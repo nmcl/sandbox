@@ -1,0 +1,425 @@
+13:02:52,130 INFO  [io.undertow.servlet] (MSC service thread 1-10) Spring WebApplicationInitializers detected on classpath: [org.springframework.boot.autoconfigure.jersey.JerseyAutoConfiguration$JerseyWebApplicationInitializer@34646a24, sample.jndi.SampleJndiInitializer@80487a3]
+13:02:52,482 INFO  [org.hibernate.validator.internal.util.Version] (pool-5-thread-1) HV000001: Hibernate Validator 5.1.0.Final
+13:02:52,614 INFO  [stdout] (MSC service thread 1-10) 
+13:02:52,615 INFO  [stdout] (MSC service thread 1-10)   .   ____          _            __ _ _
+13:02:52,615 INFO  [stdout] (MSC service thread 1-10)  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+13:02:52,615 INFO  [stdout] (MSC service thread 1-10) ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+13:02:52,615 INFO  [stdout] (MSC service thread 1-10)  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+13:02:52,615 INFO  [stdout] (MSC service thread 1-10)   '  |____| .__|_| |_|_| |_\__, | / / / /
+13:02:52,616 INFO  [stdout] (MSC service thread 1-10)  =========|_|==============|___/=/_/_/_/
+13:02:52,618 INFO  [stdout] (MSC service thread 1-10)  :: Spring Boot ::        (v1.3.1.RELEASE)
+13:02:52,618 INFO  [stdout] (MSC service thread 1-10) 
+13:02:52,676 INFO  [sample.jndi.SampleJndiInitializer] (MSC service thread 1-10) Starting SampleJndiInitializer on rorschach.local with PID 94797 (started by marklittle in /usr/local/wildfly-8.1.0.Final)
+13:02:52,677 INFO  [sample.jndi.SampleJndiInitializer] (MSC service thread 1-10) No active profile set, falling back to default profiles: default
+13:02:52,727 INFO  [org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext] (MSC service thread 1-10) Refreshing org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@107ae154: startup date [Wed Dec 23 13:02:52 GMT 2015]; root of context hierarchy
+13:02:53,479 INFO  [org.springframework.beans.factory.support.DefaultListableBeanFactory] (MSC service thread 1-10) Overriding bean definition for bean 'beanNameViewResolver' with a different definition: replacing [Root bean: class [null]; scope=; abstract=false; lazyInit=false; autowireMode=3; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=org.springframework.boot.autoconfigure.web.ErrorMvcAutoConfiguration$WhitelabelErrorViewConfiguration; factoryMethodName=beanNameViewResolver; initMethodName=null; destroyMethodName=(inferred); defined in class path resource [org/springframework/boot/autoconfigure/web/ErrorMvcAutoConfiguration$WhitelabelErrorViewConfiguration.class]] with [Root bean: class [null]; scope=; abstract=false; lazyInit=false; autowireMode=3; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration$WebMvcAutoConfigurationAdapter; factoryMethodName=beanNameViewResolver; initMethodName=null; destroyMethodName=(inferred); defined in class path resource [org/springframework/boot/autoconfigure/web/WebMvcAutoConfiguration$WebMvcAutoConfigurationAdapter.class]]
+13:02:53,975 INFO  [org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor] (MSC service thread 1-10) JSR-330 'javax.inject.Inject' annotation found and supported for autowiring
+13:02:54,112 INFO  [org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] (MSC service thread 1-10) Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [class org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$f4eff866] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+13:02:54,146 INFO  [io.undertow.servlet] (MSC service thread 1-10) Initializing Spring embedded WebApplicationContext
+13:02:54,152 INFO  [org.springframework.web.context.ContextLoader] (MSC service thread 1-10) Root WebApplicationContext: initialization completed in 1430 ms
+13:02:54,489 INFO  [org.springframework.boot.autoconfigure.websocket.UndertowWebSocketContainerCustomizer] (MSC service thread 1-10) NonEmbeddedServletContainerFactory detected. Websockets support should be native so this normally is not a problem.
+13:02:54,826 INFO  [org.springframework.boot.context.embedded.ServletRegistrationBean] (MSC service thread 1-10) Mapping servlet: 'dispatcherServlet' to [/]
+13:02:54,830 INFO  [org.springframework.boot.context.embedded.FilterRegistrationBean] (MSC service thread 1-10) Mapping filter: 'errorPageFilter' to: [/*]
+13:02:54,831 INFO  [org.springframework.boot.context.embedded.FilterRegistrationBean] (MSC service thread 1-10) Mapping filter: 'metricFilter' to: [/*]
+13:02:54,831 INFO  [org.springframework.boot.context.embedded.FilterRegistrationBean] (MSC service thread 1-10) Mapping filter: 'characterEncodingFilter' to: [/*]
+13:02:54,831 INFO  [org.springframework.boot.context.embedded.FilterRegistrationBean] (MSC service thread 1-10) Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+13:02:54,831 INFO  [org.springframework.boot.context.embedded.FilterRegistrationBean] (MSC service thread 1-10) Mapping filter: 'httpPutFormContentFilter' to: [/*]
+13:02:54,832 INFO  [org.springframework.boot.context.embedded.FilterRegistrationBean] (MSC service thread 1-10) Mapping filter: 'requestContextFilter' to: [/*]
+13:02:54,832 INFO  [org.springframework.boot.context.embedded.FilterRegistrationBean] (MSC service thread 1-10) Mapping filter: 'webRequestLoggingFilter' to: [/*]
+13:02:54,832 INFO  [org.springframework.boot.context.embedded.FilterRegistrationBean] (MSC service thread 1-10) Mapping filter: 'applicationContextIdFilter' to: [/*]
+13:02:55,053 INFO  [org.springframework.transaction.jta.JtaTransactionManager] (MSC service thread 1-10) Using JTA UserTransaction: org.jboss.tm.usertx.client.ServerVMClientUserTransaction@1c9178e0
+13:02:55,053 INFO  [org.springframework.transaction.jta.JtaTransactionManager] (MSC service thread 1-10) Using JTA TransactionManager: com.arjuna.ats.jbossatx.jta.TransactionManagerDelegate@256a2592
+13:02:55,053 INFO  [org.springframework.transaction.jta.JtaTransactionManager] (MSC service thread 1-10) Using JTA TransactionSynchronizationRegistry: com.arjuna.ats.internal.jta.transaction.arjunacore.TransactionSynchronizationRegistryImple@368164d7
+13:02:55,129 INFO  [org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean] (MSC service thread 1-10) Building JPA container EntityManagerFactory for persistence unit 'default'
+13:02:55,139 INFO  [org.hibernate.jpa.internal.util.LogHelper] (MSC service thread 1-10) HHH000204: Processing PersistenceUnitInfo [
+	     name: default
+	     ...]
+13:02:55,223 INFO  [org.hibernate.Version] (MSC service thread 1-10) HHH000412: Hibernate Core {4.3.11.Final}
+13:02:55,226 INFO  [org.hibernate.cfg.Environment] (MSC service thread 1-10) HHH000206: hibernate.properties not found
+13:02:55,228 INFO  [org.hibernate.cfg.Environment] (MSC service thread 1-10) HHH000021: Bytecode provider name : javassist
+13:02:55,370 INFO  [org.hibernate.annotations.common.Version] (MSC service thread 1-10) HCANN000001: Hibernate Commons Annotations {4.0.5.Final}
+13:02:55,574 INFO  [org.hibernate.dialect.Dialect] (MSC service thread 1-10) HHH000400: Using dialect: org.hibernate.dialect.PostgreSQL9Dialect
+13:02:55,584 INFO  [org.hibernate.engine.jdbc.internal.LobCreatorBuilder] (MSC service thread 1-10) HHH000424: Disabling contextual LOB creation as createClob() method threw error : java.lang.reflect.InvocationTargetException
+13:02:55,691 INFO  [org.hibernate.hql.internal.ast.ASTQueryTranslatorFactory] (MSC service thread 1-10) HHH000397: Using ASTQueryTranslatorFactory
+13:02:55,925 INFO  [org.hibernate.tool.hbm2ddl.SchemaUpdate] (MSC service thread 1-10) HHH000228: Running hbm2ddl schema update
+13:02:55,926 INFO  [org.hibernate.tool.hbm2ddl.SchemaUpdate] (MSC service thread 1-10) HHH000102: Fetching database metadata
+13:02:55,942 INFO  [org.hibernate.tool.hbm2ddl.SchemaUpdate] (MSC service thread 1-10) HHH000396: Updating schema
+13:02:55,950 INFO  [java.sql.DatabaseMetaData] (MSC service thread 1-10) HHH000262: Table not found: account
+13:02:55,953 INFO  [java.sql.DatabaseMetaData] (MSC service thread 1-10) HHH000262: Table not found: account
+13:02:55,954 INFO  [java.sql.DatabaseMetaData] (MSC service thread 1-10) HHH000262: Table not found: account
+13:02:55,957 INFO  [java.sql.DatabaseMetaData] (MSC service thread 1-10) HHH000262: Table not found: hibernate_sequence
+13:02:55,976 INFO  [org.hibernate.tool.hbm2ddl.SchemaUpdate] (MSC service thread 1-10) HHH000232: Schema update complete
+13:02:56,512 INFO  [org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter] (MSC service thread 1-10) Looking for @ControllerAdvice: org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@107ae154: startup date [Wed Dec 23 13:02:52 GMT 2015]; root of context hierarchy
+13:02:56,606 INFO  [org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping] (MSC service thread 1-10) Mapped "{[/]}" onto public java.lang.String sample.jndi.WebController.hello()
+13:02:56,610 INFO  [org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping] (MSC service thread 1-10) Mapped "{[/error]}" onto public org.springframework.http.ResponseEntity<java.util.Map<java.lang.String, java.lang.Object>> org.springframework.boot.autoconfigure.web.BasicErrorController.error(javax.servlet.http.HttpServletRequest)
+13:02:56,611 INFO  [org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping] (MSC service thread 1-10) Mapped "{[/error],produces=[text/html]}" onto public org.springframework.web.servlet.ModelAndView org.springframework.boot.autoconfigure.web.BasicErrorController.errorHtml(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse)
+13:02:56,645 INFO  [org.springframework.web.servlet.handler.SimpleUrlHandlerMapping] (MSC service thread 1-10) Mapped URL path [/webjars/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+13:02:56,645 INFO  [org.springframework.web.servlet.handler.SimpleUrlHandlerMapping] (MSC service thread 1-10) Mapped URL path [/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+13:02:56,695 INFO  [org.springframework.web.servlet.handler.SimpleUrlHandlerMapping] (MSC service thread 1-10) Mapped URL path [/**/favicon.ico] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+13:02:57,272 INFO  [org.springframework.boot.actuate.endpoint.mvc.EndpointHandlerMapping] (MSC service thread 1-10) Mapped "{[/dump || /dump.json],methods=[GET],produces=[application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+13:02:57,273 INFO  [org.springframework.boot.actuate.endpoint.mvc.EndpointHandlerMapping] (MSC service thread 1-10) Mapped "{[/health || /health.json],produces=[application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.HealthMvcEndpoint.invoke(java.security.Principal)
+13:02:57,275 INFO  [org.springframework.boot.actuate.endpoint.mvc.EndpointHandlerMapping] (MSC service thread 1-10) Mapped "{[/metrics/{name:.*}],methods=[GET],produces=[application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.MetricsMvcEndpoint.value(java.lang.String)
+13:02:57,275 INFO  [org.springframework.boot.actuate.endpoint.mvc.EndpointHandlerMapping] (MSC service thread 1-10) Mapped "{[/metrics || /metrics.json],methods=[GET],produces=[application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+13:02:57,276 INFO  [org.springframework.boot.actuate.endpoint.mvc.EndpointHandlerMapping] (MSC service thread 1-10) Mapped "{[/trace || /trace.json],methods=[GET],produces=[application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+13:02:57,277 INFO  [org.springframework.boot.actuate.endpoint.mvc.EndpointHandlerMapping] (MSC service thread 1-10) Mapped "{[/autoconfig || /autoconfig.json],methods=[GET],produces=[application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+13:02:57,280 INFO  [org.springframework.boot.actuate.endpoint.mvc.EndpointHandlerMapping] (MSC service thread 1-10) Mapped "{[/info || /info.json],methods=[GET],produces=[application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+13:02:57,281 INFO  [org.springframework.boot.actuate.endpoint.mvc.EndpointHandlerMapping] (MSC service thread 1-10) Mapped "{[/mappings || /mappings.json],methods=[GET],produces=[application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+13:02:57,281 INFO  [org.springframework.boot.actuate.endpoint.mvc.EndpointHandlerMapping] (MSC service thread 1-10) Mapped "{[/beans || /beans.json],methods=[GET],produces=[application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+13:02:57,282 INFO  [org.springframework.boot.actuate.endpoint.mvc.EndpointHandlerMapping] (MSC service thread 1-10) Mapped "{[/env/{name:.*}],methods=[GET],produces=[application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EnvironmentMvcEndpoint.value(java.lang.String)
+13:02:57,282 INFO  [org.springframework.boot.actuate.endpoint.mvc.EndpointHandlerMapping] (MSC service thread 1-10) Mapped "{[/env || /env.json],methods=[GET],produces=[application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+13:02:57,283 INFO  [org.springframework.boot.actuate.endpoint.mvc.EndpointHandlerMapping] (MSC service thread 1-10) Mapped "{[/configprops || /configprops.json],methods=[GET],produces=[application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+13:02:57,452 INFO  [org.springframework.jmx.export.annotation.AnnotationMBeanExporter] (MSC service thread 1-10) Registering beans for JMX exposure on startup
+13:02:57,459 INFO  [org.springframework.boot.actuate.endpoint.jmx.EndpointMBeanExporter] (MSC service thread 1-10) Registering beans for JMX exposure on startup
+13:02:57,465 INFO  [org.springframework.context.support.DefaultLifecycleProcessor] (MSC service thread 1-10) Starting beans in phase 0
+13:02:57,469 INFO  [org.springframework.boot.actuate.endpoint.jmx.EndpointMBeanExporter] (MSC service thread 1-10) Located managed bean 'requestMappingEndpoint': registering with JMX server as MBean [org.springframework.boot:type=Endpoint,name=requestMappingEndpoint]
+13:02:57,503 INFO  [org.springframework.boot.actuate.endpoint.jmx.EndpointMBeanExporter] (MSC service thread 1-10) Located managed bean 'environmentEndpoint': registering with JMX server as MBean [org.springframework.boot:type=Endpoint,name=environmentEndpoint]
+13:02:57,512 INFO  [org.springframework.boot.actuate.endpoint.jmx.EndpointMBeanExporter] (MSC service thread 1-10) Located managed bean 'healthEndpoint': registering with JMX server as MBean [org.springframework.boot:type=Endpoint,name=healthEndpoint]
+13:02:57,518 INFO  [org.springframework.boot.actuate.endpoint.jmx.EndpointMBeanExporter] (MSC service thread 1-10) Located managed bean 'beansEndpoint': registering with JMX server as MBean [org.springframework.boot:type=Endpoint,name=beansEndpoint]
+13:02:57,523 INFO  [org.springframework.boot.actuate.endpoint.jmx.EndpointMBeanExporter] (MSC service thread 1-10) Located managed bean 'infoEndpoint': registering with JMX server as MBean [org.springframework.boot:type=Endpoint,name=infoEndpoint]
+13:02:57,526 INFO  [org.springframework.boot.actuate.endpoint.jmx.EndpointMBeanExporter] (MSC service thread 1-10) Located managed bean 'metricsEndpoint': registering with JMX server as MBean [org.springframework.boot:type=Endpoint,name=metricsEndpoint]
+13:02:57,530 INFO  [org.springframework.boot.actuate.endpoint.jmx.EndpointMBeanExporter] (MSC service thread 1-10) Located managed bean 'traceEndpoint': registering with JMX server as MBean [org.springframework.boot:type=Endpoint,name=traceEndpoint]
+13:02:57,533 INFO  [org.springframework.boot.actuate.endpoint.jmx.EndpointMBeanExporter] (MSC service thread 1-10) Located managed bean 'dumpEndpoint': registering with JMX server as MBean [org.springframework.boot:type=Endpoint,name=dumpEndpoint]
+13:02:57,542 INFO  [org.springframework.boot.actuate.endpoint.jmx.EndpointMBeanExporter] (MSC service thread 1-10) Located managed bean 'autoConfigurationReportEndpoint': registering with JMX server as MBean [org.springframework.boot:type=Endpoint,name=autoConfigurationReportEndpoint]
+13:02:57,546 INFO  [org.springframework.boot.actuate.endpoint.jmx.EndpointMBeanExporter] (MSC service thread 1-10) Located managed bean 'configurationPropertiesReportEndpoint': registering with JMX server as MBean [org.springframework.boot:type=Endpoint,name=configurationPropertiesReportEndpoint]
+13:02:57,549 INFO  [org.springframework.context.support.DefaultLifecycleProcessor] (MSC service thread 1-10) Starting beans in phase 2147483647
+13:02:57,579 INFO  [sample.jndi.SampleJndiInitializer] (MSC service thread 1-10) Started SampleJndiInitializer in 5.373 seconds (JVM running for 10.481)
+13:02:57,653 INFO  [org.wildfly.extension.undertow] (MSC service thread 1-10) JBAS017534: Registered web context: /spring-boot-sample-jta-jndi
+13:02:57,683 INFO  [org.jboss.as.server] (ServerService Thread Pool -- 31) JBAS018559: Deployed "spring-boot-sample-jta-jndi.war" (runtime-name : "spring-boot-sample-jta-jndi.war")
+13:02:57,692 INFO  [org.jboss.as] (Controller Boot Thread) JBAS015961: Http management interface listening on http://127.0.0.1:9990/management
+13:02:57,693 INFO  [org.jboss.as] (Controller Boot Thread) JBAS015951: Admin console listening on http://127.0.0.1:9990
+13:02:57,694 INFO  [org.jboss.as] (Controller Boot Thread) JBAS015874: WildFly 8.1.0.Final "Kenny" started in 10486ms - Started 404 of 457 services (103 services are lazy, passive or on-demand)
+13:03:03,234 INFO  [io.undertow.servlet] (default task-1) Initializing Spring FrameworkServlet 'dispatcherServlet'
+13:03:03,235 INFO  [org.springframework.web.servlet.DispatcherServlet] (default task-1) FrameworkServlet 'dispatcherServlet': initialization started
+13:03:03,254 INFO  [org.springframework.web.servlet.DispatcherServlet] (default task-1) FrameworkServlet 'dispatcherServlet': initialization completed in 18 ms
+13:03:03,562 INFO  [stdout] (default task-1) Count is 0
+13:03:03,641 WARN  [com.arjuna.ats.jta] (default task-1) ARJUNA016041: prepare on < formatId=131077, gtrid_length=29, bqual_length=36, tx_uid=0:ffffc0a801f0:-724ca071:567a9b79:31, node_name=1, branch_uid=0:ffffc0a801f0:-724ca071:567a9b79:37, subordinatenodename=null, eis_name=java:jboss/datasources/bootdemo > (XAResourceWrapperImpl@6d2bd2f6[xaResource=org.jboss.jca.adapters.jdbc.xa.XAManagedConnection@37a5981d pad=false overrideRmValue=null productName=PostgreSQL productVersion=9.3.5 jndiName=java:jboss/datasources/bootdemo]) failed with exception XAException.XAER_RMERR: org.postgresql.xa.PGXAException: Error preparing transaction
+	     at org.postgresql.xa.PGXAConnection.prepare(PGXAConnection.java:330)
+	     at org.jboss.jca.adapters.jdbc.xa.XAManagedConnection.prepare(XAManagedConnection.java:330)
+	     at org.jboss.jca.core.tx.jbossts.XAResourceWrapperImpl.prepare(XAResourceWrapperImpl.java:169)
+	     at com.arjuna.ats.internal.jta.resources.arjunacore.XAResourceRecord.topLevelPrepare(XAResourceRecord.java:210)
+	     at com.arjuna.ats.arjuna.coordinator.BasicAction.doPrepare(BasicAction.java:2586)
+	     at com.arjuna.ats.arjuna.coordinator.BasicAction.doPrepare(BasicAction.java:2536)
+	     at com.arjuna.ats.arjuna.coordinator.BasicAction.prepare(BasicAction.java:2097)
+	     at com.arjuna.ats.arjuna.coordinator.BasicAction.End(BasicAction.java:1481)
+	     at com.arjuna.ats.arjuna.coordinator.TwoPhaseCoordinator.end(TwoPhaseCoordinator.java:96)
+	     at com.arjuna.ats.arjuna.AtomicAction.commit(AtomicAction.java:162)
+	     at com.arjuna.ats.internal.jta.transaction.arjunacore.TransactionImple.commitAndDisassociate(TransactionImple.java:1166)
+	     at com.arjuna.ats.internal.jta.transaction.arjunacore.BaseTransaction.commit(BaseTransaction.java:126)
+	     at com.arjuna.ats.jbossatx.BaseTransactionManagerDelegate.commit(BaseTransactionManagerDelegate.java:75)
+	     at org.jboss.tm.usertx.client.ServerVMClientUserTransaction.commit(ServerVMClientUserTransaction.java:173)
+	     at org.springframework.transaction.jta.JtaTransactionManager.doCommit(JtaTransactionManager.java:1021) [spring-tx-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.transaction.support.AbstractPlatformTransactionManager.processCommit(AbstractPlatformTransactionManager.java:761) [spring-tx-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.transaction.support.AbstractPlatformTransactionManager.commit(AbstractPlatformTransactionManager.java:730) [spring-tx-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.transaction.interceptor.TransactionAspectSupport.commitTransactionAfterReturning(TransactionAspectSupport.java:485) [spring-tx-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:291) [spring-tx-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:96) [spring-tx-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179) [spring-aop-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:655) [spring-aop-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at sample.jndi.AccountService$$EnhancerBySpringCGLIB$$a54dc28.createAccountAndNotify(<generated>) [classes:]
+	     at sample.jndi.WebController.hello(WebController.java:39) [classes:]
+	     at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) [rt.jar:1.8.0_45]
+	     at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) [rt.jar:1.8.0_45]
+	     at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) [rt.jar:1.8.0_45]
+	     at java.lang.reflect.Method.invoke(Method.java:497) [rt.jar:1.8.0_45]
+	     at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:222) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:137) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:110) [spring-webmvc-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:814) [spring-webmvc-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:737) [spring-webmvc-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:85) [spring-webmvc-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:959) [spring-webmvc-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:893) [spring-webmvc-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:969) [spring-webmvc-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:860) [spring-webmvc-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at javax.servlet.http.HttpServlet.service(HttpServlet.java:687) [jboss-servlet-api_3.1_spec-1.0.0.Final.jar:1.0.0.Final]
+	     at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:845) [spring-webmvc-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at javax.servlet.http.HttpServlet.service(HttpServlet.java:790) [jboss-servlet-api_3.1_spec-1.0.0.Final.jar:1.0.0.Final]
+	     at io.undertow.servlet.handlers.ServletHandler.handleRequest(ServletHandler.java:85) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:130) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at org.springframework.boot.context.web.ErrorPageFilter.doFilter(ErrorPageFilter.java:120) [spring-boot-1.3.1.RELEASE.jar:1.3.1.RELEASE]
+	     at org.springframework.boot.context.web.ErrorPageFilter.access$000(ErrorPageFilter.java:61) [spring-boot-1.3.1.RELEASE.jar:1.3.1.RELEASE]
+	     at org.springframework.boot.context.web.ErrorPageFilter$1.doFilterInternal(ErrorPageFilter.java:95) [spring-boot-1.3.1.RELEASE.jar:1.3.1.RELEASE]
+	     at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.boot.context.web.ErrorPageFilter.doFilter(ErrorPageFilter.java:113) [spring-boot-1.3.1.RELEASE.jar:1.3.1.RELEASE]
+	     at io.undertow.servlet.core.ManagedFilter.doFilter(ManagedFilter.java:60) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:132) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at org.springframework.boot.actuate.autoconfigure.MetricsFilter.doFilterInternal(MetricsFilter.java:103) [spring-boot-actuator-1.3.1.RELEASE.jar:1.3.1.RELEASE]
+	     at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at io.undertow.servlet.core.ManagedFilter.doFilter(ManagedFilter.java:60) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:132) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:121) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at io.undertow.servlet.core.ManagedFilter.doFilter(ManagedFilter.java:60) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:132) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at org.springframework.web.filter.HiddenHttpMethodFilter.doFilterInternal(HiddenHttpMethodFilter.java:77) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at io.undertow.servlet.core.ManagedFilter.doFilter(ManagedFilter.java:60) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:132) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at org.springframework.web.filter.HttpPutFormContentFilter.doFilterInternal(HttpPutFormContentFilter.java:87) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at io.undertow.servlet.core.ManagedFilter.doFilter(ManagedFilter.java:60) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:132) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:99) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at io.undertow.servlet.core.ManagedFilter.doFilter(ManagedFilter.java:60) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:132) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at org.springframework.boot.actuate.trace.WebRequestTraceFilter.doFilterInternal(WebRequestTraceFilter.java:111) [spring-boot-actuator-1.3.1.RELEASE.jar:1.3.1.RELEASE]
+	     at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at io.undertow.servlet.core.ManagedFilter.doFilter(ManagedFilter.java:60) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:132) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at org.springframework.boot.actuate.autoconfigure.EndpointWebMvcAutoConfiguration$ApplicationContextHeaderFilter.doFilterInternal(EndpointWebMvcAutoConfiguration.java:243) [spring-boot-actuator-1.3.1.RELEASE.jar:1.3.1.RELEASE]
+	     at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at io.undertow.servlet.core.ManagedFilter.doFilter(ManagedFilter.java:60) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:132) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.FilterHandler.handleRequest(FilterHandler.java:85) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.security.ServletSecurityRoleHandler.handleRequest(ServletSecurityRoleHandler.java:61) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.ServletDispatchingHandler.handleRequest(ServletDispatchingHandler.java:36) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at org.wildfly.extension.undertow.security.SecurityContextAssociationHandler.handleRequest(SecurityContextAssociationHandler.java:78)
+	     at io.undertow.server.handlers.PredicateHandler.handleRequest(PredicateHandler.java:25) [undertow-core-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.security.SSLInformationAssociationHandler.handleRequest(SSLInformationAssociationHandler.java:113) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.security.ServletAuthenticationCallHandler.handleRequest(ServletAuthenticationCallHandler.java:56) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.server.handlers.PredicateHandler.handleRequest(PredicateHandler.java:25) [undertow-core-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.security.handlers.AbstractConfidentialityHandler.handleRequest(AbstractConfidentialityHandler.java:45) [undertow-core-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.security.ServletConfidentialityConstraintHandler.handleRequest(ServletConfidentialityConstraintHandler.java:61) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.security.handlers.AuthenticationMechanismsHandler.handleRequest(AuthenticationMechanismsHandler.java:58) [undertow-core-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.security.CachedAuthenticatedSessionHandler.handleRequest(CachedAuthenticatedSessionHandler.java:70) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.security.handlers.SecurityInitialHandler.handleRequest(SecurityInitialHandler.java:76) [undertow-core-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.server.handlers.PredicateHandler.handleRequest(PredicateHandler.java:25) [undertow-core-1.0.15.Final.jar:1.0.15.Final]
+	     at org.wildfly.extension.undertow.security.jacc.JACCContextIdHandler.handleRequest(JACCContextIdHandler.java:61)
+	     at io.undertow.server.handlers.PredicateHandler.handleRequest(PredicateHandler.java:25) [undertow-core-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.server.handlers.PredicateHandler.handleRequest(PredicateHandler.java:25) [undertow-core-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.ServletInitialHandler.handleFirstRequest(ServletInitialHandler.java:240) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.ServletInitialHandler.dispatchRequest(ServletInitialHandler.java:227) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.ServletInitialHandler.access$000(ServletInitialHandler.java:73) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.ServletInitialHandler$1.handleRequest(ServletInitialHandler.java:146) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.server.Connectors.executeRootHandler(Connectors.java:177) [undertow-core-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.server.HttpServerExchange$1.run(HttpServerExchange.java:727) [undertow-core-1.0.15.Final.jar:1.0.15.Final]
+	     at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142) [rt.jar:1.8.0_45]
+	     at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617) [rt.jar:1.8.0_45]
+	     at java.lang.Thread.run(Thread.java:745) [rt.jar:1.8.0_45]
+Caused by: org.postgresql.util.PSQLException: ERROR: prepared transactions are disabled
+  Hint: Set max_prepared_transactions to a nonzero value.
+  at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2198)
+  at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:1927)
+  at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:255)
+  at org.postgresql.jdbc2.AbstractJdbc2Statement.execute(AbstractJdbc2Statement.java:562)
+  at org.postgresql.jdbc2.AbstractJdbc2Statement.executeWithFlags(AbstractJdbc2Statement.java:406)
+  at org.postgresql.jdbc2.AbstractJdbc2Statement.executeUpdate(AbstractJdbc2Statement.java:334)
+  at org.postgresql.xa.PGXAConnection.prepare(PGXAConnection.java:318)
+  ... 103 more
+
+13:03:03,650 WARN  [com.arjuna.ats.arjuna] (default task-1) ARJUNA012073: BasicAction.End() - prepare phase of action-id 0:ffffc0a801f0:-724ca071:567a9b79:31 failed.
+13:03:03,650 WARN  [com.arjuna.ats.arjuna] (default task-1) ARJUNA012075: Action Aborting
+13:03:03,653 WARN  [com.arjuna.ats.jta] (default task-1) ARJUNA016045: attempted rollback of < formatId=131077, gtrid_length=29, bqual_length=36, tx_uid=0:ffffc0a801f0:-724ca071:567a9b79:31, node_name=1, branch_uid=0:ffffc0a801f0:-724ca071:567a9b79:37, subordinatenodename=null, eis_name=java:jboss/datasources/bootdemo > (XAResourceWrapperImpl@6d2bd2f6[xaResource=org.jboss.jca.adapters.jdbc.xa.XAManagedConnection@37a5981d pad=false overrideRmValue=null productName=PostgreSQL productVersion=9.3.5 jndiName=java:jboss/datasources/bootdemo]) failed with exception code XAException.XAER_NOTA: org.postgresql.xa.PGXAException: Error rolling back prepared transaction
+	     at org.postgresql.xa.PGXAConnection.rollback(PGXAConnection.java:435)
+	     at org.jboss.jca.adapters.jdbc.xa.XAManagedConnection.rollback(XAManagedConnection.java:346)
+	     at org.jboss.jca.core.tx.jbossts.XAResourceWrapperImpl.rollback(XAResourceWrapperImpl.java:186)
+	     at com.arjuna.ats.internal.jta.resources.arjunacore.XAResourceRecord.topLevelAbort(XAResourceRecord.java:355)
+	     at com.arjuna.ats.arjuna.coordinator.BasicAction.doAbort(BasicAction.java:2939)
+	     at com.arjuna.ats.arjuna.coordinator.BasicAction.doAbort(BasicAction.java:2918)
+	     at com.arjuna.ats.arjuna.coordinator.BasicAction.phase2Abort(BasicAction.java:1924)
+	     at com.arjuna.ats.arjuna.coordinator.BasicAction.End(BasicAction.java:1494)
+	     at com.arjuna.ats.arjuna.coordinator.TwoPhaseCoordinator.end(TwoPhaseCoordinator.java:96)
+	     at com.arjuna.ats.arjuna.AtomicAction.commit(AtomicAction.java:162)
+	     at com.arjuna.ats.internal.jta.transaction.arjunacore.TransactionImple.commitAndDisassociate(TransactionImple.java:1166)
+	     at com.arjuna.ats.internal.jta.transaction.arjunacore.BaseTransaction.commit(BaseTransaction.java:126)
+	     at com.arjuna.ats.jbossatx.BaseTransactionManagerDelegate.commit(BaseTransactionManagerDelegate.java:75)
+	     at org.jboss.tm.usertx.client.ServerVMClientUserTransaction.commit(ServerVMClientUserTransaction.java:173)
+	     at org.springframework.transaction.jta.JtaTransactionManager.doCommit(JtaTransactionManager.java:1021) [spring-tx-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.transaction.support.AbstractPlatformTransactionManager.processCommit(AbstractPlatformTransactionManager.java:761) [spring-tx-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.transaction.support.AbstractPlatformTransactionManager.commit(AbstractPlatformTransactionManager.java:730) [spring-tx-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.transaction.interceptor.TransactionAspectSupport.commitTransactionAfterReturning(TransactionAspectSupport.java:485) [spring-tx-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:291) [spring-tx-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:96) [spring-tx-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179) [spring-aop-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:655) [spring-aop-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at sample.jndi.AccountService$$EnhancerBySpringCGLIB$$a54dc28.createAccountAndNotify(<generated>) [classes:]
+	     at sample.jndi.WebController.hello(WebController.java:39) [classes:]
+	     at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) [rt.jar:1.8.0_45]
+	     at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) [rt.jar:1.8.0_45]
+	     at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) [rt.jar:1.8.0_45]
+	     at java.lang.reflect.Method.invoke(Method.java:497) [rt.jar:1.8.0_45]
+	     at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:222) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:137) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:110) [spring-webmvc-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:814) [spring-webmvc-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:737) [spring-webmvc-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:85) [spring-webmvc-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:959) [spring-webmvc-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:893) [spring-webmvc-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:969) [spring-webmvc-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:860) [spring-webmvc-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at javax.servlet.http.HttpServlet.service(HttpServlet.java:687) [jboss-servlet-api_3.1_spec-1.0.0.Final.jar:1.0.0.Final]
+	     at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:845) [spring-webmvc-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at javax.servlet.http.HttpServlet.service(HttpServlet.java:790) [jboss-servlet-api_3.1_spec-1.0.0.Final.jar:1.0.0.Final]
+	     at io.undertow.servlet.handlers.ServletHandler.handleRequest(ServletHandler.java:85) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:130) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at org.springframework.boot.context.web.ErrorPageFilter.doFilter(ErrorPageFilter.java:120) [spring-boot-1.3.1.RELEASE.jar:1.3.1.RELEASE]
+	     at org.springframework.boot.context.web.ErrorPageFilter.access$000(ErrorPageFilter.java:61) [spring-boot-1.3.1.RELEASE.jar:1.3.1.RELEASE]
+	     at org.springframework.boot.context.web.ErrorPageFilter$1.doFilterInternal(ErrorPageFilter.java:95) [spring-boot-1.3.1.RELEASE.jar:1.3.1.RELEASE]
+	     at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.boot.context.web.ErrorPageFilter.doFilter(ErrorPageFilter.java:113) [spring-boot-1.3.1.RELEASE.jar:1.3.1.RELEASE]
+	     at io.undertow.servlet.core.ManagedFilter.doFilter(ManagedFilter.java:60) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:132) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at org.springframework.boot.actuate.autoconfigure.MetricsFilter.doFilterInternal(MetricsFilter.java:103) [spring-boot-actuator-1.3.1.RELEASE.jar:1.3.1.RELEASE]
+	     at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at io.undertow.servlet.core.ManagedFilter.doFilter(ManagedFilter.java:60) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:132) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:121) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at io.undertow.servlet.core.ManagedFilter.doFilter(ManagedFilter.java:60) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:132) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at org.springframework.web.filter.HiddenHttpMethodFilter.doFilterInternal(HiddenHttpMethodFilter.java:77) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at io.undertow.servlet.core.ManagedFilter.doFilter(ManagedFilter.java:60) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:132) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at org.springframework.web.filter.HttpPutFormContentFilter.doFilterInternal(HttpPutFormContentFilter.java:87) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at io.undertow.servlet.core.ManagedFilter.doFilter(ManagedFilter.java:60) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:132) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:99) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at io.undertow.servlet.core.ManagedFilter.doFilter(ManagedFilter.java:60) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:132) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at org.springframework.boot.actuate.trace.WebRequestTraceFilter.doFilterInternal(WebRequestTraceFilter.java:111) [spring-boot-actuator-1.3.1.RELEASE.jar:1.3.1.RELEASE]
+	     at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at io.undertow.servlet.core.ManagedFilter.doFilter(ManagedFilter.java:60) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:132) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at org.springframework.boot.actuate.autoconfigure.EndpointWebMvcAutoConfiguration$ApplicationContextHeaderFilter.doFilterInternal(EndpointWebMvcAutoConfiguration.java:243) [spring-boot-actuator-1.3.1.RELEASE.jar:1.3.1.RELEASE]
+	     at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at io.undertow.servlet.core.ManagedFilter.doFilter(ManagedFilter.java:60) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:132) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.FilterHandler.handleRequest(FilterHandler.java:85) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.security.ServletSecurityRoleHandler.handleRequest(ServletSecurityRoleHandler.java:61) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.ServletDispatchingHandler.handleRequest(ServletDispatchingHandler.java:36) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at org.wildfly.extension.undertow.security.SecurityContextAssociationHandler.handleRequest(SecurityContextAssociationHandler.java:78)
+	     at io.undertow.server.handlers.PredicateHandler.handleRequest(PredicateHandler.java:25) [undertow-core-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.security.SSLInformationAssociationHandler.handleRequest(SSLInformationAssociationHandler.java:113) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.security.ServletAuthenticationCallHandler.handleRequest(ServletAuthenticationCallHandler.java:56) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.server.handlers.PredicateHandler.handleRequest(PredicateHandler.java:25) [undertow-core-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.security.handlers.AbstractConfidentialityHandler.handleRequest(AbstractConfidentialityHandler.java:45) [undertow-core-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.security.ServletConfidentialityConstraintHandler.handleRequest(ServletConfidentialityConstraintHandler.java:61) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.security.handlers.AuthenticationMechanismsHandler.handleRequest(AuthenticationMechanismsHandler.java:58) [undertow-core-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.security.CachedAuthenticatedSessionHandler.handleRequest(CachedAuthenticatedSessionHandler.java:70) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.security.handlers.SecurityInitialHandler.handleRequest(SecurityInitialHandler.java:76) [undertow-core-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.server.handlers.PredicateHandler.handleRequest(PredicateHandler.java:25) [undertow-core-1.0.15.Final.jar:1.0.15.Final]
+	     at org.wildfly.extension.undertow.security.jacc.JACCContextIdHandler.handleRequest(JACCContextIdHandler.java:61)
+	     at io.undertow.server.handlers.PredicateHandler.handleRequest(PredicateHandler.java:25) [undertow-core-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.server.handlers.PredicateHandler.handleRequest(PredicateHandler.java:25) [undertow-core-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.ServletInitialHandler.handleFirstRequest(ServletInitialHandler.java:240) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.ServletInitialHandler.dispatchRequest(ServletInitialHandler.java:227) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.ServletInitialHandler.access$000(ServletInitialHandler.java:73) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.ServletInitialHandler$1.handleRequest(ServletInitialHandler.java:146) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.server.Connectors.executeRootHandler(Connectors.java:177) [undertow-core-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.server.HttpServerExchange$1.run(HttpServerExchange.java:727) [undertow-core-1.0.15.Final.jar:1.0.15.Final]
+	     at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142) [rt.jar:1.8.0_45]
+	     at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617) [rt.jar:1.8.0_45]
+	     at java.lang.Thread.run(Thread.java:745) [rt.jar:1.8.0_45]
+Caused by: org.postgresql.util.PSQLException: ERROR: prepared transaction with identifier "131077_AAAAAAAAAAAAAP//wKgB8I2zX49Wept5AAAAMTE=_AAAAAAAAAAAAAP//wKgB8I2zX49Wept5AAAANwAAAAIAAAAA" does not exist
+       at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2198)
+       at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:1927)
+       at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:255)
+       at org.postgresql.jdbc2.AbstractJdbc2Statement.execute(AbstractJdbc2Statement.java:562)
+       at org.postgresql.jdbc2.AbstractJdbc2Statement.executeWithFlags(AbstractJdbc2Statement.java:406)
+       at org.postgresql.jdbc2.AbstractJdbc2Statement.executeUpdate(AbstractJdbc2Statement.java:334)
+       at org.postgresql.xa.PGXAConnection.rollback(PGXAConnection.java:423)
+       ... 103 more
+
+13:03:03,667 ERROR [org.springframework.boot.context.web.ErrorPageFilter] (default task-1) Forwarding to error page from request [/] due to exception [JTA transaction unexpectedly rolled back (maybe due to a timeout); nested exception is javax.transaction.RollbackException: ARJUNA016053: Could not commit transaction.]: org.springframework.transaction.UnexpectedRollbackException: JTA transaction unexpectedly rolled back (maybe due to a timeout); nested exception is javax.transaction.RollbackException: ARJUNA016053: Could not commit transaction.
+	     at org.springframework.transaction.jta.JtaTransactionManager.doCommit(JtaTransactionManager.java:1024) [spring-tx-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.transaction.support.AbstractPlatformTransactionManager.processCommit(AbstractPlatformTransactionManager.java:761) [spring-tx-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.transaction.support.AbstractPlatformTransactionManager.commit(AbstractPlatformTransactionManager.java:730) [spring-tx-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.transaction.interceptor.TransactionAspectSupport.commitTransactionAfterReturning(TransactionAspectSupport.java:485) [spring-tx-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:291) [spring-tx-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:96) [spring-tx-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179) [spring-aop-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:655) [spring-aop-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at sample.jndi.AccountService$$EnhancerBySpringCGLIB$$a54dc28.createAccountAndNotify(<generated>) [classes:]
+	     at sample.jndi.WebController.hello(WebController.java:39) [classes:]
+	     at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) [rt.jar:1.8.0_45]
+	     at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) [rt.jar:1.8.0_45]
+	     at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) [rt.jar:1.8.0_45]
+	     at java.lang.reflect.Method.invoke(Method.java:497) [rt.jar:1.8.0_45]
+	     at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:222) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:137) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:110) [spring-webmvc-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:814) [spring-webmvc-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:737) [spring-webmvc-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:85) [spring-webmvc-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:959) [spring-webmvc-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:893) [spring-webmvc-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:969) [spring-webmvc-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:860) [spring-webmvc-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at javax.servlet.http.HttpServlet.service(HttpServlet.java:687) [jboss-servlet-api_3.1_spec-1.0.0.Final.jar:1.0.0.Final]
+	     at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:845) [spring-webmvc-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at javax.servlet.http.HttpServlet.service(HttpServlet.java:790) [jboss-servlet-api_3.1_spec-1.0.0.Final.jar:1.0.0.Final]
+	     at io.undertow.servlet.handlers.ServletHandler.handleRequest(ServletHandler.java:85) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:130) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at org.springframework.boot.context.web.ErrorPageFilter.doFilter(ErrorPageFilter.java:120) [spring-boot-1.3.1.RELEASE.jar:1.3.1.RELEASE]
+	     at org.springframework.boot.context.web.ErrorPageFilter.access$000(ErrorPageFilter.java:61) [spring-boot-1.3.1.RELEASE.jar:1.3.1.RELEASE]
+	     at org.springframework.boot.context.web.ErrorPageFilter$1.doFilterInternal(ErrorPageFilter.java:95) [spring-boot-1.3.1.RELEASE.jar:1.3.1.RELEASE]
+	     at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.boot.context.web.ErrorPageFilter.doFilter(ErrorPageFilter.java:113) [spring-boot-1.3.1.RELEASE.jar:1.3.1.RELEASE]
+	     at io.undertow.servlet.core.ManagedFilter.doFilter(ManagedFilter.java:60) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:132) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at org.springframework.boot.actuate.autoconfigure.MetricsFilter.doFilterInternal(MetricsFilter.java:103) [spring-boot-actuator-1.3.1.RELEASE.jar:1.3.1.RELEASE]
+	     at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at io.undertow.servlet.core.ManagedFilter.doFilter(ManagedFilter.java:60) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:132) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:121) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at io.undertow.servlet.core.ManagedFilter.doFilter(ManagedFilter.java:60) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:132) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at org.springframework.web.filter.HiddenHttpMethodFilter.doFilterInternal(HiddenHttpMethodFilter.java:77) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at io.undertow.servlet.core.ManagedFilter.doFilter(ManagedFilter.java:60) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:132) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at org.springframework.web.filter.HttpPutFormContentFilter.doFilterInternal(HttpPutFormContentFilter.java:87) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at io.undertow.servlet.core.ManagedFilter.doFilter(ManagedFilter.java:60) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:132) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:99) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at io.undertow.servlet.core.ManagedFilter.doFilter(ManagedFilter.java:60) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:132) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at org.springframework.boot.actuate.trace.WebRequestTraceFilter.doFilterInternal(WebRequestTraceFilter.java:111) [spring-boot-actuator-1.3.1.RELEASE.jar:1.3.1.RELEASE]
+	     at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at io.undertow.servlet.core.ManagedFilter.doFilter(ManagedFilter.java:60) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:132) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at org.springframework.boot.actuate.autoconfigure.EndpointWebMvcAutoConfiguration$ApplicationContextHeaderFilter.doFilterInternal(EndpointWebMvcAutoConfiguration.java:243) [spring-boot-actuator-1.3.1.RELEASE.jar:1.3.1.RELEASE]
+	     at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107) [spring-web-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+	     at io.undertow.servlet.core.ManagedFilter.doFilter(ManagedFilter.java:60) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:132) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.FilterHandler.handleRequest(FilterHandler.java:85) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.security.ServletSecurityRoleHandler.handleRequest(ServletSecurityRoleHandler.java:61) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.ServletDispatchingHandler.handleRequest(ServletDispatchingHandler.java:36) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at org.wildfly.extension.undertow.security.SecurityContextAssociationHandler.handleRequest(SecurityContextAssociationHandler.java:78)
+	     at io.undertow.server.handlers.PredicateHandler.handleRequest(PredicateHandler.java:25) [undertow-core-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.security.SSLInformationAssociationHandler.handleRequest(SSLInformationAssociationHandler.java:113) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.security.ServletAuthenticationCallHandler.handleRequest(ServletAuthenticationCallHandler.java:56) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.server.handlers.PredicateHandler.handleRequest(PredicateHandler.java:25) [undertow-core-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.security.handlers.AbstractConfidentialityHandler.handleRequest(AbstractConfidentialityHandler.java:45) [undertow-core-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.security.ServletConfidentialityConstraintHandler.handleRequest(ServletConfidentialityConstraintHandler.java:61) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.security.handlers.AuthenticationMechanismsHandler.handleRequest(AuthenticationMechanismsHandler.java:58) [undertow-core-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.security.CachedAuthenticatedSessionHandler.handleRequest(CachedAuthenticatedSessionHandler.java:70) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.security.handlers.SecurityInitialHandler.handleRequest(SecurityInitialHandler.java:76) [undertow-core-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.server.handlers.PredicateHandler.handleRequest(PredicateHandler.java:25) [undertow-core-1.0.15.Final.jar:1.0.15.Final]
+	     at org.wildfly.extension.undertow.security.jacc.JACCContextIdHandler.handleRequest(JACCContextIdHandler.java:61)
+	     at io.undertow.server.handlers.PredicateHandler.handleRequest(PredicateHandler.java:25) [undertow-core-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.server.handlers.PredicateHandler.handleRequest(PredicateHandler.java:25) [undertow-core-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.ServletInitialHandler.handleFirstRequest(ServletInitialHandler.java:240) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.ServletInitialHandler.dispatchRequest(ServletInitialHandler.java:227) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.ServletInitialHandler.access$000(ServletInitialHandler.java:73) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.servlet.handlers.ServletInitialHandler$1.handleRequest(ServletInitialHandler.java:146) [undertow-servlet-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.server.Connectors.executeRootHandler(Connectors.java:177) [undertow-core-1.0.15.Final.jar:1.0.15.Final]
+	     at io.undertow.server.HttpServerExchange$1.run(HttpServerExchange.java:727) [undertow-core-1.0.15.Final.jar:1.0.15.Final]
+	     at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142) [rt.jar:1.8.0_45]
+	     at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617) [rt.jar:1.8.0_45]
+	     at java.lang.Thread.run(Thread.java:745) [rt.jar:1.8.0_45]
+Caused by: javax.transaction.RollbackException: ARJUNA016053: Could not commit transaction.
+       at com.arjuna.ats.internal.jta.transaction.arjunacore.TransactionImple.commitAndDisassociate(TransactionImple.java:1178)
+       at com.arjuna.ats.internal.jta.transaction.arjunacore.BaseTransaction.commit(BaseTransaction.java:126)
+       at com.arjuna.ats.jbossatx.BaseTransactionManagerDelegate.commit(BaseTransactionManagerDelegate.java:75)
+       at org.jboss.tm.usertx.client.ServerVMClientUserTransaction.commit(ServerVMClientUserTransaction.java:173)
+       at org.springframework.transaction.jta.JtaTransactionManager.doCommit(JtaTransactionManager.java:1021) [spring-tx-4.2.4.RELEASE.jar:4.2.4.RELEASE]
+       ... 89 more
