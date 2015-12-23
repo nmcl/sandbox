@@ -1,0 +1,2 @@
+Various examples. Some copied from their original repos, some developed from scratch.
+References to the former should appear in the relevant directories along with any licences.
