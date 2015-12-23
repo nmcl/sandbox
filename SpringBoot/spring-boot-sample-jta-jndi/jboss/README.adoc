@@ -1,0 +1,9 @@
+module.xml - the module.xml file that actually works.
+
+postgres jar - the version of postgresql tried in the example.
+
+standalone-boot-demo.xml - the edited standalone boot config file used in the example. Modified from the original.
+
+log - the log from WildFly 8.1 showing that the example doesn't work.
+
+screenshot - a picture of the web page.
