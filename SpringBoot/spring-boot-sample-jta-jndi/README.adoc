@@ -2,5 +2,7 @@
 
 Originally taken from https://github.com/spring-projects/spring-boot/tree/master/spring-boot-samples/spring-boot-sample-jta-jndi
 
+Modified to be stand-alone, i.e., doesn't need the original parent pom so should be relatively stable across time.
+
 However, there have been some updates since then and at least one error in the original text. Check the jboss directory for more
 details.
