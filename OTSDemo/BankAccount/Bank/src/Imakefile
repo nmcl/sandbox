@@ -1,0 +1,37 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.8 1994/11/29 14:02:03 ngdp Exp $
+COMMENT
+
+SOURCES  = BankDriver.cc \
+	   Bank.cc \
+	   Account.cc \
+	   Applet.cc \
+	   JavaR.cc
+
+BUILDOBJECTS  = BankDriver.o \
+	        Bank.o \
+	        Account.o \
+		Applet.o \
+		JavaR.o
+
+AddCppFlags(-I$(ARJUNA_INCLUDES) -I../include -I/home/nmcl/DistC++/RPC/SimpleRpc/include)
+AddLibraries($(LIBOTS) $(LIBORBCOMMON) $(LIBARJUNA) $(LIBOTS) $(ORB_LIBS) -L/home/nmcl/Install/DistC++/lib -lCommon)
+
+AllTarget(BankDriver)
+
+MakeProgramCPLUSPLUS(BankDriver,$(BUILDOBJECTS),NOPARAM)
+
+BuildObjectCPLUSPLUS(BankDriver,NOPARAM)
+BuildObjectCPLUSPLUS(Bank,NOPARAM)
+BuildObjectCPLUSPLUS(Account,NOPARAM)
+BuildObjectCPLUSPLUS(Applet,NOPARAM)
+BuildObjectCPLUSPLUS(JavaR,NOPARAM)
+
+TidyTarget(BankDriver)
