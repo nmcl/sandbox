@@ -1,0 +1,42 @@
+COMMENT 
+COMMENT Copyright (C) 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1998/07/17 08:59:18 nmcl Exp $
+COMMENT
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+LIBRARIES = $(LIBCPPSIM) $(LIBSTAT) $(LIBCOMMON)
+
+OBJECTS = BitVector.o \
+	  BloomFilter.o \
+	  HashFunctions.o \
+	  IORHash.o \
+	  UidHash.o
+	  
+SOURCES = BitVector.cc \
+	  BloomFilter.cc \
+	  HashFunctions.cc \
+	  IORHash.cc \
+	  UidHash.cc
+
+AllTarget(BitVector BloomFilter HashFunctions IORHash UidHash)
+
+MakeObjectCPLUSPLUS(BitVector,NOPARAM)
+MakeObjectCPLUSPLUS(BloomFilter,NOPARAM)
+MakeObjectCPLUSPLUS(HashFunctions,NOPARAM)
+MakeObjectCPLUSPLUS(IORHash,NOPARAM)
+MakeObjectCPLUSPLUS(UidHash,NOPARAM)
+
+MakeProgramCPLUSPLUS(BitVector,BitVector.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(BloomFilter,BloomFilter.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(HashFunctions,HashFunctions.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(IORHash,IORHash.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(UidHash,UidHash.o $(LIBRARIES),NOPARAM)
+
+TidyTarget(BitVector BloomFilter HashFunctions IORHash UidHash *.class)

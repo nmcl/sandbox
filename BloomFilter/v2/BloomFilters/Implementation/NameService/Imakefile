@@ -1,0 +1,35 @@
+COMMENT 
+COMMENT Copyright (C) 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 1998/07/17 09:00:32 nmcl Exp $
+COMMENT
+
+SOURCES = Populator.cc \
+	  Searcher.cc
+
+OBJECTS = Populator.o \
+	  Searcher.o
+
+CLIENT_IDL = ../idl/dummy.o
+
+SERVER_IDL = ../idl/dummy.o \
+	     ../idl/dummy_i.o
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES) -I$(OMNIORB_ROOT)/include -I../idl -D__sparc__ -D__sunos__ -D__OSVERSION__=5 -DSYSV)
+
+SetLocalLibraries(-L$(OMNIORB_ROOT)/lib -lomniORB2 -lomnithread -ltcpwrapGK -lomniGK_stub -lomniLC $(LIBCOMMON))
+
+AllTarget(Populator Searcher)
+
+MakeObjectCPLUSPLUS(Populator,NOPARAM)
+MakeObjectCPLUSPLUS(Searcher,NOPARAM)
+
+MakeProgramCPLUSPLUS(Populator,Populator.o $(SERVER_IDL),NOPARAM)
+MakeProgramCPLUSPLUS(Searcher,Searcher.o $(CLIENT_IDL),NOPARAM)
+
+TidyTarget(Populator Searcher)

@@ -1,0 +1,35 @@
+COMMENT 
+COMMENT Copyright (C) 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.3 1998/07/17 09:04:39 nmcl Exp $
+COMMENT
+
+SOURCES = dummy.cc \
+	  dummy_i.cc
+
+OBJECTS = dummy.o \
+	  dummy_i.o
+
+dummy.cc: dummy.h
+
+SetLocalCppFlags(-I$(OMNIORB_ROOT)/include -D__sparc__ -D__sunos__ -D__OSVERSION__=5 -DSYSV)
+
+LIBRARIES = -L$(OMNIORB_ROOT)/lib -lomniORB2 -lomnithread -ltcpwrapGK -lomniGK_stub -lomniLC
+
+IDLCOMPILER = $(OMNIORB_ROOT)/bin/omniidl2
+IDLFLAGS= -s .cc -h .h
+
+AllTarget(dummy.h $(OBJECTS))
+
+dummy.h:
+	$(IDLCOMPILER) $(IDLFLAGS) dummy.idl
+
+MakeObjectCPLUSPLUS(dummy,NOPARAM)
+MakeObjectCPLUSPLUS(dummy_i,NOPARAM)
+
+TidyTarget(dummy.h dummy.cc *.o)

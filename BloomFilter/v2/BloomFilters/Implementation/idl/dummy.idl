@@ -1,0 +1,14 @@
+/*
+ * Copyright (C) 1998,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: dummy.idl,v 1.2 1998/07/17 09:00:15 nmcl Exp $
+ */
+
+interface dummy
+{
+};

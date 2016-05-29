@@ -1,0 +1,40 @@
+COMMENT 
+COMMENT Copyright (C) 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 1998/07/23 10:47:28 nmcl Exp $
+COMMENT
+
+SOURCES = Searcher.cc \
+	  Timer.cc \
+	  BloomFilter.cc \
+	  BloomFilterNameService.cc \
+	  Populator.cc
+
+OBJECTS = Searcher.o \
+	  Timer.o \
+	  BloomFilter.o \
+	  BloomFilterNameService.o \
+	  Populator.o
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES) -I.)
+
+SetLocalLibraries($(LIBCPPSIM) $(LIBSTAT) $(LIBCOMMON))
+
+AllTarget(Searcher Timer Populator)
+
+MakeObjectCPLUSPLUS(Searcher,NOPARAM)
+MakeObjectCPLUSPLUS(Timer,NOPARAM)
+MakeObjectCPLUSPLUS(Populator,NOPARAM)
+MakeObjectCPLUSPLUS(BloomFilter,NOPARAM)
+MakeObjectCPLUSPLUS(BloomFilterNameService,NOPARAM)
+
+MakeProgramCPLUSPLUS(Searcher, BloomFilter.o BloomFilterNameService.o Searcher.o,NOPARAM)
+MakeProgramCPLUSPLUS(Timer, BloomFilter.o BloomFilterNameService.o Timer.o,NOPARAM)
+MakeProgramCPLUSPLUS(Populator, BloomFilter.o BloomFilterNameService.o Populator.o,NOPARAM)
+
+TidyTarget(Searcher Timer Populator)

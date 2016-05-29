@@ -1,0 +1,57 @@
+COMMENT
+COMMENT Copyright (C) 1994
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1998/06/02 12:55:30 nnas Exp $
+COMMENT
+
+SOURCES  = Client.cc \
+	   Breaks.cc \
+	   Job.cc \
+	   Machine.cc \
+	   Network.cc \
+	   MainBody.cc \
+	   Simulation.cc \
+	   Server.cc \
+	   Results.cc \
+	   Receiver.cc \
+	   Queue.cc
+
+OBJECTS  = Client.o \
+	   Breaks.o \
+	   Job.o \
+	   Machine.o \
+	   Network.o \
+	   MainBody.o \
+	   Simulation.o \
+	   Server.o \
+	   Results.o \
+	   Receiver.o \
+	   Queue.o
+
+LIBRARIES = $(LIBCONTRIB) $(LIBCPPSIM) $(LIBCONTRIB) $(LIBCPPSIM) \
+            $(LIBCOMMON) $(LIBSTAT)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+AllTarget(Main)
+
+MakeProgramCPLUSPLUS(Main,$(OBJECTS) $(LIBRARIES),NOPARAM)
+
+MakeObjectCPLUSPLUS(Client,NOPARAM)
+MakeObjectCPLUSPLUS(Breaks,NOPARAM)
+MakeObjectCPLUSPLUS(Job,NOPARAM)
+MakeObjectCPLUSPLUS(Machine,NOPARAM)
+MakeObjectCPLUSPLUS(Network,NOPARAM)
+MakeObjectCPLUSPLUS(MainBody,NOPARAM)
+MakeObjectCPLUSPLUS(Simulation,NOPARAM)
+MakeObjectCPLUSPLUS(Server,NOPARAM)
+MakeObjectCPLUSPLUS(Results,NOPARAM)
+MakeObjectCPLUSPLUS(Receiver,NOPARAM)
+MakeObjectCPLUSPLUS(Queue,NOPARAM)
+
+TidyTarget(Main)
