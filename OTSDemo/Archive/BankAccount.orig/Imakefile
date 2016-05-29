@@ -1,0 +1,14 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT 
+COMMENT $Id: Imakefile,v 1.5 1994/12/15 12:25:06 ngdp Exp $
+COMMENT
+
+#define IHaveSubDirs
+
+AddSubDirectories(Bank)
