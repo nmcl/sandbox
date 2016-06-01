@@ -1,0 +1,23 @@
+D/Actions////
+D/ActivityCoordinator////
+D/ArjunaOTS////
+D/Interposition////
+D/Outcomes////
+D/SignalSets////
+D/Signals////
+/ActivityTokenImple.javatmpl/1.1/Mon Jul 23 14:44:50 2001//TRC_0_1
+/CosActivity.javatmpl/1.1/Mon Jul 23 14:44:50 2001//TRC_0_1
+/CosActivityAdministrationCurrentImple.javatmpl/1.1/Mon Jul 23 14:44:50 2001//TRC_0_1
+/ActivityContextElement.java/1.1/Mon Jul 23 14:44:50 2001//TRC_0_1
+/ActivityContextStructure.java/1.1/Mon Jul 23 14:44:50 2001//TRC_0_1
+/ActivityHierarchy.java/1.1/Mon Jul 23 14:44:50 2001//TRC_0_1
+/ActivityReaper.java/1.2/Thu Feb 28 12:43:36 2002//TRC_0_1
+/CosActivityCoordinationCurrentImple.javatmpl/1.2/Thu Feb 28 12:43:36 2002//TRC_0_1
+/CosActivityCurrentImple.javatmpl/1.2/Thu Feb 28 12:43:36 2002//TRC_0_1
+/Defaults.java/1.1/Mon Jul 23 14:44:52 2001//TRC_0_1
+/Environment.java/1.1/Mon Jul 23 14:44:52 2001//TRC_0_1
+/Imakefile/1.2/Thu Feb 28 12:43:36 2002//TRC_0_1
+/Info.javatmpl/1.1/Mon Jul 23 14:44:52 2001//TRC_0_1
+/Utility.javatmpl/1.1/Mon Jul 23 14:44:52 2001//TRC_0_1
+/tests/1.1/Mon Apr 29 10:10:08 2002//TRC_0_1
+/todo/1.1/Mon Apr 29 10:10:08 2002//TRC_0_1

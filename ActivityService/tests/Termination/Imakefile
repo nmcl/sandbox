@@ -1,0 +1,23 @@
+COMMENT 
+COMMENT Copyright (C) 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 2002/04/29 09:10:07 nmcl Exp $
+COMMENT
+
+SOURCES = OutOfOrderActivity.java \
+	  OutOfOrderTransaction.java
+
+OBJECTS = OutOfOrderActivity.class \
+	  OutOfOrderTransaction.class
+
+Target($(OBJECTS))
+
+BuildJavaByteCode(OutOfOrderActivity,NullParam)
+BuildJavaByteCode(OutOfOrderTransaction,NullParam)
+
+Clean(*.class)

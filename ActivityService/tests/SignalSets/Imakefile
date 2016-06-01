@@ -1,0 +1,23 @@
+COMMENT 
+COMMENT Copyright (C) 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 2001/07/23 13:45:01 nmcl Exp $
+COMMENT
+
+SOURCES = SynchronizationAction.java \
+	  ChildLifetimeAction.java
+
+OBJECTS = SynchronizationAction.class \
+	  ChildLifetimeAction.class
+
+Target($(OBJECTS))
+
+BuildJavaByteCode(SynchronizationAction,NullParam)
+BuildJavaByteCode(ChildLifetimeAction,NullParam)
+
+Clean(*.class)
