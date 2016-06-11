@@ -1,0 +1,3 @@
+#!/bin/sh
+
+java HelloServer -name testobject -class HelloImpl -binder JavaStubGenerator.rmi.RMIServerObjectBinder

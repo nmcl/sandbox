@@ -1,0 +1,19 @@
+COMMENT 
+COMMENT Copyright (C) 1996,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1997/07/31 09:13:07 nmcl Exp $
+COMMENT
+
+InstallFile(/config,JavaStubGenerator.tmpl)
+InstallFile(/config,JavaStubGenerator.cf)
+InstallFile(/config,JavaStubGenerator_Override.def)
+InstallFile(/config,JavaStubGenerator_Prog.def)
+InstallFile(/config,JavaStubGenerator_Rule.def)
+InstallFileAs(/config,Module_install.def,Module.def)
+
+Purge(JavaStubGenerator.cf Local.def Module.def Module_install.def)

@@ -1,0 +1,52 @@
+COMMENT 
+COMMENT Copyright (C) 1996, 1997,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1997/07/31 09:13:05 nmcl Exp $
+COMMENT
+
+SOURCES = Hello.java \
+	  MigrateHello.java \
+	  HelloImpl.java \
+	  StubGenerator.java \
+	  HelloArjunaApplet.java
+
+TESTOBJECTS = Hello.class \
+	      MigrateHello.class \
+	      HelloImpl.class \
+	      HelloArjunaApplet.class
+
+TESTSTUBS = HelloClient.java \
+	    HelloServer.java \
+            HelloClient.class \
+	    HelloServer.class \
+	    HelloServer_Stub.class \
+	    HelloServer_Skel.class
+
+OBJECTS = StubGenerator.class
+
+Target($(OBJECTS))
+
+#ifdef BUILDTESTS
+Target($(TESTSTUBS) $(TESTOBJECTS))
+#endif
+
+BuildJavaStubCode(Hello,NullParam,NullParam)
+
+BuildGlobalJavaRMIStubs(HelloServer,NullParam)
+
+BuildJavaByteCode(Hello,NullParam)
+BuildJavaByteCode(HelloImpl,NullParam)
+BuildJavaByteCode(StubGenerator,NullParam)
+BuildJavaByteCode(HelloArjunaApplet,NullParam)
+BuildJavaByteCode(HelloClient,NullParam)
+BuildJavaByteCode(HelloServer,NullParam)
+BuildJavaByteCode(MigrateHello,NullParam)
+
+Clean(HelloClient.java HelloServer.java)
+Clean(HelloMigrateClient.java HelloMigrateServer.java)
+Clean(*.class *.prof out)

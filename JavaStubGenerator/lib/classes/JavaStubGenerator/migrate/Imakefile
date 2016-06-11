@@ -1,0 +1,29 @@
+COMMENT 
+COMMENT Copyright (C) 1996, 1997,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1997/07/31 09:13:32 nmcl Exp $
+COMMENT
+
+SOURCES = MigrateStubCodeGenerator.java \
+	  MigrateStubCodeObject.java \
+	  MigrateObjectBinder.java \
+	  Migrate.java
+
+OBJECTS = MigrateStubCodeObject.class \
+	  MigrateStubCodeGenerator.class \
+	  Migrate.class \
+	  MigrateObjectBinder.class
+
+Target($(OBJECTS))
+
+BuildJavaByteCode(MigrateStubCodeGenerator,NullParam)
+BuildJavaByteCode(MigrateObjectBinder,NullParam)
+BuildJavaByteCode(MigrateStubCodeObject,NullParam)
+BuildJavaByteCode(Migrate,NullParam)
+
+Clean(*.class)

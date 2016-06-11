@@ -1,0 +1,20 @@
+COMMENT 
+COMMENT Copyright (C) 1996, 1997,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1997/07/31 09:13:36 nmcl Exp $
+COMMENT
+
+SOURCES = ObjectBinder.java
+
+OBJECTS = ObjectBinder.class
+
+Target($(OBJECTS))
+
+BuildJavaByteCode(ObjectBinder,NullParam)
+
+Clean(*.class)

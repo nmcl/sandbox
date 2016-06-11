@@ -1,0 +1,26 @@
+COMMENT 
+COMMENT Copyright (C) 1996, 1997,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 1997/08/05 14:43:01 nmcl Exp $
+COMMENT
+
+SOURCES = StubCodeGenerator.java \
+	  StubCodeObject.java \
+	  StubException.java
+
+OBJECTS = StubCodeGenerator.class \
+	  StubCodeObject.class \
+	  StubException.class
+
+Target($(OBJECTS))
+
+BuildJavaByteCode(StubCodeGenerator,NullParam)
+BuildJavaByteCode(StubCodeObject,NullParam)
+BuildJavaByteCode(StubException,NullParam)
+
+Clean(*.class)

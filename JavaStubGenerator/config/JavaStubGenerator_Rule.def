@@ -1,0 +1,26 @@
+/*
+ * Copyright (C) 1996,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: JavaStubGenerator_Rule.def,v 1.1 1997/07/31 09:13:10 nmcl Exp $
+ */
+
+/*
+ *  JavaStubGenerator_Rule.def
+ */
+
+/*
+ *  Generate Java Stub Code
+ */
+
+#ifndef BuildJavaStubCode
+#define BuildJavaStubCode(file,stubflags,javaflags)                        	@@\
+file/**/Client/**/.JAVASUFF file/**/Server/**/.JAVASUFF: file/**/.JAVASUFF	@@\
+	@echo Generating Java stub code for file/**/Client and file/**/Server	@@\
+	CommandPrefix($(JAVAC)) javaflags file/**/.JAVASUFF			@@\
+	CommandPrefix($(JAVAEXEC) $(JAVASTUBGEN)) javaflags stubflags -interface file
+#endif
