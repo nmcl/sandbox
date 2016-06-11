@@ -1,0 +1,17 @@
+sun.jws.version.1
+sun.jws.altText=If you had a java-enabled browser, you would see an applet here.
+sun.jws.alignment=Top
+sun.jws.classpath=/home/nmcl/Java/JWS/classes:/home/nmcl/Java/Arjuna/classes:/home/nmcl/Development/Java
+sun.jws.classname=Atomic.class
+sun.jws.type=applet
+sun.jws.instance=AtomicBank
+sun.jws.options=-g
+sun.jws.files=List
+Atomic.java
+Bank.java
+Globals.java
+EndOfList
+sun.jws.altHTML=List
+<hr>If your browser recognized the applet tag, 
+you would see an applet here.<hr>
+EndOfList

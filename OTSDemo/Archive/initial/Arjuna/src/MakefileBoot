@@ -1,0 +1,49 @@
+#
+# Makefile for creating the top-level test Makefile.
+#
+# Copyright (C) 1993
+# 
+# Department of Computing Science,
+# The University,
+# Newcastle upon Tyne,
+# UK.
+#
+# $Id: MakefileBoot.tmpl,v 1.2 1994/12/15 12:25:07 ngdp Exp $
+#
+
+MAKE                  = make
+IMAKE                 = imake
+IMAKE_TEMPLATE        = Config/Arjuna.tmpl
+MV		      = mv
+SED		      = sed
+RM		      = rm -f
+
+IMAKE_INCLUDE  = /home/nmcl/Install/CC3.0.1_Dbg_NoIn_g/include
+IMAKE_FLAGS    = "-DUseInstalled -DTOPDIR_DEFAULT=`pwd`"
+
+# The next line gets modified when configure is run
+IMAKE_INST_INCLUDE  = /home/nmcl/Install/CC3.0.1_Dbg_NoIn_g/include
+IMAKE_INST_FLAGS    = "-DUseInstalled -DTOPDIR_DEFAULT=`pwd`"
+
+Makefile.local ::
+	@echo
+	@echo "## Building root 'Makefile' ##"
+	@$(IMAKE) -T$(IMAKE_TEMPLATE) -I$(IMAKE_INCLUDE) $(IMAKE_FLAGS);$(MV) Makefile Makefile.sed;$(SED) -e '/^COMMENT$$/s//#/' -e '/^COMMENT /s//# /' < Makefile.sed > Makefile;$(RM) Makefile.sed
+	@echo
+
+Makefile.installed ::
+	@echo
+	@echo "## Building root 'Makefile' ##"
+	@$(IMAKE) -T$(IMAKE_TEMPLATE) -I$(IMAKE_INST_INCLUDE) $(IMAKE_INST_FLAGS);$(MV) Makefile Makefile.sed;$(SED) -e '/^COMMENT$$/s//#/' -e '/^COMMENT /s//# /' < Makefile.sed > Makefile;$(RM) Makefile.sed
+	@echo
+
+tidy clean purge ::
+	@echo "## Making $@ ##"
+	@if [ -f Makefile ]; \
+	then \
+		$(MAKE) $@; \
+	fi
+
+purge::
+	@$(RM) MakefileBoot
+
