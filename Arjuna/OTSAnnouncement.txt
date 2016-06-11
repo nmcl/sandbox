@@ -1,0 +1,29 @@
+OTSArjuna
+
+Steve Gaughey sent us the following note on the availability of a
+commercial OTS product that runs on omniORB2, among other ORBs.
+
+> Our OTS, called OTSArjuna, is highly portable and currently runs on -
+> omniORB2, ORBacus, Visibroker, Orbix (inc. versions 2.0.1MT, 2.1MT,
+> 2.2MT, 2.3cMT) RCP-ORB from Nortel, TAO and CorbaPlus - with the
+> following compilers - Sun's C++ 4.2 and 4.0 on Solaris 2.5.1 or Solaris
+> 2.6, HP's C++ compiler, g++ 2.7.x and 2.8.x and Visual C++ 5.0.
+> OTSArjuna is *fully* CORBA-compliant and includes support for nested
+> transactions.
+> We're listed as a success story by the OMG -
+>
+> http://www.corba.org/research.htm
+>
+> Recently we've created a company, Arjuna Solutions Ltd., to market our
+> OTS (and JTS) implementations. We offer free evaluations but do charge
+> for development and run-time licensing. Inexpensive academic licenses
+> are available.
+> Hopefully you'll agree that the availability of an OTS for omniORB2 will
+>
+> be interesting news for your existing customers and help encourage new
+> users to explore this technology.
+>
+> You can obtain more information about our products from our commercial
+> site -
+>
+> http://www.arjuna.com
