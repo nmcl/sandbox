@@ -1,0 +1,50 @@
+X-Mozilla-Status: 0001
+X-Mozilla-Status2: 00800000
+Message-ID: <435388AF.2000801@arjuna.com>
+Date: Mon, 17 Oct 2005 12:19:11 +0100
+From: Mark Little <mark.little@arjuna.com>
+User-Agent: Mozilla Thunderbird 1.0.6 (Windows/20050716)
+X-Accept-Language: en-us, en
+MIME-Version: 1.0
+To: jsr 156 <JSR-156-EG@JCP.ORG>
+Subject: a resend
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+
+Following on from my previous summary, it seems to me that we have come 
+well down the path of finalizing the MixedOutcomeTransaction API. If you 
+look back at the class diagram I send a few months ago (the one we 
+agreed to base the API on during our last vote), the remaining 
+interfaces, which are specific to the MixedOutcomeTransaction API, are:
+
+MixedOutcomeTransaction: this derives from UniformOutcomeTransaction and 
+provided cancel(Participant[]), confirm(Participant[]) and 
+ready(Participant[]) operations. Is there anything else we need to 
+consider adding to this interface?
+
+Likewise, the MixedOutcomeTransactionManager and 
+MixedOutcomeUserTransaction provide the same operations.
+
+One question: we are adding a getAllParticipants operation to the 
+UniformOutcome API. Should this return (i) just the byte array 
+representation of the participants, (ii) a list of Participant 
+interfaces, or (iii) both (i) and (ii)?
+
+In general, and without revisiting anything we've already voted on, can 
+anyone think of anything else that we're missing from the API?
+
+Mark.
+
+-- 
+Mark Little
+Chief Architect
+Arjuna Technologies Ltd
+www.arjuna.com
+
+-- 
+Mark Little
+Chief Architect
+Arjuna Technologies Ltd
+www.arjuna.com
+
+

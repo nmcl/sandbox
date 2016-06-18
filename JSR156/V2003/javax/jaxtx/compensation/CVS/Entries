@@ -1,0 +1,16 @@
+/AlreadyRegisteredException.java/1.1/Tue Jun 22 10:07:58 2004//
+/CompensationParticipant.java/1.1/Tue Jun 22 10:07:58 2004//
+/CompensationParticipantManager.java/1.2/Thu Dec 02 12:10:34 2004//
+/CompensationTransactionCancelledException.java/1.1/Tue Jun 22 10:07:59 2004//
+/CompensationTransactionManager.java/1.1/Wed Sep 14 11:12:54 2005//
+/NoCompensationTransactionException.java/1.1/Tue Jun 22 10:29:12 2004//
+/NotRegisteredException.java/1.1/Tue Jun 22 10:07:59 2004//
+/NotSupportedException.java/1.1/Tue Jun 22 10:07:59 2004//
+/Status.java/1.1/Tue Jun 22 10:07:59 2004//
+/SystemException.java/1.1/Tue Jun 22 10:07:59 2004//
+/UnknownCompensationTransactionException.java/1.1/Tue Jun 22 10:07:59 2004//
+/UnknownParticipantException.java/1.1/Tue Jun 22 10:07:59 2004//
+/UserCompensationTransaction.java/1.2/Thu Sep 16 10:06:26 2004//
+/WrongStateException.java/1.1/Tue Jun 22 10:07:59 2004//
+/CompensationTransaction.java/1.3/Fri Oct 21 09:26:56 2005//
+D

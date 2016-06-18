@@ -1,0 +1,897 @@
+X-Mozilla-Status: 0001
+X-Mozilla-Status2: 00000000
+Return-Path: <owner-jsr-156-eg@JCP.ORG>
+Delivered-To: mark.little@arjuna.com
+Received: from mailstore10.simplicato.com (localhost.simplicato.com [127.0.0.1])
+	by mailstore10.simplicato.com (Postfix) with ESMTP id C13D4497E046
+	for <mark.little@arjuna.com>; Wed, 12 Oct 2005 03:30:22 -0400 (EDT)
+Received: from mx11.simplicato.com (host90.simplicato.com [207.99.47.90])
+	by mailstore10.simplicato.com (Postfix) with ESMTP id AD3C8497E011
+	for <mark.little@arjuna.com>; Wed, 12 Oct 2005 03:30:22 -0400 (EDT)
+Received: from mx11.simplicato.com (localhost.simplicato.com [127.0.0.1])
+	by mx11.simplicato.com (Postfix) with ESMTP id AA3948220B5
+	for <mark.little@ARJUNA.COM>; Wed, 12 Oct 2005 03:30:21 -0400 (EDT)
+Received: from swjscmail2.java.sun.com (swjscmail2.Sun.COM [192.18.99.108])
+	by mx11.simplicato.com (Postfix) with ESMTP id 5E4B0821FB8
+	for <mark.little@ARJUNA.COM>; Wed, 12 Oct 2005 03:30:20 -0400 (EDT)
+Received: from swjscmail1 (swjscmail1.Sun.COM [192.18.99.107])
+	by swjscmail2.java.sun.com (Postfix) with ESMTP
+	id 4B17F2154A; Wed, 12 Oct 2005 01:30:02 -0600 (MDT)
+Received: from JAVA.SUN.COM by JAVA.SUN.COM (LISTSERV-TCP/IP release 1.8e) with
+          spool id 76408668 for JSR-156-EG@JAVA.SUN.COM; Wed, 12 Oct 2005
+          01:29:52 -0600
+X-Original-To: JSR-156-EG@JCP.ORG
+Delivered-To: JSR-156-EG@JCP.ORG
+Received: from mailrelay.eurospot.com (mailrelay.eurospot.com [62.39.81.196])
+          by swjscmail1.java.sun.com (Postfix) with ESMTP id F28EE4B0A; Wed, 12
+          Oct 2005 01:29:50 -0600 (MDT)
+Received: from [192.168.50.253] (unknown [213.27.192.154]) by
+          mailrelay.eurospot.com (Postfix) with ESMTP id C5DC4286CF6; Wed, 12
+          Oct 2005 09:30:07 +0200 (CEST)
+User-Agent: Mozilla Thunderbird 1.0.6 (Windows/20050716)
+X-Accept-Language: en-us, en
+MIME-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Message-ID:  <434CBB7E.1090609@arjuna.com>
+Date:         Wed, 12 Oct 2005 08:30:06 +0100
+Reply-To: Java Community Process JSR #156 Expert List <JSR-156-EG@JCP.ORG>
+Sender: Java Community Process JSR #156 Expert List <JSR-156-EG@JCP.ORG>
+From: Mark Little <mark.little@ARJUNA.COM>
+Subject: resend
+Comments: To: jsr 156 <JSR-156-EG@JCP.ORG>
+To: JSR-156-EG@JCP.ORG
+Precedence: list
+X-AV-Checked: ClamAV using ClamSMTP by Simplicato
+
+On the assumption that the mailing list doesn't like attachments, the
+following few messages are resends inline.
+
+
+Hearing no objections, let's change it to "ready".
+
+Mark.
+
+
+Mark Little wrote:
+
+> In the interests of moving this discussion forward, does anyone have any
+> objections to renaming "complete" to "ready" and ensuring that the
+> specification and associated javadocs are consistent on what this means
+> in terms of implementation semantics?
+>
+> Mark.
+>
+>
+> Furniss, Peter wrote:
+>
+>> Forwarded on Alastair's behalf:
+>>
+>> -----Original Message-----
+>> From: Green, Alastair J.
+>> Sent: 21 September 2005 11:09
+>> To: Furniss, Peter
+>> Subject: RE: [Fwd: Re: FW: thoughts on the mixed-mode compensation API
+>> (transaction interface)]
+>>
+>>
+>> Peter, can you forward to the list for me, thanks, Alastair
+>>
+>>
+>>
+>>
+>>
+>>> ----------
+>>> From:  Greg Pavlik[SMTP:GREG.PAVLIK@ORACLE.COM]
+>>> Sent:  Tuesday, September 20, 2005 5:50:59 PM
+>>> To:    JSR-156-EG@JCP.ORG
+>>> Subject:       Re: [Fwd: Re: FW: thoughts on the mixed-mode
+>>>
+>>>
+>> compensation API (transaction interface)]
+>>
+>>
+>>> Auto forwarded by a Rule
+>>>
+>>> On 1) I think the problem here is that the target protocols are not
+>>> designed with a provisional final model in mind with the exception of
+>>> BTP, with its more open semantic. BTP can't be boxed into a model for
+>>> WS-BusinessActivity; conversely, WS-BusinessActivity users will most
+>>> likely want to have an API that reflects the restrictions of the
+>>> protocol. Not sure that we will ever come up with a successful
+>>> unification that is satisfactory to all.
+>>>
+>>>
+>>
+>> Greg, I hope this is soluble. The key to consensus is agreement that we
+>> are working to create a protocol-independent API.
+>>
+>> The following protocols support a signal to indicate a fault processing
+>> the "confirm" / "commit" / "close" signal: BTP, WS-CAF TXM Acid, WS-CAF
+>> TXM LRA.
+>>
+>> The following protocols do not: WS-AT, WS-BA.
+>>
+>> WS-AT does not allow a fault signal after rollback either; WS-BA does.
+>>
+>> The implication of these variations are:
+>>
+>> BTP and the WS-CAF drafts expect that a user may implement a participant
+>> and it may not succeed in processing its reaction to confirm or cancel
+>> (technical failure of a general-purpose RM, technical or business logic
+>> exception in app-specific participant).
+>>
+>> WS-AT cleaves to the line: heuristic reporting is a matter for a
+>> separate protocol (signal the administrative console etc). This
+>> contradicts the notion that its primary authors have pushed -- that
+>> WS-AT signals might control app-specific participants. The likelihood of
+>> error in an app participant is higher than in a general-purpose RM.
+>> However, that's not our problem (in this place).
+>>
+>> WS-BA recognizes that app-defined work will likely fail, and allows the
+>> compensate processing to signal a fault; it pre-determines that close
+>> processing is a no-op, and therefore prevents signalling of any fault.
+>> This is wrong in my opinion, but is unlikely to change given the 15"
+>> corset of the OASIS WS-TX TC Charter.
+>>
+>> What this (known) variation indicates is that the API has to superset in
+>> order to be protocol-independent, which is a basic thrust agreed a while
+>> ago in the EG, after experimentation with protocol-oriented variants.
+>> The primary signals are broadly the same in all protocols, but the
+>> intent of the authors (target field of use) varies. We have to come up
+>> with an API that rises above one set of intents, and subsumes several.
+>>
+>> One example of this approach is the prior decision to allow an exception
+>> to be thrown on the Participant.confirm() -- it is not needed for all
+>> protocols, but it won't harm those who don't use it -- they will never
+>> throw the exception. This allows everyone to be "happy".
+>>
+>> Put another way, in this context: we have to use basic, general terms,
+>> not specific ones.
+>>
+>> I have suggested the term "ready". It is not "prepare/d" which has a
+>> distinctly ACIDic odour, as Mark points out. It is not "complete/d"
+>> which has a distinctly ONT/BPEL-style compensation odour. It is true of
+>> both approaches (and any shading inbetween): the participant is ready
+>> for the last coordinator instruction (commit, close etc etc).
+>>
+>> I think that both ends of the API can use ready (as an imperative, and
+>> as a statement) in the same way that confirm and cancel work both ways
+>> round.
+>>
+>>
+>> Alastair
+>>
+>> P.S. The taxonomy we use in Choreology for participant styles is:
+>> provisional-final, validate-do, do-compensate. Provisional-final is a
+>> Y-shaped state transition diagram. Start, goes to prepared, then either
+>> to confirmed or cancelled. Do-compensate blocks off the transition from
+>> prepared to confirmed, because prepared state = confirmed state = the
+>> good end. Validate-do stops off the prepared-cancelled transition,
+>> because getting ready equals validation which is a read-only activity,
+>> and therefore cancel becomes a no-op.
+>>
+>> If you want to write a compensation participant you therefore
+>> consciously eschew inserting user code in the implementation of
+>> confirm(). If you are really hard-core about this, you create an
+>> implementation of the Participant interface that has a finalized no-op
+>> implementation of confirm(), and your users can't go wrong.
+>>
+>>
+>>
+>>
+>> Mark Little wrote:
+>>
+>>
+>>
+>>> --
+>>> Mark Little
+>>> Chief Architect
+>>> Arjuna Technologies Ltd
+>>> (www.arjuna.com)
+>>>
+>>>
+>>> ----------------------------------------------------------------------
+>>> --
+>>>
+>>> Subject:
+>>> Re: FW: thoughts on the mixed-mode compensation API (transaction
+>>> interface)
+>>> From:
+>>> Alastair <alastair.green@choreology.com>
+>>> Date:
+>>> Mon, 19 Sep 2005 11:39:36 +0100
+>>> To:
+>>> Mark Little <mark.little@arjuna.com>
+>>>
+>>> To:
+>>> Mark Little <mark.little@arjuna.com>
+>>> CC:
+>>> Java Community Process JSR #156 Expert List <JSR-156-EG@JCP.ORG>
+>>>
+>>>
+>>> Mark,
+>>>
+>>> If you wouldn't mind, again, forwarding this. Thank you.
+>>>
+>>> Two points outstanding in my mind, subject to further comments from
+>>> others.
+>>>
+>>> *1. Prepare vs complete
+>>> *
+>>> Despite the thesaurus, prepared or ready are not synonyms of complete.
+>>>
+>>>
+>>
+>>
+>>
+>>> The first two mean: poised to act, resources gathered but not
+>>> deployed. The second means: has acted, finished.
+>>>
+>>> Much of human history hinges on optimistic confusions between
+>>> readiness and victory. The CIA prepared to invade Cuba at the Bay of
+>>> Pigs. The invasion was not completed.
+>>>
+>>> More prosaically (and stringently, as consent was never sought from or
+>>>
+>>>
+>>
+>>
+>>
+>>> offered by Cuba) --
+>>>
+>>> EXAMPLE A. I offer you a quote for this commodity in this quantity. Do
+>>>
+>>>
+>>
+>>
+>>
+>>> you wish to execute an order? No -- inventory released, provisional
+>>> reserve removed. Yes -- inventory definitely consumed, invoicing and
+>>> shipment processes unleased. "Have quoted, am /ready/ to accept your
+>>> order on these terms" does not equal "transaction /completed/".
+>>>
+>>> The only circumstance in which "complete" is even half-right is the
+>>> one where it is deemed that there is no further work to be done if the
+>>>
+>>>
+>>
+>>
+>>
+>>> transaction closes normally.
+>>>
+>>> EXAMPLE B: "If you click here to accept your motor insurance policy
+>>> will take effect immediately and your vehicle will be on cover. Due to
+>>>
+>>>
+>>
+>>
+>>
+>>> toothless and irritating consumer legislation this company is
+>>> compelled to offer you a cooling-off period of seven days, confident
+>>> that you will never figure out how to communicate with the relevant
+>>> department, even if you should be energetic enough to do so." The
+>>> "I've gone cold on this" e-mail (more likely paper letter) is a
+>>> compensation signal. Everything proceeds, money is taken, policies
+>>> written etc. If the signal does arrive subsequently we run a reversal
+>>> process. If it never arrives then, after seven days, we can close the
+>>> transaction, and no more work will be carried out. By a stretch, you
+>>> can argue that the transaction was completed before it closed. But you
+>>>
+>>>
+>>
+>>
+>>
+>>> cannot argue that an EXAMPLE A transaction is completed when it is
+>>> ready, by any stretch.
+>>>
+>>> That's why I say that the word "complete" is a narrow misnomer.
+>>>
+>>> *2. Selective cancel or confirm operations
+>>> *
+>>> Thinking over this again, I would suggest considering the following:
+>>>
+>>> I think the best we can do (given protocol variation) is to have the
+>>> rule that an illegal partial operation (for a given protocol or
+>>> implementation) will fault, to state that the wholesale operations are
+>>>
+>>>
+>>
+>>
+>>
+>>> not idempotent, and will fault on second+ attempt, and to state that a
+>>>
+>>>
+>>
+>>
+>>
+>>> transaction must be brought to an end by a wholesale operation. I
+>>> think this is how it should rest, othewise we incarnate prejudices and
+>>>
+>>>
+>>
+>>
+>>
+>>> assumptions which may be too restrictive for future developments.
+>>>
+>>> As I read WS-BA, for example, it is an implementation decision as to
+>>> policies on partial confirmation and cancellation. Whereas BTP does
+>>> not support partial confirm in its control sub-protocol.
+>>>
+>>> Faults concerned are something like:
+>>>
+>>> *InvalidPartialConfirmOperation*  Partial confirmation not supported
+>>> in this context. [might mean -- is never supported, might mean you
+>>> can't do that twice, thrice etc]
+>>> *InvalidPartialCancelOperation*  Partial cancellation not supported in
+>>>
+>>>
+>>
+>>
+>>
+>>> this context. [similar comments]
+>>> *TransactionCanceled*  Transaction has been canceled: no further
+>>> outcome operations can be performed.
+>>> *TransactionConfirmed*  Transaction has been confirmed: no further
+>>> outcome operations can be performed.
+>>>
+>>> Alastair
+>>>
+>>>
+>>> We assume that the protocol will support selective outcomes
+>>> (otherwise, go and use UniformOutcomeTransaction). If it supports "one
+>>>
+>>>
+>>
+>>
+>>
+>>> statement and you're done" then any attempt to use confirm or cancel
+>>> (in whole or in part) after the first use of confirm or cancel should
+>>> result in an exception, saying TransactionCancelled | Confirmed.
+>>>
+>>> You still have to allow prepareParticipants. It is difficult to see
+>>> how this could be illegal to be performed repetitivelyIf it supports
+>>> rolling behaviours, at an API level, we should simply allow the
+>>> repeated use of confirmParticipants | cancelParticipants, and allow
+>>> the implementation to throw an InvalidOperation or InvalidState or
+>>> somesuch if it gets tired. If the user calls confirm() or cancel()
+>>> then that's the end of that. Any use of confirm/cancel will cause the
+>>> outcome exceptions.
+>>>
+>>> If we take this approach, then we make no statements about the
+>>> feasibility of multiple calls, or their meaning. This allows for
+>>> protocol variation. If we Mark Little wrote:
+>>>
+>>>
+>>>
+>>>> Alastair wrote:
+>>>>
+>>>>
+>>>>
+>>>>> Hi Mark,
+>>>>>
+>>>>> Wd you mind forwarding to the list for me? Thanks, Alastair
+>>>>>
+>>>>> Not convinced that packaging Transaction in jaxtx doesn't
+>>>>> distinguish it sufficiently from JTA etc but not too concerned about
+>>>>>
+>>>>>
+>>
+>>
+>>
+>>>>> those names, so I would be happy also with Uniform |
+>>>>> MixedOutcomeTransaction.
+>>>>>
+>>>>> The intended meaning of "complete" is: "get into a state where you
+>>>>> can be confirmed or cancelled". This is known in all transaction
+>>>>> literature heretofore as "prepared" or "ready" (which latter term I
+>>>>> would settle for cheerfully, if we are seeking elegant variation of
+>>>>> specs).
+>>>>>
+>>>>> Complete is a compensation-specific (ONT-specific) notion, which
+>>>>> captures the fact that in that one pattern or model the
+>>>>> participant's prepared state of application data exactly equals its
+>>>>> confirmed state of application data (i.e. that the
+>>>>> prepared-to-confirm state transition is a no-op, can be disappeared
+>>>>> from the protoocol). But this API rightly admits the possibility of
+>>>>> that state transition actually occurring with effect on application
+>>>>> data. Therefore, "complete" is a narrow misnomer, and "prepare" is
+>>>>> accurate, sufficiently broad and well-understood.
+>>>>>
+>>>>>
+>>>> I'm not even going to mention the prepare-2PC association ;-)
+>>>>
+>>>> The use of "complete" is there for pragmatic reasons: we don't want
+>>>> to get into the argument about 2PC/ACID and "prepare" is too closely
+>>>> associated with ACID in many peoples minds (I know it should only be
+>>>> syntax, but there's a lot of semantics tied up with it too); plus
+>>>> "complete" is used by one of the protocols we want to support and
+>>>> doesn't necessarily have the baggage associate with it.
+>>>>
+>>>> However, if the EG wants to change it, then let's do so. I really
+>>>> don't want us to have to run a vote to get there though (although we
+>>>> can if we so decide). For now, let's try to have a straw-poll:
+>>>> current options are "complete", "prepare", "ready". Any more?
+>>>>
+>>>> BTW, you'll note here (http://thesaurus.reference.com/search?q=ready)
+>>>> that complete(d) is a synonym for ready (so is prepare(d)) ;-)
+>>>>
+>>>>
+>>>>
+>>>>> The distinction between Participant.cancel and
+>>>>> Participant.compensate is: the participant received the cancel
+>>>>> signal of the protocol before it had gone prepared, or after it had
+>>>>> gone prepared. As you point out there is not a one-to-one
+>>>>> correspondence with the Transaction side: it only requires a single
+>>>>> cancel([]) instruction. It would be preferable (see the earlier
+>>>>> points about its-not-just-compensation) to make these
+>>>>>
+>>>>>   cancelBeforePrepared()
+>>>>>   cancelAfterPrepared()
+>>>>>
+>>>>> The alignment I have in mind would look like this:
+>>>>>
+>>>>> Transaction.prepare      Participant.prepare
+>>>>> Transaction.confirm      Participant.confirm
+>>>>> Transaction.cancel        Participant.cancelBeforePrepared
+>>>>>                                   Participant.cancelAfterPrepared
+>>>>>
+>>>>>
+>>>> I don't have a problem with the cancelBeforeX or cancelAfterX
+>>>> pattern. Obviously X remains to be set.
+>>>>
+>>>> Again, it would be useful to hear from others too.
+>>>>
+>>>>
+>>>>
+>>>>> On the queston of rolling confirm/cancel.
+>>>>>
+>>>>> I would prefer to have API methods thus:
+>>>>>
+>>>>> cancelParticipants() = cancel them, but leave the transaction
+>>>>> outcome open
+>>>>> cance()  = close the transaction, cancel any outstanding
+>>>>> participants not already cancelled
+>>>>> confirmParticipants() = close the transaction with this subset
+>>>>> confirmed.
+>>>>> confirm() = close the transaction with all participants in the
+>>>>> confirm set.
+>>>>>
+>>>>>
+>>>> I think the issue with allowing the transaction to continue to run
+>>>> after a subset of participants have been cancelled/confirmed is one
+>>>> that our API shouldn't enforce. However, what about the situation
+>>>> where there are protocols/implementations that do not support that
+>>>> behaviour? It's important that user applications know the difference.
+>>>>
+>>>>
+>>
+>>
+>>
+>>>> One argument could be that you simply force the development of
+>>>> another API, i.e., "this is the way this API works and if you don't
+>>>> like it, then develop another". I'm not too keen on that. However,
+>>>> neither am I keen on providing an API that only allows lazy
+>>>> determination of this kind of characteristic, e.g., through a return
+>>>> value (TRANSACTION_TERMINATED or TRANSACTION_RUNNING, for instance).
+>>>>
+>>>> Maybe I'm over thinking this? But it's a Friday afternoon and it has
+>>>> been a very long week!
+>>>>
+>>>>
+>>>>
+>>>>> If we allow confirmParticipants() to be called more than once then
+>>>>> we partition the transaction (which is not odious, but is
+>>>>> heterodox). It's easier and less culturally revolting to do what you
+>>>>>
+>>>>>
+>>
+>>
+>>
+>>>>> suggest.
+>>>>>
+>>>>>
+>>>> Agreed. However, I think my comment above still applies for
+>>>> cancelParticipants.
+>>>>
+>>>>
+>>>>
+>>>>> Calling cancelParticipants() on a presumed abort protocol will cause
+>>>>>
+>>>>>
+>>
+>>
+>>
+>>>>> no log write; on a presumed nothing protocol it will, but that's a
+>>>>> trade off that a general API should permit but not comment on, in my
+>>>>>
+>>>>>
+>>
+>>
+>>
+>>>>> view.
+>>>>>
+>>>>> Why bother to have confirmParticipants() you may ask? We've come
+>>>>> across use cases where autocancellation by participants is a very
+>>>>> useful optimization. If you are forced to say: cancel A, B and D,
+>>>>> and then confirm (meaning confirm C and E), then we are wasting the
+>>>>> autocancels -- and we're also forcing the programmer to state a
+>>>>> short positive by writing a long negative.
+>>>>>
+>>>>>
+>>>> I don't see any major problems with adding support for
+>>>> confirmParticipants with the semantics we've discussed.
+>>>>
+>>>> Mark.
+>>>>
+>>>>
+>>>>
+>>>>> Alastair
+>>>>>
+>>>>> Mark Little wrote:
+>>>>>
+>>>>>
+>>>>>
+>>>>>> I'm cc-ing this to Alastair.
+>>>>>>
+>>>>>> Furniss, Peter wrote:
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>>> Forwarded on behalf of alastair
+>>>>>>> -----Original Message-----
+>>>>>>> From: Green, Alastair J. Sent: 14 September 2005 18:02
+>>>>>>> To: Furniss, Peter
+>>>>>>> Subject: RE: thoughts on the mixed-mode compensation API
+>>>>>>> (transaction
+>>>>>>> interface)
+>>>>>>>
+>>>>>>>
+>>>>>>> Can you post to list for me, thanks, Alastair?
+>>>>>>>
+>>>>>>> 1) I don't think that CompensationTransaction is the right name.
+>>>>>>> The transaction is about outcome combinations, not participant
+>>>>>>> behaviours. And the participant is capable of more than
+>>>>>>> compensation (see addition
+>>>>>>> of exception on the confirm operation). Therefore, I believe that
+>>>>>>>
+>>>>>>>
+>> we
+>>
+>>
+>>>>>>> should have two names, along the following lines:
+>>>>>>>
+>>>>>>> UniformOutcomeTransaction (or UniformTransaction)
+>>>>>>> MixedOutcomeTransaction (or MixedTransaction or
+>>>>>>> SelectiveOutcomeTransaction or SelectiveTransaction)
+>>>>>>>
+>>>>>>> My personal preference would be:
+>>>>>>>
+>>>>>>> Transaction and SelectiveTransaction
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>> I think Transaction is prone to misinterpretation, particularly
+>>>>>> since there already is such a beast within J2EE.
+>>>>>>
+>>>>>> However, I'd be happy with UniformOutcomeTransaction and
+>>>>>> MixedOutcomeTransaction.
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>>> 2) I don't like the name CompensationParticipant: it's a
+>>>>>>> Participant. You can do compensation with it (confirm is a no-op)
+>>>>>>> but you can also implement confirm, and that's not what is usually
+>>>>>>>
+>>>>>>>
+>>
+>>
+>>
+>>>>>>> meant by a compensation. At minimum, the BPEL meaning of
+>>>>>>> compensation (the Open Nested Transaction model) is widely
+>>>>>>> understood to be the definition of the term, and this participant
+>>>>>>> interface is (rightly) wider in its capabilities (it can, of
+>>>>>>> course, be used, by choice, in a limited way,
+>>>>>>> to do compensation).
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>> I'm happy to change it and I can't think of any alternative to
+>>>>>> Participant.
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>>> 3) Can we align the "top" names and the "bottom" names: if a
+>>>>>>> transaction cancels a participant can a participant please react
+>>>>>>> by processing an upcall that has cancel in its name (like "cancel"
+>>>>>>>
+>>>>>>>
+>>
+>>
+>>
+>>>>>>> or "doCancel")?
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>> Currently the CompensationTransaction has confirm/cancel/complete
+>>>>>> and CompensationParticipant has complete/cancel/compensate. But
+>>>>>> these aren't meant to map directly. I can see how we could change
+>>>>>> "complete" in the participant to "confirm", but there is no
+>>>>>> equivalent of "compensate" in the transaction API because that's
+>>>>>> not something applications can drive explicitly: it's the domain of
+>>>>>>
+>>>>>>
+>>
+>>
+>>
+>>>>>> the coordinator. In both cases, the transaction is required to
+>>>>>> "cancel", but whether "cancel" or "compensate" is called on the
+>>>>>> participant will depend upon which state in the transaction
+>>>>>> protocol the participant has reached.
+>>>>>>
+>>>>>> So does changing complete to confirm work for you?
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>>> 4) Presumably unqualified cancel() and confirm() automatically
+>>>>>>> mean: all
+>>>>>>> participants. They have to be available on both uniform and
+>>>>>>> selective, because selective needs a "full stop": this is the last
+>>>>>>>
+>>>>>>>
+>>
+>>
+>>
+>>>>>>> thing we are going to do, move to the confirmed state if you can.
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>> Yes, that's what I meant by ensuring the specification and javadocs
+>>>>>>
+>>>>>>
+>>
+>>
+>>
+>>>>>> are clear on this.
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>>> The question of
+>>>>>>> rolling confirm is interesting: if you have a
+>>>>>>> confirmParticipants() then
+>>>>>>> you pose the question of the recovery semantics: must each partial
+>>>>>>>
+>>>>>>>
+>>
+>>
+>>
+>>>>>>> confirm be logged or is that an implementation issue? BTP chose
+>>>>>>> only to have a prepare inferiors and a cancel inferiors signal on
+>>>>>>> its control protocol, for simplicity, but that does carry an
+>>>>>>> implication of presumed
+>>>>>>> abort.
+>>>>>>>
+>>>>>>>
+>>>>>> Do you have a preference? I must admit I wasn't assuming a rolling
+>>>>>> confirm, but rather the semantics would be an implicit
+>>>>>> cancel/compensate on all other participants and the end of the
+>>>>>> transaction.
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>>> 4) cancelParticipants() and confirmParticipants() seem like good
+>>>>>>> names (leaving aside the worry about a confirmP stated above),
+>>>>>>> other than the
+>>>>>>> fact that the thing below me may be a "sub-transaction", an
+>>>>>>> interposed
+>>>>>>> transaction (which of course in the scheme proposed is not visible
+>>>>>>> at an
+>>>>>>> interface level, but is created by implementation of Participant
+>>>>>>>
+>>>>>>>
+>> and
+>>
+>>
+>>>>>>> SelectiveTransaction). I don't see this as fundamental.
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>> Actually I'm fairly neutral about the names and my first choice was
+>>>>>> cancel([]) and confirm([]); I chose the more explicit names simply
+>>>>>> for clarity during the discussion.
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>>> 5) I think the term "complete" to mean "prepare" is confusing and
+>>>>>>> too loaded with compensation-only assumptions. I would propose
+>>>>>>> that
+>>>>>>> prepareParticipants() be used, and we have Participant.doPrepare()
+>>>>>>>
+>>>>>>>
+>> in
+>>
+>>
+>>>>>>> the same vein.
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>> There's obviously still debate in the general community about
+>>>>>> whether or not "complete" means "prepare".  I'd prefer to leave the
+>>>>>>
+>>>>>>
+>>
+>>
+>>
+>>>>>> operation as "complete" and perhaps update the javadocs text to
+>>>>>> make it clearer what MAY happen.
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>>> Peter is writing on identity matters.
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>> Thanks Alastair.
+>>>>>>
+>>>>>> Mark.
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>>> Alastair
+>>>>>>>
+>>>>>>> -----Original Message-----
+>>>>>>> From: Furniss, Peter Sent: 14 September 2005 13:59
+>>>>>>> To: Green, Alastair J.
+>>>>>>> Subject: FW: thoughts on the mixed-mode compensation API
+>>>>>>> (transaction
+>>>>>>> interface)
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>>>> ----------
+>>>>>>>> From:  Mark Little[SMTP:MARK.LITTLE@ARJUNA.COM]
+>>>>>>>> Sent:  Wednesday, September 14, 2005 1:58:53 PM
+>>>>>>>> To:    JSR-156-EG@JCP.ORG
+>>>>>>>> Subject:       thoughts on the mixed-mode compensation API
+>>>>>>>> (transaction
+>>>>>>>>
+>>>>>>>>
+>>>>>>>>
+>>>>>>>
+>>>>>>> interface)
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>>>> Auto forwarded by a Rule
+>>>>>>>>
+>>>>>>>>
+>>>>>>>>
+>>>>>>>>
+>>>>>>>
+>>>>>>> As per the diagram I sent round on the 25th of July, the
+>>>>>>> mixed-mode outcome API is an optional extension of the current
+>>>>>>> atomic outcome API.
+>>>>>>>
+>>>>>>> First question: does anyone have any strong opinion on whether or
+>>>>>>> not we should rename all of the atomic outcome interfaces/classes
+>>>>>>> to explicitly
+>>>>>>> call out their "atomic-ness"? So, for example,
+>>>>>>> CompensationTransaction
+>>>>>>> would become AtomicCompensationTransaction. I really don't care
+>>>>>>> either
+>>>>>>> way, but it's worth checking with the EG.
+>>>>>>>
+>>>>>>> Starting with the actual transaction interface: in the atomic API
+>>>>>>> it's called CompensationTransaction (currently), so for simplicity
+>>>>>>>
+>>>>>>>
+>>
+>>
+>>
+>>>>>>> we'd have
+>>>>>>> a derived interface which (provisionally) we'll call
+>>>>>>> MixedCompensationTransaction. This interface would provide
+>>>>>>> cancelParticipants and confirmParticipants operations, all of
+>>>>>>> which take
+>>>>>>> a list of participants to either cancel or confirm respectively.
+>>>>>>>
+>>>>>>> This raises the following issues:
+>>>>>>>
+>>>>>>> (i) we would need to ensure that the javadocs for all of the
+>>>>>>> atomic APIs make it clear that the goal of any implementation is
+>>>>>>> to be atomic. So,
+>>>>>>> in this case, cancel/complete/confirm must make it clear that they
+>>>>>>> operate on all registered participants.
+>>>>>>>
+>>>>>>> (ii) do we need a completeParticipants method in
+>>>>>>> MixedCompensationTransaction?
+>>>>>>>
+>>>>>>> (iii) we obviously need some way to uniquely identify which
+>>>>>>> participants to cancel or confirm when using mixed. Ignorning what
+>>>>>>>
+>>>>>>>
+>>
+>>
+>>
+>>>>>>> that information
+>>>>>>> is for a moment, this leads to the obvious question: where does
+>>>>>>>
+>>>>>>>
+>> that
+>>
+>>
+>>>>>>> information come from? In the case of the atomic outcome, it's not
+>>>>>>> needed: the terminator leaves all of that up to the coordinator.
+>>>>>>> In this
+>>>>>>> case, however, we're giving that fine grained control over to
+>>>>>>> something
+>>>>>>> that sits outside of the coordinator. On the one hand, we could
+>>>>>>> simply
+>>>>>>> say that it is outside the scope of this specification to say how
+>>>>>>>
+>>>>>>>
+>> the
+>>
+>>
+>>>>>>> information is obtained. On the other hand, we could provide a
+>>>>>>> getAllParticipants (sp?) operation on the
+>>>>>>> MixedCompensationTransaction
+>>>>>>> interface, which returns the list of currently registered
+>>>>>>> participants.
+>>>>>>>
+>>>>>>> (iv) coming back to how participants are identified. I'd suggest
+>>>>>>> that a byte array is suitably abstract enough to handle most/all
+>>>>>>> implementations. Does anyone have any other suggestions?
+>>>>>>>
+>>>>>>>
+>> Furthermore,
+>>
+>>
+>>>>>>> irrespective of the format, I'd also suggest that we add an
+>>>>>>> identification method to the CompensationParticipant
+>>>>>>>
+>>>>>>>
+>> (getIdentity?)
+>>
+>>
+>>>>>>> If we can get some of these issues dealt with, I think we should
+>>>>>>> be well on the way to completing!
+>>>>>>>
+>>>>>>> Mark.
+>>>>>>>
+>>>>>>> --
+>>>>>>> Mark Little
+>>>>>>> Chief Architect
+>>>>>>> Arjuna Technologies Ltd
+>>>>>>> www.arjuna.com
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>
+>>>>> Choreology Anti virus scan completed
+>>>>>
+>>>>>
+>>>>>
+>>> Choreology Anti virus scan completed
+>>>
+>>>
+>>>
+>
+
+--
+Mark Little
+Chief Architect
+Arjuna Technologies Ltd
+www.arjuna.com
+

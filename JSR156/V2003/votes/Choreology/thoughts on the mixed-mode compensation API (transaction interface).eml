@@ -1,0 +1,137 @@
+X-Mozilla-Status: 0001
+X-Mozilla-Status2: 00800000
+Message-ID: <434112D0.60501@arjuna.com>
+Date: Mon, 03 Oct 2005 12:15:28 +0100
+From: Mark Little <mark.little@arjuna.com>
+User-Agent: Mozilla Thunderbird 1.0.6 (Windows/20050716)
+X-Accept-Language: en-us, en
+MIME-Version: 1.0
+To: Java Community Process JSR #156 Expert List <JSR-156-EG@JCP.ORG>
+Subject: Re: thoughts on the mixed-mode compensation API (transaction interface)
+References: <43281E8D.9050104@arjuna.com>
+In-Reply-To: <43281E8D.9050104@arjuna.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+
+Summarizing the discussions we had around this email inline:
+
+Mark Little wrote:
+
+> As per the diagram I sent round on the 25th of July, the mixed-mode
+> outcome API is an optional extension of the current atomic outcome API.
+>
+> First question: does anyone have any strong opinion on whether or not we
+> should rename all of the atomic outcome interfaces/classes to explicitly
+> call out their "atomic-ness"? So, for example, CompensationTransaction
+> would become AtomicCompensationTransaction. I really don't care either
+> way, but it's worth checking with the EG.
+
+UniformOutcomeTransaction and MixedOutcomeTransaction.
+
+>
+> Starting with the actual transaction interface: in the atomic API it's
+> called CompensationTransaction (currently), so for simplicity we'd have
+> a derived interface which (provisionally) we'll call
+> MixedCompensationTransaction.
+
+MixedOutcomeTransaction.
+
+> This interface would provide
+> cancelParticipants and confirmParticipants operations, all of which take
+> a list of participants to either cancel or confirm respectively.
+
+CompensationParticipant changed to Participant.
+
+confirmParticipants terminates the transaction, confirming those 
+participants mentioned in the parameter list and cancelling the others. 
+cancelParticipants does not automatically terminate the transaction. If 
+you want to cancel and terminate, then use cancel.
+
+Also, confirmParticipants becomes confirm(Participants[]) and 
+cancelParticipants becomes cancel(Participants[]) (pseudo-code).
+
+>
+> This raises the following issues:
+>
+> (i) we would need to ensure that the javadocs for all of the atomic APIs
+> make it clear that the goal of any implementation is to be atomic. So,
+> in this case, cancel/complete/confirm must make it clear that they
+> operate on all registered participants.
+
+cancel/ready/confirm
+
+Unqualified cancel/confirm mean terminate the transaction in that state, 
+across all registered participants.
+
+>
+> (ii) do we need a completeParticipants method in
+> MixedCompensationTransaction?
+
+We will add one of these, though it will be called ready(Participants[]) 
+(with a similar change to the current complete method).
+
+>
+> (iii) we obviously need some way to uniquely identify which participants
+> to cancel or confirm when using mixed. Ignorning what that information
+> is for a moment, this leads to the obvious question: where does that
+> information come from? In the case of the atomic outcome, it's not
+> needed: the terminator leaves all of that up to the coordinator. In this
+> case, however, we're giving that fine grained control over to something
+> that sits outside of the coordinator. On the one hand, we could simply
+> say that it is outside the scope of this specification to say how the
+> information is obtained. On the other hand, we could provide a
+> getAllParticipants (sp?) operation on the MixedCompensationTransaction
+> interface, which returns the list of currently registered participants.
+
+We add a getAllParticipants method to the base atomic transaction 
+protocol. The specification will ensure that this is an optional 
+signature and an appropriate exception will be thrown if the underlying 
+implementation does not support it.
+
+>
+> (iv) coming back to how participants are identified. I'd suggest that a
+> byte array is suitably abstract enough to handle most/all
+> implementations. Does anyone have any other suggestions? Furthermore,
+> irrespective of the format, I'd also suggest that we add an
+> identification method to the CompensationParticipant (getIdentity?)
+
+We define a byte array for the identity and require it to be set on the 
+enlistment interface. Thus, the registration component of the 
+application is required to manage the creation of these participant 
+identifiers.
+
+>
+> If we can get some of these issues dealt with, I think we should be well
+> on the way to completing!
+
+
+Furthermore, as per Alastair's suggestion:
+
+Transaction.prepare      Participant.prepare
+Transaction.confirm      Participant.confirm
+Transaction.cancel        Participant.cancelBeforeReady
+                                    Participant.cancelAfterReady
+
+Any comments or something I might have missed? If not, I'll record these 
+as changes we need to make. I'll send round another email asap on 
+further progressions.
+
+Mark.
+
+>
+> Mark.
+>
+> -- 
+> Mark Little
+> Chief Architect
+> Arjuna Technologies Ltd
+> www.arjuna.com
+>
+
+-- 
+Mark Little
+Chief Architect
+Arjuna Technologies Ltd
+www.arjuna.com
+
+

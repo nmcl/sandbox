@@ -1,0 +1,54 @@
+Received: from cheviot2.ncl.ac.uk (root@cheviot2.ncl.ac.uk [128.240.234.82] (may be forged))
+	by burnmoor.ncl.ac.uk (8.9.3/8.9.3) with ESMTP id TAA09800
+	for <nmcl4@burnmoor.ncl.ac.uk>; Tue, 21 Dec 2004 19:39:21 GMT
+Received: from swjscmail2.java.sun.com (swjscmail2.Sun.COM [192.18.99.108])
+	by cheviot2.ncl.ac.uk (8.12.10/8.12.10) with ESMTP id iBLJd5k3018966
+	for <mark.little@ARJUNA.COM>; Tue, 21 Dec 2004 19:39:06 GMT
+Received: from swjscmail1 (swjscmail1.Sun.COM [192.18.99.107])
+	by swjscmail2.java.sun.com (Postfix) with ESMTP
+	id 2B36C212BD; Tue, 21 Dec 2004 12:31:47 -0700 (MST)
+Received: from JAVA.SUN.COM by JAVA.SUN.COM (LISTSERV-TCP/IP release 1.8e) with
+          spool id 51026633 for JSR-156-EG@JAVA.SUN.COM; Tue, 21 Dec 2004
+          12:26:31 -0700
+X-Original-To: JSR-156-EG@JCP.ORG
+Delivered-To: JSR-156-EG@JCP.ORG
+Received: from cheviot5.ncl.ac.uk (cheviot5.ncl.ac.uk [128.240.233.122]) by
+          swjscmail1.java.sun.com (Postfix) with ESMTP id CDC6B4A33 for
+          <JSR-156-EG@JCP.ORG>; Tue, 21 Dec 2004 12:26:30 -0700 (MST)
+Received: from [10.8.1.197] (pandon4.ncl.ac.uk [10.8.1.197]) by
+          cheviot5.ncl.ac.uk (8.12.11/8.12.10) with ESMTP id iBLJcN97027247;
+          Tue, 21 Dec 2004 19:38:57 GMT
+Mime-Version: 1.0 (Apple Message framework v606)
+Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Mailer: Apple Mail (2.606)
+X-Newcastle-MailScanner: Found to be clean, Found to be clean
+Message-ID:  <81659828-532C-11D9-8188-00039399DACE@arjuna.com>
+Date:         Tue, 21 Dec 2004 08:44:19 +0000
+Reply-To: Java Community Process JSR #156 Expert List <JSR-156-EG@JCP.ORG>
+Sender: Java Community Process JSR #156 Expert List <JSR-156-EG@JCP.ORG>
+From: Mark Little <mark.little@ARJUNA.COM>
+Subject: any problems with layering of APIs?
+Comments: To: Java Community Process JSR #156 Expert List <JSR-156-EG@JCP.ORG>
+Comments: cc: "Alastair J. Green" <Alastair.Green@choreology.com>
+To: JSR-156-EG@JCP.ORG
+Precedence: list
+X-Newcastle-MailScanner-Information: Please contact Postmaster@newcastle.ac.uk for more information
+X-Newcastle-MailScanner-From: owner-jsr-156-eg@jcp.org
+Content-Length: 467
+
+In environments where both JTA-atomic and compensation models are
+required within the same client/application, are there issues with
+layering of that support that we need to consider? I suppose this
+includes: is the ability to combine both models naturally and
+conveniently currently adversely affected by something in the
+specification? Do we need to say more than we currently do?
+
+Mark.
+
+----
+Mark Little,
+Chief Architect,
+Arjuna Technologies Ltd.
+
+www.arjuna.com

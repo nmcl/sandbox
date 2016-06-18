@@ -1,0 +1,143 @@
+Received: from cheviot2.ncl.ac.uk (root@cheviot2.ncl.ac.uk [128.240.234.82] (may be forged))
+	by burnmoor.ncl.ac.uk (8.9.3/8.9.3) with ESMTP id LAA25066
+	for <nmcl4@burnmoor.ncl.ac.uk>; Tue, 4 Jan 2005 11:10:04 GMT
+Received: from swjscmail2.java.sun.com (swjscmail2.Sun.COM [192.18.99.108])
+	by cheviot2.ncl.ac.uk (8.12.11/8.12.10) with ESMTP id j04B9P07005102
+	for <mark.little@ARJUNA.COM>; Tue, 4 Jan 2005 11:09:26 GMT
+Received: from swjscmail1 (swjscmail1.Sun.COM [192.18.99.107])
+	by swjscmail2.java.sun.com (Postfix) with ESMTP
+	id 798D621FC3; Tue,  4 Jan 2005 04:02:01 -0700 (MST)
+Received: from JAVA.SUN.COM by JAVA.SUN.COM (LISTSERV-TCP/IP release 1.8e) with
+          spool id 52696578 for JSR-156-EG@JAVA.SUN.COM; Tue, 4 Jan 2005
+          03:56:44 -0700
+X-Original-To: JSR-156-EG@JCP.ORG
+Delivered-To: JSR-156-EG@JCP.ORG
+Received: from cheviot5.ncl.ac.uk (cheviot5.ncl.ac.uk [128.240.233.122]) by
+          swjscmail1.java.sun.com (Postfix) with ESMTP id 827254DDF for
+          <JSR-156-EG@JCP.ORG>; Tue,  4 Jan 2005 03:56:43 -0700 (MST)
+Received: from exhp (exhp.atl.ncl.ac.uk [10.9.10.133]) by cheviot5.ncl.ac.uk
+          (8.12.11/8.12.10) with SMTP id j04B99b5007257 for
+          <JSR-156-EG@JCP.ORG>; Tue, 4 Jan 2005 11:09:14 GMT
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+              boundary="----=_NextPart_000_1640_01C4F24B.A1AF5D70"
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2741.2600
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2742.200
+X-Newcastle-MailScanner: Found to be clean, Found to be clean
+Message-ID:  <17d901c4f24d$970b24b0$850a090a@exhp>
+Date:         Tue, 4 Jan 2005 10:53:32 -0000
+Reply-To: Java Community Process JSR #156 Expert List <JSR-156-EG@JCP.ORG>
+Sender: Java Community Process JSR #156 Expert List <JSR-156-EG@JCP.ORG>
+From: Mark Little <mark.little@ARJUNA.COM>
+Subject: integration layer for foreign implementations
+Comments: To: jsr 156 <JSR-156-EG@JCP.ORG>
+To: JSR-156-EG@JCP.ORG
+Precedence: list
+X-Newcastle-MailScanner-Information: Please contact Postmaster@newcastle.ac.uk for more information
+X-Newcastle-MailScanner-From: owner-jsr-156-eg@jcp.org
+Content-Length: 3685
+
+This is a multi-part message in MIME format.
+
+------=_NextPart_000_1640_01C4F24B.A1AF5D70
+Content-Type: text/plain;
+        charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
+
+Sent on behalf of Madhav, who's on holiday.
+
+The general problem statement, which applies across all supported=20
+transaction models is:
+
+A SOAP request comes in from a sender with coordination and transaction
+information. The recipient is a J2EE artifact (say, an EJB) The J2EE=20
+artifact is in fact a
+proxy for an Enterprise Information System (EIS) artifact (say, a COBOL
+program). The J2EE proxy object needs to propagate this transaction to=20
+the
+EIS. The EIS DOES NOT have a Java footprint and needs to reconstruct the
+coordination and transaction objects using the appropriate stacks.
+
+There are a number of questions that arise:
+
+Do we have enough information in the supported interfaces so that the=20
+EIS can reconstruct the coordination and transaction using the=20
+appropriate stacks?
+
+If we assume we are working in a pure J2EE environment then is this=20
+still a problem? Can we realistically make such an assumption?
+
+Since the JTA does not mention this and the JCA is meant as a solution=20
+to transaction interoperability , can we do anything sensible in this=20
+area alone?
+
+Do we want to restrict this problem to just the compensation based API?
+
+
+Mark.
+
+----
+Mark Little,
+Chief Architect,
+Arjuna Technologies Ltd.
+=20
+www.arjuna.com
+
+
+------=_NextPart_000_1640_01C4F24B.A1AF5D70
+Content-Type: text/html;
+        charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META http-equiv=3DContent-Type content=3D"text/html; charset=3Dwindows-125=
+2">
+<META content=3D"MSHTML 6.00.2745.2800" name=3DGENERATOR>
+<STYLE></STYLE>
+</HEAD>
+<BODY bgColor=3D#ffffff>
+<DIV><FONT face=3DArial size=3D2>Sent on behalf of Madhav, who's on=20
+holiday.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV>The general problem statement, which applies across all supported=20
+<BR>transaction models is:<BR><BR>A SOAP request comes in from a sender wit=
+h=20
+coordination and transaction<BR>information. The recipient is a J2EE artifa=
+ct=20
+(say, an EJB) The J2EE <BR>artifact is in fact a<BR>proxy for an Enterprise=
+=20
+Information System (EIS) artifact (say, a COBOL<BR>program). The J2EE proxy=
+=20
+object needs to propagate this transaction to <BR>the<BR>EIS. The EIS DOES =
+NOT=20
+have a Java footprint and needs to reconstruct the<BR>coordination and=20
+transaction objects using the appropriate stacks.<BR><BR>There are a number=
+ of=20
+questions that arise:<BR><BR>Do we have enough information in the supported=
+=20
+interfaces so that the <BR>EIS can reconstruct the coordination and transac=
+tion=20
+using the <BR>appropriate stacks?<BR><BR>If we assume we are working in a p=
+ure=20
+J2EE environment then is this <BR>still a problem? Can we realistically mak=
+e=20
+such an assumption?<BR><BR>Since the JTA does not mention this and the JCA =
+is=20
+meant as a solution <BR>to transaction interoperability , can we do anythin=
+g=20
+sensible in this <BR>area alone?<BR><BR>Do we want to restrict this problem=
+ to=20
+just the compensation based API?<BR></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>Mark.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>----<BR>Mark Little,<BR>Chief Architect,<B=
+R>Arjuna=20
+Technologies Ltd.<BR>&nbsp;<BR><A=20
+href=3D"http://www.arjuna.com">www.arjuna.com</A><BR></FONT></DIV></BODY></=
+HTML>
+
+------=_NextPart_000_1640_01C4F24B.A1AF5D70--

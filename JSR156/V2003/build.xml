@@ -1,0 +1,131 @@
+<project name="JAXTX" default="com.arjuna.jaxtx.jar" basedir=".">
+	<!-- class path behaviour -->
+	<property name="build.sysclasspath" value="last"/>
+
+	<!-- Set module name -->
+	<property name="com.arjuna.jaxtx.internal.modulename" value="jaxtx"/>
+
+	<!-- Load Build Properties File -->
+	<property file="${com.arjuna.jaxtx.properties}"/>
+
+	<!-- Set internal property defaults -->
+
+	<property name="com.arjuna.jaxtx.installationdirectory"
+	location="C:/progra~1/jsr156"/>
+
+	<!-- Path names -->
+	<property name="com.arjuna.jaxtx.internal.src" value="javax"/>
+	<property name="com.arjuna.jaxtx.internal.dest.root" value="build"/>
+	<property name="com.arjuna.jaxtx.internal.dest" value="build/classes"/>
+	<property name="com.arjuna.jaxtx.internal.jar.dest" value="lib"/>
+	<property name="com.arjuna.jaxtx.internal.javadocs.dest"
+	value="javadocs"/>
+
+	<!-- Initialisation -->
+	<target name="com.arjuna.jaxtx.internal.init">
+		<!-- Define default build properties -->
+		<tstamp>
+			<format property="com.arjuna.jaxtx.date" pattern="yyyy/mm/dd hh:mm aa"/>
+		</tstamp>
+		<!-- Make the destination directory -->
+		<mkdir dir="${com.arjuna.jaxtx.internal.dest}"/>
+	</target>
+
+	<!-- Compilation targets -->
+	<target name="com.arjuna.jaxtx.compile"
+	depends="com.arjuna.jaxtx.internal.compile, com.arjuna.jaxtx.javadocs"/>
+
+	<target name="com.arjuna.jaxtx.internal.compile" depends="com.arjuna.jaxtx.internal.init">
+		<echo message="Compiling module"/>
+		<javac srcdir="${com.arjuna.jaxtx.internal.src}"
+                       destdir="${com.arjuna.jaxtx.internal.dest}"
+                       excludes="${com.arjuna.jaxtx.internal.compile.excludes}"
+                       debug="yes"
+	        >
+			<classpath>
+				<path path="${com.arjuna.jaxtx.internal.src}"/>
+			</classpath>
+		</javac>
+
+	</target>
+
+	<!-- javadocs paths -->
+	<path id="com.arjuna.jaxtx.javadocs.path">
+		<pathelement path="."/>
+	</path>
+
+	<property name="com.arjuna.jaxtx.javadocs.list"
+	value="javax.jaxtx.*"/>
+
+	<!-- Jar targets -->
+	<target name="com.arjuna.jaxtx.jar" depends="com.arjuna.jaxtx.compile">
+		<echo message="Building jar file"/>
+		<mkdir dir="${com.arjuna.jaxtx.internal.jar.dest}"/>
+		<jar jarfile="${com.arjuna.jaxtx.internal.jar.dest}/${com.arjuna.jaxtx.internal.modulename}.jar" basedir="${com.arjuna.jaxtx.internal.dest}"/>
+	</target>
+
+	<target name="com.arjuna.jaxtx.javadocs"
+				depends="com.arjuna.jaxtx.internal.init">
+		<echo message="Building javadocs "/>
+		<mkdir dir="${com.arjuna.jaxtx.internal.javadocs.dest}"/>
+		<path id="com.arjuna.jaxtx.internal.javadocs.path">
+			<path refid="com.arjuna.jaxtx.javadocs.path"/>
+		</path>
+
+		<javadoc
+			sourcepathref="com.arjuna.jaxtx.internal.javadocs.path"
+			destdir="${com.arjuna.jaxtx.internal.javadocs.dest}"
+			packagenames="${com.arjuna.jaxtx.javadocs.list}"
+	        >
+			<classpath>
+				<path path="${com.arjuna.jaxtx.internal.src}"/>
+			</classpath>
+		</javadoc>
+	</target>
+
+	<target name="install" depends="com.arjuna.jaxtx.jar">
+
+		<echo message="Installation directory : ${com.arjuna.jaxtx.installationdirectory}"/>
+
+		<echo message="Installing jar files"/>
+		<mkdir dir="${com.arjuna.jaxtx.installationdirectory}/lib"/>
+		<copy
+			todir="${com.arjuna.jaxtx.installationdirectory}/lib"
+		>
+			<fileset dir="lib">
+				<include name="*.jar"/>
+			</fileset>
+		</copy>
+
+		<echo message="Installing xml"/>
+		<mkdir dir="${com.arjuna.jaxtx.installationdirectory}/xml"/>
+		<copy
+			todir="${com.arjuna.jaxtx.installationdirectory}/xml"
+		>
+			<fileset dir="xml"/>
+		</copy>
+
+		<echo message="Installing javadocs"/>
+		<mkdir dir="${com.arjuna.jaxtx.installationdirectory}/javadocs"/>
+		<copy
+			todir="${com.arjuna.jaxtx.installationdirectory}/javadocs"
+		>
+			<fileset dir="javadocs"/>
+		</copy>
+
+	</target>
+
+	<!-- Clean targets -->
+	<target name="com.arjuna.jaxtx.clean">
+		<echo message="Cleaning module"/>
+		<delete dir="${com.arjuna.jaxtx.internal.dest}"/>
+		<delete dir="${com.arjuna.jaxtx.internal.dest.root}"/>
+		<delete dir="${com.arjuna.jaxtx.internal.javadocs.dest}"/>
+		<delete dir="${com.arjuna.jaxtx.internal.jar.dest}"/>
+	</target>
+
+	<!-- Short target names -->
+	<target name="compile" depends="com.arjuna.jaxtx.compile"/>
+	<target name="jar" depends="com.arjuna.jaxtx.jar"/>
+	<target name="clean" depends="com.arjuna.jaxtx.clean"/>
+</project>

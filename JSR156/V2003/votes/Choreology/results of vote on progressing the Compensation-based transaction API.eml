@@ -1,0 +1,71 @@
+Received: from cheviot5.ncl.ac.uk (root@cheviot5.ncl.ac.uk [128.240.233.122])
+	by burnmoor.ncl.ac.uk (8.9.3/8.9.3) with ESMTP id JAA17715
+	for <nmcl4@burnmoor.ncl.ac.uk>; Fri, 29 Jul 2005 09:26:07 +0100 (BST)
+Received: from swjscmail2.java.sun.com (swjscmail2.Sun.COM [192.18.99.108])
+	by cheviot5.ncl.ac.uk (8.12.11/8.12.10) with ESMTP id j6T8PkQw030947
+	for <mark.little@ARJUNA.COM>; Fri, 29 Jul 2005 09:25:47 +0100
+Received: from swjscmail1 (swjscmail1.Sun.COM [192.18.99.107])
+	by swjscmail2.java.sun.com (Postfix) with ESMTP
+	id 5C3B6217D8; Fri, 29 Jul 2005 02:17:30 -0600 (MDT)
+Received: from JAVA.SUN.COM by JAVA.SUN.COM (LISTSERV-TCP/IP release 1.8e) with
+          spool id 70732216 for JSR-156-EG@JAVA.SUN.COM; Fri, 29 Jul 2005
+          02:11:08 -0600
+X-Original-To: JSR-156-EG@JCP.ORG
+Delivered-To: JSR-156-EG@JCP.ORG
+Received: from mk-smarthost-3.mail.uk.tiscali.com
+          (mk-smarthost-3.mail.uk.tiscali.com [212.74.114.39]) by
+          swjscmail1.java.sun.com (Postfix) with ESMTP id B7B534AD2 for
+          <JSR-156-EG@JCP.ORG>; Fri, 29 Jul 2005 02:11:07 -0600 (MDT)
+Received: from dsl-80-43-121-74.access.as9105.com ([80.43.121.74]:49259) by
+          mk-smarthost-3.mail.uk.tiscali.com with esmtp (Exim 4.30) id
+          1DyQBc-0006YA-N1 for JSR-156-EG@JCP.ORG; Fri, 29 Jul 2005 08:25:44
+          +0000
+User-Agent: Mozilla Thunderbird 1.0.6 (Macintosh/20050716)
+X-Accept-Language: en-us, en
+MIME-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Message-ID:  <42E9E7E9.8000500@arjuna.com>
+Date:         Fri, 29 Jul 2005 09:25:13 +0100
+Reply-To: Java Community Process JSR #156 Expert List <JSR-156-EG@JCP.ORG>
+Sender: Java Community Process JSR #156 Expert List <JSR-156-EG@JCP.ORG>
+From: Mark Little <mark.little@arjuna.com>
+Subject: results of vote on progressing the Compensation-based transaction API
+Comments: To: Java Community Process JSR #156 Expert List <JSR-156-EG@JCP.ORG>
+To: JSR-156-EG@JCP.ORG
+Precedence: list
+X-Newcastle-MailScanner-Information: Please contact Postmaster@newcastle.ac.uk for more information
+X-Newcastle-MailScanner: Found to be clean
+X-Newcastle-MailScanner-MCPCheck: MCP-Clean, MCP-Checker (score=0,
+	required 1)
+X-Newcastle-MailScanner-From: owner-jsr-156-eg@jcp.org
+Content-Length: 555
+
+Here is the result of the following vote:
+
+----
+
+"Do you agree that we should provide support for mixed participant
+outcomes in the compensation transaction API, such that it is possible
+to have disjoint compensation and non-compensation sets of participants
+within the same tranasction?"
+
+----
+
+Abstain:
+Yes: 8
+No:
+Did not vote: 1
+
+So this vote passes in favour of adding a mixed-mode capability within
+the specification.
+
+Which brings us to the two proposals on the table.
+
+Mark.
+
+--
+Mark Little
+Chief Architect
+Arjuna Technologies Ltd
+(www.arjuna.com)

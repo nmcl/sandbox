@@ -1,0 +1,121 @@
+Received: from cheviot2.ncl.ac.uk (root@cheviot2.ncl.ac.uk [128.240.234.82] (may be forged))
+	by burnmoor.ncl.ac.uk (8.9.3/8.9.3) with ESMTP id KAA25505
+	for <nmcl4@burnmoor.ncl.ac.uk>; Thu, 16 Dec 2004 10:28:59 GMT
+Received: from swjscmail2.java.sun.com (swjscmail2.Sun.COM [192.18.99.108])
+	by cheviot2.ncl.ac.uk (8.12.10/8.12.10) with ESMTP id iBGASANN004233
+	for <mark.little@ARJUNA.COM>; Thu, 16 Dec 2004 10:28:10 GMT
+Received: from swjscmail1 (swjscmail1.Sun.COM [192.18.99.107])
+	by swjscmail2.java.sun.com (Postfix) with ESMTP
+	id 4C585217A8; Thu, 16 Dec 2004 03:20:51 -0700 (MST)
+Received: from JAVA.SUN.COM by JAVA.SUN.COM (LISTSERV-TCP/IP release 1.8e) with
+          spool id 50234000 for JSR-156-EG@JAVA.SUN.COM; Thu, 16 Dec 2004
+          03:15:38 -0700
+X-Original-To: JSR-156-EG@JCP.ORG
+Delivered-To: JSR-156-EG@JCP.ORG
+Received: from cheviot5.ncl.ac.uk (cheviot5.ncl.ac.uk [128.240.233.122]) by
+          swjscmail1.java.sun.com (Postfix) with ESMTP id 2674648BF for
+          <JSR-156-EG@JCP.ORG>; Thu, 16 Dec 2004 03:15:38 -0700 (MST)
+Received: from exhp (exhp.atl.ncl.ac.uk [10.9.10.133]) by cheviot5.ncl.ac.uk
+          (8.12.11/8.12.10) with SMTP id iBGARigA008742 for
+          <JSR-156-EG@JCP.ORG>; Thu, 16 Dec 2004 10:27:49 GMT
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+              boundary="----=_NextPart_000_06EA_01C4E359.9C9BFEC0"
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2741.2600
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2742.200
+X-Newcastle-MailScanner: Found to be clean, Found to be clean
+Message-ID:  <06f201c4e359$a0001150$850a090a@exhp>
+Date:         Thu, 16 Dec 2004 10:25:49 -0000
+Reply-To: Java Community Process JSR #156 Expert List <JSR-156-EG@JCP.ORG>
+Sender: Java Community Process JSR #156 Expert List <JSR-156-EG@JCP.ORG>
+From: Mark Little <mark.little@ARJUNA.COM>
+Subject: result of vote on JTA api
+Comments: To: jsr 156 <JSR-156-EG@JCP.ORG>
+To: JSR-156-EG@JCP.ORG
+Precedence: list
+X-Newcastle-MailScanner-Information: Please contact Postmaster@newcastle.ac.uk for more information
+X-Newcastle-MailScanner-From: owner-jsr-156-eg@jcp.org
+Content-Length: 2628
+
+This is a multi-part message in MIME format.
+
+------=_NextPart_000_06EA_01C4E359.9C9BFEC0
+Content-Type: text/plain;
+        charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
+
+The result of the following vote:
+
+Do you agree that, as in the 0.5 version of the specification, the JTA API =
+is sufficient for transaction demarcation and participant registration when=
+ the underlying Web Services transaction model is based on strict ACID sema=
+ntics that are compatible with the X/Open XA specification as required by t=
+he JTA?
+
+was:
+
+YES 9 votes
+NO   0 votes
+ABSTAIN 0 votes
+
+So that vote passes.
+
+Mark.
+
+----
+Mark Little,
+Chief Architect,
+Arjuna Technologies Ltd.
+=20
+www.arjuna.com
+
+
+
+
+------=_NextPart_000_06EA_01C4E359.9C9BFEC0
+Content-Type: text/html;
+        charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META http-equiv=3DContent-Type content=3D"text/html; charset=3Dwindows-125=
+2">
+<META content=3D"MSHTML 6.00.2745.2800" name=3DGENERATOR>
+<STYLE></STYLE>
+</HEAD>
+<BODY bgColor=3D#ffffff>
+<DIV><FONT face=3DArial size=3D2>The result of the following vote:</FONT></=
+DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV>
+<DIV><FONT face=3DArial size=3D2>Do you agree that, as in the 0.5 version o=
+f the=20
+specification,&nbsp;the JTA API is sufficient for transaction demarcation a=
+nd=20
+participant registration when the underlying Web Services transaction model=
+=20
+is&nbsp;based on strict ACID semantics that are compatible with the X/Open =
+XA=20
+specification as required by the JTA?</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>was:</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>YES 9 votes</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>NO&nbsp;&nbsp; 0 votes</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>ABSTAIN 0 votes</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>So that vote passes.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>Mark.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>----<BR>Mark Little,<BR>Chief Architect,<B=
+R>Arjuna=20
+Technologies Ltd.<BR>&nbsp;<BR><A=20
+href=3D"http://www.arjuna.com">www.arjuna.com</A><BR></FONT></DIV></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV></BODY></HTML>
+
+------=_NextPart_000_06EA_01C4E359.9C9BFEC0--

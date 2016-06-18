@@ -1,0 +1,68 @@
+Received: from cheviot1.ncl.ac.uk (root@cheviot1.ncl.ac.uk [128.240.233.15])
+	by burnmoor.ncl.ac.uk (8.9.3/8.9.3) with ESMTP id PAA17396
+	for <nmcl4@burnmoor.ncl.ac.uk>; Fri, 14 Jan 2005 15:32:25 GMT
+Received: from swjscmail2.java.sun.com (swjscmail2.Sun.COM [192.18.99.108])
+	by cheviot1.ncl.ac.uk (8.12.11/8.12.10) with ESMTP id j0EFW9Xi009562
+	for <mark.little@ARJUNA.COM>; Fri, 14 Jan 2005 15:32:14 GMT
+Received: from swjscmail1 (swjscmail1.Sun.COM [192.18.99.107])
+	by swjscmail2.java.sun.com (Postfix) with ESMTP
+	id 3DED52127A; Fri, 14 Jan 2005 08:24:36 -0700 (MST)
+Received: from JAVA.SUN.COM by JAVA.SUN.COM (LISTSERV-TCP/IP release 1.8e) with
+          spool id 53665836 for JSR-156-EG@JAVA.SUN.COM; Fri, 14 Jan 2005
+          08:19:17 -0700
+X-Original-To: JSR-156-EG@JAVA.SUN.COM
+Delivered-To: JSR-156-EG@JAVA.SUN.COM
+Received: from swjscmail2.java.sun.com (swjscmail2.Sun.COM [192.18.99.108]) by
+          swjscmail1.java.sun.com (Postfix) with ESMTP id DE1354AB9 for
+          <JSR-156-EG@JAVA.SUN.COM>; Fri, 14 Jan 2005 08:19:16 -0700 (MST)
+Received: from swjscmail1 (swjscmail1.Sun.COM [192.18.99.107]) by
+          swjscmail2.java.sun.com (Postfix) with ESMTP id 50D3F2127A for
+          <JSR-156-EG@JAVA.SUN.COM>; Fri, 14 Jan 2005 08:24:35 -0700 (MST)
+Message-ID:  <LISTSERV%2005011408191667@JAVA.SUN.COM>
+Date:         Fri, 14 Jan 2005 08:19:16 -0700
+Reply-To: Java Community Process JSR #156 Expert List <JSR-156-EG@JCP.ORG>
+Sender: Java Community Process JSR #156 Expert List <JSR-156-EG@JCP.ORG>
+From: Gary Tully <gary.tully@IONA.COM>
+Subject: Issue: How does a third party jax-rpc implementation flow a transaction in a J2EE environment?
+To: JSR-156-EG@JCP.ORG
+Precedence: list
+X-Newcastle-MailScanner-Information: Please contact Postmaster@newcastle.ac.uk for more information
+X-Newcastle-MailScanner: Found to be clean
+X-Newcastle-MailScanner-From: owner-jsr-156-eg@jcp.org
+Content-Length: 1080
+
+Question:
+How does a third party jax-rpc implementation or arbirary transport flow a
+JXTX atomic transaction in a J2EE environment?
+
+Answer:
+It does not!
+
+Issue:
+Is this acceptable?
+
+Context
+I think not:
+
+1) Because pluggable transports are an important part of JAX-RPC, 2.0
+introduces plug ability at all levels.
+2) The XML representation of a WS-?? transaction is self describing and
+protocol independent, hence sufficient for flow.
+3) providing jxtx.atomic. assessors to the current XML propagation context
+seems like a simple and obvious solution.
+
+E.g.:
+ package javax.jxtx.atomic;
+ import org.w3c.dom.Node;
+ public Interface XMLTransactionContext {
+ Node getCurrent() throws NoContext;
+ void setCurrent(Node) throws ContextExists, UnRecognisedContext
+ }
+
+A third party transport uses getCurrent() before an outbound call and
+setCurrent() on an inbound call. The format and means of transport are
+irrelvant, the important thing is that the underlying WX-?? transaction
+flows.
+
+Surely this is what WS-?? TX specs are all about, a JXTX atomic transaction
+could flow over mail.

@@ -1,0 +1,261 @@
+Received: from cheviot4.ncl.ac.uk (IDENT:U2FsdGVkX18EfPA8GA9uYhRCUml+7WJqPIvdH5tkKWM@cheviot4.ncl.ac.uk [128.240.234.66])
+	by burnmoor.ncl.ac.uk (8.9.3/8.9.3) with ESMTP id WAA13756
+	for <nmcl4@burnmoor.ncl.ac.uk>; Sat, 23 Apr 2005 22:04:45 +0100 (BST)
+Received: from swjscmail2.java.sun.com (swjscmail2.Sun.COM [192.18.99.108])
+	by cheviot4.ncl.ac.uk (8.12.11/8.12.10) with ESMTP id j3NL4ZLn031304
+	for <mark.little@ARJUNA.COM>; Sat, 23 Apr 2005 22:04:36 +0100
+Received: from swjscmail1 (swjscmail1.Sun.COM [192.18.99.107])
+	by swjscmail2.java.sun.com (Postfix) with ESMTP
+	id 32EEB21C47; Sat, 23 Apr 2005 14:56:45 -0600 (MDT)
+Received: from JAVA.SUN.COM by JAVA.SUN.COM (LISTSERV-TCP/IP release 1.8e) with
+          spool id 61745677 for JSR-156-EG@JAVA.SUN.COM; Sat, 23 Apr 2005
+          14:50:55 -0600
+X-Original-To: JSR-156-EG@JCP.ORG
+Delivered-To: JSR-156-EG@JCP.ORG
+Received: from mk-smarthost-3.mail.uk.tiscali.com
+          (mk-smarthost-3.mail.uk.tiscali.com [212.74.114.39]) by
+          swjscmail1.java.sun.com (Postfix) with ESMTP id 895FB4A52 for
+          <JSR-156-EG@JCP.ORG>; Sat, 23 Apr 2005 14:50:54 -0600 (MDT)
+Received: from dsl-80-43-120-180.access.as9105.com ([80.43.120.180]:50385) by
+          mk-smarthost-3.mail.uk.tiscali.com with esmtp (Exim 4.30) id
+          1DPRnk-0002b1-E5 for JSR-156-EG@JCP.ORG; Sat, 23 Apr 2005 21:04:32
+          +0000
+User-Agent: Mozilla Thunderbird 1.0 (Macintosh/20041206)
+X-Accept-Language: en-us, en
+MIME-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Message-ID:  <426AB861.10505@arjuna.com>
+Date:         Sat, 23 Apr 2005 22:04:33 +0100
+Reply-To: Java Community Process JSR #156 Expert List <JSR-156-EG@JCP.ORG>
+Sender: Java Community Process JSR #156 Expert List <JSR-156-EG@JCP.ORG>
+From: Mark Little <mark.little@ARJUNA.COM>
+Subject: result of vote for integration of 3rd parties
+Comments: To: Java Community Process JSR #156 Expert List <JSR-156-EG@JCP.ORG>
+To: JSR-156-EG@JCP.ORG
+Precedence: list
+X-Newcastle-MailScanner-Information: Please contact Postmaster@newcastle.ac.uk for more information
+X-Newcastle-MailScanner: Found to be clean
+X-Newcastle-MailScanner-From: owner-jsr-156-eg@jcp.org
+Content-Length: 9999
+
+Here is the result of the following vote:
+
+----
+
+Amendments to JSR-156 Specification for Issue: integration of 3rd parties
+-------------------
+
+Section 4.1 AtomicTransactions, delete the last line of the first
+paragraph, the following text:
+ "This means that no additional interfaces are required by J2EE providers."
+
+Add a new section as follows:
+
+Section 4.1.1 Access to Transaction Context
+
+In J2EE, JTA does not provide a means to access the context associated with
+the current transaction. Hence, it is not possible to flow the JTA
+transaction in an application specific manner, using a third party
+transport for example.
+
+The javax.jaxtx.AtomicTransaction interface provides a means to obtain the
+current JTA transaction context as XML and a means to set the current JTA
+transaction from an XML context. The contents of the XML are defined by the
+underlying web service atomic transaction specification's schema. The
+content is sufficient to flow the current transaction between interoperable
+implementations of the underlying specification. In other words, this
+interface can be used, within the confines of the supported web service
+transaction specification, to explicitly export a JTA transaction as a web
+service transaction and explicitly import a web service transaction to JTA.
+
+The returned context representation is XML because all of the evolving Web
+services transaction specifications define an XML representation of a
+transaction that is sufficient to flow the transaction between
+interoperable implementations of the specifications.
+
+The AtomicTransaction interface is obtained via JNDI lookup. This interface
+is available to all components.
+The exact JNDI name is application server or JAXTX vendor dependent. This
+is the case because there may be more than one JAXTX implementation
+available in an application server and a given JAXTX implementation may
+support more than one web service atomic transaction specification. It is
+not reasonable to require a single standard entity to encompass this
+potential complexity. When the need arises, the multiplicity of
+AtomicTransaction instances should by handled by the application server or
+JXTX vendor.
+
+An instance of AtomicTransaction does not represent a specific transaction,
+rather it represents the current JTA transaction, accessible from
+javax.transaction.TransactionManager.getTransaction().
+
+The AtomicTransaction.toXML() method provides access to the XML
+representation of the current transaction as an org.w3c.dom.Node. The
+contents of the Node are defined by a specific supported web service atomic
+transaction specification's schema. The content is sufficient to flow the
+transaction between interoperable implementations of the supported
+specification.
+If there is no current JTA transaction, that is,
+javax.transaction.TransactionManager.getTransaction() returns null, toXML()
+also returns null.
+If the implementation encounters an unexpected internal error that does not
+allow this operation to succeed the javax.transaction.SystemException is
+thrown. Exception chaining should be used to associate the underlying root
+cause with the thrown exception. The implementation must insure that all
+relevant exceptions are reported using an appropriate logging facility.
+The toXML() method does not affect the thread transaction association as
+defined by JTA.
+
+A typical invoker would flow the current transaction using a third party
+JAX-RPC provider by using document literal encoding to transform the
+returned non-null XML context Node into a SOAP header.
+
+A typical implementation would leverage the application servers or JAXTX
+vendors' internal support for web service transaction propagation to obtain
+the relevant XML representation of the current JTA transaction.
+
+An XML context may be associated with the current thread using the
+AtomicTransaction.fromXML(org.w3c.dom.Node context) method.
+If this method completes successfully, the current thread is associated
+with a JTA transaction that represents the XML context parameter. The
+mechanism that allows this to happen is implementation and web services
+atomic transaction specification, specific. For example, interposition may
+be required to transform the received context into the native format
+supported by the local implementation of JTA. The implementation must
+ensure that ACID properties are maintained across the conversion.
+If the current thread already has a JTA transaction association, the
+java.lang.IllegalStateException is thrown. If the XML content format is not
+recognised or not supported the javax.transaction.NotSupportedException is
+thrown. If the XML content is supported but invalid, incomplete or has
+expired, the javax.transaction.InvalidTransactionException is thrown. If
+the implementation encounters an unexpected internal error that does not
+allow this operation to succeed, the javax.transaction.SystemException is
+thrown. In all cases, exception chaining should be used to associate the
+underlying root cause with the thrown exception.
+The implementation must insure that all relevant exceptions are reported
+using an appropriate logging facility.
+
+For those familiar with JTS, the AtomicTransaction interface provides a
+mechanism that is analogous to explicit propagation and interposition. The
+toXML() method maps to Coordinator.get_txcontext(), in other words, obtain
+an interoperable representation that can be propagated. The fromXML()
+method
+maps to TransactionFactory.recreate(), that is, make the transaction
+represented
+by the propagation context locally available doing interposition or
+bridging as
+appropriate.
+
+
+The toXML() method of an AtomicTransaction instance will always return XML
+that conforms to the schema of a single web services atomic transaction
+specification. If the current JTA transaction must be propagated to servers
+supporting multiple web services transaction specifications, then multiple
+instances of AtomicTransaction must be used; one corresponding to each of
+the required web services transaction specifications.
+
+The fromXML() method does not have this restriction, it is possible for a
+single implementation to support many specifications but such support is
+optional. A typical implementation would throw
+javax.transaction.NotSupportedException for all but a single supported web
+service transaction specification schema type.
+In the event that multiple specifications are supported, the implementation
+must ensure that the ACID properties are maintained across transformations
+and that bridging mechanisms are used internally where appropriate.
+
+
+API with javadoc
+----------------
+
+package javax.jaxtx.atomic;
+
+import javax.transaction.InvalidTransactionException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.SystemException;
+import java.lang.IllegalStateException;
+
+/**
+* This interface provides a means to transform the current JTA
+* transaction to and from an XML representation. The XML
+* representation conforms to the schema of a web services atomic
+* transaction specification and is sufficient to flow the transaction
+* between interoperable implementations of that specification.
+* The implementation manages the association between the XML
+* representation and the current JTA transaction such they both
+* represent the same unit of work. The ACID properties of the
+* transaction are be maintained through the transformation.
+* This interface can be used, within the confines of the supported web
+* service transaction specification, to explicitly export a JTA
+* transaction as a web service transaction and explicitly import a web
+* service transaction to JTA.
+*/
+public interface AtomicTransaction {
+
+/**
+* Allows read access to the XML representation of the JTA
+* transaction associated with the current thread. The contents of
+* the Node are defined by the supported atomic transaction
+* specification's schema. The contents are sufficient to flow the
+* transaction between interoperable implementations of the
+* specification. This method does not change the JTA thread
+* transaction association.
+*
+* @throws SystemException if an unexpected internal error prevented
+* the successful completion of this operation. Exception chaining is
+* used to associate the root cause with this exception.
+*
+* @return a Node containing an XML representation of the current
+* transaction or null if there is no transaction.
+*/
+org.w3c.dom.Node toXML() throws SystemException;
+
+
+/**
+* Sets the current JTA thread transaction using the supplied XML
+* context. Upon successful completion the JTA transaction associated
+* with the current thread represents the XML context. The
+* implementation manages the association between the entities
+* identified in the context and JTA such that they both represent the
+* same unit of work. The ACID properties of the transaction identified
+* by the context are maintained through the transformation.
+*
+* @param context that contains the XML representation of a transaction
+* as defined by a web services atomic transaction specification
+* schema. The contents are sufficient to flow the transaction between
+* interoperable implementations of the specification.
+*
+* @throws IllegalStateException if the thread is already associated
+* with a JTA transaction.
+* @throws NotSupportedException if the context type or schema is not
+* supported.
+* @throws InvalidTransactionException if the context is supported but
+* is invalid, incomplete or has expired. Exception chaining is used to
+* associate the root cause with this exception.
+* @throws SystemException if an unexpected internal error prevents the
+* successful completion of this operation. Exception chaining is used
+* to associate the root cause with this exception.
+*
+*/
+
+void fromXML(org.w3c.dom.Node context) throws IllegalStateException,
+   NotSupportedException,
+   InvalidTransactionException,
+   SystemException;
+}
+
+----
+
+Abtain: 1
+Yes: 4
+No: 0
+Did not vote: 4
+
+So the vote passed.
+
+Mark.
+
+--
+Mark Little
+Chief Architect
+Arjuna Technologies Ltd
+(www.arjuna.com)
