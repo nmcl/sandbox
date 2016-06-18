@@ -1,0 +1,50 @@
+On 2001-11-05 Oracle voted Yes with no comment.
+------------------------------------------------------------------------------
+On 2001-11-05 Compaq Computer Corporation voted Yes with no comment.
+------------------------------------------------------------------------------
+On 2001-11-05 Lea, Doug voted Yes with the following comment:
+I don't think that BEA's objections are sufficient
+to preclude formation of expert group to try to
+address them.
+------------------------------------------------------------------------------
+On 2001-11-05 Apache Software Foundation voted Abstain with no comment.
+------------------------------------------------------------------------------
+On 2001-11-04 Sun Microsystems, Inc. voted Yes with the following comment:
+For JSR 156 to be successful, we believe it is important that
+it view J2EE containers as its primary user and J2EE components
+as 'managed' users with access to only a basic level of web
+transaction control.  
+
+In J2EE, the container primarily provides transaction support
+as an injected service.  Only in exceptional cases do J2EE components
+explicitly use the JTA API to manage transactions.  As web service
+transaction/synchronization protocols emerge it will be important for
+J2EE containers to continue to supply injected transaction support.
+Only in exceptional cases, should J2EE web services be required
+to explicitly program their web service transactions. 
+
+We therefore believe it is important that the work of JSR 156 be
+carefully coordinated with J2EE's web service client and endpoint
+models so that J2EE components that utilize web serviced
+transaction/synchronization are not exposed to complex API's
+that they have to explicitly manage. To accomplish this, it
+seems likely that the work of JSR 156 will be best realized 
+as primarily an SPI layer between the J2EE container and web
+transaction/synchronization services.
+------------------------------------------------------------------------------
+On 2001-11-01 Hewlett-Packard voted Yes with no comment.
+------------------------------------------------------------------------------
+On 2001-11-01 WebGain voted Abstain with no comment.
+------------------------------------------------------------------------------
+On 2001-10-31 BEA Systems voted No with the following comment:
+We believe that the technology proposed as the basis for this JSR is too immature to commit to a standard JAVA API. We further believe that the scope of this specification is too broad in attempting to include such a wide spectrum of transaction models. It is also unclear how this API relates to the work of JSR 95 which proposed to support extended transaction models similar to the one defined by the OASIS specification.
+------------------------------------------------------------------------------
+On 2001-10-31 Caldera Systems voted Yes with no comment.
+------------------------------------------------------------------------------
+On 2001-10-29 IBM voted Yes with no comment.
+------------------------------------------------------------------------------
+On 2001-10-25 Progress Software voted Yes with no comment.
+------------------------------------------------------------------------------
+On 2001-10-24 Cisco Systems voted Yes with no comment.
+------------------------------------------------------------------------------
+
