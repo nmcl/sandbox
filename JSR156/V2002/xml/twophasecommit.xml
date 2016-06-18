@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<jaxtx:transaction-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxtx="C:\temp\src\JSR156\xml\JAXTX.xsd">
+	<jaxtx:tx-info>
+		<jaxtx:transaction-name>
+		    urn:sun:transaction_models:two_phase_commit
+		</jaxtx:transaction-name>
+		<jaxtx:transaction-type-specific-information>
+		    99.99% availability
+		</jaxtx:transaction-type-specific-information>	
+		<jaxtx:transaction-type-specific-information>
+		    Implemented by John Doe of FooBar.com
+		</jaxtx:transaction-type-specific-information>
+	</jaxtx:tx-info>
+</jaxtx:transaction-config>

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xsd:complexType name="Coordinator">
+		<xsd:sequence/>
+	</xsd:complexType>
+	<xsd:complexType name="Participant">
+		<xsd:sequence/>
+	</xsd:complexType>
+	<xsd:element name="transaction-config-version">
+		<xsd:annotation>
+			<xsd:documentation>
+				transaction-config-version represents the requested configuration for a specific transaction implementation.
+				This information needs to uniquely identify the type of transaction implementation.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="transaction-config"/>
+			</xsd:sequence>
+			<xsd:attribute name="schema-major-version" type="xsd:integer" fixed="1"/>
+			<xsd:attribute name="schema-minor-version" type="xsd:integer" fixed="0"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="qualifier">
+		<xsd:annotation>
+			<xsd:documentation>
+				qualifier represents a component of the sequence of qualifiers.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:attribute name="name" use="required">
+				<xsd:annotation>
+					<xsd:documentation>
+						Attribute describes name element of qualifier name-value pair.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="value" use="required">
+				<xsd:annotation>
+					<xsd:documentation>
+						Attribute describes value element of qualifier name-value pair.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="MustUnderstand" type="xsd:boolean" use="optional">
+				<xsd:annotation>
+					<xsd:documentation>
+						If MustUnderstand is true then the user must be able to deal with the attribute. If is is ommitted or false then it is optional.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="qualifiers">
+		<xsd:annotation>
+			<xsd:documentation>
+				qualifiers represents values for qualifiers name-value pairs.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="qualifier" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="transaction-attributes">
+		<xsd:annotation>
+			<xsd:documentation>
+				If MustUnderstand is true then the user must be able to deal with the attribute. If is is ommitted or false then it is optional.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="attribute" type="xsd:string"/>
+				<xsd:element name="MustUnderstand" type="xsd:boolean" minOccurs="0"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:complexType name="transaction-type">
+		<xsd:sequence>
+			<xsd:element name="transaction-name" type="xsd:anyURI"/>
+			<xsd:element ref="transaction-attributes" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:element name="transaction-config">
+		<xsd:annotation>
+			<xsd:documentation>
+			Specific configuration information required to define what type of transaction model the implementation provides.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="tx-info" type="transaction-type" minOccurs="0"/>
+				<xsd:element ref="transaction-attributes" minOccurs="0"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="message" abstract="true"/>
+	<xsd:element name="contextelement">
+		<xsd:annotation>
+			<xsd:documentation>
+				contextelement represents the information for an entry in the hierarchy.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="qualifiers" minOccurs="0"/>
+			</xsd:sequence>
+			<xsd:attribute name="transaction-name" type="xsd:anyURI" use="optional"/>
+			<xsd:attribute name="coordinator" type="xsd:anyURI" use="required"/>
+			<xsd:attribute name="ctxId" type="xsd:anyURI" use="required"/>
+			<xsd:attribute name="timeout" type="xsd:integer" use="optional"/>
+			<xsd:attribute name="implementation_specific_data" type="xsd:anySimpleType" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:simpleType name="status">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="ActiveStatus"/>
+			<xsd:enumeration value="CompletedCancelStatus"/>
+			<xsd:enumeration value="CompletingCancelStatus"/>
+			<xsd:enumeration value="CompletedConfirmStatus"/>
+			<xsd:enumeration value="CompletingConfirmStatus"/>
+			<xsd:enumeration value="NoTransactionStatus"/>
+			<xsd:enumeration value="MarkedCancelOnlyStatus"/>
+			<xsd:enumeration value="UnknownStatus"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="completionstatus">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="CancelCompletionStatus"/>
+			<xsd:enumeration value="CancelOnlyCompletionStatus"/>
+			<xsd:enumeration value="ConfirmCompletionStatus"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:element name="context" substitutionGroup="message">
+		<xsd:annotation>
+			<xsd:documentation>
+				context represents the context hierarchy.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="contextelement"/>
+			</xsd:sequence>
+			<xsd:attribute name="invocation_specific_data" type="xsd:anySimpleType" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="protocol_message" substitutionGroup="message">
+		<xsd:annotation>
+			<xsd:documentation/>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="specific_data" type="xsd:anySimpleType" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="qualifiers" minOccurs="0"/>
+			</xsd:sequence>
+			<xsd:attribute name="identification" type="xsd:anyURI" use="required"/>
+			<xsd:attribute name="related_to" type="xsd:anyURI" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

@@ -1,0 +1,15 @@
+/InvalidParentException.java/1.2/Mon Jul 01 14:55:02 2002//
+/InvalidParticipantException.java/1.2/Mon Jul 01 14:55:02 2002//
+/InvalidSecurityOptionException.java/1.2/Mon Jul 01 14:55:02 2002//
+/InvalidTimeoutException.java/1.2/Mon Jul 01 14:55:02 2002//
+/InvalidTransactionException.java/1.2/Mon Jul 01 14:55:02 2002//
+/JAXTXException.java/1.1/Mon Jul 01 14:55:02 2002//
+/NestingNotAllowedException.java/1.2/Mon Jul 01 14:55:02 2002//
+/NoPermissionException.java/1.3/Wed Aug 14 11:10:05 2002//
+/NoSuchServiceException.java/1.2/Mon Jul 01 14:55:02 2002//
+/NoTransactionException.java/1.2/Mon Jul 01 14:55:02 2002//
+/ProtocolViolationException.java/1.3/Mon Jul 01 14:55:02 2002//
+/SystemException.java/1.2/Mon Jul 01 14:55:03 2002//
+/UnknownParticipantException.java/1.2/Mon Jul 01 14:55:03 2002//
+/WrongStateException.java/1.3/Wed Aug 14 11:10:05 2002//
+D

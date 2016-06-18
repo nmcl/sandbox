@@ -1,0 +1,150 @@
+<wsdl:definitions
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:jaxtxp="http://schemas.sun.com/ws/2003/04/jaxtxp"
+    xmlns:wsjta="http://schemas.sun.com/ws/2003/04/wsjta"
+    targetNamespace="http://schemas.sun.com/ws/2003/04/wsjta"
+>
+	<wsdl:import namespace="http://http://schemas.sun.com/ws/2003/04/wsjta"/>
+	<!-- Messages -->
+	<wsdl:message name="Prepare">
+		<wsdl:part name="parameters" element="wsjta:Prepare"/>
+	</wsdl:message>
+	<wsdl:message name="Prepared">
+		<wsdl:part name="parameters" element="wsjta:Prepared"/>
+	</wsdl:message>
+	<wsdl:message name="Aborted">
+		<wsdl:part name="parameters" element="wsjta:Aborted"/>
+	</wsdl:message>
+	<wsdl:message name="ReadOnly">
+		<wsdl:part name="parameters" element="wsjta:ReadOnly"/>
+	</wsdl:message>
+	<wsdl:message name="Commit">
+		<wsdl:part name="parameters" element="wsjta:Commit"/>
+	</wsdl:message>
+	<wsdl:message name="Rollback">
+		<wsdl:part name="parameters" element="wsjta:Rollback"/>
+	</wsdl:message>
+	<wsdl:message name="Committed">
+		<wsdl:part name="parameters" element="wsjta:Committed"/>
+	</wsdl:message>
+	<wsdl:message name="OnePhaseCommit">
+		<wsdl:part name="parameters" element="wsjta:OnePhaseCommit"/>
+	</wsdl:message>
+	<wsdl:message name="Forget">
+		<wsdl:part name="parameters" element="wsjta:Forget"/>
+	</wsdl:message>
+	<wsdl:message name="BeforeCompletion">
+		<wsdl:part name="parameters" element="wsjta:BeforeCompletion"/>
+	</wsdl:message>
+	<wsdl:message name="BeforeCompletionCompleted">
+		<wsdl:part name="parameters" element="wsjta:BeforeCompletionCompleted"/>
+	</wsdl:message>
+	<wsdl:message name="AfterCompletion">
+		<wsdl:part name="parameters" element="wsjta:AfterCompletion"/>
+	</wsdl:message>
+	<wsdl:message name="Replay">
+		<wsdl:part name="parameters" element="wsjta:Replay"/>
+	</wsdl:message>
+	<wsdl:message name="Unknown">
+		<wsdl:part name="parameters" element="wsjta:Unknown"/>
+	</wsdl:message>
+	<wsdl:message name="Error">
+		<wsdl:part name="parameters" element="wsjta:Error"/>
+	</wsdl:message>
+	<!-- PortTypes -->
+	<wsdl:portType name="CompleteTransactionPortType">
+		<wsdl:operation name="Commit">
+			<wsdl:input message="wsjta:Commit"/>
+		</wsdl:operation>
+		<wsdl:operation name="Rollback">
+			<wsdl:input message="wsjta:Rollback"/>
+		</wsdl:operation>
+		<wsdl:operation name="Unknown">
+			<wsdl:input message="wsjta:Unknown"/>
+		</wsdl:operation>
+		<wsdl:operation name="Error">
+			<wsdl:input message="wsjta:Error"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:portType name="CompleteTransactionParticipantPortType">
+		<wsdl:operation name="Committed">
+			<wsdl:input message="wsjta:Committed"/>
+		</wsdl:operation>
+		<wsdl:operation name="Aborted">
+			<wsdl:input message="wsjta:Aborted"/>
+		</wsdl:operation>
+		<wsdl:operation name="Error">
+			<wsdl:input message="wsjta:Error"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:portType name="SynchronizationPortType">
+		<wsdl:operation name="BeforeCompletionCompleted">
+			<wsdl:input message="wsjta:BeforeCompletionCompleted"/>
+		</wsdl:operation>
+		<wsdl:operation name="Unknown">
+			<wsdl:input message="wsjta:Unknown"/>
+		</wsdl:operation>
+		<wsdl:operation name="Error">
+			<wsdl:input message="wsjta:Error"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:portType name="SynchronizationParticipantPortType">
+		<wsdl:operation name="BeforeCompletion">
+			<wsdl:input message="wsjta:BeforeCompletion"/>
+		</wsdl:operation>
+		<wsdl:operation name="AfterCompletion">
+			<wsdl:input message="wsjta:AfterCompletion"/>
+		</wsdl:operation>
+		<wsdl:operation name="Error">
+			<wsdl:input message="wsjta:Error"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:portType name="XAResourcePortType">
+		<wsdl:operation name="Prepared">
+			<wsdl:input message="wsjta:Prepared"/>
+		</wsdl:operation>
+		<wsdl:operation name="Aborted">
+			<wsdl:input message="wsjta:Aborted"/>
+		</wsdl:operation>
+		<wsdl:operation name="ReadOnly">
+			<wsdl:input message="wsjta:ReadOnly"/>
+		</wsdl:operation>
+		<wsdl:operation name="Committed">
+			<wsdl:input message="wsjta:Committed"/>
+		</wsdl:operation>
+		<wsdl:operation name="Unknown">
+			<wsdl:input message="wsjta:Unknown"/>
+		</wsdl:operation>
+		<wsdl:operation name="Replay">
+			<wsdl:input message="wsjta:Replay"/>
+		</wsdl:operation>
+		<wsdl:operation name="Error">
+			<wsdl:input message="wsjta:Error"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:portType name="XAResourceParticipantPortType">
+		<wsdl:operation name="Prepare">
+			<wsdl:input message="wsjta:Prepare"/>
+		</wsdl:operation>
+		<wsdl:operation name="OnePhaseCommit">
+			<wsdl:input message="wsjta:OnePhaseCommit"/>
+		</wsdl:operation>
+		<wsdl:operation name="Commit">
+			<wsdl:input message="wsjta:Commit"/>
+		</wsdl:operation>
+		<wsdl:operation name="Rollback">
+			<wsdl:input message="wsjta:Rollback"/>
+		</wsdl:operation>
+		<wsdl:operation name="Forget">
+			<wsdl:input message="wsjta:Forget"/>
+		</wsdl:operation>
+		<wsdl:operation name="Unknown">
+			<wsdl:input message="wsjta:Unknown"/>
+		</wsdl:operation>
+		<wsdl:operation name="Error">
+			<wsdl:input message="wsjta:Error"/>
+		</wsdl:operation>
+	</wsdl:portType>
+</wsdl:definitions>

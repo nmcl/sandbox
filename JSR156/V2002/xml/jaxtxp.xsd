@@ -1,0 +1,77 @@
+<xsd:schema targetNamespace="http://schemas.sun.com/ws/2003/04/jaxtxp" xmlns:jaxtxp="http://schemas.sun.com/ws/2003/04/jaxtxp" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+	<xsd:complexType name="PortReferenceType">
+		<xsd:sequence>
+			<xsd:element name="address" type="xsd:anyURI"/>
+			<xsd:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="TransactionContextType">
+		<xsd:sequence>
+			<xsd:element name="TransactionType" type="xsd:anyURI"/>
+			<xsd:element name="TransactionManagerService" type="jaxtxp:PortReferenceType"/>
+			<xsd:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:anyAttribute namespace="##other" processContents="lax"/>
+	</xsd:complexType>
+	<xsd:element name="TransactionContext" type="jaxtxp:StartTransactionType"/>
+	<xsd:complexType name="StartTransaction">
+		<xsd:sequence>
+			<xsd:element name="TransactionService" type="jaxtxp:PortReferenceType"/>
+			<xsd:element name="Expires" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="CurrentContext" type="jaxtxp:TransactionContextType" minOccurs="0"/>
+			<xsd:element name="RequesterReference" type="jaxtxp:PortReferenceType"/>
+			<xsd:element name="TransactionType" type="xsd:anyURI"/>
+			<xsd:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:anyAttribute namespace="##other" processContents="lax"/>
+	</xsd:complexType>
+	<xsd:element name="StartTransaction" type="jaxtxp:StartTransactionType"/>
+	<xsd:complexType name="StartTransactionResponseType">
+		<xsd:sequence>
+			<xsd:element name="RequesterReference" type="jaxtxp:PortReferenceType"/>
+			<xsd:element name="TransactionContext" type="jaxtxp:TransactionContextType" minOccurs="0"/>
+			<xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:anyAttribute namespace="##other" processContents="lax"/>
+	</xsd:complexType>
+	<xsd:element name="StartTransactionResponse" type="jaxtxp:StartTransactionResponseType"/>
+	<xsd:complexType name="RegisterType">
+		<xsd:sequence>
+			<xsd:element name="TransactionManagerService" type="jaxtxp:PortReferenceType"/>
+			<xsd:element name="RequesterReference" type="jaxtxp:PortReferenceType"/>
+			<xsd:element name="ProtocolIdentifier" type="xsd:anyURI"/>
+			<xsd:element name="ParticipantProtocolService" type="jaxtxp:PortReferenceType"/>
+			<xsd:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:anyAttribute namespace="##other" processContents="lax"/>
+	</xsd:complexType>
+	<xsd:element name="Register" type="jaxtxp:RegisterType"/>
+	<xsd:complexType name="RegisterResponseType">
+		<xsd:sequence>
+			<xsd:element name="TransactionManagerService" type="jaxtxp:PortReferenceType"/>
+			<xsd:element name="RequesterReference" type="jaxtxp:PortReferenceType"/>
+			<xsd:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:anyAttribute namespace="##other" processContents="lax"/>
+	</xsd:complexType>
+	<xsd:element name="RegisterResponse" type="jaxtxp:RegisterResponseType"/>
+	<xsd:complexType name="ErrorType">
+		<xsd:sequence>
+			<xsd:element name="TargetProtocolService" type="jaxtxp:PortReferenceType"/>
+			<xsd:element name="Errorcode" type="xsd:QName"/>
+			<xsd:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:element name="Error" type="jaxtxp:ErrorType"/>
+	<xsd:simpleType name="ErrorCodes">
+		<xsd:restriction base="xsd:QName">
+			<xsd:enumeration value="jaxtxp:AlreadyRegistered"/>
+			<xsd:enumeration value="jaxtxp:WrongState"/>
+			<xsd:enumeration value="jaxtxp:InvalidProtocol"/>
+			<xsd:enumeration value="jaxtxp:NoTransaction"/>
+			<xsd:enumeration value="jaxtxp:InvalidStartParameters"/>
+			<xsd:enumeration value="jaxtxp:AddressTooLong"/>
+			<xsd:enumeration value="jaxtxp:InvalidAddress"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+</xsd:schema>

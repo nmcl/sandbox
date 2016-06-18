@@ -1,0 +1,46 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jaxtxp="http://schemas.sun.com/ws/2003/04/jaxtxp" targetNamespace="http://schemas.sun.com/ws/2003/04/jaxtxp">
+	<wsdl:import namespace="http://schemas.xmlsoap.org/ws/2002/08/jaxtxp"/>
+	<!-- Messages -->
+	<wsdl:message name="StartTransaction">
+		<wsdl:part name="parameters" element="jaxtxp:StartTransaction"/>
+	</wsdl:message>
+	<wsdl:message name="StartTransactionResponse">
+		<wsdl:part name="parameters" element="jaxtxp:StartTransactionResponse"/>
+	</wsdl:message>
+	<wsdl:message name="Register">
+		<wsdl:part name="parameters" element="jaxtxp:Register"/>
+	</wsdl:message>
+	<wsdl:message name="RegisterResponse">
+		<wsdl:part name="parameters" element="jaxtxp:RegisterResponse"/>
+	</wsdl:message>
+	<wsdl:message name="Error">
+		<wsdl:part name="parameters" element="jaxtxp:Error"/>
+	</wsdl:message>
+	<!-- PortTypes -->
+	<wsdl:portType name="TransactionServicePortType">
+		<wsdl:operation name="StartTransaction">
+			<wsdl:input message="jaxtxp:StartTransaction"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:portType name="TransactionManagerServicePortType">
+		<wsdl:operation name="Register">
+			<wsdl:input message="jaxtxp:Register"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:portType name="TransactionServiceRequesterPortType">
+		<wsdl:operation name="StartTransactionResponse">
+			<wsdl:input message="jaxtxp:StartTransactionResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="Error">
+			<wsdl:input message="jaxtxp:Error"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:portType name="RegistrationRequesterPortType">
+		<wsdl:operation name="RegisterResponse">
+			<wsdl:input message="jaxtxp:RegisterResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="Error">
+			<wsdl:input message="jaxtxp:Error"/>
+		</wsdl:operation>
+	</wsdl:portType>
+</wsdl:definitions>

@@ -1,0 +1,65 @@
+<xsd:schema targetNamespace="http://schemas.sun.com/ws/2003/04/wsjta" xmlns:jaxtxp="http://schemas.sun.com/ws/2003/04/jaxtxp" xmlns:wsjta="http://schemas.sun.com/ws/2003/04/wsjta" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+	<xsd:import namespace="http://schemas.sun.com/ws/2003/04/jaxtxp"/>
+	<xsd:complexType name="Notification">
+		<xsd:sequence>
+			<xsd:element name="TargetProtocolService" type="jaxtxp:PortReferenceType"/>
+			<xsd:element name="SourceProtocolService" type="jaxtxp:PortReferenceType"/>
+			<xsd:element name="txId" type="xsd:anyURI"/>
+			<xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:element name="correlationId" type="xsd:string"/>
+		<xsd:anyAttribute namespace="##other" processContents="lax"/>
+	</xsd:complexType>
+	<xsd:element name="Prepare" type="wsjta:Notification"/>
+	<xsd:element name="Prepared" type="wsjta:Notification"/>
+	<xsd:element name="Aborted" type="wsjta:Notification"/>
+	<xsd:element name="ReadOnly" type="wsjta:Notification"/>
+	<xsd:element name="Commit" type="wsjta:Notification"/>
+	<xsd:element name="Rollback" type="wsjta:Notification"/>
+	<xsd:element name="Committed" type="wsjta:Notification"/>
+	<xsd:element name="Forget" type="wsjta:Notification"/>
+	<xsd:element name="OnePhaseCommit" type="wsjta:Notification"/>
+	<xsd:element name="BeforeCompletion" type="wsjta:Notification"/>
+	<xsd:element name="BeforeCompletionCompleted" type="wsjta:Notification"/>
+	<xsd:complexType name="AfterCompletion">
+		<xsd:sequence>
+			<xsd:element name="TargetProtocolService" type="jaxtxp:PortReferenceType"/>
+			<xsd:element name="SourceProtocolService" type="jaxtxp:PortReferenceType"/>
+			<xsd:element name="txId" type="xsd:anyURI"/>
+			<xsd:element name="status" type="xsd:integer"/>
+			<xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:element name="correlationId" type="xsd:string"/>
+		<xsd:anyAttribute namespace="##other" processContents="lax"/>
+	</xsd:complexType>
+	<xsd:element name="Unknown" type="wsjta:Notification"/>
+	<xsd:complexType name="Replay">
+		<xsd:sequence>
+			<xsd:element name="TransactionManagerService" type="jaxtxp:PortReferenceType"/>
+			<xsd:element name="ParticipantProtocolService" type="jaxtxp:PortReferenceType"/>
+			<xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:element name="correlationId" type="xsd:string"/>		
+		<xsd:anyAttribute namespace="##other" processContents="lax"/>
+	</xsd:complexType>
+	<xsd:element name="Replay" type="wsjta:Replay"/>
+	<xsd:complexType name="ErrorType">
+		<xsd:sequence>
+			<xsd:element name="TargetProtocolService" type="jaxtxp:PortReferenceType"/>
+			<xsd:element name="Errorcode" type="xsd:QName"/>
+			<xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:element name="correlationId" type="xsd:string"/>		
+		<xsd:anyAttribute namespace="##other" processContents="lax"/>
+	</xsd:complexType>
+	<xsd:element name="Error" type="wsjta:ErrorType"/>
+	<xsd:simpleType name="ErrorCodes">
+		<xsd:restriction base="xsd:QName">
+			<xsd:enumeration value="wsjta:BeforeCompletionFailure"/>
+			<xsd:enumeration value="wsjta:HeuristicMixed"/>
+			<xsd:enumeration value="wsjta:HeuristicHazard"/>
+			<xsd:enumeration value="wsjta:HeuristicRollback"/>
+			<xsd:enumeration value="wsjta:HeuristicCommit"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+</xsd:schema>
