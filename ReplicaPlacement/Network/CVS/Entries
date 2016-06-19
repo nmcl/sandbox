@@ -1,0 +1,24 @@
+/AC.cc/1.1/Mon Jun 14 13:19:13 1993//
+/AC.h/1.1/Mon Jun 14 13:19:15 1993//
+/Client.cc/1.1/Mon Jun 14 13:19:17 1993//
+/Client.h/1.1/Mon Jun 14 13:19:19 1993//
+/Machine.cc/1.1/Mon Jun 14 13:19:20 1993//
+/Machine.h/1.1/Mon Jun 14 13:19:22 1993//
+/MainBody.cc/1.1/Mon Jun 14 13:19:23 1993//
+/MainBody.h/1.1/Mon Jun 14 13:19:25 1993//
+/Makefile/1.1/Mon Jun 14 13:19:27 1993//
+/Object.cc/1.1/Mon Jun 14 13:19:28 1993//
+/Object.h/1.1/Mon Jun 14 13:19:30 1993//
+/Passive.cc/1.1/Mon Jun 14 13:19:31 1993//
+/Passive.h/1.1/Mon Jun 14 13:19:33 1993//
+/Protocol.cc/1.1/Mon Jun 14 13:19:35 1993//
+/Protocol.h/1.1/Mon Jun 14 13:19:36 1993//
+/RandomPolicy.cc/1.1/Mon Jun 14 13:19:38 1993//
+/RandomPolicy.h/1.1/Mon Jun 14 13:19:40 1993//
+/Simulation.cc/1.1/Mon Jun 14 13:19:41 1993//
+/SingleCopy.cc/1.1/Mon Jun 14 13:19:43 1993//
+/SingleCopy.h/1.1/Mon Jun 14 13:19:45 1993//
+/Voting.cc/1.1/Mon Jun 14 13:19:47 1993//
+/Voting.h/1.1/Mon Jun 14 13:19:49 1993//
+/dorun.sh/1.1/Mon Jun 14 13:19:51 1993//
+D
