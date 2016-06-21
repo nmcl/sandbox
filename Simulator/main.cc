@@ -6,7 +6,10 @@
 #include "MultiConnector.h"
 #include <iostream>
 
-main()
+using std::cout;
+using std::cerr;
+
+int main()
 {
     Bus *bs = new Bus();
     BusInterface *if1 = new BusInterface(1, 1000, true, bs);
@@ -29,4 +32,6 @@ main()
     data_buffer d = cpu->multi_read(4);
     cerr << "Reading 4, got " << d.value << "\n";
     cerr << "Reading 4, got " << d.next_buffer->value << "\n";
+
+    return 1;
 }

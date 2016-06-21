@@ -9,7 +9,8 @@
 #define READ 0
 #define WRITE 1
 
-enum boolean { false, true };
+#define boolean bool
+
 enum direction { ON_BUS, OFF_BUS };
 
 struct data_buffer

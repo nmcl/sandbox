@@ -1,7 +1,7 @@
 MAKE = make
 
-CC  = cc
-C++ = CC
+CC  = gcc
+C++ = g++
 CPP = gcc
 LEX = lex
 

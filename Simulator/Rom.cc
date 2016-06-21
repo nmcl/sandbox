@@ -1,5 +1,8 @@
 #include "Rom.h"
 
+using std::cout;
+using std::cerr;
+
 Rom::Rom(BusInterface *b, int priority) : Memory(b, priority)
 {
 }
