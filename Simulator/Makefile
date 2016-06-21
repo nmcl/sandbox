@@ -65,5 +65,5 @@ MultiConnector.o: MultiConnector.cc MultiConnector.h
 clean:
 	rm -f *.o
 
-vclean: clean
+purge: clean
 	rm -f main *~*
