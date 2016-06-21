@@ -43,4 +43,5 @@ private:
     char*         bloomFilterBits;
 };
 
-#endif  _BLOOMFILTER_H_
+#endif
+

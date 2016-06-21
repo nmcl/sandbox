@@ -21,10 +21,7 @@
 MAKE = make
 
 CC = cc
-C++ = CC
-
-MDEP = /usr/local/Arjuna/bin/makedepend
-STRIPDEPEND= /usr/local/Arjuna/bin/stripdepend
+C++ = g++
 
 CPPFLAGS =
 CFLAGS =
@@ -33,7 +30,7 @@ LDFLAGS = -g
 
 MDEPFLAGS =
 
-LOCAL_CPPFLAGS = -I../include -I/usr/local/Arjuna/include
+LOCAL_CPPFLAGS = -I../include
 LOCAL_CFLAGS = 
 LOCAL_C++FLAGS =
 LOCAL_LDFLAGS =
@@ -44,15 +41,11 @@ LIB = libBloomFilter.a
 
 OBJECTS = BloomFilter.o \
           StringBloomFilter.o \
-          UidBloomFilter.o \
-	  StringHash.o \
-	  UidHash.o
+	  StringHash.o
 
 SOURCES = BloomFilter.cc \
           StringBloomFilter.cc \
-          UidBloomFilter.cc \
-	  StringHash.cc \
-	  UidHash.cc
+	  StringHash.cc
 
 all: $(LIB)
 

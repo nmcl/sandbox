@@ -1,0 +1,1356 @@
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[1]: Nothing to be done for `all'.
+g++ -c  -I../include   StringBloomFilter.cc
+g++ -c  -I../include   StringHash.cc
+StringHash.cc:40:18: warning: using the result of an assignment as a condition without parentheses [-Wparentheses]
+        if (temp = hashVal & 0xf0000000)
+            ~~~~~^~~~~~~~~~~~~~~~~~~~~~
+StringHash.cc:40:18: note: place parentheses around the assignment to silence this warning
+        if (temp = hashVal & 0xf0000000)
+                 ^
+            (                          )
+StringHash.cc:40:18: note: use '==' to turn this assignment into an equality comparison
+        if (temp = hashVal & 0xf0000000)
+                 ^
+                 ==
+1 warning generated.
+ar rv libBloomFilter.a BloomFilter.o StringBloomFilter.o StringHash.o
+ar: creating archive libBloomFilter.a
+a - BloomFilter.o
+a - StringBloomFilter.o
+a - StringHash.o
+ranlib libBloomFilter.a
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[2]: Nothing to be done for `all'.
+make[2]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[3]: Nothing to be done for `all'.
+make[3]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[4]: Nothing to be done for `all'.
+make[4]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[5]: Nothing to be done for `all'.
+make[5]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[6]: Nothing to be done for `all'.
+make[6]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[7]: Nothing to be done for `all'.
+make[7]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[8]: Nothing to be done for `all'.
+make[8]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[9]: Nothing to be done for `all'.
+make[9]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[10]: Nothing to be done for `all'.
+make[10]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[11]: Nothing to be done for `all'.
+make[11]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[12]: Nothing to be done for `all'.
+make[12]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[13]: Nothing to be done for `all'.
+make[13]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[14]: Nothing to be done for `all'.
+make[14]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[15]: Nothing to be done for `all'.
+make[15]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[16]: Nothing to be done for `all'.
+make[16]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[17]: Nothing to be done for `all'.
+make[17]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[18]: Nothing to be done for `all'.
+make[18]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[19]: Nothing to be done for `all'.
+make[19]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[20]: Nothing to be done for `all'.
+make[20]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[21]: Nothing to be done for `all'.
+make[21]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[22]: Nothing to be done for `all'.
+make[22]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[23]: Nothing to be done for `all'.
+make[23]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[24]: Nothing to be done for `all'.
+make[24]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[25]: Nothing to be done for `all'.
+make[25]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[26]: Nothing to be done for `all'.
+make[26]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[27]: Nothing to be done for `all'.
+make[27]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[28]: Nothing to be done for `all'.
+make[28]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[29]: Nothing to be done for `all'.
+make[29]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[30]: Nothing to be done for `all'.
+make[30]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[31]: Nothing to be done for `all'.
+make[31]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[32]: Nothing to be done for `all'.
+make[32]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[33]: Nothing to be done for `all'.
+make[33]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[34]: Nothing to be done for `all'.
+make[34]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[35]: Nothing to be done for `all'.
+make[35]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[36]: Nothing to be done for `all'.
+make[36]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[37]: Nothing to be done for `all'.
+make[37]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[38]: Nothing to be done for `all'.
+make[38]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[39]: Nothing to be done for `all'.
+make[39]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[40]: Nothing to be done for `all'.
+make[40]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[41]: Nothing to be done for `all'.
+make[41]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[42]: Nothing to be done for `all'.
+make[42]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[43]: Nothing to be done for `all'.
+make[43]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[44]: Nothing to be done for `all'.
+make[44]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[45]: Nothing to be done for `all'.
+make[45]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[46]: Nothing to be done for `all'.
+make[46]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[47]: Nothing to be done for `all'.
+make[47]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[48]: Nothing to be done for `all'.
+make[48]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[49]: Nothing to be done for `all'.
+make[49]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[50]: Nothing to be done for `all'.
+make[50]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[51]: Nothing to be done for `all'.
+make[51]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[52]: Nothing to be done for `all'.
+make[52]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[53]: Nothing to be done for `all'.
+make[53]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[54]: Nothing to be done for `all'.
+make[54]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[55]: Nothing to be done for `all'.
+make[55]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[56]: Nothing to be done for `all'.
+make[56]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[57]: Nothing to be done for `all'.
+make[57]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[58]: Nothing to be done for `all'.
+make[58]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[59]: Nothing to be done for `all'.
+make[59]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[60]: Nothing to be done for `all'.
+make[60]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[61]: Nothing to be done for `all'.
+make[61]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[62]: Nothing to be done for `all'.
+make[62]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[63]: Nothing to be done for `all'.
+make[63]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[64]: Nothing to be done for `all'.
+make[64]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[65]: Nothing to be done for `all'.
+make[65]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[66]: Nothing to be done for `all'.
+make[66]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[67]: Nothing to be done for `all'.
+make[67]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[68]: Nothing to be done for `all'.
+make[68]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[69]: Nothing to be done for `all'.
+make[69]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[70]: Nothing to be done for `all'.
+make[70]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[71]: Nothing to be done for `all'.
+make[71]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[72]: Nothing to be done for `all'.
+make[72]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[73]: Nothing to be done for `all'.
+make[73]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[74]: Nothing to be done for `all'.
+make[74]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[75]: Nothing to be done for `all'.
+make[75]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[76]: Nothing to be done for `all'.
+make[76]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[77]: Nothing to be done for `all'.
+make[77]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[78]: Nothing to be done for `all'.
+make[78]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[79]: Nothing to be done for `all'.
+make[79]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[80]: Nothing to be done for `all'.
+make[80]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[81]: Nothing to be done for `all'.
+make[81]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[82]: Nothing to be done for `all'.
+make[82]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[83]: Nothing to be done for `all'.
+make[83]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[84]: Nothing to be done for `all'.
+make[84]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[85]: Nothing to be done for `all'.
+make[85]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[86]: Nothing to be done for `all'.
+make[86]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[87]: Nothing to be done for `all'.
+make[87]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[88]: Nothing to be done for `all'.
+make[88]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[89]: Nothing to be done for `all'.
+make[89]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[90]: Nothing to be done for `all'.
+make[90]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[91]: Nothing to be done for `all'.
+make[91]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[92]: Nothing to be done for `all'.
+make[92]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[93]: Nothing to be done for `all'.
+make[93]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[94]: Nothing to be done for `all'.
+make[94]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[95]: Nothing to be done for `all'.
+make[95]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[96]: Nothing to be done for `all'.
+make[96]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[97]: Nothing to be done for `all'.
+make[97]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[98]: Nothing to be done for `all'.
+make[98]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[99]: Nothing to be done for `all'.
+make[99]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[100]: Nothing to be done for `all'.
+make[100]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[101]: Nothing to be done for `all'.
+make[101]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[102]: Nothing to be done for `all'.
+make[102]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[103]: Nothing to be done for `all'.
+make[103]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[104]: Nothing to be done for `all'.
+make[104]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[105]: Nothing to be done for `all'.
+make[105]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[106]: Nothing to be done for `all'.
+make[106]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[107]: Nothing to be done for `all'.
+make[107]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[108]: Nothing to be done for `all'.
+make[108]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[109]: Nothing to be done for `all'.
+make[109]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[110]: Nothing to be done for `all'.
+make[110]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[111]: Nothing to be done for `all'.
+make[111]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[112]: Nothing to be done for `all'.
+make[112]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[113]: Nothing to be done for `all'.
+make[113]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[114]: Nothing to be done for `all'.
+make[114]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[115]: Nothing to be done for `all'.
+make[115]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[116]: Nothing to be done for `all'.
+make[116]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[117]: Nothing to be done for `all'.
+make[117]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[118]: Nothing to be done for `all'.
+make[118]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[119]: Nothing to be done for `all'.
+make[119]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[120]: Nothing to be done for `all'.
+make[120]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[121]: Nothing to be done for `all'.
+make[121]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[122]: Nothing to be done for `all'.
+make[122]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[123]: Nothing to be done for `all'.
+make[123]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[124]: Nothing to be done for `all'.
+make[124]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[125]: Nothing to be done for `all'.
+make[125]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[126]: Nothing to be done for `all'.
+make[126]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[127]: Nothing to be done for `all'.
+make[127]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[128]: Nothing to be done for `all'.
+make[128]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[129]: Nothing to be done for `all'.
+make[129]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[130]: Nothing to be done for `all'.
+make[130]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[131]: Nothing to be done for `all'.
+make[131]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[132]: Nothing to be done for `all'.
+make[132]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[133]: Nothing to be done for `all'.
+make[133]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[134]: Nothing to be done for `all'.
+make[134]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[135]: Nothing to be done for `all'.
+make[135]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[136]: Nothing to be done for `all'.
+make[136]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[137]: Nothing to be done for `all'.
+make[137]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[138]: Nothing to be done for `all'.
+make[138]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[139]: Nothing to be done for `all'.
+make[139]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[140]: Nothing to be done for `all'.
+make[140]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[141]: Nothing to be done for `all'.
+make[141]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[142]: Nothing to be done for `all'.
+make[142]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[143]: Nothing to be done for `all'.
+make[143]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[144]: Nothing to be done for `all'.
+make[144]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[145]: Nothing to be done for `all'.
+make[145]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[146]: Nothing to be done for `all'.
+make[146]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[147]: Nothing to be done for `all'.
+make[147]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[148]: Nothing to be done for `all'.
+make[148]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[149]: Nothing to be done for `all'.
+make[149]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[150]: Nothing to be done for `all'.
+make[150]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[151]: Nothing to be done for `all'.
+make[151]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[152]: Nothing to be done for `all'.
+make[152]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[153]: Nothing to be done for `all'.
+make[153]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[154]: Nothing to be done for `all'.
+make[154]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[155]: Nothing to be done for `all'.
+make[155]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[156]: Nothing to be done for `all'.
+make[156]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[157]: Nothing to be done for `all'.
+make[157]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[158]: Nothing to be done for `all'.
+make[158]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[159]: Nothing to be done for `all'.
+make[159]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[160]: Nothing to be done for `all'.
+make[160]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[161]: Nothing to be done for `all'.
+make[161]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[162]: Nothing to be done for `all'.
+make[162]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[163]: Nothing to be done for `all'.
+make[163]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[164]: Nothing to be done for `all'.
+make[164]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[165]: Nothing to be done for `all'.
+make[165]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+make[166]: Nothing to be done for `all'.
+make[166]: Nothing to be done for `all'.
+/bin/sh: line 0: cd: test: No such file or directory
+for i in include src test ;\
+	do \
+		(cd $i; make MAKE="make" CC="cc" C++="g++" CPPFLAGS="" CFLAGS="" C++FLAGS="" LDFLAGS="" all) ;\
+	done
+/bin/sh: fork: Resource temporarily unavailable
+/bin/sh: fork: Resource temporarily unavailable
+/bin/sh: line 0: cd: test: No such file or directory
+/bin/sh: fork: Resource temporarily unavailable
+make[166]: *** [all] Error 129
+make[165]: *** [all] Error 2
+make[164]: *** [all] Error 2
+make[163]: *** [all] Error 2
+make[162]: *** [all] Error 2
+make[161]: *** [all] Error 2
+make[160]: *** [all] Error 2
+make[159]: *** [all] Error 2
+make[158]: *** [all] Error 2
+make[157]: *** [all] Error 2
+make[156]: *** [all] Error 2
+make[155]: *** [all] Error 2
+make[154]: *** [all] Error 2
+make[153]: *** [all] Error 2
+make[152]: *** [all] Error 2
+make[151]: *** [all] Error 2
+make[150]: *** [all] Error 2
+make[149]: *** [all] Error 2
+make[148]: *** [all] Error 2
+make[147]: *** [all] Error 2
+make[146]: *** [all] Error 2
+make[145]: *** [all] Error 2
+make[144]: *** [all] Error 2
+make[143]: *** [all] Error 2
+make[142]: *** [all] Error 2
+make[141]: *** [all] Error 2
+make[140]: *** [all] Error 2
+make[139]: *** [all] Error 2
+make[138]: *** [all] Error 2
+make[137]: *** [all] Error 2
+make[136]: *** [all] Error 2
+make[135]: *** [all] Error 2
+make[134]: *** [all] Error 2
+make[133]: *** [all] Error 2
+make[132]: *** [all] Error 2
+make[131]: *** [all] Error 2
+make[130]: *** [all] Error 2
+make[129]: *** [all] Error 2
+make[128]: *** [all] Error 2
+make[127]: *** [all] Error 2
+make[126]: *** [all] Error 2
+make[125]: *** [all] Error 2
+make[124]: *** [all] Error 2
+make[123]: *** [all] Error 2
+make[122]: *** [all] Error 2
+make[121]: *** [all] Error 2
+make[120]: *** [all] Error 2
+make[119]: *** [all] Error 2
+make[118]: *** [all] Error 2
+make[117]: *** [all] Error 2
+make[116]: *** [all] Error 2
+make[115]: *** [all] Error 2
+make[114]: *** [all] Error 2
+make[113]: *** [all] Error 2
+make[112]: *** [all] Error 2
+make[111]: *** [all] Error 2
+make[110]: *** [all] Error 2
+make[109]: *** [all] Error 2
+make[108]: *** [all] Error 2
+make[107]: *** [all] Error 2
+make[106]: *** [all] Error 2
+make[105]: *** [all] Error 2
+make[104]: *** [all] Error 2
+make[103]: *** [all] Error 2
+make[102]: *** [all] Error 2
+make[101]: *** [all] Error 2
+make[100]: *** [all] Error 2
+make[99]: *** [all] Error 2
+make[98]: *** [all] Error 2
+make[97]: *** [all] Error 2
+make[96]: *** [all] Error 2
+make[95]: *** [all] Error 2
+make[94]: *** [all] Error 2
+make[93]: *** [all] Error 2
+make[92]: *** [all] Error 2
+make[91]: *** [all] Error 2
+make[90]: *** [all] Error 2
+make[89]: *** [all] Error 2
+make[88]: *** [all] Error 2
+make[87]: *** [all] Error 2
+make[86]: *** [all] Error 2
+make[85]: *** [all] Error 2
+make[84]: *** [all] Error 2
+make[83]: *** [all] Error 2
+make[82]: *** [all] Error 2
+make[81]: *** [all] Error 2
+make[80]: *** [all] Error 2
+make[79]: *** [all] Error 2
+make[78]: *** [all] Error 2
+make[77]: *** [all] Error 2
+make[76]: *** [all] Error 2
+make[75]: *** [all] Error 2
+make[74]: *** [all] Error 2
+make[73]: *** [all] Error 2
+make[72]: *** [all] Error 2
+make[71]: *** [all] Error 2
+make[70]: *** [all] Error 2
+make[69]: *** [all] Error 2
+make[68]: *** [all] Error 2
+make[67]: *** [all] Error 2
+make[66]: *** [all] Error 2
+make[65]: *** [all] Error 2
+make[64]: *** [all] Error 2
+make[63]: *** [all] Error 2
+make[62]: *** [all] Error 2
+make[61]: *** [all] Error 2
+make[60]: *** [all] Error 2
+make[59]: *** [all] Error 2
+make[58]: *** [all] Error 2
+make[57]: *** [all] Error 2
+make[56]: *** [all] Error 2
+make[55]: *** [all] Error 2
+make[54]: *** [all] Error 2
+make[53]: *** [all] Error 2
+make[52]: *** [all] Error 2
+make[51]: *** [all] Error 2
+make[50]: *** [all] Error 2
+make[49]: *** [all] Error 2
+make[48]: *** [all] Error 2
+make[47]: *** [all] Error 2
+make[46]: *** [all] Error 2
+make[45]: *** [all] Error 2
+make[44]: *** [all] Error 2
+make[43]: *** [all] Error 2
+make[42]: *** [all] Error 2
+make[41]: *** [all] Error 2
+make[40]: *** [all] Error 2
+make[39]: *** [all] Error 2
+make[38]: *** [all] Error 2
+make[37]: *** [all] Error 2
+make[36]: *** [all] Error 2
+make[35]: *** [all] Error 2
+make[34]: *** [all] Error 2
+make[33]: *** [all] Error 2
+make[32]: *** [all] Error 2
+make[31]: *** [all] Error 2
+make[30]: *** [all] Error 2
+make[29]: *** [all] Error 2
+make[28]: *** [all] Error 2
+make[27]: *** [all] Error 2
+make[26]: *** [all] Error 2
+make[25]: *** [all] Error 2
+make[24]: *** [all] Error 2
+make[23]: *** [all] Error 2
+make[22]: *** [all] Error 2
+make[21]: *** [all] Error 2
+make[20]: *** [all] Error 2
+make[19]: *** [all] Error 2
+make[18]: *** [all] Error 2
+make[17]: *** [all] Error 2
+make[16]: *** [all] Error 2
+make[15]: *** [all] Error 2
+make[14]: *** [all] Error 2
+make[13]: *** [all] Error 2
+make[12]: *** [all] Error 2
+make[11]: *** [all] Error 2
+make[10]: *** [all] Error 2
+make[9]: *** [all] Error 2
+make[8]: *** [all] Error 2
+make[7]: *** [all] Error 2
+make[6]: *** [all] Error 2
+make[5]: *** [all] Error 2
+make[4]: *** [all] Error 2
+make[3]: *** [all] Error 2
+make[2]: *** [all] Error 2
+make[1]: *** [all] Error 2
+make: *** [all] Error 2

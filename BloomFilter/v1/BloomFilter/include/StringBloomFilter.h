@@ -21,7 +21,7 @@
  */
 
 #include "BloomFilter.h"
-// #include <Arjuna/Buffer.h>
+#include "StringHash.h"
 
 class StringBloomFilter : public BloomFilter
 {
@@ -40,4 +40,4 @@ private:
     StringHash**  hashes;
 };
 
-#endif  _STRINGBLOOMFILTER_H_
+#endif

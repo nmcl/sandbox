@@ -19,12 +19,11 @@
 
 static char bitMasks[] = { 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80 };
 
-#include <Arjuna/commondefs.h>
 #include "BloomFilter.h"
 
 BloomFilter::BloomFilter (unsigned long numBits)
 {
-    bloomFilterBits = NILPTR(char);
+    bloomFilterBits = 0;
     numberOfBits    = numBits;
     numberOfBytes   = (numberOfBits + 7) / 8;
     numberOfBitsSet = 0;
@@ -37,7 +36,7 @@ BloomFilter::BloomFilter (unsigned long numBits)
 
 BloomFilter::~BloomFilter ()
 {
-    if (bloomFilterBits != NILPTR(char))
+    if (bloomFilterBits != 0)
 	delete bloomFilterBits;
 }
 

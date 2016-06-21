@@ -36,4 +36,4 @@ private:
     unsigned long hashSeed;
 };
 
-#endif  _STRINGHASH_H_
+#endif

@@ -19,12 +19,11 @@
 
 #define RAND(x) ((x * 1103515245) + 12345)
 
-#include <Arjuna/commondefs.h>
 #include "StringBloomFilter.h"
 
 StringBloomFilter::StringBloomFilter (unsigned long numBits, unsigned long numOfHashes) : BloomFilter (numBits)
 {
-    hashes          = NILPTR(StringHash*);
+    hashes          = 0;
 
     numberOfHashes = numOfHashes;
 
@@ -35,10 +34,10 @@ StringBloomFilter::StringBloomFilter (unsigned long numBits, unsigned long numOf
 
 StringBloomFilter::~StringBloomFilter ()
 {
-    if (hashes != NILPTR(StringHash*))
+    if (hashes != 0)
     {
 	for (int index = 0; index < numberOfHashes; index++)
-	    if (hashes[index] != NILPTR(StringHash))
+	    if (hashes[index] != 0)
 		delete hashes[index];
 	delete hashes;
     }
@@ -52,7 +51,7 @@ void StringBloomFilter::AddEntry(char* name)
 
 bool StringBloomFilter::IsEntry(char* name)
 {
-    bool res = TRUE;
+    bool res = true;
 
     for (int index = 0; (index < numberOfHashes) && res; index++)
 	res = TestBit(hashes[index]->Hash(name) % NumberOfBits());

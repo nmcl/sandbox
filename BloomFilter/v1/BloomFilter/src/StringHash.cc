@@ -17,8 +17,6 @@
  *
  */
 
-// #include <Arjuna/Buffer.h>
-
 #include "StringHash.h"
 
 StringHash::StringHash (unsigned long hSeed)
