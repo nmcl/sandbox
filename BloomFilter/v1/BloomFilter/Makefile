@@ -22,9 +22,7 @@
 MAKE = make
 
 CC = cc
-C++ = CC
-
-MDEP = /usr/local/Arjuna/bin/makedepend
+C++ = g++
 
 CPPFLAGS =
 CFLAGS =

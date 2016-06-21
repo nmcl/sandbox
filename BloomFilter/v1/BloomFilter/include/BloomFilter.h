@@ -20,9 +20,6 @@
  *
  */
 
-#include <Std/boolean.h>
-// #include <Arjuna/Buffer.h>
-
 class BloomFilter
 {
 public:
