@@ -1,7 +1,7 @@
 #ifndef _Bus_
 #define _Bus_
 #include "common.h"
-#include <iostream.h>
+#include <iostream>
 
 // InterfaceList is a list of the BusInterfaces which have been connected to the bus.
 

@@ -2,27 +2,24 @@ MAKE = make
 
 CC  = cc
 C++ = CC
-CPP = /lib/cpp
+CPP = gcc
 LEX = lex
-
-MDEP = /usr/local/Arjuna/bin/makedepend
-STRIPDEPEND = /usr/local/Arjuna/bin/stripdepend
 
 CFLAGS   =
 CPPFLAGS =
-C++FLAGS = -g +w
+C++FLAGS = -g
 LDFLAGS  = -g
 LEXFLAGS =
 
 MDEPFLAGS =
 
 LOCAL_CFLAGS   =
-LOCAL_CPPFLAGS = -I/usr/local/Arjuna/include
+LOCAL_CPPFLAGS = 
 
 LOCAL_C++FLAGS =
-LOCAL_LDFLAGS  = -L/usr/lib -lm
+LOCAL_LDFLAGS  = 
 
-LOCAL_MDEPFLAGS = -I/usr/local/include/CC
+LOCAL_MDEPFLAGS =
 
 OBJECTS	= main.o Bus.o BusInterface.o Memory.o Ram.o Rom.o Connector.o \
 	Processor.o MultiConnector.o

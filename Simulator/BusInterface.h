@@ -1,7 +1,7 @@
 #ifndef _BusInterface_
 #define _BusInterface_
 #include "common.h"
-#include <iostream.h>
+#include <iostream>
 
 class BusInterface
 {
