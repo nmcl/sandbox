@@ -27,7 +27,7 @@ int main()
     memory1->write(4, 4);
     memory2->write(2, 4);
     cerr << "Ram memory 4 = " << memory1->read(4) << "\n";
-    cerr << "Reading 2, got " << cpu->read(2) << "\n";
+    cerr << "Reading 2, got " << cpu->read(2) << "\n";  // should be -1 as not initialised
 
     data_buffer d = cpu->multi_read(4);
     cerr << "Reading 4, got " << d.value << "\n";
