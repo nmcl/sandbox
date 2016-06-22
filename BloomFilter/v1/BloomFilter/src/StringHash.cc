@@ -37,7 +37,7 @@ unsigned long StringHash::Hash(char* entry)
     while (*cp != '\0')
     {
         hashVal = (hashVal << 4) + (*cp);
-        if (temp = hashVal & 0xf0000000)
+        if (temp == (hashVal & 0xf0000000))
         {
             hashVal = hashVal ^ (temp >> 24);
             hashVal = hashVal ^ temp;

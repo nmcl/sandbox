@@ -31,7 +31,7 @@ LDFLAGS =
 
 MDEPFLAGS =
 
-ALLDIRS  = include src test
+ALLDIRS  = include src
 
 all:
 	for i in $(ALLDIRS) ;\
