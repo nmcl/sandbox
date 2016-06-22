@@ -16,7 +16,7 @@
  * $Id: Manager.cc,v 1.2 1991/08/19 20:02:29 nsmw Exp $
  */
 
-#include <sysent.h>
+// #include <sysent.h>
 
 #include <PortAddress.h>
 #include <Port.h>

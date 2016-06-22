@@ -21,9 +21,7 @@
 MAKE = make
 
 CC = cc
-C++ = CC
-
-MDEP = /usr/local/bin/makedepend
+C++ = g++
 
 CPPFLAGS = -DDEBUG
 CFLAGS =
