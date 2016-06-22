@@ -61,7 +61,7 @@ public String unpackString () throws IOException
 	byte[] b = new byte[length];
 	_input.read(b, 0, length);
 
-	return new String(b, 0);
+	return new String(b);
     }
 
 private void skipHeader () throws IOException

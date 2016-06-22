@@ -116,7 +116,7 @@ public synchronized void setupConnection (PortAddress addr) throws IOException
 	if (!addr.valid())
 	    throw(new IOException("Invalid PortAddress."));
 	
-	_sock = new Socket(addr.hostName(), addr.portNumber(), true);
+	_sock = new Socket(addr.hostName(), addr.portNumber());
 	_myOutputStream = _sock.getOutputStream();
 	_myInputStream = _sock.getInputStream();
 	_isConnected = true;
