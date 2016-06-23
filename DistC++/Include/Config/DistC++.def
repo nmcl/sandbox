@@ -1,0 +1,47 @@
+
+#ifdef UseInstalled
+STUBGEN = /usr/local/DistC++/bin/tatsu
+#else
+STUBGEN = /home/nmcl/DistC++/StubGen/src/tatsu
+#endif
+
+#ifdef UseInstalled
+MULTISERVER = /usr/local/DistC++/bin/multiserver
+#else
+MULTISERVER = /home/nmcl/DistC++/Utilities/Tools/multiserver
+#endif
+
+#ifdef UseInstalled
+LIBCOMMON = /usr/local/DistC++/lib/libCommon.a
+#else
+LIBCOMMON = /home/nmcl/DistC++/lib/libCommon.a
+#endif
+
+#ifdef UseInstalled
+LIBSTUB = /usr/local/DistC++/lib/libRPC.a
+#else
+LIBSTUB = /home/nmcl/DistC++/lib/libRPC.a
+#endif
+
+#ifdef UseInstalled
+LIBSIMPLERPC = /usr/local/DistC++/lib/libRPC.a
+#else
+LIBSIMPLERPC = /home/nmcl/DistC++/lib/libRPC.a
+#endif
+
+LIBRPC = $(LIBSIMPLERPC)
+
+#ifdef UseInstalled
+STD_INCLUDES = /usr/local/DistC++/include
+#else
+STD_INCLUDES = /home/nmcl/DistC++/Include
+#endif
+
+#ifdef UseInstalled
+UIDSTUB_H = /usr/local/DistC++/include/Common/Uid_stub.h
+BUFFSTUB_H = /usr/local/DistC++/include/Common/Buffer_stub.h
+#else
+UIDSTUB_H = /home/nmcl/DistC++/include/Common/Uid_stub.h
+BUFFSTUB_H = /home/nmcl/DistC++/include/Common/Buffer_stub.h
+#endif
+

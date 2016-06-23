@@ -1,0 +1,39 @@
+/Imakefile/1.1/Thu Sep 25 15:26:37 1997//
+/PosixThread.h/1.1/Thu Sep 25 15:26:39 1997//
+/SolarisSynch.h/1.1/Thu Sep 25 15:26:40 1997//
+/SolarisThread.h/1.1/Thu Sep 25 15:26:40 1997//
+/assert.h/1.1/Thu Sep 25 15:26:41 1997//
+/ctype.h/1.1/Thu Sep 25 15:26:42 1997//
+/direct.h/1.1/Thu Sep 25 15:26:42 1997//
+/dirent.h/1.1/Thu Sep 25 15:26:43 1997//
+/errno.h/1.1/Thu Sep 25 15:26:44 1997//
+/fcntl.h/1.1/Thu Sep 25 15:26:45 1997//
+/fstream.h/1.1/Thu Sep 25 15:26:46 1997//
+/iostream.h/1.1/Thu Sep 25 15:26:47 1997//
+/limits.h/1.1/Thu Sep 25 15:26:48 1997//
+/malloc.h/1.1/Thu Sep 25 15:26:49 1997//
+/math.h/1.1/Thu Sep 25 15:26:50 1997//
+/memory.h/1.1/Thu Sep 25 15:26:51 1997//
+/ndbm.h/1.1/Thu Sep 25 15:26:52 1997//
+/netdb.h/1.1/Thu Sep 25 15:26:54 1997//
+/new.h/1.1/Thu Sep 25 15:26:56 1997//
+/osfcn.h/1.1/Thu Sep 25 15:26:58 1997//
+/process.h/1.1/Thu Sep 25 15:27:00 1997//
+/protos.h/1.1/Thu Sep 25 15:27:01 1997//
+/pwd.h/1.1/Thu Sep 25 15:27:02 1997//
+/setjmp.h/1.1/Thu Sep 25 15:27:03 1997//
+/signal.h/1.1/Thu Sep 25 15:27:04 1997//
+/stddef.h/1.1/Thu Sep 25 15:27:05 1997//
+/stdio.h/1.1/Thu Sep 25 15:27:06 1997//
+/stdlib.h/1.1/Thu Sep 25 15:27:07 1997//
+/string.h/1.1/Thu Sep 25 15:27:08 1997//
+/strstream.h/1.1/Thu Sep 25 15:27:10 1997//
+/syslog.h/1.1/Thu Sep 25 15:27:10 1997//
+/time.h/1.1/Thu Sep 25 15:27:11 1997//
+/unistd.h/1.1/Thu Sep 25 15:27:13 1997//
+/values.h/1.1/Thu Sep 25 15:27:14 1997//
+/wchar.h/1.1/Thu Sep 25 15:27:15 1997//
+/winsock.h/1.1/Thu Sep 25 15:27:17 1997//
+D/arpa////
+D/netinet////
+D/sys////

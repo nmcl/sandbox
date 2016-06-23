@@ -1,0 +1,17 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: m_i386.cf,v 1.1 1997/09/25 15:26:09 nmcl Exp $
+ */
+
+/*
+ * m_i386.cf.cf
+ */
+
+#define MACHINE_SPECIFIC_FLAGS -DLITTLE_ENDIAN_MC
+#define STUBGEN_MC_FLAGS "-Di386 -D_I386 -DLITTLE_ENDIAN_MC"

@@ -1,0 +1,57 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1997/09/25 15:31:48 nmcl Exp $
+COMMENT
+
+STUBS     = cRBC_stub.h \
+	    cRBC_stubclass.h \
+	    cOCifc_stub.h \
+	    cOCifc_stubclass.h
+
+SOURCES	  = cRBC.cc \
+	    cRBC_client.cc \
+	    cRBC_server.cc \
+	    cRBC_servermain.cc \
+	    $(STUBS) \
+	    cOCifc.cc \
+	    cOCifc_client.cc \
+	    cOCifc_server.cc \
+	    cOCifc_servermain.cc
+
+OBJECTS1  = cRBC_server.o \
+	    cRBC.o
+
+OBJECTS2 =  cOCifc_server.o \
+	    cOCifc.o
+
+LIBRARIES =  $(LIBSTUB) $(LIBRPC) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(STD_INCLUDES))
+
+AllTarget(cRBC starter driver cRBC_client.o)
+
+StubTarget($(STUBS))
+
+CreateInstallTopDirectory(servers)
+InstallProgram(servers,cRBC)
+
+MakeProgramCPLUSPLUS(cRBC,$(OBJECTS1) cRBC_servermain.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(cOCifc,$(OBJECTS1) $(OBJECTS2) cRBC_client.o cOCifc_servermain.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(starter,starter.o cRBC_client.o $(OBJECTS1) $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(driver,driver.o cRBC_client.o $(OBJECTS1) $(LIBRARIES),NOPARAM)
+
+MakeObjectCPLUSPLUS(cRBC,NOPARAM)
+MakeObjectCPLUSPLUS(cOCifc,NOPARAM)
+MakeObjectCPLUSPLUS(starter,NOPARAM)
+MakeObjectCPLUSPLUS(driver,NOPARAM)
+
+MakeStubGen(cRBC,cRBC,cRBC,NOPARAM)
+MakeStubGen(cOCifc,cOCifc,cOCifc,NOPARAM)
+
+TidyTarget(cRBC cRBC_client.cc cRBC_server.cc cRBC_servermain.cc $(STUBS) cOCifc cOCifc_client.cc cOCifc_server.cc cOCifc_servermain.cc)

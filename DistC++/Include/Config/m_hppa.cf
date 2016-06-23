@@ -1,0 +1,17 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: m_hppa.cf,v 1.1 1997/09/25 15:26:09 nmcl Exp $
+ */
+
+/*
+ * m_hppa.cf
+ */
+
+#define MACHINE_SPECIFIC_FLAGS
+#define STUBGEN_MC_FLAGS "-Dhppa -D__hppa -D__hppa__"

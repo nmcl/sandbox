@@ -1,0 +1,23 @@
+/*
+ * Copyright (C) 1993-1998,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: c_cxx.cf,v 1.2 1998/11/20 08:28:34 nmcl Exp $
+ */
+
+/*
+ * c_cxx.cf
+ */
+
+/*
+ * cxx exhibits the same bug as g++-2.5.8 as far as static structs goes
+ */
+
+#define COMPILER_SPECIFIC_FLAGS -DHAS_IOSTREAM_INIT -DSTUBGEN_IGNORE_COMPILER -DGCC_STATIC_INIT_BUG
+#define STUBGEN_CC_FLAGS "-D__DECCXX "
+#define STUBGEN_POST_PROCESS_CMD "sed '/^#/s% [0-9]* $pragma%pragma%'"
+#define LINKER_SPECIFIC_FLAGS

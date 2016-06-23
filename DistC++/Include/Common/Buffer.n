@@ -1,0 +1,165 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: Buffer.n,v 1.1 1997/09/25 15:25:38 nmcl Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(BUFFER_CC_)
+
+class ostream;
+
+extern ostream& operator<< (ostream&, const Buffer&);
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF ostream& operator<<  ( ostream& strm, const Buffer& b )
+{
+    return b.print (strm);
+}
+
+INLINEF const char *Buffer::buffer () const
+{
+    return bufferStart;
+}
+
+INLINEF size_t Buffer::length () const
+{
+    return (packPoint - bufferStart);
+}
+
+INLINEF BufferState Buffer::readState () const
+{
+    return buffState;
+}
+
+INLINEF void Buffer::reread ()
+{
+    unpackPoint = bufferStart + rereadOffset;
+    unpackPointers.clearMap();
+}
+
+INLINEF void Buffer::rewrite ()
+{
+    packPointers.clearMap();
+    unpackPointers.clearMap();
+    readOnly = FALSE;
+    packPoint = bufferStart;
+    initBuffer();
+}
+
+INLINEF void Buffer::setState ( BufferState newState )
+{
+    buffState = newState;
+}
+
+INLINEF void Buffer::setLength ( size_t newLength )
+{
+    packPoint = bufferStart + newLength;
+}
+
+#ifdef HAVE_BOOLEAN_TYPE
+INLINEF Boolean Buffer::pack ( bool b )
+{
+    Uint32 l = b;
+
+    return (pack32bits(l));
+}
+#endif
+
+INLINEF Boolean Buffer::pack ( char c )
+{
+    Uint32 l = c;
+
+    return (pack32bits(l));
+}
+
+INLINEF Boolean Buffer::pack ( unsigned char c )
+{
+    Uint32 l = c;
+
+    return (pack32bits(l));
+}
+
+INLINEF Boolean Buffer::pack ( short s )
+{
+    Uint32 l = s;
+
+    return (pack32bits(l));
+}
+
+INLINEF Boolean Buffer::pack ( unsigned short s )
+{
+    Uint32 l = s;
+
+    return (pack32bits(l));
+}
+
+INLINEF Boolean Buffer::pack ( int i )
+{
+    Uint32 l = i;
+
+    return (pack32bits(l));
+}
+
+INLINEF Boolean Buffer::pack ( unsigned int i )
+{
+    Uint32 l = i;
+
+    return (pack32bits(l));
+}
+
+INLINEF Boolean Buffer::pack ( long l )
+{
+    unsigned long ul = l;
+
+    return (pack(ul));
+}
+
+#ifdef HAVE_LONG_LONG
+INLINEF Boolean Buffer::pack ( long long l )
+{
+    unsigned long long ul = l;
+
+    return (pack(ul));
+}
+#endif
+
+INLINEF Boolean Buffer::unpack ( char& c )
+{
+    return (unpack((unsigned char&) c));
+}
+
+INLINEF Boolean Buffer::unpack ( short& s )
+{
+    return (unpack((unsigned short&) s));
+}
+
+INLINEF Boolean Buffer::unpack ( int& i )
+{
+    return (unpack((unsigned int&) i));
+}
+
+#ifdef HAVE_LONG_LONG
+
+INLINEF Boolean Buffer::unpack ( long long& i )
+{
+    return (unpack((unsigned long long&) i));
+}
+#endif
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif

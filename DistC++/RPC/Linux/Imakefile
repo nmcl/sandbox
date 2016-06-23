@@ -1,0 +1,22 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1997/09/25 15:28:27 nmcl Exp $
+COMMENT
+
+SOURCES = common.cc
+
+OBJECTS = common.o
+
+SetLocalCppFlags(-I$(STD_INCLUDES))
+
+AllTarget($(LIBRPC))
+
+MakeLibrary($(LIBRPC),$(OBJECTS))
+
+MakeObjectCPLUSPLUS(common,)

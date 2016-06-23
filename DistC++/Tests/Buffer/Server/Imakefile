@@ -1,0 +1,40 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 1998/08/29 11:47:34 nmcl Exp $
+COMMENT
+
+STUBS     = BufferCheck_stub.h \
+	    BufferCheck_stubclass.h
+
+SOURCES	  = BufferCheck.cc \
+	    BufferCheck_client.cc \
+	    BufferCheck_server.cc \
+	    BufferCheck_servermain.cc \
+	    $(STUBS)
+
+OBJECTS	  = BufferCheck_server.o \
+	    BufferCheck_servermain.o \
+	    BufferCheck.o
+
+LIBRARIES = $(LIBRPC) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(STD_INCLUDES))
+
+AllTarget(BufferCheck BufferCheck_client.o)
+StubTarget($(STUBS))
+CreateInstallTopDirectory(servers)
+InstallProgram(servers,BufferCheck)
+
+MakeProgramCPLUSPLUS(BufferCheck,$(OBJECTS) $(LIBRARIES),NOPARAM)
+
+MakeObjectCPLUSPLUS(BufferCheck,NOPARAM)
+
+MakeStubGen(BufferCheck,BufferCheck,BufferCheck,NOPARAM)
+
+TidyTarget(BufferCheck BufferCheck_client.cc BufferCheck_server.cc BufferCheck_servermain.cc $(STUBS))

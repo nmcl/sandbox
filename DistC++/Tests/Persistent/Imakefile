@@ -1,0 +1,54 @@
+COMMENT
+COMMENT Copyright (C) 1997,
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 1997/10/02 13:00:27 nmcl Exp $
+COMMENT
+
+STUBS     = Stack_stub.h \
+	    Stack_stubclass.h
+
+SOURCES	  = Stack.cc \
+	    Stack_client.cc \
+	    Stack_server.cc \
+	    Stack_servermain.cc \
+	    StackStarter.cc \
+	    $(STUBS)
+
+SOBJECTS  = Stack_server.o \
+	    Stack_servermain.o \
+	    Stack.o
+
+COBJECTS  = StackStarter.o \
+	    Stack_client.o
+
+DOBJECTS  = StackDriver.o \
+	    Stack_client.o
+
+LIBRARIES =  $(LIBSTUB) $(LIBRPC) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(STD_INCLUDES))
+
+AllTarget(Stack StackStarter StackDriver Stack_client.o)
+
+StubTarget($(STUBS))
+
+CreateInstallTopDirectory(servers)
+
+InstallProgram(servers,Stack)
+
+MakeProgramCPLUSPLUS(Stack,$(SOBJECTS) $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(StackStarter,$(COBJECTS) $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(StackDriver,$(DOBJECTS) $(LIBRARIES),NOPARAM)
+
+MakeObjectCPLUSPLUS(Stack,NOPARAM)
+MakeObjectCPLUSPLUS(StackStarter,NOPARAM)
+MakeObjectCPLUSPLUS(StackDriver,NOPARAM)
+
+MakeStubGen(Stack,Stack,Stack,NOPARAM)
+
+TidyTarget(Stack StackStarter StackDriver Stack_client.cc Stack_server.cc Stack_servermain.cc $(STUBS) $(COBJECTS) $(DOBJECTS))

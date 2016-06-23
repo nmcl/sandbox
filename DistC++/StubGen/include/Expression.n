@@ -1,0 +1,39 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: Expression.n,v 1.1 1997/09/25 15:30:00 nmcl Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(EXPRESSION_CC_)
+
+class ostream;
+
+extern ostream& operator<< (ostream&, const Expression&);
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF Expression::Expression ()
+{
+}
+
+INLINEF ostream& operator<< ( ostream& s, const Expression& expr )
+{
+    return expr.printExpr(s);
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif

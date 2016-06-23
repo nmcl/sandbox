@@ -1,0 +1,33 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1997/09/25 15:32:13 nmcl Exp $
+COMMENT
+
+SOURCES	  = BufferCheckDriver \
+	    BufferServer.cc
+
+OBJECTS   = BufferCheckDriver.o \
+	    BufferServer.o
+
+LIBRARIES = $(LIBRPC) $(LIBCOMMON)
+
+SetLocalCppFlags(-I../../RPC/SimpleRpc/include -I$(STD_INCLUDES))
+
+AllTarget(BufferCheckDriver BufferServer)
+
+CreateInstallTopDirectory(servers)
+InstallProgram(servers,BufferServer)
+
+MakeProgramCPLUSPLUS(BufferCheckDriver,BufferCheckDriver.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(BufferServer,BufferServer.o $(LIBRARIES),NOPARAM)
+
+MakeObjectCPLUSPLUS(BufferCheckDriver,NOPARAM)
+MakeObjectCPLUSPLUS(BufferServer,NOPARAM)
+
+TidyTarget(BufferCheckDriver BufferServer)

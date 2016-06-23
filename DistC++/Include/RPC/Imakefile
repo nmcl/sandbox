@@ -1,0 +1,20 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1997/09/25 15:26:25 nmcl Exp $
+COMMENT
+
+#define IHaveSubDirs
+
+SetSubDirectorys(SimpleRpc)
+
+
+CreateInstallTopDirectory(include)
+CreateInstallDirectory(include,RPC)
+InstallFile(include/RPC,ClStatus.h)
+

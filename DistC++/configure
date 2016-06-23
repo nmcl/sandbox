@@ -1,0 +1,1052 @@
+#!/bin/sh
+#
+# Copyright (C) 1993-1998,
+# 
+# Department of Computing Science,
+# The University,
+# Newcastle upon Tyne,
+# UK.
+# 
+# $Id: configure,v 1.4 1998/11/20 08:28:26 nmcl Exp $
+#
+ 
+trap 'rm -fr configtest* configdefs* core; exit 1' 1 3 15
+trap 'rm -f configdefs* configtest*' 0
+ 
+ECHO_TEST=`echo "Test \c"`
+if test "$ECHO_TEST" = "Test "
+then 
+	PRE_ECHO=""
+	POST_ECHO="\c"
+else
+	PRE_ECHO="-n"
+	POST_ECHO=""
+fi
+
+OS=`(uname -s) 2> /dev/null`
+if test -n "$OS" 
+then
+	RELEASE=`uname -r`
+	MACHINE=`uname -m`
+else
+	RELEASE=unknown
+	MACHINE=unknown
+	OSMAJOR=0
+	OSMINOR=0
+	OSMINMIN=0
+	OS="unknown OS"
+fi
+
+NATIVE_MACHINE=$MACHINE
+NATIVE_OS=$OS
+NATIVE_RELEASE=$RELEASE
+CROSS_COMPILE=
+SUPPORT_THREADS=YES
+THREAD_CPPFLAGS=
+COMPILER_THREAD_OPT=
+LD_THREAD_OPT=
+LD_THREAD_LIBS=
+DEFAULT_THREAD_SYS=NoneThread
+VERBOSE_MAKE=NO
+TOPDIR_DEFAULT=`pwd`
+CPLUSPLUS_PROGRAM=CC
+CPLUSPLUS_NATIVE_COMPILER=
+CPPFLAGS_DEFAULT=
+CPLUSPLUSFLAGS_DEFAULT=
+LIBRARIES_DEFAULT=
+LDFLAGS_DEFAULT=
+LEX_PROGRAM="lex"
+LEX_LIB=
+LEXFLAGS_DEFAULT=
+PURIFY_PROGRAM="purify"
+YACC_PROGRAM="yacc"
+YACCFLAGS_DEFAULT=
+YACC_LIB=
+ID_PROGRAM=id
+INSTALL_TOPDIR_DEFAULT=/usr/local/DistC++
+HAVE_INTERVIEWS=NO
+
+CONFIGDIR=Include/Config
+
+while true
+do
+	INPUT="xxxx"
+	while test "'x$INPUT'" != "'x'" -a "'x$INPUT'" != "'xYES'" -a "'x$INPUT'" != "'xNO'"
+	do
+		echo $PRE_ECHO "Configuring for a $MACHINE machine running $OS version $RELEASE. Is this OK [YES] : " $POST_ECHO
+		read INPUT
+		echo
+	done
+	if test "'x$INPUT'" != "'xYES'" -a "'x$INPUT'" != "'x'"
+	then  
+		INPUT="xxxx"
+		echo $PRE_ECHO "Machine type [$MACHINE] " $POST_ECHO
+		read INPUT
+		echo
+		if test "'x$INPUT'" != "'x'"
+		then  
+			MACHINE=$INPUT
+		fi
+		INPUT="xxxx"
+		echo $PRE_ECHO "Operating System [$OS] " $POST_ECHO
+		read INPUT
+		echo
+		if test "'x$INPUT'" != "'x'"
+		then
+			OS=$INPUT
+		fi
+		INPUT="xxxx"
+		echo $PRE_ECHO "Operating System Version [$RELEASE] " $POST_ECHO
+		read INPUT
+		echo
+		if test "'x$INPUT'" != "'x'"
+		then
+			RELEASE=$INPUT
+		fi
+	else
+		break
+	fi
+done
+
+REL=`echo $RELEASE | sed -e 's/^[^0-9]*//'`
+COMPONENTS=`echo $REL |  awk -F. "{print NF}"`
+
+if [ $COMPONENTS -gt 2 ]
+then
+	OSMINMIN=`echo $REL | awk -F. '{print $3}'`
+fi
+if [ $COMPONENTS -gt 1 ]
+then
+	OSMINOR=`echo $REL | awk -F. '{print $2}'`
+fi
+if [ $COMPONENTS -gt 0 ]
+then
+	OSMAJOR=`echo $REL | awk -F. '{print $1}'`
+fi
+
+OSNAME=`echo s_$OS | tr "A-Z-" "a-z_" | tr -d "."`
+
+echo $PRE_ECHO "Finding OS config file : " $POST_ECHO
+S_CONFIG=`./getVersion ${OSNAME} .cf $CONFIGDIR ${OSMAJOR} ${OSMINOR} ${OSMINMIN}`
+echo $S_CONFIG
+
+if [ -z $S_CONFIG ]; then
+	S_CONFIG=s_unknown.cf
+	echo "WARNING no OS specific config file for this OS! using :" $S_CONFIG
+fi
+
+case $OS in
+SunOS|Solaris)
+	;;
+HP-RT)	LDFLAGS_DEFAULT="+A"
+	CPLUSPLUS_PROGRAM=CCrt
+	CPLUSPLUS_NATIVE_COMPILER=CC
+	;;
+Linux)	CPLUSPLUS_PROGRAM=g++
+	CPLUSPLUS_NATIVE_COMPILER=g++
+	YACCFLAGS_DEFAULT=-y
+	;;
+AIX)	CPLUSPLUS_PROGRAM=xlC
+	CPLUSPLUS_NATIVE_COMPILER=xlC
+	;;
+OSF1)	CPLUSPLUS_PROGRAM=cxx
+	CPLUSPLUS_NATIVE_COMPILER=cxx
+	;;
+ULTRIX)	CPLUSPLUS_PROGRAM=cxx
+	CPLUSPLUS_NATIVE_COMPILER=cxx
+	;;
+esac
+
+V_CONFIG="v_unknown.cf"
+
+case $MACHINE in
+sun4*)
+	M_CONFIG="m_sparc.cf" 
+	V_CONFIG="v_sun.cf" ;;
+9000*)	M_CONFIG="m_hppa.cf" ;;
+sun3*)  M_CONFIG="m_68k.cf" 	
+	V_CONFIG="v_sun.cf" ;;
+alpha*)	M_CONFIG="m_alpha.cf" ;;
+i386*|i486*)
+	M_CONFIG="m_i386.cf" ;;
+RISC)	if [ $OS = "ULTRIX" ] 
+	then
+		MACHINE=mips
+		NATIVE_MACHINE=mips
+		M_CONFIG="m_mips.cf"
+	else
+		M_CONFIG="m_unknown.cf"
+	fi
+	;;
+*)	M_CONFIG="m_unknown.cf" ;;
+esac
+
+echo $PRE_ECHO "Root directory of source tree ["$TOPDIR_DEFAULT"] : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then
+	TOPDIR_DEFAULT=$INPUT
+fi
+
+echo $PRE_ECHO "Root of directory tree for installation ["$INSTALL_TOPDIR_DEFAULT"] : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then  
+	INSTALL_TOPDIR_DEFAULT=$INPUT
+fi
+
+#
+# Installed Configure.h overrides any local version.
+#
+
+if test -s $INSTALL_TOPDIR_DEFAULT/Include/Config/Configure.h
+then
+	CACHED_SETUP=$INSTALL_TOPDIR_DEFAULT/Include/Config/Configure.h
+else
+	if test -s $TOPDIR_DEFAULT/Include/Config/Configure.h
+	then
+		CACHED_SETUP=$TOPDIR_DEFAULT/Include/Config/Configure.h
+	fi
+fi
+
+if test -n "$CACHED_SETUP"
+then
+	echo Using default answers from $CACHED_SETUP
+	grep -s " CPLUSPLUS_PROGRAM " $CACHED_SETUP > /dev/null 2>&1
+	if test $? -eq 0
+	then
+		TEMPVAR=`awk -F\" '/CPLUSPLUS_PROGRAM / {print $2}' $CACHED_SETUP`
+		CPLUSPLUS_PROGRAM=$TEMPVAR
+	fi
+
+	grep -s " CPPFLAGS_DEFAULT " $CACHED_SETUP > /dev/null 2>&1	
+	if test $? -eq 0
+	then
+		TEMPVAR=`awk '/ CPPFLAGS_DEFAULT / {for (i = 3; i <= NF; i++) print $i}' $CACHED_SETUP`
+		CPPFLAGS_DEFAULT=$TEMPVAR
+	fi
+	
+	grep -s " THREAD_CPPFLAGS_DEFAULT " $CACHED_SETUP > /dev/null 2>&1	
+	if test $? -eq 0
+	then
+		TEMPVAR=`awk '/ THREAD_CPPFLAGS_DEFAULT / {for (i = 3; i <= NF; i++) print $i}' $CACHED_SETUP`
+		THREAD_CPPFLAGS=$TEMPVAR
+	fi
+	
+	grep -s " CPLUSPLUSFLAGS_DEFAULT " $CACHED_SETUP > /dev/null 2>&1	
+	if test $? -eq 0
+	then
+		TEMPVAR=`awk '/ CPLUSPLUSFLAGS_DEFAULT / {for (i = 3; i <= NF; i++) print $i}' $CACHED_SETUP`
+		CPLUSPLUSFLAGS_DEFAULT=$TEMPVAR
+	fi
+	
+	grep -s " COMPILER_THREAD_FLAGS_DEFAULT " $CACHED_SETUP > /dev/null 2>&1	
+	if test $? -eq 0
+	then
+		TEMPVAR=`awk '/ COMPILER_THREAD_FLAGS_DEFAULT / {for (i = 3; i <= NF; i++) print $i}' $CACHED_SETUP`
+		COMPILER_THREAD_OPT=$TEMPVAR
+	fi
+	
+	grep -s " LDFLAGS_DEFAULT " $CACHED_SETUP > /dev/null 2>&1	
+	if test $? -eq 0
+	then
+		TEMPVAR=`awk '/ LDFLAGS_DEFAULT / {for (i = 3; i <= NF; i++) print $i}' $CACHED_SETUP`
+		LDFLAGS_DEFAULT=$TEMPVAR
+	fi
+	
+	grep -s " THREAD_LDFLAGS_DEFAULT " $CACHED_SETUP > /dev/null 2>&1	
+	if test $? -eq 0
+	then
+		TEMPVAR=`awk '/ THREAD_LDFLAGS_DEFAULT / {for (i = 3; i <= NF; i++) print $i}' $CACHED_SETUP`
+		LD_THREAD_OPT=$TEMPVAR
+	fi
+	
+	grep -s " THREAD_LIB_DEFAULT " $CACHED_SETUP > /dev/null 2>&1	
+	if test $? -eq 0
+	then
+		TEMPVAR=`awk '/THREAD_LIB_DEFAULT / {print substr($3,4,length($3)-5)}' $CACHED_SETUP`
+		DEFAULT_THREAD_SYS=$TEMPVAR
+	fi
+	
+	grep -s " xLIBRARIES_DEFAULT " $CACHED_SETUP > /dev/null 2>&1	
+	if test $? -eq 0
+	then
+		TEMPVAR=`awk '/ xLIBRARIES_DEFAULT / {for (i = 3; i <= NF; i++) print $i}' $CACHED_SETUP`
+		LIBRARIES_DEFAULT=$TEMPVAR
+	fi
+	
+	grep -s " LEX_LIBRARY " $CACHED_SETUP > /dev/null 2>&1	
+	if test $? -eq 0
+	then
+		TEMPVAR=`awk '/ LEX_LIBRARY / {print $3}' $CACHED_SETUP`
+		LEX_LIB=$TEMPVAR
+	fi
+	
+	grep -s " YACC_LIBRARY " $CACHED_SETUP > /dev/null 2>&1	
+	if test $? -eq 0
+	then
+		TEMPVAR=`awk '/ YACC_LIBRARY / {print $3}' $CACHED_SETUP`
+		YACC_LIB=$TEMPVAR
+	fi
+	
+	grep -s " THREAD_LDLIBS_DEFAULT " $CACHED_SETUP > /dev/null 2>&1	
+	if test $? -eq 0
+	then
+		TEMPVAR=`awk '/ THREAD_LDLIBS_DEFAULT / {for (i = 3; i <= NF; i++) print $i}' $CACHED_SETUP`
+		LD_THREAD_LIBS=$TEMPVAR
+	fi
+	
+	grep -s " LEX_PROGRAM " $CACHED_SETUP > /dev/null 2>&1	
+	if test $? -eq 0
+	then
+		TEMPVAR=`awk -F\" '/LEX_PROGRAM / {print $2}' $CACHED_SETUP`
+		LEX_PROGRAM=$TEMPVAR
+	fi
+	
+	grep -s " LEXFLAGS_DEFAULT " $CACHED_SETUP > /dev/null 2>&1	
+	if test $? -eq 0
+	then
+		TEMPVAR=`awk '/ LEXFLAGS_DEFAULT / {for (i = 3; i <= NF; i++) print $i}' $CACHED_SETUP`
+		LEXFLAGS_DEFAULT=$TEMPVAR
+	fi
+	
+	grep -s " YACC_PROGRAM " $CACHED_SETUP > /dev/null 2>&1	
+	if test $? -eq 0
+	then
+		TEMPVAR=`awk -F\" '/YACC_PROGRAM / {print $2}' $CACHED_SETUP`
+		YACC_PROGRAM=$TEMPVAR
+	fi
+	
+	grep -s " YACCFLAGS_DEFAULT " $CACHED_SETUP > /dev/null 2>&1	
+	if test $? -eq 0
+	then
+		TEMPVAR=`awk '/ YACCFLAGS_DEFAULT / {for (i = 3; i <= NF; i++) print $i}' $CACHED_SETUP`
+		YACCFLAGS_DEFAULT=$TEMPVAR
+	fi
+
+	grep -s " HAVE_INTERVIEWS " $CACHED_SETUP > /dev/null 2>&1
+	if test $? -eq 0
+	then
+		TEMPVAR=`awk '/HAVE_INTERVIEWS / {print $3}' $CACHED_SETUP`
+		HAVE_INTERVIEWS=$TEMPVAR
+	fi
+fi
+
+if test $NATIVE_OS != $OS -o $NATIVE_MACHINE != $MACHINE -o $NATIVE_RELEASE != $RELEASE
+then
+	echo "You appear to be cross-compiling..."
+	echo "Arjuna needs to compile its stub generation system for BOTH targets"
+	echo
+	CROSS_COMPILE="#define CROSS_COMPILE"
+	echo 'main(){}' > configtest.C
+	while true
+	do
+		echo $PRE_ECHO "$NATIVE_OS C++ compiler ["$CPLUSPLUS_NATIVE_COMPILER"] : " $POST_ECHO
+		read INPUT
+		echo
+		if test "'x$INPUT'" != "'x'"
+		then
+			CPLUSPLUS_NATIVE_COMPILER=$INPUT
+		fi
+		echo $PRE_ECHO "Checking for" $CPLUSPLUS_NATIVE_COMPILER "... " $POST_ECHO
+		($CPLUSPLUS_NATIVE_COMPILER -c configtest.C) > /dev/null 2>&1
+		if [ $? -ne 0 ]
+		then
+			echo done
+			echo I cannot find $CPLUSPLUS_NATIVE_COMPILER
+			echo
+			CPLUSPLUS_NATIVE_COMPILER=""
+		else
+			echo done
+			break
+		fi
+	done
+	echo
+	rm -f configtest.*
+fi
+
+echo 'main(){}' > configtest.C
+while true
+do
+	echo $PRE_ECHO "$OS C++ compiler ["$CPLUSPLUS_PROGRAM"] : " $POST_ECHO
+	read INPUT
+	echo
+	if test "'x$INPUT'" != "'x'"
+	then  
+		CPLUSPLUS_PROGRAM=$INPUT
+	fi
+	echo $PRE_ECHO "Checking for" $CPLUSPLUS_PROGRAM "... " $POST_ECHO
+	($CPLUSPLUS_PROGRAM -c configtest.C) > /dev/null 2>&1
+	if [ $? -ne 0 ]
+	then
+		echo done
+		echo I cannot find $CPLUSPLUS_PROGRAM
+		echo
+		CPLUSPLUS_PROGRAM=""
+	else
+		echo done
+		break
+	fi
+done
+rm -f configtest.*
+
+#
+# Compiler version
+# 
+
+echo $PRE_ECHO "Determining C++ compiler version ... " $POST_ECHO
+case "$CPLUSPLUS_PROGRAM" in
+*gcc*|*g++*) version="`$CPLUSPLUS_PROGRAM -v 2>&1 | grep version | sed 's/^[^0-9]*\([0-9.]*\).*/\1/'`"
+	echo "done (version is" $version ")"
+	CPLUSPLUS_NAME="c_gcc"
+
+	case "$version" in
+	2.5*)	echo "WARNING gcc-2.5 has bugs that affect the linking of Arjuna applications."
+		echo "See README-GCC for details"
+		;;
+	2.6*)	echo "WARNING gcc-2.6 has bugs that affect the linking of Arjuna applications."
+		echo "See README-GCC for details"
+		;;
+	esac
+	LEX_PROGRAM=flex
+	YACC_PROGRAM=bison
+	if test "'x$COMPILER_THREAD_OPT'" = "'x-mt'"
+	then
+		COMPILER_THREAD_OPT=
+		LD_THREAD_OPT=
+		DEFAULT_THREAD_SYS=NoneThread
+	fi
+	;;
+*CC*)	echo 'int x;' > configtest.C 
+	CPLUSPLUS_NAME="c_att"
+	fullversion="`$CPLUSPLUS_PROGRAM -V 2>&1| grep -v 'warning' | grep '^CC:'`"
+	if [ -z "$fullversion" ]
+	then
+		fullversion="`$CPLUSPLUS_PROGRAM -F configtest.C 2>/dev/null| grep '<<' | sed -e 's|.*\(<<.*>>\).*|\1|'`"
+	fi
+	rm -f configtest.C
+
+	case "$fullversion" in
+	*SC*)version="`echo $fullversion | sed -e 's|.*\(SC[0-9.]*\).*|\1|'`";;
+	*AT*)version="`echo $fullversion | sed -e 's|<<[^0-9]*\([0-9.]*\).*>>|\1|'`" ;;
+	*Sun*)version="`echo $fullversion | sed -e 's|<<[^0-9]*\([0-9.]*\).*>>|\1|'`" ;;
+	*HP*)version="`echo $fullversion | sed -e 's|<<.*A\.\([0-9.]*\).*>>|A.\1|'`" ;;
+	*) version=unknown
+	esac
+
+	echo "done (version is" $fullversion ")"
+	case "$version" in
+	A.*)	CPLUSPLUS_NAME="c_att_hp" 
+		version=`echo $version | sed -e 's|A\.||'`
+		;;
+	SC3*)	CPLUSPLUS_NAME="c_sc"
+		version=`echo $version | sed -e 's|SC||'`
+		;;
+	esac
+	;;
+*cxx*)	echo 'int x;' > configtest.C 
+	fullversion="`$CPLUSPLUS_PROGRAM -V 2>&1| grep '^[ 	]*DEC'`"
+	rm -f configtest.C
+
+	version="`echo $fullversion | sed -e 's|<<.*\([0-9.]*\).*|\1|'`" 
+
+	echo "done (version is" $fullversion ")"
+	CPLUSPLUS_NAME="c_cxx"
+	;;
+*)	CPLUSPLUS_NAME="c"
+	echo "done (version unknown)" 
+	;;
+esac
+
+COMPONENTS=`echo $version | awk -F. "{print NF}"`
+
+if [ $COMPONENTS -gt 2 ]
+then
+	CPLUSPLUS_MINORMINOR=`echo $version | awk -F. '{print $3}'`
+fi
+if [ $COMPONENTS -gt 1 ]
+then
+	CPLUSPLUS_MINOR=`echo $version | awk -F. '{print $2}'`
+fi
+if [ $COMPONENTS -gt 0 ]
+then
+	CPLUSPLUS_MAJOR=`echo $version | awk -F. '{print $1}'`
+fi
+
+echo
+echo $PRE_ECHO "Finding compiler config file : " $POST_ECHO
+
+C_CONFIG=`./getVersion ${CPLUSPLUS_NAME} .cf $CONFIGDIR ${CPLUSPLUS_MAJOR} ${CPLUSPLUS_MINOR} ${CPLUSPLUS_MINORMINOR}`
+
+echo $C_CONFIG
+
+if [ -z $C_CONFIG ]; then
+	echo $PRE_ECHO "WARNING no compiler specific config file for this compiler! using : "
+	C_CONFIG=${CPLUSPLUS_NAME}_unknown.cf
+	if [ ! -f $CONFIGDIR/$C_CONFIG ]; then
+		C_CONFIG=c_unknown.cf	
+	fi
+	echo $C_CONFIG
+fi
+
+echo
+
+#
+# locate standard include directory via compiler
+#
+
+echo $PRE_ECHO "Finding standard C++ include directory ..." $POST_ECHO
+echo '#include <iostream.h>' > configtest.C
+CPLUSPLUS_INCLUDE_DEFAULT=`$CPLUSPLUS_PROGRAM -E configtest.C | grep "/iostream.h" | head -1 |sed -e 's|[^"]*"\([^"]*\).*|\1|' -e 's|/iostream.h||'`
+rm -f configtest.C
+echo "done"
+echo
+echo $PRE_ECHO "C++ include directory ["$CPLUSPLUS_INCLUDE_DEFAULT"] : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then  
+	CPLUSPLUS_INCLUDE_DEFAULT=$INPUT
+fi
+
+echo $PRE_ECHO "Which version of lex (lex/lex++/flex) ["$LEX_PROGRAM"] : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then  
+	LEX_PROGRAM=$INPUT
+fi
+
+if test `basename "$LEX_PROGRAM"` = "flex"
+then
+	LEX_LIB=
+	YACC_PROGRAM=bison
+else
+	LEX_LIB=-ll
+fi
+
+echo $PRE_ECHO "lex flags ["$LEXFLAGS_DEFAULT"] : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then  
+	if test "'x$INPUT'" != "'xnone'"
+	then
+		LEXFLAGS_DEFAULT=$INPUT
+	else
+		LEXFLAGS_DEFAULT=
+	fi
+fi
+
+echo $PRE_ECHO "lex library ["$LEX_LIB"] : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then  
+	if test "'x$INPUT'" != "'xnone'"
+	then
+		LEX_LIB=$INPUT
+	else
+		LEX_LIB=
+	fi
+fi
+
+echo $PRE_ECHO "Which version of yacc (yacc/yacc++/bison) ["$YACC_PROGRAM"] : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then  
+	YACC_PROGRAM=$INPUT
+fi
+
+if test `basename "$YACC_PROGRAM"` != "bison"
+then
+	YACC_LIB=-ly
+else
+	YACCFLAGS_DEFAULT=-y
+fi
+
+echo $PRE_ECHO "yacc flags ["$YACCFLAGS_DEFAULT"] : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then  
+	if test "'x$INPUT'" != "'xnone'"
+	then
+		YACCFLAGS_DEFAULT=$INPUT
+	else
+		YACCFLAGS_DEFAULT=
+	fi
+fi
+
+echo $PRE_ECHO "yacc library ["$YACC_LIB"] : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then  
+	if test "'x$INPUT'" != "'xnone'"
+	then
+		YACC_LIB=$INPUT
+	else
+		YACC_LIB=
+	fi
+fi
+
+echo "Flags governing compilation:"
+echo "-DDEBUG                  Output various debugging information"
+echo "-DNO_INLINES             Disable inlining"
+echo "-DUSE_PURIFY             Enable purify checking (if available)"
+echo
+echo $PRE_ECHO "Additional CppFlags ["$CPPFLAGS_DEFAULT"] : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then  
+	if test "'x$INPUT'" != "'xnone'"
+	then
+		CPPFLAGS_DEFAULT=$INPUT
+	else
+		CPPFLAGS_DEFAULT=
+	fi
+fi
+
+echo
+echo "Threads package :"
+echo "	0) None"
+echo "	1) Solaris"
+echo "	2) Posix"
+echo
+INPUT="xxxx"
+FINISHED=""
+while test -z "$FINISHED"
+do
+	echo $PRE_ECHO "Package number : " $POST_ECHO
+	read INPUT
+
+case $INPUT in
+0)
+    SUPPORT_THREADS="NO"
+    DEFAULT_THREAD_SYS="NoneThread"
+    THREAD_CPPFLAGS="-DNONE_THREADS"
+    COMPILER_THREAD_OPT=
+    LD_THREAD_OPT=
+    FINISHED="TRUE"
+    ;;
+1)
+    SUPPORT_THREADS="YES"
+    DEFAULT_THREAD_SYS="SolarisThread"
+    THREAD_CPPFLAGS="-DHAVE_SOLARIS_THREADS -D_REENTRANT"
+    COMPILER_THREAD_OPT="-mt"
+    LD_THREAD_OPT="-mt"
+    FINISHED="TRUE"
+    ;;
+2)
+    SUPPORT_THREADS="YES"
+    DEFAULT_THREAD_SYS="PosixThread"
+    THREAD_CPPFLAGS="-DHAVE_POSIX_THREADS -D_REENTRANT"
+    FINISHED="TRUE"
+
+    case $OS in
+    SunOS|Solaris)
+	case $RELEASE in
+	5.5*)	COMPILER_THREAD_OPT="-mt"
+		LD_THREAD_OPT="-mt"
+		LD_THREAD_LIBS="-lposix4"
+		THREAD_CPPFLAGS="-DHAVE_SOLARIS_THREADS "$THREAD_CPPFLAGS
+		;;
+	*)	;;
+	esac
+	;;
+    Linux)	THREAD_CPPFLAGS="-DLINUX_THREADS -I/usr/include "$THREAD_CPPFLAGS
+		LD_THREAD_OPT="-L/usr/lib"
+		LD_THREAD_LIBS="-lpthread -lm"
+	;;
+HP-UX)  THREAD_CPPFLAGS="-DHAVE_STRUCT_PTHREAD_T -DHAVE_HPUX_PTHREADS -DHAVE_RECURSIVE_MUTEX -DHAVE_DCE_THREADS "$THREAD_CPPFLAGS
+		LD_THREAD_OPT="-L/usr/lib"
+		LD_THREAD_LIBS="-ldce"
+		LDFLAGS_DEFAULT=$THREAD_CPPFLAGS" "$LDFLAGS_DEFAULT
+	;;
+    *)	;;
+    esac
+	;;
+esac
+
+done
+
+echo
+echo $CPPFLAGS_DEFAULT | grep -s PURIFY > /dev/null 2>&1
+if test $? -eq 0
+then
+	CPLUSPLUSFLAGS_DEFAULT=-g
+	LDFLAGS_DEFAULT=-g
+	echo $PRE_ECHO "purify program ["$PURIFY_PROGRAM"] : " $POST_ECHO
+	read INPUT
+	echo
+	if test "'x$INPUT'" != "'x'"
+	then  
+		PURIFY_PROGRAM=$INPUT
+	fi
+else
+	PURIFY_PROGRAM="exec"
+fi
+
+if test "$SUPPORT_THREADS" = "YES"
+then
+	echo $PRE_ECHO "Pre-Processor flags for thread support ["$THREAD_CPPFLAGS"] : " $POST_ECHO
+	read INPUT
+	echo
+	if test "'x$INPUT'" != "'x'"
+	then  
+		if test "'x$INPUT'" != "'xnone'"
+		then
+			THREAD_CPPFLAGS=$INPUT
+		else
+			THREAD_CPPFLAGS=
+		fi
+	fi
+
+	echo $PRE_ECHO "Compiler flags for thread support ["$COMPILER_THREAD_OPT"] : " $POST_ECHO
+	read INPUT
+	echo
+	if test "'x$INPUT'" != "'x'"
+	then  
+		if test "'x$INPUT'" != "'xnone'"
+		then
+			COMPILER_THREAD_OPT=$INPUT
+		else
+			COMPILER_THREAD_OPT=
+		fi
+	fi
+
+	echo $PRE_ECHO "Loader flags for thread support ["$LD_THREAD_OPT"] : " $POST_ECHO
+	read INPUT
+	echo
+	if test "'x$INPUT'" != "'x'"
+	then  
+		if test "'x$INPUT'" != "'xnone'"
+		then
+			LD_THREAD_OPT=$INPUT
+		else
+			LD_THREAD_OPT=
+		fi
+	fi
+
+	echo $PRE_ECHO "Loader libs for thread support ["$LD_THREAD_LIBS"] : " $POST_ECHO
+	read INPUT
+	echo
+	if test "'x$INPUT'" != "'x'"
+	then  
+		if test "'x$INPUT'" != "'xnone'"
+		then
+			LD_THREAD_LIB=$INPUT
+		else
+			LD_THREAD_LIBS=
+		fi
+	fi
+fi
+
+echo $PRE_ECHO "Additional compilation flags for optimisation and/or debugging ["$CPLUSPLUSFLAGS_DEFAULT"] : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then  
+	if test "'x$INPUT'" != "'xnone'"
+	then
+		CPLUSPLUSFLAGS_DEFAULT=$INPUT
+	else
+		CPLUSPLUSFLAGS_DEFAULT=
+	fi
+fi
+
+echo $PRE_ECHO "Additional loader flags ["$LDFLAGS_DEFAULT"] : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then  
+	if test "'x$INPUT'" != "'xnone'"
+	then
+		LDFLAGS_DEFAULT=$INPUT
+	else
+		LDFLAGS_DEFAULT=
+	fi
+fi
+
+echo $PRE_ECHO "Additional libraries ["$LIBRARIES_DEFAULT"] : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then  
+	if test "'x$INPUT'" != "'xnone'"
+	then
+		LIBRARIES_DEFAULT=$INPUT
+	else
+		LIBRARIES_DEFAULT=
+	fi
+fi
+
+PATH_SIZE=10
+BROADCAST_NET="localnet"
+SERVER_LOCATION=$INSTALL_TOPDIR_DEFAULT"/servers"
+(
+echo "Creating Tests/MakefileBoot"
+sed -e "s;CONFIGDIRECTORY;$INSTALL_TOPDIR_DEFAULT/include;" < Tests/MakefileBoot.tmpl > Tests/MakefileBoot
+)
+(
+echo "/*"
+echo " * Copyright (C) 1993-1998,"
+echo " *"
+echo " * Department of Computing Science,"
+echo " * The University,"
+echo " * Newcastle upon Tyne,"
+echo " * UK."
+echo " *"
+echo " * \$Id\$"
+echo " */"
+echo
+echo "/*"
+echo " *  Configure.h"
+echo " */"
+echo
+echo "#ifdef STUB"
+echo "#  pragma @NoRename"
+echo "#endif"
+echo
+echo "#ifndef CONFIGURE_H_"
+echo "#  define CONFIGURE_H_"
+echo "#include <Config/"$M_CONFIG">"
+echo "#include <Config/"$V_CONFIG">"
+echo "#include <Config/"$S_CONFIG">"
+echo "#include <Config/"$C_CONFIG">"
+echo "#include <Config/Override.h>"
+echo 
+echo "#define OSNAME" $OS
+echo "#define OSRELEASE" $RELEASE
+echo "#define OSMAJOR" $OSMAJOR
+echo "#define OSMINOR" $OSMINOR
+echo "#define MACHINE_HW" \"$MACHINE\"
+echo
+echo $CROSS_COMPILE
+echo "#define CPLUSPLUS_CROSS_PROGRAM" \"$CPLUSPLUS_NATIVE_COMPILER\"
+echo
+echo "#ifndef YES"
+echo "#define YES 1"
+echo "#endif"
+echo
+echo "#ifndef NO"
+echo "#define NO  0"
+echo "#endif"
+echo
+echo "/*"
+echo " *  Make and Source configuration"
+echo " */"
+echo
+echo "#ifndef DISTCPP_TOPDIR_DEFAULT"
+echo "#define DISTCPP_TOPDIR_DEFAULT "$TOPDIR_DEFAULT
+echo "#endif"
+echo
+echo "#ifndef PURIFY_PROGRAM"
+echo "#define PURIFY_PROGRAM " \"$PURIFY_PROGRAM\"
+echo "#endif"
+echo
+echo "#ifndef LEX_PROGRAM"
+echo "#define LEX_PROGRAM " \"$LEX_PROGRAM\"
+echo "#endif"
+echo
+echo "#ifndef LEXFLAGS_DEFAULT"
+echo "#define LEXFLAGS_DEFAULT "$LEXFLAGS_DEFAULT
+echo "#endif"
+echo
+echo "#ifndef LEX_LIBRARY"
+echo "#define LEX_LIBRARY "$LEX_LIB
+echo "#endif"
+echo
+echo "#ifndef YACC_PROGRAM"
+echo "#define YACC_PROGRAM " \"$YACC_PROGRAM\"
+echo "#endif"
+echo
+echo "#ifndef YACCFLAGS_DEFAULT"
+echo "#define YACCFLAGS_DEFAULT "$YACCFLAGS_DEFAULT
+echo "#endif"
+echo
+echo "#ifndef YACC_LIBRARY"
+echo "#define YACC_LIBRARY "$YACC_LIB
+echo "#endif"
+echo
+echo "#ifndef CPLUSPLUS_PROGRAM"
+echo "#define CPLUSPLUS_PROGRAM " \"$CPLUSPLUS_PROGRAM\"
+echo "#endif"
+echo
+echo "#ifndef CPLUSPLUS_INCLUDE_DEFAULT"
+echo "#define CPLUSPLUS_INCLUDE_DEFAULT "$CPLUSPLUS_INCLUDE_DEFAULT
+echo "#endif"
+echo
+echo "#ifndef CPPFLAGS_DEFAULT"
+echo "#define CPPFLAGS_DEFAULT "$CPPFLAGS_DEFAULT
+echo "#endif"
+echo
+echo "#ifndef CPLUSPLUSFLAGS_DEFAULT"
+echo "#define CPLUSPLUSFLAGS_DEFAULT "$CPLUSPLUSFLAGS_DEFAULT
+echo "#endif"
+echo
+echo "#ifndef LDFLAGS_DEFAULT"
+echo "#define LDFLAGS_DEFAULT " $LDFLAGS_DEFAULT
+echo "#endif"
+echo
+echo "#ifndef xLIBRARIES_DEFAULT"
+echo "#define xLIBRARIES_DEFAULT " $LIBRARIES_DEFAULT
+echo "#endif"
+echo
+if test "$SUPPORT_THREADS" = "YES"
+then
+echo "/*"
+echo " *  Thread system details"
+echo " */"
+echo
+echo "#ifndef THREAD_CPPFLAGS_DEFAULT"
+echo "#define THREAD_CPPFLAGS_DEFAULT " $THREAD_CPPFLAGS
+echo "#endif"
+echo
+echo "#ifndef COMPILER_THREAD_FLAGS_DEFAULT"
+echo "#define COMPILER_THREAD_FLAGS_DEFAULT " $COMPILER_THREAD_OPT
+echo "#endif"
+echo
+echo "#ifndef THREAD_LDFLAGS_DEFAULT"
+echo "#define THREAD_LDFLAGS_DEFAULT " $LD_THREAD_OPT
+echo "#endif"
+echo
+echo "#ifndef THREAD_LDLIBS_DEFAULT"
+echo "#define THREAD_LDLIBS_DEFAULT " $LD_THREAD_LIBS
+echo "#endif"
+echo
+fi
+echo "/*"
+echo " *  Installation details"
+echo " */"
+echo
+echo "#ifndef INSTALL_DISTCPP_TOPDIR_DEFAULT"
+echo "#define INSTALL_DISTCPP_TOPDIR_DEFAULT "$INSTALL_TOPDIR_DEFAULT
+echo "#endif"
+echo
+echo "/*"
+echo " * Location of servers to be initiated"
+echo " */"
+echo
+echo "#ifndef SERVER_LOCATION"
+echo "#define SERVER_LOCATION "$SERVER_LOCATION
+echo "#endif"
+echo
+echo "/*"
+echo " *  Quoted versions."
+echo " */"
+echo
+echo "#ifndef INSTALL_DISTCPP_TOPDIR_DEFAULT_Q"
+echo "#define INSTALL_DISTCPP_TOPDIR_DEFAULT_Q \""$INSTALL_TOPDIR_DEFAULT"\""
+echo "#endif"
+echo
+echo "#ifndef SERVER_LOCATION_Q"
+echo "#define SERVER_LOCATION_Q \""$SERVER_LOCATION"\""
+echo "#endif"
+echo
+echo "#ifndef MANPID_FILE_Q"
+echo "#define MANPID_FILE_Q \""$INSTALL_TOPDIR_DEFAULT/etc/manager.pid"\""
+echo "#endif"
+echo
+echo "#endif"
+) > $TOPDIR_DEFAULT/Include/Config/Configure.h
+
+(
+echo
+echo "#ifdef UseInstalled"
+echo "STUBGEN = $INSTALL_TOPDIR_DEFAULT/bin/tatsu"
+echo "#else"
+echo "STUBGEN = $TOPDIR_DEFAULT/StubGen/src/tatsu"
+echo "#endif"
+echo
+echo "#ifdef UseInstalled"
+echo "MULTISERVER = $INSTALL_TOPDIR_DEFAULT/bin/multiserver"
+echo "#else"
+echo "MULTISERVER = $TOPDIR_DEFAULT/Utilities/Tools/multiserver"
+echo "#endif"
+echo
+echo "#ifdef UseInstalled"
+echo "LIBCOMMON = $INSTALL_TOPDIR_DEFAULT/lib/libCommon.a"
+echo "#else"
+echo "LIBCOMMON = $TOPDIR_DEFAULT/lib/libCommon.a"
+echo "#endif"
+echo
+echo "#ifdef UseInstalled"
+echo "LIBSTUB = $INSTALL_TOPDIR_DEFAULT/lib/libRPC.a"
+echo "#else"
+echo "LIBSTUB = $TOPDIR_DEFAULT/lib/libRPC.a"
+echo "#endif"
+echo
+echo "#ifdef UseInstalled"
+echo "LIBSIMPLERPC = $INSTALL_TOPDIR_DEFAULT/lib/libRPC.a"
+echo "#else"
+echo "LIBSIMPLERPC = $TOPDIR_DEFAULT/lib/libRPC.a"
+echo "#endif"
+echo
+echo "LIBRPC = \$(LIBSIMPLERPC)"
+echo
+echo "#ifdef UseInstalled"
+echo "STD_INCLUDES = $INSTALL_TOPDIR_DEFAULT/include"
+echo "#else"
+echo "STD_INCLUDES = $TOPDIR_DEFAULT/Include"
+echo "#endif"
+echo
+echo "#ifdef UseInstalled"
+echo "UIDSTUB_H = $INSTALL_TOPDIR_DEFAULT/include/Common/Uid_stub.h"
+echo "BUFFSTUB_H = $INSTALL_TOPDIR_DEFAULT/include/Common/Buffer_stub.h"
+echo "#else"
+echo "UIDSTUB_H = $TOPDIR_DEFAULT/include/Common/Uid_stub.h"
+echo "BUFFSTUB_H = $TOPDIR_DEFAULT/include/Common/Buffer_stub.h"
+echo "#endif"
+echo
+) > $TOPDIR_DEFAULT/Include/Config/DistC++.def
+
+(
+echo
+echo Makefile :: $TOPDIR_DEFAULT/Include/Config/$M_CONFIG
+echo "	"@echo
+echo "	"@echo "***"
+echo "	"@echo "*** WARNING : "CURDIR_VAR"/Makefile may be out of date,"
+echo "	"@echo "***         : older than "$TOPDIR_DEFAULT"/Include/Config/$M_CONFIG"
+echo "	"@echo "***"
+echo
+echo Makefile :: $TOPDIR_DEFAULT/Include/Config/$S_CONFIG
+echo "	"@echo
+echo "	"@echo "***"
+echo "	"@echo "*** WARNING : "CURDIR_VAR"/Makefile may be out of date,"
+echo "	"@echo "***         : older than "$TOPDIR_DEFAULT"/Include/Config/$S_CONFIG"
+echo "	"@echo "***"
+echo
+echo Makefile :: $TOPDIR_DEFAULT/Include/Config/$C_CONFIG
+echo "	"@echo
+echo "	"@echo "***"
+echo "	"@echo "*** WARNING : "CURDIR_VAR"/Makefile may be out of date,"
+echo "	"@echo "***         : older than "$TOPDIR_DEFAULT"/Include/Config/$C_CONFIG"
+echo "	"@echo "***"
+echo
+) > $TOPDIR_DEFAULT/Include/Config/MachineRules.h
+
+(
+echo "/*"
+echo " * Copyright (C) 1993, 1994, 1995, 1996, 1997, 1998,"
+echo " *"
+echo " * Department of Computing Science,"
+echo " * The University,"
+echo " * Newcastle upon Tyne,"
+echo " * UK."
+echo " *"
+echo " * \$Id\$"
+echo " */"
+echo
+echo "/*"
+echo " *  Configure.def"
+echo " */"
+echo
+echo "#define TOPDIR_DEFAULT "$TOPDIR_DEFAULT
+echo "#define INSTALL_TOPDIR_DEFAULT "$INSTALL_TOPDIR_DEFAULT
+) > $TOPDIR_DEFAULT/Include/Config/Configure.def

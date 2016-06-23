@@ -1,0 +1,26 @@
+COMMENT 
+COMMENT Copyright (C) 1993-1997,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1997/09/25 15:27:57 nmcl Exp $
+COMMENT
+
+CreateInstallTopDirectory(include)
+CreateInstallDirectory(include,Template)
+
+InstallFile(include/Template,BasicList.h)
+InstallFile(include/Template,BasicList.cc)
+InstallFile(include/Template,HashList.h)
+InstallFile(include/Template,HashList.cc)
+InstallFile(include/Template,SimpleList.h)
+InstallFile(include/Template,SimpleList.cc)
+InstallFile(include/Template,TSHashList.h)
+InstallFile(include/Template,TSHashList.cc)
+InstallFile(include/Template,TSBasicList.h)
+InstallFile(include/Template,TSBasicList.cc)
+InstallFile(include/Template,ServerObjectManager.h)
+InstallFile(include/Template,ServerObjectData.h)

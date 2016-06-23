@@ -1,0 +1,23 @@
+/*
+ * Copyright (C) 1993-1998,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: c_gcc_unknown.cf,v 1.2 1998/11/20 08:28:36 nmcl Exp $
+ */
+
+/*
+ * c_gcc_unknown.cf
+ */
+
+#ifdef MAY_NEED_GCC_PROTOTYPES
+#  define COMPILER_SPECIFIC_FLAGS  -DNEED_GCC_PROTOYPES -DGCC_BROKEN_IOMANIP
+#else
+#  define COMPILER_SPECIFIC_FLAGS  -DGCC_BROKEN_IOMANIP
+#endif
+
+#define STUBGEN_CC_FLAGS "-D__GNUG__ -D__GNUC__"
+#define LINKER_SPECIFIC_FLAGS

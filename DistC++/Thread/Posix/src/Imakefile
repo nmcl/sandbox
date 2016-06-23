@@ -1,0 +1,31 @@
+COMMENT 
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1997/09/25 15:32:53 nmcl Exp $
+COMMENT
+
+SOURCES = PosixMutex.cc \
+	  PosixRWLock.cc \
+	  PosixThread.cc \
+	  PosixSpecific.cc
+
+OBJECTS = PosixMutex.o \
+	  PosixRWLock.o \
+	  PosixThread.o \
+	  PosixSpecific.o
+
+SetLocalCppFlags(-I$(STD_INCLUDES) -I../include)
+
+AllTarget($(LIBCOMMON))
+
+MakeLibrary($(LIBCOMMON),$(OBJECTS))
+
+MakeObjectCPLUSPLUS(PosixMutex,NOPARAM)
+MakeObjectCPLUSPLUS(PosixRWLock,NOPARAM)
+MakeObjectCPLUSPLUS(PosixThread,NOPARAM)
+MakeObjectCPLUSPLUS(PosixSpecific,NOPARAM)

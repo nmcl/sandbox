@@ -1,0 +1,32 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: ClientRpcMan.n,v 1.2 1997/10/02 12:57:29 nmcl Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(CLIENTRPCMAN_CC_)
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF ClientRpcManager* ClientRpcManager::createInstance (const char* const serverName, 
+							    int byDefault)
+{
+    return new ClientRpcManager(serverName, byDefault);
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif

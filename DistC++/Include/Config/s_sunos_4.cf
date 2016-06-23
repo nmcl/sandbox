@@ -1,0 +1,25 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: s_sunos_4.cf,v 1.1 1997/09/25 15:26:17 nmcl Exp $
+ */
+
+/*
+ * s_sunos4.cf
+ */
+
+#define MAY_NEED_GCC_PROTOTYPES
+
+#define SYSTEM_SPECIFIC_FLAGS -DHAVE_UNION_WAIT -DHAVE_MMAP -DHIDE_FCNTL_PROTO -DBROKEN_WCHAR_T
+
+#define STUBGEN_OS_FLAGS "-Dunix -D__unix -D__unix__"
+
+#ifndef YACC_CPLUSPLUS_MAGIC
+#define YACC_CPLUSPLUS_MAGIC sed -e "/^#[ ]*line/d" -e "1s/^extern char \*malloc.*;//"
+#endif
+

@@ -1,0 +1,153 @@
+/*
+ * Copyright (C) 1993-1997, 1998,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: Config.tmpl,v 1.4 1998/11/20 08:28:28 nmcl Exp $
+ */
+
+/*
+ *  Inclusion of Macro definitions.
+ */
+
+#include <Config/Macro.def>
+
+/*
+ *  Inclusion of Make definitions.
+ */
+
+#include <Config/Make.def>
+
+/*
+ *  Inclusion of Rule definitions.
+ */
+
+#include <Config/Rule.def>
+
+/*
+ *  Inclusion of Local definitions.
+ */
+
+#include <Config/Configure.h>
+#include <Config/DistC++.def>
+
+/*
+ * Module specific definitions. Allows redefinition.
+ */
+
+#include <Config/Configure.def>
+
+/*
+ *  Inclusion of Programs definitions.
+ */
+
+#include <Config/Prog.def>
+
+/*
+ *  Inclusion of Flags definitions.
+ */
+
+#include <Config/Flag.def>
+
+/*
+ *  Inclusion of Library definitions.
+ */
+
+#include <Config/Lib.def>
+
+/*
+ *  Inclusion of Standard Parameter definitions.
+ */
+
+#include <Config/StdParam.def>
+
+/*
+ * Generator Default flags
+ */
+
+COMMENT
+COMMENT Make generated for OSNAME OSRELEASE - MACHINE_HW
+COMMENT
+
+TOPDIR_DEFINE = TOPDIR_DEFAULT
+INSTALL_TOPDIR_DEFINE = INSTALL_TOPDIR_DEFAULT
+
+CURDIR_DEFINE = .
+
+MAKE_DEFINE = MAKE_PROGRAM
+IMAKE_DEFINE = IMAKE_PROGRAM
+
+MAKEDEPEND_DEFINE = MAKEDEPEND_PROGRAM
+
+CPLUSPLUS_DEFINE = CPLUSPLUS_PROGRAM
+CPLUSPLUS_CROSS_DEFINE = CPLUSPLUS_CROSS_PROGRAM
+
+AR_DEFINE = AR_PROGRAM
+SED_DEFINE = SED_PROGRAM
+RANLIB_DEFINE = RANLIB_PROGRAM
+PURIFY_DEFINE = PURIFY_PROGRAM
+YACC_DEFINE = YACC_PROGRAM
+LEX_DEFINE = LEX_PROGRAM
+
+MV_DEFINE = MV_PROGRAM
+CP_DEFINE = CP_PROGRAM
+RM_DEFINE = RM_PROGRAM
+CAT_DEFINE = CAT_PROGRAM
+MKDIR_DEFINE = MKDIR_PROGRAM
+CHMOD_DEFINE = CHMOD_PROGRAM
+
+MAKEFLAGS_DEFINE = MAKEFLAGS_DEFAULT
+IMAKEFLAGS_DEFINE = IMAKEFLAGS_DEFAULT
+STUBFLAGS_DEFINE += STUBFLAGS_DEFAULT
+MAKEDEPENDFLAGS_DEFINE += MAKEDEPENDFLAGS_DEFAULT
+ARFLAGS_DEFINE = ARFLAGS_DEFAULT
+
+CPPFLAGS_DEFINE += CPPFLAGS_DEFAULT THREAD_CPPFLAGS_DEFAULT COMPILER_SPECIFIC_FLAGS SYSTEM_SPECIFIC_FLAGS MACHINE_SPECIFIC_FLAGS VENDOR_SPECIFIC_FLAGS
+CPLUSPLUSFLAGS_DEFINE += CPLUSPLUSFLAGS_DEFAULT COMPILER_THREAD_FLAGS_DEFAULT
+LDFLAGS_DEFINE += LDFLAGS_DEFAULT THREAD_LDFLAGS_DEFAULT LINKER_SPECIFIC_FLAGS
+LIBRARIES_DEFINE += xLIBRARIES_DEFAULT THREAD_LDLIBS_DEFAULT SYSTEM_SPECIFIC_LIBRARIES 
+
+CPPFLAGS_CROSS_DEFINE += CPPFLAGS_CROSS_DEFAULT COMPILER_SPECIFIC_CROSS_FLAGS SYSTEM_SPECIFIC_CROSS_FLAGS MACHINE_SPECIFIC_CROSS_FLAGS VENDOR_SPECIFIC_CROSS_FLAGS
+CPLUSPLUSFLAGS_CROSS_DEFINE += CPLUSPLUSFLAGS_CROSS_DEFAULT
+LDFLAGS_CROSS_DEFINE += LDFLAGS_CROSS_DEFAULT
+LIBRARIES_CROSS_DEFINE += xLIBRARIES_DEFAULT SYSTEM_SPECIFIC_CROSS_LIBRARIES
+
+YACCFLAGS_DEFINE += YACCFLAGS_DEFAULT
+LEXFLAGS_DEFINE += LEXFLAGS_DEFAULT
+
+
+CPLUSPLUS_INCLUDE_DEFINE += CPLUSPLUS_INCLUDE_DEFAULT
+
+all :: Makefile
+
+Makefile :: Imakefile
+	@echo
+	@echo "***"
+	@echo "*** WARNING : "CURDIR_VAR"/Makefile may be out of date,"
+	@echo "***         : older than "CURDIR_VAR"/Imakefile"
+	@echo "***"
+
+/*
+ * Include the local Imakefile.
+ */
+
+#include INCLUDE_IMAKEFILE
+
+/*
+ * Common Rules
+ */
+
+#ifdef IHaveSubDirs
+SubdirCommon
+#else
+DummyMakefilesTarget
+#endif
+DummyAllTarget
+DependTarget($(SOURCES))
+TidyTarget($(OBJECTS))
+MakefileTarget
+InstallTarget
+StubTarget(NOPARAM)

@@ -1,0 +1,42 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1997/09/25 15:31:56 nmcl Exp $
+COMMENT
+
+STUBS     = Combo_stub.h \
+	    Combo_stubclass.h
+
+SOURCES	  = Combo.cc \
+	    Combo_client.cc \
+	    Combo_server.cc \
+	    Combo_servermain.cc \
+	    $(STUBS)
+
+OBJECTS	  = Combo_server.o \
+	    Combo_servermain.o \
+	    Combo.o \
+	    ../../Buffer/Server/BufferCheck_server.o \
+	    ../../Buffer/Server/BufferCheck.o
+
+LIBRARIES =  $(LIBSTUB) $(LIBRPC) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(STD_INCLUDES) -I../../Buffer/Server -I../../Inheritance/Server)
+
+AllTarget(Combo Combo_client.o)
+StubTarget($(STUBS))
+CreateInstallTopDirectory(servers)
+InstallProgram(servers,Combo)
+
+MakeProgramCPLUSPLUS(Combo,$(OBJECTS) $(LIBRARIES),NOPARAM)
+
+MakeObjectCPLUSPLUS(Combo,NOPARAM)
+
+MakeStubGen(Combo,Combo,Combo,NOPARAM)
+
+TidyTarget(Combo Combo_client.cc Combo_server.cc Combo_servermain.cc $(STUBS))

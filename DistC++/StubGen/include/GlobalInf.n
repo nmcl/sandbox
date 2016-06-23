@@ -1,0 +1,151 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: GlobalInf.n,v 1.1 1997/09/25 15:30:05 nmcl Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(GLOBALINF_CC_)
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF void GlobalInfo::compatabilityMode ()
+{
+    typeContext = new DeclContext();
+    typesGlobal = TRUE;
+}
+
+INLINEF void GlobalInfo::newLine ()
+{
+    currentLoc.incrLine();
+    errorLocation.incrLine();
+}
+
+INLINEF void GlobalInfo::setCurrentIf ( InterfaceDef *newIf )
+{
+    currentIf = newIf;
+}
+
+INLINEF void GlobalInfo::setCurrentLine ( long l )
+{
+    currentLoc.setLineno(l);
+    errorLocation.setLineno(l);
+}
+
+INLINEF void GlobalInfo::setInterfaceName ( const String& ifname )
+{
+    interfaceName = ifname;
+}
+
+INLINEF void GlobalInfo::setOutputStyle ( OutputStyle theStyle )
+{
+    outputAs = theStyle;
+}
+
+INLINEF void GlobalInfo::setServerName ( const String& sname )
+{
+    serverFileName = sname;
+}
+
+INLINEF DeclContext *GlobalInfo::getContext ()
+{
+    return currentContext;
+}
+
+INLINEF Location GlobalInfo::getCurrentloc ()
+{
+    return currentLoc;
+}
+
+INLINEF String GlobalInfo::getClassHdrSuff ()
+{
+    return classHdrSuff;
+}
+
+INLINEF String GlobalInfo::getClientHdrSuff ()
+{
+    return clientHdrSuff;
+}
+
+INLINEF String GlobalInfo::getClientCodeSuff ()
+{
+    return clientCodeSuff;
+}
+
+INLINEF InterfaceDef *GlobalInfo::getCurrentIf ()
+{
+    return currentIf;
+}
+
+INLINEF Declaration *GlobalInfo::getDecl ( int declNum )
+{
+    return globalSymbols.getOneMember(declNum);
+}
+
+INLINEF String GlobalInfo::getMarshallCodeSuff ()
+{
+    return marshallCodeSuff;
+}
+
+INLINEF Linkage *GlobalInfo::getLinkage ()
+{
+    return currentLinkage;
+}
+
+INLINEF OutputStyle GlobalInfo::getOutputStyle ()
+{
+    return outputAs;
+}
+
+INLINEF String GlobalInfo::getServerCodeSuff ()
+{
+    return serverCodeSuff;
+}
+
+INLINEF String GlobalInfo::getServermCodeSuff ()
+{
+    return servermCodeSuff;
+}
+
+INLINEF String GlobalInfo::getShadowCodeSuff ()
+{
+    return shadowCodeSuff;
+}
+
+INLINEF String GlobalInfo::getServerName ()
+{
+    return serverFileName;
+}
+
+INLINEF StubModifier GlobalInfo::getStubGlobalMods ()
+{
+    if (currentFile)
+	return currentFile->getGeneric();
+    else
+	return STUB_DEFAULT;
+}
+
+INLINEF void GlobalInfo::verboseMode ( Boolean flag )
+{
+    verbose = flag;
+}
+
+INLINEF Boolean GlobalInfo::verboseMode ()
+{
+    return verbose;
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif

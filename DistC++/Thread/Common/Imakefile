@@ -1,0 +1,28 @@
+COMMENT 
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1997/09/25 15:32:24 nmcl Exp $
+COMMENT
+
+SOURCES = InitThreads.cc \
+	  ThreadCommon.cc \
+	  ThreadSpecific.cc
+
+OBJECTS = InitThreads.o \
+	  ThreadCommon.o \
+	  ThreadSpecific.o
+
+SetLocalCppFlags(-I$(STD_INCLUDES))
+
+AllTarget($(LIBCOMMON))
+
+MakeLibrary($(LIBCOMMON),$(OBJECTS))
+
+MakeObjectCPLUSPLUS(InitThreads,NOPARAM)
+MakeObjectCPLUSPLUS(ThreadCommon,NOPARAM)
+MakeObjectCPLUSPLUS(ThreadSpecific,NOPARAM)

@@ -1,0 +1,26 @@
+COMMENT 
+COMMENT Copyright (C) 1997,
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1997/09/25 15:32:19 nmcl Exp $
+COMMENT
+
+SOURCES  = ThreadTest.cc
+
+OBJECTS = ThreadTest.o
+
+AllTarget(ThreadTest)
+
+LIBRARIES = $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(STD_INCLUDES))
+
+MakeProgramCPLUSPLUS(ThreadTest,ThreadTest.o $(LIBRARIES),NOPARAM)
+
+MakeObjectCPLUSPLUS(ThreadTest,NOPARAM)
+
+TidyTarget(ThreadTest)

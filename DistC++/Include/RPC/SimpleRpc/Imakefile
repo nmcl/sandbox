@@ -1,0 +1,21 @@
+COMMENT
+COMMENT Copyright (C) 1993-1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 1998/11/20 08:28:38 nmcl Exp $
+COMMENT
+
+CreateInstallTopDirectory(include)
+CreateInstallDirectory(include,RPC)
+CreateInstallDirectory(include/RPC,SimpleRpc)
+InstallFile(include/RPC/SimpleRpc,ClientControl.h)
+InstallFile(include/RPC/SimpleRpc,SimpleRpcClient.h)
+InstallFile(include/RPC/SimpleRpc,SimpleRpcServer.h)
+InstallFile(include/RPC/SimpleRpc,SimpleServerConnection.h)
+InstallFile(include/RPC/SimpleRpc,Manager_def.h)
+InstallFile(include/RPC/SimpleRpc,Ping.h)
+

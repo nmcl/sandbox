@@ -1,0 +1,42 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 1998/08/29 11:47:36 nmcl Exp $
+COMMENT
+
+STUBS     = DummyBuffer_stub.h \
+	    DummyBuffer_stubclass.h
+
+SOURCES	  = DummyBuffer.cc \
+	    DummyBuffer_client.cc \
+	    DummyBuffer_server.cc \
+	    DummyBuffer_servermain.cc \
+	    $(STUBS)
+
+OBJECTS	  = DummyBuffer_server.o \
+	    DummyBuffer_servermain.o \
+	    DummyBuffer.o \
+	    ../../Buffer/Server/BufferCheck_server.o \
+	    ../../Buffer/Server/BufferCheck.o
+
+LIBRARIES = $(LIBRPC) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(STD_INCLUDES) -I../../Buffer/Server)
+
+AllTarget(DummyBuffer DummyBuffer_client.o)
+StubTarget($(STUBS))
+CreateInstallTopDirectory(servers)
+InstallProgram(servers,DummyBuffer)
+
+MakeProgramCPLUSPLUS(DummyBuffer,$(OBJECTS) $(LIBRARIES),NOPARAM)
+
+MakeObjectCPLUSPLUS(DummyBuffer,NOPARAM)
+
+MakeStubGen(DummyBuffer,DummyBuffer,DummyBuffer,NOPARAM)
+
+TidyTarget(DummyBuffer DummyBuffer_client.cc DummyBuffer_server.cc DummyBuffer_servermain.cc $(STUBS))

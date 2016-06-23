@@ -1,0 +1,38 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1997/09/25 15:29:11 nmcl Exp $
+COMMENT
+
+SOURCES = RpcBuffer.cc  \
+          ClientRpcMan.cc \
+          ClientRpc.cc  \
+          ServerRpc.cc  \
+	  Abort.cc \
+	  ServerConnection.cc
+
+OBJECTS = RpcBuffer.o  \
+          ClientRpcMan.o \
+          ClientRpc.o  \
+          ServerRpc.o  \
+	  Abort.o \
+	  ServerConnection.o
+
+SetLocalCppFlags(-I$(STD_INCLUDES))
+
+AllTarget($(OBJECTS) $(LIBRPC))
+
+MakeLibrary($(LIBRPC),$(OBJECTS))
+
+MakeObjectCPLUSPLUS(RpcBuffer,NOPARAM)
+MakeObjectCPLUSPLUS(ClientRpcMan,NOPARAM)
+MakeObjectCPLUSPLUS(ClientRpc,NOPARAM)
+MakeObjectCPLUSPLUS(ServerRpc,NOPARAM)
+MakeObjectCPLUSPLUS(Abort,NOPARAM)
+MakeObjectCPLUSPLUS(ServerConnection,NOPARAM)
+

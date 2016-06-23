@@ -1,0 +1,28 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1997/09/25 15:31:51 nmcl Exp $
+COMMENT
+
+SOURCES   = DummyBufferDriver.cc
+
+OBJECTS	  = DummyBufferDriver.o \
+	    ../Server/DummyBuffer_client.o \
+	    ../../Buffer/Server/BufferCheck_client.o
+
+LIBRARIES = $(LIBSTUB) $(LIBRPC) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(STD_INCLUDES) -I../Server -I../../Buffer/Server)
+
+AllTarget(DummyBufferDriver)
+
+MakeProgramCPLUSPLUS(DummyBufferDriver,$(OBJECTS) $(LIBRARIES),NOPARAM)
+
+MakeObjectCPLUSPLUS(DummyBufferDriver,NOPARAM)
+
+TidyTarget(DummyBufferDriver)

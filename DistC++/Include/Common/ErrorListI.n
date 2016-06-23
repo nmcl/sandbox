@@ -1,0 +1,31 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: ErrorListI.n,v 1.1 1997/09/25 15:25:45 nmcl Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(LOCKLISTI_CC_)
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF void ErrorListI::reset ()
+{
+    next = 0;
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif

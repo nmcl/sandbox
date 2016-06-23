@@ -1,0 +1,27 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: s_linux.cf,v 1.1 1997/09/25 15:26:15 nmcl Exp $
+ */
+
+/*
+ * s_linux.cf
+ */
+
+/*
+ * Supress parallel make 
+ */
+#define MAKEFLAGS_DEFAULT -j 1 -l 1 --no-print-directory
+
+/*
+ * Suppress use of GCC extras by Linux headers
+ */
+
+#define SYSTEM_SPECIFIC_FLAGS -DNEED_MALLOC_T -D__LINUX__ -DNEED_MSGHDR -DNEED_SENDMSG -DSYSV -D__CONSTVALUE="" -D__CONSTVALUE2="" -D__NORETURN="" -D__NORETURN2=""
+#define STUBGEN_OS_FLAGS " -D__LINUX__ -Dunix -D__unix -D__unix__"
+

@@ -1,0 +1,22 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: s_sunos_5_5.cf,v 1.1 1997/09/25 15:26:18 nmcl Exp $
+ */
+
+/*
+ * s_sunos5_5.cf
+ */
+
+#define RANLIB_PROGRAM true
+
+#define SYSTEM_SPECIFIC_FLAGS -DSYSV -DHAVE_MMAP -DHAVE_SELECT_H_ -DNEED_USLEEP_PROTO -DNEED_MALLOC_T -DINT_YYLESS
+
+#define STUBGEN_OS_FLAGS "-Dunix -D__unix -D__unix__ -Dsvr4 -D__svr4 -D__svr4__ -DSVR4 -D__SVR4 -D__SVR4__"
+
+#define SYSTEM_SPECIFIC_LIBRARIES -lsocket -lnsl

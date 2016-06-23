@@ -1,0 +1,42 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1997/10/03 14:31:58 nmcl Exp $
+COMMENT
+
+SOURCES = servercode.cc \
+	  Tester.cc
+
+COBJECTS = ../Inheritance/Server/DummyBuffer_client.o \
+	   ../Buffer/Server/BufferCheck_client.o
+
+SOBJECTS = ../Inheritance/Server/DummyBuffer_server.o \
+	   ../Inheritance/Server/DummyBuffer.o \
+	   ../Buffer/Server/BufferCheck_server.o \
+	   ../Buffer/Server/BufferCheck.o
+
+OBJECTS = servercode.o \
+	  Tester.o
+
+LIBRARIES = $(LIBSTUB) $(LIBRPC) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(STD_INCLUDES) -I../Buffer/Server -I../Inheritance/Server)
+
+AllTarget(servercode Tester)
+CreateInstallTopDirectory(servers)
+InstallProgram(servers,servercode)
+
+MakeMultiServer(servercode,-class BufferCheck -class DummyBuffer -info)
+
+MakeProgramCPLUSPLUS(Tester,Tester.o $(COBJECTS) $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(servercode,servercode.o $(SOBJECTS) $(LIBRARIES),NOPARAM)
+
+MakeObjectCPLUSPLUS(Tester,NOPARAM)
+MakeObjectCPLUSPLUS(servercode,NOPARAM)
+
+TidyTarget(servercode Tester servercode.cc servercode.o)

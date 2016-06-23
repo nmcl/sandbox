@@ -1,0 +1,74 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: StdParam.def,v 1.1 1997/09/25 15:25:58 nmcl Exp $
+ */
+
+/*
+ *  StdParam.def
+ */
+
+#ifndef CPLUSPLUS_HEADER
+#define CPLUSPLUS_HEADER(file) Concat(file,.h)
+#endif
+
+#ifndef CPLUSPLUS_SOURCE
+#define CPLUSPLUS_SOURCE(file) Concat(file,.cc)
+#endif
+
+#ifndef CPLUSPLUS_OBJECT
+#define CPLUSPLUS_OBJECT(file) Concat(file,.o)
+#endif
+
+#ifndef LEX_SOURCE
+#define LEX_SOURCE(file) Concat(file,.l)
+#endif
+
+#ifndef YACC_SOURCE
+#define YACC_SOURCE(file) Concat(file,.y)
+#endif
+
+#ifndef STUB_HEADER
+#define STUB_HEADER(file) Concat(file,_stub.h)
+#endif
+
+#ifndef STUBCLASS_HEADER
+#define STUBCLASS_HEADER(file) Concat(file,_stubclass.h)
+#endif
+
+#ifndef CLIENT_STUBCODE
+#define CLIENT_STUBCODE(file) Concat(file,_client.cc)
+#endif
+
+#ifndef SERVER_STUBCODE
+#define SERVER_STUBCODE(file) Concat(file,_server.cc)
+#endif
+
+#ifndef SERVERMAIN_STUBCODE
+#define SERVERMAIN_STUBCODE(file) Concat(file,_servermain.cc)
+#endif
+
+#ifndef MARSHALL_STUBCODE
+#define MARSHALL_STUBCODE(file) Concat(file,_marshall.cc)
+#endif
+
+#ifndef CLIENT_STUBCODE_F
+#define CLIENT_STUBCODE_F(file) Concat(file,_client)
+#endif
+
+#ifndef SERVER_STUBCODE_F
+#define SERVER_STUBCODE_F(file) Concat(file,_server)
+#endif
+
+#ifndef SERVERMAIN_STUBCODE_F
+#define SERVERMAIN_STUBCODE_F(file) Concat(file,_servermain)
+#endif
+
+#ifndef MARSHALL_STUBCODE_F
+#define MARSHALL_STUBCODE_F(file) Concat(file,_marshall)
+#endif
