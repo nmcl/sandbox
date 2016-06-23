@@ -21,9 +21,7 @@
 MAKE = make
 
 CC = cc
-C++ = CC
-
-MDEP = makedepend
+C++ = g++
 
 CPPFLAGS =
 CFLAGS =

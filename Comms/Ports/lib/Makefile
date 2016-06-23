@@ -21,10 +21,7 @@
 MAKE = make
 
 CC = cc
-C++ = CC
-
-MDEP = /usr/local/Arjuna/bin/makedepend
-STRIPDEPEND= /usr/local/Arjuna/bin/stripdepend
+C++ = g++
 
 CPPFLAGS =
 CFLAGS =
@@ -33,7 +30,7 @@ LDFLAGS =
 
 MDEPFLAGS =
 
-LOCAL_CPPFLAGS =  -I/usr/local/Arjuna/include -I../include
+LOCAL_CPPFLAGS =  -I../include
 LOCAL_CFLAGS = 
 LOCAL_C++FLAGS =
 LOCAL_LDFLAGS =
