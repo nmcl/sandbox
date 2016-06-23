@@ -1,0 +1,9 @@
+This project was the work of many people, including but not limited to:
+
+Steve Caughey
+Graeme Dixon
+Dave Ingham
+Mark Little
+Graham Parrington
+Santosh Shrivastava
+Stuart Wheater
