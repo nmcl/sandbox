@@ -1,1 +1,1 @@
-School work for kids.
+School work for the kids.
