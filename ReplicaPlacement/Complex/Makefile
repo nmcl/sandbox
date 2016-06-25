@@ -1,12 +1,9 @@
 MAKE = make
 
-CC  = cc
-C++ = CC3.0.1
-CPP = /lib/cpp
+CC  = gcc
+C++ = g++
+CPP = gcc
 LEX = lex
-
-MDEP = /usr/local/Arjuna/bin/makedepend
-STRIPDEPEND = /usr/local/Arjuna/bin/stripdepend
 
 CFLAGS   = -g
 CPPFLAGS =
