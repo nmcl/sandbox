@@ -1,0 +1,390 @@
+Simulation begin 
+    ! Simulating transactions on replicated objects in 
+      a network of unreliable nodes ;
+
+    ! Parameters controlling size of the simulation ;
+
+    TotalMachines     = 8;
+    TotalObjects      = 8;
+    TotalTransactions = 8;
+    MinTransactionTime = 1.0;
+    MaxTransactionTime = 10.0;
+
+    ! Fix a delay period before attempting to re-acquire locks ;
+    Delta		= 1.0;
+
+    ! Define other simulation parameters ;
+    ReadWriteRatio   = 10;
+
+    ! Other simulation variables ;
+    integer   Seed;		! Random number seed ;
+    boolean   Debug;		! True for debug print messages ;
+    integer   ObjectID,		! UID generator for transactions ;
+	      MachineID;	! UID generator for machines ;
+
+    ! Global data structures for basic machine and object configuration ;
+    ref (Machine) array Nodes(0:TotalMachines-1); 
+    ref (ReplicatedObject) array Objects(0:TotalObjects-1);
+
+    ! Loop control variables for main program ;
+    integer StartedTransactions, CompletedTransactions;
+
+    procedure DumpMachines;
+    begin
+	integer i;
+	ref (tlink) p;
+	outimage;
+	outtext("Machine     MTTF            MTTR         Speed   Active"); outimage;
+	outtext("         Mean  Std Dev   Mean  Std Dev           Transactions"); outimage;
+	for i := 0 step 1 until TotalMachines-1 do
+	    inspect Nodes(i) do begin
+		outint(i, 4);
+		outreal(MTTFMean,   2, 12);
+		outreal(MTTFStdDev, 2, 12);
+		outreal(MTTRMean,   2, 12);
+		outreal(MTTRStdDev, 2, 12);
+		outint(Speed, 8);
+		if ActiveTransactions =/= None and then 
+		   not ActiveTransactions.Empty
+		then 
+		    for p :- ActiveTransactions.First, p.suc while p =/= none do 
+			outint(p.Xaction.ID, 5);
+		outimage;
+		end;
+    end of procedure DumpMachines;
+
+    procedure DumpObjects;
+    begin
+	integer i,j;
+	outimage;
+	outtext("Object  Replica  Read    Write   Machines"); outimage;
+	outtext("        Count    Quorum  Quorum"); outimage;
+	for i := 0 step 1 until TotalObjects-1 do
+	    inspect Objects(i) do begin
+		outint(ID, 4);
+		outint(ReplicaCount, 7); 
+		outint(ReadQuorum, 9);
+		outint(WriteQuorum, 8);
+		outtext("    ");
+		for j := 0 step 1 until TotalMachines-1 do
+		    if Map(j) then outint(j, 4);
+		outimage;
+		end;
+    end of procedure DumpObjects;
+
+    link class tlink(Xaction); ref (Transaction) Xaction; begin end;
+
+    class ReplicatedObject(ID, AvailabilityRequirement);
+    integer ID;
+    real AvailabilityRequirement; 
+    ! percentage of time that the object must be available ; 
+    begin 
+	boolean array Map(0:TotalMachines-1); 
+	integer ReplicaCount; integer ReadQuorum, WriteQuorum;
+	boolean grant;
+	integer needed, try,i;
+
+	! Export a function to lock the object ;
+	! Really want to return the map of acquired replicas,
+	  but for now, just returm a count ;
+	integer procedure Lock(Behalf, Mode); 
+	ref(Transaction)Behalf; boolean Mode; 
+	begin 
+	    integer acquired; 
+	    acquired := 0; 
+	    for i := 0 step 1 until TotalMachines-1 do 
+		if Map(i) and Nodes(i).Available 
+		then begin
+		    ! should check mode here ; 
+		    ! Record the transaction with the machine ;
+		    new tlink(Behalf).Into(Nodes(i).ActiveTransactions);
+		    acquired := acquired + 1; 
+		    end;
+
+	    if Mode
+	    then 
+		needed := WriteQuorum;
+	    else
+		needed := ReadQuorum;
+
+	    grant := (acquired >= needed); 
+
+	    if grant
+	    then
+		Lock := acquired;
+	    else
+		Lock := 0;
+
+	    if Debug
+	    then begin
+		outtext ("Lock request on object "); outint(ID, 3);
+		outtext (" for transaction "); outint(Behalf.ID, 3);
+		if grant then outtext(" granted ") else outtext(" refused ");
+		outimage;
+		end;
+	end of procedure Lock;
+
+	! Export a procedure to unlock the object ;
+	procedure Unlock(Behalf); 
+	ref(Transaction)Behalf; 
+	begin 
+	    integer i;
+	    ref (tlink) p;
+	    for i := 0 step 1 until TotalMachines-1 do 
+		if Map(i) and Nodes(i).Available and then 
+		   not Nodes(i).ActiveTransactions.Empty
+		then ! remove the transaction from the machine ;
+		    for p :- Nodes(i).ActiveTransactions.First, p.suc while p =/= None do
+		        if p.Xaction == Behalf
+			then begin
+			    p.Out;
+			    p :- None;
+			    end;
+	end of procedure Unlock;
+
+	! Compute desired replica count and placement ;
+	ReplicaCount := RandInt(1,TotalMachines,Seed);
+
+	! Place replicas (randomly) on separate machines ;
+	i := 0; 
+	while i < ReplicaCount do 
+	begin 
+	    try := RandInt(0,TotalMachines-1,Seed); 
+	    if not Map(try) 
+	    then begin 
+		Map(try) := true; 
+		i := i + 1; 
+		end; 
+	end;
+
+	! Compute read and write quorums based on count and protocol;
+	ReadQuorum := ReplicaCount//2 + 1; 
+	WriteQuorum := ReplicaCount//2 + 1;
+
+    end of class ReplicatedObject ;
+
+    link class OA (ObjRef, Mode, quorum);
+    ref(ReplicatedObject) ObjRef; 
+    boolean Mode; 
+    integer quorum;
+    begin end of class OA;
+
+    boolean procedure FindObj(ORef,Lst);
+    ref(ReplicatedObject) ORef; 
+    ref(Head) Lst; 
+    begin 
+	ref(OA) p; 
+
+	FindObj := false; 
+	if not Lst.Empty
+	then
+	    for p :- Lst.First, p.suc while p =/= none do 
+		if p.ObjRef == ORef 
+		then
+		    FindObj := true; 
+    end of procedure FindObj;
+
+    Process class Transaction;
+    begin 
+	integer ID;
+	long real ComputeTime, CompletionTime; 
+	ref (Head) Olist; 
+	integer ObjectCount; 
+	integer i, try; 
+	ref(OA) p;
+	Completed, LostQuorum : boolean;
+
+	! Update the global counter and use it for a unique id ;
+	StartedTransactions := StartedTransactions + 1;
+	ID := StartedTransactions;
+
+	! Generate a compute time for this transaction ;
+	ComputeTime := Uniform(MinTransactionTime,MaxTransactionTime,Seed);
+
+	! Select a set of objects and access modes ;
+	ObjectCount := RandInt(1,TotalObjects,Seed); 
+	Olist :- new Head;
+	i := 0; 
+	while i < ObjectCount do 
+	begin 
+	    try := RandInt(0,TotalObjects-1,Seed);
+	    if not FindObj(Objects(try), Olist) 
+	    then begin 
+		boolean lockmode;
+		lockmode := Draw(1/ReadWriteRatio, Seed);
+		new OA(Objects(try),lockmode, 0).Into(Olist);
+		i := i + 1;
+		end;
+	end;
+
+	if Debug
+	then begin
+	    outtext("Created transaction ");
+	    outint(ID, 3);
+	    outtext(" which accesses "); 
+	    outint(ObjectCount, 3); 
+	    outtext(" objects for ");
+	    outreal(ComputeTime, 10,20);
+	    outimage;
+	    end;
+
+	! Launch another ;
+	if (StartedTransactions < TotalTransactions) 
+	then 
+	    activate new Transaction;
+
+	! Calculate completion time ;
+	CompletionTime := Current.EVTime + ComputeTime;
+
+	! Loop 'computing' until done
+	Completed := Current.EVTime >= CompletionTime;
+	while not Completed do
+	begin
+
+	    ! If possible, acquire quorum of locks on objects ;
+	    for p :- Olist.First, p.suc while p =/= None do 
+		p.quorum := p.ObjRef.Lock(this Transaction, p.Mode);
+
+	    ! See if a quorum was achieved for every object ;
+	    LostQuorum := false;
+	    for p :- Olist.First, p.suc while p =/= None do 
+		if p.quorum = 0 then LostQuorum := true;
+	    
+	    while not Completed and not LostQuorum do
+	    begin
+
+		! Compute until done or interrupted;
+		hold (CompletionTime - Current.EVTime);
+
+		! Decide if we're done or just interrupted ;
+		Completed := Current.EVTime >= CompletionTime;
+
+		if not Completed
+		then begin
+		    ! must have been interrupted - check objects ;
+		    end;
+	    end;
+
+	    ! Release all locks ;
+	    for p :- Olist.First, p.suc while p =/= None do 
+		if p.quorum then p.ObjRef.Unlock(this Transaction);
+
+	    ! If we need to go round again, wait a bit before attempting to
+	      re-acquire the locks;
+	    if LostQuorum
+	    then begin
+		CompletionTime := CompletionTime + Delta;
+		hold (Delta);
+		end;
+
+	end;
+	CompletedTransactions := CompletedTransactions + 1;
+
+        if Debug
+	then begin
+	    outtext("Completed transaction ");
+	    outint(ID, 3);
+	    outimage;
+	    end;
+    end of class Transaction ;
+
+    class Machine (ID, MTTFMean, MTTFStdDev, MTTRMean, MTTRStdDev, Speed);
+    ! Machine characteristics ;
+    integer ID;
+    real MTTFMean, MTTFStdDev, MTTRMean, MTTRStdDev;
+    integer Speed;
+    begin 
+	! Machine "state" (e.g., up/down) ;
+	boolean Available;
+
+	! Current transactions ;
+        ref (Head) ActiveTransactions;
+
+	! Initialise Machine state ;
+	Available := true;
+	ActiveTransactions :- new Head;
+
+    end class Machine ;
+
+    Process class MachineControl (TheMachine);
+    ref (Machine) TheMachine;
+    begin
+	ref (Transaction) p;
+
+	! Endlessly alternate between up and down ;
+	while true do 
+	    inspect TheMachine do 
+	    begin
+		! Process transactions until failure;
+		hold(Normal(MTTFMean, MTTFStdDev, Seed));
+
+		! Crash ;
+		Available := false;
+
+		! Notify transactions that a machine has gone away;
+		for p :- ActiveTransactions.First, p.suc while p =/= None do 
+		    reactivate p;
+
+		ActiveTransactions.Clear;
+
+		! Repair ;
+		hold(Normal(MTTRMean, MTTRStdDev, Seed));
+
+		! Recover ;
+		Available := true;
+
+	    end of Crash-Recover cycle ;
+    end of class MachineControl;
+
+
+    !
+    ! Main Program ;
+
+    ! Initialise the random number seed ;
+    Seed := 2013;
+
+    Debug := true;
+
+    ! Basic Algorithm 
+    !
+    ! Main program configures and launches the simulation by:
+	1) Creating a set of machines (the "network" ) 
+	2) Allocating objects to machines (the "placement") 
+	3) Generating a transaction stream 
+	4) Reporting results ;
+
+    !
+    ! Creating the network of machines ;
+
+    for MachineID := 0 step 1 until TotalMachines-1 do 
+    begin 
+	Nodes(MachineID) :- new Machine (MachineID, 3600.0*24.0, 3600.0, 3600.0*2.0, 1200.0, 10);
+	activate new MachineControl(Nodes(MachineID));
+    end of loop creating network of machines ;
+
+    !
+    ! Create Objects and Allocate to machines (initial placement) ;
+    for ObjectID := 0 step 1 until TotalObjects-1 do 
+    begin
+	Objects(ObjectID) :- new ReplicatedObject(ObjectID, 0.98);
+    end of loop creating and placing objects ;
+
+    ! Generate transaction stream ;
+    activate new Transaction;
+
+    if Debug
+    then begin
+	DumpMachines;
+	DumpObjects;
+	end;
+
+    hold(10000);
+
+    DumpMachines;
+
+    ! Report simulation results ;
+    outtext ("The number of completed transactions is ");
+    outint  (CompletedTransactions, 10);
+    outimage;
+end 
+
