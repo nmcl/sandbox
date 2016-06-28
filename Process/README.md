@@ -1,3 +1,7 @@
+The old C++SIM used to be called Process and was developed for the Replica Placement work. Hence why replica placement code appears within the body of this source tree. Eventually the simulation libraries were factored out and became C++SIM.
+
+----
+
 D. McCue, M. Little	Computing Laboratory
 29 November 1991	University of Newcastle upon Tyne, NE1 7RU, England
 
