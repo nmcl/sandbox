@@ -1,0 +1,17 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: v_sun.cf,v 1.1 1997/06/09 19:51:55 nmcl Exp $
+ */
+
+/*
+ * Vendor config file : v_sun.cf
+ */
+
+#define VENDOR_SPECIFIC_FLAGS -Dsun -D__sun -D__sun__
+#define STUBGEN_VEND_FLAGS "-Dsun -D__sun -D__sun__"

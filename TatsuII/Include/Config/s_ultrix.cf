@@ -1,0 +1,19 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: s_ultrix.cf,v 1.1 1997/06/09 19:51:55 nmcl Exp $
+ */
+
+/*
+ * s_ultrix.cf
+ */
+
+#define SYSTEM_SPECIFIC_FLAGS -DHAVE_UNION_WAIT -DHIDE_INET_PROTOTYPES -DNEED_USLEEP_PROTO -DHAVE_SYSCONF -DHIDE_FCNTL_PROTO -DNEED_SELECT_PROTO
+#define STUBGEN_OS_FLAGS "-D__ultrix -Dunix -D__unix -D__unix__"
+
+#define LEX_CPLUSPLUS_MAGIC sed -e "/<osfcn.h>/s//<unistd.h>/"
