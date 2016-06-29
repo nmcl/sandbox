@@ -1,0 +1,36 @@
+#
+# Copyright (C) 1993
+#
+# Department of Computing Science,
+# The University,
+# Newcastle upon Tyne,
+# UK.
+#
+
+#
+# Makefile for creating the top-level Makefile.
+#
+
+#
+# $Id: MakefileBoot,v 1.1 1997/06/09 19:51:46 nmcl Exp $
+#
+
+MAKE                  = make
+IMAKE                 = imake
+MV		      = mv
+SED		      = sed
+RM		      = rm -f
+_IMAKE_INCLUDE  = Include
+_IMAKE_TEMPLATE = Config/Config.tmpl
+
+_IMAKE_FLAGS    = 
+# _IMAKE_FLAGS  = "-DUseInstalled -DTOPDIR_DEFAULT=`pwd`"
+
+Makefile ::
+	@echo
+	@echo "You have run 'configure'. Haven't you?"
+	@echo
+	@echo "## Building root 'Makefile' ##"
+	@$(IMAKE) -T$(_IMAKE_TEMPLATE) -I$(_IMAKE_INCLUDE) $(_IMAKE_FLAGS);$(MV) Makefile Makefile.sed;$(SED) -e '/^COMMENT$$/s//#/' -e '/^COMMENT /s//# /' < Makefile.sed > Makefile;$(RM) Makefile.sed
+	@echo
+

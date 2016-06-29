@@ -1,0 +1,50 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: String.n,v 1.1 1997/06/09 19:52:17 nmcl Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(STRING_CC_)
+class ostream;
+
+extern ostream& operator<< (ostream&, const String&);
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF int String::size () const
+{
+    return ((sp)? sp->slen : 0);
+}
+
+INLINEF String::operator char * () const
+{
+    return (sp? sp->s: 0);
+}
+
+INLINEF String::operator const char * () const
+{
+    return (sp? sp->s: 0);
+}
+
+INLINEF ostream& operator<< ( ostream& s,  const String& st )
+{
+    st.printout(s);
+    return s;
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif

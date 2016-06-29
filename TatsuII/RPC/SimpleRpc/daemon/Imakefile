@@ -1,0 +1,32 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1997/06/09 19:52:05 nmcl Exp $
+COMMENT
+
+SOURCES = Manager.cc \
+          Manager_main.cc
+
+OBJECTS = Manager.o \
+          Manager_main.o
+
+LIBRARIES = $(LIBRPC) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(STD_INCLUDES) -I../include)
+
+AllTarget(manager)
+
+CreateInstallTopDirectory(etc)
+InstallProgram(etc,manager)
+
+MakeProgramCPLUSPLUS(manager,Manager.o Manager_main.o $(LIBRARIES),)
+
+MakeObjectCPLUSPLUS(Manager,)
+MakeObjectCPLUSPLUS(Manager_main,)
+
+TidyTarget(manager)

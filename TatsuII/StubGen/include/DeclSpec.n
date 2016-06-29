@@ -1,0 +1,51 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: DeclSpec.n,v 1.1 1997/06/09 19:52:12 nmcl Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(DECLSPEC_CC_)
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF void DeclSpecifier::makeElaborated ()
+{
+    declIsElaborated = TRUE;
+}
+
+INLINEF void DeclSpecifier::setType ( TypeDescriptor *nt )
+{
+    declBtype = nt;
+}
+
+INLINEF StorageSpecifier DeclSpecifier::getStClass () const
+{
+    return declStClass;
+}
+
+INLINEF TypeDescriptor *DeclSpecifier::getType () const
+{
+    return declBtype;
+}
+
+INLINEF Boolean DeclSpecifier::isElaborated () const
+{
+    return declIsElaborated;
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif

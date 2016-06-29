@@ -1,0 +1,244 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: VecT.cc,v 1.1 1997/06/09 19:52:25 nmcl Exp $
+ */
+
+/*
+ * Stub generator vector (array) type definition handler
+ *
+ */
+
+#include <strstream.h>
+#include <fstream.h>
+
+#ifdef SG_DEBUG
+#  include "Debug.h"
+#endif
+
+#ifndef ERROR_H_
+#  include "Error.h"
+#endif
+
+#ifndef UTILITY_H_
+#  include "Utility.h"
+#endif
+
+#ifndef VECT_H_
+#  include "VecT.h"
+#endif
+
+#ifndef POINTERT_H_
+#  include "PointerT.h"
+#endif
+
+#ifndef EXPRESSION_H_
+#  include "Expression.h"
+#endif
+
+#ifndef GLOBALINF_H_
+#  include "GlobalInf.h"
+#endif
+
+#ifndef INTERFACE_H_
+#  include "Interface.h"
+#endif
+
+static const char RCSid[] = "$Id: VecT.cc,v 1.1 1997/06/09 19:52:25 nmcl Exp $";
+
+/*
+ * PUBLIC operations
+ */
+
+VecType::VecType ( Expression *vs, TypeDescriptor *isOf )
+                 : TypeDescriptor(VECTOR_TYPE),
+		   vectorSize(vs),
+		   vectorOf(isOf)
+{
+#ifdef SG_DEBUG
+    debugStream << "VecType::VecType("  << (void *)this << ","
+		<< vs << ", " << (void *)isOf << ")\n";
+    _debug.dbgFlush(CONSTRUCTORS, FAC_BASIC_TYPES, VIS_PUBLIC);
+#endif
+}
+
+VecType::~VecType ()
+{
+#ifdef SG_DEBUG
+    debugStream << "VecType::~VecType(" << (void *)this << ")\n";
+    _debug.dbgFlush(DESTRUCTORS, FAC_BASIC_TYPES, VIS_PUBLIC);
+#endif
+}
+
+Boolean VecType::addStubModifier ( StubModifier newMod )
+{
+    if (vectorOf)
+	return vectorOf->addStubModifier(newMod);
+    else
+	return TypeDescriptor::addStubModifier(newMod);
+}
+
+Boolean VecType::attachBaseType ( TypeDescriptor *baseType )
+{
+#ifdef SG_DEBUG
+    debugStream << "VecType::attachBaseType(" << (void *)this 
+		<< ", " << (void *)baseType << ")\n";
+    _debug.dbgFlush(FUNCTIONS, FAC_BASIC_TYPES, VIS_PUBLIC);
+#endif
+
+    if (vectorOf)
+	vectorOf->attachBaseType(baseType);
+    else
+	vectorOf = baseType;
+
+    return TRUE;
+}
+
+/*
+ * Adjust type of vector. Sets vectorOf field, returns old value.
+ * Used in building declarator type
+ */
+
+TypeDescriptor *VecType::combineTypes ( TypeDescriptor *newtype )
+{
+#ifdef SG_DEBUG
+    debugStream << "VecType::combineTypes ("  << (void *)this << ","
+	         << (void *)newtype << ")\n";
+    _debug.dbgFlush(FUNCTIONS, FAC_BASIC_TYPES, VIS_PUBLIC);
+#endif
+
+    if (vectorOf)
+	vectorOf->combineTypes(newtype);
+    else
+	vectorOf = newtype;
+
+    return this;
+}
+
+TypeDescriptor *VecType::deref ()
+{
+    if (vectorOf)
+	return vectorOf;
+    else
+	return this;
+}
+
+Boolean VecType::freezeType ()
+{
+    if (vectorOf != 0)
+	return vectorOf->freezeType();
+    else
+	return FALSE;
+}
+
+String VecType::postName ( DeclStyle ds ) const
+{
+    String s = "[";
+
+    if (vectorSize != 0)
+#ifndef BROKEN_CONVERSION_OPERS
+        s += *vectorSize;
+#else
+        s += vectorSize->asString();
+#endif
+
+    s += "]";
+
+    if (vectorOf != 0)
+        s += vectorOf->postName(ds);
+
+    return s;
+}
+
+String VecType::preName ( DeclStyle ds, Boolean elab, Boolean noConst ) const
+{
+    if ((ds != JAVA_DECL) && (vectorOf != 0))
+	return vectorOf->preName(ds,elab,noConst);
+    else
+	return NullString;
+}
+
+Boolean VecType::isFundamental () const
+{
+    return FALSE;
+}
+
+String VecType::signature () const
+{
+    String sig;
+
+    sig += "A_";
+
+    if (vectorOf != 0)
+        sig += vectorOf->signature();
+
+    if (vectorSize != 0)
+#ifndef BROKEN_CONVERSION_OPERS
+        sig += *vectorSize;
+#else
+        sig += vectorSize->asString();
+#endif
+
+    return sig;    
+}
+
+StubModifier VecType::defaultMarshall () const
+{
+    if ((vectorSize != 0) && (vectorOf != 0))
+	return vectorOf->defaultMarshall();
+    else
+	return STUB_NOMARSHALL;
+}
+
+StubModifier VecType::defaultTransfer () const
+{
+    return STUB_ARG_INOUT;
+}
+
+Boolean VecType::isTransferable () const
+{
+    if (vectorOf)
+	return vectorOf->isTransferable();
+    else
+	return TRUE;
+}
+
+Boolean VecType::produceMarshallingCode ( ostream& s,
+					  DeclStyle ds,
+					  Direction d,
+					  const String& varname, 
+					  const String& buffname) 
+{
+    return produceVecMarshallingCode(s,ds,d,varname,buffname);
+}
+
+/*
+ * PRIVATE operations
+ */
+
+String VecType::indexName ()
+{
+    static long index_number;           /* ensure each index is unique */
+
+    return constructName("i_", index_number++);
+}
+
+Boolean VecType::produceVecMarshallingCode ( ostream& s,
+					     DeclStyle ds,
+					     Direction d,
+					     const String& varname, 
+					     const String& buffname) 
+{
+    String indexvarName = indexName();
+    String newstring = varname + "[" + indexvarName + "]";
+
+    s << "for (int " << indexvarName << " = 0; ";
+    s << indexvarName << " < " << *vectorSize << "; ";
+    s << indexvarName << "++ )\n";
+    return vectorOf->produceMarshallingCode(s, ds, d, newstring, buffname);
+}

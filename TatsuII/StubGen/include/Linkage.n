@@ -1,0 +1,35 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: Linkage.n,v 1.1 1997/06/09 19:52:15 nmcl Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(LINKAGE_CC_)
+
+class ostream;
+
+extern ostream& operator << (ostream&, Linkage *);
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF  ostream& operator << ( ostream& s, Linkage *l )
+{
+    return l->printLinkage(s);
+}
+
+#ifdef INLINEF 
+#  undef INLINEF 
+#endif
+
+#endif

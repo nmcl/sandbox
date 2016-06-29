@@ -1,0 +1,16 @@
+COMMENT 
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1997/06/09 19:52:29 nmcl Exp $
+COMMENT
+
+CreateInstallTopDirectory(lib)
+InstallLibrary(lib,libCommon.a)
+
+TidyTarget(libCommon.a)
+

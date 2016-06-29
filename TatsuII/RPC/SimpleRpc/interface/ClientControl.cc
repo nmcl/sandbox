@@ -1,0 +1,244 @@
+/*
+ * Copyright 1990, 1991, 1992,
+ * Computing Laboratory, University of Newcastle upon Tyne, UK.
+ */
+
+/*
+ * $Id: ClientControl.cc,v 1.1 1997/06/09 19:52:06 nmcl Exp $
+ */
+
+#ifndef UNISTD_H_
+#  include <System/unistd.h>
+#endif
+
+#ifndef SYS_PARAM_H_
+#  include <System/sys/param.h>
+#endif
+
+#ifndef WIN32
+
+#ifndef NETDB_H_
+#  include <System/netdb.h>
+#endif
+
+#endif
+
+#ifndef PROTOS_H_
+#  include <System/protos.h>
+#endif
+
+#ifndef STRING_H_
+#  include <System/string.h>
+#endif
+
+#ifndef IOSTREAM_H_
+#  include <System/iostream.h>
+#endif
+
+#ifndef MEMORY_H_
+#  include <System/memory.h>
+#endif
+
+#ifndef SIMPLERPCCLIENT_H_
+#  include <RPC/SimpleRpc/SimpleRpcClient.h>
+#endif
+
+#ifndef CLIENTCONTROL_H_
+#  include <RPC/SimpleRpc/ClientControl.h>
+#endif
+
+const char* defaultServer = "server";
+char* ClientControl::myHost = 0;
+
+
+ClientControl::ClientControl ()
+			     : service(0),
+			       hostname(0),
+			       timeout(DEFAULT_TIMEOUT),
+			       retry(DEFAULT_RETRY),
+			       itTimeout(INITTERM_TIMEOUT),
+			       itRetry(INITTERM_RETRY),
+			       burstSize(BURST_SIZE),
+			       burstTimeout(BURST_TIMEOUT),
+			       protocol(DGRAM)
+{
+    if (ClientControl::myHost == 0)
+    {
+	ClientControl::myHost = ::new char[MAXHOSTNAMELEN+1];
+	::memset(ClientControl::myHost, '\0', MAXHOSTNAMELEN+1);
+	::gethostname(ClientControl::myHost, MAXHOSTNAMELEN);
+    }
+
+    setServiceName(defaultServer);
+    setHost(ClientControl::myHost);
+}
+
+
+ClientControl::~ClientControl ()
+{
+    if (service != 0)
+    {
+	::delete [] service;
+	service = 0;
+    }
+
+    if (hostname != 0)
+    {
+	::delete [] hostname;
+	hostname = 0;
+    }
+}
+
+RPC_Status ClientControl::setProtocol ( ProtocolType p )
+{
+    protocol = p;
+    return OPER_DONE;
+}
+
+RPC_Status ClientControl::getProtocol ( ProtocolType& p ) const
+{
+    p = protocol;
+    return OPER_DONE;
+}
+
+RPC_Status ClientControl::setServerID ( const Uid& id )
+{
+    serverID = id;
+    return OPER_DONE;
+}
+
+RPC_Status ClientControl::getServerID ( Uid& id ) const
+{
+    id = serverID;
+    return OPER_DONE;
+}
+
+RPC_Status ClientControl::setServiceName ( const char* serv )
+{
+    if (serv)
+    {
+	if (service)
+	    ::delete [] service;
+    
+	service = ::new char[::strlen(serv)+1];
+	::memset(service, '\0', ::strlen(serv)+1);
+	::memcpy(service, serv, ::strlen(serv));
+	return OPER_DONE;
+    }
+    
+    return OPER_NOTDONE;
+}
+
+RPC_Status ClientControl::getServiceName ( char*& serv ) const
+{
+    if (service)
+    {
+	serv = ::new char[::strlen(service)+1];
+	::memset(serv, '\0', ::strlen(service)+1);
+	::memcpy(serv, service, ::strlen(service));
+	return OPER_DONE;
+    }
+    
+    return OPER_NOTDONE;
+}
+
+RPC_Status ClientControl::setHost ( const char* host )
+{
+    if (host)
+    {
+	if (hostname)
+	    ::delete [] hostname;
+
+	hostname = ::new char[::strlen(host)+1];
+	::memset(hostname, '\0', ::strlen(host)+1);
+	::memcpy(hostname, host, ::strlen(host));
+	return OPER_DONE;
+    }
+    
+    return OPER_NOTDONE;
+}
+
+RPC_Status ClientControl::getHost ( char*& host ) const
+{
+    if (hostname)
+    {
+	host = ::new char[::strlen(hostname)+1];
+	::memset(host, '\0', ::strlen(hostname)+1);
+	::memcpy(host, hostname, ::strlen(hostname));
+	return OPER_DONE;
+    }
+    
+    return OPER_NOTDONE;
+}
+
+RPC_Status ClientControl::setTimeout ( long t_out )
+{
+    timeout = t_out;
+    return OPER_DONE;
+}
+
+RPC_Status ClientControl::getTimeout ( long& t_out ) const
+{
+    t_out = timeout;
+    return OPER_DONE;
+}
+
+RPC_Status ClientControl::setInitTermTimeout ( long t )
+{
+    itTimeout = t;
+    return OPER_DONE;
+}
+
+RPC_Status ClientControl::getInitTermTimeout ( long& t ) const
+{
+    t = itTimeout;
+    return OPER_DONE;
+}
+
+RPC_Status ClientControl::setInitTermRetry ( long r )
+{
+    itRetry = r;
+    return OPER_DONE;
+}
+
+RPC_Status ClientControl::getInitTermRetry ( long& r ) const
+{
+    r = itRetry;
+    return OPER_DONE;
+}
+
+RPC_Status ClientControl::setRetry ( long r )
+{
+    retry = r;
+    return OPER_DONE;
+}
+
+RPC_Status ClientControl::getRetry ( long& r ) const
+{
+    r = retry;
+    return OPER_DONE;
+}
+
+RPC_Status ClientControl::setBurstTimeout (long b)
+{
+    burstTimeout = b;
+    return OPER_DONE;
+}
+
+RPC_Status ClientControl::getBurstTimeout (long& b) const
+{
+    b = burstTimeout;
+    return OPER_DONE;
+}
+
+RPC_Status ClientControl::setBurstSize (long b)
+{
+    burstSize = b;
+    return OPER_DONE;
+}
+
+RPC_Status ClientControl::getBurstSize (long& b) const
+{
+    b = burstSize;
+    return OPER_DONE;
+}

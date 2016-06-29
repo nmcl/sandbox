@@ -1,0 +1,269 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1997/06/09 19:52:23 nmcl Exp $
+COMMENT
+COMMENT
+COMMENT
+COMMENT Supress dependency on $(STUBGEN)
+COMMENT
+
+STUBGEN=
+
+SetLocalCppFlags(-DCOMPILER_NAME=CPLUSPLUS_Q_VAR  -I../include -I$(STD_INCLUDES) -DSYS_INCLUDE=\"-I$(CPLUSPLUSINCLUDE)\" -D__EXTERN_C__)
+
+#ifdef CROSS_COMPILE
+
+/*
+ * Revised rules to do cross compilation
+ */
+
+#define MakeObjectsCPLUSPLUS(file, flags)                                                       @@\
+native/CPLUSPLUS_OBJECT(file) CPLUSPLUS_OBJECT(file) : CPLUSPLUS_SOURCE(file)                    @@\
+	@echo Compiling $@                                                                      @@\
+	COMMAND_PREFIX(exec CPLUSPLUS_CROSS_VAR) -c flags CPLUSPLUS_CROSS_COMP_DEFINES CPLUSPLUS_SOURCE(file) @@\
+	COMMAND_PREFIX(exec CPLUSPLUS_VAR) -c flags -o native/$@ CPLUSPLUS_COMP_DEFINES CPLUSPLUS_SOURCE(file)
+
+#define MakeProgramsCPLUSPLUS(prog, objects, flags)                                              @@\
+native/prog prog: objects                                                                             @@\
+	@echo Linking $@                                                                         @@\
+	COMMAND_PREFIX(eval PURIFY_VAR CPLUSPLUS_CROSS_VAR) CPLUSPLUS_CROSS_LINK_DEFINES_I -o prog objects flags CPLUSPLUS_CROSS_LINK_DEFINES_II @@\
+	COMMAND_PREFIX(cd native; PURIFY_VAR CPLUSPLUS_VAR) CPLUSPLUS_LINK_DEFINES_I -o prog objects flags CPLUSPLUS_LINK_DEFINES_II
+
+#undef InstallProgram
+#define InstallProgram(dir,prog, newname)                                                                   @@\
+install.local :: INSTALL_TOPDIR_VAR/dir INSTALL_TOPDIR_VAR/dir/newname                                @@\
+                                                                                                   @@\
+CreateInstallTopDirectory(dir)                                                                     @@\
+                                                                                                   @@\
+INSTALL_TOPDIR_VAR/dir/newname : prog                                                                 @@\
+	@echo Copying prog to INSTALL_TOPDIR_VAR/dir/newname                                          @@\
+	COMMAND_PREFIX(CP_VAR) prog INSTALL_TOPDIR_VAR/dir/newname                                    @@\
+	COMMAND_PREFIX(CHMOD_VAR) u=rwx,g=rx,o=rx INSTALL_TOPDIR_VAR/dir/newname
+
+#else
+#define MakeObjectsCPLUSPLUS(file, flags) MakeObjectCPLUSPLUS(file, flags) 
+#define	MakeProgramsCPLUSPLUS(prog, objects, flags) MakeProgramCPLUSPLUS(prog, objects, flags)	    
+#endif
+
+SOURCES = ADclCntxt.cc \
+          BaseClass.cc \
+          CDclCntxt.cc \
+          CLnkage.cc \
+	  BoolT.cc \
+          CharT.cc \
+          ClassT.cc \
+          CppLnkage.cc \
+          CvQuals.cc \
+          CvT.cc \
+          DclContxt.cc \
+          Debug.cc \
+          Decl.cc \
+          DeclList.cc \
+          DeclListE.cc \
+          DeclListI.cc \
+          DeclSpec.cc \
+          DirectivT.cc \
+          DummyArgT.cc \
+          DummyT.cc \
+	  EDclCntxt.cc \
+          EnumT.cc \
+          Error.cc \
+          Expr.cc \
+	  AllocExpr.cc \
+	  ArrayExpr.cc \
+          BinExpr.cc \
+	  Literal.cc \
+	  NestExpr.cc \
+          FileInfo.cc \
+          FloatT.cc \
+          FuncMods.cc \
+          FuncT.cc \
+          GlobalInf.cc \
+          IncludeT.cc \
+          IntT.cc \
+          Interface.cc \
+          Linkage.cc \
+          Location.cc \
+          ModifiedT.cc \
+          PointerT.cc \
+          QualT.cc \
+          StoreSpec.cc \
+          String.cc \
+          StubMods.cc \
+          TDesc.cc \
+	  TemplateCT.cc \
+	  InstClassT.cc \
+	  TmplCntxt.cc \
+          Type.cc \
+          TypeDefT.cc \
+          TypeMods.cc \
+          Utility.cc \
+          VecT.cc \
+          VisSpec.cc \
+          VoidT.cc \
+          tatsu.cc \
+          c++21.gram.cc \
+          c++21.lex.cc
+
+OBJECTS = ADclCntxt.o \
+          BaseClass.o \
+          CDclCntxt.o \
+          CLnkage.o \
+	  BoolT.o \
+          CharT.o \
+          ClassT.o \
+          CppLnkage.o \
+          CvQuals.o \
+          CvT.o \
+          DclContxt.o \
+          Debug.o \
+          Decl.o \
+          DeclList.o \
+          DeclListE.o \
+          DeclListI.o \
+          DeclSpec.o \
+          DirectivT.o \
+          DummyArgT.o \
+          DummyT.o \
+	  EDclCntxt.o \
+          EnumT.o \
+          Error.o \
+          Expr.o \
+	  AllocExpr.o \
+	  ArrayExpr.o \
+	  BinExpr.o \
+	  Literal.o \
+	  NestExpr.o \
+          FileInfo.o \
+          FloatT.o \
+          FuncMods.o \
+          FuncT.o \
+          GlobalInf.o \
+          IncludeT.o \
+          IntT.o \
+          Interface.o \
+          Linkage.o \
+          Location.o \
+          ModifiedT.o \
+          PointerT.o \
+          QualT.o \
+          StoreSpec.o \
+          String.o \
+          StubMods.o \
+          TDesc.o \
+	  TemplateCT.o \
+	  InstClassT.o \
+	  TmplCntxt.o \
+          Type.o \
+          TypeDefT.o \
+          TypeMods.o \
+          Utility.o \
+          VecT.o \
+          VisSpec.o \
+          VoidT.o \
+          tatsu.o \
+          c++21.gram.o \
+          c++21.lex.o
+
+SetLocalYaccFlags(-d)
+
+SetLocalLibraries(LEX_LIBRARY YACC_LIBRARY)
+
+#ifdef CROSS_COMPILE
+AllTarget(native tatsu native/tatsu)
+
+native :
+	COMMAND_PREFIX(MKDIR_VAR native)
+
+InstallProgram(bin,native/tatsu,tatsu.native)
+InstallProgram(bin,tatsu,tatsu)
+#else
+AllTarget(tatsu)
+InstallProgram(bin,tatsu)
+#endif
+
+MakeProgramsCPLUSPLUS(tatsu,$(OBJECTS),NOPARAM)
+
+MakeObjectsCPLUSPLUS(ADclCntxt,NOPARAM)
+MakeObjectsCPLUSPLUS(BaseClass,NOPARAM)
+MakeObjectsCPLUSPLUS(CDclCntxt,NOPARAM)
+MakeObjectsCPLUSPLUS(CLnkage,NOPARAM)
+MakeObjectsCPLUSPLUS(BoolT,NOPARAM)
+MakeObjectsCPLUSPLUS(CharT,NOPARAM)
+MakeObjectsCPLUSPLUS(ClassT,NOPARAM)
+MakeObjectsCPLUSPLUS(CppLnkage,NOPARAM)
+MakeObjectsCPLUSPLUS(CvQuals,NOPARAM)
+MakeObjectsCPLUSPLUS(CvT,NOPARAM)
+MakeObjectsCPLUSPLUS(DclContxt,NOPARAM)
+MakeObjectsCPLUSPLUS(Debug,NOPARAM)
+MakeObjectsCPLUSPLUS(Decl,NOPARAM)
+MakeObjectsCPLUSPLUS(DeclList,NOPARAM)
+MakeObjectsCPLUSPLUS(DeclListE,NOPARAM)
+MakeObjectsCPLUSPLUS(DeclListI,NOPARAM)
+MakeObjectsCPLUSPLUS(DeclSpec,NOPARAM)
+MakeObjectsCPLUSPLUS(DirectivT,NOPARAM)
+MakeObjectsCPLUSPLUS(DummyT,NOPARAM)
+MakeObjectsCPLUSPLUS(DummyArgT,NOPARAM)
+MakeObjectsCPLUSPLUS(EDclCntxt,NOPARAM)
+MakeObjectsCPLUSPLUS(EnumT,NOPARAM)
+MakeObjectsCPLUSPLUS(Error,NOPARAM)
+MakeObjectsCPLUSPLUS(Expr,NOPARAM)
+MakeObjectsCPLUSPLUS(AllocExpr,NOPARAM)
+MakeObjectsCPLUSPLUS(ArrayExpr,NOPARAM)
+MakeObjectsCPLUSPLUS(BinExpr,NOPARAM)
+MakeObjectsCPLUSPLUS(Literal,NOPARAM)
+MakeObjectsCPLUSPLUS(NestExpr,NOPARAM)
+MakeObjectsCPLUSPLUS(FileInfo,NOPARAM)
+MakeObjectsCPLUSPLUS(FloatT,NOPARAM)
+MakeObjectsCPLUSPLUS(FuncMods,NOPARAM)
+MakeObjectsCPLUSPLUS(FuncT,NOPARAM)
+MakeObjectsCPLUSPLUS(GlobalInf,NOPARAM)
+MakeObjectsCPLUSPLUS(IncludeT,NOPARAM)
+MakeObjectsCPLUSPLUS(IntT,NOPARAM)
+MakeObjectsCPLUSPLUS(IntegralT,NOPARAM)
+MakeObjectsCPLUSPLUS(Interface,NOPARAM)
+MakeObjectsCPLUSPLUS(Linkage,NOPARAM)
+MakeObjectsCPLUSPLUS(Location,NOPARAM)
+MakeObjectsCPLUSPLUS(ModifiedT,NOPARAM)
+MakeObjectsCPLUSPLUS(PointerT,NOPARAM)
+MakeObjectsCPLUSPLUS(QualT,NOPARAM)
+MakeObjectsCPLUSPLUS(StoreSpec,NOPARAM)
+MakeObjectsCPLUSPLUS(String,NOPARAM)
+MakeObjectsCPLUSPLUS(StubMods,NOPARAM)
+MakeObjectsCPLUSPLUS(TDesc,NOPARAM)
+MakeObjectsCPLUSPLUS(TemplateCT,NOPARAM)
+MakeObjectsCPLUSPLUS(InstClassT,NOPARAM)
+MakeObjectsCPLUSPLUS(TmplCntxt,NOPARAM)
+MakeObjectsCPLUSPLUS(Type,NOPARAM)
+MakeObjectsCPLUSPLUS(TypeDefT,NOPARAM)
+MakeObjectsCPLUSPLUS(TypeMods,NOPARAM)
+MakeObjectsCPLUSPLUS(Utility,NOPARAM)
+MakeObjectsCPLUSPLUS(VecT,NOPARAM)
+MakeObjectsCPLUSPLUS(VisSpec,NOPARAM)
+MakeObjectsCPLUSPLUS(VoidT,NOPARAM)
+MakeObjectsCPLUSPLUS(tatsu,NOPARAM)
+
+MakeYaccCPLUSPLUSSource(c++21.gram)
+
+MakeObjectsCPLUSPLUS(c++21.gram,NOPARAM)
+
+MakeLexCPLUSPLUSSource(c++21.lex)
+
+MakeObjectsCPLUSPLUS(c++21.lex,NOPARAM)
+
+TidyTarget(tatsu y.output c++21.gram.cc c++21.gram.h c++21.lex.cc)
+
+
+#ifdef CROSS_COMPILE
+tidy.local ::
+	COMMAND_PREFIX(cd native; $(RM) -f $(OBJECTS))
+
+purge.local ::
+	COMMAND_PREFIX($(RM) -rf native)
+#endif

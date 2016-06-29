@@ -1,0 +1,44 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: TDesc.n,v 1.1 1997/06/09 19:52:17 nmcl Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(TDESC_CC_)
+
+class ostream;
+
+extern ostream& operator<< (ostream&, TypeDescriptor *);
+ 
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF ostream& operator<< ( ostream& s, TypeDescriptor *t )
+{
+    t->printAsTypedef(s, NORMAL_DECL);
+    return s;
+}
+
+INLINEF ostream& TypeDescriptor::marshall(ostream& s, Direction d,
+					  DeclStyle ds,
+					  const String& bn , const String& vn )
+{
+    produceMarshallingCode(s,ds,d,vn,bn);
+    return s;
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif

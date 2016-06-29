@@ -1,0 +1,29 @@
+COMMENT 
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1997/06/09 19:53:06 nmcl Exp $
+COMMENT
+
+SOURCES = NoneMutex.cc \
+	  NoneThread.cc
+
+OBJECTS = NoneMutex.o \
+	  NoneThread.o
+
+LIBOBJS = $(LIB)(NoneMutex.o) \
+	  $(LIB)(NoneThread.o)
+
+LIB = $(LIBCOMMON)
+
+SetLocalCppFlags(-I../include -I$(STD_INCLUDES))
+
+AllTarget($(LIB))
+MakeLibObjectCPLUSPLUS($(LIBCOMMON),NoneMutex,NOPARAM)
+MakeLibObjectCPLUSPLUS($(LIBCOMMON),NoneThread,NOPARAM)
+
+MakeLibrary($(LIB),$(LIBOBJS))
