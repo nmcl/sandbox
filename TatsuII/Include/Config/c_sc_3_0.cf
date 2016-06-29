@@ -1,0 +1,18 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: c_sc_3_0.cf,v 1.1 1997/06/09 19:51:53 nmcl Exp $
+ */
+
+/*
+ * c_sc_3_0.cf
+ */
+
+#define COMPILER_SPECIFIC_FLAGS -DSTUBGEN_IGNORE_COMPILER -DHAVE_LONG_LONG -DDONT_DELETE_DBGFILTER
+#define STUBGEN_CC_FLAGS "-D__SUNPRO_CC=0x400 -D__BUILTIN_VA_ARG_INCR"
+

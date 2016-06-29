@@ -1,0 +1,22 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: c_gcc_2_7.cf,v 1.1 1997/06/09 19:51:53 nmcl Exp $
+ */
+
+/*
+ * c_gcc_2_7.cf
+ */
+
+#ifdef MAY_NEED_GCC_PROTOTYPES
+#define COMPILER_SPECIFIC_FLAGS -DNEED_GCC_PROTOTYPES -DHAVE_BOOLEAN_TYPE -DHAVE_WCHAR_TYPE -DHAVE_LONG_LONG -DGCC_STATIC_INIT_BUG -DMEMFNS_IN_STRING_H
+#else
+#define COMPILER_SPECIFIC_FLAGS -DHAVE_BOOLEAN_TYPE -DHAVE_WCHAR_TYPE -DHAVE_LONG_LONG -DGCC_STATIC_INIT_BUG -DMEMFNS_IN_STRING_H
+#endif
+
+#define STUBGEN_CC_FLAGS "-D__GNUG__=2 -D__GNUC__=2 -D__GNUC_MINOR__=7 -D__GCC_NEW_VARARGS__"
