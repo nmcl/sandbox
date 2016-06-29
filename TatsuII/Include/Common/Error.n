@@ -1,0 +1,50 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: Error.n,v 1.1 1997/06/09 19:51:48 nmcl Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(ERROR_CC_)
+
+extern ostream& operator<< (ostream&, const Error&);
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF int Error::errorCode () const
+{
+    return errCode;
+}
+
+INLINEF FacilityCode Error::errorFac () const
+{
+    return errorFacility;
+}
+
+#ifndef WIN32
+INLINEF Error::operator const char * const () const
+{
+    return errorText;
+}
+#endif
+
+INLINEF ostream& operator<< ( ostream& strm, const Error& err )
+{
+    return err.print(strm);
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif
