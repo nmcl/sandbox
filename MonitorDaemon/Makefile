@@ -1,8 +1,8 @@
 MAKE = make
 
-CC  = cc
-C++ = CC3.0.1
-CPP = /lib/cpp
+CC  = gcc
+C++ = g++
+CPP = gcc
 LEX = lex
 
 MDEP = 
@@ -10,7 +10,7 @@ STRIPDEPEND =
 
 CFLAGS   = -g
 CPPFLAGS = 
-C++FLAGS = -g +w
+C++FLAGS = -g
 LDFLAGS  = -g -lnsl -lsocket
 LEXFLAGS =
 
