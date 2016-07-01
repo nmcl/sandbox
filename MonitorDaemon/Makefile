@@ -67,7 +67,7 @@ install: all
 clean:
 	rm -f *.o
 
-vclean: clean
+purge: clean
 	rm -f MonitorDriver pingdaemon Download *~* *.bak
 
 depend:
