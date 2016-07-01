@@ -11,7 +11,7 @@ STRIPDEPEND =
 CFLAGS   = -g
 CPPFLAGS = 
 C++FLAGS = -g
-LDFLAGS  = -g -lnsl -lsocket
+LDFLAGS  = -g
 LEXFLAGS =
 
 MDEPFLAGS =
