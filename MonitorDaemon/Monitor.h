@@ -10,7 +10,9 @@
 #include <netinet/in.h>
 #include <sys/param.h>
 #include <string.h>
-#include <fstream.h>
+#include <fstream>
+
+using namespace std;
 
 #ifndef COMMON_H_
 #  include "Common.h"
