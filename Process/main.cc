@@ -1,6 +1,6 @@
 #define Main_
 
-#include <iostream.h>
+#include <iostream>
 #include <lwp/lwp.h>
 #include "Processor.h"
 #include "common.h"
