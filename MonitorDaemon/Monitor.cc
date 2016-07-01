@@ -5,6 +5,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <stdlib.h>
+#include <sys/socket.h>
 
 #ifndef MONITOR_H_
 #  include "Monitor.h"
@@ -283,7 +284,7 @@ Boolean Monitor::probe (int waitTime)
      */
     
     struct sockaddr_in from;
-    int length = sizeof(struct sockaddr_in);
+    socklen_t length = sizeof(struct sockaddr_in);
     int message = -1;
 
     msgSock = accept(sock, (struct sockaddr*) &from, &length);

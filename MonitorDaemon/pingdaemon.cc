@@ -31,12 +31,14 @@
 #include <netinet/in.h>
 #include <sys/param.h>
 #include <string.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 
 #ifndef COMMON_H_
 #  include "Common.h"
 #endif
 
+using namespace std;
 
 int main (int argc, char** argv)
 {

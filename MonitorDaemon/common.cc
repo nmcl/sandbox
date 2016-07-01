@@ -11,7 +11,7 @@
  * $Id: common.cc,v 1.19 1995/03/09 12:35:09 ngdp Exp $
  */
 
-#include <iostream.h>
+#include <iostream>
 #include <string.h>
 #include <sys/time.h>
 #include <unistd.h>
@@ -42,6 +42,7 @@
 double clockTick = (1.0/sysconf(_SC_CLK_TCK));
 #endif
 
+using namespace std;
 
 /*
  * The following routines are used to "ping" a given machine to determine
@@ -158,7 +159,7 @@ Boolean ping (const char* hostName, long& timeTaken, int portNumber)
 		    if (res > 0)
 		    {
 			struct sockaddr_in from;
-			int length = 0;
+			socklen_t length = 0;
 
 			if (recvfrom(sock, (char*) &receivedTime, sizeof(receivedTime), 0, (struct sockaddr*) &from, &length) >= 0)
 			{
