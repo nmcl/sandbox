@@ -1,12 +1,9 @@
 MAKE = make
 
 CC  = cc
-C++ = CC
-CPP = /lib/cpp
+C++ = g++
+CPP = gcc
 LEX = lex
-
-MDEP = /usr/local/Arjuna/bin/makedepend
-STRIPDEPEND = /usr/local/Arjuna/bin/stripdepend
 
 CFLAGS   =
 CPPFLAGS =
@@ -17,7 +14,7 @@ LEXFLAGS =
 MDEPFLAGS =
 
 LOCAL_CFLAGS   =
-LOCAL_CPPFLAGS = -I/usr/local/Arjuna/include
+LOCAL_CPPFLAGS = 
 
 LOCAL_C++FLAGS =
 LOCAL_LDFLAGS  = -L/usr/lib -lm -llwp
@@ -56,5 +53,5 @@ Processor.o: Processor.cc Processor.h
 clean:
 	rm -f *.o
 
-vclean: clean
+purge: clean
 	rm -f main *~*
