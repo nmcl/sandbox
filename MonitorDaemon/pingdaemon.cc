@@ -85,7 +85,7 @@ int main (int argc, char** argv)
     else
     {
 	if (debugOn)
-	    cout = target1;
+	  cout = target1;
 	else
 	{
 	    target1.close();
