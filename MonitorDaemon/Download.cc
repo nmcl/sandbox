@@ -1,6 +1,6 @@
 #include <string.h>
 #include <stdio.h>
-#include <iostream.h>
+#include <iostream>
 #include <memory.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -15,6 +15,7 @@
 #  include "Common.h"
 #endif
 
+using namespace std;
 
 int main (int argc, char** argv)
 {
