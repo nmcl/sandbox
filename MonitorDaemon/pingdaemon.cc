@@ -79,13 +79,15 @@ int main (int argc, char** argv)
     sprintf(outputFileName, "pingdaemon_out_%d", daemonPid);
     sprintf(errorFileName, "pingdaemon_err_%d", daemonPid);
 
-    ofstream target1(outputFileName);
+    std::ofstream target1(outputFileName);
+    std::ofstream target2(errorFileName);
+
     if (!target1)
 	printf("pingdaemon: Cannot open file %s\n", outputFileName);
     else
     {
 	if (debugOn)
-	  cout = target1;
+	  std::cout.rdbuf(target1.rdbuf());
 	else
 	{
 	    target1.close();
@@ -93,13 +95,12 @@ int main (int argc, char** argv)
 	}
     }
 	
-    ofstream target2(errorFileName);
     if (!target2)
 	printf("pingdaemon: Cannot open file %s\n", errorFileName);
     else
     {
 	if (debugOn)
-	    cerr = target2;
+	  std::cerr.rdbuf(target2.rdbuf());
 	else
 	{
 	    target2.close();
@@ -143,7 +144,7 @@ int main (int argc, char** argv)
 	    for (;;)
 	    {
 		struct sockaddr_in from;
-		int length = sizeof(struct sockaddr), res;
+		socklen_t length = sizeof(struct sockaddr), res;
 		
 		res = recvfrom(s, (char*) &receivedTime, sizeof(receivedTime), 0, (struct sockaddr*) &from, &length);
 		
