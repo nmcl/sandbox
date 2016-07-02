@@ -144,7 +144,8 @@ int main (int argc, char** argv)
 	    for (;;)
 	    {
 		struct sockaddr_in from;
-		socklen_t length = sizeof(struct sockaddr), res;
+		socklen_t length = sizeof(struct sockaddr);
+		ssize_t res;
 		
 		res = recvfrom(s, (char*) &receivedTime, sizeof(receivedTime), 0, (struct sockaddr*) &from, &length);
 		
