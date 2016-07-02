@@ -111,8 +111,7 @@ Boolean ping (const char* hostName, long& timeTaken, int portNumber)
     if (::strcmp(myHostName, hostName) == 0)  // can always ping own machine!
     {
 #ifdef DEBUG
-	debug_stream << FUNCTIONS << FAC_BASIC_RPC << VIS_PUBLIC;
-	debug_stream << "ping: being asked to ping own machine. Returning TRUE." << endl;
+      cout << "ping: being asked to ping own machine. Returning TRUE." << endl;
 #endif	
 	return TRUE;
     }
