@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <iostream>
 #include <memory.h>
-#include <strstream>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <stdlib.h>
