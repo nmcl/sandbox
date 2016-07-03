@@ -38,9 +38,11 @@ int main (int argc, char** argv)
     if (daemon->monitor(iterations))
     {
 	cout << "Monitor completed successfully." << endl;
+	
 	return 1;
     }
 
-    cout << "An error occurred while monitoring." << endl;
+    cout << "An error occurred while monitoring. Check " << errorFile << " for more details." << endl;
+    
     return -1;
 }
