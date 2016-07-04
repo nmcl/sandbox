@@ -9,7 +9,7 @@ COMMENT
 COMMENT $Id: Imakefile,v 1.1 1997/06/09 19:52:06 nmcl Exp $
 COMMENT
 
-SOURCES = RpcBuffer.cc  \ 
+SOURCES = RpcBuffer.cc  \
           ClientRpcMan.cc \
           ClientRpc.cc  \
           ServerRpc.cc  \
