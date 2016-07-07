@@ -1,0 +1,246 @@
+<HTML>
+<HEAD>
+<TITLE>
+C++SIM Reference Manual 3A 23 September 1994
+</TITLE>
+</HEAD>
+<BODY>
+<DL>
+<DD>
+<B>
+C++SIM Reference Manual 3A 23rd September 1994
+</B>
+</DL>
+<P>
+<DL>
+<DT>
+<B>NAME</B>
+<DD>
+Process - main simulation entity
+<P>
+<DT>
+<B>SYNOPSIS</B>
+<DD>
+<PRE>
+<B>
+#ifndef PROCESS_H_
+#   include <ClassLib/Process.h>
+#endif
+
+class Process : public Thread_Type
+{
+public:
+    static const int Never;
+
+    virtual ~Process ();
+
+    static double CurrentTime ();
+    double Time () const;
+
+    double evtime () const;
+    const Process* next_ev () const;
+
+    void Activate ();
+    void ActivateBefore (Process &);
+    void ActivateAfter (Process &);
+    void ActivateAt (double AtTime = CurrentTime(), Boolean prior = FALSE);
+    void ActivateDelay (double AtTime = CurrentTime(), Boolean prior = FALSE);
+
+    void ReActivate ();
+    void ReActivateBefore (Process &);
+    void ReActivateAfter (Process &);
+    void ReActivateAt (double AtTime = CurrentTime(), Boolean prior = FALSE);
+    void ReActivateDelay (double AtTime = CurrentTime(), Boolean prior = FALSE);
+
+    void Cancel ();
+    Boolean idle () const;
+
+    Boolean passivated () const;
+    Boolean terminated () const;
+
+    virtual void terminate ();
+
+    static const Process* current ();
+
+    virtual void Body () = 0;
+
+protected:
+    Process ();
+    Process (int priority);
+    Process (int priority, unsigned long stackSize);
+
+    void Hold (double t);
+
+    void Passivate ();
+};
+</B>
+</PRE>
+<P>
+<DT>
+<B>DESCRIPTION</B>
+<DD>
+This is the main class in the C++SIM system, representing the simulation
+entities themselves. It provides operations for the direct control of
+these processes by other (user) classes and also by the simulation <B>
+scheduler</B> object.
+<P>
+Processes run according to a logical simulation time: only
+one process is ever truly active at any instance of real time,
+but many processes may be active at the same simulation time.
+<P>
+A <B>Process</B> will be in one of four possible states:
+<P>
+<DL>
+<DT>
+<I>Active</I>
+<DD>
+: the process is currently running, and its actions are being
+executed.
+<DT>
+<I>Suspended</I>
+<DD>
+: the process is on the scheduler queue, scheduled to become
+active at a specific time in the future. This may be the same
+simulation time as the currently active process.
+<DT>
+<I>Passive</I>
+<DD>
+: the process is not on the scheduler queue, and unless another
+process brings it back onto the list by means of one of the
+activation statements, its further actions will not be executed.
+<DT>
+<I>Terminated</I>
+<DD>
+: the process is not on the scheduler queue and has no further
+actions to execute. Once a process is terminated it cannot be
+activated again.
+</DL>
+</DL>
+<DT>
+<B>PROTECTED CONSTRUCTORS</B>
+<DL>
+<DL>
+<DT>
+<B>Process ()</B>
+<DD>
+create a process with the default Thread(3A) priority and stack allocation.
+<DT>
+<B>Process (int priority)</B>
+<DD>
+create a process with the specified priority and default stack size.
+<DT>
+<B>Process (int priority, unsigned long stackSize)</B>
+<DD>
+create a process with the specified priority and stack size.
+</DL>
+</DL>
+<DT>
+<B>PUBLIC MEMBER FUNCTIONS</B>
+<DL>
+<DL>
+<DT>
+<B>double CurrentTime ()</B> and <B>double Time () const</B>
+<DD>
+return the current simulation time. The former is a
+<I>static</I> method and can therefore be invoked without an instance
+of the class which the latter version requires.
+<DT>
+<B>double evtime () const</B>
+<DD>
+returns the simulation time at which the process is scheduled
+to be activate.
+<DT>
+<B>const Process* next_ev () const</B>
+<DD>
+returns the next process (relative to this process) on the
+scheduler queue. If the current process is not on the scheduler
+queue then this returns a <B>NULL</B>pointer.
+<P>
+<DT>
+There are five <B>Activate</B> methods which operate only on passive processes:
+<DD>
+<OL>
+<LI>at the current simulation time
+<LI>before another process
+<LI>after another process
+<LI>at a specified (simulated) time
+<LI>after a specified (simulated) delay
+</OL>
+<P>
+<DT>
+The five corresponding <B>ReActivate</B>
+methods apply to both active processes and
+those on the scheduler queue.
+<P>
+<DT>
+<B>void Cancel ()</B>
+<DD>
+if the process is on the scheduler queue, then remove it
+and makes it passive. Otherwise it do nothing.
+<DT>
+<B>Boolean idle () const</B>
+<DD>
+returns <B>TRUE</B> if the process is passive or terminated,
+otherwise <B>FALSE</B> is returned (i.e., it is either active or present on
+the scheduler queue).
+<DT>
+<B>Boolean passivated () const</B>
+<DD>
+indicates whether the process is passive.
+<DT>
+<B>Boolean terminated () const</B>
+<DD>
+indicates whether the process has been terminated.
+<DT>
+<B>void terminate ()</B>
+<DD>
+removes the process from the scheduler queue if necessary
+and sets the process status to terminated. Once this is
+done the process can never be reactivated.
+<DT>
+<B>const Process* current ()</B>
+<DD>
+returns the currently active process. This is a <I>static</I> method.
+<DT>
+<B>void Body ()</B>
+<DD>
+represents the actual code for the process which is
+executed when the process is active. This is a <I>pure virtual</I>
+function, and must be defined in one of the deriving
+classes before an instance can be declared.
+</DL>
+</DL>
+<DT>
+<B>PROTECTED MEMBER FUNCTIONS</B>
+<DL>
+<DL>
+<DT>
+<B>void Hold (double)</B>
+<DD>
+When invoked by the active process it
+reschedules the currently active process for activation
+at a later time indicated by the supplied parameter.
+<DT>
+<B>void Passivate ()</B>
+<DD>removes the currently active process from the scheduler
+queue. It will not be rescheduled unless another process
+invokes one of the activation methods.
+</DL>
+</DL>
+<DT>
+<B>PUBLIC MEMBER VARIABLES</B>
+<DL>
+<DL>
+<DT>
+<B>Never</B>
+<DD>
+a <B>Process</B> assigned this time will never be reactivated by
+the scheduler.
+</DL>
+<DT>
+<B>SEE ALSO</B>
+<DD>
+Thread(3A), Thread_Type(3A)
+</DL>
+</BODY>
+</HTML>

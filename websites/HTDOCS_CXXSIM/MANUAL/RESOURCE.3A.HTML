@@ -1,0 +1,120 @@
+<HTML>
+<BODY>
+<PRE>
+       Resource - Reference counting base class
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <STRONG>#ifndef</STRONG> <STRONG>RESOURCE_H_</STRONG>
+       <STRONG>#</STRONG>   <STRONG>include</STRONG> <STRONG>&lt;Common/Resource.h&gt;</STRONG>
+       <STRONG>#endif</STRONG>
+
+       <STRONG>class</STRONG> <STRONG>Resource</STRONG>
+       <STRONG>{</STRONG>
+       <STRONG>public:</STRONG>
+            <STRONG>static</STRONG> <STRONG>void</STRONG> <STRONG>ref</STRONG>   <STRONG>(Resource*</STRONG> <STRONG>resource);</STRONG>
+            <STRONG>static</STRONG> <STRONG>void</STRONG> <STRONG>unref</STRONG> <STRONG>(Resource*</STRONG> <STRONG>resource);</STRONG>
+
+            <STRONG>void*</STRONG> <STRONG>operator</STRONG> <STRONG>new</STRONG>    <STRONG>(size_t</STRONG> <STRONG>amount);</STRONG>
+            <STRONG>void</STRONG>  <STRONG>operator</STRONG> <STRONG>delete</STRONG> <STRONG>(void*</STRONG> <STRONG>memPtr);</STRONG>
+
+       <STRONG>protected:</STRONG>
+            <STRONG>Resource</STRONG> <STRONG>();</STRONG>
+            <STRONG>virtual</STRONG> <STRONG>~Resource</STRONG> <STRONG>();</STRONG>
+       <STRONG>};</STRONG>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       C++  provides  no garbage collection mechanism, and there-
+       fore keeping track of references to  objects  and  knowing
+       when  they  can  be  correctly destroyed can be difficult.
+       Simply calling <STRONG>delete</STRONG> on a  pointer  to  an  object  could
+       leave  dangling references, or, if the object was actually
+       created on the stack, result in the failure of the  appli-
+       cation.
+
+       The  aim  of  the <STRONG>Resource</STRONG> class is to provide a reference
+       counting mechanism for all derived classes, and  to  auto-
+       matically remove objects when they are no longer required.
+       However, for this to work a new style  of  programming  is
+       required.
+
+       When  a reference counted object is created, its reference
+       count is zero. Before using the object, it should be  ref-
+       erenced using the <EM>static</EM> <STRONG>ref</STRONG> method, passing the object as
+       the parameter.
+
+       When finished with the object it  should  be  unreferenced
+       using  the  <EM>static</EM>  <STRONG>unref</STRONG>  method.  If the reference count
+       reaches zero then the object will be  deleted  if  it  was
+       created  on the heap, otherwise nothing will happen to it.
+       However, no attempt should be made to use the object after
+       <STRONG>unref</STRONG>  has been called as it cannot be guaranteed that the
+       object will be valid.
+
+       Both <STRONG>ref</STRONG> and <STRONG>unref</STRONG> are <STRONG>NULL</STRONG> pointer tolerant.
+
+       The operators  <STRONG>new</STRONG>  and  <STRONG>delete</STRONG>  are  provided  to  enable
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       The <STRONG>Thread</STRONG> class derives from  <STRONG>Resource</STRONG>  and  C++SIM  uses
+       this  to determine when it can delete threaded objects. If
+       this facility is not required, then the system  should  be
+       built using the <STRONG>-DNO_RESOURCE</STRONG> flag.
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+       A  race condition could occur during object creation which
+       would mean that an object may  incorrectly  think  it  was
+       created  on  the stack. If this happens, a memory leak may
+       result. A solution for this is being examined.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       Thread(3A)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

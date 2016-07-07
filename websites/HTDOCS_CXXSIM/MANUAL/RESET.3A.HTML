@@ -1,0 +1,64 @@
+<HTML>
+<BODY>
+<PRE>
+       MONITOR_RESET,  CHECK_RESET  RESET_POINT - allow resetting
+       of simulation runs.
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <STRONG>#ifndef</STRONG> <STRONG>RESET_H_</STRONG>
+       <STRONG>#</STRONG>   <STRONG>include</STRONG> <STRONG>&lt;ClassLib/reset.h&gt;</STRONG>
+       <STRONG>#endif</STRONG>
+
+       <STRONG>RESET_POINT</STRONG>
+
+       <STRONG>MONITOR_RESET(x,y,z);</STRONG>
+
+       <STRONG>CHECK_RESET(y,z);</STRONG>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       Resetting a  simulation  involves  resetting  all  of  the
+       objects  involved  in it which will be required for subse-
+       quent runs.  To reset a simulation, the  <STRONG>reset</STRONG>  method  of
+       the  simulation <STRONG>scheduler</STRONG> must be invoked. This then calls
+       the corresponding <STRONG>reset</STRONG> methods for  all  of  the  process
+       objects which are currently on the simulation queue.
+
+       However, there is a difference between resetting the state
+       of a process and  resetting  its  associated  thread.  The
+       thread  can  only  be  reset  when  it  is next activated.
+       Because a reset can potentially occur at any point, it  is
+       necessary  for  an  active process to be able to determine
+       whether it was reset  while  it  was  inactive,  and  take
+       appropriate action.
+
+       C++SIM  provides  two macros for this, both based upon the
+       CSP notion of guarded commands. Operations  are  performed
+       and  a  reset  condition can be checked before the process
+       acts upon the results. If a reset occurs, the <STRONG>reset</STRONG> method
+       for  the  <STRONG>Process</STRONG>  should  be written so that it sets this
+       condition flag to an appropriate state.
+
+       <STRONG>RESET_POINT</STRONG> is used  for  specifying  the  reset  position
+       within a method where the flow of control will be returned
+       to upon detecting a reset.
+
+       <STRONG>MONITOR_RESET(x,y,z)</STRONG> executes statement <STRONG>x</STRONG> and upon comple-
+       tion  statements  <STRONG>y</STRONG> and <STRONG>z</STRONG> are compared. If they are equal,
+       then the control flow is returned to the <STRONG>RESET_POINT.</STRONG>
+
+       <STRONG>CHECK_RESET(y,z)</STRONG> compares statements <STRONG>y</STRONG> and <STRONG>z</STRONG>  and  returns
+       control to the <STRONG>RESET_POINT</STRONG> if they are equal.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       Process(3A), Scheduler(3A)
+
+
+</PRE>
+</BODY>
+</HTML>

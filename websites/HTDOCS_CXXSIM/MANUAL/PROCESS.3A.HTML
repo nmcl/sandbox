@@ -1,0 +1,220 @@
+<HTML>
+<BODY>
+<PRE>
+       Process - main simulation entity
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <STRONG>#ifndef</STRONG> <STRONG>PROCESS_H_</STRONG>
+       <STRONG>#</STRONG>   <STRONG>include</STRONG> <STRONG>&lt;ClassLib/Process.h&gt;</STRONG>
+       <STRONG>#endif</STRONG>
+
+       <STRONG>class</STRONG> <STRONG>Process</STRONG> <STRONG>:</STRONG> <STRONG>public</STRONG> <STRONG>Thread_Type</STRONG>
+       <STRONG>{</STRONG>
+       <STRONG>public:</STRONG>
+            <STRONG>static</STRONG> <STRONG>const</STRONG> <STRONG>int</STRONG> <STRONG>Never;</STRONG>
+
+            <STRONG>virtual</STRONG> <STRONG>~Process</STRONG> <STRONG>();</STRONG>
+
+            <STRONG>static</STRONG> <STRONG>double</STRONG> <STRONG>CurrentTime</STRONG> <STRONG>();</STRONG>
+            <STRONG>double</STRONG> <STRONG>Time</STRONG> <STRONG>()</STRONG> <STRONG>const;</STRONG>
+
+            <STRONG>double</STRONG> <STRONG>evtime</STRONG> <STRONG>()</STRONG> <STRONG>const;</STRONG>
+
+            <STRONG>const</STRONG> <STRONG>Process*</STRONG> <STRONG>next_ev</STRONG> <STRONG>()</STRONG> <STRONG>const;</STRONG>
+
+            <STRONG>void</STRONG> <STRONG>Activate</STRONG> <STRONG>();</STRONG>
+            <STRONG>void</STRONG> <STRONG>ActivateBefore</STRONG> <STRONG>(Process</STRONG> <STRONG>&amp;);</STRONG>
+            <STRONG>void</STRONG> <STRONG>ActivateAfter</STRONG> <STRONG>(Process</STRONG> <STRONG>&amp;);</STRONG>
+            <STRONG>void</STRONG> <STRONG>ActivateAt</STRONG> <STRONG>(double</STRONG> <STRONG>AtTime</STRONG> <STRONG>=</STRONG> <STRONG>CurrentTime(),</STRONG>
+                           <STRONG>Boolean</STRONG> <STRONG>prior</STRONG> <STRONG>=</STRONG> <STRONG>FALSE);</STRONG>
+            <STRONG>void</STRONG> <STRONG>ActivateDelay</STRONG> <STRONG>(double</STRONG> <STRONG>AtTime</STRONG> <STRONG>=</STRONG> <STRONG>CurrentTime(),</STRONG>
+                               <STRONG>Boolean</STRONG> <STRONG>prior</STRONG> <STRONG>=</STRONG> <STRONG>FALSE);</STRONG>
+
+            <STRONG>void</STRONG> <STRONG>ReActivate</STRONG> <STRONG>();</STRONG>
+            <STRONG>void</STRONG> <STRONG>ReActivateBefore</STRONG> <STRONG>(Process</STRONG> <STRONG>&amp;);</STRONG>
+            <STRONG>void</STRONG> <STRONG>ReActivateAfter</STRONG> <STRONG>(Process</STRONG> <STRONG>&amp;);</STRONG>
+            <STRONG>void</STRONG> <STRONG>ReActivateAt</STRONG> <STRONG>(double</STRONG> <STRONG>AtTime</STRONG> <STRONG>=</STRONG> <STRONG>CurrentTime(),</STRONG>
+                                <STRONG>Boolean</STRONG> <STRONG>prior</STRONG> <STRONG>=</STRONG> <STRONG>FALSE);</STRONG>
+            <STRONG>void</STRONG> <STRONG>ReActivateDelay</STRONG> <STRONG>(double</STRONG> <STRONG>AtTime</STRONG> <STRONG>=</STRONG> <STRONG>CurrentTime(),</STRONG>
+                                <STRONG>Boolean</STRONG> <STRONG>prior</STRONG> <STRONG>=</STRONG> <STRONG>FALSE);</STRONG>
+
+            <STRONG>void</STRONG> <STRONG>Cancel</STRONG> <STRONG>();</STRONG>
+            <STRONG>Boolean</STRONG> <STRONG>idle</STRONG> <STRONG>()</STRONG> <STRONG>const;</STRONG>
+
+            <STRONG>Boolean</STRONG> <STRONG>passivated</STRONG> <STRONG>()</STRONG> <STRONG>const;</STRONG>
+            <STRONG>Boolean</STRONG> <STRONG>terminated</STRONG> <STRONG>()</STRONG> <STRONG>const;</STRONG>
+            <STRONG>virtual</STRONG> <STRONG>void</STRONG> <STRONG>terminate</STRONG> <STRONG>();</STRONG>
+
+            <STRONG>static</STRONG> <STRONG>const</STRONG> <STRONG>Process*</STRONG> <STRONG>current</STRONG> <STRONG>();</STRONG>
+
+            <STRONG>virtual</STRONG> <STRONG>void</STRONG> <STRONG>Body</STRONG> <STRONG>()</STRONG> <STRONG>=</STRONG> <STRONG>0;</STRONG>
+
+            <STRONG>virtual</STRONG> <STRONG>void</STRONG> <STRONG>reset</STRONG> <STRONG>();</STRONG>
+
+       <STRONG>protected:</STRONG>
+            <STRONG>Process</STRONG> <STRONG>();</STRONG>
+
+            <STRONG>void</STRONG> <STRONG>Hold</STRONG> <STRONG>(double</STRONG> <STRONG>t);</STRONG>
+            <STRONG>void</STRONG> <STRONG>Passivate</STRONG> <STRONG>();</STRONG>
+       <STRONG>};</STRONG>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       This  is the main class in the C++SIM system, representing
+       the simulation entities themselves. It provides operations
+       for  the direct control of these processes by other (user)
+       classes and also by the simulation <STRONG>scheduler</STRONG> object.
+
+       Processes run according to a logical simulation time: only
+       one  process  is ever truly active at any instance of real
+       time, but many processes may be active at the same simula-
+       tion time.
+
+       A <STRONG>Process</STRONG> will be in one of four possible states:
+
+            <EM>Active</EM>  :  the  process is currently running, and its
+       actions are being executed.
+
+            <EM>Suspended</EM> : the process is on  the  scheduler  queue,
+       scheduled  to  become  active  at  a  specific time in the
+       future. This may be the same simulation time as  the  cur-
+       rently active process.
+
+            <EM>Passive</EM>  : the process is not on the scheduler queue,
+       and unless another process brings it back onto the list by
+       means  of  one  of  the activation statements, its further
+       actions will not be executed.
+
+            <EM>Terminated</EM> : the process  is  not  on  the  scheduler
+       queue  and  has no further actions to execute. Once a pro-
+       cess is terminated it cannot be activated again.
+
+       It is not possible to create instances of  this  class  by
+       virtue  of  the  fact  that  its  constructor is <EM>protected</EM>
+       because a <STRONG>Process</STRONG> itself represents an abstract  entity  -
+       the  real entity must be provided by the deriving classes.
+
+       The default constructor creates a process with the default
+       Thread(3A)  priority  and  stack allocation. The other two
+       constructors allow for the modification of both  of  these
+       parameters.
+
+       The  <EM>static</EM> constant <STRONG>Never</STRONG> represents a special simulation
+       time: processes with this time will never  be  reactivated
+       by the <STRONG>scheduler.</STRONG>
+
+       The  methods  <STRONG>CurrentTime</STRONG> and <STRONG>Time</STRONG> both return the current
+       simulation time. The former is a  <EM>static</EM>  method  and  can
+       therefore  be  invoked  without  an  instance of the class
+       scheduled to be activate.
+
+       <STRONG>next_ev</STRONG>  returns  the  next process (relative to this pro-
+       cess) on the scheduler queue. If the  current  process  is
+       not  on  the  scheduler  queue  then  this  returns a <STRONG>NULL</STRONG>
+       pointer.
+
+       There are five <STRONG>Activate</STRONG> methods which operate only on pas-
+       sive processes:
+
+            1) at the current simulation time
+            2) before another process,
+            3) after another process,
+            4) at a specified (simulated) time, or
+            5) after a specified (simulated) delay
+
+
+       The  five  corresponding  <STRONG>ReActivate</STRONG> methods apply to both
+       active processes and those on the scheduler queue.
+
+       If the process is on  the  scheduler  queue,  then  <STRONG>Cancel</STRONG>
+       removes  it  and makes it passive. Otherwise it does noth-
+       ing.
+
+       <STRONG>idle</STRONG> returns <STRONG>TRUE</STRONG> if the process is passive or terminated,
+       otherwise  <STRONG>FALSE</STRONG> is returned (i.e., it is either active or
+       present on the scheduler queue).
+
+       <STRONG>passivated</STRONG> indicates whether the process is passive.
+
+       <STRONG>terminated</STRONG> indicates whether the process has  been  termi-
+       nated.
+
+       <STRONG>terminate</STRONG>  removes the process from the scheduler queue if
+       necessary and sets the process status to terminated.  Once
+       this is done the process can never be reactivated.
+
+       <STRONG>current</STRONG> returns the currently active process.
+
+       <STRONG>Body</STRONG>  represents  the actual code for the process which is
+       executed when the process is active. This is a  <EM>pure</EM>  <EM>vir-</EM>
+       <EM>tual</EM>  function, and must be defined in one of the deriving
+       classes before an instance can be declared.
+
+       <STRONG>reset</STRONG> is used for resetting the process prior  to  another
+       simulation run. To reset a simulation, the <STRONG>reset</STRONG> method of
+       the <STRONG>scheduler</STRONG> must be called, and this resets all  of  the
+       processes currently on the simulation queue.
+
+       When  invoked  by  the active process <STRONG>Hold</STRONG> reschedules the
+       currently active process for activation at  a  later  time
+       indicated by the supplied parameter.
+       scheduler queue. It will not be rescheduled unless another
+       process invokes one of the activation methods.
+
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       reset(3A), Scheduler(3A), Thread(3A), Thread_Type(3A)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,116 @@
+<HTML>
+<BODY>
+<PRE>
+       Scheduler - simulation scheduler object
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <STRONG>#ifndef</STRONG> <STRONG>PROCESS_H_</STRONG>
+       <STRONG>#</STRONG>   <STRONG>include</STRONG> <STRONG>&lt;ClassLib/Process.h&gt;</STRONG>
+       <STRONG>#endif</STRONG>
+
+       <STRONG>class</STRONG> <STRONG>Scheduler</STRONG>
+       <STRONG>{</STRONG>
+       <STRONG>public:</STRONG>      <STRONG>double</STRONG> <STRONG>CurrentTime</STRONG> <STRONG>()</STRONG> <STRONG>const;</STRONG>
+            <STRONG>void</STRONG> <STRONG>reset</STRONG> <STRONG>()</STRONG> <STRONG>const;</STRONG>
+            <STRONG>static</STRONG> <STRONG>Scheduler&amp;</STRONG> <STRONG>scheduler</STRONG> <STRONG>();</STRONG>
+
+            <STRONG>static</STRONG> <STRONG>void</STRONG>       <STRONG>terminate</STRONG> <STRONG>();</STRONG>
+            <STRONG>void</STRONG> <STRONG>Suspend</STRONG> <STRONG>();</STRONG>
+
+            <STRONG>void</STRONG> <STRONG>Resume</STRONG> <STRONG>();</STRONG>
+       <STRONG>protected:</STRONG>
+
+            <STRONG>Scheduler</STRONG> <STRONG>();</STRONG>
+
+            <STRONG>virtual</STRONG> <STRONG>~Scheduler</STRONG> <STRONG>();</STRONG>
+
+       <STRONG>};</STRONG>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       An instance of this class represents the simulation sched-
+       uler.  It maintains the queue of <STRONG>Process</STRONG> objects which are
+       currently  inactive,  and determines which process will be
+       activated next.
+
+       In versions of C++SIM prior to 1.6  the  scheduler  was  a
+       threaded  object.   However,  for performance reasons this
+       was changed, and the scheduler is no longer  derived  from
+       the  thread  implementation class. To maintain some degree
+       of backward compatibility, the methods Suspend and  Resume
+       remain  in the scheduler class, but correspond to suspend-
+       ing and resuming the simulation, rather  than  the  sched-
+       uler. (The overall effect is the same as in older versions
+       of C++SIM). The names of these routines may change.
+
+       It is not possible for simulations to create instances  of
+       this class. Instead the system guarantees that a scheduler
+       exists when needed. This is hidden by  the  <EM>static</EM>  method
+       <STRONG>scheduler()</STRONG>  which  returns  a  reference to the scheduler
+       object.
+
+       If the simulation requires to remove this scheduler object
+       it should invoke the <EM>static</EM> <STRONG>terminate()</STRONG> method.
+
+       The  <STRONG>CurrentTime()</STRONG>  method  returns the current simulation
+       time.
+       quent  run.  This first resets the simulation time to 0.0,
+       and then resets all of the  processes  on  the  simulation
+       queue.  All  simulation  processes  have  a  corresponding
+       method which the scheduler invokes.
+
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       Process(3A), reset(3A), Thread(3A), Thread_Type(3A)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

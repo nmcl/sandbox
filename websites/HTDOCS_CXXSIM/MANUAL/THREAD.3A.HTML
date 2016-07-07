@@ -1,0 +1,116 @@
+<HTML>
+<BODY>
+<PRE>
+       Thread, Thread_Type - runtime thread implementation
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <STRONG>#ifndef</STRONG> <STRONG>THREAD_H_</STRONG>
+       <STRONG>#</STRONG>   <STRONG>include</STRONG> <STRONG>&lt;ClassLib/thread.h&gt;</STRONG>
+       <STRONG>#endif</STRONG>
+
+       <STRONG>class</STRONG> <STRONG>Thread</STRONG> <STRONG>:</STRONG> <STRONG>public</STRONG> <STRONG>Resource</STRONG>
+       <STRONG>{</STRONG>
+       <STRONG>public:</STRONG>
+            <STRONG>virtual</STRONG> <STRONG>void</STRONG> <STRONG>Suspend</STRONG> <STRONG>()</STRONG> <STRONG>=</STRONG> <STRONG>0;</STRONG>
+            <STRONG>virtual</STRONG> <STRONG>void</STRONG> <STRONG>Resume</STRONG> <STRONG>()</STRONG> <STRONG>=</STRONG> <STRONG>0;</STRONG>
+            <STRONG>virtual</STRONG> <STRONG>void</STRONG> <STRONG>Body</STRONG> <STRONG>()</STRONG> <STRONG>=</STRONG> <STRONG>0;</STRONG>
+
+            <STRONG>virtual</STRONG> <STRONG>long</STRONG> <STRONG>Current_Thread</STRONG> <STRONG>()</STRONG> <STRONG>const</STRONG> <STRONG>=</STRONG> <STRONG>0;</STRONG>
+
+            <STRONG>virtual</STRONG> <STRONG>long</STRONG> <STRONG>Identity</STRONG> <STRONG>()</STRONG> <STRONG>const;</STRONG>
+
+            <STRONG>static</STRONG> <STRONG>Thread</STRONG> <STRONG>*Self</STRONG> <STRONG>();</STRONG>
+
+       <STRONG>protected:</STRONG>
+            <STRONG>Thread</STRONG> <STRONG>();</STRONG>
+            <STRONG>virtual</STRONG> <STRONG>~Thread</STRONG> <STRONG>();</STRONG>
+
+            <STRONG>long</STRONG> <STRONG>thread_key;</STRONG>
+       <STRONG>};</STRONG>
+
+       <STRONG>#define</STRONG> <STRONG>Thread_Type</STRONG> <STRONG>'thread</STRONG> <STRONG>implementation'</STRONG>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       This  class  defines a template for all thread implementa-
+       tions used to provide an active  object  abstraction.  The
+       actual  thread  implementations  form  classes  which  are
+       derived from this class, and are hidden by the <STRONG>Thread_Type</STRONG>
+       CPP  macro  definition,  which  is defined at system build
+       time.  All classes which  require  a  threaded  capability
+       should be derived from this <STRONG>Thread_Type</STRONG> "class" for porta-
+       bility reasons, rather than directly from a  given  thread
+       implementation.
+
+       The  <STRONG>Suspend</STRONG> method is used to suspend the thread to which
+       it is applied.
+
+       The <STRONG>Resume</STRONG> method resumes the thread it is applied to.
+
+       <STRONG>Body</STRONG> is the main active object code which is executed when
+       the threaded object is created.
+
+       <STRONG>Current_Thread</STRONG>  returns  the  identity  of  the  currently
+       active thread, or <STRONG>-1</STRONG> if an error occurs.
+
+       <STRONG>Identity</STRONG> returns the identity of the threaded object it is
+       object.
+
+       <STRONG>thread_key</STRONG> is used  to  uniquely  identify  each  threaded
+       object  within  the  system.  It must be set by the actual
+       (derived) thread class.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       Resource(3A)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

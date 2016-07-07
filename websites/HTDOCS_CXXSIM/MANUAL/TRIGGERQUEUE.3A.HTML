@@ -1,0 +1,66 @@
+<HTML>
+<BODY>
+<PRE>
+       TriggerQueue  -  used  for  handling  application specific
+       events
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <STRONG>#ifndef</STRONG> <STRONG>TRIGGERQUEUE_H_</STRONG>
+       <STRONG>#</STRONG>   <STRONG>include</STRONG> <STRONG>&lt;Event/TriggerQueue.h&gt;</STRONG>
+       <STRONG>#endif</STRONG>
+
+       <STRONG>class</STRONG> <STRONG>TriggerQueue</STRONG>
+       <STRONG>{</STRONG>
+       <STRONG>public:</STRONG>
+            <STRONG>TriggerQueue</STRONG> <STRONG>();</STRONG>
+            <STRONG>virtual</STRONG> <STRONG>~TriggerQueue</STRONG> <STRONG>();</STRONG>
+
+            <STRONG>Boolean</STRONG> <STRONG>triggerAll</STRONG> <STRONG>();</STRONG>
+            <STRONG>Boolean</STRONG> <STRONG>triggerFirst</STRONG> <STRONG>(Boolean</STRONG> <STRONG>triggered</STRONG> <STRONG>=</STRONG> <STRONG>TRUE);</STRONG>
+       <STRONG>};</STRONG>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       An instance of this  class  maintain  a  queue  of  <STRONG>Entity</STRONG>
+       objects  waiting  for  application  specific events. These
+       objects are placed  on  a  queue  via  the  <STRONG>WaitForTrigger</STRONG>
+       method of the <STRONG>Entity</STRONG> class.
+
+       Applications  can  then  use these queues to simulate spe-
+       cific events, for example processor interrupt levels. When
+       an event occurs, members of a queue can be informed (trig-
+       gered) using one of the two methods provided.
+
+       The <STRONG>triggerAll</STRONG> method triggers all of the members  of  the
+       queue.  These  objects  will know that they were triggered
+       and not interrupted.
+
+       <STRONG>triggerFirst</STRONG> triggers only the member at the head  of  the
+       queue.  If the parameter is <STRONG>FALSE</STRONG> then the object will not
+       know it was triggered, and will assume it was  interrupted
+       from its <EM>waiting</EM> state.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       If a queue is not empty when it goes out of scope then all
+       remaining members will be triggered and placed back on  to
+       the scheduler queue.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       Entity(3A)
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

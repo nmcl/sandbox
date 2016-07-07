@@ -1,0 +1,64 @@
+<HTML>
+<BODY>
+<PRE>
+       error_stream - object which provides for output of differ-
+       ent levels of error severity messages
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <STRONG>#ifndef</STRONG> <STRONG>ERROR_H_</STRONG>
+       <STRONG>#</STRONG>   <STRONG>include</STRONG> <STRONG>&lt;Common/Error.h&gt;</STRONG>
+       <STRONG>#endif</STRONG>
+
+       <STRONG>enum</STRONG> <STRONG>ErrorSeverity</STRONG>
+       <STRONG>{</STRONG>
+            <STRONG>FATAL,</STRONG> <STRONG>WARNING</STRONG>
+       <STRONG>};</STRONG>
+
+       <STRONG>extern</STRONG> <STRONG>ostream&amp;</STRONG> <STRONG>operator&lt;&lt;</STRONG> <STRONG>(</STRONG> <STRONG>ostream&amp;</STRONG> <STRONG>strm,</STRONG>
+                                <STRONG>enum</STRONG> <STRONG>ErrorSeverity</STRONG> <STRONG>es</STRONG> <STRONG>);</STRONG>
+
+       <STRONG>#define</STRONG> <STRONG>error_stream</STRONG> <STRONG>cerr</STRONG>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       The <STRONG>error_stream</STRONG> and its associated <STRONG>&lt;&lt;</STRONG> operator provide  a
+       means  of  outputting  error  messages  which indicate the
+       level of severity of the error and give other  information
+       which may prove useful in tracking down faults (e.g., pro-
+       cess identifier).
+
+       The format for using <STRONG>error_stream</STRONG> is straightforward,  and
+       is illustrated with two examples:
+
+       <STRONG>error_stream</STRONG> <STRONG>&lt;&lt;</STRONG> <STRONG>WARNING</STRONG> <STRONG>&lt;&lt;</STRONG> <STRONG>"Attempt</STRONG> <STRONG>to</STRONG> <STRONG>do</STRONG> <STRONG>something</STRONG>
+                 <STRONG>illegal</STRONG> <STRONG>but</STRONG> <STRONG>not</STRONG> <STRONG>severe."</STRONG> <STRONG>&lt;&lt;</STRONG> <STRONG>endl;</STRONG>
+
+       <STRONG>error_stream</STRONG> <STRONG>&lt;&lt;</STRONG> <STRONG>FATAL</STRONG> <STRONG>&lt;&lt;</STRONG> <STRONG>"Attempt</STRONG> <STRONG>to</STRONG> <STRONG>do</STRONG> <STRONG>something</STRONG>
+                 <STRONG>such</STRONG> <STRONG>as</STRONG> <STRONG>divide</STRONG> <STRONG>by</STRONG> <STRONG>zero."</STRONG> <STRONG>&lt;&lt;</STRONG> <STRONG>endl;</STRONG>
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       debug_stream(3A)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,191 @@
+<HTML>
+<HEAD>
+<TITLE>
+C++SIM Reference Manual 3A 23 September 1994
+</TITLE>
+</HEAD>
+<BODY>
+<DL>
+<DD>
+<B>
+C++SIM Reference Manual 3A 23rd September 1994
+</B>
+</DL>
+<P>
+<DL>
+<DT>
+<B>NAME</B>
+<DD>
+debug_stream, _cppsim_debug - objects which allow for selective debugging
+statements
+<P>
+<DT>
+<B>SYNOPSIS</B>
+<DD>
+<B>
+<PRE>
+#ifndef DEBUG_H_
+#   include <Common/Debug.h>
+#endif
+
+enum FacilityCode
+{
+	FAC_SCHEDULER = 0x0001,
+	FAC_PROCESS = 0x0002,
+	FAC_THREAD = 0x0004,
+	FAC_SIMSCRIPT = 0x0008,
+	FAC_SEMAPHORE = 0x0010,
+	FAC_ENTITY = 0x0020,
+	FAC_PROCESSLISTS = 0x0040,
+	FAC_GENERAL = 0x0080,
+	FAC_USER1 = 0x1000,
+	FAC_USER2 = 0x2000,
+	FAC_USER3 = 0x4000,
+	FAC_USER4 = 0x8000,
+	FAC_ALL = 0xffff
+};
+
+enum VisibilityLevel
+{
+	VIS_PRIVATE = 0x0001,
+	VIS_PROTECTED = 0x0002,
+	VIS_PUBLIC = 0x0004,
+	VIS_ALL = 0xffff
+};
+
+enum DebugLevel
+{
+	NO_DEBUGGING = 0,
+	CONSTRUCTORS = 0x0001,
+	DESTRUCTORS = 0x0002,
+	CONSTRUCT_AND_DESTRUCT = CONSTRUCTORS | DESTRUCTORS,
+	FUNCTIONS = 0x0010,
+	OPERATORS = 0x0020,
+	FUNCS_AND_OPS = FUNCTIONS | OPERATORS,
+	ALL_NON_TRIVIAL = CONSTRUCT_AND_DESTRUCT | FUNCTIONS
+					 | OPERATORS,
+	TRIVIAL_FUNCS = 0x0100,
+	TRIVIAL_OPERATORS = 0x0200,
+	ALL_TRIVIAL = TRIVIAL_FUNCS | TRIVIAL_OPERATORS,
+	FULL_DEBUGGING = 0xffff
+};
+
+
+class DebugController : public StreamFilter
+{
+public:
+	DebugController ();
+	virtual ~DebugController ();
+	void set_all (DebugLevel, FacilityCode, VisibilityLevel);
+	void set_debuglevel (DebugLevel);
+	void set_facility (FacilityCode);
+	void set_visibility (VisibilityLevel);
+};
+
+extern DebugController *_cppsim_debug;
+</B>
+</PRE>
+<P>
+<DT>
+<B>DESCRIPTION</B>
+<DD>
+This set of classes provide a uniform means of selectively outputting
+debugging statements based upon the run-time requirements of the user.
+<P>
+The <B>debug_stream</B> variable is an instance of an <I>ostream</I>
+with an associated filter mechanism which is used to determine whether
+the data provided should be finally output. The information required
+by the filter is split into three different levels:
+<P>
+<OL>
+<LI>
+the  <I>debugging  facility</I>, which is a   way  of grouping together
+related  debugging information, based  upon classes, functionality, or
+any other desired means.
+<LI>
+the <I>visibility  level</I>,  which is   a means   of indicating  the
+interface   visibility  of  the   various methods/functions outputting
+debugging information.
+<LI>
+the <I>debugging level</I>, which  indicates the level of debugging at
+which the debugging statement should appear.
+</OL>
+<P>
+All debugging statements should be written within an
+<P>
+<PRE>
+<B>#ifdef DEBUG
+#endif</B>
+</PRE>
+<P>
+expression. The debugging statement should then have an indication
+of the level etc. at which it should occur. This should be done using
+the << operator. For example:
+<P>
+<B>
+debug_stream << CONSTRUCTOR << VIS_PUBLIC << FAC_USER1;
+</B>
+<P>
+Then the actual debugging statement can be inserted, again
+using the overloaded << operator. It is preferable to flush the output also.
+Output will only be produced if the inserted code, level, etc. match the
+currently requested debugging level.
+<P>
+To set the debug tracing level, the variable <B>_cppsim_debug</B>
+must be set to the level of tracing required. Since each level is
+represented by a bit in the variable, multiple levels are produced
+by OR-ing the fields together.
+<P>
+Another way of setting the tracing level is by way of the following
+shell environment variables:
+<P>
+<B>
+DEBUG_FAC, DEBUG_VIS, DEBUG_LEVEL
+</B>
+<P>
+These can be set according to the shell in use. For example,
+using csh:
+<P>
+<B>
+<PRE>
+setenv DEBUG_FAC FFFF
+setenv DEBUG_VIS FFFF
+setenv DEBUG_LEVEL FFFF
+</PRE>
+</B>
+</DL>
+<DL>
+<DT>
+<B>NOTES</B>
+<DD>
+The default values for each debug filter variable are:
+<P>
+<DL>
+<B>
+<DD>
+DEBUG_LEVEL = FULL_DEBUGGING
+<DD>
+DEBUG_FAC = FAC_ALL
+<DD>
+DEBUG_VIS = VIS_ALL
+</B>
+</DL>
+</DL>
+<DL>
+<DT>
+<B>EXAMPLE</B>
+<DD>
+The following is an example of using the <B>debug_stream</B>:
+<P>
+<DL>
+<B>
+<DT>
+debug_stream << CONSTRUCTORS << FAC_THREAD << VIS_PROTECTED;
+<DT>
+debug_stream << "Sample debugging statement" << endl;
+</B>
+</DL>
+</DL>
+</BODY>
+</HTML>
+

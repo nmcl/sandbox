@@ -1,0 +1,64 @@
+<HTML>
+<BODY>
+<PRE>
+       RandomStream - base class of all random number classes.
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <STRONG>#ifndef</STRONG> <STRONG>RANDOM_H_</STRONG>
+       <STRONG>#</STRONG>   <STRONG>include</STRONG> <STRONG>&lt;ClassLib/Random.h&gt;</STRONG>
+       <STRONG>#endif</STRONG>
+
+       <STRONG>class</STRONG> <STRONG>RandomStream</STRONG>
+       <STRONG>{</STRONG>
+       <STRONG>public:</STRONG>
+            <STRONG>RandomStream</STRONG> <STRONG>(long</STRONG> <STRONG>=</STRONG> <STRONG>772531L,</STRONG> <STRONG>long</STRONG> <STRONG>=</STRONG> <STRONG>1878892440L);</STRONG>
+            <STRONG>virtual</STRONG> <STRONG>double</STRONG> <STRONG>operator()</STRONG> <STRONG>()</STRONG> <STRONG>=</STRONG> <STRONG>0;</STRONG>
+            <STRONG>double</STRONG> <STRONG>Error</STRONG> <STRONG>();</STRONG>
+
+       <STRONG>protected:</STRONG>
+            <STRONG>double</STRONG> <STRONG>Uniform</STRONG> <STRONG>();</STRONG>
+       <STRONG>};</STRONG>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       The  <STRONG>RandomStream</STRONG>  class  is the base class from which all
+       other random number classes are derived. It is not  possi-
+       ble to create instances of this class, rather other classs
+       should be inherited from it to make use of its functional-
+       ity.
+
+       <STRONG>RandomStream</STRONG>  returns  a uniform  distribution based  upon
+       parameters given, and the most  derived class  manipulates
+       this   accordingly.  The algorithm uses a linear congruen-
+       tial generator and the results of this are  then  shuffled
+       with a multiplicative generator.
+
+       The  <STRONG>constructor</STRONG> initializes the multiplicative and linear
+       congruential generators with the seeds  provided,  respec-
+       tively.
+
+       The  <STRONG>operator</STRONG>  <STRONG>()</STRONG>  must  be  defined in one of the derived
+       classes and is used to return the random numbers for  that
+       class.
+
+       <STRONG>Error</STRONG>  returns  a  chi-square error measure on the uniform
+       distribution function.
+
+       <STRONG>Uniform</STRONG> returns the random number drawn from  the  uniform
+       distribution.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       UniformStream(3A),     Draw(3A),    ExponentialStream(3A),
+       ErlangStream(3A),   HyperExponentialStream(3A),    Normal-
+       Stream(3A)
+
+
+
+</PRE>
+</BODY>
+</HTML>

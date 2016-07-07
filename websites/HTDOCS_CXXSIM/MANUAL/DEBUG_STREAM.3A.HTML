@@ -1,0 +1,168 @@
+<HTML>
+<BODY>
+<PRE>
+       debug_stream,  _cppsim_debug   -  objects  which allow for
+       selective output of debugging statements
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <STRONG>#ifndef</STRONG> <STRONG>DEBUG_H_</STRONG>
+       <STRONG>#</STRONG>   <STRONG>include</STRONG> <STRONG>&lt;Common/Debug.h&gt;</STRONG>
+       <STRONG>#endif</STRONG>
+
+       <STRONG>enum</STRONG> <STRONG>FacilityCode</STRONG>
+       <STRONG>{</STRONG>
+            <STRONG>FAC_SCHEDULER</STRONG> <STRONG>=</STRONG> <STRONG>0x0001,</STRONG>
+            <STRONG>FAC_PROCESS</STRONG> <STRONG>=</STRONG> <STRONG>0x0002,</STRONG>
+            <STRONG>FAC_THREAD</STRONG> <STRONG>=</STRONG> <STRONG>0x0004,</STRONG>
+            <STRONG>FAC_SIMSCRIPT</STRONG> <STRONG>=</STRONG> <STRONG>0x0008,</STRONG>
+            <STRONG>FAC_SEMAPHORE</STRONG> <STRONG>=</STRONG> <STRONG>0x0010,</STRONG>
+            <STRONG>FAC_ENTITY</STRONG> <STRONG>=</STRONG> <STRONG>0x0020,</STRONG>
+            <STRONG>FAC_PROCESSLISTS</STRONG> <STRONG>=</STRONG> <STRONG>0x0040,</STRONG>
+            <STRONG>FAC_GENERAL</STRONG> <STRONG>=</STRONG> <STRONG>0x0080,</STRONG>
+            <STRONG>FAC_USER1</STRONG> <STRONG>=</STRONG> <STRONG>0x1000,</STRONG>
+            <STRONG>FAC_USER2</STRONG> <STRONG>=</STRONG> <STRONG>0x2000,</STRONG>
+            <STRONG>FAC_USER3</STRONG> <STRONG>=</STRONG> <STRONG>0x4000,</STRONG>
+            <STRONG>FAC_USER4</STRONG> <STRONG>=</STRONG> <STRONG>0x8000,</STRONG>
+            <STRONG>FAC_ALL</STRONG> <STRONG>=</STRONG> <STRONG>0xffff</STRONG>
+       <STRONG>};</STRONG>
+
+       <STRONG>enum</STRONG> <STRONG>VisibilityLevel</STRONG>
+       <STRONG>{</STRONG>
+            <STRONG>VIS_PRIVATE</STRONG> <STRONG>=</STRONG> <STRONG>0x0001,</STRONG>
+            <STRONG>VIS_PROTECTED</STRONG> <STRONG>=</STRONG> <STRONG>0x0002,</STRONG>
+            <STRONG>VIS_PUBLIC</STRONG> <STRONG>=</STRONG> <STRONG>0x0004,</STRONG>
+            <STRONG>VIS_ALL</STRONG> <STRONG>=</STRONG> <STRONG>0xffff</STRONG>
+       <STRONG>};</STRONG>
+
+       <STRONG>enum</STRONG> <STRONG>DebugLevel</STRONG>
+       <STRONG>{</STRONG>
+            <STRONG>NO_DEBUGGING</STRONG> <STRONG>=</STRONG> <STRONG>0,</STRONG>
+            <STRONG>CONSTRUCTORS</STRONG> <STRONG>=</STRONG> <STRONG>0x0001,</STRONG>
+            <STRONG>DESTRUCTORS</STRONG> <STRONG>=</STRONG> <STRONG>0x0002,</STRONG>
+            <STRONG>CONSTRUCT_AND_DESTRUCT</STRONG> <STRONG>=</STRONG> <STRONG>CONSTRUCTORS</STRONG> <STRONG>|</STRONG> <STRONG>DESTRUCTORS,</STRONG>
+            <STRONG>FUNCTIONS</STRONG> <STRONG>=</STRONG> <STRONG>0x0010,</STRONG>
+            <STRONG>OPERATORS</STRONG> <STRONG>=</STRONG> <STRONG>0x0020,</STRONG>
+            <STRONG>FUNCS_AND_OPS</STRONG> <STRONG>=</STRONG> <STRONG>FUNCTIONS</STRONG> <STRONG>|</STRONG> <STRONG>OPERATORS,</STRONG>
+            <STRONG>ALL_NON_TRIVIAL</STRONG> <STRONG>=</STRONG> <STRONG>CONSTRUCT_AND_DESTRUCT</STRONG> <STRONG>|</STRONG> <STRONG>FUNCTIONS</STRONG>
+                                 <STRONG>|</STRONG> <STRONG>OPERATORS,</STRONG>
+            <STRONG>TRIVIAL_FUNCS</STRONG> <STRONG>=</STRONG> <STRONG>0x0100,</STRONG>
+            <STRONG>TRIVIAL_OPERATORS</STRONG> <STRONG>=</STRONG> <STRONG>0x0200,</STRONG>
+            <STRONG>ALL_TRIVIAL</STRONG> <STRONG>=</STRONG> <STRONG>TRIVIAL_FUNCS</STRONG> <STRONG>|</STRONG> <STRONG>TRIVIAL_OPERATORS,</STRONG>
+            <STRONG>FULL_DEBUGGING</STRONG> <STRONG>=</STRONG> <STRONG>0xffff</STRONG>
+       <STRONG>};</STRONG>
+
+
+
+       <STRONG>{</STRONG>
+       <STRONG>public:</STRONG>
+            <STRONG>DebugController</STRONG> <STRONG>();</STRONG>
+            <STRONG>virtual</STRONG> <STRONG>~DebugController</STRONG> <STRONG>();</STRONG>
+
+            <STRONG>void</STRONG> <STRONG>set_all</STRONG> <STRONG>(DebugLevel,</STRONG> <STRONG>FacilityCode,</STRONG>
+                      <STRONG>VisibilityLevel);</STRONG>
+            <STRONG>void</STRONG> <STRONG>set_debuglevel</STRONG> <STRONG>(DebugLevel);</STRONG>
+            <STRONG>void</STRONG> <STRONG>set_facility</STRONG> <STRONG>(FacilityCode);</STRONG>
+            <STRONG>void</STRONG> <STRONG>set_visibility</STRONG> <STRONG>(VisibilityLevel);</STRONG>
+       <STRONG>};</STRONG>
+
+       <STRONG>extern</STRONG> <STRONG>DebugController</STRONG> <STRONG>*_cppsim_debug;</STRONG>
+
+       <STRONG>debug_stream</STRONG> <STRONG>&lt;&lt;</STRONG> <EM>DEBUGLEVEL</EM> <STRONG>&lt;&lt;</STRONG> <EM>DEBUGFAC</EM> <STRONG>&lt;&lt;</STRONG> <EM>DEBUGVIS</EM> <STRONG>;</STRONG>
+       <STRONG>debug_stream</STRONG> <STRONG>&lt;&lt;</STRONG> <STRONG>"Sample</STRONG> <STRONG>debugging</STRONG> <STRONG>statement"</STRONG> <STRONG>&lt;&lt;</STRONG> <STRONG>endl;</STRONG>
+
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       This set of objects provide a uniform means of selectively
+       outputting  debugging  statements  based upon the run-time
+       requirements of the user.  The <STRONG>debug_stream</STRONG> variable is an
+       instance of an <EM>ostream</EM> with an associated filter mechanism
+       which is used  to  determine  whether  the  data  provided
+       should  be finally output. The information required by the
+       filter is split into three different levels:
+
+            1: the <EM>debugging</EM> <EM>facility</EM> - which is a way of  group-
+       ing  together  related  debugging  information, based upon
+       classes, functionality, or any other desired means.
+
+            2: the <EM>visibility</EM> <EM>level</EM> - which is a means  of  indi-
+       cating  the  interface  visibility  of  the  various meth-
+       ods/functions outputting debugging information.
+
+            3: the <EM>debugging</EM> <EM>level</EM> - which indicates the level of
+       debugging  at which the debugging statement should appear.
+
+       All debugging statements should be written within an
+
+       <STRONG>#ifdef</STRONG> <STRONG>DEBUG</STRONG>
+       <STRONG>#endif</STRONG>
+
+       expression. The debugging statement should  then  have  an
+       indication  of  the  level  etc. at which it should occur.
+       This should be done using the <STRONG>&lt;&lt;</STRONG> operator. For example:
+
+       <STRONG>debug_stream</STRONG> <STRONG>&lt;&lt;</STRONG> <STRONG>CONSTRUCTOR</STRONG> <STRONG>&lt;&lt;</STRONG> <STRONG>VIS_PUBLIC</STRONG>
+                      <STRONG>&lt;&lt;</STRONG> <STRONG>FAC_USER1;</STRONG>
+
+       Then the actual debugging statement can be inserted, again
+       using  the  overloaded  <STRONG>&lt;&lt;</STRONG>  operator.  It is preferable to
+       debugging level.
+
+       To set the debug tracing level, the variable <STRONG>_cppsim_debug</STRONG>
+       must  be  set to the level of tracing required. Since each
+       level is represented by a bit in  the  variable,  multiple
+       levels are produced by OR-ing the fields together.
+
+       Another  way of setting the tracing level is by way of the
+       following shell environment variables:
+
+       <STRONG>DEBUG_FAC,</STRONG> <STRONG>DEBUG_VIS,</STRONG> <STRONG>DEBUG_LEVEL</STRONG>
+
+       These can be set according to the shell in use. For  exam-
+       ple, using csh:
+
+       <STRONG>setenv</STRONG> <STRONG>DEBUG_FAC</STRONG> <STRONG>FFFF</STRONG>
+       <STRONG>setenv</STRONG> <STRONG>DEBUG_VIS</STRONG> <STRONG>FFFF</STRONG>
+       <STRONG>setenv</STRONG> <STRONG>DEBUG_LEVEL</STRONG> <STRONG>FFFF</STRONG>
+
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       The default values for each debug filter variable are:
+
+       <STRONG>DEBUG_LEVEL</STRONG> <STRONG>=</STRONG> <STRONG>FULL_DEBUGGING</STRONG>
+       <STRONG>DEBUG_FAC</STRONG> <STRONG>=</STRONG> <STRONG>FAC_ALL</STRONG>
+       <STRONG>DEBUG_VIS</STRONG> <STRONG>=</STRONG> <STRONG>VIS_ALL</STRONG>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

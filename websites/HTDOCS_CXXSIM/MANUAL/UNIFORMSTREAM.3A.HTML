@@ -1,0 +1,116 @@
+<HTML>
+<BODY>
+<PRE>
+       UniformStream,   Draw,   ExponentialStream,  ErlangStream,
+       HyperExponentialStream, NormalStream - various pseudo-ran-
+       dom number generators.
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <STRONG>#ifndef</STRONG> <STRONG>RANDOM_H_</STRONG>
+       <STRONG>#</STRONG>   <STRONG>include</STRONG> <STRONG>&lt;ClassLib/Random.h&gt;</STRONG>
+       <STRONG>#endif</STRONG>
+
+       <STRONG>class</STRONG> <STRONG>Draw</STRONG>
+       <STRONG>{</STRONG>
+       <STRONG>public:</STRONG>
+            <STRONG>Draw</STRONG> <STRONG>(double</STRONG> <STRONG>p,</STRONG> <STRONG>int</STRONG> <STRONG>StreamSelect</STRONG> <STRONG>=</STRONG> <STRONG>0);</STRONG>
+       <STRONG>};</STRONG>
+
+       <STRONG>class</STRONG> <STRONG>UniformStream</STRONG> <STRONG>:</STRONG> <STRONG>public</STRONG> <STRONG>RandomStream</STRONG>
+       <STRONG>{</STRONG>
+       <STRONG>public:</STRONG>
+            <STRONG>UniformStream</STRONG> <STRONG>(double</STRONG> <STRONG>lo,</STRONG> <STRONG>double</STRONG> <STRONG>hi,</STRONG>
+                           <STRONG>int</STRONG> <STRONG>StreamSelect</STRONG> <STRONG>=</STRONG> <STRONG>0);</STRONG>
+       <STRONG>};</STRONG>
+
+       <STRONG>class</STRONG> <STRONG>ExponentialStream</STRONG> <STRONG>:</STRONG> <STRONG>public</STRONG> <STRONG>RandomStream</STRONG>
+       <STRONG>{</STRONG>
+       <STRONG>public:</STRONG>
+            <STRONG>ExponentialStream</STRONG> <STRONG>(double</STRONG> <STRONG>Mean,</STRONG>
+                               <STRONG>int</STRONG> <STRONG>StreamSelect</STRONG> <STRONG>=</STRONG> <STRONG>0);</STRONG>
+       <STRONG>};</STRONG>
+
+       <STRONG>class</STRONG> <STRONG>ErlangStream</STRONG> <STRONG>:</STRONG> <STRONG>public</STRONG> <STRONG>RandomStream</STRONG>
+       <STRONG>{</STRONG>
+       <STRONG>public:</STRONG>
+            <STRONG>ErlangStream</STRONG> <STRONG>(double</STRONG> <STRONG>Mean,</STRONG> <STRONG>double</STRONG> <STRONG>StdDev,</STRONG>
+                          <STRONG>int</STRONG> <STRONG>StreamSelect</STRONG> <STRONG>=</STRONG> <STRONG>0);</STRONG>
+       <STRONG>};</STRONG>
+
+       <STRONG>class</STRONG> <STRONG>HyperExponentialStream</STRONG> <STRONG>:</STRONG> <STRONG>public</STRONG> <STRONG>RandomStream</STRONG>
+       <STRONG>{</STRONG>
+       <STRONG>public:</STRONG>
+            <STRONG>HyperExponentialStream</STRONG> <STRONG>(double</STRONG> <STRONG>Mean,</STRONG> <STRONG>double</STRONG> <STRONG>StdDev,</STRONG>
+                                    <STRONG>int</STRONG> <STRONG>StreamSelect</STRONG> <STRONG>=</STRONG> <STRONG>0);</STRONG>
+       <STRONG>};</STRONG>
+
+       <STRONG>class</STRONG> <STRONG>NormalStream</STRONG> <STRONG>:</STRONG> <STRONG>public</STRONG> <STRONG>RandomStream</STRONG>
+       <STRONG>{</STRONG>
+       <STRONG>public:</STRONG>
+            <STRONG>NormalStream</STRONG> <STRONG>(double</STRONG> <STRONG>Mean,</STRONG> <STRONG>double</STRONG> <STRONG>StdDev,</STRONG>
+                          <STRONG>int</STRONG> <STRONG>StreamSelect</STRONG> <STRONG>=</STRONG> <STRONG>0);</STRONG>
+       <STRONG>};</STRONG>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       These  classes  provide  pseudo-random  number  generators
+       which,  if  given  an integer value <STRONG>n</STRONG> can be used to "dis-
+       card" the first <STRONG>n</STRONG> random numbers taken from the base algo-
+       rithm.
+
+       With  the  exception of <STRONG>Draw</STRONG> they all have a single public
+       method <STRONG>operator()</STRONG> which returns a random number drawn from
+       the relevant distribution.
+
+       <STRONG>Draw</STRONG>  returns TRUE with the probability given in the first
+       parameter.
+
+       <STRONG>UniformStream</STRONG> returns a number from a uniform distribution
+       with the lower bound of <STRONG>lo</STRONG> and an upper bound of <STRONG>hi</STRONG> inclu-
+       sive.
+
+       <STRONG>ExponentialStream</STRONG> returns a  number  from  an  exponential
+       distribution with <STRONG>Mean</STRONG> as the mean.
+
+       <STRONG>ErlangStream</STRONG>  returns a number from an Erlang distribution
+       with a mean of <STRONG>Mean</STRONG> and <STRONG>StdDev</STRONG> as its standard  deviation.
+
+       <STRONG>HyperExponential</STRONG>  returns a number from a hyperexponential
+       distribution with a mean of <STRONG>Mean</STRONG> and <STRONG>StdDev</STRONG> as  its  stan-
+       dard deviation.
+
+       <STRONG>Normal</STRONG>  returns a number from a normal distribution with a
+       mean of <STRONG>Mean</STRONG> and <STRONG>StdDev</STRONG> as its standard deviation.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       RandomStream(3A)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

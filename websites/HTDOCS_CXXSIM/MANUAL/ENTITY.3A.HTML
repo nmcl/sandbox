@@ -1,0 +1,118 @@
+<HTML>
+<BODY>
+<PRE>
+       Entity - asynchronous simulation processes
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <STRONG>#ifndef</STRONG> <STRONG>ENTITY_H_</STRONG>
+       <STRONG>#</STRONG>   <STRONG>include</STRONG> <STRONG>&lt;Event/Entity.h&gt;</STRONG>
+       <STRONG>#endif</STRONG>
+
+       <STRONG>class</STRONG> <STRONG>Entity</STRONG> <STRONG>:</STRONG> <STRONG>public</STRONG> <STRONG>Process</STRONG>
+       <STRONG>{</STRONG>
+       <STRONG>public:</STRONG>
+            <STRONG>virtual</STRONG> <STRONG>~Entity</STRONG> <STRONG>();</STRONG>
+
+            <STRONG>Boolean</STRONG> <STRONG>Interrupt</STRONG> <STRONG>(Entity&amp;</STRONG> <STRONG>toInterrupt,</STRONG>
+                                <STRONG>Boolean</STRONG> <STRONG>immediate</STRONG> <STRONG>=</STRONG> <STRONG>TRUE);</STRONG>
+
+            <STRONG>virtual</STRONG> <STRONG>void</STRONG> <STRONG>terminate</STRONG> <STRONG>();</STRONG>
+
+            <STRONG>virtual</STRONG> <STRONG>void</STRONG> <STRONG>Body</STRONG> <STRONG>()</STRONG> <STRONG>=</STRONG> <STRONG>0;</STRONG>
+
+       <STRONG>protected:</STRONG>
+            <STRONG>Entity</STRONG> <STRONG>();</STRONG>
+
+            <STRONG>Boolean</STRONG> <STRONG>Wait</STRONG> <STRONG>(double</STRONG> <STRONG>waitTime);</STRONG>
+            <STRONG>Boolean</STRONG> <STRONG>WaitFor</STRONG> <STRONG>(Entity&amp;</STRONG> <STRONG>controller,</STRONG>
+                                <STRONG>Boolean</STRONG> <STRONG>reAct</STRONG> <STRONG>=</STRONG> <STRONG>FALSE);</STRONG>
+            <STRONG>Boolean</STRONG> <STRONG>WaitForTrigger</STRONG> <STRONG>(TriggerQueue&amp;</STRONG> <STRONG>_queue);</STRONG>
+            <STRONG>void</STRONG> <STRONG>WaitForSemaphore</STRONG> <STRONG>(Semaphore&amp;</STRONG> <STRONG>sem);</STRONG>
+       <STRONG>};</STRONG>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       This  class  provides  finer-grained control of simulation
+       processes than is available  through  the  <STRONG>Process</STRONG>  class.
+       Instances  of  these classes can be used to simulate asyn-
+       chronous events such  as  processor  interrupts.  However,
+       since  <STRONG>Entity</STRONG>  is  derived  from  <STRONG>Process</STRONG> all of the (syn-
+       chronous) simulation controls are still available.
+
+       In addition to the states available to a  <STRONG>Process</STRONG>  object,
+       an  asynchronous  object  can  be  in one of the following
+       states:
+
+            <EM>waiting</EM> : the process is suspended waiting for a spe-
+       cific  event  to occur.  This process is <EM>not</EM> placed on the
+       scheduler queue.
+
+            <EM>interrupted</EM> : the process, which was in  the  <EM>waiting</EM>
+       state,  has  been  interrupted before the condition it was
+       waiting for occurred.
+
+       <STRONG>Interrupt</STRONG> can be used to interrupt the specified  process,
+       which  <EM>must</EM>  not  be terminated and <EM>must</EM> be in the <EM>waiting</EM>
+       state. The interrupted process  becomes  the  next  active
+       tivation at the current simulation time.
+
+       The conditions a process can wait for are:
+
+            <EM>time</EM>  :  using the <STRONG>Wait</STRONG> method, a process can attempt
+       to wait for the specified simulation time, and  is  placed
+       in  the <EM>waiting</EM> state. The method returns <STRONG>TRUE</STRONG> if the pro-
+       cess is interrupted before the time elapses.
+
+            <EM>process</EM> <EM>termination</EM> : using  the  <STRONG>WaitFor</STRONG>  method,  a
+       process  can  wait  for  the termination of the <STRONG>controller</STRONG>
+       object, and is placed in the <EM>waiting</EM> state. If the  second
+       parameter  is <STRONG>TRUE</STRONG> then <STRONG>controller</STRONG> is moved to the head of
+       the scheduler queue to become  the  next  active  process,
+       otherwise the application must activate it. If the waiting
+       process is interrupted before <STRONG>controller</STRONG> terminates,  then
+       <STRONG>TRUE</STRONG>  is  returned. The <STRONG>controller</STRONG> and the waiting process
+       <EM>must</EM> be different, i.e., it is not possible for a  process
+       to wait for itself.
+
+            <EM>semaphore</EM>  :  critical regions of a simulation can be
+       protected by semaphores.  Only a single <STRONG>Entity</STRONG> object  can
+       acquire  a  semaphore;  all others are suspended until the
+       semaphore is released. The <STRONG>WaitForSemaphore</STRONG> method  causes
+       the current process to attempt to acquire the <STRONG>Semaphore</STRONG> in
+       the parameter. If this is not possible the process is sus-
+       pended.  A process waiting on a semaphore cannot be inter-
+       rupted, and is <EM>not</EM> placed in the <EM>waiting</EM> state. Therefore,
+       when this method returns, the semaphore has been acquired.
+
+            <EM>application</EM> <EM>specific</EM> : other asynchronous events  can
+       be  simulated  using  the  <STRONG>WaitForTrigger</STRONG>  method. A <STRONG>Trig-</STRONG>
+       <STRONG>gerQueue</STRONG> maintains a list of <STRONG>Entity</STRONG>  objects  waiting  for
+       specific  events.  This  method  places  the object on the
+       specified queue and passivates it, placing it in the <EM>wait-</EM>
+       <EM>ing</EM>  state.  The queue methods can then be used to control
+       reactivation. The return value indicates whether the  pro-
+       cess was interrupted or triggered.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       Because instances of this class can be outside of the con-
+       trol of the simulation <STRONG>scheduler</STRONG> , deadlock situations can
+       occur. Therefore, some care must be taken when using these
+       objects.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       Process(3A), Semaphore(3A), TriggerQueue(3A)
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

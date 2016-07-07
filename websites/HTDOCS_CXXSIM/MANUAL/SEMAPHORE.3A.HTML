@@ -1,0 +1,116 @@
+<HTML>
+<BODY>
+<PRE>
+       Semaphore - semaphore class
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <STRONG>#ifndef</STRONG> <STRONG>SEMAPHORE_H_</STRONG>
+       <STRONG>#</STRONG>   <STRONG>include</STRONG> <STRONG>&lt;Event/Semaphore.h&gt;</STRONG>
+       <STRONG>#endif</STRONG>
+
+       <STRONG>class</STRONG> <STRONG>Semaphore</STRONG>
+       <STRONG>{</STRONG>
+       <STRONG>public:</STRONG>
+            <STRONG>Semaphore</STRONG> <STRONG>();</STRONG>
+
+            <STRONG>virtual</STRONG> <STRONG>~Semaphore</STRONG> <STRONG>();</STRONG>
+
+            <STRONG>virtual</STRONG> <STRONG>void</STRONG> <STRONG>Get</STRONG> <STRONG>(Entity*</STRONG> <STRONG>attempting);</STRONG>
+            <STRONG>virtual</STRONG> <STRONG>void</STRONG> <STRONG>Release</STRONG> <STRONG>();</STRONG>
+
+            <STRONG>long</STRONG> <STRONG>NumberWaiting</STRONG> <STRONG>()</STRONG> <STRONG>const;</STRONG>
+       <STRONG>};</STRONG>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       Application  code  can  be  protected from simulation pro-
+       cesses through semaphores,  which  are  instances  of  the
+       <STRONG>Semaphore</STRONG> class.
+
+       A  semaphore is exclusively acquired, and can exist in one
+       of two states:
+
+            <EM>available</EM> : the semaphoe can be acquired.
+
+            <EM>unavailable</EM> : a process has acquired  the  semaphore.
+       If  another process attempts to acquire it then it will be
+       suspended until the semaphore is <EM>available</EM> again.
+
+       A process attempting to acquire a semaphore should  invoke
+       the  <STRONG>Get</STRONG>  method  of  the semaphore, passing itself as the
+       parameter. The process will be suspended if the  semaphore
+       cannot be acquired.
+
+       A process which successfully acquires the semaphore should
+       invoke its <STRONG>Release</STRONG> method when it is no  longer  required.
+       This  will automatically enable other processes to attempt
+       to acquire the semaphore and enter the protected region.
+
+       <STRONG>NumberWaiting</STRONG> returns  the  number  of  currently  waiting
+       (suspended) processes.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       If  the  semaphore  goes out of scope with processes still
+       waiting for it then an error message is displayed. No fur-
+       ther action is attempted on behalf of these processes.
+
+       Entity(3A)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>
