@@ -36,7 +36,6 @@
 #endif
 
 class DeclarationList;
-class ostream;
 
 class EnumType : public TypeDescriptor
 {

@@ -39,7 +39,6 @@
 #  include "DeclStyle.h"
 #endif
 
-class ostream;
 
 class TypeDefType : public TypeDescriptor
 {

@@ -66,9 +66,12 @@
 #  include "Direction.h"
 #endif
 
+#include <iostream>
+
+using namespace std;
+
 class DeclContext;
 class Expression;
-class ostream;
 
 class TypeDescriptor
 {   

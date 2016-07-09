@@ -12,14 +12,16 @@
 #ifndef VISSPEC_H_
 #define VISSPEC_H_
 
+#include <iostream>
+
+using namespace std;
+
 /*
  *
  * Enumeration type describing visibility of class members.
  *     
  */
 
-
-class ostream;				/* don't want to include iostream.h */
 
 enum VisibilitySpec { CLASS_PRIVATE = 1, CLASS_PROTECTED, CLASS_PUBLIC,
 		      CLASS_DEFAULT, FILE_STATIC, FILE_EXTERN };

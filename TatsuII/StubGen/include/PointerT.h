@@ -34,7 +34,6 @@
 #  include "TDesc.h"
 #endif
 
-class ostream;
 
 class PointerType : public TypeDescriptor
 {

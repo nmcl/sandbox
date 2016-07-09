@@ -12,6 +12,10 @@
 #ifndef STCOMMONT_H_
 #define STCOMMONT_H_
 
+#include <string.h>
+
+#include <iostream>
+
 /*
  *
  * Stub generator common type definitions.
@@ -29,8 +33,6 @@
 
 #ifndef HAVE_BOOLEAN_TYPE
 enum Boolean { FALSE = 0, TRUE };
-
-class ostream;
 
 extern ostream& operator<< (ostream&, Boolean);
 

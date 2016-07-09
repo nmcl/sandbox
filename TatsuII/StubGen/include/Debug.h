@@ -12,14 +12,15 @@
 #ifndef DEBUG_H_
 #define DEBUG_H_
 
+#include <string.h>
+
+#include <iostream>
+
 /*
  *
  * Stub generator debug class. All debug information printed via this class.
  *
  */
-
-class ostream;
-class ostrstream;
 
 enum FacilityCode
 {

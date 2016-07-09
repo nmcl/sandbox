@@ -12,6 +12,10 @@
 #ifndef DCLCONTXT_H_
 #define DCLCONTXT_H_
 
+#include <iostream>
+
+using namespace std;
+
 /*
  *
  * This class implements a flat scoped symbol table suitable for the 
@@ -34,8 +38,6 @@
 #ifndef DECLSTYLE_H_
 #  include "DeclStyle.h"
 #endif
-
-class ostream;
 
 class Declaration;
 class DeclarationList;
