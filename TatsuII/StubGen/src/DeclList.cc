@@ -23,7 +23,7 @@
  *
  */
 
-#include <iostream.h>
+#include <iostream>
 
 #ifndef DECL_H_
 #  include "Decl.h"

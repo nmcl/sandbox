@@ -13,8 +13,10 @@
 #define DEBUG_H_
 
 #include <string.h>
-
+#include <strstream>
 #include <iostream>
+
+using namespace std;
 
 /*
  *
