@@ -14,7 +14,7 @@
  *
  */
 
-#include <strstream.h>
+#include <strstream>
 
 #ifndef STUBMODS_H_
 #  include "StubMods.h"

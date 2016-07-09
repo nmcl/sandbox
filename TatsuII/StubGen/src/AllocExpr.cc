@@ -14,7 +14,7 @@
  *
  */
 
-#include <iostream.h>
+#include <iostream>
 
 #ifndef ALLOCEXPR_H_
 #  include "AllocExpr.h"

@@ -17,7 +17,7 @@
  *
  */
 
-#include <iostream.h>
+#include <iostream>
 #include <ctype.h>
 
 /* toupper is sometimes a macro */

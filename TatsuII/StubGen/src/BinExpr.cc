@@ -14,7 +14,7 @@
  *
  */
 
-#include <iostream.h>
+#include <iostream>
 
 #ifndef BINEXPR_H_
 #  include "BinExpr.h"

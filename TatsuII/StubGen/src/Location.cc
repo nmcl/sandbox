@@ -16,7 +16,7 @@
  *
  */
 
-#include <strstream.h>
+#include <strstream>
 
 #ifndef LOCATION_H_
 #  include "Location.h"

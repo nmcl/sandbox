@@ -14,7 +14,7 @@
  *
  */
 
-#include <strstream.h>
+#include <strstream>
 
 #ifndef STORESPEC_H_
 #  include "StoreSpec.h"

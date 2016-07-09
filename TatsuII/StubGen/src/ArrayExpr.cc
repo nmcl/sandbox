@@ -14,7 +14,7 @@
  *
  */
 
-#include <iostream.h>
+#include <iostream>
 
 #ifndef ARRAYEXPR_H_
 #  include "ArrayExpr.h"

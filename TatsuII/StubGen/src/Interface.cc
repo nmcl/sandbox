@@ -20,13 +20,13 @@
 
 #ifdef WIN32
 #  include <process.h>
-#  include <strstrea.h>
+#  include <strstrea>
 #else
-#  include <strstream.h>
+#  include <strstream>
 #endif
 
 #include <stddef.h>
-#include <fstream.h>
+#include <fstream>
 
 #ifndef WIN32
 #  include <sys/wait.h>

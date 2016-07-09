@@ -14,7 +14,7 @@
  *
  */
 
-#include <iostream.h>
+#include <iostream>
 
 #ifndef NESTEXPR_H_
 #  include "NestExpr.h"

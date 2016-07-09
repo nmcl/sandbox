@@ -14,7 +14,7 @@
  *
  */
 
-#include <iostream.h>
+#include <iostream>
 
 #ifndef LITERAL_H_
 #  include "Literal.h"

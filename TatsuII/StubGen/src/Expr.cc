@@ -14,7 +14,7 @@
  *
  */
 
-#include <strstream.h>
+#include <strstream>
 
 #ifndef EXPRESSION_H_
 #  include "Expression.h"

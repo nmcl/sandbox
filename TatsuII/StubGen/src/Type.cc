@@ -14,7 +14,7 @@
  *
  */
 
-#include <strstream.h>
+#include <strstream>
 
 #ifndef TYPE_H_
 #  include "Type.h"

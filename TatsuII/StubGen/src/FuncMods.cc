@@ -14,7 +14,7 @@
  *
  */
 
-#include <strstream.h>
+#include <strstream>
 
 #ifndef FUNCMODS_H_
 #  include "FuncMods.h"
