@@ -10,7 +10,7 @@
  */
 
 #ifndef STRSTREAM_H_
-#  include "strstream.h"
+#  include "strstream"
 #endif
 
 #ifndef STRING_H_
