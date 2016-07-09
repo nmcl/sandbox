@@ -14,7 +14,7 @@
  *
  */
 
-#include <strstream.h>
+#include <strstream>
 #include <stdlib.h>
 
 #ifndef ERROR_H_
@@ -57,7 +57,7 @@ void Error::postError ( ostrstream& s, ErrorType e )
 	{
 	    /* discard contents of 's' */
 	    streambuf *sb = s.rdbuf();
-	    sb->seekoff(0, ios::end, ios::in);	    
+	    sb->pubseekoff(0, ios_base::end, ios_base::in);
 	}
         warningCount++;
 	if (warningsSupressed)
