@@ -12,18 +12,20 @@
 #ifndef STUBMODS_H_
 #define STUBMODS_H_
 
+#include <iostream>
+
+using namespace std;
+
 /*
  *
  * Enumeration for stub specific modifiers.
  *     
  */
 
-
 #ifndef DECLSTYLE_H_
 #  include "DeclStyle.h"
 #endif
 
-class ostream;
 
 enum StubModifier { STUB_NOMARSHALL, STUB_AUTOMARSHALL, STUB_USERMARSHALL,
 		    STUB_NOREMOTE, STUB_REMOTE, STUB_NOCLIENT,

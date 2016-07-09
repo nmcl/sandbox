@@ -12,14 +12,15 @@
 #ifndef CVQUALS_H_
 #define CVQUALS_H_
 
+#include <iostream>
+
+using namespace std;
+
 /*
  *
  * Enumeration type describing qualifiers applicable to types.
  *     
  */
-
-
-class ostream;
 
 enum CvQualifier { QUAL_CONST = 1, QUAL_VOLATILE };
 

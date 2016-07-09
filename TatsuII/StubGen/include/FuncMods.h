@@ -12,14 +12,15 @@
 #ifndef FUNCMODS_H_
 #define FUNCMODS_H_
 
+#include <iostream>
+
+using namespace std;
+
 /*
  *
  * Enumeration for kinds of modifiers applicable to funcs. 
  *     
  */
-
-
-class ostream;
 
 enum FuncModifier { FUNC_INLINE = 1, FUNC_VIRTUAL };
 
