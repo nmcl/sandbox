@@ -27,7 +27,6 @@
 #  include "Expression.h"
 #endif
 
-class ostream;
 
 class Literal : public Expression
 {

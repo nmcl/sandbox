@@ -28,7 +28,6 @@
 #  include "Expression.h"
 #endif
 
-class ostream;
 
 class BinaryExpression : public Expression
 {

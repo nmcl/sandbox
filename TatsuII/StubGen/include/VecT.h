@@ -35,7 +35,6 @@
 #endif
 
 class Expression;
-class ostream;
 
 class VecType : public TypeDescriptor
 {

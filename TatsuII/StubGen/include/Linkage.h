@@ -12,14 +12,16 @@
 #ifndef LINKAGE_H_
 #define LINKAGE_H_
 
+#include <iostream>
+
+using namespace std;
+
 /*
  *
  * Stub generator linkage class. Provides name mangling routines for
  * overloading purposes
  *
  */
-
-class ostream;
 
 class String;
 class TypeDescriptor;

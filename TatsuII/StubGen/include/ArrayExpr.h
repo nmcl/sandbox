@@ -26,7 +26,6 @@
 #  include "Expression.h"
 #endif
 
-class ostream;
 
 class ArrayExpression : public Expression
 {

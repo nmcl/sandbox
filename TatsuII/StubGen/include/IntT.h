@@ -31,7 +31,6 @@
 #  include "DeclStyle.h"
 #endif
 
-class ostream;
 class TypeDescriptor;
 
 class IntType : public ModifiedType

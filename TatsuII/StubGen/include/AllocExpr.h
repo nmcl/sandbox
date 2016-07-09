@@ -30,7 +30,6 @@
 #  include "Expression.h"
 #endif
 
-class ostream;
 
 class AllocExpression : public Expression
 {

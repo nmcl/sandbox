@@ -35,8 +35,6 @@
 #  include "DeclStyle.h"
 #endif
 
-class ostream;
-
 class BoolType : public TypeDescriptor
 {
 public:

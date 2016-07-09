@@ -38,7 +38,6 @@
 #  include "StubMods.h"
 #endif
 
-class ostream;
 class ClassType;
 
 class BaseClass

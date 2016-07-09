@@ -34,7 +34,6 @@
 #  include "DeclStyle.h"
 #endif
 
-class ostream;
 
 class QualifiedType : public TypeDescriptor
 {
