@@ -14,7 +14,7 @@
  *
  */
 
-#include <strstream.h>
+#include <strstream>
 
 #ifndef VISSPEC_H_
 #  include "VisSpec.h"

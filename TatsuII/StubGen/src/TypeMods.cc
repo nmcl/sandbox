@@ -14,7 +14,7 @@
  *
  */
 
-#include <strstream.h>
+#include <strstream>
 
 #ifndef TYPEMODS_H_
 #  include "TypeMods.h"

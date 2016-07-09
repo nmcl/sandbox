@@ -14,8 +14,8 @@
  *
  */
 
-#include <strstream.h>
-#include <fstream.h>
+#include <strstream>
+#include <fstream>
 
 #ifdef SG_DEBUG
 #  include "Debug.h"

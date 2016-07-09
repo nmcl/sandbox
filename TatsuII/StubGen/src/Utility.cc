@@ -16,10 +16,10 @@
 
 
 #ifndef WIN32
-#  include <strstream.h>
+#  include <strstream>
 #  include <unistd.h>
 #else
-#  include <strstrea.h>
+#  include <strstrea>
 #  include <io.h>
 #endif
 
