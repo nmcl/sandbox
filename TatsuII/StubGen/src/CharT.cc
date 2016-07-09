@@ -15,10 +15,14 @@
  */
 
 #ifndef WIN32
-#  include <strstream.h>
+#  include <strstream>
 #else
 #  include <strstrea.h>
 #endif
+
+#include <iostream>
+
+using namespace std;
 
 #ifdef SG_DEBUG
 #  include "Debug.h"
