@@ -16,7 +16,7 @@
 
 #ifndef WIN32
 
-#include <strstream.h>
+#include <strstream>
 
 #else
 

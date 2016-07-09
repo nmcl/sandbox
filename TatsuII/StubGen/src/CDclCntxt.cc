@@ -19,7 +19,7 @@
 
 #ifndef WIN32
 #ifndef STRSTREAM_H_
-#  include "strstream.h"
+#  include "strstream"
 #endif
 #else
 #  include <strstrea.h>
