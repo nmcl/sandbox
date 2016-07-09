@@ -12,14 +12,15 @@
 #ifndef STORESPEC_H_
 #define STORESPEC_H_
 
+#include <iostream>
+
+using namespace std;
+
 /*
  *
  * Enumeration type describing storage classes
  *     
  */
-
-
-class ostream;
 
 enum StorageSpecifier { SC_AUTO = 1, SC_EXTERN, SC_REGISTER,
                         SC_STATIC, SC_FRIEND, SC_TYPEDEF,

@@ -12,6 +12,10 @@
 #ifndef DECLLIST_H_
 #define DECLLIST_H_
 
+#include <iostream>
+
+using namespace std;
+
 /*
  *
  * Stub generator declaration list class definition.
@@ -21,8 +25,6 @@
 #ifndef DECLLISTE_H_
 #  include "DeclListE.h"
 #endif
-
-class ostream;
 
 class Declaration;
 

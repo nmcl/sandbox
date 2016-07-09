@@ -10,7 +10,6 @@
  */
 
 #if defined(NO_INLINES) && !defined(STRING_CC_)
-class ostream;
 
 extern ostream& operator<< (ostream&, const String&);
 
