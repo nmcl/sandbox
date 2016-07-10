@@ -18,7 +18,7 @@
  */
 
 #ifndef WIN32
-#  include "strstream.h"
+#  include "strstream"
 #else
 #  include <strstrea.h>
 #endif

@@ -27,7 +27,6 @@
 #  include "StringClass.h"
 #endif
 
-class ostream;
 
 class Location
 {

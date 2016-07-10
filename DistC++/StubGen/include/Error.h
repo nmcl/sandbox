@@ -34,8 +34,6 @@ extern void warning (const char *);
 extern void fatal (const char *);
 
 class Error;
-class ostream;				/* avoid #include <iostream.h> */
-class ostrstream;
 class Declaration;			/* likewise for Declaration.h */
 
 extern Error errorLog;
