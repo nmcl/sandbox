@@ -7,3 +7,5 @@ Mark Little
 Graham Parrington
 Santosh Shrivastava
 Stuart Wheater
+
+It was an offshoot (core component) of the original Arjuna project.
