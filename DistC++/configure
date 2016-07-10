@@ -621,13 +621,17 @@ echo "	0) None"
 echo "	1) Solaris"
 echo "	2) Posix"
 echo
-INPUT="xxxx"
 FINISHED=""
 while test -z "$FINISHED"
 do
-	echo $PRE_ECHO "Package number : " $POST_ECHO
+	echo $PRE_ECHO "Package number (default == 0) : " $POST_ECHO
 	read INPUT
 
+	if test "'x$INPUT'" != "'xnone'"
+	then
+		INPUT="0"
+	fi
+		
 case $INPUT in
 0)
     SUPPORT_THREADS="NO"
