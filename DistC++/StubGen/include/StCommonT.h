@@ -12,6 +12,10 @@
 #ifndef STCOMMONT_H_
 #define STCOMMONT_H_
 
+#include <iostream>
+
+using namespace std;
+
 /*
  *
  * Stub generator common type definitions.
