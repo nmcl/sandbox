@@ -1,0 +1,93 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.18 1993/04/30 13:12:36 nsmw Exp $
+COMMENT
+
+
+LIBRARIES = $(LIBARJSERVERS) $(LIBSTUB) $(LIBRPC) $(LIBARJUNA) $(LIBARJSERVERS) $(LIBSTUB) $(LIBRPC) $(LIBARJUNA) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES) -I/usr/local/InterViews3.0.1/include)
+
+SetLocalLibraries(-L/usr/local/InterViews3.0.1/lib/$$CPU -L/usr/local/X11R5/lib -lIV -lX11 -lXext -lX11 -lm)
+
+
+SOURCES = MenuItemDispatch.cc \
+	  LogInter.cc \
+	  LogLevel1Event.cc \
+	  LogLevel2Event.cc \
+	  LogBaseEvent.cc \
+	  LogMark.cc \
+	  LogVoid.cc \
+          SeatInter.cc \
+          SeatPersis.cc \
+          Theatre.cc \
+          TheatreDispatch.cc \
+          TheatreInter.cc \
+          TheatrePersis.cc \
+          TheatrePersis_client.cc \
+          TheatrePersis_server.cc \ 
+          TheatrePersis_servermain.cc
+
+OBJTHEATRE =       Theatre.o TheatreDispatch.o TheatreInter.o \
+                   TheatrePersis_client.o \
+                   SeatInter.o MenuItemDispatch.o \
+                   LogInter.o LogMark.o \
+                   LogVoid.o LogLevel1Event.o \
+                   LogLevel2Event.o LogBaseEvent.o
+
+OBJTHEATREPERSIS = TheatrePersis_servermain.o TheatrePersis.o \
+		   TheatrePersis_server.o SeatPersis.o
+
+STUBS = TheatrePersis_stub.h SeatPersis_stub.h
+
+MakeNonRecursiveAllTarget($(STUBS) Theatre TheatrePersis)
+
+MakeNonRecursiveInstall
+
+CreateInstallTopDirectory(servers)
+InstallProgram(servers,TheatrePersis)
+
+MakeProgramCPLUSPLUS(Theatre,$(OBJTHEATRE) $(LIBRARIES),)
+MakeProgramCPLUSPLUS(TheatrePersis,$(OBJTHEATREPERSIS) $(LIBRARIES),)
+
+MakeStubGen(TheatrePersis,TheatrePersis,TheatrePersis,)
+MakeStubGen(SeatPersis,SeatPersis,SeatPersis,)
+
+MakeObjectCPLUSPLUS(MenuItemDispatch,)
+MakeObjectCPLUSPLUS(LogInter,)
+MakeObjectCPLUSPLUS(LogLevel1Event,)
+MakeObjectCPLUSPLUS(LogLevel2Event,)
+MakeObjectCPLUSPLUS(LogBaseEvent,)
+MakeObjectCPLUSPLUS(LogMark,)
+MakeObjectCPLUSPLUS(LogVoid,)
+MakeObjectCPLUSPLUS(SeatInter,)
+MakeObjectCPLUSPLUS(SeatPersis,)
+MakeObjectCPLUSPLUS(Theatre,)
+MakeObjectCPLUSPLUS(TheatreDispatch,)
+MakeObjectCPLUSPLUS(TheatreInter,)
+MakeObjectCPLUSPLUS(TheatrePersis,)
+
+TheatrePersis_servermain.cc: SeatPersis_stub.h
+MenuItemDispatch.cc: TheatrePersis_stub.h SeatPersis_stub.h
+SeatInter.cc: TheatrePersis_stub.h SeatPersis_stub.h
+SeatPersis.cc: SeatPersis_stub.h
+Theatre.cc: TheatrePersis_stub.h SeatPersis_stub.h
+TheatreDispatch.cc: TheatrePersis_stub.h SeatPersis_stub.h
+TheatreInter.cc: TheatrePersis_stub.h SeatPersis_stub.h
+TheatrePersis.cc: TheatrePersis_stub.h SeatPersis_stub.h
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(Theatre TheatrePersis *_stub.h *_stubclass.h *_server.cc *_client.cc *_servermain.cc)
+
+MakeNonRecursiveMakedepend($(SOURCES) $(STUBS))
+
+MakeNonRecursiveStripdepend
