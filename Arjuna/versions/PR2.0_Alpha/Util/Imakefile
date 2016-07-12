@@ -1,0 +1,26 @@
+COMMENT 
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.7 1993/03/19 14:15:30 nsmw Exp $
+COMMENT
+
+SetSubDirectorys(NameServEdit OSConverter ReplicateState ServerGroupEdit SetDebug bin)
+
+MakeRecursiveAllTarget
+
+MakeRecursiveInstall
+
+MakeMakefile
+
+MakeMakefiles
+
+MakeEmptyTidyCleanPurge
+
+MakeRecursiveMakedepend
+
+MakeRecursiveStripdepend

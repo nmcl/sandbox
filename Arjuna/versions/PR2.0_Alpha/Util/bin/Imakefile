@@ -1,0 +1,36 @@
+COMMENT 
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.8 1993/03/18 14:59:23 nsmw Exp $
+COMMENT
+
+MakeNonRecursiveAllTarget(arjmkmf)
+
+MakeNonRecursiveInstall
+
+CreateInstallTopDirectory(bin)
+InstallProgram(bin,arjmkmf)
+InstallProgram(bin,ipcclean)
+InstallProgram(bin,includecheck)
+InstallProgram(bin,makedepend)
+InstallProgram(bin,stripdepend)
+
+arjmkmf : arjmkmf.tmpl
+	@echo Creating $@
+	COMMAND_PREFIX(sed) -e "s;CONFIGDIRECTORY;"$(INSTALL_TOPDIR)"/Config;" < arjmkmf.tmpl > arjmkmf
+	COMMAND_PREFIX(CHMOD_VAR) ug+rx arjmkmf
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(arjmkmf)
+
+MakeDummyMakedepend
+
+MakeDummyStripdepend
