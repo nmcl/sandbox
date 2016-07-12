@@ -1,0 +1,101 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.12 1993/05/06 14:48:41 nmcl Exp $
+COMMENT
+
+SOURCES =        NameServ.cc          \
+                 NameServer_server.cc \
+                 NameServer_client.cc \
+                 NameServer_servermain.cc \
+                 GroupView.cc \
+                 GroupViewDriver.cc \
+                 RepDesc.cc \
+                 RepDesc_Marshall.cc \
+		 GroupData.cc \
+                 ReplicaList.cc \
+                 ServerList.cc \
+                 ServerView.cc
+
+OBJECTS_NAMESERVER = NameServ.o          \
+                     NameServer_server.o \
+                     NameServer_servermain.o
+
+OBJECTS_GROUPVIEWD = GroupViewDriver.o
+
+OBJECTS_LIBRARY = NameServer_client.o \
+                  GroupView.o \
+                  RepDesc.o \
+	   	  GroupData.o \
+                  RepDesc_Marshall.o \
+                  ReplicaList.o \
+                  ServerList.o \
+                  ServerView.o
+
+HEADERS        = ../../../Include/RPC/ArjServers/NameServ_stub.h \
+                 ../../../Include/RPC/ArjServers/NameServer_stubclass.h \
+                 ../../../Include/RPC/ArjServers/RepDesc_stub.h
+
+
+LIBRARY = $(LIBARJSERVERS) $(LIBSTUB) $(LIBRPC) $(LIBARJUNA) $(LIBARJSERVERS) $(LIBSTUB) $(LIBRPC) $(LIBARJUNA) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+MakeNonRecursiveAllTarget($(HEADERS) NameServer ../libArjServers.a GroupViewDriver)
+
+MakeNonRecursiveInstall
+
+CreateInstallTopDirectory(servers)
+InstallProgram(servers,NameServer)
+
+CreateInstallTopDirectory(bin)
+InstallProgram(bin,GroupViewDriver)
+
+../../../Include/RPC/ArjServers/NameServ_stub.h : NameServ_stub.h
+	@echo Copying NameServ_stub.h
+	@sed -e "s;\"NameServ_stubclass.h\";\<RPC/ArjServers/NameServ_stubclass.h\>;" NameServ_stub.h > ../../../Include/RPC/ArjServers/NameServ_stub.h
+
+../../../Include/RPC/ArjServers/NameServer_stubclass.h : NameServer_stubclass.h
+	@echo Copying NameServer_stubclass.h
+	@CP_VAR NameServer_stubclass.h ../../../Include/RPC/ArjServers/NameServer_stubclass.h
+
+../../../Include/RPC/ArjServers/RepDesc_stub.h : RepDesc_stub.h
+	@echo Copying RepDesc_stub.h
+	@CP_VAR RepDesc_stub.h  ../../../Include/RPC/ArjServers/RepDesc_stub.h
+
+MakeProgramCPLUSPLUS(NameServer,$(OBJECTS_NAMESERVER) $(LIBRARY),)
+MakeProgramCPLUSPLUS(GroupViewDriver,$(OBJECTS_GROUPVIEWD) $(LIBRARY),)
+
+NameServ.cc: NameServ_stub.h
+NameServ.cc: RepDesc_stub.h
+
+MakeObjectCPLUSPLUS(NameServ,)
+MakeObjectCPLUSPLUS(GroupView,)
+MakeObjectCPLUSPLUS(GroupViewDriver,)
+MakeObjectCPLUSPLUS(GroupData,)
+MakeObjectCPLUSPLUS(RepDesc,)
+MakeObjectCPLUSPLUS(RepDesc_Marshall,)
+MakeObjectCPLUSPLUS(ReplicaList,)
+MakeObjectCPLUSPLUS(ServerList,)
+MakeObjectCPLUSPLUS(ServerView,)
+
+MakeStubGen(NameServ,NameServer,NameServer,)
+
+MakeStubGen(RepDesc,RepDesc,RepDesc,)
+
+MakeLibrary(../libArjServers.a,$(OBJECTS_LIBRARY))
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(NameServer NameServ_stub.h NameServer_client.cc NameServer_server.cc NameServer_servermain.cc NameServer_stubclass.h RepDesc_stub.h GroupViewDriver)
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend
