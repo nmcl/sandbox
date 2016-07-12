@@ -1,0 +1,55 @@
+COMMENT 
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.14 1993/03/18 14:17:34 nsmw Exp $
+COMMENT
+
+SOURCES = Buffer.cc \
+          Boolean.cc \
+	  Debug.cc \
+          Error.cc \
+	  Filtsbuf.cc \
+          Uid.cc \
+	  Utility.cc
+
+OBJECTS = Buffer.o \
+          Boolean.o \
+	  Debug.o \
+          Error.o \
+	  Filtsbuf.o \
+          Uid.o \
+	  Utility.o
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+MakeNonRecursiveAllTarget(libCommon.a)
+
+MakeNonRecursiveInstall
+
+CreateInstallTopDirectory(lib)
+InstallLibrary(lib,libCommon.a)
+
+MakeLibrary(libCommon.a,$(OBJECTS))
+
+MakeObjectCPLUSPLUS(Buffer,)
+MakeObjectCPLUSPLUS(Boolean,)
+MakeObjectCPLUSPLUS(Debug,)
+MakeObjectCPLUSPLUS(Error,)
+MakeObjectCPLUSPLUS(Filtsbuf,)
+MakeObjectCPLUSPLUS(Uid,)
+MakeObjectCPLUSPLUS(Utility,)
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(libCommon.a)
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend
