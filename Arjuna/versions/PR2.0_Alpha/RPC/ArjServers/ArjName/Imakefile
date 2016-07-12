@@ -1,0 +1,40 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.7 1993/03/18 15:11:17 nmcl Exp $
+COMMENT
+
+SOURCES = ArjName.cc
+
+OBJECTS = ArjName.o
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+MakeNonRecursiveAllTarget(../libArjServers.a)
+
+MakeNonRecursiveInstall
+
+MakeObjectCPLUSPLUS(ArjName,)
+
+MakeLibrary(../libArjServers.a,$(OBJECTS))
+
+ArjName.cc : $(ARJUNA_INCLUDES)/RPC/ArjServers/NameServ_stub.h
+ArjName.cc : $(ARJUNA_INCLUDES)/RPC/ArjServers/NameServer_stubclass.h
+ArjName.cc : $(ARJUNA_INCLUDES)/RPC/ArjServers/RepDesc_stub.h
+ArjName.cc : $(ARJUNA_INCLUDES)/Arjuna/StateMan_stub.h
+ArjName.cc : $(ARJUNA_INCLUDES)/Arjuna/StateManager_stubclass.h
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeEmptyNonRecursiveTidyCleanPurge
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend
