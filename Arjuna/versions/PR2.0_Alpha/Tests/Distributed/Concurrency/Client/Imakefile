@@ -1,0 +1,38 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.11 1993/03/18 15:06:07 n048z Exp $
+COMMENT
+
+SOURCES	   = TestLockDriver.cc
+
+OBJECTS	   = TestLockDriver.o \
+	     ../Server/TestLock_client.o
+
+LIBRARIES = $(LIBARJSERVERS) $(LIBSTUB) $(LIBRPC) $(LIBARJUNA) $(LIBCOMMON) \
+	    $(LIBARJSERVERS) $(LIBSTUB) $(LIBRPC) $(LIBARJUNA)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES) -I../Server)
+
+MakeNonRecursiveAllTarget(TestLockDriver)
+
+MakeNonRecursiveInstall
+
+MakeProgramCPLUSPLUS(TestLockDriver,$(OBJECTS) $(LIBRARIES),)
+
+MakeObjectCPLUSPLUS(TestLockDriver,)
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(TestLockDriver)
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend
