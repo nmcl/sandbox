@@ -1,0 +1,31 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.16 1993/03/18 15:10:22 nmcl Exp $
+COMMENT
+
+SetSubDirectorys(ArjName NameInfo ClassLib NSInterface Migration PrimaryNS Register GroupView StateDaemon)
+
+MakeAllTarget(libArjServers.a)
+
+MakeRecursiveInstall
+
+CreateInstallTopDirectory(lib)
+InstallLibrary(lib,libArjServers.a)
+
+MakeRecursiveTarget(libArjServers.a,../libArjServers.a,,ArjName NameInfo ClassLib NSInterface Migration PrimaryNS Register GroupView StateDaemon)
+
+MakeMakefile
+
+MakeMakefiles
+
+MakeTidyCleanPurge(libArjServers.a)
+
+MakeRecursiveMakedepend
+
+MakeRecursiveStripdepend
