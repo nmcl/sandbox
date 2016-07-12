@@ -1,0 +1,39 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.3 1993/03/18 15:08:07 n048z Exp $
+COMMENT
+
+SOURCES  = Object.cc \
+           Test.cc
+
+OBJECTS  = Object.o \
+           Test.o
+
+LIBRARYS = $(LIBARJUNA) $(LIBCOMMON) $(LIBARJSERVERS) $(LIBSTUB) $(LIBRPC)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+MakeNonRecursiveAllTarget(Test)
+
+MakeNonRecursiveInstall
+
+MakeProgramCPLUSPLUS(Test,$(OBJECTS) $(LIBRARYS),)
+
+MakeObjectCPLUSPLUS(Object,)
+MakeObjectCPLUSPLUS(Test,)
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(Test)
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend

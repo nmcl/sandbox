@@ -1,0 +1,36 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.8 1993/03/18 15:07:20 n048z Exp $
+COMMENT
+
+SOURCES  = BufferTest.cc
+
+OBJECTS  = BufferTest.o
+
+LIBRARYS = $(LIBARJUNA) $(LIBCOMMON) $(LIBARJSERVERS) $(LIBSTUB) $(LIBRPC)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+MakeNonRecursiveAllTarget(BufferTest)
+
+MakeNonRecursiveInstall
+
+MakeProgramCPLUSPLUS(BufferTest,$(OBJECTS) $(LIBRARYS),)
+
+MakeObjectCPLUSPLUS(BufferTest,)
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(BufferTest)
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend

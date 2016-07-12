@@ -1,0 +1,39 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.3 1993/03/18 15:06:56 n048z Exp $
+COMMENT
+
+SOURCES  = Isotope.cc \
+	   main.cc
+
+OBJECTS  = Isotope.o \
+	   main.o
+
+LIBRARYS = $(LIBARJUNA) $(LIBCOMMON) $(LIBARJSERVERS) $(LIBSTUB) $(LIBRPC)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+MakeNonRecursiveAllTarget(main)
+
+MakeNonRecursiveInstall
+
+MakeProgramCPLUSPLUS(main,$(OBJECTS) $(LIBRARYS),)
+
+MakeObjectCPLUSPLUS(Isotope,)
+MakeObjectCPLUSPLUS(main,)
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(main)
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend

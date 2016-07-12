@@ -1,0 +1,123 @@
+COMMENT 
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.7 1993/04/30 13:13:07 nsmw Exp $
+COMMENT
+
+
+LIBRARY = $(LIBARJSERVERS) $(LIBSTUB) $(LIBRPC) $(LIBARJUNA) $(LIBCOMMON) $(LIBARJSERVERS) $(LIBSTUB) $(LIBRPC) $(LIBARJUNA)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES) -I/usr/local/InterViews3.0.1/include)
+SetLocalLibraries(-L/usr/local/InterViews3.0.1/lib/$$CPU -L/usr/local/X11R5/lib -lIV -lX11 -lXext -lX11 -lm)
+
+SOURCES = \
+                AutoInterfaceDriver.cc \
+                Interface.cc \
+                InterfaceArgs.cc \
+                Interface_client.cc \
+                Interface_server.cc \
+                Interface_servermain.cc \
+                InterfaceState.cc \
+                InterfaceTextDriver.cc \
+                InterfaceWindowDriver.cc \
+                Menu.cc \
+                Message.cc \
+                Selector.cc \
+                Transporter.cc \
+                Transporter_client.cc \
+                Transporter_server.cc \
+                Transporter_servermain.cc \
+                Window.cc
+
+OBJAUTOINTERFACEDRIVER = \
+                AutoInterfaceDriver.o \
+                InterfaceArgs.o \
+                Interface_client.o \
+                Transporter_client.o
+
+OBJINTERFACE = \
+                Interface.o \
+                InterfaceState.o \
+                Interface_server.o \
+                Interface_servermain.o
+
+OBJINTERFACETEXTDRIVER = \
+                InterfaceArgs.o \
+                InterfaceState.o \
+                InterfaceTextDriver.o \
+                Interface_client.o \
+                Transporter_client.o
+
+OBJINTERFACEWINDOWDRIVER = \
+                Interface_client.o \
+                InterfaceArgs.o \
+                InterfaceState.o \
+                InterfaceWindowDriver.o \
+                Menu.o \
+                Message.o \
+                Selector.o \
+                Transporter_client.o \
+                Window.o
+
+OBJTRANSPORTER = \
+                Transporter.o \
+                Transporter_server.o \
+                Transporter_servermain.o
+
+STUBS = \
+                Interface_stub.h \
+                Transporter_stub.h
+
+MakeNonRecursiveAllTarget($(STUBS) AutoInterfaceDriver Interface InterfaceTextDriver InterfaceWindowDriver Transporter)
+
+MakeNonRecursiveInstall
+
+CreateInstallTopDirectory(servers)
+InstallProgram(servers,Interface)
+InstallProgram(servers,Transporter)
+
+MakeProgramCPLUSPLUS(AutoInterfaceDriver,$(OBJAUTOINTERFACEDRIVER) $(LIBRARY),)
+MakeProgramCPLUSPLUS(Interface,$(OBJINTERFACE) $(LIBRARY),)
+MakeProgramCPLUSPLUS(InterfaceTextDriver,$(OBJINTERFACETEXTDRIVER) $(LIBRARY),)
+MakeProgramCPLUSPLUS(InterfaceWindowDriver,$(OBJINTERFACEWINDOWDRIVER) $(LIBRARY),)
+MakeProgramCPLUSPLUS(Transporter,$(OBJTRANSPORTER) $(LIBRARY),)
+
+MakeStubGen(Interface,Interface,Interface,)
+MakeStubGen(Transporter,Transporter,Transporter,)
+
+MakeObjectCPLUSPLUS(AutoInterfaceDriver,)
+MakeObjectCPLUSPLUS(Interface,)
+MakeObjectCPLUSPLUS(InterfaceArgs,)
+MakeObjectCPLUSPLUS(InterfaceState,)
+MakeObjectCPLUSPLUS(InterfaceTextDriver,)
+MakeObjectCPLUSPLUS(InterfaceWindowDriver,)
+MakeObjectCPLUSPLUS(Menu,)
+MakeObjectCPLUSPLUS(Message,)
+MakeObjectCPLUSPLUS(Selector,)
+MakeObjectCPLUSPLUS(Transporter,)
+MakeObjectCPLUSPLUS(Window,)
+
+COMMENT TheatrePersis_servermain.cc: SeatPersis_stub.h
+COMMENT MenuItemDispatch.cc: TheatrePersis_stub.h SeatPersis_stub.h
+COMMENT SeatInter.cc: TheatrePersis_stub.h SeatPersis_stub.h
+COMMENT SeatPersis.cc: SeatPersis_stub.h
+COMMENT Theatre.cc: TheatrePersis_stub.h SeatPersis_stub.h
+COMMENT TheatreDispatch.cc: TheatrePersis_stub.h SeatPersis_stub.h
+COMMENT TheatreInter.cc: TheatrePersis_stub.h SeatPersis_stub.h
+COMMENT TheatrePersis.cc: TheatrePersis_stub.h SeatPersis_stub.h
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(AutoInterfaceDriver Interface InterfaceTextDriver InterfaceWindowDriver Transporter *_stub.h *_stubclass.h *_server.cc *_client.cc *_servermain.cc)
+
+MakeNonRecursiveMakedepend($(SOURCES) $(STUBS))
+
+MakeNonRecursiveStripdepend
+
