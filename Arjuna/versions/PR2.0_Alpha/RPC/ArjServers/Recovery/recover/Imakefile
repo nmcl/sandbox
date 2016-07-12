@@ -1,0 +1,41 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.6 1993/03/18 15:43:36 n048z Exp $
+COMMENT
+
+SOURCES   = recover.cc
+
+DAEMONS   = recover
+
+LIBRARIES = ../lib/libRecovery.a $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES) -I../include)
+
+MakeNonRecursiveAllTarget($(DAEMONS))
+
+MakeNonRecursiveInstall
+
+CreateInstallTopDirectory(etc)
+InstallProgram(etc,recover)
+
+MakeAbsCheckDependency(../lib/libRecovery.a,TOPDIR_VAR/RPC/ArjServers/Recovery/lib,libRecovery.a)
+
+MakeProgramCPLUSPLUS(recover,recover.o $(LIBRARIES),)
+
+MakeObjectCPLUSPLUS(recover,)
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(recover)
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend
