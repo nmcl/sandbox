@@ -1,0 +1,99 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT  Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT This makefile builds the "Calendar" application.
+COMMENT
+COMMENT $Id: Imakefile,v 1.11 1993/04/30 13:12:32 nsmw Exp $
+COMMENT
+
+
+LIBRARIES = $(LIBARJSERVERS) $(LIBSTUB) $(LIBRPC) $(LIBARJUNA) $(LIBCOMMON) $(LIBARJSERVERS) $(LIBSTUB) $(LIBRRPC)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES) -I/usr/local/InterViews3.0.1/include -I/usr/local/X11/include)
+SetLocalLibraries(-L/usr/local/InterViews3.0.1/lib/$$CPU -L/usr/local/X11/lib -lIV -lX11 -lXext -lm)
+
+SOURCES = \
+	Alert.cc \
+	AppointmentEntry_marshall.cc \
+	AppointmentViewer.cc \
+	Appointments.cc \
+	Calendar.cc \
+	Calendar_client.cc \
+	Calendar_server.cc \
+	Calendar_servermain.cc \
+	CalendarClient.cc \
+	CalendarCreate.cc \
+	Control.cc \
+	MakeAppointment.cc \
+	ServerList.cc
+
+OBJCALENDAR = \
+	AppointmentEntry_marshall.o \
+	Appointments.o \
+	Calendar.o \
+	Calendar_server.o \
+	Calendar_servermain.o
+
+OBJCLIENT = \
+	Alert.o \
+	AppointmentEntry_marshall.o \
+	AppointmentViewer.o \
+	Calendar_client.o \
+	CalendarClient.o \
+	Control.o \
+	MakeAppointment.o \
+	ServerList.o
+
+OBJCREATOR = \
+	AppointmentEntry_marshall.o \
+	Calendar_client.o \
+	CalendarCreate.o
+
+STUBS = Calendar_stub.h
+
+MakeNonRecursiveAllTarget($(STUBS) Calendar CalendarClient CalendarCreator)
+
+MakeNonRecursiveInstall
+
+CreateInstallTopDirectory(servers)
+InstallProgram(servers,Calendar)
+
+MakeProgramCPLUSPLUS(Calendar,$(OBJCALENDAR) $(LIBRARIES),)
+MakeProgramCPLUSPLUS(CalendarClient,$(OBJCLIENT) $(LIBRARIES),)
+MakeProgramCPLUSPLUS(CalendarCreator,$(OBJCREATOR) $(LIBRARIES),)
+
+MakeStubGen(Calendar,Calendar,Calendar,)
+MakeStubGen(AppointmentEntry,AppointmentEntry,AppointmentEntry,)
+MakeStubGen(Appointments,Appointments,Appointments,)
+
+MakeObjectCPLUSPLUS(Alert,)
+MakeObjectCPLUSPLUS(AppointmentViewer,)
+MakeObjectCPLUSPLUS(Appointments,)
+MakeObjectCPLUSPLUS(Calendar,)
+MakeObjectCPLUSPLUS(CalendarClient,)
+MakeObjectCPLUSPLUS(CalendarCreate,)
+MakeObjectCPLUSPLUS(Control,)
+MakeObjectCPLUSPLUS(MakeAppointment,)
+MakeObjectCPLUSPLUS(ServerList,)
+
+Appointments.cc: Appointments_stub.h AppointmentEntry_stub.h
+Calendar_servermain.cc: Appointments_stub.h AppointmentEntry_stub.h
+Calendar.cc: Calendar_stub.h Appointments_stub.h AppointmentEntry_stub.h
+CalendarClient.cc: Calendar_stub.h Appointments_stub.h AppointmentEntry_stub.h
+CalendarCreator.cc: Calendar_stub.h Appointments_stub.h AppointmentEntry_stub.h
+
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(Calendar CalendarClient CalendarCreator *_stub.h *_stubclass.h *_server.cc *_client.cc *_servermain.cc *_marshall.cc)
+
+MakeNonRecursiveMakedepend($(SOURCES) $(STUBS))
+
+MakeNonRecursiveStripdepend
