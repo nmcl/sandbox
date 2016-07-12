@@ -1,0 +1,43 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.4 1993/03/18 15:23:03 nmcl Exp $
+COMMENT
+
+SOURCES = NameInfo.cc \
+	  NameInfoDriver.cc
+
+OBJECTS = NameInfo.o
+	  
+OBJECTS_NAMED = NameInfoDriver.o
+
+LIBRARY = $(LIBSTUB) ../libArjServers.a $(LIBRPC) $(LIBARJUNA) $(LIBCOMMON) \
+	  ../libArjServers.a $(LIBSTUB) $(LIBRPC)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+MakeNonRecursiveAllTarget(../libArjServers.a NameInfoDriver)
+
+MakeNonRecursiveInstall
+
+MakeProgramCPLUSPLUS(NameInfoDriver,$(OBJECTS_NAMED) $(LIBRARY),)
+
+MakeObjectCPLUSPLUS(NameInfo,)
+MakeObjectCPLUSPLUS(NameInfoDriver,)
+
+MakeLibrary(../libArjServers.a,$(OBJECTS))
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(NameInfoDriver)
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend
