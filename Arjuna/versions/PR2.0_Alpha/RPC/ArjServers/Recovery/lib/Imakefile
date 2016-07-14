@@ -1,0 +1,61 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.4 1993/03/18 15:43:04 n048z Exp $
+COMMENT
+
+SOURCES = connection.cc \
+          dir.cc \
+          filepath.cc \
+          filestrings.cc \
+          phone.cc \
+          shadow.cc \
+          strequ.cc \
+          strlist.cc \
+          strlistiter.cc \
+          tree.cc
+
+OBJECTS = connection.o \
+          dir.o \
+          filepath.o \
+          filestrings.o \
+          phone.o \
+          shadow.o \
+          strequ.o \
+          strlist.o \
+          strlistiter.o \
+          tree.o
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES) -I../include)
+
+MakeNonRecursiveAllTarget(libRecovery.a)
+
+MakeNonRecursiveInstall
+
+MakeLibrary(libRecovery.a,$(OBJECTS))
+
+MakeObjectCPLUSPLUS(connection,)
+MakeObjectCPLUSPLUS(dir,)
+MakeObjectCPLUSPLUS(filepath,)
+MakeObjectCPLUSPLUS(filestrings,)
+MakeObjectCPLUSPLUS(phone,)
+MakeObjectCPLUSPLUS(shadow,)
+MakeObjectCPLUSPLUS(strequ,)
+MakeObjectCPLUSPLUS(strlist,)
+MakeObjectCPLUSPLUS(strlistiter,)
+MakeObjectCPLUSPLUS(tree,)
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(libRecovery.a)
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend

@@ -1,0 +1,39 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.3 1993/03/18 15:06:56 n048z Exp $
+COMMENT
+
+SOURCES  = Replica.cc \
+           ReplicationDriver.cc
+
+OBJECTS  = Replica.o \
+           ReplicationDriver.o
+
+LIBRARYS = $(LIBARJUNA) $(LIBCOMMON) $(LIBARJSERVERS) $(LIBSTUB) $(LIBRPC)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+MakeNonRecursiveAllTarget(ReplicationDriver)
+
+MakeNonRecursiveInstall
+
+MakeProgramCPLUSPLUS(ReplicationDriver,$(OBJECTS) $(LIBRARYS),)
+
+MakeObjectCPLUSPLUS(Replica,)
+MakeObjectCPLUSPLUS(ReplicationDriver,)
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(ReplicationDriver)
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend

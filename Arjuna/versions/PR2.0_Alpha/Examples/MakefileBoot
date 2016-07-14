@@ -1,0 +1,54 @@
+#
+# Copyright (C) 1993
+#
+# Department of Computing Science,
+# The University,
+# Newcastle upon Tyne,
+# UK.
+#
+
+#
+# Makefile for creating the top-level examples Makefile.
+#
+
+#
+# $Id: MakefileBoot,v 1.3 1993/03/18 14:11:32 nmcl Exp $
+#
+
+MAKE                  = make
+IMAKE                 = imake
+ARJUNA_IMAKE_INCLUDE  = ../Config
+ARJUNA_IMAKE_TEMPLATE = Arjuna.tmpl
+
+ARJUNA_IMAKE_FLAGS    = 
+# ARJUNA_IMAKE_FLAGS  = -DUseInstalled
+
+Makefile ::
+	@echo
+	@echo "## Building root 'Makefile' ##"
+	@$(IMAKE) -T$(ARJUNA_IMAKE_TEMPLATE) -I$(ARJUNA_IMAKE_INCLUDE) $(ARJUNA_IMAKE_FLAGS)
+	@echo
+
+Makefiles :: Makefile
+	@echo
+	@echo "## Building 'Makefiles' ##"
+	@$(MAKE) Makefiles
+	@echo
+
+depend :: Makefiles
+	@echo
+	@echo "## Building 'depend' ##"
+	@$(MAKE) depend
+	@echo
+
+all :: depend
+	@echo
+	@echo "## Building 'all' ##"
+	@$(MAKE) all
+	@echo
+
+install :: all
+	@echo
+	@echo "## Building 'install' ##"
+	@$(MAKE) install
+	@echo
