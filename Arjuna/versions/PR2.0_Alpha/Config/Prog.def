@@ -1,0 +1,70 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: Prog.def,v 1.14 1993/03/18 14:07:09 nsmw Exp $
+ */
+
+/*
+ *  Prog.def
+ */
+
+#ifndef MAKE_PROGRAM
+#define MAKE_PROGRAM make
+#endif
+
+#ifndef IMAKE_PROGRAM
+#define IMAKE_PROGRAM imake
+#endif
+
+#ifndef MAKEDEPEND_PROGRAM
+#ifdef UseInstalled
+#define MAKEDEPEND_PROGRAM INSTALL_TOPDIR_VAR/bin/makedepend
+#else
+#define MAKEDEPEND_PROGRAM TOPDIR_VAR/Util/bin/makedepend
+#endif
+#endif
+
+#ifndef STRIPDEPEND_PROGRAM
+#ifdef UseInstalled
+#define STRIPDEPEND_PROGRAM INSTALL_TOPDIR_VAR/bin/stripdepend
+#else
+#define STRIPDEPEND_PROGRAM TOPDIR_VAR/Util/bin/stripdepend
+#endif
+#endif
+
+#ifndef AR_PROGRAM
+#define AR_PROGRAM ar rv
+#endif
+
+#ifndef RANLIB_PROGRAM
+#define RANLIB_PROGRAM ranlib
+#endif
+
+#ifndef MV_PROGRAM
+#define MV_PROGRAM mv
+#endif
+
+#ifndef CP_PROGRAM
+#define CP_PROGRAM cp
+#endif
+
+#ifndef RM_PROGRAM
+#define RM_PROGRAM rm -f
+#endif
+
+#ifndef CAT_PROGRAM
+#define CAT_PROGRAM cat
+#endif
+
+#ifndef MKDIR_PROGRAM
+#define MKDIR_PROGRAM mkdir
+#endif
+
+#ifndef CHMOD_PROGRAM
+#define CHMOD_PROGRAM chmod
+#endif
