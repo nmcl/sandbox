@@ -1,0 +1,26 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ */
+
+/*
+ * $Id: README
+ */
+
+This handles atomic migration of object states. The parameters which are passed to
+MoveFromTo are:
+	the host where the object state currently resides;
+	the host where the state is to be moved to;
+	the Uid of the replica group to which the state belongs;
+	the Uid of the replica to be moved.
+
+The operation returns an indication of whether it completed successfully. A successful
+completion is atomic, i.e., the state is moved and the movement is reflected at the
+nameserver.
+
+Note that typename and storename must also be set before the operation is
+used.
