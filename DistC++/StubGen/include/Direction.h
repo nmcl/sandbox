@@ -10,15 +10,17 @@
  */
 
 #ifndef DIRECTION_H_
-#define DIRECTION_H_ 
+#define DIRECTION_H_
+
+#include <iostream>
+
+using namespace std;
 
 /*
  *
  * Enumeration for marshalling direction
  *     
  */
-
-class ostream;
 
 enum Direction { IN, OUT };
 

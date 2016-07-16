@@ -18,8 +18,9 @@
  *     
  */
 
+#include <iostream>
 
-class ostream;
+using namespace std;
 
 enum TypeModifier { MOD_SHORT = 1, MOD_LONG, MOD_SIGNED, MOD_UNSIGNED };
 

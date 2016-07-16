@@ -12,6 +12,10 @@
 #ifndef TYPE_H_
 #define TYPE_H_
 
+#include <iostream>
+
+using namespace std;
+
 /*
  *
  * Enumeration type describing basic kinds of types that the stub
@@ -40,8 +44,6 @@ enum Type { NONE_TYPE = 0,
 	    FUNCTION_TYPE = 0x0100, VECTOR_TYPE = 0x0200,
 	    TYPE_TYPE = 0x0400, CV_TYPE = 0x0800,
 	    CHAR_TYPE = 0x1000, ANY_TYPE = 0xffff };
-
-class ostream;
 
 extern ostream& operator<< (ostream&, Type);
 

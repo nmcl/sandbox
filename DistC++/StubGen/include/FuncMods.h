@@ -18,8 +18,9 @@
  *     
  */
 
+#include <iostream>
 
-class ostream;
+using namespace std;
 
 enum FuncModifier { FUNC_INLINE = 1, FUNC_VIRTUAL };
 
