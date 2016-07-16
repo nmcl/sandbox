@@ -35,7 +35,6 @@
 #  include "DeclStyle.h"
 #endif
 
-class ostream;
 
 class Declaration;
 class DeclarationList;

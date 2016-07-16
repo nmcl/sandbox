@@ -68,7 +68,6 @@
 
 class DeclContext;
 class Expression;
-class ostream;
 
 class TypeDescriptor
 {   

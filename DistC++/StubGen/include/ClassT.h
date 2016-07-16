@@ -49,7 +49,6 @@
 
 enum ClassSpecifier { CLASS_TYPE, STRUCT_TYPE, UNION_TYPE };
 
-class ostream;
 class DeclarationList;
 
 class ClassType : public TypeDescriptor

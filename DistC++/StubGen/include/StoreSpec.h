@@ -18,8 +18,10 @@
  *     
  */
 
+#include <iostream>
 
-class ostream;
+using namespace std;
+
 
 enum StorageSpecifier { SC_AUTO = 1, SC_EXTERN, SC_REGISTER,
                         SC_STATIC, SC_FRIEND, SC_TYPEDEF,

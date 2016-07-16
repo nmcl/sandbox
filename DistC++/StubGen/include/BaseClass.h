@@ -12,6 +12,10 @@
 #ifndef BASECLASS_H_
 #define BASECLASS_H_
 
+#include <iostream>
+
+using namespace std;
+
 /*
  *
  * Class to describe attributes of a base class
@@ -38,7 +42,6 @@
 #  include "StubMods.h"
 #endif
 
-class ostream;
 class ClassType;
 
 class BaseClass
