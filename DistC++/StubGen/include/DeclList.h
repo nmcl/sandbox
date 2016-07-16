@@ -22,7 +22,10 @@
 #  include "DeclListE.h"
 #endif
 
-class ostream;
+#include <iostream>
+
+using namespace std;
+
 
 class Declaration;
 

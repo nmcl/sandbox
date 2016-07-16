@@ -12,6 +12,10 @@
 #ifndef GLOBALINF_H_
 #define GLOBALINF_H_
 
+#include <iostream>
+
+using namespace std;
+
 /*
  *
  * Global information structure for stub generator. Constructed by

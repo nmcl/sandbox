@@ -35,6 +35,9 @@
 #  include "DeclStyle.h"
 #endif
 
+#include <iostream>
+
+using namespace std;
 
 class Declaration;
 class DeclarationList;

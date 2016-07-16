@@ -48,8 +48,6 @@
 #  include "DeclStyle.h"
 #endif
 
-class ostream;
-     
 class ModifiedType : public TypeDescriptor
 {
 public:

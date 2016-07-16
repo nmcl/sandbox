@@ -15,12 +15,12 @@
  */
 
 #ifndef WIN32
-#  include <strstream.h>
+#  include <strstream>
 #else
 #  include <strstrea.h>
 #endif
 
-#include <fstream.h>
+#include <fstream>
 
 #ifdef SG_DEBUG
 #  include "Debug.h"

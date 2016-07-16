@@ -30,8 +30,6 @@
 #  include "OutputStyle.h"
 #endif
 
-class ostream;
-
 static const int MAXCPPARGS = 80;
 static const int MAXCPPPROGS = 8;
 
