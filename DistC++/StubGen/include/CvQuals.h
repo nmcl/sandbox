@@ -19,7 +19,9 @@
  */
 
 
-class ostream;
+#include <iostream>
+
+using namespace std;
 
 enum CvQualifier { QUAL_CONST = 1, QUAL_VOLATILE };
 

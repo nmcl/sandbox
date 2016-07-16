@@ -18,8 +18,10 @@
  *     
  */
 
+#include <iostream>
 
-class ostream;				/* don't want to include iostream.h */
+using namespace std;
+
 
 enum VisibilitySpec { CLASS_PRIVATE = 1, CLASS_PROTECTED, CLASS_PUBLIC,
 		      CLASS_DEFAULT, FILE_STATIC, FILE_EXTERN };

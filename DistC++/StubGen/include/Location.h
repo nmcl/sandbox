@@ -27,6 +27,10 @@
 #  include "StringClass.h"
 #endif
 
+#include <ostream>
+
+using namespace std;
+
 
 class Location
 {

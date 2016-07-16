@@ -22,6 +22,10 @@
 
 #include <string.h>
 
+#include <iostream>
+
+using namespace std;
+
 /*
  * Since we redo index and rindex for Strings make sure that if these
  * are macros they do not cause confusion here
@@ -38,8 +42,6 @@
 /*
  * Try to avoid include iostream.h in this header file
  */
-
-class ostream;
 
 class String
 {
