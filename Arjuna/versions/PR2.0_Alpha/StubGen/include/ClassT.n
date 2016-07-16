@@ -1,0 +1,77 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: ClassT.n,v 1.4 1993/03/22 09:28:04 ngdp Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(CLASST_CC_)
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF BaseClass *ClassType::get_bases () const
+{
+    return base_list;
+}
+
+INLINEF long ClassType::get_class_hashval () const
+{
+    return class_hashval;
+}
+
+INLINEF String ClassType::get_clientname () const
+{
+    return class_clientname;
+}
+
+INLINEF Declaration *ClassType::get_class_member ( int memnum ) const
+{
+    return class_members->get_member(memnum);
+}
+
+INLINEF DeclContext *ClassType::get_member_context () const
+{
+    return class_members;
+}
+
+INLINEF String ClassType::get_servername () const
+{
+    return class_servername;
+}
+
+INLINEF BaseClass *ClassType::get_vbases () const
+{
+    return vbase_list;
+}
+
+INLINEF VisibilitySpec ClassType::get_visibility () const
+{
+    return cur_visibility;
+}
+
+INLINEF String ClassType::get_implname () const
+{
+    return class_implname;
+}
+
+INLINEF Declaration *ClassType::lookfor ( const String& s, 
+					 Type t, Context c ) const
+{
+    return class_members->lookfor(s, t, c);
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif
