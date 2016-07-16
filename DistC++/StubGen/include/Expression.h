@@ -22,7 +22,6 @@
 #  include "StringClass.h"
 #endif
 
-class ostream;
 
 class Expression
 {
