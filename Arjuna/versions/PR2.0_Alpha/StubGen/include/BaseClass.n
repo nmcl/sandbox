@@ -1,0 +1,69 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: BaseClass.n,v 1.5 1993/03/22 09:28:01 ngdp Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(BASECLASS_CC_)
+
+class ostream;
+
+extern ostream& operator<< (ostream&, BaseClass *);
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF BaseClass::BaseClass ( ClassType *base, Boolean is_virtual,
+			      VisibilitySpec base_vis )
+                            : base_class(base),
+			      next_base(0),
+			      virtual_base(is_virtual),
+			      visibility(base_vis)
+{
+}
+
+INLINEF ClassType *BaseClass::get_class () const
+{
+    return base_class;
+}
+
+INLINEF BaseClass *BaseClass::get_next () const
+{
+    return next_base;
+}
+
+INLINEF VisibilitySpec BaseClass::get_visibility () const
+{
+    return visibility;
+}
+
+INLINEF Boolean BaseClass::is_virtual () const
+{
+    return virtual_base;
+}
+
+INLINEF void BaseClass::set_link ( BaseClass *bc )
+{
+    next_base = bc;
+}
+
+INLINEF ostream& operator<< ( ostream& s, BaseClass *bc )
+{
+    return bc->print_baseclass(s, NORMAL_DECL);
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif
