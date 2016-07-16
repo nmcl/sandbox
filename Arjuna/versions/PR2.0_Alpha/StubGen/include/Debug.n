@@ -1,0 +1,56 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: Debug.n,v 1.4 1993/03/22 09:28:06 ngdp Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(DEBUG_CC_)
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF DebugController::DebugController ( DebugLevel dbg, FacilityCode fac,
+					  VisibilityLevel vis )
+                                        : current_level(dbg),
+					  current_fac(fac),
+					  current_vis(vis)
+{
+}
+
+INLINEF void DebugController::set_all ( DebugLevel dbg, FacilityCode fac,
+				       VisibilityLevel vis )
+{
+    current_level = dbg;
+    current_fac = fac;
+    current_vis = vis;
+}
+
+INLINEF void DebugController::set_debuglevel ( DebugLevel dbg )
+{
+    current_level = dbg;
+}
+
+INLINEF void DebugController::set_facility ( FacilityCode fac )
+{
+    current_fac = fac;
+}
+
+INLINEF void DebugController::set_visibility ( VisibilityLevel vis )
+{
+    current_vis = vis;
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif
