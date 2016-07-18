@@ -1,0 +1,63 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: Error.n,v 1.5 1993/03/22 09:28:14 ngdp Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(ERROR_CC_)
+
+class ostrstream;
+
+extern void yyerror (char *);
+extern void error (ostrstream&);
+extern void fatal (ostrstream& s);
+extern void warning (ostrstream& s);
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF int Error::no_of_errors () const
+{
+    return errorcount;
+}
+
+INLINEF void Error::do_warnings ()
+{
+    warnings_wanted = TRUE;
+}
+
+INLINEF void yyerror ( char *s )
+{
+    error(s);
+}
+
+INLINEF void error ( ostrstream& s )
+{
+    error_log.post_error(s, ERROR);
+}
+
+INLINEF void fatal ( ostrstream& s )
+{
+    error_log.post_error(s, FATAL);
+}
+
+INLINEF void warning ( ostrstream& s )
+{
+    error_log.post_error(s, WARNING);
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif
