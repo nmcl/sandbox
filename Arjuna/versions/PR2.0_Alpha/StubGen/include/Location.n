@@ -1,0 +1,61 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: Location.n,v 1.4 1993/03/22 09:28:29 ngdp Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(LOCATION_CC_)
+
+class ostream;
+
+extern ostream& operator<< (ostream&, Location&);
+ 
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF String Location::get_filename () const
+{
+    return file;
+}
+
+INLINEF long Location::get_lineno () const
+{
+    return lineno;
+}
+
+INLINEF void Location::incrline ()
+{
+    lineno++;
+}
+
+INLINEF void Location::set_filename ( const String& newname )
+{
+    file = newname;
+}
+
+INLINEF void Location::set_lineno ( long where )
+{
+    lineno = where;
+}
+
+INLINEF ostream& operator<< ( ostream& s, Location& loc )
+{
+    loc.print_loc(s);
+    return s;
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif
