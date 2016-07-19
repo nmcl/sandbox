@@ -1,0 +1,36 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: Lock.n,v 1.4 1993/03/22 09:37:12 ngdp Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(LOCK_CC_)
+
+class ostream;
+
+extern ostream& operator<< (ostream& strm, const Lock& lock);
+extern ostream& operator<< (ostream& strm , LockStatus ls);
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF ostream& operator<< ( ostream& strm, const Lock& lock )
+{
+    return lock.print(strm);
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif
