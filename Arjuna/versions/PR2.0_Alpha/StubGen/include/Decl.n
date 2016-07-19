@@ -1,0 +1,106 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: Decl.n,v 1.9 1993/03/22 09:28:07 ngdp Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(DECL_CC_)
+
+class ostream;
+
+extern  ostream& operator<< (ostream&, Declaration *d);
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF DeclContext *Declaration::get_context () const
+{
+    return decl_context;
+}
+
+INLINEF Location Declaration::get_loc () const
+{
+    return decl_loc;
+}
+
+INLINEF Expression *Declaration::get_initialiser () const
+{
+    return decl_init;
+}
+
+INLINEF Linkage *Declaration::get_linkage () const
+{
+    return decl_linkage;
+}
+
+INLINEF TypeDescriptor *Declaration::get_type () const
+{
+    return declarator_type;
+}
+
+INLINEF VisibilitySpec Declaration::get_visibility () const
+{
+    return decl_vis;
+}
+
+INLINEF void Declaration::make_elaborated ()
+{
+    decl_is_elaborated = TRUE;
+}
+
+INLINEF Boolean Declaration::is_typedef () const
+{
+    return decl_is_typedef;
+}
+
+INLINEF void Declaration::make_special ()
+{
+    decl_is_special = TRUE;
+}
+
+
+INLINEF void Declaration::make_typedef ()
+{
+    decl_is_typedef = TRUE;
+}
+
+INLINEF void Declaration::set_dtype ( TypeDescriptor *nt )
+{
+    declarator_type = nt;
+}
+
+INLINEF void Declaration::set_name ( const String& newname )
+{
+    decl_name = newname;
+}
+
+INLINEF void Declaration::set_visibility ( VisibilitySpec new_vis )
+{
+    decl_vis = new_vis;
+}
+
+/*
+ * Enable declarations to be printed on output stream using the << notation
+ */
+
+INLINEF ostream& operator<< (ostream& s,  Declaration *d)
+{
+    d->print_decl(s);
+    return s;
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif

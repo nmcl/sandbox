@@ -1,0 +1,45 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: DclContxt.n,v 1.4 1993/03/22 09:28:05 ngdp Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(DCLCONTXT_CC_)
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF Declaration *DeclContext::get_member ( int memb_num ) const
+{
+    return (memb_num < maxentries ? order[memb_num] : 0);
+}
+
+INLINEF int DeclContext::get_no_of_entries () const
+{
+    return entrycount;
+}
+
+INLINEF DeclContext *DeclContext::get_enclosing_context () const
+{
+    return enclosing_context;
+}
+
+INLINEF DeclarationList **DeclContext::get_symtable () const
+{
+    return symtable;
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif
