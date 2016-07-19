@@ -1,0 +1,95 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: GlobalInf.n,v 1.6 1993/03/22 09:28:21 ngdp Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(GLOBALINF_CC_)
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF void GlobalInfo::compatability_mode ()
+{
+    type_context = new DeclContext();
+    types_global = TRUE;
+}
+
+INLINEF DeclContext *GlobalInfo::get_context ()
+{
+    return current_context;
+}
+
+INLINEF Location GlobalInfo::get_currentloc ()
+{
+    return current_loc;
+}
+
+INLINEF InterfaceDef *GlobalInfo::get_current_if ()
+{
+    return current_if;
+}
+
+INLINEF Declaration *GlobalInfo::get_decl ( int decl_num )
+{
+    return global_symbols.get_member(decl_num);
+}
+
+INLINEF Linkage *GlobalInfo::get_linkage ()
+{
+    return current_linkage;
+}
+
+INLINEF String GlobalInfo::get_servername ()
+{
+    return server_filename;
+}
+
+INLINEF StubModifier GlobalInfo::get_stub_globalmods ()
+{
+    if (current_file)
+	return current_file->get_generic();
+    else
+	return STUB_DEFAULT;
+}
+
+INLINEF void GlobalInfo::newline ()
+{
+    current_loc.incrline();
+    error_location.incrline();
+}
+
+INLINEF void GlobalInfo::set_current_if ( InterfaceDef *new_if )
+{
+    current_if = new_if;
+}
+INLINEF void GlobalInfo::set_currentline ( long l )
+{
+    current_loc.set_lineno(l);
+    error_location.set_lineno(l);
+}
+
+INLINEF void GlobalInfo::set_interfacename ( const String& ifname )
+{
+    interfacename = ifname;
+}
+
+INLINEF void GlobalInfo::set_servername ( const String& sname )
+{
+    server_filename = sname;
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif
