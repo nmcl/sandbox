@@ -1,0 +1,1511 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ */
+
+/*
+ * $Id: NSInterface.cc
+ */
+
+#ifndef ERRNO_H_
+#include <System/errno.h>
+#endif
+
+#ifndef SYS_TYPES_H_
+#include <System/sys/types.h>
+#endif
+
+#ifndef SYS_STAT_H_
+#include <System/sys/stat.h>
+#endif
+
+#ifndef NETINET_IN_H_
+#  include <System/netinet/in.h>
+#endif
+
+#ifndef NETDB_H_
+#  include <System/netdb.h>
+#endif
+
+#ifndef SYS_PARAM_H_
+#include <System/sys/param.h>
+#endif
+
+#ifndef ARPA_INET_H_
+#  include <System/arpa/inet.h>
+#endif
+
+#ifndef FCNTL_H_
+#include <System/fcntl.h>
+#endif
+
+#ifndef STRING_H_
+#include <System/string.h>
+#endif
+
+#ifndef MEMORY_H_
+#  include <System/memory.h>
+#endif
+
+#ifndef PROTOS_H_
+#  include <System/protos.h>
+#endif
+
+#ifndef STDLIB_H_
+#  include <System/stdlib.h>
+#endif
+
+#ifndef SYSENT_H_
+#  include <System/unistd.h>
+#endif
+
+#include <RPC/ArjServers/NSInterface.h>
+
+#ifndef IOSTREAM_H_
+#include <System/iostream.h>
+#endif
+
+#ifndef STRSTREAM_H_
+#include <System/strstream.h>
+#endif
+
+#ifndef ATOMICA_H_
+#include <Arjuna/AtomicA.h>
+#endif
+
+#ifndef LSPOBJSTORE_H_
+#include <Arjuna/LSPObjStore.h>
+#endif
+
+#ifndef NAMEINFO_H_
+#include <RPC/ArjServers/NameInfo.h>
+#endif
+
+#ifndef ERROR_H_
+#  include <Common/Error.h>
+#endif
+
+#ifndef CONFIGURE_H_
+#  include <Configure.h>
+#endif
+
+#if defined(DEBUG) && !defined(DEBUG_H_)
+#  include <Common/Debug.h>
+#endif
+
+
+const char* filename = "/tmp/NameServer.lock";
+char* ndLocation = "/StateManager/LockManager/NameInfo";
+
+
+NameServer* NSInterface::NS[rep_number] = { 0 };
+ClientRpc* NSInterface::RpcClient[rep_number] = { 0 };
+RpcControl* NSInterface::RpcCont[rep_number] = { 0 };
+int NSInterface::use_count = 0;
+int NSInterface::activated = 0;
+int NSInterface::repLevel = 0;
+int NSInterface::quorum = 0;
+
+
+dataStore::dataStore ()
+                      : rd(0),
+			rd1(0),
+			buff(0),
+			os(0),
+			versionNumber(0)
+{
+#ifdef DEBUG
+    debug_stream << CONSTRUCTORS << FAC_USER1 << VIS_PUBLIC;
+    debug_stream << "dataStore::dataStore ()" << endl;
+#endif    
+}
+
+dataStore::~dataStore ()
+{
+#ifdef DEBUG
+    debug_stream << DESTRUCTORS << FAC_USER1 << VIS_PUBLIC;
+    debug_stream << "dataStore::~dataStore ()" << endl;
+#endif
+    
+    if (rd)
+	delete rd;
+
+    if (rd1)
+	delete rd1;
+    
+    if (buff)
+	delete buff;
+
+    if (os)
+	delete os;
+}
+
+
+
+NSInterface::NSInterface (Boolean& done)
+                                       : X(0),
+					 Renamed(FALSE),
+					 NS_Uid(0)
+{
+    // Create new NameServer database.
+#ifdef DEBUG
+    debug_stream << CONSTRUCTORS << FAC_USER1 << VIS_PUBLIC;
+    debug_stream << "NSInterface::NSInterface (Boolean& done)\n" << flush;
+#endif
+
+    done = lockAndCreate();
+    Initialise();
+}
+
+NSInterface::NSInterface (int& res)
+                                  : X(0),
+				    position(0),
+				    Renamed(FALSE),
+				    NS_Uid(0)
+  
+{
+    // Use existing NameServer database(s).
+#ifdef DEBUG
+    debug_stream << CONSTRUCTORS << FAC_USER1 << VIS_PUBLIC;
+    debug_stream << "NSInterface::NSInterface (int& res)\n" << flush;
+#endif
+
+    AtomicAction A;
+    unsigned short ret, activated = 0;
+    char* path = dirPath();
+    char* uidType = UidString();
+    Boolean done = FALSE;
+    Uid Y(uidType);
+    struct stat buf;
+
+    Initialise();
+    
+    if (NSInterface::use_count > 0)
+    {
+	Renamed = TRUE;
+	NSInterface::use_count++;
+	if (NSInterface::activated >= (NSInterface::repLevel/2)+1)
+	    res = 0;
+	else
+	    error_stream << WARNING << "NSInterface::Insufficient replicas started.\n" << flush;
+    }
+    else
+    {
+	res = -1;
+	A.Begin();
+
+	if (stat(path, &buf) == -1)
+	{
+	    if (lockAndCreate())
+		res = 0;
+	}
+	else
+	{
+	    int pathSize = ::strlen(path) + ::strlen(uidType) +2;
+	    char* pathName = ::new char[pathSize];
+	    ::memset(pathName, '\0', pathSize);
+	    ::strcpy(pathName, path);
+	    ::strcpy(pathName+::strlen(path), "/");
+	    ::strcpy(pathName+::strlen(path)+1, uidType);
+	
+	    if (stat(pathName, &buf) == 0)
+	    {
+		Renamed = TRUE;
+		X = new NameInfo(Y, done);
+		if (done)
+		{
+		    NameData *marker, *ptr = (NameData*) 0;
+
+		    done = FALSE;
+		    marker = X->GetReplicationInfo(done, NSInterface::repLevel);
+		    if (done)
+		    {
+			int i = 0;
+			
+			NSInterface::quorum = (NSInterface::repLevel/2)+1;
+			ptr = marker;
+			while (ptr != (NameData*) 0)
+			{
+			    ArjName[i].SetObjName("NameServer");
+			    ArjName[i].SetServiceName("NameServer");
+			    ArjName[i].SetHostName(ptr->hostname);
+			    NSInterface::RpcClient[i] = new ClientRpc(&ArjName[i]);
+
+#if (RPC_SYSTEM_TYPE == RPC_RajdootAction_) || (RPC_SYSTEM_TYPE == RPC_Radjoot_)
+#ifdef DEBUG
+			    NSInterface::RpcClient[i]->SetTimeout(8000);
+			    NSInterface::RpcClient[i]->SetRetry(5);
+#else
+			    NSInterface::RpcClient[i]->SetTimeout(5000);
+#endif
+#endif
+			    NSInterface::RpcCont[i] = new RpcControl(NSInterface::RpcClient[i]);
+			    ret = 1;
+			    NSInterface::NS[i] = new NameServer(*ptr->myUID, ret, NSInterface::RpcCont[i]);
+			    if (ret == 0)
+				NSInterface::activated++;
+			    else
+			    {
+				NSInterface::NS[i] = (RemoteNameServer*) 0;
+				NSInterface::RpcCont[i] = (RpcControl*) 0;
+			    }
+			    ptr = ptr->next;
+			    i++;
+			}
+		    }
+
+		    NSInterface::use_count++;
+		    if (NSInterface::activated >= NSInterface::quorum)
+			res = 0;
+		    else
+			error_stream << WARNING << "NSInterface::Insufficient replicas started.\n" << flush;
+		}
+	    }
+	    else
+	    {
+		if (lockAndCreate())
+		    res = 0;
+	    }
+
+	    if (pathName)
+#ifndef __GNUG__
+		::delete [] pathName;
+#else
+	        ::delete pathName;
+#endif	
+	}
+    
+	if (res == 0)
+	    res = ((A.End() == COMMITTED) ? 0 : -1);
+	else
+	    A.Abort();
+    }
+    
+    if (path)
+#ifndef __GNUG__
+	::delete [] path;
+#else
+        ::delete path;
+#endif
+    
+    if (uidType)
+#ifndef __GNUG__
+	::delete [] uidType;
+#else
+        ::delete uidType;
+#endif
+}
+
+NSInterface::~NSInterface ()
+{
+#ifdef DEBUG
+    debug_stream << DESTRUCTORS << FAC_USER1 << VIS_PUBLIC;
+    debug_stream << "NSInterface::~NSInterface ()\n" << flush;
+#endif
+
+    if (!Renamed)
+	(void) closeAndUnlock();
+
+    use_count--;
+    if (use_count == 0)
+    {
+	for (int i = 0; i < rep_number; i++)
+	{
+	    if (NS[i])
+	    {
+		delete NS[i];
+		NS[i] = (RemoteNameServer*) 0;
+		if (NSInterface::RpcCont[i])
+		{
+		    delete NSInterface::RpcCont[i];
+		    NSInterface::RpcCont[i] = (RpcControl*) 0;
+		}
+		if (NSInterface::RpcClient[i])
+		{
+		    delete NSInterface::RpcClient[i];
+		    NSInterface::RpcClient[i] = (ClientRpc*) 0;
+		}
+	    }
+	}
+    }
+
+    if (X)
+	delete X;
+
+    Remove();
+}
+
+void NSInterface::Initialise ()
+{
+#ifdef DEBUG
+    debug_stream << FUNCTIONS << FAC_USER1 << VIS_PRIVATE;
+    debug_stream << "void NSInterface::Initialise ()" << endl;
+#endif
+
+    for (int i = 0; i < rep_number; i++)
+	dataList[i] = 0;
+}
+
+void NSInterface::Remove ()
+{
+#ifdef DEBUG
+    debug_stream << FUNCTIONS << FAC_USER1 << VIS_PRIVATE;
+    debug_stream << "void NSInterface::Remove ()" << endl;
+#endif
+
+    for (int i = 0; i < rep_number; i++)
+    {
+	if (dataList[i])
+	{
+	    delete dataList[i];
+	    dataList[i] = 0;
+	}
+    }
+}
+
+void NSInterface::zeroList ()
+{
+#ifdef DEBUG
+    debug_stream << FUNCTIONS << FAC_USER1 << VIS_PRIVATE;
+    debug_stream << "void NSInterface::zeroList ()" << endl;
+#endif
+
+    Remove();
+    Initialise();
+}
+
+Boolean NSInterface::lockAndCreate ()
+{
+#ifdef DEBUG
+    debug_stream << FUNCTIONS << FAC_USER1 << VIS_PRIVATE;
+    debug_stream << "Boolean NSInterface::lockAndCreate ()\n" << flush;
+#endif
+
+    Boolean status = FALSE;
+
+    if (openAndLock())
+    {
+	if (createNewDatabase())
+	    status = TRUE;
+#ifdef DEBUG
+	else
+	{
+	    debug_stream << FUNCTIONS << FAC_USER1 << VIS_PRIVATE;
+	    debug_stream << "Could not create new name server info. database\n" << flush;
+	}
+#endif
+    }
+
+    (void)closeAndUnlock();
+
+    return status;
+}
+
+Boolean NSInterface::createNewDatabase ()
+{
+#ifdef DEBUG
+    debug_stream << FUNCTIONS << FAC_USER1 << VIS_PRIVATE;
+    debug_stream << "Boolean NSInterface::createNewDatabase ()\n" << flush;
+#endif
+
+    g_version_number = s_version_number = 0;
+    unsigned short ret = 1;
+    repLevel = 1;
+    quorum = 1;
+    position = 0;
+    Boolean result = FALSE;
+    AtomicAction A;
+
+    X = new NameInfo(result);
+    if (result)
+    {
+	A.Begin();
+	NS[0] = new NameServer(ret);
+
+	if (ret == 0)
+	{
+	    use_count++;
+	    NSInterface::activated = 1;
+	    NameData* Y = new NameData;
+    	    Y->hostname = new char[MAXHOSTNAMELEN];
+	    ::memset(Y->hostname, '\0', MAXHOSTNAMELEN);
+	    (void) gethostname(Y->hostname, MAXHOSTNAMELEN);
+	    Y->myUID = new Uid(NS[0]->get_uid());
+
+	    result = (Boolean) (X->SetReplicationInfo(Y));
+	
+	    if (Y)
+		delete Y;
+	}
+	
+	if ((ret == 0) && (result))
+	{
+	    if (A.End() == COMMITTED)
+		return TRUE;
+	}
+	else
+	    A.Abort();
+    }
+
+    return FALSE;
+}
+
+char* NSInterface::UidString ()
+{
+    unsigned long hostAddr = hostInetAddr();
+    struct in_addr inet;
+
+    inet.s_addr = hostAddr;
+    char* name = inet_ntoa(inet);
+    const char* n_name = ":0:0:0";
+    char* s_uid = new char[strlen(name) + strlen(n_name) +1];
+    ::memset(s_uid, '\0', strlen(name) + strlen(n_name) +1);
+    ::memcpy(s_uid, name, strlen(name));
+    ::memcpy(s_uid+strlen(name), n_name, strlen(n_name));
+
+    return s_uid;
+}
+
+char* NSInterface::dirPath ()
+{
+    char* pathName = new char[strlen(OBJECTSTOREDIR_Q)+strlen(ndLocation)+1];
+
+    ::memset(pathName, '\0', strlen(OBJECTSTOREDIR_Q)+strlen(ndLocation)+1);
+    ::memcpy(pathName, OBJECTSTOREDIR_Q, strlen(OBJECTSTOREDIR_Q));
+    ::memcpy(pathName+strlen(OBJECTSTOREDIR_Q), ndLocation, strlen(ndLocation));
+
+    return pathName;
+}
+
+Boolean NSInterface::openAndLock ()
+{
+#ifdef DEBUG
+    debug_stream << FUNCTIONS << FAC_USER1 << VIS_PRIVATE;
+    debug_stream << "Boolean NSInterface::openAndLock ()\n" << flush;
+#endif
+
+    fp = ::open(filename, O_WRONLY | O_CREAT | O_EXCL);
+
+    if (fp < 0)
+    {
+	error_stream << WARNING << "file " << filename << " exists" << endl;
+	return FALSE;
+    }
+    else
+	return TRUE;
+}
+
+Boolean NSInterface::closeAndUnlock ()
+{
+#ifdef DEBUG
+    debug_stream << FUNCTIONS << FAC_USER1 << VIS_PRIVATE;
+    debug_stream << "Boolean NSInterface::closeAndUnlock ()\n" << flush;
+#endif
+
+    Boolean result = FALSE;
+    LocalSimplePersistentObjectStore LP;
+    char* oldName = 0;
+
+    if (Renamed)
+	return TRUE;
+
+    if (!X)
+	return FALSE;
+
+    if (AtomicAction::Current() != 0)
+	return FALSE;
+
+    if (!NS_Uid)
+	NS_Uid = new Uid(X->get_uid());
+
+    oldName = LP.genPathName(*NS_Uid, ndLocation, ORIGINAL);
+
+    if (strcmp(oldName, UidString()) != 0)
+    {
+	if (::chdir(dirPath()) == 0)
+	{
+	    if (::rename(oldName, UidString()) == 0)
+		result = TRUE;
+	    else
+	    {
+		cout << "NSInterface - An error occurred while attempting to rename object state." << endl;
+		cout << "NSInterface - The error was: " << errno << endl;
+	    }
+	}
+	else
+	{
+	    cout << "NSInterface - An error occurred while attempting to change directory to " << dirPath() << endl;
+	    cout << "NSInterface - The error was: " << errno << endl;
+	}
+
+	close(fp);
+	unlink(filename);
+
+	if (result)
+	    Renamed = TRUE;
+    }
+    else
+    {
+	Renamed = TRUE;
+	result = TRUE;
+    }
+
+    if (!Renamed)
+    {
+	cout << "NSInterface - An error occurred while in directory " << dirPath() << endl;
+	cout << "NSInterface - Attempting to rename " << oldName << " to " << UidString() << endl;
+	cout << "NSInterface - Manual rename required.\n" << flush;
+    }
+
+    return result;
+}
+
+unsigned long NSInterface::hostInetAddr ()
+{
+    static unsigned long myAddr;
+    static char hostname[256];
+
+    struct hostent *h;
+    
+    ::gethostname(hostname, 256);
+    h = ::gethostbyname(hostname);
+    ::memcpy(&myAddr, h->h_addr, h->h_length);
+
+    return myAddr;
+}
+
+Boolean NSInterface::IsQuorum (Boolean groupview, unsigned long& version)
+{
+    unsigned short is_same;
+
+    if (quorum == 1)
+	return TRUE;
+
+    if (groupview)
+    {
+	for (int i = 0; i < repLevel; i++)
+	{
+	    if (g_version_number < g_versions[i])
+	    {
+		is_same = 0;
+		g_version_number = g_versions[i];
+		version = g_version_number;
+	    }
+
+	    if (g_versions[i] == g_version_number)
+		is_same++;
+	}
+    }
+    else
+    {
+	for (int j = 0; j < repLevel; j++)
+	{
+	    if (s_version_number < s_versions[j])
+	    {
+		is_same = 0;
+		s_version_number = s_versions[j];
+		version = s_version_number;
+	    }
+
+	    if (s_versions[j] == s_version_number)
+		is_same++;
+	}
+    }
+
+    if (is_same >= quorum)
+	return TRUE;
+    else
+	return FALSE;
+}
+
+void NSInterface::CopyReplicaDescriptor (ReplicaDescriptor& rd, unsigned long version, Boolean unknown)
+{
+#ifdef DEBUG
+    debug_stream << FUNCTIONS << FAC_USER1 << VIS_PRIVATE;
+    debug_stream << "void NSInterface::CopyReplicaDescriptor" << endl;
+#endif
+    
+    Boolean found = FALSE;
+    
+    for (int i = 0; ((i < repLevel) && (!found)); i++)
+    {
+	if (dataList[i])
+	{
+	    if ((dataList[i]->versionNumber == version) || (quorum == 1))
+	    {
+		found = TRUE;
+		if (!unknown)
+		    rd = *dataList[i]->rd;
+		else
+		    rd = *dataList[i]->rd1;
+	    }
+	}
+    }
+}
+
+void NSInterface::CopyBuffer (Buffer& buff, unsigned long version)
+{
+#ifdef DEBUG
+    debug_stream << FUNCTIONS << FAC_USER1 << VIS_PRIVATE;
+    debug_stream << "void NSInterface::CopyBuffer" << endl;
+#endif
+    
+    Boolean found = FALSE;
+    
+    for (int i = 0; ((i < repLevel) && (!found)); i++)
+    {
+	if (dataList[i])
+	{
+	    if ((dataList[i]->versionNumber == version) || (quorum == 1))
+	    {
+		found = TRUE;
+		buff = *dataList[i]->buff;
+	    }
+	}
+    }
+}
+
+void NSInterface::CopyObjectState (ObjectState& os, unsigned long version)
+{
+#ifdef DEBUG
+    debug_stream << FUNCTIONS << FAC_USER1 << VIS_PRIVATE;
+    debug_stream << "void NSInterface::CopyObjectState" << endl;
+#endif
+
+    Boolean found = FALSE;
+    
+    for (int i = 0; ((i < repLevel) && (!found)); i++)
+    {
+	if (dataList[i])
+	{
+	    if ((dataList[i]->versionNumber == version) || (quorum == 1))
+	    {
+		found = TRUE;
+		os = *dataList[i]->os;
+	    }
+	}
+    }
+}
+
+Boolean NSInterface::CheckAndSet (const Uid& group)
+{
+    AtomicAction Z;
+    int res, responded = 0;
+    Boolean result;
+
+    Z.Begin();
+
+    for (int i = 0; i < repLevel; i++)
+    {
+	if (NS[i])
+	{
+	    res = -1;
+	    g_versions[i] = 0;
+	    result = NS[i]->CheckAndSet(group, res, g_versions[i]);
+	    if (res == 0)
+		if (result) responded++;
+	}
+    }
+
+    if (responded >= quorum)
+    {
+	unsigned long dummy;
+	
+	if (IsQuorum(TRUE, dummy))
+	{
+	    if (Z.End() == COMMITTED)
+		return TRUE;
+	    else
+		return FALSE;
+	}
+	else
+	{
+	    Z.Abort();
+	    return FALSE;
+	}
+    }
+    
+    Z.Abort();
+    return FALSE;
+}
+
+Boolean NSInterface::GetExclusiveGroupView (ReplicaDescriptor& rd, const Uid& group)
+{
+    AtomicAction Z;
+    int res, responded = 0;
+    Boolean result;
+
+    zeroList();
+    
+    Z.Begin();
+    
+    for (int i = 0; i < repLevel; i++)
+    {
+	if (NS[i])
+	{
+	    res = -1;
+	    g_versions[i] = 0;
+	    dataList[i] = new dataStore;
+	    dataList[i]->rd = new ReplicaDescriptor(0); // blank as it will be filled in by database
+	    *dataList[i]->rd = rd;
+	    
+	    result = NS[i]->GetExclusiveGroupView(*dataList[i]->rd, group, res, g_versions[i]);
+	    dataList[i]->versionNumber = g_versions[i];
+	    
+	    if (res == 0)
+		if (result) responded++;
+	}
+    }
+    
+    if (responded >= quorum)
+    {
+	unsigned long version = 0;
+	
+	if (IsQuorum(TRUE, version))
+	{
+	    if (Z.End() == COMMITTED)
+	    {
+		CopyReplicaDescriptor(rd, version);
+		return TRUE;
+	    }
+	    else
+		return FALSE;
+	}
+	else
+	{
+	    Z.Abort();
+	    return FALSE;
+	}
+    }
+    
+    Z.Abort();
+    return FALSE;
+}
+
+Boolean NSInterface::AlterLocation (const Uid& group, const Uid& replica, string location)
+{
+    AtomicAction Z;
+    int res, responded = 0;
+    Boolean result;
+
+    Z.Begin();
+
+    for (int i = 0; i < repLevel; i++)
+    {
+	if (NS[i])
+	{
+	    res = -1;
+	    g_versions[i] = 0;
+
+	    result = NS[i]->AlterLocation(group, replica, location, res, g_versions[i]);
+	    if (res == 0)
+		if (result) responded++;
+	}
+    }
+
+    if (responded >= quorum)
+    {
+	unsigned long dummy;
+	
+	if (IsQuorum(TRUE, dummy))
+	{
+	    if (Z.End() == COMMITTED)
+		return TRUE;
+	    else
+		return FALSE;
+	}
+	else
+	{
+	    Z.Abort();
+	    return FALSE;
+	}
+    }
+
+    Z.Abort();
+    return FALSE;
+}
+
+Boolean NSInterface::Get_View (ReplicaDescriptor& rd, const Uid& u, const LockMode mode)
+{
+    AtomicAction Z;
+    int ret, responded = 0;
+    Boolean result;
+
+    zeroList();
+    
+    Z.Begin();
+
+    for (int i = 0; i < repLevel; i++)
+    {
+	if (NS[i])
+	{
+	    ret = -1;
+	    g_versions[i] = 0;
+	    dataList[i] = new dataStore;
+	    dataList[i]->rd = new ReplicaDescriptor(0); // blank for db
+	    *dataList[i]->rd = rd;
+	    
+	    result = NS[i]->Get_View(*dataList[i]->rd, u, ret, g_versions[i], mode);
+	    dataList[i]->versionNumber = g_versions[i];
+	    
+	    if (ret == 0)
+		if (result) responded++;
+	}
+    }
+
+    if (responded >= quorum)
+    {
+	unsigned long version = 0;
+	
+	if (IsQuorum(TRUE, version))
+	{
+	    if (Z.End() == COMMITTED)
+	    {
+		CopyReplicaDescriptor(rd, version);
+		return TRUE;
+	    }
+	    else
+		return FALSE;
+	}
+	else
+	{
+	    Z.Abort();
+	    return FALSE;
+	}
+    }
+    else
+    {
+	Z.Abort();
+	return FALSE;
+    }
+}
+
+Boolean NSInterface::Add_Replicas (const ReplicaDescriptor& rd, const Uid& u)
+{
+    AtomicAction Z;
+    int ret, responded = 0;
+    Boolean result;
+
+    Z.Begin();
+
+    for (int i = 0; i < repLevel; i++)
+    {
+	if (NS[i])
+	{
+	    ret = -1;
+	    g_versions[i] = 0;
+	    result = NS[i]->Add_Replicas(rd, u, ret, g_versions[i]);
+	    if (ret == 0)
+		if (result) responded++;
+	}
+    }
+    
+    if (responded >= quorum)
+    {
+	unsigned long dummy;
+	
+	if (IsQuorum(TRUE, dummy))
+	{
+	    if (Z.End() == COMMITTED)
+		return TRUE;
+	    else
+		return FALSE;
+	}
+	else
+	{
+	    Z.Abort();
+	    return FALSE;
+	}
+    }
+    else
+    {
+	Z.Abort();
+	return FALSE;
+    }
+}
+
+Boolean NSInterface::Delete_Replicas (const ReplicaDescriptor& rd, const Uid& u, const Boolean deleteAll)
+{
+    AtomicAction Z;
+    int ret, responded = 0;
+    Boolean result;
+
+    Z.Begin();
+
+    for (int i = 0; i < repLevel; i++)
+    {
+	if (NS[i])
+	{
+	    ret = -1;
+	    g_versions[i] = 0;
+	    result = NS[i]->Delete_Replicas(u, rd, ret, g_versions[i], deleteAll);
+	    if (ret == 0)
+		if (result) responded++;
+	}
+    }
+
+    if (responded >= quorum)
+    {
+	unsigned long dummy;
+	
+	if (IsQuorum(TRUE, dummy))
+	{
+	    if (Z.End() == COMMITTED)
+		return TRUE;
+	    else
+		return FALSE;
+	}
+	else
+	{
+	    Z.Abort();
+	    return FALSE;
+	}
+    }
+    else
+    {
+	Z.Abort();
+	return FALSE;
+    }
+}
+
+Boolean NSInterface::Release_Group (const Uid& u)
+{
+    AtomicAction Z;
+    int ret, responded = 0;
+    Boolean result;
+
+    Z.Begin();
+
+    for (int i = 0; i < repLevel; i++)
+    {
+	if (NS[i])
+	{
+	    ret = -1;
+	    g_versions[i] = 0;
+	    result = NS[i]->Release_Group(u, ret, g_versions[i]);
+	    if (ret == 0)
+		if (result) responded++;
+	}
+    }
+
+    if (responded >= quorum)
+    {
+	unsigned long dummy;
+	
+	if (IsQuorum(TRUE, dummy))
+	{
+	    if (Z.End() == COMMITTED)
+		return TRUE;
+	    else
+		return FALSE;
+	}
+	else
+	{
+	    Z.Abort();
+	    return FALSE;
+	}
+    }
+    else
+    {
+	Z.Abort();
+	return FALSE;
+    }
+}
+
+Boolean NSInterface::Traverse_Database (ReplicaDescriptor& rd, Uid& u, int& pos)
+{
+    AtomicAction Z;
+    int ret, responded = 0;
+    Boolean result;
+
+    zeroList();
+    
+    Z.Begin();
+
+    for (int i = 0; i < repLevel; i++)
+    {
+	if (NS[i])
+	{
+	    ret = -1;
+	    g_versions[i] = 0;
+	    dataList[i] = new dataStore;
+	    dataList[i]->rd = new ReplicaDescriptor(0); // blank
+	    *dataList[i]->rd = rd;
+	    
+	    result = NS[i]->Traverse_Database(*dataList[i]->rd, u, pos, ret, g_versions[i]);
+	    dataList[i]->versionNumber = g_versions[i];
+	    
+	    if (ret == 0)
+		if (result) responded++;
+	}
+    }
+
+    if (responded >= quorum)
+    {
+	unsigned long version = 0;
+	
+	if (IsQuorum(TRUE, version))
+	{
+	    if (Z.End() == COMMITTED)
+	    {
+		CopyReplicaDescriptor(rd, version);
+		return TRUE;
+	    }
+	    else
+		return FALSE;
+	}
+	else
+	{
+	    Z.Abort();
+	    return FALSE;
+	}
+    }
+    else
+    {
+	Z.Abort();
+	return FALSE;
+    }
+}
+
+
+Boolean NSInterface::ChangeReplicaStatus (const ReplicaDescriptor& rd, const Uid& u, const Boolean t)
+{
+    AtomicAction Z;
+    int ret, responded = 0;
+    Boolean result;
+
+    Z.Begin();
+
+    for (int i = 0; i < repLevel; i++)
+    {
+	if (NS[i])
+	{
+	    ret = -1;
+	    g_versions[i] = 0;
+	    result = NS[i]->ChangeReplicaStatus(rd, u, t, ret, g_versions[i]);
+	    if (ret == 0)
+		if (result) responded++;
+	}
+    }
+
+    if (responded >= quorum)
+    {
+	unsigned long dummy;
+	
+	if (IsQuorum(TRUE, dummy))
+	{
+	    if (Z.End() == COMMITTED)
+		return TRUE;
+	    else
+		return FALSE;
+	}
+	else
+	{
+	    Z.Abort();
+	    return FALSE;
+	}
+    }
+    else
+    {
+	Z.Abort();
+	return FALSE;
+    }
+}
+
+
+Boolean NSInterface::NeedsUpdating (const Uid& u, ReplicaDescriptor& rd)
+{
+    AtomicAction Z;
+    int ret, responded = 0;
+    Boolean result;
+
+    zeroList();
+    
+    Z.Begin();
+
+    for (int i = 0; i < repLevel; i++)
+    {
+	if (NS[i])
+	{
+	    ret = -1;
+	    g_versions[i] = 0;
+	    dataList[i] = new dataStore;
+	    dataList[i]->rd = new ReplicaDescriptor(0); // blank
+	    *dataList[i]->rd = rd;
+	    
+	    result = NS[i]->NeedsUpdating(u, *dataList[i]->rd, ret, g_versions[i]);
+	    dataList[i]->versionNumber = g_versions[i];
+	    
+	    if (ret == 0)
+		if (result) responded++;
+	}
+    }
+
+    if (responded >= quorum)
+    {
+	unsigned long version = 0;
+	
+	if (IsQuorum(TRUE, version))
+	{
+	    if (Z.End() == COMMITTED)
+	    {
+		CopyReplicaDescriptor(rd, version);
+		return TRUE;
+	    }
+	    else
+		return FALSE;
+	}
+	else
+	{
+	    Z.Abort();
+	    return FALSE;
+	}
+    }
+    else
+    {
+	Z.Abort();
+	return FALSE;
+    }
+}
+
+Boolean NSInterface::GetNodeUpdateList (ReplicaDescriptor& rd, ReplicaDescriptor& unknownList,
+					string name, Boolean& unknownState)
+{
+    AtomicAction Z;
+    int ret, responded = 0;
+    Boolean result;
+
+    zeroList();
+    
+    Z.Begin();
+
+    for (int i = 0; i < repLevel; i++)
+    {
+	if (NS[i])
+	{
+	    ret = -1;
+	    g_versions[i] = 0;
+	    dataList[i] = new dataStore;
+	    dataList[i]->rd = new ReplicaDescriptor(0);
+	    *dataList[i]->rd = rd;
+	    dataList[i]->rd1 = new ReplicaDescriptor(0);
+	    *dataList[i]->rd1 = unknownList;
+	    
+	    result = NS[i]->GetNodeUpdateList(*dataList[i]->rd, *dataList[i]->rd1, name, unknownState, ret, g_versions[i]);
+	    dataList[i]->versionNumber = g_versions[i];
+	    
+	    if (ret == 0)
+		if (result) responded++;
+	}
+    }
+
+    if (responded >= quorum)
+    {
+	unsigned long version = 0;
+	
+	if (IsQuorum(TRUE, version))
+	{
+	    if (Z.End() == COMMITTED)
+	    {
+		CopyReplicaDescriptor(rd, version);
+		CopyReplicaDescriptor(unknownList, version, TRUE);
+		return TRUE;
+	    }
+	    else
+		return FALSE;
+	}
+	else
+	{
+	    Z.Abort();
+	    return FALSE;
+	}
+    }
+    else
+    {
+	Z.Abort();
+	return FALSE;
+    }
+}
+
+void NSInterface::StoreName (Boolean& done, Buffer key_buff, Buffer data_buff)
+{
+    AtomicAction Z;
+    int ret, responded = 0;
+    Boolean result;
+
+    done = FALSE;
+    
+    Z.Begin();
+
+    for (int i = 0; i < repLevel; i++)
+    {
+	if (NS[i])
+	{
+	    ret = -1;
+	    result = FALSE;
+	    s_versions[i] = 0;
+	    NS[i]->StoreName(result, key_buff, data_buff, s_versions[i]);
+	    if (result) responded++;
+	}
+    }
+
+    if (responded >= quorum)
+    {
+	unsigned long dummy;
+	
+	if (IsQuorum(FALSE, dummy))
+	{
+	    if (Z.End() == COMMITTED)
+		done = TRUE;
+	}
+	else
+	    Z.Abort();
+    }
+    else
+	Z.Abort();
+}
+
+void NSInterface::FetchName (Boolean& done, Buffer key_buff, Buffer& data_buff)
+{
+    AtomicAction Z;
+    int ret, responded = 0;
+    Boolean result;
+
+    done = FALSE;
+    zeroList();
+    
+    Z.Begin();
+
+    for (int i = 0; i < repLevel; i++)
+    {
+	if (NS[i])
+	{
+	    ret = -1;
+	    result = FALSE;
+	    s_versions[i] = 0;
+	    dataList[i] = new dataStore;
+	    dataList[i]->buff = new Buffer;
+
+	    NS[i]->FetchName(result, key_buff, *dataList[i]->buff, s_versions[i]);
+	    dataList[i]->versionNumber = s_versions[i];
+	    
+	    if (result) responded++;
+	}
+    }
+
+    if (responded >= quorum)
+    {
+	unsigned long version = 0;
+	
+	if (IsQuorum(FALSE, version))
+	{
+	    if (Z.End() == COMMITTED)
+	    {
+		CopyBuffer(data_buff, version);
+		done = TRUE;
+	    }
+	}
+	else
+	    Z.Abort();
+    }
+    else
+	Z.Abort();
+}
+
+void NSInterface::RemoveName (Boolean& done, Buffer key_buff)
+{
+    AtomicAction Z;
+    int ret, responded = 0;
+    Boolean result;
+
+    done = FALSE;
+    
+    Z.Begin();
+
+    for (int i = 0; i < repLevel; i++)
+    {
+	if (NS[i])
+	{
+	    ret = -1;
+	    result = FALSE;
+	    s_versions[i] = 0;
+	    NS[i]->RemoveName(result, key_buff, s_versions[i]);
+	    if (result) responded++;
+	}
+    }
+
+    if (responded >= quorum)
+    {
+	unsigned long dummy;
+	
+	if (IsQuorum(FALSE, dummy))
+	{
+	    if (Z.End() == COMMITTED)
+		done = TRUE;
+	}
+	else
+	    Z.Abort();
+    }
+    else
+	Z.Abort();
+}
+
+void NSInterface::ReplaceName (Boolean& done, Buffer key_buff, Buffer data_buff)
+{
+    AtomicAction Z;
+    int ret, responded = 0;
+    Boolean result;
+
+    done = FALSE;
+    
+    Z.Begin();
+
+    for (int i = 0; i < repLevel; i++)
+    {
+	if (NS[i])
+	{
+	    ret = -1;
+	    result = FALSE;
+	    s_versions[i] = 0;
+	    NS[i]->ReplaceName(result, key_buff, data_buff, s_versions[i]);
+	    if (result) responded++;
+	}
+    }
+
+    if (responded >= quorum)
+    {
+	unsigned long dummy;
+	
+	if (IsQuorum(FALSE, dummy))
+	{
+	    if (Z.End() == COMMITTED)
+		done = TRUE;
+	}
+	else
+	    Z.Abort();
+    }
+    else
+	Z.Abort();
+}
+
+void NSInterface::GetNextName (Boolean& done, Buffer& data_buff, Boolean& endofdata)
+{
+    AtomicAction Z;
+    int ret, responded = 0, marker;
+    Boolean result;
+
+    done = FALSE;
+    endofdata = FALSE;
+    zeroList();
+    
+    Z.Begin();
+
+    marker = position;
+
+    for (int i = 0; i < repLevel; i++)
+    {
+	if (NS[i])
+	{
+	    ret = -1;
+	    result = FALSE;
+	    s_versions[i] = 0;
+	    dataList[i] = new dataStore;
+	    dataList[i]->buff = new Buffer;
+
+	    NS[i]->GetNextName(result, *dataList[i]->buff, marker, s_versions[i]);
+	    dataList[i]->versionNumber = s_versions[i];
+	    
+	    if (result)
+	    {
+		responded++;
+		position = marker;
+	    }
+	}
+    }
+
+    if (position == -1)
+	endofdata = TRUE;
+
+    if (responded >= quorum)
+    {
+	unsigned long version = 0;
+	
+	if (IsQuorum(FALSE, version))
+	{
+	    if (Z.End() == COMMITTED)
+	    {
+		CopyBuffer(data_buff, version);
+		done = TRUE;
+	    }
+	}
+	else
+	    Z.Abort();
+    }
+    else
+	Z.Abort();
+}
+
+void NSInterface::Restart (Boolean& done)
+{
+    position = 0;
+    done = TRUE;
+}
+
+Boolean NSInterface::GetGroupViewState (ObjectState& os)
+{
+    AtomicAction A;
+    Boolean result;
+    int ret, responded = 0;
+    
+    A.Begin();
+    
+    for (int i = 0; i < repLevel; i++)
+    {
+	if (NS[i])
+	{
+	    ret = -1;
+	    g_versions[i] = 0;
+	    dataList[i] = new dataStore;
+	    dataList[i]->os = new ObjectState;
+	    
+	    result = NS[i]->GetGroupViewState(*dataList[i]->os, ret, g_versions[i]);
+	    dataList[i]->versionNumber = g_versions[i];
+	    
+	    if (ret == 0)
+		if (result) responded++;
+	}
+    }
+    
+    if (responded >= quorum)
+    {
+	unsigned long version = 0;
+	
+	if (IsQuorum(TRUE, version))
+	{
+	    if (A.End() == COMMITTED)
+	    {
+		CopyObjectState(os, version);
+		return TRUE;
+	    }
+	    else
+		return FALSE;
+	}
+	else
+	{
+	    A.Abort();
+	    return FALSE;
+	}
+    }
+
+    A.Abort();
+    return FALSE;
+}
+
+Boolean NSInterface::ImposeGroupViewState (ObjectState& os)
+{
+    return FALSE;
+}
