@@ -1,0 +1,32 @@
+Extra notes about building Arjuna under AIX
+(please read all the other README files beforehand)
+
+1-	run configure and answer the questions as appropriate
+	   for AIX, the answers I used were as follows:
+
+	C++ compiler [CC] : xlC
+	C++ include directory [/usr/include/CC] : /usr/lpp/xlC/include
+	Which version of lex (lex/lex++) [lex] : lex
+	lex flags [] : -C
+	Which version of yacc (yacc/yacc++/bison) [yacc] : yacc
+	yacc flags [] : -C
+	Arjuna flags [] : -D_ALL_SOURCE -DBSD_INCLUDES
+	Additional compilation flags for optimisation and/or debugging [] : -+
+	Arjuna specific loader flags [] : -qtwolink
+	Arjuna specific libraries [] : -lbsd
+
+2-	make -f MakefileBoot
+
+3-      make Makefiles
+
+4-      make
+
+
+
+NOTE:
+	The Applications Calendar & Theatre require InterViews 3.0.1
+	TowersOfHanoi requires InterViews 2.6
+	The Imakefiles will need to be changed as appropriate for your
+	InterViews installation etc.
+
+
