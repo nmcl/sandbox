@@ -1,0 +1,115 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1993/11/03 12:27:09 nmcl Exp $
+COMMENT
+
+SOURCES =        NameServ.cc          \
+                 NameServer_server.cc \
+                 NameServer_client.cc \
+                 NameServer_servermain.cc \
+                 GroupView.cc \
+                 RepDesc.cc \
+		 GroupData.cc \
+	         ReplicaData.cc \
+                 ReplicaList.cc \
+                 CompositeObject.cc \
+		 TemplateObject.cc \
+                 ServerList.cc \
+                 ServerView.cc \
+	         OutCome_marshall.cc \
+		 ReplicaDescriptor_marshall.cc \
+		 ReplicaData_marshall.cc
+
+OBJECTS_NAMESERVER = NameServ.o          \
+                     NameServer_server.o \
+                     NameServer_servermain.o
+
+OBJECTS_LIBRARY = NameServer_client.o \
+                  GroupView.o \
+                  RepDesc.o \
+	   	  GroupData.o \
+		  ReplicaData.o \
+                  ReplicaList.o \
+                  CompositeObject.o \
+		  TemplateObject.o \
+                  ServerList.o \
+                  ServerView.o \
+	          OutCome_marshall.o \
+		  ReplicaDescriptor_marshall.o \
+		  ReplicaData_marshall.o
+
+HEADERS        = ../../Include/ArjServers/NameServ_stub.h \
+                 ../../Include/ArjServers/NameServer_stubclass.h \
+                 ../../Include/ArjServers/RepDesc_stub.h \
+		 ../../Include/ArjServers/ReplicaData_stub.h
+
+
+LIBRARY = $(LIBARJUNA) $(LIBOBJECTSTORE) $(LIBSTUB) $(LIBRPC) $(LIBARJSERVERS) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+MakeNonRecursiveAllTarget($(HEADERS) NameServer ../libArjServers.a)
+
+MakeNonRecursiveInstall
+
+CreateInstallTopDirectory(servers)
+InstallProgram(servers,NameServer)
+
+../../Include/ArjServers/NameServ_stub.h : NameServ_stub.h
+	@echo Copying NameServ_stub.h
+	@sed -e "s;\"NameServ_stubclass.h\";\<ArjServers/NameServ_stubclass.h\>;" NameServ_stub.h > ../../Include/ArjServers/NameServ_stub.h
+
+../../Include/ArjServers/NameServer_stubclass.h : NameServer_stubclass.h
+	@echo Copying NameServer_stubclass.h
+	@CP_VAR NameServer_stubclass.h ../../Include/ArjServers/NameServer_stubclass.h
+
+../../Include/ArjServers/RepDesc_stub.h : RepDesc_stub.h
+	@echo Copying RepDesc_stub.h
+	@CP_VAR RepDesc_stub.h  ../../Include/ArjServers/RepDesc_stub.h
+
+../../Include/ArjServers/ReplicaData_stub.h : ReplicaData_stub.h
+	@echo Copying ReplicaData_stub.h
+	@CP_VAR ReplicaData_stub.h  ../../Include/ArjServers/ReplicaData_stub.h
+
+MakeProgramCPLUSPLUS(NameServer,$(OBJECTS_NAMESERVER) $(LIBRARY),)
+
+NameServ.cc: NameServ_stub.h
+NameServ.cc: RepDesc_stub.h
+NameServ.cc: ReplicaData_stub.h
+OutCome_marshall.cc: NameServ_stub.h
+
+MakeObjectCPLUSPLUS(NameServ,)
+MakeObjectCPLUSPLUS(GroupView,)
+MakeObjectCPLUSPLUS(GroupData,)
+MakeObjectCPLUSPLUS(RepDesc,)
+MakeObjectCPLUSPLUS(ReplicaData,)
+MakeObjectCPLUSPLUS(ReplicaList,)
+MakeObjectCPLUSPLUS(CompositeObject,)
+MakeObjectCPLUSPLUS(TemplateObject,)
+MakeObjectCPLUSPLUS(ServerList,)
+MakeObjectCPLUSPLUS(ServerView,)
+MakeObjectCPLUSPLUS(OutCome_marshall,)
+
+MakeStubGen(NameServ,NameServer,NameServer,)
+
+MakeStubGen(RepDesc,ReplicaDescriptor,RepDesc,)
+
+MakeStubGen(ReplicaData,ReplicaData,ReplicaData,)
+
+MakeLibrary(../libArjServers.a,$(OBJECTS_LIBRARY))
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(NameServer NameServ_stub.h NameServer_client.cc NameServer_server.cc NameServer_servermain.cc NameServer_stubclass.h OutCome_marshall.cc RepDesc_stub.h ReplicaData_stub.h ReplicaData_marshall.cc ReplicaDescriptor_marshall.cc)
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend
