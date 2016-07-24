@@ -1,0 +1,41 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1993/11/03 14:42:31 nmcl Exp $
+COMMENT
+
+SOURCES = Migration.cc
+
+OBJECTS = Migration.o
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+MakeNonRecursiveAllTarget(../libReplication.a)
+
+MakeNonRecursiveInstall
+
+MakeObjectCPLUSPLUS(Migration,)
+
+MakeLibrary(../libReplication.a,$(OBJECTS))
+
+Migration.cc : $(ARJUNA_INCLUDES)/Replication/Migration.h
+Migration.cc : $(ARJUNA_INCLUDES)/ArjServers/NameServ_stub.h
+Migration.cc : $(ARJUNA_INCLUDES)/ArjServers/NameServer_stubclass.h
+Migration.cc : $(ARJUNA_INCLUDES)/ArjServers/RepDesc_stub.h
+Migration.cc : $(ARJUNA_INCLUDES)/Arjuna/StateMan_stub.h
+Migration.cc : $(ARJUNA_INCLUDES)/Arjuna/StateManager_stubclass.h
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeEmptyNonRecursiveTidyCleanPurge
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend

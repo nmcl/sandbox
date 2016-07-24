@@ -1,0 +1,47 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1993/11/03 14:27:25 nmcl Exp $
+COMMENT
+
+MakeDummyAllTarget
+
+MakeNonRecursiveInstall
+
+CreateInstallTopDirectory(include)
+CreateInstallDirectory(include,RPC)
+CreateInstallDirectory(include/RPC,ArjServers)
+InstallFile(include/RPC/ArjServers,ArjName.h)
+InstallFile(include/RPC/ArjServers,ArjName_stub.h)
+InstallFile(include/RPC/ArjServers,NameInfo.h)
+InstallFile(include/RPC/ArjServers,NSInterface.h)
+InstallFile(include/RPC/ArjServers,NameServ_stub.h)
+InstallFile(include/RPC/ArjServers,NameServer_stubclass.h)
+InstallFile(include/RPC/ArjServers,RepDesc_stub.h)
+InstallFile(include/RPC/ArjServers,ReplicaData_stub.h)
+InstallFile(include/RPC/ArjServers,ReplicaData.n)
+InstallFile(include/RPC/ArjServers,GroupData.h)
+InstallFile(include/RPC/ArjServers,StateDaemon_stub.h)
+InstallFile(include/RPC/ArjServers,StateDaemon_stubclass.h)
+
+NameServ_stub.h : $(ARJUNA_INCLUDES)/ArjServers/NameServ_stub.h
+NameServer_stubclass.h : $(ARJUNA_INCLUDES)/ArjServers/NameServer_stubclass.h
+RepDesc_stub.h : $(ARJUNA_INCLUDES)/ArjServers/RepDesc_stub.h
+ReplicaData_stub.h : $(ARJUNA_INCLUDES)/ArjServers/ReplicaData_stub.h
+StateDaemon_stub.h : $(ARJUNA_INCLUDES)/ArjServers/StateDaemon_stub.h
+StateDaemon_stubclass.h : $(ARJUNA_INCLUDES)/ArjServers/StateDaemon_stubclass.h
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(ArjName_stub.h NameServ_stub.h NameServer_stubclass.h StateDaemon_stub.h StateDaemon_stubclass.h RepDesc_stub.h ReplicaData_stub.h)
+
+MakeDummyMakedepend
+
+MakeDummyStripdepend

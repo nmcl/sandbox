@@ -1,0 +1,49 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: AtomicA.n,v 1.1 1993/11/03 14:27:47 nmcl Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(ATOMICA_CC_)
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF AtomicAction *AtomicAction::Current ()
+{
+    return currentAct;
+}
+
+INLINEF int AtomicAction::hierarchyDepth () const
+{
+    return actionDepth;
+}
+
+INLINEF void AtomicAction::preventCommit ()
+{
+    commitAllowed = FALSE;
+}
+
+INLINEF TopLevelAction::TopLevelAction () : AtomicAction(TOP_LEVEL)
+{
+}
+
+INLINEF TopLevelAction::~TopLevelAction ()
+{
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif

@@ -1,0 +1,34 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: ADclCntxt.n,v 1.1 1993/11/03 14:44:00 nmcl Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(ADCLCNTXT_CC_)
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF ArgDeclContext::ArgDeclContext ( DeclContext *parent, int size )
+                                       : DeclContext(parent, size)
+{
+}
+
+INLINEF ArgDeclContext::~ArgDeclContext ()
+{
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif

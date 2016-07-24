@@ -1,0 +1,58 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1993/11/03 14:46:37 nmcl Exp $
+COMMENT
+
+SOURCES = RpcBuffer.cc  \ 
+          RpcControl.cc \
+          ClientRpc.cc  \
+          ClientRpc_.cc \
+          ServerRpc.cc  \
+	  Abort.cc
+
+OBJECTS = RpcBuffer.o  \
+          RpcControl.o \
+          ClientRpc.o  \
+          ClientRpc_.o \
+          ServerRpc.o  \
+	  Abort.o
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+MakeNonRecursiveAllTarget(libStub.a)
+
+MakeNonRecursiveInstall
+
+CreateInstallTopDirectory(lib)
+InstallLibrary(lib,libStub.a)
+
+MakeLibrary(libStub.a,$(OBJECTS))
+
+RpcBuffer.cc : $(ARJUNA_INCLUDES)/Common/Buffer_stub.h
+
+MakeObjectCPLUSPLUS(RpcBuffer,)
+MakeObjectCPLUSPLUS(RpcControl,)
+MakeObjectCPLUSPLUS(ClientRpc,)
+MakeObjectCPLUSPLUS(ClientRpc_,)
+MakeObjectCPLUSPLUS(ServerRpc,)
+MakeObjectCPLUSPLUS(Abort,)
+
+RpcBuffer.cc: $(TOPDIR)/Include/Common/Uid_stub.h
+RpcBuffer.cc: $(TOPDIR)/Include/Common/Buffer_stub.h
+ClientRpc_.cc: $(TOPDIR)/Include/ArjServers/ArjName_stub.h
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(libStub.a)
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend

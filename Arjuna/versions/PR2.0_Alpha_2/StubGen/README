@@ -1,0 +1,173 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: README,v 1.1 1993/11/03 14:43:32 nmcl Exp $
+ */
+
+1.	Introduction
+********************
+
+	The aim of the stub generator is to take a standard C++ header
+file defining some class and produce from it a set of equivalent files
+containing replacement stub-class  definitions together with  the code
+that  implements the client and server operations of the stub classes.
+Unfortunately this seemingly simple requirement  is impossible to meet
+in practice; thus the  stub generator imposes  certain restrictions on
+the  structure  and contents of  any  header files  it  processes,  as
+described in the following sections.
+
+2.	Assumptions
+*******************
+
+	The  stub generator  assumes  that  its  input  file  contains
+syntactically valid  C++ and although  it performs some checking it is
+not  intended to replace the compiler  and can  become  confused  when
+presented with invalid input.
+
+3.	Directives
+******************
+
+	To  ensure  that  the  header  file  used  as  input is  still
+acceptable  to standard  C++ compilers, stub generation directives are
+hidden   within   comments.    Syntactically  they  are  classed   are
+declaration specifiers by the grammar (that is,  like static or const,
+etc.)  and thus  should precede  the class declaration  to  which they
+apply.   More  than one directive may be given at a time, though  some
+conflict with each other. The current set is:
+
+@Remote
+	 Indicates that  the following class will be accessed remotely
+so the stub generator should attempt to produce client and server code
+and definitions to accomplish this.
+
+@NoRemote
+	 The negation to  the above. In this case no RPC code will  be
+generated for this  class. However  its public interface  may still be
+augmented  with  the addition of  marshalling code  depending upon the
+setting of the following options.
+
+@AutoMarshall
+	 Attempt  to  generate   marshalling   code  for  this   class
+automatically.  This enables  instances of  the  class to be passed as
+arguments in RPC calls.
+
+@UserMarshall
+	 Augment  the interface  with marshalling operation signatures
+but  do not generate the code automatically - this must be provided by
+the user.
+
+@NoMarshall
+	 No marshalling is allowed on instances of this class.
+
+@NoClient
+	 Applicable only within a class declaration and only to member
+functions.  Indicates  that the  following  operation  should  not  be
+provided in the client interface regardless of its visibility.
+
+	The   following  directives  are   only   applicable   in  the
+declaration of a parameter list for a member function. They modify the
+default parameter passing behaviour appropriately:
+
+@In
+	Mark parameter  as  input only.  This  is  the default for all
+parameters except  pointers,  references and  arrays  unless they  are
+marked const.
+
+@Out
+	 Mark parameter as output only. Never a default, but useful in
+those  cases where the  parameter  is set  by the called operation but
+invalid  before  the  call (so an attempt to  transmit it in  the call
+could fail).
+
+@InOut
+	The default  for pointers,  references and arrays Causes  such
+parameters  to be  passed  by value result  (copy-in, copy-out) as  an
+approximation to call be reference.
+
+	The default options for a class are @Remote, @NoMarshall. Note
+that due to limitations in the current implementation classes that can
+be accessed remotely cannot be marshalled and passed as parameters.
+
+4.	Command Line Options
+****************************
+
+	The  stub  generator  supports  a  small set  of command  line
+arguments.  All command line arguments  that start with a  minus  sign
+(for example - I, -D  etc.) are  passed directly  to the  preprocessor
+unaltered, while those that  start with  a  plus sign  (+)  affect the
+execution of the stub  generation process in some way. The current set
+of options is:
+
+	+S. Indicates that the preprocessed output should be saved in a 
+	file suffixed by '.i'. This file can later be used as input to
+	the stub generator directly. 
+
+	+w. Enable the printing of warning messages. By default only 
+	error messages are printed
+
+	+bc. Enable 2.0 compatibility mode. This option forces any 
+	nested types to be exported to global scope to conform with 
+	the old C++ language semantics.  
+
+	+s servername. Change the name of the server for a given 
+	interface to servername. This name is used by the underlying 
+	RPC mechanism to start a server process on the home node of 
+	the object.
+
+	+[dfv]level. Stub generation debugging. Only really of use to
+	the 	maintainers of the stub generation system. Included
+	here for completeness only.
+
+	+y. Enable yacc level debugging. Sets the variable yydebug to 1 
+	to force the yacc parser to print its debugging information.
+
+
+5. 	Problems
+****************
+
+a)	Stub generator will not compile.
+
+	See the README file in the root directory for possible causes
+for this. 
+
+b).	Stub generator does not produce output.
+
+	Initially, the input file must be  preprocessed before parsing
+commences  to remove all C++ preprocessor directives.  By default this
+preprocessing is done by invoking the compiler  used to compile Arjuna
+(as specified at configuration time) and passing it the -E (preprocess
+only  flag). 
+	However,  some compiler driver programs produce no output when
+given header files (.h files)  as  input  (Cfront  2.1  based  systems
+typically   suffer  from  this).   The  stub  generator   attempts  to
+compensate  for this  and will  attempt to  run preproceesors  in  the
+following order:
+
+	1) (C++-Compiler) -E
+	This is whatever compiler you specified at configuration time.
+Your current path is searched to locate this compiler.
+
+	2) CCROOTDIR/cpp
+	A concession  to  Sun based systems where  cpp, lex++, etc are
+normally found by using the environment variable CCROOTDIR.
+
+	3) /usr/lib/cpp
+
+	4) /lib/cpp
+
+	Running anything other than option  1 on the input file should
+produce compilable output, however, it  may not necessarily be correct
+if the driver program normally  invoked the C  preprocessor with extra
+arguments  (typically -D  and -U flags).  
+
+	This  preprocessing can  also cause problems if,  for example,
+array sizes were defined using preprocessor #define directives  rather
+than C++ language facilities  since the generated output file would no
+longer contain such directives.
+
+

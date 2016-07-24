@@ -1,0 +1,33 @@
+#!/bin/sh
+
+#
+# Copyright (C) 1993
+#
+# Department of Computing Science,
+# The University,
+# Newcastle upon Tyne,
+# UK.
+#
+# $Id: includecheck,v 1.1 1993/11/03 15:07:49 nmcl Exp $
+#
+
+awk '
+BEGIN { INDENT=0
+}
+{
+	if (NR == 1) printf "   %s\n", $3
+	if ($1 == "#")
+        {
+	    	if ($4 == 1)
+	    	{
+			INDENT++
+			printf "%2d ", INDENT
+			for (i = 0; i < INDENT; i++) printf "       "
+			printf "%s\n", $3
+	    	}
+		if ($4 == 2) INDENT--
+	}
+} '
+
+
+

@@ -1,0 +1,48 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1993/11/03 15:40:15 nmcl Exp $
+COMMENT
+
+SOURCES	  = ObjTest.cc \
+	    ObjTest_client.cc \
+	    ObjTest_server.cc \
+	    ObjTest_servermain.cc \
+	    ObjTest_stub.h \
+	    ObjTest_stubclass.h
+
+OBJECTS	  = ObjTest_server.o \
+	    ObjTest_servermain.o \
+	    ObjTest.o
+
+LIBRARIES = $(LIBARJSERVERS) $(LIBSTUB) $(LIBRPC) $(LIBOBJECTSTORE) $(LIBARJUNA) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+MakeNonRecursiveAllTarget(ObjTest ObjTest_client.o)
+
+MakeNonRecursiveInstall
+
+CreateInstallTopDirectory(servers)
+InstallProgram(servers,ObjTest)
+
+MakeProgramCPLUSPLUS(ObjTest,$(OBJECTS) $(LIBRARIES),)
+
+MakeObjectCPLUSPLUS(ObjTest,)
+
+MakeStubGen(ObjTest,ObjTest,ObjTest,)
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(ObjTest ObjTest_client.cc ObjTest_server.cc ObjTest_servermain.cc ObjTest_stub.h ObjTest_stubclass.h)
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend

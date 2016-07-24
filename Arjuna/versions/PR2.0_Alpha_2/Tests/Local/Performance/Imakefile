@@ -1,0 +1,44 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1993/11/03 15:01:21 nmcl Exp $
+COMMENT
+
+LIBRARIES = $(LIBOBJECTSTORE) $(LIBARJUNA) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+SOURCES = OperActions.cc         \
+          OperActionsDriver.cc   \
+          BasicTime.cc \
+          CpuTime.cc \
+          ElapsedTime.cc
+
+OAOBJ = OperActionsDriver.o OperActions.o BasicTime.o CpuTime.o ElapsedTime.o
+
+MakeNonRecursiveAllTarget(OperActionsDriver)
+
+MakeNonRecursiveInstall
+
+MakeProgramCPLUSPLUS(OperActionsDriver,$(OAOBJ) $(LIBRARIES),)
+
+MakeObjectCPLUSPLUS(OperActionsDriver,)
+MakeObjectCPLUSPLUS(OperActions,)
+MakeObjectCPLUSPLUS(BasicTime,)
+MakeObjectCPLUSPLUS(CpuTime,)
+MakeObjectCPLUSPLUS(ElapsedTime,)
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(OperActionsDriver)
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend

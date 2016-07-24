@@ -1,0 +1,41 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1993/11/03 14:42:40 nmcl Exp $
+COMMENT
+
+SOURCES = PrimaryNS.cc
+
+OBJECTS = PrimaryNS.o
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+MakeNonRecursiveAllTarget(../libReplication.a)
+
+MakeNonRecursiveInstall
+
+MakeObjectCPLUSPLUS(PrimaryNS,)
+
+MakeLibrary(../libReplication.a,$(OBJECTS))
+
+PrimaryNS.cc : $(ARJUNA_INCLUDES)/Replication/PrimaryNS.h
+PrimaryNS.cc : $(ARJUNA_INCLUDES)/ArjServers/NameServ_stub.h
+PrimaryNS.cc : $(ARJUNA_INCLUDES)/ArjServers/NameServer_stubclass.h
+PrimaryNS.cc : $(ARJUNA_INCLUDES)/ArjServers/RepDesc_stub.h
+PrimaryNS.cc : $(ARJUNA_INCLUDES)/Arjuna/StateMan_stub.h
+PrimaryNS.cc : $(ARJUNA_INCLUDES)/Arjuna/StateManager_stubclass.h
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeEmptyNonRecursiveTidyCleanPurge
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend

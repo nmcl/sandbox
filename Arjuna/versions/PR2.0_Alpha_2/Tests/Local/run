@@ -1,0 +1,50 @@
+#!/bin/sh
+
+echo "Testing Buffer class"
+(cd Buffer; ./BufferTest)
+echo
+sleep 2
+
+echo "Testing Uid class"
+(cd UidUniqueness; ./UidUniqueness)
+echo
+sleep 2
+
+echo "Testing atomic action system"
+(cd AtomicAction; chmod +x run; ./run)
+echo
+sleep 2
+
+echo "Testing concurrency control"
+(cd Concurrency; ./LockDriver)
+echo
+sleep 2
+
+echo "Testing atomic action and 2-phase locking"
+(cd AA+CC; ./Test)
+echo
+sleep 2
+
+echo "Testing persistent object creation"
+(cd NewObject; ./NewObject)
+echo
+sleep 2
+
+echo "Testing nested top-level atomic actions"
+(cd NestedTLAA; ./Test)
+echo
+sleep 2
+
+echo "Testing main-memory object store"
+(cd Volatile; chmod +x run; ./run)
+echo
+sleep 2
+
+echo "Running performance test"
+(cd Performance; ./OperActionsDriver)
+echo
+
+echo "Finished Local tests"
+
+
+

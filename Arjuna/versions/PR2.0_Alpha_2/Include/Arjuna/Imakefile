@@ -1,0 +1,53 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1993/11/03 14:27:49 nmcl Exp $
+COMMENT
+
+MakeDummyAllTarget
+
+MakeMakefile
+
+MakeNonRecursiveInstall
+
+CreateInstallTopDirectory(include)
+CreateInstallDirectory(include,Arjuna)
+
+InstallFile(include/Arjuna,AbstractR.h)
+InstallFile(include/Arjuna,ActionH.h)
+InstallFile(include/Arjuna,AtomicA.h)
+InstallFile(include/Arjuna,AtomicA.n)
+InstallFile(include/Arjuna,Lock.h)
+InstallFile(include/Arjuna,Lock.n)
+InstallFile(include/Arjuna,LockMan.h)
+InstallFile(include/Arjuna,ObjState.h)
+InstallFile(include/Arjuna,ObjState_stub.h)
+InstallFile(include/Arjuna,ObjState.n)
+InstallFile(include/Arjuna,PrepOut.h)
+InstallFile(include/Arjuna,RecordT.h)
+InstallFile(include/Arjuna,ServerAA.h)
+InstallFile(include/Arjuna,StateMan.h)
+InstallFile(include/Arjuna,StateMan_stub.h)
+InstallFile(include/Arjuna,StateManager_stubclass.h)
+InstallFile(include/Arjuna,LockMan_stub.h)
+InstallFile(include/Arjuna,LockManager_stubclass.h)
+
+ObjState.h : $(ARJUNA_INCLUDES)/Arjuna/ObjState_stub.h
+ObjectState_stubclass.h : $(ARJUNA_INCLUDES)/Arjuna/ObjectState_stubclass.h
+StateMan_stub.h : $(ARJUNA_INCLUDES)/Arjuna/StateMan_stub.h
+StateManager_stubclass.h : $(ARJUNA_INCLUDES)/Arjuna/StateManager_stubclass.h
+LockMan_stub.h : $(ARJUNA_INCLUDES)/Arjuna/LockMan_stub.h
+LockManager_stubclass.h : $(ARJUNA_INCLUDES)/Arjuna/LockManager_stubclass.h
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(ObjState_stub.h ObjectState_stubclass.h StateMan_stub.h StateManager_stubclass.h LockMan_stub.h LockManager_stubclass.h)
+
+MakeDummyMakedepend
+
+MakeDummyStripdepend

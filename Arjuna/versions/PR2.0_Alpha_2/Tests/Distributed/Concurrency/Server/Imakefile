@@ -1,0 +1,48 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 1993/11/03 14:57:24 nmcl Exp $
+COMMENT
+
+SOURCES	  = TestLock.cc \
+	    TestLock_client.cc \
+	    TestLock_server.cc \
+	    TestLock_servermain.cc \
+	    TestLock_stub.h \
+	    TestLock_stubclass.h
+
+OBJECTS	  = TestLock_server.o \
+	    TestLock_servermain.o \
+	    TestLock.o
+
+LIBRARIES = $(LIBARJSERVERS) $(LIBSTUB) $(LIBRPC) $(LIBOBJECTSTORE) $(LIBARJUNA) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+MakeNonRecursiveAllTarget(TestLock TestLock_client.o)
+
+MakeNonRecursiveInstall
+
+CreateInstallTopDirectory(servers)
+InstallProgram(servers,TestLock)
+
+MakeProgramCPLUSPLUS(TestLock,$(OBJECTS) $(LIBRARIES),)
+
+MakeObjectCPLUSPLUS(TestLock,)
+
+MakeStubGen(TestLock,TestLock,TestLock,)
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(TestLock TestLock_client.cc TestLock_server.cc TestLock_servermain.cc TestLock_stub.h TestLock_stubclass.h LockCode_marshall.cc)
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend

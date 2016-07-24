@@ -1,0 +1,59 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1993/11/03 14:41:15 nmcl Exp $
+COMMENT
+
+SOURCES   = dupserver.cc \
+            groupsrvr.cc \
+            keephouse.cc \
+            manager.cc \
+            mcrdaemon.cc
+
+DAEMONS   = dupserver \
+            groupsrvr \
+            keephouse \
+            manager \
+            mcrdaemon
+
+LIBRARIES = $(LIBRAJDOOT) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES) -I../include)
+
+MakeNonRecursiveAllTarget($(DAEMONS))
+
+MakeNonRecursiveInstall
+
+CreateInstallTopDirectory(etc)
+InstallProgram(etc,dupserver)
+InstallProgram(etc,groupsrvr)
+InstallProgram(etc,keephouse)
+InstallProgram(etc,manager)
+InstallProgram(etc,mcrdaemon)
+
+MakeProgramCPLUSPLUS(dupserver,dupserver.o $(LIBRARIES),)
+MakeProgramCPLUSPLUS(groupsrvr,groupsrvr.o $(LIBRARIES),)
+MakeProgramCPLUSPLUS(keephouse,keephouse.o $(LIBRARIES),)
+MakeProgramCPLUSPLUS(manager,manager.o $(LIBRARIES),)
+MakeProgramCPLUSPLUS(mcrdaemon,mcrdaemon.o $(LIBRARIES),)
+
+MakeObjectCPLUSPLUS(dupserver,)
+MakeObjectCPLUSPLUS(groupsrvr,)
+MakeObjectCPLUSPLUS(keephouse,)
+MakeObjectCPLUSPLUS(manager,)
+MakeObjectCPLUSPLUS(mcrdaemon,)
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(dupserver groupsrvr keephouse manager mcrdaemon)
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend

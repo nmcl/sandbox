@@ -1,0 +1,55 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1993/11/03 14:41:42 nmcl Exp $
+COMMENT
+
+SOURCES = clientops.cc \
+          common.cc \
+          longmltcst.cc \
+          multicast.cc \
+          rpc.cc \
+          rpcops.cc \
+          rpcserver.cc \
+          serverops.cc
+
+OBJECTS = clientops.o \
+          common.o \
+          longmltcst.o \
+          multicast.o \
+          rpc.o \
+          rpcops.o \
+          rpcserver.o \
+          serverops.o
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES) -I../include)
+
+MakeNonRecursiveAllTarget(../../libRajdoot.a)
+
+MakeNonRecursiveInstall
+
+MakeLibrary(../../libRajdoot.a,$(OBJECTS))
+
+MakeObjectCPLUSPLUS(clientops,)
+MakeObjectCPLUSPLUS(common,)
+MakeObjectCPLUSPLUS(longmltcst,)
+MakeObjectCPLUSPLUS(multicast,)
+MakeObjectCPLUSPLUS(rpc,)
+MakeObjectCPLUSPLUS(rpcops,)
+MakeObjectCPLUSPLUS(rpcserver,)
+MakeObjectCPLUSPLUS(serverops,)
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeEmptyNonRecursiveTidyCleanPurge
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend

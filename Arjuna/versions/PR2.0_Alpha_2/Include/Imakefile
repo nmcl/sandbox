@@ -1,0 +1,29 @@
+COMMENT 
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1993/11/03 14:27:10 nmcl Exp $
+COMMENT
+
+SetSubDirectorys(ArjServers Arjuna Common ObjectStore ObjectConfig Replication RPC StubGen System)
+
+MakeRecursiveAllTarget
+
+MakeRecursiveInstall
+
+CreateInstallTopDirectory(include)
+InstallFile(include,Configure.h)
+
+MakeMakefile
+
+MakeMakefiles
+
+MakeEmptyTidyCleanPurge
+
+MakeRecursiveMakedepend
+
+MakeRecursiveStripdepend

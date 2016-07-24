@@ -1,0 +1,79 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: ObjStore.n,v 1.1 1993/11/03 14:29:14 nmcl Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(OBJSTORE_CC_)
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF const char *ObjectStore::getStoreName () const
+{
+    return storeName;
+}
+
+/*
+* read a committed instance of ObjectState out of the object store. The instance
+ * is identified by the unique id and type
+ */
+
+INLINEF ObjectState* ObjectStore::read_state ( const Uid& storeUid,
+					       const TypeName tName) const
+{
+    return read_state(storeUid, tName, ORIGINAL);
+}
+
+/*
+ * read an  uncommitted instance of ObjectState out of the object store. 
+ * The instance is identified by the unique id and type
+ */
+
+INLINEF ObjectState* ObjectStore::read_uncommitted ( const Uid& storeUid,
+						     const TypeName tName ) const
+{
+    return read_state(storeUid, tName, SHADOW);
+}
+
+INLINEF Boolean ObjectStore::remove_state ( const Uid& storeUid,
+					    const TypeName tName ) const
+{
+    return remove_state(storeUid, tName, ORIGINAL);
+}
+
+INLINEF Boolean ObjectStore::remove_uncommitted ( const Uid& storeUid,
+						  const TypeName tName ) const
+{
+    return remove_state(storeUid, tName, SHADOW);
+}
+
+INLINEF Boolean ObjectStore::write_state ( const Uid& storeUid,
+					   const TypeName tName,
+					   const ObjectState &state ) const
+{
+    return write_state(storeUid, tName, state, SHADOW);
+}
+
+INLINEF Boolean ObjectStore::write_committed ( const Uid& storeUid,
+					       const TypeName tName,
+					       const ObjectState &state ) const
+{
+    return write_state(storeUid, tName, state, ORIGINAL);
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif

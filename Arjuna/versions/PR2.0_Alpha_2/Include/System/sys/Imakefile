@@ -1,0 +1,43 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1993/11/03 14:34:08 nmcl Exp $
+COMMENT
+
+MakeDummyAllTarget
+
+MakeNonRecursiveInstall
+
+CreateInstallTopDirectory(include)
+CreateInstallDirectory(include,System)
+CreateInstallDirectory(include/System,sys)
+InstallFile(include/System/sys,file.h)
+InstallFile(include/System/sys,ipc.h)
+InstallFile(include/System/sys,param.h)
+InstallFile(include/System/sys,resource.h)
+InstallFile(include/System/sys,sem.h)
+InstallFile(include/System/sys,shm.h)
+InstallFile(include/System/sys,signal.h)
+InstallFile(include/System/sys,socket.h)
+InstallFile(include/System/sys,stat.h)
+InstallFile(include/System/sys,time.h)
+InstallFile(include/System/sys,times.h)
+InstallFile(include/System/sys,timeb.h)
+InstallFile(include/System/sys,types.h)
+InstallFile(include/System/sys,uio.h)
+InstallFile(include/System/sys,wait.h)
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeEmptyNonRecursiveTidyCleanPurge
+
+MakeDummyMakedepend
+
+MakeDummyStripdepend

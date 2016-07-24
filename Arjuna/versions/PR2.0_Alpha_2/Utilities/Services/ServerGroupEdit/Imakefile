@@ -1,0 +1,39 @@
+COMMENT 
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1993/11/03 15:04:07 nmcl Exp $
+COMMENT
+
+SOURCES   = ServerGroupEdit.cc
+
+OBJECTS   = ServerGroupEdit.o
+
+LIBRARIES = $(LIBARJSERVERS) $(LIBSTUB) $(LIBRPC) $(LIBOBJECTSTORE) $(LIBARJUNA) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+MakeNonRecursiveAllTarget(ServerGroupEdit)
+
+MakeNonRecursiveInstall
+
+CreateInstallTopDirectory(bin)
+InstallProgram(bin,ServerGroupEdit)
+
+MakeProgramCPLUSPLUS(ServerGroupEdit, $(OBJECTS) $(LIBRARIES),)
+
+MakeObjectCPLUSPLUS(ServerGroupEdit,)
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(ServerGroupEdit)
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend

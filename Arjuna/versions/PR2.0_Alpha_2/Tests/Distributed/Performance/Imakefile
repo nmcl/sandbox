@@ -1,0 +1,71 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1993/11/03 14:58:26 nmcl Exp $
+COMMENT
+
+LIBRARIES = $(LIBARJSERVERS) $(LIBSTUB) $(LIBRPC) $(LIBOBJECTSTORE) $(LIBARJUNA) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+SOURCES = OperParamSize.cc       \
+          OperParamSizeDriver.cc \
+          OperActions.cc         \
+          OperActionsDriver.cc   \
+          Time.cc
+
+OPSDOBJ  = OperParamSizeDriver.o Time.o OperParamSize_client.o
+OPSSOBJ  = OperParamSize.o OperParamSize_server.o OperParamSize_servermain.o
+
+OPITDOBJ = OperInitTermDriver.o Time.o
+
+OADOBJ   = OperActionsDriver.o Time.o OperActions_client.o
+OASOBJ   = OperActions.o OperActions_server.o OperActions_servermain.o
+
+STUBS = OperParamSize_stub.h OperActions_stub.h
+
+MakeNonRecursiveAllTarget($(STUBS) OperParamSizeDriver OperParamSize OperInitTermDriver OperActionsDriver OperActions)
+
+MakeNonRecursiveInstall
+
+CreateInstallTopDirectory(servers)
+InstallProgram(servers,OperParamSize)
+InstallProgram(servers,OperActions)
+
+MakeProgramCPLUSPLUS(OperParamSizeDriver,$(OPSDOBJ) $(LIBRARIES),)
+MakeProgramCPLUSPLUS(OperParamSize,$(OPSSOBJ) $(LIBRARIES),)
+
+MakeProgramCPLUSPLUS(OperInitTermDriver,$(OPITDOBJ) $(LIBRARIES),)
+
+MakeProgramCPLUSPLUS(OperActionsDriver,$(OADOBJ) $(LIBRARIES),)
+MakeProgramCPLUSPLUS(OperActions,$(OASOBJ) $(LIBRARIES),)
+
+MakeStubGen(OperParamSize,OperParamSize,OperParamSize,)
+MakeStubGen(OperActions,OperActions,OperActions,)
+
+MakeObjectCPLUSPLUS(OperParamSizeDriver,)
+MakeObjectCPLUSPLUS(OperParamSize,)
+MakeObjectCPLUSPLUS(OperInitTermDriver,)
+MakeObjectCPLUSPLUS(OperActionsDriver,)
+MakeObjectCPLUSPLUS(OperActions,)
+MakeObjectCPLUSPLUS(Time,)
+
+OperParamSize.cc: OperParamSize_stub.h
+OperParamSizeDriver.cc: OperParamSize_stub.h
+OperActions.cc: OperActions_stub.h
+OperActionsDriver.cc: OperActions_stub.h
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(OperParamSizeDriver OperParamSize OperParamSize_stub.h OperParamSize_stubclass.h OperParamSize_client.cc OperParamSize_server.cc OperParamSize_servermain.cc OperInitTermDriver OperActionsDriver OperActions OperActions_stub.h OperActions_stubclass.h OperActions_client.cc OperActions_server.cc OperActions_servermain.cc )
+
+MakeNonRecursiveMakedepend($(SOURCES) $(STUBS))
+
+MakeNonRecursiveStripdepend

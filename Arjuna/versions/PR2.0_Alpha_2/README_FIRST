@@ -1,0 +1,143 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ */
+
+/* 
+ * $Id: README_FIRST,v 1.1 1993/11/03 12:21:29 nmcl Exp $
+ */
+
+1. 	What is Arjuna 
+**********************
+
+ 	Arjuna is  a  research software  system  that provides several
+tools and facilities for the development of reliable, distributed  C++
+programs.  The  system  is  implemented  in  C++  and  uses  the  type
+inheritance facilities provided by the language extensively to provide
+user-defined  objects  with  characteristics such as  persistence  and
+recoverability.
+
+  	Note: This release  of  Arjuna  does NOT support the  multiple
+inheritence or template facilities provided  by the latest versions of
+C++.
+
+	Arjuna  provides  nested  atomic  actions  (transactions)  for
+structuring  programs.   Programs   invoke  operations   upon  objects
+(instances of abstract data types). In Arjuna, objects are regarded as
+long  lived (persistent) entities and are  the  main  repositories for
+application state. The design and implementation goal of Arjuna was to
+provide  a   state-of-the-art   programming  system  for  constructing
+fault-tolerant  distributed applications.  In meeting this goal, three
+system properties were considered highly important:
+
+ 	Integration of Mechanisms. A fault-tolerant distributed system
+requires a  variety of system functions  for  naming objects, locating
+and invoking  operations  upon of system functions for naming objects,
+locating and invoking operations upon objects and also for concurrency
+control, error detection and  recovery from failures. These mechanisms
+must be  integrated  such that their use by a  programmer is easy  and
+natural.
+
+	Flexibility.  These  mechanisms must be  flexible,  permitting
+application specific enhancements, such as  type-specific  concurrency
+and recovery control, to be easily produced from existing defaults.
+
+	Portability. The system  must be easy to  install and run on a
+variety of hardware configurations.
+
+2.	Release Status
+**********************
+
+	This  release of Arjuna is officially known as ArjunaPR1.2. It
+fixes all known bugs present in ArjunaPR1.1 that have been reported to
+us or that  we have found. This release  should be compilable with the
+following compilers:
+
+	AT&T Cfront Releases 2.1 and 3.0.1 (using lex and yacc)
+	GCC versions 2.1 and 2.2.2 (using flex(2.3.7) and bison(1.18))
+	HP C++ version <<HP C++ B2402  A.02.34>> on HP-UX 8.0
+	Sun C++ 2.1 (using Sun's lex++ and yacc++)
+
+	Any bugs should be reported to arjuna@newcastle.ac.uk
+
+3.	System Requirements
+***************************
+
+	Although  not intentionally  machine or system specific Arjuna
+requires certain basic capabilities from  the underlying system, these
+include:
+
+1)	BSD style sockets (Rajdoot).
+2)	System V shared memory and semaphores (Arjuna).
+3)	A version of imake (system building).
+4)	A version of the C pre-processor that allows "#pragma" (Stub
+	generation). 
+5)	Support for long file names.
+6)	If Arjuna is run on a system that uses NFS then the system
+	should also be running the rpc.statd, and rpc.lockd daemons.
+
+4.	Source Tree Structure 
+*****************************
+
+	The source is split into several sub-directories as documented
+below.   Each  sub-directory contains  one  component  of the complete
+system.  These components (and their directories) are currently:
+
+ClassLib:
+*********
+	This is the core code of Arjuna.  It constitutes a  set of C++
+classes that  provide  recovery,  persistence, and concurrency control
+mechanisms for user-defined classes,  together with the atomic  action
+and system support classes.
+
+Common:
+*******
+	Generally useful classes used throughout the Arjuna system.
+
+Config:
+*******
+	Contains information about the system configuration.
+
+Include:
+********
+	The primary public header files  used  by the  Arjuna  system.
+Files   in  this  directory   tree   are  needed   to  compile  Arjuna
+applications.  There may  be other include directories  in the  source
+tree but those are  intended to be  private and only  used during  the
+initial  build  process. Once  the Arjuna system is built the files in
+these private  directories  do not  need to  be available in order  to
+construct applications.
+
+RPC:
+****
+	The Arjuna RPC mechanism (Rajdoot) is within this directory).
+
+StubGen:
+********
+	The Arjuna stub generator that provides access transparency to
+remote objects  by creating  stub objects  that have  the  same public
+interface  as  the  original  object  but  that  have  all  operations
+implemented as RPC calls.  
+
+Util:
+*****
+	Contains some  useful utilities,  e.g., makedepend,  ipcclean,
+etc. 
+ 
+Tests:
+******
+	Some simple tests to verify that the build of Arjuna
+has completed correctly.
+
+Applications:
+*************
+	Some applications that  exercise  Arjuna in  interesting ways.
+You will need a version of the InterViews library to compile these.
+
+	Several of  the  individual  directories  also have  their own
+README files which should at least be browsed through.
+

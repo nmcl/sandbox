@@ -1,0 +1,44 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id:
+ */
+
+#if defined(NO_INLINES) && !defined(REGISTER_CC_)
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+
+
+INLINEF const char* ListData::name () const
+{
+    return hostName;
+}
+
+INLINEF void Register::registerGroupUid (const Uid& gid)
+{
+    group_uid = new Uid(gid);
+}
+
+INLINEF void Register::registerTypeName (TypeName name)
+{
+    tn = &name;
+}
+
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif

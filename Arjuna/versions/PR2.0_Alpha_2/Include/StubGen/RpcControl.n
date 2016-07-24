@@ -1,0 +1,32 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: RpcControl.n,v 1.1 1993/11/03 14:32:15 nmcl Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(RPCCONTROL_CC_)
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF RpcControl* RpcControl::createInstance (const char* serverName, 
+	                                        int byDefault)
+{
+    return new RpcControl(serverName, byDefault);
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif

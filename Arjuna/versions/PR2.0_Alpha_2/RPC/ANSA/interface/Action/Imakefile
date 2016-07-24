@@ -1,0 +1,65 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1993/11/03 14:38:38 nmcl Exp $
+COMMENT
+
+SOURCES = ClANSAAct.cc \
+          ClANSAAct_.cc \
+          ANSACadvR.cc \
+          ANSACallR.cc \
+          ANSAInitR.cc \
+          ANSATermR.cc \
+          SvANSAAct.cc
+
+OBJECTS = ClANSAAct.o \
+          ClANSAAct_.o \
+          ANSACadvR.o \
+          ANSACallR.o \
+          ANSAInitR.o \
+          ANSATermR.o \
+          SvANSAAct.o
+
+SetLocalCppFlags(-I../include -I$(TOPDIR)/Include)
+
+MakeNonRecursiveAllTarget(../../libANSA.a)
+
+MakeNonRecursiveInstall
+
+MakeLibrary(../../libANSA.a,$(OBJECTS))
+
+MakeObjectCPLUSPLUS(ClANSAAct,)
+MakeObjectCPLUSPLUS(ClANSAAct_,)
+MakeObjectCPLUSPLUS(ANSACadvR,)
+MakeObjectCPLUSPLUS(ANSACallR,)
+MakeObjectCPLUSPLUS(ANSAInitR,)
+MakeObjectCPLUSPLUS(ANSATermR,)
+MakeObjectCPLUSPLUS(SvANSAAct,)
+
+ClANSAAct.cc : TOPDIR_VAR/Include/Arjuna/StateMan_stub.h
+ClANSAAct.cc : TOPDIR_VAR/Include/Arjuna/StateManager_stubclass.h
+ANSACadvR.cc : TOPDIR_VAR/Include/Arjuna/StateMan_stub.h
+ANSACadvR.cc : TOPDIR_VAR/Include/Arjuna/StateManager_stubclass.h
+ANSACallR.cc : TOPDIR_VAR/Include/Arjuna/StateMan_stub.h
+ANSACallR.cc : TOPDIR_VAR/Include/Arjuna/StateManager_stubclass.h
+ANSAInitR.cc : TOPDIR_VAR/Include/Arjuna/StateMan_stub.h
+ANSAInitR.cc : TOPDIR_VAR/Include/Arjuna/StateManager_stubclass.h
+ANSATermR.cc : TOPDIR_VAR/Include/Arjuna/StateMan_stub.h
+ANSATermR.cc : TOPDIR_VAR/Include/Arjuna/StateManager_stubclass.h
+SvANSAAct.cc : TOPDIR_VAR/Include/Arjuna/StateMan_stub.h
+SvANSAAct.cc : TOPDIR_VAR/Include/Arjuna/StateManager_stubclass.h
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(../../libANSA.a)
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend

@@ -1,0 +1,58 @@
+/*
+ * Copyright (C) 1993
+ * 
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: Imakefile,v 1.1 1993/11/03 14:39:19 nmcl Exp $
+ *
+ */
+
+DEFINES =
+INCLUDES =
+IDLFLAGS =
+DPLFLAGS =
+LINTLIBS = $(LINTANSALIB) -lc
+LOCALLIB = $(ANSALIB) $(ANSASTUBLIB)
+LOCALLIBD = $(ANSALIBD) $(ANSASTUBLIB)
+
+IDLFILES = RPC.idl
+SIFFILES = RPC.sif
+DPLFILES = client.dpl server.dpl
+RCSFILES = Imakefile $(IDLFILES) $(DPLFILES)
+CL_OBJS = client.o cRPC.o
+SE_OBJS = server.o sRPC.o
+
+all:: ../libANSA.a
+
+DPLDepend(client)
+DPLDepend(server)
+
+IDLDepend(RPC)
+
+InstallIDL(RPC)
+
+DependTarget()
+
+IDLCleanList($(IDLFILES))
+DPLCleanList($(DPLFILES))
+
+RPC.sif : RPC.idl
+client.dpl server.dpl: RPC.sif
+
+../libANSA.a: client.o cRPC.o server.o sRPC.o mRPC.o
+	$(AR) $@ $?
+	$(RANLIB) ../libANSA.a
+
+../../../Include/RPC/ANSA/tRPC.h: tRPC.h
+	$(CP) tRPC.h ../../../Include/RPC/ANSA/tRPC.h
+
+tidy:
+	$(RM) core *~ \#*\# *.bak *.BAK
+
+clean.obj:: tidy
+
+purge: clean.obj clean
+	$(RM) Makefile

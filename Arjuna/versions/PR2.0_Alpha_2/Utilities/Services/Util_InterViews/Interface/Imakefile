@@ -1,0 +1,126 @@
+COMMENT 
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1993/11/03 15:05:55 nmcl Exp $
+COMMENT
+
+LIBRARIES = $(LIBARJSERVERS) $(LIBSTUB) $(LIBRPC) $(LIBOBJECTSTORE) $(LIBARJUNA) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES) -I/usr/local/InterViews3.0.1/include)
+SetLocalLdFlags(-L/usr/local/InterViews3.0.1/lib/$$CPU -L/usr/local/X11R5/lib)
+SetLocalLibraries(-lIV -lX11 -lXext -lX11 -lm)
+
+SOURCES = \
+                AutoInterfaceDriver.cc \
+                Interface.cc \
+                InterfaceArgs.cc \
+                Interface_client.cc \
+                Interface_server.cc \
+                Interface_servermain.cc \
+                InterfaceState.cc \
+                InterfaceTextDriver.cc \
+                InterfaceWindowDriver.cc \
+                Menu.cc \
+                Message.cc \
+                Selector.cc \
+                Transporter.cc \
+                Transporter_client.cc \
+                Transporter_server.cc \
+                Transporter_servermain.cc \
+                Window.cc
+
+OBJAUTOINTERFACEDRIVER = \
+                AutoInterfaceDriver.o \
+                InterfaceArgs.o \
+                Interface_client.o \
+                Transporter_client.o
+
+OBJINTERFACE = \
+                Interface.o \
+                InterfaceState.o \
+                Interface_server.o \
+                Interface_servermain.o
+
+OBJINTERFACETEXTDRIVER = \
+                InterfaceArgs.o \
+                InterfaceState.o \
+                InterfaceTextDriver.o \
+                Interface_client.o \
+                Transporter_client.o
+
+OBJINTERFACEWINDOWDRIVER = \
+                Interface_client.o \
+                InterfaceArgs.o \
+                InterfaceState.o \
+                InterfaceWindowDriver.o \
+                Menu.o \
+                Message.o \
+                Selector.o \
+                Transporter_client.o \
+                Window.o
+
+OBJTRANSPORTER = \
+                Transporter.o \
+                Transporter_server.o \
+                Transporter_servermain.o
+
+STUBS = \
+                Interface_stub.h \
+                Transporter_stub.h
+
+MakeNonRecursiveAllTarget($(STUBS) AutoInterfaceDriver Interface InterfaceTextDriver InterfaceWindowDriver Transporter)
+
+MakeNonRecursiveInstall
+
+CreateInstallTopDirectory(servers)
+InstallProgram(servers,Interface)
+InstallProgram(servers,Transporter)
+
+MakeProgramCPLUSPLUS(AutoInterfaceDriver,$(OBJAUTOINTERFACEDRIVER) $(LIBRARY),)
+MakeProgramCPLUSPLUS(Interface,$(OBJINTERFACE) $(LIBRARY),)
+MakeProgramCPLUSPLUS(InterfaceTextDriver,$(OBJINTERFACETEXTDRIVER) $(LIBRARY),)
+MakeProgramCPLUSPLUS(InterfaceWindowDriver,$(OBJINTERFACEWINDOWDRIVER) $(LIBRARY),)
+MakeProgramCPLUSPLUS(Transporter,$(OBJTRANSPORTER) $(LIBRARY),)
+
+MakeStubGen(Interface,Interface,Interface,)
+MakeStubGen(Transporter,Transporter,Transporter,)
+
+MakeObjectCPLUSPLUS(AutoInterfaceDriver,)
+MakeObjectCPLUSPLUS(Interface,)
+MakeObjectCPLUSPLUS(InterfaceArgs,)
+MakeObjectCPLUSPLUS(InterfaceState,)
+MakeObjectCPLUSPLUS(InterfaceTextDriver,)
+MakeObjectCPLUSPLUS(InterfaceWindowDriver,)
+MakeObjectCPLUSPLUS(Menu,)
+MakeObjectCPLUSPLUS(Message,)
+MakeObjectCPLUSPLUS(Selector,)
+MakeObjectCPLUSPLUS(Transporter,)
+MakeObjectCPLUSPLUS(Window,)
+
+AutoInterfaceDriver.cc: Interface_stub.h
+AutoInterfaceDriver.cc: Transporter_stub.h
+Interface.cc: Interface_stub.h
+InterfaceTextDriver.cc: Interface_stub.h
+InterfaceTextDriver.cc: Transporter_stub.h
+InterfaceWindowDriver.cc: Interface_stub.h
+InterfaceWindowDriver.cc: Transporter_stub.h
+Menu.cc: Interface_stub.h
+Selector.cc: Interface_stub.h
+Selector.cc: Transporter_stub.h
+Transporter.cc: Transporter_stub.h
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(AutoInterfaceDriver Interface InterfaceTextDriver InterfaceWindowDriver Transporter *_stub.h *_stubclass.h *_server.cc *_client.cc *_servermain.cc)
+
+MakeNonRecursiveMakedepend($(SOURCES) $(STUBS))
+
+MakeNonRecursiveStripdepend
+

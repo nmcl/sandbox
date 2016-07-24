@@ -1,0 +1,39 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1993/11/03 14:29:00 nmcl Exp $
+COMMENT
+
+MakeDummyAllTarget
+
+MakeMakefile
+
+MakeNonRecursiveInstall
+
+CreateInstallTopDirectory(include)
+CreateInstallDirectory(include,ObjectStore)
+
+InstallFile(include/Arjuna,FdCache.h)
+InstallFile(include/Arjuna,ObjStore.h)
+InstallFile(include/Arjuna,LPObjStore.h)
+InstallFile(include/Arjuna,LPObjStore.n)
+InstallFile(include/Arjuna,LVObjStore.h)
+InstallFile(include/Arjuna,LVObjStore.n)
+InstallFile(include/Arjuna,LSPObjStore.h)
+InstallFile(include/Arjuna,LSPObjStore.n)
+InstallFile(include/Arjuna,LocalOSTypes.h)
+InstallFile(include/Arjuna,StoreList.h)
+InstallFile(include/Arjuna,ObjStoreI.h)
+
+MakeDummyMakefiles
+
+MakeEmptyNonRecursiveTidyCleanPurge
+
+MakeDummyMakedepend
+
+MakeDummyStripdepend

@@ -1,0 +1,27 @@
+This  directory contains various  utilities which  are  useful  in the
+development  of  Arjuna  applications.  The  two  sub-directories  are
+Services and Tools.
+
+Services: This directory contains utilities to make use of the various
+Arjuna services.
+	
+	GroupViewDriver: interface to the GroupView Database.
+	NameInfoDriver : interface to the database of NameServers.
+	NameServEdit   : interface to the NameServer.
+	ServerGroupEdit: interface to the NameServer for replicated
+			 server groups.
+	Util_InterView : this require InterViews 3.0.1 and maintains
+			 a database of objects headers for use with
+			 Arjuna  applications  (mainly  for  the  stub
+			 generator).
+
+Tools: This directory contains general utilities.
+
+	OSConverter    : this converts an old format object state to a
+			 new format (and vice versa).
+	ReplicateState : this allows the creation of replicas of object
+			 state and registers them at the GroupView
+			 Database.
+	SetDebug       : sets various debugging flags.
+	UidConverter   : this converts from old format Uids to new format.
+	bin            : various utilities such as makedepend and ipcclean.

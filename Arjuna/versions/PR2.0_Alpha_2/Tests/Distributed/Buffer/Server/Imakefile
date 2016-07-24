@@ -1,0 +1,48 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1993/11/03 14:52:05 nmcl Exp $
+COMMENT
+
+SOURCES	  = BufferCheck.cc \
+	    BufferCheck_client.cc \
+	    BufferCheck_server.cc \
+	    BufferCheck_servermain.cc \
+	    BufferCheck_stub.h \
+	    BufferCheck_stubclass.h
+
+OBJECTS	  = BufferCheck_server.o \
+	    BufferCheck_servermain.o \
+	    BufferCheck.o
+
+LIBRARIES = $(LIBARJSERVERS) $(LIBSTUB) $(LIBRPC) $(LIBOBJECTSTORE) $(LIBARJUNA) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+MakeNonRecursiveAllTarget(BufferCheck BufferCheck_client.o)
+
+MakeNonRecursiveInstall
+
+CreateInstallTopDirectory(servers)
+InstallProgram(servers,BufferCheck)
+
+MakeProgramCPLUSPLUS(BufferCheck,$(OBJECTS) $(LIBRARIES),)
+
+MakeObjectCPLUSPLUS(BufferCheck,)
+
+MakeStubGen(BufferCheck,BufferCheck,BufferCheck,)
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(BufferCheck BufferCheck_client.cc BufferCheck_server.cc BufferCheck_servermain.cc BufferCheck_stub.h BufferCheck_stubclass.h)
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend

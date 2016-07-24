@@ -1,0 +1,55 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * LSPObjStore.n,v
+ */
+
+#if defined(NO_INLINES) && !defined(LSPOBJSTORE_CC_)
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF const char *LocalSimplePersistentObjectStore::getStoreName () const
+{
+    return storeName;
+}
+
+/*
+ * read an  uncommitted instance of ObjectState out of the object store. 
+ * The instance is identified by the unique id and type
+ */
+
+INLINEF ObjectState* LocalSimplePersistentObjectStore::read_uncommitted ( const Uid& storeUid,
+						   	                  const TypeName tName )
+{
+    return read_state(storeUid, tName, SHADOW);
+}
+
+INLINEF Boolean LocalSimplePersistentObjectStore::remove_uncommitted ( const Uid& storeUid,
+							               const TypeName tName )
+{
+    return remove_state(storeUid, tName, SHADOW);
+}
+
+INLINEF Boolean LocalSimplePersistentObjectStore::write_committed ( const Uid& storeUid,
+						                    const TypeName tName,
+						                    const ObjectState &state )
+{
+    return write_state(storeUid, tName, state, ORIGINAL);
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif

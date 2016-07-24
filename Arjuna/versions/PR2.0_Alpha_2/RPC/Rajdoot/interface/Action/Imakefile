@@ -1,0 +1,65 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1993/11/03 14:40:04 nmcl Exp $
+COMMENT
+
+SOURCES = ClRajAct.cc \
+          ClRajAct_.cc \
+          RajCadvR.cc \
+          RajCallR.cc \
+          RajInitR.cc \
+          RajTermR.cc \
+          SvRajAct.cc
+
+OBJECTS = ClRajAct.o \
+          ClRajAct_.o \
+          RajCadvR.o \
+          RajCallR.o \
+          RajInitR.o \
+          RajTermR.o \
+          SvRajAct.o
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES) -I../include)
+
+MakeNonRecursiveAllTarget(../../libRajdoot.a)
+
+MakeNonRecursiveInstall
+
+MakeLibrary(../../libRajdoot.a,$(OBJECTS))
+
+MakeObjectCPLUSPLUS(ClRajAct,)
+MakeObjectCPLUSPLUS(ClRajAct_,)
+MakeObjectCPLUSPLUS(RajCadvR,)
+MakeObjectCPLUSPLUS(RajCallR,)
+MakeObjectCPLUSPLUS(RajInitR,)
+MakeObjectCPLUSPLUS(RajTermR,)
+MakeObjectCPLUSPLUS(SvRajAct,)
+
+ClRajAct.cc : $(ARJUNA_INCLUDES)/Arjuna/StateMan_stub.h
+ClRajAct.cc : $(ARJUNA_INCLUDES)/Arjuna/StateManager_stubclass.h
+RajCadvR.cc : $(ARJUNA_INCLUDES)/Arjuna/StateMan_stub.h
+RajCadvR.cc : $(ARJUNA_INCLUDES)/Arjuna/StateManager_stubclass.h
+RajCallR.cc : $(ARJUNA_INCLUDES)/Arjuna/StateMan_stub.h
+RajCallR.cc : $(ARJUNA_INCLUDES)/Arjuna/StateManager_stubclass.h
+RajInitR.cc : $(ARJUNA_INCLUDES)/Arjuna/StateMan_stub.h
+RajInitR.cc : $(ARJUNA_INCLUDES)/Arjuna/StateManager_stubclass.h
+RajTermR.cc : $(ARJUNA_INCLUDES)/Arjuna/StateMan_stub.h
+RajTermR.cc : $(ARJUNA_INCLUDES)/Arjuna/StateManager_stubclass.h
+SvRajAct.cc : $(ARJUNA_INCLUDES)/Arjuna/StateMan_stub.h
+SvRajAct.cc : $(ARJUNA_INCLUDES)/Arjuna/StateManager_stubclass.h
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(../../libRajdoot.a)
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend

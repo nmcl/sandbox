@@ -1,0 +1,56 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1993/11/03 14:32:35 nmcl Exp $
+COMMENT
+
+SetSubDirectorys(arpa netinet sys)
+
+MakeRecursiveAllTarget
+
+MakeRecursiveInstall
+
+CreateInstallTopDirectory(include)
+CreateInstallDirectory(include,System)
+InstallFile(include/System,assert.h)
+InstallFile(include/System,ctype.h)
+InstallFile(include/System,dirent.h)
+InstallFile(include/System,errno.h)
+InstallFile(include/System,fcntl.h)
+InstallFile(include/System,fstream.h)
+InstallFile(include/System,iostream.h)
+InstallFile(include/System,limits.h)
+InstallFile(include/System,malloc.h)
+InstallFile(include/System,memory.h)
+InstallFile(include/System,ndbm.h)
+InstallFile(include/System,netdb.h)
+InstallFile(include/System,new.h)
+InstallFile(include/System,osfcn.h)
+InstallFile(include/System,protos.h)
+InstallFile(include/System,pwd.h)
+InstallFile(include/System,setjmp.h)
+InstallFile(include/System,signal.h)
+InstallFile(include/System,stddef.h)
+InstallFile(include/System,stdio.h)
+InstallFile(include/System,stdlib.h)
+InstallFile(include/System,string.h)
+InstallFile(include/System,strstream.h)
+InstallFile(include/System,syslog.h)
+InstallFile(include/System,time.h)
+InstallFile(include/System,unistd.h)
+InstallFile(include/System,values.h)
+
+MakeMakefile
+
+MakeMakefiles
+
+MakeEmptyTidyCleanPurge
+
+MakeRecursiveMakedepend
+
+MakeRecursiveStripdepend
