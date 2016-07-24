@@ -1,0 +1,84 @@
+COMMENT 
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1993/11/03 14:15:02 nmcl Exp $
+COMMENT
+
+SOURCES = Buffer.cc \
+	  ../../Include/Common/Buffer_stub.h \
+          Boolean.cc \
+	  Debug.cc \
+          Error.cc \
+	  Filtsbuf.cc \
+	  ../../Include/Common/Uid_stub.h \
+          Uid.cc \
+	  Uid_marshall.cc \
+	  Utility.cc
+
+OBJECTS = Buffer.o \
+	  Buffer_marshall.o \
+          Boolean.o \
+	  Debug.o \
+          Error.o \
+	  Filtsbuf.o \
+          Uid.o \
+	  Uid_marshall.o \
+	  Utility.o
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+MakeNonRecursiveAllTarget(../../Include/Common/Buffer_stub.h ../../Include/Common/Uid_stub.h libCommon.a)
+
+MakeNonRecursiveInstall
+
+CreateInstallTopDirectory(lib)
+InstallLibrary(lib,libCommon.a)
+
+Uid.h : ../../Include/Common/Uid.h
+	@CP_VAR ../../Include/Common/Uid.h Uid.h
+
+../../Include/Common/Uid_stub.h : Uid_stub.h
+	@echo Copying Uid_stub.h
+	@sed -e "s;\"Uid_stubclass.h\";\<Common/Uid_stubclass.h\>;" Uid_stub.h > ../../Include/Common/Uid_stub.h
+
+../../Include/Common/Uid_stubclass.h : Uid_stubclass.h
+	@echo Copying Uid_stubclass.h
+	@CP_VAR Uid_stubclass.h ../../Include/Common/Uid_stubclass.h
+
+Buffer.h : ../../Include/Common/Buffer.h
+	@CP_VAR ../../Include/Common/Buffer.h Buffer.h
+
+../../Include/Common/Buffer_stub.h : Buffer_stub.h
+	@echo Copying Buffer_stub.h
+	@sed -e "s;\"Buffer_stubclass.h\";\<Common/Buffer_stubclass.h\>;" Buffer_stub.h > ../../Include/Common/Buffer_stub.h
+
+../../Include/Common/Buffer_stubclass.h : Buffer_stubclass.h
+	@echo Copying Buffer_stubclass.h
+	@CP_VAR Buffer_stubclass.h ../../Include/Common/Buffer_stubclass.h
+
+MakeLibrary(libCommon.a,$(OBJECTS))
+
+MakeStubGen(Uid,Uid,Uid,)
+MakeStubGen(Buffer,Buffer,Buffer,)
+MakeObjectCPLUSPLUS(Buffer,)
+MakeObjectCPLUSPLUS(Boolean,)
+MakeObjectCPLUSPLUS(Debug,)
+MakeObjectCPLUSPLUS(Error,)
+MakeObjectCPLUSPLUS(Filtsbuf,)
+MakeObjectCPLUSPLUS(Uid,)
+MakeObjectCPLUSPLUS(Utility,)
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(Buffer.h Buffer_marshall.cc Buffer_stub.h Uid.h Uid_marshall.cc Uid_stub.h libCommon.a)
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend
