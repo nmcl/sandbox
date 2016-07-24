@@ -1,0 +1,58 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1993/11/03 14:36:27 nmcl Exp $
+COMMENT
+
+SOURCES = FdCache.cc \
+          ObjStore.cc \
+	  LPObjStore.cc \
+	  ObjStoreList.cc \
+	  LVObjStore.cc \
+	  LSPObjStore.cc \
+          ObjStoreI.cc \
+	  StoreList.cc
+
+OBJECTS = FdCache.o \
+          ObjStore.o \
+	  LPObjStore.o \
+	  ObjStoreList.o \
+	  LVObjStore.o \
+	  LSPObjStore.o \
+          ObjStoreI.o \
+	  StoreList.o
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES) -I../include)
+
+MakeNonRecursiveAllTarget(libObjectStore.a)
+
+MakeNonRecursiveInstall
+
+CreateInstallTopDirectory(lib)
+InstallLibrary(lib,libObjectStore.a)
+
+MakeLibrary(libObjectStore.a,$(OBJECTS))
+
+MakeObjectCPLUSPLUS(FdCache,)
+MakeObjectCPLUSPLUS(ObjStore,)
+MakeObjectCPLUSPLUS(LPObjStore,)
+MakeObjectCPLUSPLUS(LVObjStore,)
+MakeObjectCPLUSPLUS(LSPObjStore,)
+MakeObjectCPLUSPLUS(ObjStoreList,)
+MakeObjectCPLUSPLUS(ObjStoreI,)
+MakeObjectCPLUSPLUS(StoreList,)
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(libObjectStore.a)
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend
