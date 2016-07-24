@@ -1,0 +1,26 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: Arj-Sun.cf,v 1.1 1993/11/03 14:15:52 nmcl Exp $
+ */
+
+/*
+ *  Sun specific configuration.
+ */
+
+#ifndef MAKEFLAGS__
+#define MAKEFLAGS__
+#define MAKEFLAGS_DEFINE xMAKEFLAGS
+#define MAKEFLAGS_Q_VAR "$(xMAKEFLAGS)"
+#define MAKEFLAGS_VAR $(xMAKEFLAGS)
+#endif
+
+#ifndef YACC_CPLUSPLUS_MAGIC
+#define YACC_CPLUSPLUS_MAGIC sed -e "/^#[ ]*line/d" -e "1s/^extern char \*malloc.*;//"
+#endif
+

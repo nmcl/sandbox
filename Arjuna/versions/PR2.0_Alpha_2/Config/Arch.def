@@ -1,0 +1,119 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: Arch.def,v 1.1 1993/11/03 14:15:41 nmcl Exp $
+ */
+
+/*
+ *  Arch.def
+ */
+
+/*
+ *      Sun Architecture
+ */
+
+#ifdef  sun
+#define SunArchitecture
+#ifdef  mc68020
+#define ArchitectureName SUN3
+#endif
+#ifdef  sparc
+#define ArchitectureName SUN4
+#endif
+#ifndef ArchitectureName
+#define ArchitectureName Unknown_SUN
+#endif
+#define ArchSpecificConfig <Arj-Sun.cf>
+#endif
+
+/*
+ *      HP Architecture
+ */
+
+#ifdef  hpux
+#define HPArchitecture
+#ifdef  hp9000s300
+#define ArchitectureName HP300
+#endif
+#ifdef  hp9000s700
+#define ArchitectureName HP700
+#endif
+#ifdef  hp9000s800
+#define ArchitectureName HP800
+#endif
+#ifndef ArchitectureName
+#define ArchitectureName Unknown_HP
+#endif
+#define ArchSpecificConfig <Arj-HP.cf>
+#endif
+
+/*
+ *      Dec Architecture
+ */
+
+#ifdef  ultrix
+#ifdef  vax
+#define VaxArchitecture
+#define ArchitectureName VAX
+#endif
+#ifdef  mips
+#define MipsArchitecture
+#define ArchitectureName MIPS
+#endif
+#ifndef ArchitectureName
+#define DecArchitecture
+#define ArchitectureName Unknown_DEC
+#endif
+#define ArchSpecificConfig <Arj-DEC.cf>
+#endif
+
+/*
+ *      IBM Architecture
+ */
+
+#ifdef  _AIX
+#ifdef  rs6000
+#define RS6000Architecture
+#define ArchitectureName RS6000
+#endif
+#ifndef ArchitectureName
+#define IBMArchitecture
+#define ArchitectureName Unknown_IBM
+#endif
+#define ArchSpecificConfig <Arj-IBM.cf>
+#endif
+
+
+/*
+ *      PC Architecture
+ */
+
+#ifdef linux
+#ifdef i386
+#define Intel386Architecture
+#define ArchitectureName Intel386
+#endif
+#ifndef ArchitectureName
+#define PCArchitecture
+#define ArchitectureName Unknown_PC
+#endif
+#define ArchSpecificConfig <Arj-I386.cf>
+#endif
+
+
+/*
+ *      Other Architecture
+ */
+
+#ifndef ArchitectureName
+#define OtherArchitecture
+#define ArchitectureName Other
+#define ArchSpecificConfig <Arj-Other.cf>
+#endif
+
+#include ArchSpecificConfig

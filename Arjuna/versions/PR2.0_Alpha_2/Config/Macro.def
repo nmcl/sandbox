@@ -1,0 +1,38 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: Macro.def,v 1.1 1993/11/03 14:15:58 nmcl Exp $
+ */
+
+/*
+ *  Macro.def
+ */
+
+#ifndef MACRO_DEF_
+#define MACRO_DEF_
+
+#ifndef Concat
+#define Concat(x,y) x/**/y
+#endif
+
+#ifndef YES
+#define YES 1
+#endif
+
+#ifndef NO
+#define NO  0
+#endif
+
+#ifndef COMMENT
+#define COMMENT /**/#
+#endif
+
+#ifndef Quote
+#define Quote(x) "x"
+#endif
+#endif
