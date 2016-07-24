@@ -1,0 +1,47 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ */
+
+/*
+ * $Id: INSTALL,v 1.1 1993/11/03 12:21:24 nmcl Exp $
+ */
+
+1. 	Installation
+********************
+
+ 	Installation  of   Arjuna  should  be  a  relatively  painless
+operation accomplished in the following way:
+
+a)
+	If you are running with a version of g++ then you should be able
+to use the makefiles provided. You should edit these makefiles to contain
+the appropriate #defines (see below).
+
+b)
+	If you are running with some other MSDOS (or OS/2) compiler then
+we hope you can build the various libraries required using the facilities
+which the compiler/linker provides. You will need to specify appropriate
+#defines.
+
+The required libraries are: libCom, libArj, and libObStr
+
+If you are running on OS/2 then you should specify OS2 as a pre-processor
+definition.
+
+If you are running on MSDOS then you should specify MSDOS.
+
+If you are using Borland C++ then you should also specify BORLAND.
+
+
+2.	ObjectStore
+*******************
+	
+	Before running an application you must specify the root of the
+object store (the place where persistent object states will be read/written).
+To do this you need to specify OBJECTSTORE_ROOT as one of your environment
+variables.

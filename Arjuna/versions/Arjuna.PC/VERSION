@@ -1,0 +1,38 @@
+/*
+ * Copyright (C) 1994
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ */
+
+/*
+ * $Id: VERSION,v 1.1 1993/11/03 12:21:30 nmcl Exp $
+ */
+
+Welcome  to the  world  of Arjuna! This  source  tree contains a cut
+down version of the Arjuna PR2.0 port for MSDOS and OS/2.
+
+The cut-down MSDOS  and OS/2 port  only supports local atomic actions,
+and although the LockManager class is provided, no locking is actually
+performed by the system  by  active objects.  In addition,  the  crash
+recovery mechanism is not  supplied as standard.  If after reading the
+manual and using the code  you find a  need for any of the  facilities
+which have not been provided, then send us email (arjuna.ncl.ac.uk)
+
+Thanks to all the people who took the  time and effort to  port Arjuna
+to systems and compilers that  we do not have access too and reporting
+the problems (and fixes) that were needed, in particular:
+
+David "W." Forslund <dwf@gov.lanl.acl>
+Conrad Huang <conrad@cgl.ucsf.edu>
+Randy S Johnston <johnston@rtc.atk.com>
+David Joyner <nsysdbj@straylight.acs.ncsu.edu>
+Tage Stabell-Kulo <tage@cs.utwente.nl>
+Robb Wheatley <wheatley@enel.ucalgary.ca>
+Joao Geada <joao@com.ibm.watson>
+
+If   you   find   bugs  or   have   problems  please  report  them  to
+arjuna@newcastle.ac.uk
+
