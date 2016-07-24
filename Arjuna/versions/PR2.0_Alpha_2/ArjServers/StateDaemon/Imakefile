@@ -1,0 +1,69 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1993/11/03 12:28:07 nmcl Exp $
+COMMENT
+
+SOURCES =        StateDaemon.cc          \
+                 StateDaemon_server.cc \
+                 StateDaemon_client.cc \
+		 BootStateDaemon.cc \
+                 ../../Include/ArjServers/StateDaemon_stub.h \
+                 ../../Include/ArjServers/StateDaemon_stubclass.h
+
+OBJECTS_STATEDAEMOND = BootStateDaemon.o
+
+OBJECTS_SERVER = StateDaemon.o          \
+                 StateDaemon_server.o \
+                 StateDaemon_servermain.o
+
+OBJECTS_CLIENT = StateDaemon_client.o
+
+LIBRARY = $(LIBARJSERVERS) $(LIBSTUB) $(LIBRPC) $(LIBOBJECTSTORE) $(LIBARJUNA) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+MakeNonRecursiveAllTarget(StateDaemon ../../Include/ArjServers/StateDaemon_stub.h ../../Include/ArjServers/StateDaemon_stubclass.h ../libArjServers.a BootStateDaemon)
+
+MakeNonRecursiveInstall
+
+CreateInstallTopDirectory(servers)
+InstallProgram(servers,StateDaemon)
+
+CreateInstallTopDirectory(etc)
+InstallProgram(etc,BootStateDaemon)
+
+../../Include/ArjServers/StateDaemon_stub.h : StateDaemon_stub.h
+	@echo Copying StateDaemon_stub.h
+	@sed -e "s;\"StateDaemon_stubclass.h\";\<ArjServers/StateDaemon_stubclass.h\>;" StateDaemon_stub.h > ../../Include/ArjServers/StateDaemon_stub.h
+
+../../Include/ArjServers/StateDaemon_stubclass.h : StateDaemon_stubclass.h
+	@echo Copying StateDaemon_stubclass.h
+	@CP_VAR StateDaemon_stubclass.h ../../Include/ArjServers/StateDaemon_stubclass.h
+
+MakeProgramCPLUSPLUS(StateDaemon,$(OBJECTS_SERVER) $(LIBRARY),)
+MakeProgramCPLUSPLUS(BootStateDaemon, $(OBJECTS_STATEDAEMOND) $(LIBRARY),)
+
+StateDaemon.cc: StateDaemon_stub.h
+
+MakeObjectCPLUSPLUS(StateDaemon,)
+MakeObjectCPLUSPLUS(BootStateDaemon,)
+
+MakeStubGen(StateDaemon,StateDaemon,StateDaemon,)
+
+MakeLibrary(../libArjServers.a,$(OBJECTS_CLIENT))
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(StateDaemon StateDaemon_stub.h StateDaemon_client.cc StateDaemon_server.cc StateDaemon_servermain.cc StateDaemon_stubclass.h BootStateDaemon)
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend

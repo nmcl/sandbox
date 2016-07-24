@@ -1,0 +1,37 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1993/11/03 12:27:56 nmcl Exp $
+COMMENT
+
+SOURCES = NameInfo.cc
+
+OBJECTS = NameInfo.o
+	  
+LIBRARY = $(LIBSTUB) ../libArjServers.a $(LIBRPC) $(LIBARJUNA) $(LIBCOMMON) \
+	  ../libArjServers.a $(LIBSTUB) $(LIBRPC)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+MakeNonRecursiveAllTarget(../libArjServers.a)
+
+MakeNonRecursiveInstall
+
+MakeObjectCPLUSPLUS(NameInfo,)
+
+MakeLibrary(../libArjServers.a,$(OBJECTS))
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeEmptyNonRecursiveTidyCleanPurge
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend
