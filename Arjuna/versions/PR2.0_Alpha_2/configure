@@ -1,0 +1,470 @@
+#!/bin/sh
+
+#
+# Copyright (C) 1993
+# 
+# Department of Computing Science,
+# The University,
+# Newcastle upon Tyne,
+# UK.
+# 
+# $Id: configure,v 1.1 1993/11/03 12:21:32 nmcl Exp $
+#
+
+ECHO_TEST=`echo "Test \c"`
+if test "$ECHO_TEST" = "Test "
+then 
+	PRE_ECHO=""
+	POST_ECHO="\c"
+else
+	PRE_ECHO="-n"
+	POST_ECHO=""
+fi
+
+VERBOSE_MAKE=NO
+FAST_MAKE=YES
+TOPDIR_DEFAULT=`pwd`
+RPC_SYSTEM_TYPE_DEFAULT=RajdootAction
+CPLUSPLUS_PROGRAM=CC
+CPLUSPLUS_INCLUDE_DEFAULT=/usr/include/CC
+CPPFLAGS_DEFAULT=""
+CPLUSPLUSFLAGS_DEFAULT=""
+LIBRARIES_DEFAULT=""
+LDFLAGS_DEFAULT=""
+LEX_PROGRAM="lex"
+LEXFLAGS_DEFAULT=""
+YACC_PROGRAM="yacc"
+YACCFLAGS_DEFAULT=""
+
+INPUT="xxxx"
+while test "'x$INPUT'" != "'x'" -a "'x$INPUT'" != "'xYES'" -a "'x$INPUT'" != "'xNO'"
+do  
+	echo $PRE_ECHO "Make is verbose (NO/YES) ["$VERBOSE_MAKE"] : " $POST_ECHO
+	read INPUT
+	echo
+done
+if test "'x$INPUT'" != "'x'"
+then  
+	VERBOSE_MAKE=$INPUT
+fi
+
+INPUT="xxxx"
+while test "'x$INPUT'" != "'x'" -a "'x$INPUT'" != "'xYES'" -a "'x$INPUT'" != "'xNO'"
+do  
+	echo $PRE_ECHO "Make is fast (no inter module cross checks) (NO/YES) ["$FAST_MAKE"] : " $POST_ECHO
+	read INPUT
+	echo
+done
+if test "'x$INPUT'" != "'x'"
+then  
+	FAST_MAKE=$INPUT
+fi
+
+echo $PRE_ECHO "Root directory of source tree ["$TOPDIR_DEFAULT"] : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then  
+	TOPDIR_DEFAULT=$INPUT
+fi
+
+echo "RPC system which you wish to use:"
+echo "  RajdootAction (Rajdoot with Atomic action support)"
+echo "  Rajdoot       (Rajdoot without Atomic action support)"
+echo "  ANSAAction    (ANSA    with Atomic action support)"
+echo "  ANSA          (ANSA    without Atomic action support)"
+echo 
+
+INPUT="xxxx"
+while test "'x$INPUT'" != "'x'" -a "'x$INPUT'" != "'xRajdootAction'" -a "'x$INPUT'" != "'xRajdoot'" -a "'x$INPUT'" != "'xANSAAction'" -a "'x$INPUT'" != "'xANSA'"
+do  
+	echo $PRE_ECHO "RPC system ["$RPC_SYSTEM_TYPE_DEFAULT"] : " $POST_ECHO
+	read INPUT
+	echo
+done
+if test "'x$INPUT'" != "'x'"
+then  
+	RPC_SYSTEM_TYPE_DEFAULT=$INPUT
+fi
+
+if test "'x$RPC_SYSTEM_TYPE_DEFAULT'" = "'xANSAAction'" -o "'x$RPC_SYSTEM_TYPE_DEFAULT'" = "'xANSA'"
+then
+        echo "Make sure ANSAware's bin is in your PATH"
+        echo
+        echo "PATH =" $PATH
+        echo
+fi
+
+echo $PRE_ECHO "C++ compiler ["$CPLUSPLUS_PROGRAM"] : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then  
+	CPLUSPLUS_PROGRAM=$INPUT
+fi
+
+echo $PRE_ECHO "C++ include directory ["$CPLUSPLUS_INCLUDE_DEFAULT"] : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then  
+	CPLUSPLUS_INCLUDE_DEFAULT=$INPUT
+fi
+
+echo $PRE_ECHO "Which version of lex (lex/lex++) ["$LEX_PROGRAM"] : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then  
+	LEX_PROGRAM=$INPUT
+fi
+
+echo $PRE_ECHO "lex flags ["$LEXFLAGS_DEFAULT"] : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then  
+	LEXFLAGS_DEFAULT=$INPUT
+fi
+
+echo $PRE_ECHO "Which version of yacc (yacc/yacc++/bison) ["$YACC_PROGRAM"] : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then  
+	YACC_PROGRAM=$INPUT
+fi
+
+echo $PRE_ECHO "yacc flags ["$YACCFLAGS_DEFAULT"] : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then  
+	YACCFLAGS_DEFAULT=$INPUT
+fi
+
+echo "Arjuna specific flags governing compilation:"
+echo "-DDEBUG                  Enable Arjuna debugging messages"
+echo "-DYYDEBUG                Enable yacc debugging"
+echo "-DNO_INLINES             Disable inlining"
+echo "-DHAVE_UNION_WAIT        wait() defined as \"int wait(union wait*)\")"
+echo "-DNO_NESTED_TYPES        Turn on 2.0 compatability mode (limited support)"
+echo "-DUSESG                  Use sendmsg/recvmsg (for systems without this capability)"
+echo
+echo $PRE_ECHO "Arjuna CppFlags ["$CPPFLAGS_DEFAULT"] : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then  
+	CPPFLAGS_DEFAULT=$INPUT
+fi
+
+if test "'x$RPC_SYSTEM_TYPE_DEFAULT'" = "'xANSAAction'" -o "'x$RPC_SYSTEM_TYPE_DEFAULT'" = "'xANSA'"
+then
+        echo "ANSA specific flags governing compilation (including):"
+        echo "-I"`ansaconfig -include`"/stub"
+        echo "-I"`ansaconfig -include`"/capsule"
+        echo "-D_ansa_\"os type\"_ -D_ansa_osmajor_=... -D_ansa_osminor_=..."
+        echo "     (e.g., -D_ansa_sunos_ -D_ansa_osmajor_=4 -D_ansa_osminor_=1)"
+        echo
+        echo $PRE_ECHO "ANSA CppFlags [] : " $POST_ECHO
+        read INPUT
+        echo
+        if test "'x$INPUT'" != "'x'"
+        then  
+	        CPPFLAGS_DEFAULT=$CPPFLAGS_DEFAULT" "$INPUT
+        fi
+fi
+
+echo $PRE_ECHO "Additional compilation flags for optimisation and/or debugging ["$CPLUSPLUSFLAGS_DEFAULT"] : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then  
+	CPLUSPLUSFLAGS_DEFAULT=$INPUT
+fi
+
+echo $PRE_ECHO "Arjuna specific loader flags ["$LDFLAGS_DEFAULT"] : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then  
+	LDFLAGS_DEFAULT=$INPUT
+fi
+
+if test "'x$RPC_SYSTEM_TYPE_DEFAULT'" = "'xANSAAction'" -o "'x$RPC_SYSTEM_TYPE_DEFAULT'" = "'xANSA'"
+then
+        echo "ANSA specific load flags (including):"
+	echo "-L"`ansaconfig -lib`
+	echo "-L"`ansaconfig -include`"/stub"
+        echo
+        echo $PRE_ECHO "ANSA specific load flags [] : " $POST_ECHO
+        read INPUT
+        echo
+        if test "'x$INPUT'" != "'x'"
+        then  
+	        LDFLAGS_DEFAULT=$LDFLAGS_DEFAULT" "$INPUT
+        fi
+fi
+
+echo $PRE_ECHO "Arjuna specific libraries ["$LIBRARIES_DEFAULT"] : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then  
+	LIBRARIES_DEFAULT=$INPUT
+fi
+
+if test "'x$RPC_SYSTEM_TYPE_DEFAULT'" = "'xANSAAction'" -o "'x$RPC_SYSTEM_TYPE_DEFAULT'" = "'xANSA'"
+then
+        echo "ANSA specific libraries (including):"
+	echo "-lansa -lstub"
+        echo
+        echo $PRE_ECHO "ANSA specific libraries [] : " $POST_ECHO
+        read INPUT
+        echo
+        if test "'x$INPUT'" != "'x'"
+        then  
+	        LIBRARIES_DEFAULT=$LIBRARIES_DEFAULT" "$INPUT
+        fi
+fi
+
+INSTALL_TOPDIR_DEFAULT=/usr/local/ArjunaPR2.0beta
+
+echo $PRE_ECHO "Root of directory tree for installation ["$INSTALL_TOPDIR_DEFAULT"] : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then  
+	INSTALL_TOPDIR_DEFAULT=$INPUT
+fi
+
+OBJECTSTOREDIR=$INSTALL_TOPDIR_DEFAULT"/ObjectStore"
+ATOMICACTIONDIR=$OBJECTSTOREDIR"/StateManager/AtomicAction"
+SERVERATOMICACTIONDIR=$OBJECTSTOREDIR"/StateManager/AtomicAction/ServerAtomicAction"
+C_LIST=$INSTALL_TOPDIR_DEFAULT"/adm/c_list"
+C_COUNT=$INSTALL_TOPDIR_DEFAULT"/adm/c_count"
+MANPID_FILE=$INSTALL_TOPDIR_DEFAULT"/adm/manager_pid"
+DUPSERVER=$INSTALL_TOPDIR_DEFAULT"/etc/dupserver"
+GMSERVER=$INSTALL_TOPDIR_DEFAULT"/etc/groupsrvr"
+PATH_SIZE=10
+BROADCAST_NET="localnet"
+RAJDOOT_USE_BROADCAST=NO
+RAJDOOT_USE_SHARED_MEMORY=YES
+SERVER_LOCATION=$INSTALL_TOPDIR_DEFAULT"/servers"
+NAME_SERVER_SERVICE="NameServ"
+
+(
+echo "/*"
+echo " * Copyright (C) 1993"
+echo " *"
+echo " * Department of Computing Science,"
+echo " * The University,"
+echo " * Newcastle upon Tyne,"
+echo " * UK."
+echo " *"
+echo " * \$Id\$"
+echo " */"
+echo
+echo "/*"
+echo " *  Local.def"
+echo " */"
+echo
+echo "#ifndef YES"
+echo "#define YES 1"
+echo "#endif"
+echo
+echo "#ifndef NO"
+echo "#define NO  0"
+echo "#endif"
+echo
+echo "/*"
+echo " *  Make and Source configuration"
+echo " */"
+echo
+echo "#ifndef VERBOSE_MAKE"
+echo "#define VERBOSE_MAKE "$VERBOSE_MAKE
+echo "#endif"
+echo
+echo "#ifndef FAST_MAKE"
+echo "#define FAST_MAKE "$FAST_MAKE
+echo "#endif"
+echo
+echo "#ifndef TOPDIR_DEFAULT"
+echo "#define TOPDIR_DEFAULT "$TOPDIR_DEFAULT
+echo "#endif"
+echo
+echo "#define RPC_RajdootAction_ 1"
+echo "#define RPC_Rajdoot_       2"
+echo "#define RPC_ANSAAction_    3"
+echo "#define RPC_ANSA_          4"
+echo 
+echo "#ifndef RPC_SYSTEM_TYPE"
+echo "#define RPC_SYSTEM_TYPE RPC_"$RPC_SYSTEM_TYPE_DEFAULT"_"
+echo "#endif"
+echo
+echo "#ifndef LEX_PROGRAM"
+echo "#define LEX_PROGRAM "$LEX_PROGRAM
+echo "#endif"
+echo
+echo "#ifndef LEXFLAGS_DEFAULT"
+echo "#define LEXFLAGS_DEFAULT "$LEXFLAGS_DEFAULT
+echo "#endif"
+echo
+echo "#ifndef YACC_PROGRAM"
+echo "#define YACC_PROGRAM "$YACC_PROGRAM
+echo "#endif"
+echo
+echo "#ifndef YACCFLAGS_DEFAULT"
+echo "#define YACCFLAGS_DEFAULT "$YACCFLAGS_DEFAULT
+echo "#endif"
+echo
+echo "#ifndef CPLUSPLUS_PROGRAM"
+echo "#define CPLUSPLUS_PROGRAM "$CPLUSPLUS_PROGRAM
+echo "#endif"
+echo
+echo "#ifndef CPLUSPLUS_INCLUDE_DEFAULT"
+echo "#define CPLUSPLUS_INCLUDE_DEFAULT "$CPLUSPLUS_INCLUDE_DEFAULT
+echo "#endif"
+echo
+echo "#ifndef CPPFLAGS_DEFAULT"
+echo "#define CPPFLAGS_DEFAULT "$CPPFLAGS_DEFAULT
+echo "#endif"
+echo
+echo "#ifndef CPLUSPLUSFLAGS_DEFAULT"
+echo "#define CPLUSPLUSFLAGS_DEFAULT "$CPLUSPLUSFLAGS_DEFAULT
+echo "#endif"
+echo
+echo "#ifndef LDFLAGS_DEFAULT"
+echo "#define LDFLAGS_DEFAULT " $LDFLAGS_DEFAULT
+echo "#endif"
+echo
+echo "#ifndef xLIBRARIES_DEFAULT"
+echo "#define xLIBRARIES_DEFAULT " $LIBRARIES_DEFAULT
+echo "#endif"
+echo
+echo "/*"
+echo " *  Installation details"
+echo " */"
+echo
+echo "#ifndef INSTALL_TOPDIR_DEFAULT"
+echo "#define INSTALL_TOPDIR_DEFAULT "$INSTALL_TOPDIR_DEFAULT
+echo "#endif"
+echo
+echo "/*"
+echo " *   ClassLib Information"
+echo " */"
+echo
+echo "#ifndef OBJECTSTOREDIR"
+echo "#define OBJECTSTOREDIR "$OBJECTSTOREDIR
+echo "#endif"
+echo
+echo "#ifndef ATOMICACTIONDIR"
+echo "#define ATOMICACTIONDIR "$ATOMICACTIONDIR
+echo "#endif"
+echo
+echo "#ifndef SERVERATOMICACTIONDIR"
+echo "#define SERVERATOMICACTIONDIR "$SERVERATOMICACTIONDIR
+echo "#endif"
+echo
+echo "/*"
+echo " *   Rajdoot Information"
+echo " */"
+echo
+echo "#ifndef C_LIST  "
+echo "#define C_LIST "$C_LIST
+echo "#endif"
+echo
+echo "#ifndef C_COUNT"
+echo "#define C_COUNT "$C_COUNT
+echo "#endif"
+echo
+echo "#ifndef MANPID_FILE"
+echo "#define MANPID_FILE "$MANPID_FILE
+echo "#endif"
+echo
+echo "#ifndef DUPSERVER"
+echo "#define DUPSERVER "$DUPSERVER
+echo "#endif"
+echo
+echo "#ifndef GMSERVER"
+echo "#define GMSERVER "$GMSERVER
+echo "#endif"
+echo
+echo "#ifndef PATH_SIZE"
+echo "#define PATH_SIZE "$PATH_SIZE
+echo "#endif"
+echo
+echo "#ifndef BROADCAST_NET"
+echo "#define BROADCAST_NET \""$BROADCAST_NET"\""
+echo "#endif"
+echo
+echo "#ifndef RAJDOOT_USE_BROADCAST"
+echo "#define RAJDOOT_USE_BROADCAST "$RAJDOOT_USE_BROADCAST
+echo "#endif"
+echo
+echo "#ifndef RAJDOOT_USE_SHARED_MEMORY"
+echo "#define RAJDOOT_USE_SHARED_MEMORY "$RAJDOOT_USE_SHARED_MEMORY
+echo "#endif"
+echo
+echo "/*"
+echo " * Location of servers to be initiated"
+echo " */"
+echo
+echo "#ifndef SERVER_LOCATION"
+echo "#define SERVER_LOCATION "$SERVER_LOCATION
+echo "#endif"
+echo
+echo "#ifndef NAME_SERVER_SERVICE"
+echo "#define NAME_SERVER_SERVICE "$NAME_SERVER_SERVICE
+echo "#endif"
+echo
+echo "/*"
+echo " *  Quoted versions."
+echo " */"
+echo
+echo "#ifndef INSTALL_TOPDIR_DEFAULT_Q"
+echo "#define INSTALL_TOPDIR_DEFAULT_Q \""$INSTALL_TOPDIR_DEFAULT"\""
+echo "#endif"
+echo
+echo "#ifndef OBJECTSTOREDIR_Q"
+echo "#define OBJECTSTOREDIR_Q \""$OBJECTSTOREDIR"\""
+echo "#endif"
+echo
+echo "#ifndef ATOMICACTIONDIR_Q"
+echo "#define ATOMICACTIONDIR_Q \""$ATOMICACTIONDIR"\""
+echo "#endif"
+echo
+echo "#ifndef SERVERATOMICACTIONDIR_Q"
+echo "#define SERVERATOMICACTIONDIR_Q \""$SERVERATOMICACTIONDIR"\""
+echo "#endif"
+echo
+echo "#ifndef C_LIST_Q  "
+echo "#define C_LIST_Q \""$C_LIST"\""
+echo "#endif"
+echo
+echo "#ifndef C_COUNT_Q"
+echo "#define C_COUNT_Q \""$C_COUNT"\""
+echo "#endif"
+echo
+echo "#ifndef MANPID_FILE_Q"
+echo "#define MANPID_FILE_Q \""$MANPID_FILE"\""
+echo "#endif"
+echo
+echo "#ifndef DUPSERVER_Q"
+echo "#define DUPSERVER_Q \""$DUPSERVER"\""
+echo "#endif"
+echo
+echo "#ifndef GMSERVER_Q"
+echo "#define GMSERVER_Q \""$GMSERVER"\""
+echo "#endif"
+echo
+echo "#ifndef SERVER_LOCATION_Q"
+echo "#define SERVER_LOCATION_Q \""$SERVER_LOCATION"\""
+echo "#endif"
+echo
+echo "#ifndef NAME_SERVER_SERVICE_Q"
+echo "#define NAME_SERVER_SERVICE_Q \""$NAME_SERVER_SERVICE"\""
+echo "#endif"
+echo
+) > $TOPDIR_DEFAULT/Config/Local.def
