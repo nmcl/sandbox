@@ -1,0 +1,541 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: ActionH.cc,v 1.9 1995/06/26 13:13:13 ngdp Exp $
+ */
+
+/*
+ *
+ * Atomic Action subsystem class
+ *
+ */
+
+#ifndef STDLIB_H_
+#  include <System/stdlib.h>
+#endif
+
+#ifndef IOSTREAM_H_
+#  include <System/iostream.h>
+#endif
+
+#if defined(DEBUG) && !defined(DEBUG_H_)
+#  include <Common/Debug.h>
+#endif
+
+#ifndef ERROR_H_
+#  include <Common/Error.h>
+#endif
+
+#ifndef BUFFER_H_
+#  include <Common/Buffer.h>
+#endif
+
+#ifndef ACTIONH_H_
+#  include <Arjuna/ActionH.h>
+#endif
+
+#ifndef ATOMICA_H_
+#  include <Arjuna/AtomicA.h>
+#endif
+
+#ifndef SERVERAA_H_
+#  include <Arjuna/ServerAA.h>
+#endif
+
+/*
+ * RCS identifying strings for this code and its matching header file
+ */
+
+static const char RCSid[] = "$Id: ActionH.cc,v 1.9 1995/06/26 13:13:13 ngdp Exp $";
+
+struct ActionInfo
+{
+    ActionInfo ();
+    Boolean operator == (const ActionInfo&) const;
+    Boolean operator != (const ActionInfo&) const;
+    
+    Uid actionUid;
+    AtomicAction::ActionType actionType;
+};
+
+ActionInfo::ActionInfo ()
+		       : actionUid(NIL_UID),
+			 actionType(AtomicAction::NESTED)
+{    
+}
+
+Boolean ActionInfo::operator== ( const ActionInfo& other ) const
+{
+    if ((actionUid == other.actionUid) &&
+	(actionType == other.actionType))
+	return TRUE;
+    else
+	return FALSE;
+}
+
+Boolean ActionInfo::operator!= ( const ActionInfo& other ) const
+{
+    if ((actionUid != other.actionUid) ||
+	(actionType != other.actionType))
+	return TRUE;
+    else
+	return FALSE;
+}
+
+/*
+ * Public constructors and destructor
+ */
+
+ActionHierarchy::ActionHierarchy ( int depth )
+				 : hierarchy(0),
+				   maxHierarchyDepth(depth),
+				   currentDepth(0)
+{
+#ifdef DEBUG
+    debug_stream.lock();
+    
+    debug_stream << CONSTRUCTORS << FAC_ATOMIC_ACTION << VIS_PUBLIC;
+    debug_stream << "ActionHierarchy::ActionHierarchy(" << depth << ")" << endl;
+    debug_stream.unlock();
+    
+#endif
+    
+    if (maxHierarchyDepth > 0)
+    {
+	hierarchy = new ActionInfo[maxHierarchyDepth];
+    }
+}
+
+ActionHierarchy::ActionHierarchy ( const ActionHierarchy& copy )
+				 : hierarchy(0),
+				   maxHierarchyDepth(copy.maxHierarchyDepth),
+				   currentDepth(copy.currentDepth)
+{
+      
+    if (maxHierarchyDepth > 0)
+    {
+	hierarchy = new ActionInfo[maxHierarchyDepth];
+    }
+    
+    for (int i = 0; i < currentDepth; i++)
+	hierarchy[i] = copy.hierarchy[i];
+}
+
+ActionHierarchy::~ActionHierarchy ()
+{
+#ifdef DEBUG
+    debug_stream.lock();
+    
+    debug_stream << DESTRUCTORS << FAC_ATOMIC_ACTION << VIS_PUBLIC;
+    debug_stream << "ActionHierarchy::~ActionHierarchy()" << endl;
+    debug_stream.unlock();
+    
+#endif
+
+    if (hierarchy)
+    {
+	delete [] hierarchy;
+	hierarchy = 0;
+    }
+}
+
+/*
+ * Public non-virtual member functions
+ */
+
+ostream& operator<< (ostream& strm, const ActionHierarchy& toPrint )
+{
+    strm << "Current depth : " << toPrint.currentDepth << endl;
+    strm << "Action Uids :" << endl;
+    
+    for (int i = 0; i < toPrint.currentDepth; i++)
+	strm << "\t" << toPrint.hierarchy[i].actionUid << endl;
+
+    return strm;
+}
+
+	
+ActionHierarchy& ActionHierarchy::operator= ( const ActionHierarchy& copy )
+{
+    /* Beware of A = A */
+    
+    if (this == &copy)
+	return *this;
+
+    if (hierarchy)
+    {
+	delete [] hierarchy;
+    }
+
+    currentDepth = copy.currentDepth;
+    maxHierarchyDepth = copy.maxHierarchyDepth;
+      
+    if (maxHierarchyDepth > 0)
+    {
+	hierarchy = new ActionInfo[maxHierarchyDepth];
+    }
+    
+    for (int i = 0; i < currentDepth; i++)
+	hierarchy[i] = copy.hierarchy[i];
+
+    return *this;
+}
+    
+Boolean ActionHierarchy::operator== ( const ActionHierarchy& other ) const
+{
+    Boolean same = TRUE;
+    
+    if (currentDepth == other.depth())
+    {
+	for (int i = 0; i < currentDepth; i++)
+	    if (hierarchy[i] != other.getActionInfo(i))
+	    {
+		same = FALSE;
+		break;
+	    }
+    }
+    else
+	same = FALSE;
+    
+    return same;
+}
+
+/*
+ * Add. Insert new entry growing table as needed
+ */
+
+Boolean ActionHierarchy::add ( const Uid& actionId, AtomicAction::ActionType at )
+{
+
+#ifdef DEBUG
+    debug_stream.lock();
+    
+    debug_stream << FUNCTIONS << FAC_ATOMIC_ACTION << VIS_PUBLIC;
+    debug_stream << "ActionHierarchy::add(" << actionId << ", " << at << ")" << endl;
+    debug_stream.unlock();
+    
+#endif
+
+    Boolean result = TRUE;
+    
+    if (currentDepth >= maxHierarchyDepth)
+    {
+	ActionInfo *newHier = 0;
+	int newDepth = (maxHierarchyDepth + 1) * 2; /*  Ensure non zero */
+	
+	newHier = new ActionInfo[newDepth];
+
+	if (newHier)
+	{
+	    maxHierarchyDepth = newDepth;
+	    
+	    for (int i = 0; i < currentDepth; i++)
+	    {
+		newHier[i] = hierarchy[i];
+	    }
+
+	    delete [] hierarchy;
+
+	    hierarchy = newHier;
+	}
+	else
+	    result = FALSE;
+    }
+
+    if (result)
+    {
+	hierarchy[currentDepth].actionType = at;
+	hierarchy[currentDepth++].actionUid = actionId;
+    }
+
+    return result;
+}
+
+/*
+ * Scan hierarchy looking for a particular Uid starting at deepest
+ * and going up. Do NOT go past any top level action
+ */
+
+Boolean ActionHierarchy::isAncestor ( const Uid& target ) const
+{
+    Boolean result = FALSE;
+
+    for (int i = currentDepth - 1; (i >= 0) && (!result); i--)
+    {
+	if (hierarchy[i].actionUid == target)
+	{
+	    result = TRUE;
+	    break;
+	}
+	else
+	    if (hierarchy[i].actionType == AtomicAction::TOP_LEVEL)
+		break;
+    }
+
+    return result;
+}
+
+Boolean ActionHierarchy::pack ( Buffer& state ) const
+{
+    Boolean res =  state.pack(currentDepth);
+
+    if (currentDepth > 4)
+	cout << "pack currentDepth " << currentDepth << endl;
+    
+    for (int i = 0; (i < currentDepth) && (res); i++)
+    {
+	res = hierarchy[i].actionUid.pack(state) && state.pack(hierarchy[i].actionType);
+    }
+
+    return res;
+}
+
+Boolean ActionHierarchy::unpack ( Buffer& state )
+{
+    int newDepth;
+    Boolean result = TRUE;
+
+    if (!state.unpack(newDepth))
+	return FALSE;
+
+    if (newDepth > 4)
+	cout << "unpack depth " << newDepth << endl;
+    
+    if (maxHierarchyDepth < newDepth)
+    {
+	/* my hierarchy is too small */
+
+	ActionInfo *newHierarchy = new ActionInfo[newDepth];
+
+	if (newHierarchy)
+	{
+	    if (hierarchy)
+		delete [] hierarchy;
+
+	    hierarchy = newHierarchy;
+	    maxHierarchyDepth = newDepth;
+	}
+	else
+	    result = FALSE;
+    }
+    else
+    {
+	/* new hierarchy is smaller - purge excess */
+
+	int i;
+	
+	for (i = newDepth; i < currentDepth; i++)
+	{
+	    hierarchy[i].actionUid = NIL_UID;
+	}
+    }    
+
+    if (result)
+    {
+	int dummy;
+	Boolean res = TRUE;
+	
+	for (int i = 0; (i < newDepth) && (res); i++)
+	{
+	    if (hierarchy[i].actionUid.unpack(state))
+		res = state.unpack(dummy);
+
+	    if (res)
+		hierarchy[i].actionType = (AtomicAction::ActionType)dummy;
+	}
+
+	if (res)
+	    currentDepth = newDepth;
+	else
+	    result = FALSE;
+    }
+    
+    return result;
+}
+
+Boolean ActionHierarchy::establishHierarchy ()
+{
+#ifdef DEBUG
+    debug_stream.lock();
+    
+    debug_stream << FUNCTIONS << FAC_ATOMIC_ACTION << VIS_PUBLIC;
+    debug_stream << "ActionHierarchy::establishHierarchy()" << endl;
+    debug_stream.unlock();
+    
+#endif
+
+    int commonRoot = 0;
+    ServerAtomicAction *SAA = ServerAtomicAction::currentSAA();
+    int currentHierarchyDepth = (SAA ? SAA->hierarchyDepth() : 0);
+
+#ifdef DEBUG
+    debug_stream.lock();
+    
+    debug_stream << FUNCTIONS << FAC_ATOMIC_ACTION << VIS_PUBLIC;
+    debug_stream << "ActionHierarchy::establishHierarchy(): new depth = " 
+		 << currentDepth << " old depth = " 
+		 << currentHierarchyDepth << endl;
+    debug_stream.unlock();
+    
+#endif
+    
+    /*
+     * First clean up the current hierarchy. This consists of first determining
+     * if the new hierarchy is smaller than the current in which case those
+     * "excess" actions need terminating
+     */
+
+    if (currentHierarchyDepth > 0)
+    {
+	ActionHierarchy *currentHierarchy = 0;
+
+	while ((AtomicAction::Current()) && 
+	       (AtomicAction::Current()->hierarchyDepth() > currentHierarchyDepth))
+	{
+	    /* 
+	     * This should not happen in practice since it means that
+	     * a local action was still executing after the operation
+	     * returned to the original caller. Still just in case...
+	     */
+
+#ifdef DEBUG
+	    debug_stream.lock();
+	    
+	    debug_stream << FUNCTIONS << FAC_ATOMIC_ACTION << VIS_PUBLIC;
+	    debug_stream << "ActionHierarchy::establishHierarchy(): cleaning up old action " 
+			 << AtomicAction::Current()->get_uid() << endl;
+	    debug_stream.unlock();
+	    
+#endif
+
+	    AtomicAction::Current()->Abort();
+	}
+	
+	currentHierarchy = ServerAtomicAction::currentSAA()->getHierarchy();
+	commonRoot = findCommonPrefix(*currentHierarchy);
+	
+	/* 
+	 * Failure makes it possible for the client hierarchy
+	 * to be smaller than that in the server. In this case
+	 * force the "excess" actions to be correctly terminated
+	 */
+
+	for (int i = commonRoot; i < currentHierarchyDepth; i++)
+	{
+	    SAA = ServerAtomicAction::currentSAA();
+
+	    if (SAA)
+	    {
+#ifdef DEBUG
+		debug_stream.lock();
+		
+		debug_stream << FUNCTIONS << FAC_ATOMIC_ACTION << VIS_PUBLIC;
+		debug_stream << "ActionHierarchy::establishHierarchy(): finishing old action " 
+			     << SAA->get_uid() << endl;
+		debug_stream.unlock();
+		
+#endif
+
+		SAA->finish();
+		delete SAA;
+	    }
+	}
+
+    }
+    
+    /*
+     * Now start any new actions that exist in the client but not the server
+     */
+
+    while (commonRoot < currentDepth)
+    {
+	SAA = new ServerAtomicAction(hierarchy[commonRoot].actionUid, hierarchy[commonRoot].actionType);
+
+#ifdef DEBUG
+	debug_stream.lock();
+	
+	debug_stream << FUNCTIONS << FAC_ATOMIC_ACTION << VIS_PUBLIC;
+	debug_stream << "ActionHierarchy::establishHierarchy(): starting up new action " 
+		     << SAA->get_uid() << endl;
+	debug_stream.unlock();
+	
+#endif
+	SAA->Begin();
+
+	commonRoot++; 
+    }
+
+    return TRUE;
+}
+
+void ActionHierarchy::forgetDeepest ()
+{
+    if (currentDepth > 0)
+    {
+	hierarchy[--currentDepth].actionUid = NIL_UID;
+    }
+    
+}
+
+/*
+ * Find common prefix in two hierarchies.
+ */
+
+int ActionHierarchy::findCommonPrefix ( const ActionHierarchy& oldHierarchy ) const
+{
+#ifdef DEBUG
+    debug_stream.lock();
+    
+    debug_stream << FUNCTIONS << FAC_ATOMIC_ACTION << VIS_PRIVATE;
+    debug_stream << "ActionHierarchy::::findCommonPrefix()" << endl;
+    debug_stream.unlock();
+    
+#endif
+
+    int common = 0;
+    int max = oldHierarchy.depth();
+    
+
+    while ((common < currentDepth) &&
+	   (common < max) &&
+	   (hierarchy[common] == oldHierarchy.getActionInfo(common)))
+    {
+	common++;
+    }
+
+#ifdef DEBUG
+    debug_stream.lock();
+    
+    debug_stream << FUNCTIONS << FAC_ATOMIC_ACTION << VIS_PRIVATE;
+    debug_stream << "ActionHierarchy::::findCommonPrefix(): prefix is " 
+		 << common << endl;
+    debug_stream.unlock();
+    
+#endif
+
+    return common;
+}
+
+int ActionHierarchy::depth () const
+{
+    return currentDepth;
+}
+
+const Uid& ActionHierarchy::getDeepestActionUid ( ) const
+{
+    if (currentDepth > 0)
+	return hierarchy[currentDepth-1].actionUid;
+    else
+	return NIL_UID;
+}
+
+const ActionInfo& ActionHierarchy::getActionInfo ( int typeIndex ) const
+{
+    return hierarchy[typeIndex];
+}
+

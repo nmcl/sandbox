@@ -1,0 +1,46 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: FileInfo.n,v 1.1 1993/11/03 14:45:07 nmcl Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(FILEINFO_CC_)
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF String FileInfo::getDname () const
+{
+    return fileDname;
+}
+
+INLINEF String FileInfo::getFname () const
+{
+    return fileFname;
+}
+
+INLINEF StubModifier FileInfo::getGeneric () const
+{
+    return fileGeneric;
+}
+
+INLINEF Boolean FileInfo::warningsEnabled () const
+{
+    return warningsOn;
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif

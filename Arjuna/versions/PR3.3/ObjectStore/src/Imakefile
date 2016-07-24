@@ -1,0 +1,60 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.9 1995/03/28 15:37:57 ngdp Exp $
+COMMENT
+
+LIB = $(LIBOBJECTSTORE)
+
+SOURCES = FdCache.cc \
+          ObjStore.cc \
+	  FSStore.cc \
+	  FragStore.cc \
+	  HashedStore.cc \
+	  VolatileStore.cc \
+	  ShadowStore.cc \
+	  ActionStore.cc \
+	  SingleTypeMS.cc \
+	  MappedStore.cc \
+	  MappedFile.cc \
+          ObjStoreI.cc \
+	  StoreList.cc
+
+OBJECTS = FdCache.o \
+          ObjStore.o \
+	  FSStore.o \
+	  FragStore.o \
+	  HashedStore.o \
+	  VolatileStore.o \
+	  ShadowStore.o \
+	  ActionStore.o \
+	  SingleTypeMS.o \
+	  MappedStore.o \
+	  MappedFile.o \
+          ObjStoreI.o \
+	  StoreList.o
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES) -I../include)
+
+AllTarget($(LIB))
+
+MakeLibrary($(LIB),$(OBJECTS))
+
+MakeObjectCPLUSPLUS(FdCache,NOPARAM)
+MakeObjectCPLUSPLUS(ObjStore,NOPARAM)
+MakeObjectCPLUSPLUS(FSStore,NOPARAM)
+MakeObjectCPLUSPLUS(FragStore,NOPARAM)
+MakeObjectCPLUSPLUS(HashedStore,NOPARAM)
+MakeObjectCPLUSPLUS(VolatileStore,NOPARAM)
+MakeObjectCPLUSPLUS(ShadowStore,NOPARAM)
+MakeObjectCPLUSPLUS(ActionStore,NOPARAM)
+MakeObjectCPLUSPLUS(MappedFile,NOPARAM)
+MakeObjectCPLUSPLUS(MappedStore,NOPARAM)
+MakeObjectCPLUSPLUS(SingleTypeMS,NOPARAM)
+MakeObjectCPLUSPLUS(ObjStoreI,NOPARAM)
+MakeObjectCPLUSPLUS(StoreList,NOPARAM)

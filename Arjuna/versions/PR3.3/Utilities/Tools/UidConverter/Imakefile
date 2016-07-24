@@ -1,0 +1,29 @@
+COMMENT 
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.6 1994/10/11 08:31:14 ngdp Exp $
+COMMENT
+
+SOURCES   = UidConverter.cc
+
+OBJECTS   = UidConverter.o
+
+LIBRARIES = $(LIBOBJECTSTORE) $(LIBARJUNA) $(LIBCOMMON) $(LIBSTUB)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+AllTarget(UidConverter)
+
+CreateInstallTopDirectory(bin)
+InstallProgram(bin,UidConverter)
+
+MakeProgramCPLUSPLUS(UidConverter, $(OBJECTS) $(LIBRARIES),NOPARAM)
+
+MakeObjectCPLUSPLUS(UidConverter,NOPARAM)
+
+TidyTarget(UidConverter)

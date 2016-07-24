@@ -1,0 +1,29 @@
+COMMENT 
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.4 1994/11/29 14:02:24 ngdp Exp $
+COMMENT
+
+SOURCES   = SetDebug.cc
+
+OBJECTS   = SetDebug.o
+
+LIBRARIES = $(LIBARJUNA) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+AllTarget(SetDebug)
+
+CreateInstallTopDirectory(bin)
+InstallProgram(bin,SetDebug)
+
+MakeProgramCPLUSPLUS(SetDebug, $(OBJECTS) $(LIBRARIES),NOPARAM)
+
+MakeObjectCPLUSPLUS(SetDebug,NOPARAM)
+
+TidyTarget(SetDebug)

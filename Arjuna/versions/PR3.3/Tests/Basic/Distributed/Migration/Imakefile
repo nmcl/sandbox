@@ -1,0 +1,29 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1995/09/18 11:36:55 nmcl Exp $
+COMMENT
+
+SOURCES  = Replica.cc \
+           MigrationDriver.cc
+
+OBJECTS  = Replica.o \
+           MigrationDriver.o
+
+LIBRARIES = $(LIBREPLICATION) $(LIBARJSERVERS)  $(LIBARJUNA) $(LIBRPC) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+AllTarget(MigrationDriver)
+
+MakeProgramCPLUSPLUS(MigrationDriver,$(OBJECTS) $(LIBRARIES),NOPARAM)
+
+MakeObjectCPLUSPLUS(Replica,NOPARAM)
+MakeObjectCPLUSPLUS(MigrationDriver,NOPARAM)
+
+TidyTarget(MigrationDriver)

@@ -1,0 +1,22 @@
+COMMENT 
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 1994/12/01 13:37:29 ngdp Exp $
+COMMENT
+
+CreateInstallTopDirectory(lib)
+InstallLibrary(lib,libArjuna.a)
+InstallLibrary(lib,libArjServers.a)
+InstallLibrary(lib,libCrashRec.a)
+InstallLibrary(lib,libReplication.a)
+InstallLibrary(lib,libObjConfig.a)
+InstallLibrary(lib,libCommon.a)
+InstallLibrary(lib,libNoneThread.a)
+
+TidyTarget($(LIBARJUNA) $(LIBARJSERVERS) $(LIBCRASH) $(LIBREPLICATION) $(LIBCOMMON) $(LIBOBJCONFIG))
+

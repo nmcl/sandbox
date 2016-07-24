@@ -1,0 +1,35 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: Interface.n,v 1.2 1994/09/14 08:55:11 ngdp Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(INTERFACE_CC_)
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF String InterfaceDef::getHeaderFname () const
+{
+    return headerFname;
+}
+
+INLINEF String InterfaceDef::getInputFname () const
+{
+    return inputFname;
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif

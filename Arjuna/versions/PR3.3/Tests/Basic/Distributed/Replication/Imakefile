@@ -1,0 +1,29 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.5 1994/11/29 14:02:00 ngdp Exp $
+COMMENT
+
+SOURCES  = Replica.cc \
+           ReplicationDriver.cc
+
+OBJECTS  = Replica.o \
+           ReplicationDriver.o
+
+LIBRARIES = ../../PUtils/libPUtils.a $(LIBREPLICATION) $(LIBARJSERVERS)  $(LIBARJUNA) $(LIBRPC) $(LIBCOMMON)
+
+SetLocalCppFlags(-I../../PUtils -I$(ARJUNA_INCLUDES))
+
+AllTarget(ReplicationDriver)
+
+MakeProgramCPLUSPLUS(ReplicationDriver,$(OBJECTS) $(LIBRARIES),NOPARAM)
+
+MakeObjectCPLUSPLUS(Replica,NOPARAM)
+MakeObjectCPLUSPLUS(ReplicationDriver,NOPARAM)
+
+TidyTarget(ReplicationDriver)

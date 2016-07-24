@@ -1,0 +1,12 @@
+COMMENT 
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.3 1994/08/02 11:03:24 ndbi Exp $
+COMMENT
+
+TidyTarget(AAStatus_stub.h AAStatus_stubclass.h)

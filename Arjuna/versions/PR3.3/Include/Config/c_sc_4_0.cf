@@ -1,0 +1,18 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: c_sc_4_0.cf,v 1.1 1996/11/08 14:31:29 ngdp Exp $
+ */
+
+/*
+ * c_sc_4_1.cf
+ */
+
+#define COMPILER_SPECIFIC_FLAGS -DSTUBGEN_IGNORE_COMPILER -DHAVE_LONG_LONG -DDONT_DELETE_DBGFILTER
+#define STUBGEN_CC_FLAGS "-D__SUNPRO_CC=0x410 -D__BUILTIN_VA_ARG_INCR"
+

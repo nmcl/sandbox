@@ -1,0 +1,1345 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: FragStore.cc,v 1.25 1995/08/18 14:15:36 ngdp Exp $
+ */
+
+#ifndef STDLIB_H_
+#  include <System/stdlib.h>
+#endif
+
+#ifndef UNISTD_H_
+#  include <System/unistd.h>
+#endif
+
+#ifndef PROTOS_H_
+#  include <System/protos.h>
+#endif
+
+#ifndef STRSTREAM_H_
+#  include <System/strstream.h>
+#endif
+
+#ifndef MEMORY_H_
+#  include <System/memory.h>
+#endif
+
+#ifndef SYS_STAT_H_
+#  include <System/sys/stat.h>
+#endif
+
+#ifndef SYS_RESOURCE_H_
+#  include <System/sys/resource.h>
+#endif
+
+#ifndef SYS_UIO_H_
+#  include <System/sys/uio.h>
+#endif
+
+#ifndef NETINET_IN_H_
+#  include <System/netinet/in.h>
+#endif
+
+#ifndef ERRNO_H_
+#  include <System/errno.h>
+#endif
+
+#ifndef STRING_H_
+#  include <System/string.h>
+#endif
+
+#ifndef CTYPE_H_
+#  include <System/ctype.h>
+#endif
+
+#ifndef DIRENT_H_
+#  include <System/dirent.h>
+#endif
+
+#ifndef FCNTL_H_
+#  include <System/fcntl.h>
+#endif
+
+#ifndef SYS_FILE_H_
+#  include <System/sys/file.h>
+#endif
+
+#ifndef SYS_PARAM_H_
+#  include <System/sys/param.h>
+#endif
+
+#if defined(DEBUG) && !defined(DEBUG_H_)
+#  include <Common/Debug.h>
+#endif
+
+#ifndef ERROR_H_
+#  include <Common/Error.h>
+#endif
+
+#ifndef OBJSTATE_H_
+#  include <Arjuna/ObjState.h>
+#endif
+
+#ifndef OBJSTORE_H_
+#  include <ObjectStore/ObjStore.h>
+#endif
+
+#ifndef FRAGSTORE_H_
+#  include <ObjectStore/FragStore.h>
+#endif
+
+#ifndef STATEDICT_H_
+#  include <ObjectStore/StateDict.h>
+#endif
+
+#ifndef STORELIST_H_
+#  include "StoreList.h"
+#endif
+
+#ifndef CONFIGURE_H_
+#  include <Config/Configure.h>
+#endif
+
+#ifdef NO_SYNC
+#  undef DO_FSYNC
+#  define SYNC 0
+#else
+#  ifdef __linux
+#    define DO_FSYNC
+#    define SYNC 0
+#  endif
+#endif
+
+#if !defined(NO_SYNC) && !defined(DO_FSYNC)
+#  ifdef O_DSYNC
+#    define SYNC O_DSYNC
+#  else
+#    ifdef O_FSYNC
+#      define SYNC O_FSYNC
+#    else
+#      ifdef O_SYNC
+#        define SYNC O_SYNC
+#      endif
+#    endif
+#  endif
+#endif
+
+static osCreatorFunc createFSInstance;
+
+static const unsigned char MAGIC1[4] = {0x13, 0x57, 0x9a, 0xce};
+static const unsigned char MAGIC2[4] = {0x13, 0x57, 0x9a, 0xdf};
+
+static const int MAXSTATESIZE = 16 * 1024 * 1024; /* 16MB */
+
+#ifdef STRUCT_INIT_BUG
+static SetUpInfo LPSetup = { 0, 0, 0, &createFSInstance, FragmentedStoreType, 0 };
+#else
+static SetUpInfo LPSetup = { FALSE, FALSE, 0, &createFSInstance, FragmentedStoreType, 0 };
+#endif
+
+StateDictionary::StateDictionary ()
+				 : originalOffset(0),
+				   originalSize(0),
+				   shadowOffset(0),
+				   shadowSize(0),
+				   stateHidden(htons(FALSE)),
+				   shadowExists(htons(FALSE))
+{
+    ::memcpy(magic, MAGIC1, sizeof(MAGIC1));
+}
+
+void StateDictionary::decode ()
+{
+    if (::memcmp(magic, MAGIC2, sizeof(MAGIC2)) == 0)
+    {
+	originalOffset = ntohl(originalOffset);
+	originalSize = ntohl(originalSize);
+	shadowOffset = ntohl(shadowOffset);
+	shadowSize = ntohl(shadowSize);
+	stateHidden = ntohs(stateHidden);
+	shadowExists = ntohs(shadowExists);
+	::memcpy(magic, MAGIC1, sizeof(MAGIC1));
+    }
+}
+
+void StateDictionary::encode ()
+{
+    if (::memcmp(magic, MAGIC1, sizeof(MAGIC1)) == 0)
+    {
+	originalOffset = htonl(originalOffset);
+	originalSize = htonl(originalSize);
+	shadowOffset = htonl(shadowOffset);
+	shadowSize = htonl(shadowSize);
+	stateHidden = htons(stateHidden);
+	shadowExists = htons(shadowExists);
+	::memcpy(magic, MAGIC2, sizeof(MAGIC2));
+    }
+}
+
+ObjectStore* createFSInstance ( const char* locationOfStore )
+{
+    return new FragmentedStore(locationOfStore);
+}
+
+FragmentedStoreSetUp::FragmentedStoreSetUp ()
+					   : ShadowingStoreSetUp(LPSetup)
+{
+#ifdef DEBUG
+    debug_stream.lock();
+    
+    debug_stream << CONSTRUCTORS << FAC_OBJECT_STORE << VIS_PUBLIC;
+    debug_stream << "FragmentedStoreSetUp::FragmentedStoreSetUp ()" << endl;
+    debug_stream.unlock();
+    
+#endif
+
+#ifdef GCC_STATIC_INIT_BUG
+    if (!LPSetup._setUp)
+    {
+	LPSetup._new = &createFSInstance;
+	LPSetup._tn = FragmentedStoreType;
+	LPSetup._setUp = TRUE;
+	ObjectStore::addToList(&LPSetup);
+    }
+#endif    
+}
+
+FragmentedStoreSetUp::~FragmentedStoreSetUp () {}
+
+/*
+ * Public constructors and destructor
+ */
+
+FragmentedStore::FragmentedStore ( const char* location )
+				 : ShadowingStore(),
+				   storeBlockSize(0),
+				   netByteOrder(TRUE)
+{
+#ifdef DEBUG
+    debug_stream.lock();
+    
+    debug_stream << CONSTRUCTORS << FAC_OBJECT_STORE << VIS_PUBLIC;
+    debug_stream << "FragmentedStore::FragmentedStore (\"" << location
+		 << "\")" << endl;
+    debug_stream.unlock();
+    
+#endif
+
+    setupStore(location);
+}
+
+FragmentedStore::~FragmentedStore ()
+{
+#ifdef DEBUG
+    debug_stream.lock();
+    
+    debug_stream << DESTRUCTORS << FAC_OBJECT_STORE << VIS_PUBLIC;
+    debug_stream << "FragmentedStore::~FragmentedStore()" << endl;
+    debug_stream.unlock();
+    
+#endif
+
+}
+
+/*
+ * Public functions
+ */
+
+ObjectStore::StateStatus FragmentedStore::currentState ( const Uid& objUid,
+							 const TypeName tName )
+{
+#ifdef DEBUG
+    debug_stream.lock();
+    
+    debug_stream << FUNCTIONS << FAC_OBJECT_STORE << VIS_PUBLIC;
+    debug_stream << "FragmentedStore::currentState(" 
+		 << objUid << ", " << tName << ")" << endl;
+    debug_stream.unlock();
+    
+#endif
+
+    ObjectStore::StateStatus theState = ObjectStore::OS_UNKNOWN;
+    
+    if (storeValid())
+    { 
+#ifndef GCC_NESTED_TYPE_BUG
+        FdCache::cacheEntry *cachePtr = openAndLock(objUid, tName, F_RDLCK);
+#else
+        cacheEntry *cachePtr = openAndLock(objUid, tName, F_RDLCK);
+#endif
+	int fd = (cachePtr == 0 ? -1 : cachePtr->storeFd);
+	
+        if (fd != -1)
+        {
+	    if (cachePtr->cachedDictPtr->stateHidden)
+	    {
+		if (cachePtr->cachedDictPtr->shadowExists)
+		    theState = ObjectStore::OS_UNCOMMITTED_HIDDEN;
+		else
+		    theState = ObjectStore::OS_COMMITTED_HIDDEN;
+	    }
+	    else if (cachePtr->cachedDictPtr->shadowExists)
+		theState = ObjectStore::OS_UNCOMMITTED;
+	    else
+		theState = ObjectStore::OS_COMMITTED;
+
+	    cachePtr->holdOpen = FALSE;
+	    closeAndUnlock(cachePtr);
+	}
+    }
+    return theState;
+}
+
+/*
+ * The following operations hide/reveal an object regardless of state.
+ * Hidden objects cannot be read but they can be written (Crash recovery
+ * needs this)
+ */
+
+Boolean FragmentedStore::hide_state ( const Uid& objUid,
+				      const TypeName tName )
+{
+#ifdef DEBUG
+    debug_stream.lock();
+    
+    debug_stream << FUNCTIONS << FAC_OBJECT_STORE << VIS_PUBLIC;
+    debug_stream << "FragmentedStore::hide_state(" 
+		 << objUid << ", " << tName << ")" << endl;
+    debug_stream.unlock();
+    
+#endif
+	
+    Boolean hiddenOk = FALSE;
+
+    /* Bail out if the object store is not set up */
+
+    if (storeValid())
+    {
+#ifndef GCC_NESTED_TYPE_BUG
+	FdCache::cacheEntry *cachePtr = openAndLock(objUid, tName, F_WRLCK);
+#else
+	cacheEntry *cachePtr = openAndLock(objUid, tName, F_WRLCK);
+#endif
+	int fd = (cachePtr != 0 ? cachePtr->storeFd : -1);
+
+	if (fd != -1)
+	{
+	    StateDictionary *sdPtr = (cachePtr != 0 ? cachePtr->cachedDictPtr : 0);
+
+	    if ((sdPtr != 0) && !sdPtr->stateHidden)
+	    {
+		int writeLen = sizeof(struct StateDictionary);
+
+		sdPtr->stateHidden = TRUE;
+
+		/* re-encode before writing */
+		
+		sdPtr->encode();
+		
+		/* rewrite header */
+	    
+		::lseek(fd, 0, SEEK_SET);
+		
+		if (::write(fd, (char*) sdPtr, writeLen) != writeLen)
+		{
+		    error_stream << WARNING 
+				 << "FragmentedStore::hide_state()"
+				 << " write failed for " << objUid << endl;
+		    closeAndUnlock(cachePtr);
+		} else
+		{
+#if defined(DO_FSYNC)
+		    if (::fsync(fd) == -1)
+		    {
+			error_stream << WARNING
+				     << "FragmentedStore::hide_state() "
+				     << "fsync failed for " << objUid << endl;
+			closeAndUnlock(cachePtr);
+			return FALSE;
+		    }
+#endif
+		    hiddenOk = closeAndUnlock(cachePtr);
+		}    
+	    }
+	    else
+		hiddenOk = closeAndUnlock(cachePtr);
+	}
+    }
+    
+    if (!hiddenOk)
+    {
+	error_stream << WARNING 
+		     << "FragmentedStore::hide_state() "
+		     << "failed for " << objUid << endl;
+    }
+    
+    return hiddenOk;
+}
+
+Boolean FragmentedStore::reveal_state ( const Uid& objUid,
+					const TypeName tName )
+{
+#ifdef DEBUG
+    debug_stream.lock();
+    
+    debug_stream << FUNCTIONS << FAC_OBJECT_STORE << VIS_PUBLIC;
+    debug_stream << "FragmentedStore::reveal_state(" 
+		 << objUid << ", " << tName << ")" << endl;
+    debug_stream.unlock();
+    
+#endif
+	
+    Boolean revealedOk = FALSE;
+
+    if (storeValid())
+    {
+#ifndef GCC_NESTED_TYPE_BUG
+	FdCache::cacheEntry *cachePtr = openAndLock(objUid, tName, F_WRLCK);
+#else
+	cacheEntry *cachePtr = openAndLock(objUid, tName, F_WRLCK);
+#endif
+	int fd = (cachePtr != 0 ? cachePtr->storeFd : -1);
+
+	if (fd != -1)
+	{
+	    StateDictionary *sdPtr = (cachePtr != 0 ? cachePtr->cachedDictPtr : 0);
+
+	    if ((sdPtr != 0) && sdPtr->stateHidden)
+	    {
+		int writeLen = sizeof(struct StateDictionary);
+
+		sdPtr->stateHidden = FALSE;
+
+		sdPtr->encode();
+
+		/* rewrite header */
+	    
+		::lseek(fd, 0, SEEK_SET);
+		
+		if (::write(fd, (char*) sdPtr, writeLen) != writeLen)
+		{
+		    error_stream << WARNING 
+				 << "FragmentedStore::reveal_state()"
+				 << " write failed for " << objUid << endl;
+		    closeAndUnlock(cachePtr);
+		} else
+		{
+#if defined(DO_FSYNC)
+		    if (::fsync(fd) == -1)
+		    {
+			error_stream << WARNING
+				     << "FragmentedStore::reveal_state() "
+				     << "fsync failed for " << objUid << endl;
+			closeAndUnlock(cachePtr);
+			
+			return FALSE;
+		    }
+#endif
+		    revealedOk = closeAndUnlock(cachePtr);
+		}    
+	    }
+	    else
+		revealedOk = closeAndUnlock(cachePtr);
+	}
+    }
+	
+    if (!revealedOk)
+    {
+	error_stream << WARNING 
+		     << "FragmentedStore::reveal_state() "
+		     << "failed for " << objUid << endl;
+    }
+    
+    return revealedOk;
+}
+   
+/*
+ * The following operation commits a previous write_state operation which
+ * was made with the SHADOW StateType argument. If the state was already
+ * committed do nothing.
+ * Hidden status is preserved.
+ */
+
+Boolean FragmentedStore::commit_state ( const Uid& objUid,
+					const TypeName tName )
+{
+#ifdef DEBUG
+    debug_stream.lock();
+    
+    debug_stream << FUNCTIONS << FAC_OBJECT_STORE << VIS_PUBLIC;
+    debug_stream << "FragmentedStore::commit_state(" 
+		 << objUid << ", " << tName << ")" << endl;
+    debug_stream.unlock();
+    
+#endif
+	
+    Boolean commitOk = FALSE;
+
+    /* Bail out if the object store is not set up */
+
+    if (storeValid())
+    {
+#ifndef GCC_NESTED_TYPE_BUG
+	FdCache::cacheEntry *cachePtr = openAndLock(objUid, tName, F_WRLCK);
+#else
+	cacheEntry *cachePtr = openAndLock(objUid, tName, F_WRLCK);
+#endif
+	int fd = (cachePtr != 0 ? cachePtr->storeFd : -1);
+	StateDictionary *sdPtr = (cachePtr != 0 ? cachePtr->cachedDictPtr : 0);
+
+	if ((fd != -1) && (sdPtr != 0))
+	{
+	    if (sdPtr->shadowExists)
+	    {
+		Boolean truncate = FALSE;
+		unsigned long temp;
+		int writeLen;
+		iovec iov[2];
+
+		writeLen = iov[0].iov_len = sizeof(struct StateDictionary);
+		iov[0].iov_base = (caddr_t) sdPtr;
+
+		/* swap over original/shadow entries */
+
+		temp = sdPtr->originalOffset;
+		sdPtr->originalOffset = sdPtr->shadowOffset;
+		sdPtr->shadowOffset = temp;
+		temp = sdPtr->originalSize;
+		sdPtr->originalSize = sdPtr->shadowSize;
+		sdPtr->shadowSize = 0;
+		sdPtr->shadowExists = FALSE;
+		
+		/* Allow file to be closed */
+
+		cachePtr->holdOpen = FALSE;
+		
+		if ((sdPtr->originalSize <= cachePtr->maxCachedImageSize) &&
+		    (cachePtr->cachedBlockPtr != 0))
+		{
+		    writeLen += sdPtr->originalSize;
+		    iov[1].iov_len = sdPtr->originalSize;
+		    iov[1].iov_base = cachePtr->cachedBlockPtr;
+		    truncate = TRUE;
+		}
+		else
+		{
+		    iov[1].iov_len = 0;
+		    iov[1].iov_base = 0;
+		}
+	    
+		/* rewrite header */
+
+		sdPtr->encode();
+		
+		::lseek(fd, 0, SEEK_SET);
+		
+		if (::writev(fd, iov, 2) != writeLen)
+		{
+		    error_stream << WARNING 
+				 << "FragmentedStore::commit_state()"
+				 << " - writev failed for " << objUid << endl;
+		    closeAndUnlock(cachePtr);
+		} else
+		{
+#if defined(DO_FSYNC)
+		    if (::fsync(fd) == -1)
+		    {
+			error_stream << WARNING
+				     << "FragmentedStore::commit_state() "
+				     << "fsync failed for " << objUid << endl;
+			closeAndUnlock(cachePtr);
+			return FALSE;
+		    }
+#endif
+		    if (truncate)
+			::ftruncate(fd, writeLen);
+		
+		    commitOk = closeAndUnlock(cachePtr);
+		}
+		
+	    }
+	    else
+		commitOk = closeAndUnlock(cachePtr);
+	}
+    }
+	
+    if (!commitOk)
+    {
+	/* If here there is an error */
+	
+	error_stream << WARNING 
+		     << "FragmentedStore::commit_state() "
+		     << "failed for " << objUid << endl;
+    }
+
+    return commitOk;
+}
+
+/*
+ * This store supports the abbreviated commit mechanism
+ * See PersistR.cc for details
+ */
+
+Boolean FragmentedStore::fullCommitNeeded () const
+{
+    return FALSE;
+}
+
+FragmentedStore::FragmentedStore ( )
+				 : ShadowingStore(),
+				   storeBlockSize(0),
+				   netByteOrder(TRUE)
+{
+#ifdef DEBUG
+    debug_stream.lock();
+    
+    debug_stream << CONSTRUCTORS << FAC_OBJECT_STORE << VIS_PUBLIC;
+    debug_stream << "FragmentedStore::FragmentedStore ()" << endl;
+    debug_stream.unlock();
+    
+#endif
+
+}
+
+/*
+ * Function to return the file name for the state of the object
+ * identified by the Uid and TypeName.
+ * Return char * is dynamically allocated and must be freed by caller
+ * Bypass genPathName in ShadowingStore (it adds characters) and go
+ * straight to that supplied by FileSystemStore
+ */
+
+char* FragmentedStore::genPathName ( const Uid& objUid, 
+				     const TypeName tName,
+				     ObjectStore::StateType st ) const
+{
+    return FileSystemStore::genPathName(objUid, tName, st);
+}
+
+/*
+ * Private non-virtual functions
+ */
+
+Boolean FragmentedStore::setupStore ( const char *location )
+{
+#ifdef DEBUG
+    debug_stream.lock();
+    
+    debug_stream << FUNCTIONS << FAC_OBJECT_STORE << VIS_PRIVATE;
+    debug_stream << "void FragmentedStore::setupStore ()" << endl;
+    debug_stream.unlock();
+    
+#endif
+
+    if (ShadowingStore::setupStore(location))
+    {
+	struct stat statarg;
+	char *path = locateStore(getStoreName());
+
+	::stat(path, &statarg);
+	storeBlockSize = statarg.st_blksize;
+
+	if (path)
+#ifdef GCC_ARRAY_DELETE_BUG
+	    delete path;
+#else
+            delete [] path;
+#endif
+	
+    }
+    else
+	storeBlockSize = 0;
+
+    return storeValid();
+}
+    
+/*
+ * read a committed instance of ObjectState out of the object store.
+ * The instance is identified by the unique id and type
+ */
+
+ObjectState* FragmentedStore::read_state ( const Uid& objUid, 
+					   const TypeName tName,
+					   ObjectStore::StateType ft )
+{
+#ifdef DEBUG
+    debug_stream.lock();
+    
+    debug_stream << FUNCTIONS << FAC_OBJECT_STORE << VIS_PRIVATE;
+    debug_stream << "FragmentedStore::read_state(" << objUid << ", "
+	         << tName << ", "
+                 << (ft == ObjectStore::OS_ORIGINAL ? "ORIGINAL" : "SHADOW") << ")" << endl;
+    debug_stream.unlock();
+    
+#endif
+
+    ObjectState* newImage = 0;
+    
+    if (storeValid())
+    {
+	char *readAheadBuffer = new char[storeBlockSize];
+	
+#ifndef GCC_NESTED_TYPE_BUG
+	FdCache::cacheEntry *cachePtr = openAndLock(objUid, tName, F_RDLCK,
+						    readAheadBuffer);
+#else
+	cacheEntry *cachePtr = openAndLock(objUid, tName, F_RDLCK,
+					   readAheadBuffer);
+#endif
+	int fd = (cachePtr == 0 ? -1 : cachePtr->storeFd);
+	
+	if (fd != -1)
+	{
+	    off_t imageSize = 0;
+	    off_t seekOffset = 0;
+
+	    /* If we get here we opened and read the file header OK */
+	    
+	    switch (ft)
+	    {
+	    case ObjectStore::OS_ORIGINAL:
+		if ((cachePtr->cachedDictPtr->stateHidden) ||
+		    (cachePtr->cachedDictPtr->shadowExists))
+		{
+		    error_stream << WARNING 
+				 << "Attempted read on shadowed/hidden state for "
+				 << objUid << "" << endl;
+#ifndef GCC_ARRAY_DELETE_BUG
+		    delete [] readAheadBuffer;
+#else
+		    delete readAheadBuffer;
+#endif
+
+		    closeAndUnlock(cachePtr);
+
+		    return 0;
+		}
+		imageSize = cachePtr->cachedDictPtr->originalSize;
+		seekOffset = cachePtr->cachedDictPtr->originalOffset;
+		break;
+	    case ObjectStore::OS_INVISIBLE:
+		if (cachePtr->cachedDictPtr->shadowExists)
+		{
+		    imageSize = cachePtr->cachedDictPtr->shadowSize;
+		    seekOffset = cachePtr->cachedDictPtr->shadowOffset;
+		}
+		else
+		{
+		    imageSize = cachePtr->cachedDictPtr->originalSize;
+		    seekOffset = cachePtr->cachedDictPtr->originalOffset;
+		}
+		break;
+	    case ObjectStore::OS_SHADOW:
+		if (cachePtr->cachedDictPtr->stateHidden)
+		{
+		    error_stream << WARNING 
+				 << "Attempted read on hidden state for "
+				 << objUid << "" << endl;
+#ifndef GCC_ARRAY_DELETE_BUG
+		    delete [] readAheadBuffer;
+#else
+		    delete readAheadBuffer;
+#endif
+
+		    closeAndUnlock(cachePtr);
+		    
+		    return 0;
+		}
+		imageSize = cachePtr->cachedDictPtr->shadowSize;
+		seekOffset = cachePtr->cachedDictPtr->shadowOffset;
+		break;
+	    }
+
+	    if (imageSize > 0)
+	    {
+		if ((ft == ObjectStore::OS_ORIGINAL) &&
+		    (imageSize) <= (cachePtr->maxCachedImageSize))
+		{
+		    /* Already got via readv on header! */
+			
+		    newImage = new ObjectState(objUid, tName,
+					       (int)imageSize,
+					       readAheadBuffer);
+		}
+		else
+		{
+		    
+		    ::lseek(fd, seekOffset, SEEK_SET);
+#ifndef GCC_ARRAY_DELETE_BUG
+		    delete [] readAheadBuffer;
+#else
+		    delete readAheadBuffer;
+#endif
+			
+#ifdef DEBUG
+		    debug_stream.lock();
+		    
+		    debug_stream << FUNCTIONS << FAC_OBJECT_STORE << VIS_PRIVATE;
+		    debug_stream << "\treading " << objUid
+				 << "(" << imageSize << " bytes)" << endl;
+		    debug_stream.unlock();
+		    
+#endif
+
+		    char *buffer = new char[(int)imageSize];
+		    
+		    /* now try to read the actual image out of the store */
+
+		    if ((buffer != 0) &&
+			(::read(fd, buffer, (int)imageSize) == imageSize))
+		    {
+			 /* create new objectstate */
+			newImage = new ObjectState(objUid, tName, (int)imageSize,
+						   buffer);
+			
+		    }
+
+		    else
+			error_stream << WARNING
+				     <<  "FragmentedStore::read_state() failed\n";
+
+		    if ((newImage == 0) && (buffer != 0))
+		    {
+#ifndef GCC_ARRAY_DELETE_BUG
+			delete [] buffer;
+#else
+		        delete buffer;
+#endif
+		    }
+		    
+		}
+	    }
+
+	    closeAndUnlock(cachePtr);
+	}
+	else
+#ifndef GCC_ARRAY_DELETE_BUG
+	    delete [] readAheadBuffer;
+#else
+	    delete readAheadBuffer;
+#endif
+	    
+    }
+
+    return newImage;
+}
+
+/*
+ * Remove the ObjectState/file from the object store.
+ */
+
+Boolean FragmentedStore::remove_state ( const Uid& objUid, 
+					const TypeName tName, 
+					ObjectStore::StateType ft )
+{
+#ifdef DEBUG
+    debug_stream.lock();
+    
+    debug_stream << FUNCTIONS << FAC_OBJECT_STORE << VIS_PRIVATE;
+    debug_stream << "FragmentedStore::remove_state(" << objUid << ", " << tName << ", "
+                 << (ft == ObjectStore::OS_ORIGINAL ? "ORIGINAL" : "SHADOW") << ")" << endl;
+    debug_stream.unlock();
+    
+#endif
+    
+    Boolean removeOk = FALSE;
+
+    if (storeValid())
+    {
+#ifndef GCC_NESTED_TYPE_BUG
+	FdCache::cacheEntry *cachePtr = openAndLock(objUid, tName, F_WRLCK);
+#else
+	cacheEntry *cachePtr = openAndLock(objUid, tName, F_WRLCK);
+#endif
+	int storeFd = (cachePtr == 0 ? -1 : cachePtr->storeFd);
+	
+	if (storeFd != -1)
+	{
+	    Boolean doWrite = TRUE;
+	    
+	    switch (ft)
+	    {
+	    case ObjectStore::OS_ORIGINAL:
+		if ((!cachePtr->cachedDictPtr->stateHidden) &&
+		    (!cachePtr->cachedDictPtr->shadowExists))
+		    cachePtr->cachedDictPtr->originalSize = 0;
+		else
+		{
+		    doWrite = FALSE;
+		    error_stream << WARNING
+				 << "Attempt to remove shadowed/hidden state for object "
+				 << objUid << "" << endl;
+		}
+		break;
+	    case ObjectStore::OS_SHADOW:
+		if (!cachePtr->cachedDictPtr->stateHidden)
+		{
+		    cachePtr->cachedDictPtr->shadowSize = 0;
+		    cachePtr->cachedDictPtr->shadowExists = FALSE;
+		}
+		else
+		{
+		    doWrite = FALSE;
+		    error_stream << WARNING
+				 << "Attempt to remove shadowed hidden state for object "
+				 << objUid << "" << endl;
+		}	
+		break;
+	    case ObjectStore::OS_INVISIBLE:
+		doWrite = FALSE;
+		error_stream << WARNING
+			     << "Attempt to remove hidden state for object "
+			     << objUid << "" << endl;
+		break;
+	    }
+
+	    if (doWrite &&
+		(cachePtr->cachedDictPtr->originalSize == 0) &&
+		(cachePtr->cachedDictPtr->shadowSize == 0))
+	    {
+		char *fname = genPathName(objUid, tName, ObjectStore::OS_ORIGINAL);
+		
+		::unlink(fname);
+		cachePtr->holdOpen = FALSE;
+		removeOk = closeAndUnlock(cachePtr);
+
+#ifndef GCC_ARRAY_DELETE_BUG
+		delete [] fname;
+#else
+		delete fname;
+#endif		
+	    }
+	    else if (doWrite)
+	    {
+		/* rewrite header */
+
+		cachePtr->cachedDictPtr->encode();
+		
+		::lseek(storeFd, 0, SEEK_SET);
+		if ((::write(storeFd, (char *)cachePtr->cachedDictPtr,
+			     sizeof(struct StateDictionary))) == sizeof(struct StateDictionary))
+		{
+#if defined(DO_FSYNC)
+		    if (::fsync(storeFd) == -1)
+		    {
+		      error_stream << WARNING << "fsync failed for storeFd" << endl;
+		      return FALSE;
+		    }
+#endif
+		    removeOk = closeAndUnlock(cachePtr);
+		}
+	    }
+	    else
+		closeAndUnlock(cachePtr);
+	}
+    }
+
+    return removeOk;
+}
+
+/*
+ * write_state saves the ObjectState in a file named by the type and Uid
+ * of the ObjectState. If the second argument is SHADOW, then the state is
+ * written as a shadow state and a subsequent commit_state is required
+ * to make the update take effect.
+ * NOTE: We allow empty states to be written!
+ */
+
+Boolean FragmentedStore::write_state ( const Uid& objUid, 
+				       const TypeName tName,
+				       const ObjectState& state, 
+				       ObjectStore::StateType ft )
+{
+#ifdef DEBUG
+    debug_stream.lock();
+    
+    /* 
+     * The void * cast in the next statement should really be to
+     * a const void * but there is no ostream.operator<<(const void *)
+     * in iostream.h (as of Cfront 3.0). Thus we have to put up with
+     * a warning message or else 3.0 will not compile the code!
+     */
+
+    debug_stream << FUNCTIONS << FAC_OBJECT_STORE << VIS_PRIVATE;
+    debug_stream << "FragmentedStore::write_state(" << objUid << ", "
+	         << tName << ", "<< (void *)&state << ", "
+                 << (ft == ObjectStore::OS_ORIGINAL ? "ORIGINAL" : "SHADOW") << ")" << endl;
+    debug_stream.unlock();
+    
+#endif
+
+    Boolean wroteOk = FALSE;
+    
+    if (storeValid())
+    {
+#ifndef GCC_NESTED_TYPE_BUG
+	FdCache::cacheEntry *cachePtr = openAndLock(objUid, tName, F_WRLCK);
+#else
+	cacheEntry *cachePtr = openAndLock(objUid, tName, F_WRLCK);
+#endif
+	int fd = (cachePtr == 0 ? -1 : cachePtr->storeFd);
+	StateDictionary *sdPtr = (cachePtr == 0 ? 0 : cachePtr->cachedDictPtr);
+
+	if ((fd != -1) && (sdPtr != 0))
+	{
+	    iovec iov[2];
+	    int writeLen = 0;
+	    size_t imageSize = state.size();
+	    off_t seekOffset = 0;
+	    const char *imageBuffer = state.buffer();
+	    Boolean doWrite = TRUE;
+
+	    iov[1].iov_len = 0;
+	    iov[1].iov_base = 0;
+
+	    switch (ft)
+	    {
+	    case ObjectStore::OS_ORIGINAL:
+		sdPtr->shadowExists = FALSE;
+		sdPtr->shadowSize = 0;
+		sdPtr->originalSize = imageSize;
+		seekOffset = sdPtr->originalOffset;
+		cachePtr->holdOpen = FALSE;
+		break;
+	    case ObjectStore::OS_SHADOW:
+		if (sdPtr->shadowExists)
+		{
+		    error_stream << WARNING
+				 << "Attempt to write shadow state for already shadowed object "
+				 << objUid << endl;
+		    closeAndUnlock(cachePtr);
+		    return FALSE;
+		}
+		
+		sdPtr->shadowExists = TRUE;
+		sdPtr->shadowSize = imageSize;
+		seekOffset = sdPtr->shadowOffset;
+		break;
+	    case ObjectStore::OS_INVISIBLE:
+		error_stream << WARNING
+			     << "Attempt to write hidden state for object "
+			     << objUid << endl;
+		closeAndUnlock(cachePtr);
+		return FALSE;
+		break;
+	    }
+
+	    if (imageSize > 0)
+	    {
+#ifdef DEBUG
+		debug_stream.lock();
+		
+		debug_stream << FUNCTIONS << FAC_OBJECT_STORE << VIS_PRIVATE;
+		debug_stream << "\twriting " << objUid
+			     << "(" << state.size() << " bytes)" << endl;
+		debug_stream.unlock();
+		
+#endif
+
+		if (imageSize <= (cachePtr->maxCachedImageSize))
+		{
+		    if (ft == ObjectStore::OS_ORIGINAL)
+		    {
+			writeLen = imageSize;
+			iov[1].iov_len = imageSize;
+			iov[1].iov_base = (char *)imageBuffer;
+			doWrite = FALSE;
+		    }
+		    else
+		    {
+			cachePtr->cachedBlockPtr = new char[cachePtr->maxCachedImageSize];
+
+			if(cachePtr->cachedBlockPtr != 0)
+			    ::memcpy(cachePtr->cachedBlockPtr, imageBuffer, imageSize);
+		    }
+		}
+	    
+		if (doWrite)
+		{
+		    ::lseek(fd, seekOffset, SEEK_SET);
+
+		    if ((::write(fd, (char *)imageBuffer, imageSize) != imageSize))
+		    {
+			error_stream << WARNING 
+				     << "FragmentedStore::write_state() "
+				     << "- image write failed for " << objUid << endl;
+			closeAndUnlock(cachePtr);
+			return FALSE;
+		    }
+		    else
+		    {
+#if defined(DO_FSYNC)
+			if (::fsync(fd) == -1)
+			{
+			    error_stream << WARNING << "fsync failed for " << objUid 
+					 << endl;
+			    closeAndUnlock(cachePtr);
+			    return FALSE;
+			}
+#endif
+		    }
+		}
+	    }
+	    
+	    /* rewrite header */
+
+	    sdPtr->encode();
+	      
+	    writeLen += sizeof(struct StateDictionary);
+	    iov[0].iov_len = sizeof(struct StateDictionary);
+	    iov[0].iov_base = (caddr_t)sdPtr;
+		
+	    ::lseek(fd, 0, SEEK_SET);
+
+	    if (::writev(fd, iov, 2) != writeLen)
+	    {
+		error_stream << WARNING 
+			     << "FragmentedStore::write_state()"
+			     << " - header write failed for " << objUid << endl;
+		closeAndUnlock(cachePtr);  
+	    }
+	    else
+#if defined(DO_FSYNC)
+		if (::fsync(fd) == -1)
+		{
+		    error_stream << WARNING << "fsync failed for " << objUid << endl;
+		    closeAndUnlock(cachePtr);
+		    return FALSE;
+		}
+		else
+#endif
+		    wroteOk = closeAndUnlock(cachePtr);
+	}
+    }
+
+    if (!wroteOk)
+    {
+	/* If here there is an error */
+	
+	error_stream << WARNING 
+		     << "FragmentedStore::write_state() "
+		     << "failed for " << objUid << endl;
+    }
+
+    return wroteOk;
+}
+
+/*
+ * Unlock and close the file. Not that if the unlock fails we set
+ * the return value to FALSE to indicate an error but rely on the
+ * close to really do the unlock (which the manual says it will do).
+ */
+
+#ifndef GCC_NESTED_TYPE_BUG
+Boolean FragmentedStore::closeAndUnlock ( FdCache::cacheEntry *ptr )
+#else
+Boolean FragmentedStore::closeAndUnlock ( cacheEntry *ptr )
+#endif
+{
+#ifdef DEBUG
+    debug_stream.lock();
+    
+    debug_stream << FUNCTIONS << FAC_OBJECT_STORE << VIS_PRIVATE;
+    debug_stream << "Boolean FragmentedStore::closeAndUnlock ( cacheEntry *ptr )" << endl;
+    debug_stream.unlock();
+    
+#endif
+    
+    Boolean closedOk = unlock(ptr->storeFd);
+
+    if (!ptr->holdOpen)
+	UnixFdCache.purgeFromCache(ptr->cachedUid);
+
+    return closedOk;
+}
+
+/*
+ * Open and lock a file corresponding to an object.
+ * This may initialise a cacheEntry and pre-read the header.
+ *
+ * NOTE: Since the Fdcache does not necessarily discard entries even when the
+ * file is closed the result of the cache scan can return a hit for the UID
+ * even though the rest of the fields are effectively invalid. This is
+ * indicated by an fd of -1.
+ * Thus once the file is opened the entry is re-entered into the cache rather
+ * than updating a few fields.
+ */
+
+#ifndef GCC_NESTED_TYPE_BUG
+FdCache::cacheEntry *
+#else
+cacheEntry *
+#endif
+FragmentedStore::openAndLock ( const Uid& objUid,
+			       const TypeName tName,
+			       int lMode,
+			       char *readAheadBuffer )
+{
+#ifdef DEBUG
+    debug_stream.lock();
+    
+    debug_stream << FUNCTIONS << FAC_OBJECT_STORE << VIS_PRIVATE;
+    debug_stream << "FragmentedStore::openAndLock ( " << objUid << ", " << tName << ", " << lMode << " )" << endl;
+    debug_stream.unlock();
+    
+#endif
+    
+#ifndef GCC_NESTED_TYPE_BUG
+    FdCache::cacheEntry *cachePtr = UnixFdCache.scanCache(objUid);
+#else
+    cacheEntry *cachePtr = UnixFdCache.scanCache(objUid);
+#endif
+
+    int fd = (cachePtr == 0 ? -1 : cachePtr->storeFd);
+    Boolean openOk = FALSE;
+
+    if (fd == -1)
+    {
+	/* File not currently open make it so if possible */
+	int flags = (lMode == F_RDLCK ? O_RDWR | SYNC
+		                      : O_RDWR | O_CREAT | SYNC);
+	char *fname = genPathName(objUid, tName, ObjectStore::OS_ORIGINAL);
+	Boolean retryOpen;
+	
+	fd = ::open(fname, flags, 0666);
+	retryOpen = (fd == -1 ? TRUE : FALSE);
+
+	while (retryOpen)
+	{
+	    /* primary open failed - determine reason and maybe retry*/
+
+	    if ((flags & O_CREAT) && (errno == ENOENT))
+	    {
+		/* File did not exist */
+
+		retryOpen = createHierarchy(fname, flags);
+	    }
+	    else
+		if (errno == EMFILE)
+		{
+		    /* Too many open files */
+
+		    retryOpen = UnixFdCache.compactCache();
+		}
+		else
+		    retryOpen = FALSE;
+	    
+	    if (retryOpen)
+		retryOpen = ((fd = ::open(fname, flags, 0666)) == -1);
+	    
+	}
+	
+#ifndef GCC_ARRAY_DELETE_BUG
+	delete [] fname;
+#else
+	delete fname;
+#endif	
+    }
+    
+    if (fd != -1)
+    {
+	/* File now open - (re-)enter in cache if possible */
+	
+	cachePtr = UnixFdCache.enterIntoCache(objUid, fd);
+	
+	if (cachePtr != 0)
+	{
+	    /* Now have cache entry - lock file and update cache fields */
+	    
+	    if (cachePtr->cachedDictPtr == 0)
+		cachePtr->cachedDictPtr = new StateDictionary();
+	    
+	    if (lock(fd, lMode))
+	    {
+		struct stat statarg;
+
+		if (::fstat(fd, &statarg) == 0)
+		{
+		    if (cachePtr->defaultBlockSize == 0)
+		    {
+			cachePtr->defaultBlockSize = (unsigned int) statarg.st_blksize;
+		    }
+
+		    if (cachePtr->maxCachedImageSize == 0)
+		    {
+			cachePtr->maxCachedImageSize = (unsigned int) (statarg.st_blksize - sizeof(struct StateDictionary));
+		    }
+
+		    ::lseek(fd, 0, SEEK_SET);
+		    
+		    /* pre-read file header or initialise */
+			
+		    if (statarg.st_size == 0)
+		    {
+			/* file empty */
+			
+			::memcpy(cachePtr->cachedDictPtr->magic, MAGIC1, sizeof(MAGIC1));
+			cachePtr->cachedDictPtr->shadowSize = 0;
+			cachePtr->cachedDictPtr->originalSize = 0;
+			cachePtr->cachedDictPtr->shadowOffset = storeBlockSize + MAXSTATESIZE;
+			cachePtr->cachedDictPtr->originalOffset = storeBlockSize;
+			cachePtr->cachedDictPtr->stateHidden = FALSE;
+			cachePtr->cachedDictPtr->shadowExists = FALSE;
+			openOk = TRUE;
+		    }
+		    else
+		    {
+			iovec iov[2];
+			int count = 1;
+		     
+			iov[0].iov_len = sizeof(struct StateDictionary);
+			iov[0].iov_base = (caddr_t)cachePtr->cachedDictPtr;
+
+			if (readAheadBuffer)
+			{
+			    iov[1].iov_len = cachePtr->maxCachedImageSize;
+			    iov[1].iov_base = readAheadBuffer;
+			    count += 1;
+			}
+
+			if (::readv(fd, iov, count) >= sizeof(struct StateDictionary))
+			{
+			    cachePtr->cachedDictPtr->decode();
+			    
+			    if (::memcmp(cachePtr->cachedDictPtr->magic,MAGIC1, sizeof(MAGIC1)) == 0)
+				openOk = TRUE;
+			}
+		    }
+		}
+	    }
+	    else
+		error_stream << WARNING 
+			     << "FragmentedStore::openAndLock() - fcntl "
+			     << "failed for " << objUid << " with errno " << errno << endl;
+	}
+    }
+
+    if (!openOk)
+    {
+	/* An error occurred - cleanup */
+	
+	if (cachePtr != 0)
+	{
+	    cachePtr->holdOpen = FALSE;
+	    closeAndUnlock(cachePtr);
+	    cachePtr = 0;
+	}
+	else
+	    if (fd != -1)
+		::close(fd);
+    }
+    
+    return cachePtr;
+}
+
+#ifdef NO_INLINES
+#  define FRAGSTORE_CC_
+#  include "ObjectStore/FragStore.n"
+#  undef FRAGSTORE_CC_
+#endif
+

@@ -1,0 +1,31 @@
+#!/bin/sh
+cd ..
+if test ! -d ObjectStore
+then
+	echo "Creating ObjectStore directory structure"
+	mkdir ObjectStore
+	mkdir ObjectStore/StateManager
+	mkdir ObjectStore/StateManager/LockManager
+	chmod -R a+rwx ObjectStore
+fi
+cp NameServer.tar ObjectStore/StateManager/LockManager/.
+cd ObjectStore/StateManager/LockManager
+echo "Untaring file"
+tar xf NameServer.tar
+for i in NameServ GroupView ReplicaList ServerView ServerList
+do
+	if test -d $i
+	then
+		echo $i
+		( cd $i
+		echo "Converting object store formats"
+		for j in *
+		do
+			echo $j
+			../../../../bin/OSConverter -TypeName StateManager/LockManager/$i -oldUid $j
+		done
+		)
+	fi
+done
+rm NameServer.tar
+

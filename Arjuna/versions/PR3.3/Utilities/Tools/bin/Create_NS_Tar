@@ -1,0 +1,24 @@
+#!/bin/sh
+cd ../ObjectStore/StateManager/LockManager
+for i in NameServ GroupView ReplicaList ServerView ServerList
+do
+	if test -d $i
+	then
+		echo $i
+		( cd $i
+		echo "Converting object store formats"
+		for j in *
+		do
+			echo $j
+			../../../../bin/OSConverter -TypeName StateManager/LockManager/$i -oldUid $j -inverse
+		done
+		)
+	fi
+done
+echo "Creating tar file"
+tar cf NameServer.tar NameServ GroupView ReplicaList ServerView ServerList
+mv NameServer.tar ../../..
+
+
+
+		

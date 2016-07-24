@@ -1,0 +1,28 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.3 1994/07/12 12:06:33 ngdp Exp $
+COMMENT
+COMMENT
+COMMENT Imakefile. (Basic)
+COMMENT
+
+SOURCES = Driver.cc \
+          Stack.cc
+
+OBJECTS = Driver.o \
+          Stack.o
+
+AllTarget(Driver)
+
+MakeProgramCPLUSPLUS(Driver,$(OBJECTS),NOPARAM)
+
+MakeObjectCPLUSPLUS(Driver,NOPARAM)
+MakeObjectCPLUSPLUS(Stack,NOPARAM)
+
+TidyTarget(Driver)

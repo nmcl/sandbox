@@ -1,0 +1,53 @@
+/*
+ * Copyright (C) 1993
+ * 
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ * 
+ * 
+ * $Id: README,v 1.3 1995/02/27 11:40:52 ngdp Exp $
+ */
+
+1. 	Introduction
+********************
+
+	The  tests in  this  sub-tree are basic tests  that  check out
+Arjuna  at its most fundamental  level. They are  split into Local and
+Distributed tests,  however, the actual  tests  are basically the same
+(that  is,  they  test  that  what  should  work  locally  also  works
+remotely).
+
+	This sub-tree is not built by default  and requires a separate
+make stage include 'make  -f  MakefileBoot;  make  Makefiles' etc. The
+makefiles are generated using  the configuration information  from the
+primary system build.
+
+	Tests  must  be run by hand -  we suggest doing the Local ones
+first and  if they work try  the  Distributed  ones.   Note  that  the
+Distributed  tests  require Arjuna  to have been installed and the RPC
+system  to  be  running.   You  must also  do a  'make install' on the
+Distrubted tests to install the servers correctly.
+
+	The primary tests are:
+
+Buffer 
+	Checks out the basic functionality of the  class Buffer. Since
+this class provides the base functionality for object storage  and RPC
+parameter passing. If this does not work nothing will!
+
+AtomicAction
+	Checks out  basic atomic action control to ensure that nesting
+works and that out of order action invocations are caught correctly.
+
+AA+CC
+	Checks out the atomic action, concurrency control and
+persistence capabilities of the system.
+
+NewObject
+	Checks that newly created persistent objects get handled
+properly. 
+
+NestedTLA
+	Checks that nested top-level atomic actions work.

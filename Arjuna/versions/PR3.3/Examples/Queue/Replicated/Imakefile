@@ -1,0 +1,69 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.6 1994/11/29 14:00:53 ngdp Exp $
+COMMENT
+COMMENT
+COMMENT Imakefile. (Distributed)
+COMMENT
+
+LIBRARIES = $(LIBREPLICATION) $(LIBARJSERVERS) $(LIBARJUNA) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+STUB_HEADERS = Queue_stub.h Queue_stubclass.h
+
+SOURCES = Driver.cc \
+          Queue_client.cc \
+          Queue_server.cc \
+          Queue_servermain.cc \
+          QueueStatus_marshall.cc \
+          Queue.cc \
+	  QueueElement.cc \
+	  $(STUB_HEADERS)
+
+#ifdef GCC_LINK_BUG
+CLIOBJS = Driver.o \
+          Queue_client.o \
+          QueueStatus_marshall.o Queue.o QueueElement.o
+
+SEROBJS = Queue_server.o \
+          Queue_servermain.o \
+          QueueStatus_marshall.o \
+          Queue.o \
+	  QueueElement.o Queue_client.o
+#else
+CLIOBJS = Driver.o \
+          Queue_client.o \
+          QueueStatus_marshall.o
+
+SEROBJS = Queue_server.o \
+          Queue_servermain.o \
+          QueueStatus_marshall.o \
+          Queue.o \
+	  QueueElement.o
+#endif
+
+OBJECTS = $(CLIOBJS) $(SEROBJS)
+AllTarget(Driver Queue_D)
+StubTarget($(STUB_HEADERS))
+
+CreateInstallTopDirectory(servers)
+InstallProgram(servers,Queue_D)
+
+MakeProgramCPLUSPLUS(Driver,$(CLIOBJS) $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(Queue_D,$(SEROBJS) $(LIBRARIES),NOPARAM)
+
+MakeStubGen(Queue,Queue,Queue_D,NOPARAM)
+
+MakeObjectCPLUSPLUS(Driver,NOPARAM)
+MakeObjectCPLUSPLUS(Queue,NOPARAM)
+MakeObjectCPLUSPLUS(QueueElement,NOPARAM)
+MakeObjectCPLUSPLUS(QueueStatus_marshall,NOPARAM)
+
+TidyTarget(Driver Queue_D Queue_stub.h Queue_stubclass.h Queue_client.cc Queue_server.cc Queue_servermain.cc QueueStatus_marshall.cc)

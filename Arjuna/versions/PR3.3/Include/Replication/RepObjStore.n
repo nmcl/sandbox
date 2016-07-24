@@ -1,0 +1,43 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: RepObjStore.n,v 1.2 1994/08/10 14:10:02 nmcl Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(REPOBJSTORE_CC_)
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+
+INLINEF const char* ReplicatedPersistentObjectStore::getStoreName () const
+{
+    return localStoreName;
+}
+
+INLINEF const TypeName ReplicatedPersistentObjectStore::type () const
+{
+    return ReplicatedStoreType;
+}
+
+INLINEF void ReplicatedPersistentObjectStore::useStoreLocation (const Boolean b)
+{
+    isRemoteOnly = b;
+}
+
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif

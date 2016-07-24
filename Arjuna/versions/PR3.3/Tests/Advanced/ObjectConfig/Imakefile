@@ -1,0 +1,17 @@
+COMMENT 
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.3 1994/06/01 14:38:23 ngdp Exp $
+COMMENT
+
+#define IHaveSubDirs
+#if HAVE_INTERVIEWS
+SetSubDirectorys(Theatre Theatre_Performance Theatre_InterViews)
+#else
+SetSubDirectorys(Theatre Theatre_Performance)
+#endif

@@ -1,0 +1,15 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.5 1995/09/18 11:36:53 nmcl Exp $
+COMMENT
+
+#define IHaveSubDirs
+SetSubDirectorys(AA+CC Buffer Migration NestedTLAA NewObject Performance Replication RPC ServerGroups)
+all depend install :: stubs
+stubs.local :: $(STUBGEN)

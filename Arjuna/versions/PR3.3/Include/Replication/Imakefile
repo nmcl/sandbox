@@ -1,0 +1,29 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.11 1996/07/05 12:58:14 nmcl Exp $
+COMMENT
+
+CreateInstallTopDirectory(include)
+CreateInstallDirectory(include,Replication)
+InstallFile(include/Replication,RepObjStore.h)
+InstallFile(include/Replication,RepObjStore.n)
+InstallFile(include/Replication,RemoteOSTypes.h)
+InstallFile(include/Replication,RepObjStoreIF.h)
+InstallFile(include/Replication,RepObjStoreIF.n)
+InstallFile(include/Replication,Migrator.h)
+InstallFile(include/Replication,PrimaryObject.h)
+InstallFile(include/Replication,RegisterGroup.h)
+InstallFile(include/Replication,RegisterGroup.n)
+InstallFile(include/Replication,GroupInformation.h)
+InstallFile(include/Replication,GroupInformation.n)
+InstallFile(include/Replication,ReplicaConfiguration.h)
+InstallFile(include/Replication,ReplicaCreate.h)
+InstallFile(include/Replication,ReplicaCreate.n)
+InstallFile(include/Replication,COControl.h)
+

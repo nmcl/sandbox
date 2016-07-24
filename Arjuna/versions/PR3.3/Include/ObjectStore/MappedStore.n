@@ -1,0 +1,76 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: MappedStore.n,v 1.2 1995/04/03 09:04:19 ngdp Exp $
+ */
+
+
+#ifndef CONFIGURE_H_
+#  include <Config/Configure.h>
+#endif
+
+
+#if defined(NO_INLINES) && !defined(MAPPEDSTORE_CC_)
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF const TypeName MappedStore::type () const
+{
+    return MappedStoreType;
+}
+
+/*
+ * Locking handled in the underlying mapping stores
+ */
+
+INLINEF Boolean MappedStore::lock ( int, int ) const
+{
+    return FALSE;
+}
+
+INLINEF Boolean MappedStore::unlock ( int ) const
+{
+    return FALSE;
+}
+
+/*
+ * These are never called but they have to be defined because they are pure
+ * in the base class
+ */
+
+INLINEF ObjectState *MappedStore::read_state ( const Uid&, const TypeName,
+					       ObjectStore::StateType)
+{
+    return 0;
+}
+
+INLINEF Boolean MappedStore::remove_state ( const Uid&, const TypeName,
+					    ObjectStore::StateType)
+{
+    return FALSE;
+}
+
+INLINEF Boolean MappedStore::write_state ( const Uid&, const TypeName,
+					   const ObjectState&,
+					   ObjectStore::StateType)
+{
+    return FALSE;
+}
+
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif

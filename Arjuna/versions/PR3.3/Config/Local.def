@@ -1,0 +1,221 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id$
+ */
+
+/*
+ *  Local.def
+ */
+
+#ifndef YES
+#define YES 1
+#endif
+
+#ifndef NO
+#define NO  0
+#endif
+
+/*
+ *  Make and Source configuration
+ */
+
+#ifndef VERBOSE_MAKE
+#define VERBOSE_MAKE NO
+#endif
+
+#ifndef TOPDIR_DEFAULT
+#define TOPDIR_DEFAULT /user1/nmcl/Arjuna/Arjuna
+#endif
+
+#define RPC_RajdootAction_ 1
+#define RPC_Rajdoot_       2
+#define RPC_ANSAAction_    3
+#define RPC_ANSA_          4
+
+#ifndef RPC_SYSTEM_TYPE
+#define RPC_SYSTEM_TYPE RPC_RajdootAction_
+#endif
+
+
+#ifndef LEX_PROGRAM
+#define LEX_PROGRAM lex
+#endif
+
+#ifndef LEXFLAGS_DEFAULT
+#define LEXFLAGS_DEFAULT 
+#endif
+
+#ifndef YACC_PROGRAM
+#define YACC_PROGRAM yacc
+#endif
+
+#ifndef YACCFLAGS_DEFAULT
+#define YACCFLAGS_DEFAULT 
+#endif
+
+#ifndef CPLUSPLUS_PROGRAM
+#define CPLUSPLUS_PROGRAM CC3.0.1
+#endif
+
+#ifndef CPLUSPLUS_INCLUDE_DEFAULT
+#define CPLUSPLUS_INCLUDE_DEFAULT /usr/local/CC/3.0.1/include
+#endif
+
+#ifndef CPPFLAGS_DEFAULT
+#define CPPFLAGS_DEFAULT -DDEBUG -DNO_INLINES
+#endif
+
+#ifndef CPLUSPLUSFLAGS_DEFAULT
+#define CPLUSPLUSFLAGS_DEFAULT -g +w
+#endif
+
+#ifndef LDFLAGS_DEFAULT
+#define LDFLAGS_DEFAULT  -g +w
+#endif
+
+#ifndef xLIBRARIES_DEFAULT
+#define xLIBRARIES_DEFAULT  -ll -ly
+#endif
+
+/*
+ *  Installation details
+ */
+
+#ifndef INSTALL_TOPDIR_DEFAULT
+#define INSTALL_TOPDIR_DEFAULT /user1/nmcl/Install/CC3.0.1_Dbg_NoIn_g
+#endif
+
+#ifndef HAVE_INTERVIEWS
+#define HAVE_INTERVIEWS NO
+#endif
+
+/*
+ *   ClassLib Information
+ */
+
+#ifndef OBJECTSTOREDIR
+#define OBJECTSTOREDIR /user1/nmcl/Install/CC3.0.1_Dbg_NoIn_g/ObjectStore
+#endif
+
+#ifndef ATOMICACTIONDIR
+#define ATOMICACTIONDIR /user1/nmcl/Install/CC3.0.1_Dbg_NoIn_g/ObjectStore/StateManager/AtomicAction
+#endif
+
+#ifndef SERVERATOMICACTIONDIR
+#define SERVERATOMICACTIONDIR /user1/nmcl/Install/CC3.0.1_Dbg_NoIn_g/ObjectStore/StateManager/AtomicAction/ServerAtomicAction
+#endif
+
+/*
+ *   Rajdoot Information
+ */
+
+#ifndef C_LIST  
+#define C_LIST /user1/nmcl/Install/CC3.0.1_Dbg_NoIn_g/adm/c_list
+#endif
+
+#ifndef C_COUNT
+#define C_COUNT /user1/nmcl/Install/CC3.0.1_Dbg_NoIn_g/adm/c_count
+#endif
+
+#ifndef MANPID_FILE
+#define MANPID_FILE /user1/nmcl/Install/CC3.0.1_Dbg_NoIn_g/adm/manager_pid
+#endif
+
+#ifndef NSLOCK_FILE
+#define NSLOCK_FILE /user1/nmcl/Install/CC3.0.1_Dbg_NoIn_g/adm/NameServer.lock
+#endif
+
+#ifndef DUPSERVER
+#define DUPSERVER /user1/nmcl/Install/CC3.0.1_Dbg_NoIn_g/etc/dupserver
+#endif
+
+#ifndef GMSERVER
+#define GMSERVER /user1/nmcl/Install/CC3.0.1_Dbg_NoIn_g/etc/groupsrvr
+#endif
+
+#ifndef PATH_SIZE
+#define PATH_SIZE 10
+#endif
+
+#ifndef BROADCAST_NET
+#define BROADCAST_NET "localnet"
+#endif
+
+#ifndef RAJDOOT_USE_BROADCAST
+#define RAJDOOT_USE_BROADCAST NO
+#endif
+
+#ifndef RAJDOOT_USE_SHARED_MEMORY
+#define RAJDOOT_USE_SHARED_MEMORY YES
+#endif
+
+/*
+ * Location of servers to be initiated
+ */
+
+#ifndef SERVER_LOCATION
+#define SERVER_LOCATION /user1/nmcl/Install/CC3.0.1_Dbg_NoIn_g/servers
+#endif
+
+#ifndef NAME_SERVER_SERVICE
+#define NAME_SERVER_SERVICE NameServ
+#endif
+
+/*
+ *  Quoted versions.
+ */
+
+#ifndef INSTALL_TOPDIR_DEFAULT_Q
+#define INSTALL_TOPDIR_DEFAULT_Q "/user1/nmcl/Install/CC3.0.1_Dbg_NoIn_g"
+#endif
+
+#ifndef OBJECTSTOREDIR_Q
+#define OBJECTSTOREDIR_Q "/user1/nmcl/Install/CC3.0.1_Dbg_NoIn_g/ObjectStore"
+#endif
+
+#ifndef ATOMICACTIONDIR_Q
+#define ATOMICACTIONDIR_Q "/user1/nmcl/Install/CC3.0.1_Dbg_NoIn_g/ObjectStore/StateManager/AtomicAction"
+#endif
+
+#ifndef SERVERATOMICACTIONDIR_Q
+#define SERVERATOMICACTIONDIR_Q "/user1/nmcl/Install/CC3.0.1_Dbg_NoIn_g/ObjectStore/StateManager/AtomicAction/ServerAtomicAction"
+#endif
+
+#ifndef C_LIST_Q  
+#define C_LIST_Q "/user1/nmcl/Install/CC3.0.1_Dbg_NoIn_g/adm/c_list"
+#endif
+
+#ifndef C_COUNT_Q
+#define C_COUNT_Q "/user1/nmcl/Install/CC3.0.1_Dbg_NoIn_g/adm/c_count"
+#endif
+
+#ifndef MANPID_FILE_Q
+#define MANPID_FILE_Q "/user1/nmcl/Install/CC3.0.1_Dbg_NoIn_g/adm/manager_pid"
+#endif
+
+#ifndef NSLOCK_FILE_Q
+#define NSLOCK_FILE_Q "/user1/nmcl/Install/CC3.0.1_Dbg_NoIn_g/adm/NameServer.lock"
+#endif
+
+#ifndef DUPSERVER_Q
+#define DUPSERVER_Q "/user1/nmcl/Install/CC3.0.1_Dbg_NoIn_g/etc/dupserver"
+#endif
+
+#ifndef GMSERVER_Q
+#define GMSERVER_Q "/user1/nmcl/Install/CC3.0.1_Dbg_NoIn_g/etc/groupsrvr"
+#endif
+
+#ifndef SERVER_LOCATION_Q
+#define SERVER_LOCATION_Q "/user1/nmcl/Install/CC3.0.1_Dbg_NoIn_g/servers"
+#endif
+
+#ifndef NAME_SERVER_SERVICE_Q
+#define NAME_SERVER_SERVICE_Q "NameServ"
+#endif
+

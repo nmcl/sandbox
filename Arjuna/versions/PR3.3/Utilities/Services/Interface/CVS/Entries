@@ -1,0 +1,24 @@
+/Definitions.cc/1.1/Tue Jul 12 17:06:34 1994//
+/Definitions.h/1.2/Tue Jul 12 17:05:37 1994//
+/Interface.cc/1.3/Fri Sep  2 13:11:25 1994//
+/Interface.h/1.1/Mon Dec 13 15:21:13 1993//
+/InterfaceArgs.cc/1.1/Mon Dec 13 15:21:13 1993//
+/InterfaceArgs.h/1.1/Mon Dec 13 15:21:13 1993//
+/InterfaceState.cc/1.1/Mon Dec 13 15:21:13 1993//
+/InterfaceState.h/1.1/Mon Dec 13 15:21:13 1993//
+/Menu.h/1.2/Tue Jul 12 17:06:45 1994//
+/Message.cc/1.2/Tue Jul 12 17:06:39 1994//
+/Message.h/1.1/Mon Dec 13 15:21:13 1993//
+/Selector.h/1.2/Tue Jul 12 17:06:46 1994//
+/Transporter.cc/1.5/Fri Sep  2 13:11:27 1994//
+/Transporter.h/1.1/Mon Dec 13 15:21:14 1993//
+/Window.cc/1.2/Tue Jul 12 17:06:43 1994//
+/Window.h/1.2/Tue Jul 12 17:06:47 1994//
+/common.h/1.1/Mon Dec 13 15:21:14 1993//
+/AutoInterfaceDriver.cc/1.7/Thu Feb 23 15:02:15 1995//
+/InterfaceTextDriver.cc/1.7/Thu Feb 23 15:02:16 1995//
+/InterfaceWindowDriver.cc/1.5/Thu Feb 23 15:02:16 1995//
+/Menu.cc/1.6/Fri Oct 13 10:23:29 1995//
+/Selector.cc/1.7/Fri Oct 13 10:23:29 1995//
+/Imakefile/1.9/Thu Feb 13 14:05:03 1997//
+D

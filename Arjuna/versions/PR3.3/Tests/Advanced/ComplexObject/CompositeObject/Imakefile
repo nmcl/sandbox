@@ -1,0 +1,32 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.5 1994/11/29 14:01:33 ngdp Exp $
+COMMENT
+
+SOURCES  = CompositeTest.cc \
+	   RecInt.cc \
+	   RecArray.cc
+
+OBJECTS  = CompositeTest.o \
+	   RecInt.o \
+	   RecArray.o
+
+LIBRARIES = $(LIBREPLICATION) $(LIBARJSERVERS) $(LIBARJUNA) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+AllTarget(CompositeTest)
+
+MakeProgramCPLUSPLUS(CompositeTest,$(OBJECTS) $(LIBRARIES),NOPARAM)
+
+MakeObjectCPLUSPLUS(CompositeTest,NOPARAM)
+MakeObjectCPLUSPLUS(RecInt,NOPARAM)
+MakeObjectCPLUSPLUS(RecArray,NOPARAM)
+
+TidyTarget(CompositeTest)

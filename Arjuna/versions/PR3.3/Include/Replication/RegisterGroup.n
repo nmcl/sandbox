@@ -1,0 +1,33 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: RegisterGroup.n,v
+ */
+
+#if defined(NO_INLINES) && !defined(REGGROUP_CC_)
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+
+INLINEF Boolean RegisterGroup::needToRelease () const
+{
+    return doRelease;
+}
+
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif

@@ -1,0 +1,53 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 1994/06/01 14:38:27 ngdp Exp $
+COMMENT
+
+LIBRARIES = $(LIBOBJCONFIG) $(LIBARJSERVERS) $(LIBSTUB) $(LIBRPC) $(LIBOBJECTSTORE) $(LIBARJUNA) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES) -I../Theatre -I/usr/local/InterViews3.0.1/include)
+
+SetLocalLdFlags(-L../Theatre -L/usr/local/InterViews3.0.1/lib/$$CPU -L/usr/local/X11R5/lib)
+SetLocalLibraries(-lTheatre -lIV -lX11 -lXext -lX11 -lm)
+
+SOURCES =    MenuItemDispatch.cc \
+	     LogInter.cc \
+	     LogLevel1Event.cc \
+	     LogLevel2Event.cc \
+	     LogBaseEvent.cc \
+	     LogMark.cc \
+	     LogVoid.cc \
+             SeatInter.cc \
+             Theatre.cc \
+             TheatreDispatch.cc \
+             TheatreInter.cc
+
+OBJTHEATRE = Theatre.o TheatreDispatch.o TheatreInter.o \
+             SeatInter.o MenuItemDispatch.o \
+             LogInter.o LogMark.o \
+             LogVoid.o LogLevel1Event.o \
+             LogLevel2Event.o LogBaseEvent.o
+
+AllTarget(Theatre)
+
+MakeProgramCPLUSPLUS(Theatre,$(OBJTHEATRE) $(LIBRARIES),)
+
+MakeObjectCPLUSPLUS(MenuItemDispatch,)
+MakeObjectCPLUSPLUS(LogInter,)
+MakeObjectCPLUSPLUS(LogLevel1Event,)
+MakeObjectCPLUSPLUS(LogLevel2Event,)
+MakeObjectCPLUSPLUS(LogBaseEvent,)
+MakeObjectCPLUSPLUS(LogMark,)
+MakeObjectCPLUSPLUS(LogVoid,)
+MakeObjectCPLUSPLUS(SeatInter,)
+MakeObjectCPLUSPLUS(Theatre,)
+MakeObjectCPLUSPLUS(TheatreDispatch,)
+MakeObjectCPLUSPLUS(TheatreInter,)
+
+TidyTarget(Theatre)

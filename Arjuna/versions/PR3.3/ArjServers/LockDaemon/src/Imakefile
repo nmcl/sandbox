@@ -1,0 +1,60 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.4 1995/04/28 09:25:56 nmcl Exp $
+COMMENT
+
+LIB = $(LIBARJUNA)
+
+STUBS = LockDaemonIf_stub.h \
+	LockDaemonIf_stubclass.h
+
+SOURCES = LTEntry.cc \
+          LockTable.cc \
+	  LockDaemonIf_client.cc \
+	  LockDaemonIf_server.cc \
+	  LockDaemonIf_servermain.cc \
+	  LocalLockDaemon.cc
+
+CLOBJS = LockDaemonIf_client.o \
+	  LockDaemon.o
+
+DAEMONOBJS = LTEntry.o \
+	     LockTable.o \
+	     LockDaemonIf_server.o \
+	     LockDaemonIf_servermain.o \
+	     LocalLockDaemon.o
+
+LIBRARY = $(LIBARJUNA) $(LIBRPC) $(LIBCOMMON)
+OBJECTS = $(CLOBJS) $(DAEMONOBJS) BootLockDaemon.o
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES) -I../include -I../../../ClassLib/include)
+
+AllTarget($(STUBS) $(LIB) LockDaemon BootLockDaemon)
+StubTarget($(STUBS))
+
+MakeLibrary($(LIB),$(CLOBJS))
+MakeProgramCPLUSPLUS(LockDaemon,$(DAEMONOBJS) $(LIBRARY),NOPARAM)
+MakeProgramCPLUSPLUS(BootLockDaemon, BootLockDaemon.o $(CLOBJS) $(LIBRARY),NOPARAM)
+
+CreateInstallTopDirectory(servers)
+CreateInstallTopDirectory(etc)
+InstallProgram(servers,LockDaemon)
+InstallProgram(etc,BootLockDaemon)
+
+LockDaemonIf.h: ../include/LockDaemonIf.h
+	@CP_VAR ../include/LockDaemonIf.h LockDaemonIf.h
+
+MakeStubGen(LockDaemonIf,LockDaemonIf,LockDaemon,NOPARAM)
+MakeObjectCPLUSPLUS(LTEntry,NOPARAM)
+MakeObjectCPLUSPLUS(LockTable,NOPARAM)
+MakeObjectCPLUSPLUS(LockDaemon,NOPARAM)
+MakeObjectCPLUSPLUS(BootLockDaemon,NOPARAM)
+MakeObjectCPLUSPLUS(LocalLockDaemon,NOPARAM)
+
+TidyTarget(LockDaemonIf.h LockDaemonIf_stub.h LockDaemonIf_stubclass.h LockDaemonIf_client.cc LockDaemonIf_server.cc LockDaemonIf_servermain.cc LockDaemon BootLockDaemon)

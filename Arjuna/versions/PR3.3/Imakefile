@@ -1,0 +1,64 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.16 1996/01/16 14:51:56 ngdp Exp $
+COMMENT
+
+#define IHaveSubDirs
+
+SetSubDirectorys(StubGen Common Thread ClassLib ObjectStore ObjectConfig RPC ArjServers Replication CrashRecovery Utilities lib Include)
+
+PrintConfig
+
+PrintEnviron
+
+all depend install :: stubs
+stubs.local :: StubGen
+
+StubGen ::
+	(cd StubGen/src;  $(MAKE) $(xMAKEFLAGS))
+
+install.local :: INSTALL_TOPDIR_VAR
+	-CHMOD_VAR ugo+rx INSTALL_TOPDIR_VAR
+
+install.local :: INSTALL_TOPDIR_VAR/ObjectStore
+	-CHMOD_VAR ugo+rwx INSTALL_TOPDIR_VAR/ObjectStore
+
+install.local :: INSTALL_TOPDIR_VAR/adm
+	-CHMOD_VAR ugo+rwx INSTALL_TOPDIR_VAR/adm
+
+install.local :: INSTALL_TOPDIR_VAR/servers
+	-CHMOD_VAR ugo+rwx INSTALL_TOPDIR_VAR/servers
+
+CreateInstallTopDirectory(ObjectStore)
+CreateInstallTopDirectory(adm)
+CreateInstallTopDirectory(servers)
+CreateInstallTopDirectory(lib)
+
+MakeRelDirectoryDependency(ClassLib)
+MakeRelDirectoryDependency(Config)
+MakeRelDirectoryDependency(Common)
+MakeRelDirectoryDependency(RPC)
+MakeRelDirectoryDependency(ArjServers)
+MakeRelDirectoryDependency(ObjectStore)
+MakeRelDirectoryDependency(ObjectConfig)
+MakeRelDirectoryDependency(Replication)
+MakeRelDirectoryDependency(StubGen)
+MakeRelDirectoryDependency(Utilities)
+MakeRelDirectoryDependency(CrashRecovery)
+MakeRelDirectoryDependency(Tests)
+MakeRelDirectoryDependency(lib)
+
+MakeInSubdir(purge.local,purge,NOPARAM,Applications)
+MakeInSubdir(purge.local,purge,NOPARAM,Examples)
+MakeInSubdir(purge.local,purge,NOPARAM,Tests)
+
+purge.local ::
+	$(RM) Applications/MakefileBoot Tests/MakefileBoot Examples/MakefileBoot
+	$(RM) Include/Configure.h Include/MachineRules.h
+

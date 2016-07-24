@@ -1,0 +1,16 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.5 1995/07/03 14:30:27 ngdp Exp $
+COMMENT
+
+#define IHaveSubDirs
+SetSubDirectorys(OSConverter ReplicateState SetDebug NameServerSetup UpdateNameServer bin)
+#ifdef SUPPORT_OLD_UIDS
+AddSubDirectorys(UidConverter)
+#endif

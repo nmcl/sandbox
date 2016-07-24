@@ -1,0 +1,23 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.4 1996/10/11 09:33:22 ngdp Exp $
+COMMENT
+
+CreateInstallTopDirectory(include)
+CreateInstallDirectory(include,RPC)
+CreateInstallDirectory(include/RPC,Rajdoot)
+InstallFile(include/RPC/Rajdoot,ClRaj.h)
+InstallFile(include/RPC/Rajdoot,ClRajAct.h)
+InstallFile(include/RPC/Rajdoot,SvRaj.h)
+InstallFile(include/RPC/Rajdoot,SvRajAct.h)
+InstallFile(include/RPC/Rajdoot,multicast.h)
+InstallFile(include/RPC/Rajdoot,ondeadline.h)
+InstallFile(include/RPC/Rajdoot,rpcuser.h)
+
+

@@ -1,0 +1,63 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: COControl.n,v
+ */
+
+#if defined(NO_INLINES) && !defined(COCONTROL_CC_)
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+
+INLINEF OutCome ComplexObjectControl::addTemplate (const Uid& groupUid, char** locations, int numberOfLocations)
+{
+    return addTemplate(groupUid, Normal, locations, numberOfLocations);
+}
+
+INLINEF OutCome ComplexObjectControl::addToTemplate (const Uid& templateUid, char* location)
+{
+    return manipulateTemplateGroup(templateUid, location, FALSE);
+}
+
+INLINEF OutCome ComplexObjectControl::replaceTemplate (const Uid& groupUid, char** locations, int numberOfLocations)
+{
+    return replaceTemplate(groupUid, Normal, locations, numberOfLocations);
+}
+
+INLINEF OutCome ComplexObjectControl::associateGroups (const StateManager& assignTo, const StateManager& toAssign)
+{
+    return associateGroups(assignTo.get_uid(), toAssign.get_uid());
+}
+
+INLINEF OutCome ComplexObjectControl::disassociateGroups (const StateManager& assignedTo, const StateManager& assigned)
+{
+    return disassociateGroups(assignedTo.get_uid(), assigned.get_uid());
+}
+
+INLINEF OutCome ComplexObjectControl::addTemplateReplicas (const Uid& groupUid, const ReplicaDescriptor& rd, Boolean isNew)
+{
+    return modifyTemplateReplicas(groupUid, rd, isNew, FALSE);
+}
+
+INLINEF OutCome ComplexObjectControl::deleteTemplateReplicas (const Uid& groupUid, const ReplicaDescriptor& rd, Boolean isNew)
+{
+    return modifyTemplateReplicas(groupUid, rd, isNew, TRUE);
+}
+
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif
