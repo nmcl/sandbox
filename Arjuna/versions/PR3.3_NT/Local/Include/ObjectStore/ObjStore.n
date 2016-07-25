@@ -1,0 +1,48 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: ObjStore.n,v 1.8 1994/10/10 10:39:53 ngdp Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(OBJSTORE_CC_)
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF void ObjectStore::storeLocation ( char**, int )
+{
+}
+
+INLINEF void ObjectStore::useStoreLocation ( const Boolean )
+{
+}
+
+INLINEF void ObjectStore::setObjectData ( const Uid&, const TypeName )
+{
+}
+
+INLINEF Boolean ObjectStore::packInto ( Buffer& ) const
+{
+    return TRUE;
+}
+
+INLINEF Boolean ObjectStore::unpackFrom ( Buffer& )
+{
+    return TRUE;
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif

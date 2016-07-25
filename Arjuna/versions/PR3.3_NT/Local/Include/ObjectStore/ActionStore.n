@@ -1,0 +1,101 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * ShadowStore.n,v
+ */
+
+#if defined(NO_INLINES) && !defined(ACTIONSTORE_CC_)
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF ActionStoreSetUp::ActionStoreSetUp ( SetUpInfo* info )
+					   : ShadowingStoreSetUp(info)
+{
+}
+
+INLINEF ActionStore::ActionStore () : ShadowingStore()
+{
+}
+
+INLINEF Boolean ActionStore::hide_state ( const Uid&,
+					  const TypeName )
+{
+    return FALSE;
+}
+
+INLINEF Boolean ActionStore::reveal_state ( const Uid&,
+					    const TypeName )
+{
+    return FALSE;
+}
+
+INLINEF ObjectState* ActionStore::read_committed ( const Uid& storeUid,
+						   const TypeName tName )
+{
+    return ShadowingStore::read_committed(storeUid, tName);
+}
+
+INLINEF ObjectState* ActionStore::read_uncommitted ( const Uid&,
+						     const TypeName )
+{
+    return 0;
+}
+
+INLINEF Boolean ActionStore::remove_committed ( const Uid& storeUid,
+						const TypeName tName )
+{
+    return ShadowingStore::remove_committed(storeUid, tName);
+}
+
+INLINEF Boolean ActionStore::remove_uncommitted ( const Uid&,
+						  const TypeName )
+{
+    return FALSE;
+}
+
+INLINEF Boolean ActionStore::write_committed ( const Uid& storeUid,
+					       const TypeName tName,
+					       const ObjectState &state )
+{
+    return ShadowingStore::write_committed(storeUid, tName, state);
+}
+
+INLINEF Boolean ActionStore::write_uncommitted ( const Uid&,
+						 const TypeName,
+						 const ObjectState& )
+{
+    return FALSE;
+}
+
+INLINEF const TypeName ActionStore::type () const
+{
+    return ActionStoreType;
+}
+
+INLINEF Boolean ActionStore::lock ( int, int ) const
+{
+    return TRUE;
+}
+
+INLINEF Boolean ActionStore::unlock ( int ) const
+{
+    return TRUE;
+}
+
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif

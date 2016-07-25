@@ -1,0 +1,84 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * ShadowStore.n,v
+ */
+
+#if defined(NO_INLINES) && !defined(FSSTORE_CC_)
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF FileSystemStoreSetUp::FileSystemStoreSetUp ( SetUpInfo* info )
+						   : ObjectStoreSetUp(info)
+{
+}
+
+INLINEF const char* FileSystemStore::getStoreName () const
+{
+    return localStoreName;
+}
+
+/*
+ * read an  uncommitted instance of State out of the object store. 
+ * The instance is identified by the unique id and type
+ */
+
+INLINEF ObjectState* FileSystemStore::read_committed ( const Uid& storeUid,
+						       const TypeName tName )
+{
+    return read_state(storeUid, tName, ObjectStore::OS_ORIGINAL);
+}
+
+INLINEF ObjectState* FileSystemStore::read_uncommitted ( const Uid& storeUid,
+							 const TypeName tName )
+{
+    return read_state(storeUid, tName, ObjectStore::OS_SHADOW);
+}
+
+INLINEF Boolean FileSystemStore::remove_committed ( const Uid& storeUid,
+						    const TypeName tName )
+{
+    return remove_state(storeUid, tName, ObjectStore::OS_ORIGINAL);
+}
+
+INLINEF Boolean FileSystemStore::remove_uncommitted ( const Uid& storeUid,
+						      const TypeName tName )
+{
+    return remove_state(storeUid, tName, ObjectStore::OS_SHADOW);
+}
+
+INLINEF Boolean FileSystemStore::write_committed ( const Uid& storeUid,
+						   const TypeName tName,
+						   const ObjectState &state )
+{
+    return write_state(storeUid, tName, state, ObjectStore::OS_ORIGINAL);
+}
+
+INLINEF Boolean FileSystemStore::write_uncommitted ( const Uid& storeUid,
+						     const TypeName tName,
+						     const ObjectState &state )
+{
+    return write_state(storeUid, tName, state, ObjectStore::OS_SHADOW);
+}
+
+INLINEF Boolean FileSystemStore::storeValid () const
+{
+    return isValid;
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif
