@@ -1,0 +1,34 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.7 1993/04/05 13:23:26 ngdp Exp $
+COMMENT
+
+MakeDummyAllTarget
+
+MakeNonRecursiveInstall
+
+CreateInstallTopDirectory(include)
+CreateInstallDirectory(include,RPC)
+CreateInstallDirectory(include/RPC,Rajdoot)
+InstallFile(include/RPC/Rajdoot,ClRaj.h)
+InstallFile(include/RPC/Rajdoot,ClRajAct.h)
+InstallFile(include/RPC/Rajdoot,SvRaj.h)
+InstallFile(include/RPC/Rajdoot,SvRajAct.h)
+InstallFile(include/RPC/Rajdoot,multicast.h)
+InstallFile(include/RPC/Rajdoot,rpcuser.h)
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeEmptyNonRecursiveTidyCleanPurge
+
+MakeDummyMakedepend
+
+MakeDummyStripdepend

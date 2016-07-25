@@ -1,0 +1,24 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 1993/03/18 15:42:48 n048z Exp $
+COMMENT
+
+MakeDummyAllTarget
+
+MakeNonRecursiveInstall
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeEmptyNonRecursiveTidyCleanPurge
+
+MakeDummyMakedepend
+
+MakeDummyStripdepend

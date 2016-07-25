@@ -1,0 +1,72 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: ClassT.n,v 1.6 1993/09/17 14:31:38 ngdp Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(CLASST_CC_)
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF void ClassType::addVirtual () 
+{
+    hasVirtuals = TRUE;
+}
+
+INLINEF BaseClass *ClassType::getNVBaseList () const
+{
+    return baseList;
+}
+
+INLINEF long ClassType::getClassHashval () const
+{
+    return classHashval;
+}
+
+INLINEF Declaration *ClassType::getClassMember ( int memnum ) const
+{
+    return classMembers->getOneMember(memnum);
+}
+
+INLINEF BaseClass *ClassType::getVbaseList () const
+{
+    return vBaseList;
+}
+
+INLINEF VisibilitySpec ClassType::getVisibility () const
+{
+    return curVisibility;
+}
+
+INLINEF Boolean ClassType::hasVirtualFuncs () const
+{
+    return hasVirtuals;
+}
+
+INLINEF Declaration *ClassType::lookFor ( const String& s, 
+					  Type t, Context c ) const
+{
+    return classMembers->lookFor(s, t, c);
+}
+
+INLINEF DeclContext *ClassType::getMemberContext () const
+{
+    return classMembers;
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif

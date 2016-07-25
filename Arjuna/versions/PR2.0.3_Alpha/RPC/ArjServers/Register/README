@@ -1,0 +1,23 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ */
+
+/*
+ * $Id: README
+ */
+
+This class provides transparent creation and registering of replica groups. Once a
+user has created one instance of a persistent state and he wishes to replicate this
+state he should create an instance of the Register class. He must first register the
+Uid of the object he has previosuly created (this will become the new group's Uid).
+Then he should call the ReplicateState operation, passing it the list of hostnames
+where states should be created, and the number of replicas desired. If this operation
+returns successfully then a new replica group will have been created and can be accessed
+in future by using the Uid returned by the single instance created previosuly.
+
+Note that typename and storename must also be set before using the operations.

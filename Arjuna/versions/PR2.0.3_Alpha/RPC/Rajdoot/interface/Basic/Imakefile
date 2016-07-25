@@ -1,0 +1,43 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.12 1993/05/25 12:02:44 nsmw Exp $
+COMMENT
+
+SOURCES = ClRaj.cc  \
+          ClRaj_.cc \
+          SvRaj.cc
+
+OBJECTS = ClRaj.o  \
+          ClRaj_.o \
+          SvRaj.o
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES) -I../include)
+
+MakeNonRecursiveAllTarget(../../libRajdoot.a)
+
+MakeNonRecursiveInstall
+
+MakeLibrary(../../libRajdoot.a,$(OBJECTS))
+
+MakeObjectCPLUSPLUS(ClRaj,)
+MakeObjectCPLUSPLUS(ClRaj_,)
+MakeObjectCPLUSPLUS(SvRaj,)
+
+ClRaj.cc : $(ARJUNA_INCLUDES)/Arjuna/StateMan_stub.h
+ClRaj.cc : $(ARJUNA_INCLUDES)/Arjuna/StateManager_stubclass.h
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(../../libRajdoot.a)
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend

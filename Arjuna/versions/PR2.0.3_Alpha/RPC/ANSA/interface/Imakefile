@@ -1,0 +1,28 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.3 1993/03/18 15:00:54 nmcl Exp $
+COMMENT
+
+SetSubDirectorys(Action Basic include)
+
+MakeRecursiveAllTarget
+
+MakeRecursiveInstall
+
+MakeRecursiveTarget(../libANSA.a,../../libANSA.a,,Action Basic)
+
+MakeMakefile
+
+MakeMakefiles
+
+MakeEmptyTidyCleanPurge
+
+MakeRecursiveMakedepend
+
+MakeRecursiveStripdepend

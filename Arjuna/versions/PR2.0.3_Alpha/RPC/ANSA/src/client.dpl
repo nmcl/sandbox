@@ -1,0 +1,408 @@
+/*
+ * Copyright (C) 1993
+ * 
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: client.dpl,v 1.4 1993/03/18 15:19:05 n048z Exp $
+ */
+
+#include <stdio.h>
+#include <sysindep.h>
+
+! USE Capsule
+! USE Factory
+! USE RPC
+! DECLARE {fref, objects[i].factory} : Factory CLIENT
+! DECLARE {cref, objects[i].capsule} : Capsule CLIENT
+! DECLARE {oref, objects[i].server} : RPC CLIENT
+
+ansa_Boolean error;
+
+#ifndef NULL
+#define NULL ((void *) 0)
+#endif
+
+
+#ifdef RPC_DEBUG
+static void report(message)
+char *message;
+{
+    fprintf(stderr,"CLIENT.DPL : %s",message);
+}
+
+
+static void show_irid( IrRef )
+ansa_InterfaceRef IrRef;
+{
+    int b;
+    char *buf;
+
+    fprintf(stderr,"CLIENT.DPL : InterfaceId = ");
+    buf = ifref_format(NULL, &IrRef, ansa_TRUE);
+    fprintf(stderr,"%s\n", buf);
+}
+
+
+static void report_status( status )
+ansa_Status status;
+{
+    switch(status)
+    {
+    case ok :
+	fprintf(stderr,"ok");
+	break;
+    case illegalOperation :
+	fprintf(stderr,"illegalOperation");
+	break;
+    case abnormalReturn :
+	fprintf(stderr,"abnormalReturn");
+	break;
+    case heapAllocationFailure :
+	fprintf(stderr,"heapAllocationFailure");
+	break;
+    case accessViolation :
+	fprintf(stderr,"accessViolation");
+	break;
+    case unAvailableProtocol :
+	fprintf(stderr,"unAvailableProtoco");
+	break;
+    case bindFailure :
+	fprintf(stderr,"bindFailure");
+	break;
+    case invalidChannelId :
+	fprintf(stderr,"invalidChannelId");
+	break;
+    case allocatedChannel :
+	fprintf(stderr,"allocatedChannel");
+	break;
+    case insufficientChannels :
+	fprintf(stderr,"insufficientChannels");
+	break;
+    case insufficientSessions : 
+	fprintf(stderr,"insufficientSessions");
+	break;
+    case invalidSessionId :
+	fprintf(stderr,"invalidSessionId");
+	break;
+    case invalidSessionState :
+	fprintf(stderr,"invalidSessionState");
+	break;
+    case invalidSessionEntry :
+	fprintf(stderr,"invalidSessionEntry");
+	break;
+    case insufficientThreads :
+	fprintf(stderr,"insufficientThreads");
+	break;
+    case invalidThreadId :
+	fprintf(stderr,"invalidThreadId");
+	break;
+    case notParentThread :
+	fprintf(stderr,"notParentThread");
+	break;
+    case noMultiTasking :
+	fprintf(stderr,"noMultiTasking");
+	break;
+    case bufferTooLong :
+	fprintf(stderr,"bufferTooLong");
+	break;
+    case transmitFailure :
+	fprintf(stderr,"transmitFailure");
+	break;
+    case transmitTimeout :
+	fprintf(stderr,"transmitTimeout");
+	break;
+    case probeTimeout :
+	fprintf(stderr,"probeTimeout");
+	break;
+    case responseTimeout :
+	fprintf(stderr,"responseTimeout");
+	break;
+    case protocolError :
+	fprintf(stderr,"protocolError");
+	break;
+    case duplicatePacket :
+	fprintf(stderr,"duplicatePacket");
+	break;
+    case unimplementedRexOption :
+	fprintf(stderr,"unimplementedRexOption");
+	break;
+    case disconnecting :
+	fprintf(stderr,"disconnecting");
+	break;
+    case resourceInUse :
+	fprintf(stderr,"resourceInUse");
+	break;
+    case illegalInterface :
+	fprintf(stderr,"illegalInterface");
+	break;
+    case initializationFailed :
+	fprintf(stderr,"initializationFailed");
+	break;
+    default :
+	fprintf(stderr,"unknown status !?");
+	break;
+    }
+    fprintf(stderr,"\n");
+}
+
+#else  /* not RPC_DEBUG */
+
+#define report(x)
+#define show_irid(x)
+#define report_status(x)
+
+#endif /* RPC_DEBUG */
+
+
+/*
+ * The various Signal_xx_xx functions intercept any
+ * exceptions raised and produce the appropriate error message
+ */
+
+static int Signal_Prepc_Import( status, typename, context, constraints, result )
+ansa_Status status;
+ansa_String typename, context, constraints;
+ansa_InterfaceRef *result;
+{
+    report("Trader Import exception : ");
+    report_status(status);
+    error = ansa_TRUE;
+    return ExceptionContinue;
+}
+
+
+static int Signal_Factory_Instantiate( status, path, template, args, envs, tr, data, ref, cid )
+ansa_Status status;
+ansa_String path, template, args, envs;
+ansa_InterfaceRef tr;
+CallerData data;
+ansa_InterfaceRef *ref;
+ansa_CapsuleId *cid;
+{
+    report("Factory Instantiate exception : ");
+    report_status(status);
+    error = ansa_TRUE;
+    return ExceptionContinue;
+}
+
+
+static int Signal_Capsule_Instantiate( status, nref, cref, template, args, envs, id, res )
+ansa_Status status;
+ansa_InterfaceRef nref, cref;
+ansa_String template, args, envs;
+ObjectRef id;
+InstantiateResult *res;
+{
+    report("Capsule Instantiate exception : ");
+    report_status(status);
+    error = ansa_TRUE;
+    return ExceptionContinue;
+}
+
+
+static int Signal_RPC_Call( status, in, out )
+ansa_Status status;
+RPCBuff in;
+RPCBuff *out;
+{
+    report("RPC Call exception : ");
+    report_status(status);
+    error = ansa_TRUE;
+    return ExceptionContinue;
+}
+
+
+/*
+ * rpc_terminate
+ *   This terminates a number of servers.
+ *   Only previously initiated servers are terminated.
+ *   Termination sequence :
+ *      1: Terminate object
+ *      2: Terminate capsule
+ */
+
+void rpc_terminate( objects )
+OBJECT_DESC *objects;
+{
+    ansa_Boolean dummy;
+    int i;
+
+    report("entry into rpc_terminate()\n");
+    for(i = 0; objects[i].hostName != NULL; i++)
+    {
+	if (objects[i].initialised == ansa_FALSE)	  /* this object not initialized -> skip terminates*/
+	    continue;
+	show_irid(objects[i].server);
+
+!       {dummy} <- objects[i].capsule$Terminate()
+!       {dummy} <- objects[i].factory$Terminate(objects[i].cid)
+    }
+    report("exit out of rpc_terminate()\n");
+}
+
+
+/*
+ * rpc_initiate
+ *   This initiates a number of servers.
+ *   Server initiation sequence :
+ *      1: Contact trader to obtain interface reference to factory on appropriate note
+ *      2: Contact factory to create capsule for the required server
+ *      3: Contact capsule to create the require object (this is the server required by Arjuna)
+ *
+ *   If the required number of servers is not successfully initiated, all servers created
+ *   are destroyed and function returns 0,
+ *   otherwise the OBJECT_DESC structure is filled with the required info and returns 1
+ *
+ */
+int rpc_initiate( objects, successes )
+OBJECT_DESC *objects;
+int *successes;
+{
+    char constraints[128];
+    int i, completed;
+    ansa_CapsuleId cid;
+    CallerData dummy = 0;
+    ansa_Boolean flag;
+    ansa_InterfaceRef fref, cref, server;
+    InstantiateResult res;
+
+    report("entry into rpc_initiate()\n");
+    completed = 0;
+    for(i = 0; objects[i].hostName != NULL; i++)
+    {
+	error = ansa_FALSE;				    /* no errors detected (yet)*/
+	objects[i].initialised = ansa_FALSE;		    /* object not initialized */
+
+#ifdef RPC_DEBUG
+	report("Node name = ");
+	fprintf(stderr,"%s\n", objects[i].hostName);
+#endif
+
+        /* constraints : factory must be on required node */
+
+	sprintf(constraints,"Node == '%s'",objects[i].hostName);
+
+#ifdef RPC_DEBUG
+	report("Trader constraints = ");
+	fprintf(stderr,"(%s)\n",constraints);
+#endif
+
+!       {fref} <- traderRef$Import("Factory","/",constraints) Continue ok Signal *
+        if (error)
+	    continue;
+	else
+	    ifref_copyRef(&objects[i].factory, &fref);
+#ifdef RPC_DEBUG
+	report("Obtained factory reference\n");
+#endif
+
+!       {cref, objects[i].cid} <- objects[i].factory$Instantiate("",objects[i].objectName, "", "", nullRef, dummy) Continue ok Signal *
+        if (error)
+	    continue;
+	else
+	    ifref_copyRef(&objects[i].capsule, &cref);
+#ifdef RPC_DEBUG
+	report("Obtained capsule reference\n");
+#endif
+
+!       {objects[i].id, res} <- objects[i].capsule$Instantiate(nullRef,nullRef,"RPC","","") Continue ok Signal *
+        if (error)
+	{
+!	    {flag} <- objects[i].factory$Terminate(objects[i].cid)
+	    continue;
+	}
+	else
+	{
+#ifdef RPC_DEBUG
+	    report("Obtained object reference\n");
+#endif
+	    ifref_copyRef(&objects[i].server, &res.data[0]);
+	    show_irid(objects[i].server);
+	    objects[i].initialised = ansa_TRUE;
+	}
+        completed++;
+    }
+
+    report("exit out of rpc_initiate()\n");
+
+    if (completed >= *successes)
+	return 1;
+    else
+    {
+	rpc_terminate(objects);
+	return 0;
+    }
+}
+
+/*
+ * rpc_call
+ *   Sends an RPCBuff to all objects, and collects the reply RPCBuff
+ *   If more than one object used, only last reply RPCBuff used (all others overwritten)
+ *
+ */
+int rpc_call( in, result, objects )
+RPCBuff *in;
+RPCBuff *result;
+OBJECT_DESC *objects;
+{
+#ifdef RPC_DEBUG
+    char message[128];
+#endif
+    int i, successes;
+    RPCBuff temp;
+
+    report("entry into rpc_call()\n");
+    successes = 0;
+    for(i = 0; objects[i].hostName != NULL; i++)
+    {
+	error = ansa_FALSE;
+
+#ifdef RPC_DEBUG
+	show_irid(objects[i].server);
+	report("rpc_call() -> about to make an RPC call\n");
+	sprintf(message,"   Opcode = %lu\n",in->Opcode);
+	report(message);
+	sprintf(message,"   Buffer1.length = %lu\n",in->Buffer1.length);
+	report(message);
+	sprintf(message,"   Buffer2.length = %lu\n",in->Buffer2.length);
+	report(message);
+#endif
+
+!       {temp} <- objects[i].server$Call(*in) Continue ok Signal *
+
+        if (error)
+	{
+	    report("rpc_call() not successful\n");
+	    continue;
+	}
+	else
+	{
+
+#ifdef RPC_DEBUG
+	    report("rpc_call() successful\n");
+	    sprintf(message,"   Errcode = %lu\n",temp.Opcode);
+	    report(message);
+	    sprintf(message,"   Buffer1.length = %lu\n",temp.Buffer1.length);
+	    report(message);
+	    sprintf(message,"   Buffer2.length = %lu\n",temp.Buffer2.length);
+	    report(message);
+#endif
+
+	    result->Opcode = temp.Opcode;
+	    result->Buffer1.length = temp.Buffer1.length;
+	    result->Buffer1.data = (ansa_Octet *) malloc(temp.Buffer1.length);
+	    memcpy(result->Buffer1.data, temp.Buffer1.data, temp.Buffer1.length);
+	    result->Buffer2.length = temp.Buffer2.length;
+	    result->Buffer2.data = (ansa_Octet *) malloc(temp.Buffer2.length);
+	    memcpy(result->Buffer2.data, temp.Buffer2.data, temp.Buffer2.length);
+
+	}
+	successes++;
+    }
+    report("exit out of rpc_call()\n");
+    return successes;
+}
+

@@ -1,0 +1,48 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.5 1993/06/25 09:54:47 n048z Exp $
+COMMENT
+
+SOURCES  = Object1.cc \
+           Object2.cc \
+           Test1.cc \
+           Test2.cc
+
+OBJTEST1 = Object1.o \
+           Test1.o
+
+OBJTEST2 = Object1.o \
+           Object2.o \
+           Test2.o
+
+LIBRARYS = $(LIBARJUNA) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+MakeNonRecursiveAllTarget(Test1 Test2)
+
+MakeNonRecursiveInstall
+
+MakeProgramCPLUSPLUS(Test1,$(OBJTEST1) $(LIBRARYS),)
+MakeProgramCPLUSPLUS(Test2,$(OBJTEST2) $(LIBRARYS),)
+
+MakeObjectCPLUSPLUS(Object1,)
+MakeObjectCPLUSPLUS(Object2,)
+MakeObjectCPLUSPLUS(Test1,)
+MakeObjectCPLUSPLUS(Test2,)
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(Test1 Test2)
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend

@@ -1,0 +1,97 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.12 1993/04/30 13:12:40 nsmw Exp $
+COMMENT
+
+LIBRARIES = $(LIBARJSERVERS) $(LIBSTUB) $(LIBRPC) $(LIBARJUNA) $(LIBARJSERVERS) $(LIBSTUB) $(LIBRPC) $(LIBARJUNA) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES) -I/usr/local/InterViews2.6/include)
+SetLocalLibraries(-L/usr/local/InterViews2.6/lib -L/usr/local/X11R5/lib -lInterViewsX11 -lX11 -lXext -lX11 -lm)
+
+SOURCES = TowerDispatch.cc \
+          TowerInter.cc \
+          TowerPersis.cc \
+          TowerView.cc \
+          TowersDispatch.cc \
+          TowersInter.cc \
+          TowersOfHanoi.cc \
+          WorkStack.cc \
+          \
+          TowerPersis_client.cc \
+          TowerPersis_server.cc \
+          TowerPersis_servermain.cc \
+          TowerState_marshall.cc \
+          WorkStack_client.cc \
+          WorkStack_server.cc \
+          WorkStack_servermain.cc \
+          Work_marshall.cc
+
+OBJMOVE  = TowersOfHanoi.o TowersDispatch.o TowersInter.o \
+           TowerInter.o TowerPersis_client.o TowerState_marshall.o \
+           WorkStack_client.o Work_marshall.o
+
+OBJVIEW  = TowerView.o TowerDispatch.o TowerInter.o \
+           TowerPersis_client.o TowerState_marshall.o
+
+OBJTOWER = TowerPersis.o TowerPersis_server.o TowerPersis_servermain.o \
+           TowerState_marshall.o
+
+OBJWORK  = WorkStack.o WorkStack_server.o WorkStack_servermain.o \
+           Work_marshall.o
+
+STUBS = TowerPersis_stub.h WorkStack_stub.h
+
+MakeNonRecursiveAllTarget($(STUBS) TowersOfHanoi TowerView TowerPersis WorkStack)
+
+MakeNonRecursiveInstall
+
+CreateInstallTopDirectory(servers)
+InstallProgram(servers,TowerPersis)
+InstallProgram(servers,WorkStack)
+
+MakeProgramCPLUSPLUS(TowersOfHanoi,$(OBJMOVE) $(LIBRARIES),)
+MakeProgramCPLUSPLUS(TowerView,$(OBJVIEW) $(LIBRARIES),)
+MakeProgramCPLUSPLUS(TowerPersis,$(OBJTOWER) $(LIBRARIES),)
+MakeProgramCPLUSPLUS(WorkStack,$(OBJWORK) $(LIBRARIES),)
+
+MakeStubGen(TowerPersis,TowerPersis,TowerPersis,)
+MakeStubGen(WorkStack,WorkStack,WorkStack,)
+
+MakeObjectCPLUSPLUS(TowerDispatch,)
+MakeObjectCPLUSPLUS(TowerInter,)
+MakeObjectCPLUSPLUS(TowerPersis,)
+MakeObjectCPLUSPLUS(TowerView,)
+MakeObjectCPLUSPLUS(TowersDispatch,)
+MakeObjectCPLUSPLUS(TowersInter,)
+MakeObjectCPLUSPLUS(TowersOfHanoi,)
+MakeObjectCPLUSPLUS(WorkStack,)
+
+MakeObjectCPLUSPLUS(TowerState_marshall,)
+MakeObjectCPLUSPLUS(Work_marshall,)
+
+TowerDispatch.cc: TowerPersis_stub.h
+TowerPersis.cc: TowerPersis_stub.h
+TowerView.cc: TowerPersis_stub.h
+TowersDispatch.cc: TowerPersis_stub.h WorkStack_stub.h
+TowersOfHanoi.cc: TowerPersis_stub.h WorkStack_stub.h
+WorkStack.cc: WorkStack_stub.h
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(TowersOfHanoi TowerView TowerPersis WorkStack \
+       TowerPersis_client.cc TowerPersis_server.cc TowerPersis_servermain.cc \
+       TowerPersis_stub.h TowerPersis_stubclass.h TowerState_marshall.cc \
+       WorkStack_client.cc WorkStack_server.cc WorkStack_servermain.cc \
+      WorkStack_stub.h WorkStack_stubclass.h Work_marshall.cc)
+
+MakeNonRecursiveMakedepend($(SOURCES) $(STUBS))
+
+MakeNonRecursiveStripdepend

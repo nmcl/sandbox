@@ -1,0 +1,53 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: Arj-HP.cf,v 1.10 1993/03/18 14:06:46 nsmw Exp $
+ */
+
+/*
+ *  HP specific configuration.
+ */
+
+#ifndef CPLUSPLUS__
+#define CPLUSPLUS__
+#define CPLUSPLUS_DEFINE CPLUSPLUS
+#define CPLUSPLUS_Q_VAR "$(CPLUSPLUS)"
+#define CPLUSPLUS_VAR $(CPLUSPLUS)
+#endif
+
+#ifndef CPLUSPLUSFLAGS__
+#define CPLUSPLUSFLAGS__
+#define CPLUSPLUSFLAGS_DEFINE CPLUSPLUSFLAGS
+#define CPLUSPLUSFLAGS_Q_VAR "$(CPLUSPLUSFLAGS)"
+#define CPLUSPLUSFLAGS_VAR $(CPLUSPLUSFLAGS)
+#endif
+
+#ifndef LOCAL_CPLUSPLUSFLAGS__
+#define LOCAL_CPLUSPLUSFLAGS__
+#define LOCAL_CPLUSPLUSFLAGS_DEFINE LOCAL_CPLUSPLUSFLAGS
+#define LOCAL_CPLUSPLUSFLAGS_Q_VAR "$(LOCAL_CPLUSPLUSFLAGS)"
+#define LOCAL_CPLUSPLUSFLAGS_VAR $(LOCAL_CPLUSPLUSFLAGS)
+#endif
+
+#ifndef CPLUSPLUS_INCLUDE__
+#define CPLUSPLUS_INCLUDE__
+#define CPLUSPLUS_INCLUDE_DEFINE CPLUSPLUSINCLUDE
+#define CPLUSPLUS_INCLUDE_Q_VAR "$(CPLUSPLUSINCLUDE)"
+#define CPLUSPLUS_INCLUDE_VAR $(CPLUSPLUSINCLUDE)
+#endif
+
+#ifndef MAKEFLAGS__
+#define MAKEFLAGS__
+#define MAKEFLAGS_DEFINE xMAKEFLAGS
+#define MAKEFLAGS_Q_VAR "$(xMAKEFLAGS)"
+#define MAKEFLAGS_VAR $(xMAKEFLAGS)
+#endif
+
+#ifndef YACC_CPLUSPLUS_MAGIC
+#define YACC_CPLUSPLUS_MAGIC sed -e "/^   #include \<stdio\.h\>/d"
+#endif

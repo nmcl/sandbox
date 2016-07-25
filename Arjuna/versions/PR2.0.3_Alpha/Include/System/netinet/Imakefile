@@ -1,0 +1,29 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.4 1993/03/22 09:43:33 ngdp Exp $
+COMMENT
+
+MakeDummyAllTarget
+
+MakeNonRecursiveInstall
+
+CreateInstallTopDirectory(include)
+CreateInstallDirectory(include,System)
+CreateInstallDirectory(include/System,netinet)
+InstallFile(include/System/netinet,in.h)
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeEmptyNonRecursiveTidyCleanPurge
+
+MakeDummyMakedepend
+
+MakeDummyStripdepend

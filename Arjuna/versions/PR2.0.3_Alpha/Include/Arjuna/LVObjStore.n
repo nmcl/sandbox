@@ -1,0 +1,99 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: LVObJStore.n,
+ */
+
+
+#ifndef CONFIGURE_H_
+#  include <Configure.h>
+#endif
+
+
+#if defined(NO_INLINES) && !defined(LVOBJSTORE_CC_)
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF size_t LocalVolatileObjectStore::dataSegment ()
+{
+    return sizeof(number_states) + (headerSize() * numberOfStates);
+}
+
+INLINEF Boolean LocalVolatileObjectStore::closeAndUnlock ()
+{
+    return (Boolean) (closeObjectStore() && unlockObjectStore());
+}
+
+
+INLINEF ObjectState* LocalVolatileObjectStore::read_state (const Uid& objUid, const TypeName tn)
+{
+    return read_state(objUid, tn, ORIGINAL);
+}
+
+INLINEF ObjectState* LocalVolatileObjectStore::read_uncommitted (const Uid& objUid, const TypeName tn)
+{
+    return read_state(objUid, tn, SHADOW);
+}
+
+INLINEF Boolean LocalVolatileObjectStore::remove_state (const Uid& objUid, const TypeName tn)
+{
+    return remove_state(objUid, tn, ORIGINAL);
+}
+
+INLINEF Boolean LocalVolatileObjectStore::remove_uncommitted (const Uid& objUid, const TypeName tn)
+{
+    return remove_state(objUid, tn, SHADOW);
+}
+
+INLINEF Boolean LocalVolatileObjectStore::write_committed (const Uid& objUid, const TypeName tn,
+							   const ObjectState& state)
+{
+    return write_state(objUid, tn, state, ORIGINAL);
+}
+
+INLINEF Boolean LocalVolatileObjectStore::write_state (const Uid& objUid, const TypeName tn,
+						       const ObjectState& state)
+{
+    return write_state(objUid, tn, state, SHADOW);
+}
+
+
+// This operation does not make sense for the volatile object store.
+
+INLINEF ObjectState* LocalVolatileObjectStore::allObjUids (const TypeName)
+{
+    return 0;
+}
+
+
+/*
+ * Dummy OsType() operation to obtain unique semaphore and shared memory segment keys
+ */
+
+INLINEF TypeName LocalVolatileObjectStore::OsType () const
+{
+    return OBJECTSTOREDIR_Q;
+}
+
+INLINEF const TypeName LocalVolatileObjectStore::type () const
+{
+    return "LocalVolatileObjectStore";
+}
+
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif

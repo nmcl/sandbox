@@ -1,0 +1,324 @@
+/*
+ * Copyright (C) 1993
+ * 
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: server.dpl,v 1.3 1993/03/18 15:19:10 n048z Exp $
+ */
+
+#include <ecs.h>
+#include <stdio.h>
+
+! MANAGED RPC
+! USE RPC
+! DECLARE { ir } : RPC SERVER
+
+/*
+ * Interface reference for object
+ */
+ansa_InterfaceRef ir;
+
+/*
+ * Sequencers & event counters to do concurrency control
+ */
+ansa_EventCount ev_get, ev_send;			    /* event counters */
+ansa_EventCount ev_sent;
+ansa_Sequencer sq_get, sq_send;				    /* sequencers  */
+ansa_Sequencer sq_sent;
+
+
+/*
+ * Temporary place to store program parameters
+ */
+int a_argc;
+char **a_argv;
+
+
+/*
+ * Temporary place to store incoming/outgoing RPCBuffs
+ */
+RPCBuff *temp_in, *temp_out;
+
+extern mainbody__FiPPc();
+
+
+#ifdef RPC_DEBUG
+
+static void report(message)
+char *message;
+{
+    fprintf(stderr,"SERVER.DPL : %s",message);
+}
+
+static void dump_buffer(buffer)
+RPCBuff *buffer;
+{
+    int d;
+
+    fprintf(stderr, "Opcode = %lu\n",buffer->Opcode);
+
+    fprintf(stderr, "Buffer1.length = %lu\n",buffer->Buffer1.length);
+    fprintf(stderr, "Buffer1.data = ");
+    for(d = 0; d < buffer->Buffer1.length; d++)
+	fprintf(stderr, " %2X", (int) buffer->Buffer1.data[d]);
+    fprintf(stderr, "\n");
+
+    fprintf(stderr, "Buffer2.length = %lu\n",buffer->Buffer2.length);
+    fprintf(stderr, "Buffer2.data = ");
+    for(d = 0; d < buffer->Buffer2.length; d++)
+	fprintf(stderr, " %2X", (int) buffer->Buffer2.data[d]);
+    fprintf(stderr, "\n");
+}
+
+#else  /* RPC_DEBUG */
+#define report(x)
+#define dump_buffer(x)
+#endif /* RPC_DEBUG */
+
+
+
+/***************************************************
+  Getwork :-
+    Receives the parameters sent by the client and
+    places them in the RPCBuff parameters.
+****************************************************/
+void rpc_getwork( parameters )
+RPCBuff *parameters;
+{
+    report("rpc_getwork() waiting for parameters\n");
+    ecs_await(ev_get, ecs_ticket(sq_get));		    /* wait for signal from RPC_Call */
+    report("rpc_getwork() : data received\n");
+
+    parameters->Opcode         = temp_in->Opcode;	    /* put data into buffer structure given as parameter */
+    parameters->Buffer1.length = temp_in->Buffer1.length;
+    parameters->Buffer1.data   = temp_in->Buffer1.data;
+    parameters->Buffer2.length = temp_in->Buffer2.length;
+    parameters->Buffer2.data   = temp_in->Buffer2.data;
+
+    free(temp_in);					    /* free buffer structure (but not the data!) 'temp_in' */
+    temp_in = NULL;
+
+    dump_buffer(parameters);
+
+    report("exit from rpc_getwork()\n");
+}
+
+
+/**************************************************
+  Sendwork :-
+     Sends back to the client the results of the
+     function executed by the server. The results
+     are in the RPCBuff results.
+***************************************************/
+int rpc_sendresult( results )
+RPCBuff results;
+{
+    report("entry into rpc_sendresults()\n");
+    dump_buffer(&results);
+
+    if (temp_out != NULL)
+    {
+	report("rpc_sendresult() : freeing temp_out RPCBuff\n");
+	if (temp_out->Buffer1.length > 0)
+	    free(temp_out->Buffer1.data);
+	if (temp_out->Buffer2.length > 0)
+	    free(temp_out->Buffer2.data);
+	free(temp_out);
+	temp_out = NULL;
+    }
+
+    temp_out = (RPCBuff *) malloc(sizeof(RPCBuff));	    /* allocate new temp buffer (temp_out) & copy data into it */
+
+    temp_out->Opcode = results.Opcode;
+
+    temp_out->Buffer1.length = results.Buffer1.length;
+    temp_out->Buffer1.data = (ansa_Octet *) malloc(results.Buffer1.length);
+    memcpy(temp_out->Buffer1.data, results.Buffer1.data, results.Buffer1.length);
+
+    temp_out->Buffer2.length = results.Buffer2.length;
+    temp_out->Buffer2.data = (ansa_Octet *) malloc(results.Buffer2.length);
+    memcpy(temp_out->Buffer2.data, results.Buffer2.data, results.Buffer2.length);
+
+    report("rpc_sendresult() : data copied into temp buffer (temp_out)\n");
+    ecs_advance(ev_send);				    /* send signal to RPC_Call to allow it to continue */
+
+    report("rpc_sendresult() : waiting for data to be sent\n");
+    ecs_await(ev_sent, ecs_ticket(sq_sent));		    /* wait signal from RPC_Call that data sent */
+    report("rpc_sendresult() : data now sent\n");
+
+    report("exit from rpc_sendresult()\n");
+    return 1;
+}
+
+
+/*************************************************
+  arjuna_call :-
+     Indirection procedure to call the main
+     arjuna body. Required because of the nature
+     of the Fork procedure in ANSAware.
+     Note that the input parameters ignored
+**************************************************/
+static void arjuna_call( attr, buffer )
+ansa_InterfaceAttr *attr;
+ansa_BufferLink buffer;
+{
+#ifdef RPC_DEBUG
+    int i;
+    report("starting arjuna_call()\n");
+
+    fprintf(stderr, "argc = %d\n", a_argc);
+    for(i = 0; i < a_argc; i++)
+	fprintf(stderr, "argv[%d] = %s\n", i, a_argv[i] );
+#endif
+
+    mainbody__FiPPc(a_argc, a_argv, NULL);
+}
+
+
+ansa_Boolean terminate()
+{
+    report("terminating\n");
+    return ansa_TRUE;
+}
+
+void copy_args(argc, argv)
+int argc;
+char *argv[];
+{
+    int i;
+
+    report("Copying parameters\n");
+    a_argc = argc;
+    a_argv = (char **) malloc(argc * sizeof(char *));
+    for(i = 0; i < argc; i++)
+    {
+	a_argv[i] = (char *) malloc(strlen(argv[i]) + 1);
+	strcpy(a_argv[i], argv[i]);
+    }
+}
+
+/**************************************************
+  Create__Object :-
+     ANSAware required function.
+     Needed to create a managed object.
+     Initialises server & splits off a thread to execute the arjuna code.
+     Current thread will run the ANSA part of the server.
+***************************************************/
+static ansa_StatePtr Create_RPC_Object( argc, argv, envp, results)
+int argc;
+char *argv[];
+char *envp[];
+InstantiateResult *results;
+{
+#ifdef RPC_DEBUG
+    int i;
+#endif
+    ansa_ThreadId arjunaThread;
+    ansa_BufferLink buffer;
+
+    report("Starting Create_RPC_Object()\n");
+#ifdef RPC_DEBUG
+    fprintf(stderr, "argc = %d\n", argc);
+    for(i = 0; i < argc; i++)
+	fprintf(stderr, "argv[%d] = %s\n", i, argv[i] );
+#endif
+
+#ifdef RPC_DEBUG
+    setbuf(stdout, NULL);
+    setbuf(stderr, NULL);
+#endif
+
+
+!   {ir} :: RPC$Create(1)
+    Capsule_SetTerminator( terminate );
+
+    results->length = 1;
+    results->data   = &ir;
+
+    nucleus_tasks( (ansa_Cardinal) 1, (ansa_Cardinal) 0);   /* create one more task */
+
+    ev_get = ecs_makeEventCount((ansa_Cardinal) 0);	    /* create an event counter for getwork (data received) */
+    sq_get = ecs_makeSequencer((ansa_Cardinal) 1);	    /* create sequencer for getwork */
+
+    ev_send = ecs_makeEventCount((ansa_Cardinal) 0);	    /* create an event counter for sendresults (data to send) */
+    sq_send = ecs_makeSequencer((ansa_Cardinal) 1);	    /* create sequencer for sendresults */
+
+    ev_sent = ecs_makeEventCount((ansa_Cardinal) 0);	    /* create another event counter for sendresults (data has been sent) */
+    sq_sent = ecs_makeSequencer((ansa_Cardinal) 2);	    /* create another sequencer for sendresults */
+
+    temp_in  = NULL;					    /* initialise temporary buffer pointers (NULL) */
+    temp_out = NULL;
+
+				                            /* place calling arguments on global vars */
+    copy_args(argc, argv);			            /* so that they are accessible to the */
+
+    report("Starting Arjuna thread\n");
+    buffer = buffer_make((ansa_Cardinal) 0);
+    arjunaThread = instruct_Spawn_with_lock(arjuna_call, (ansa_ChannelId) 0, buffer);	/* fork thread for arjuna side of server */
+
+    report("exiting Create_RPC_Object()\n");
+    return((ansa_StatePtr) 0);
+}
+
+
+/*
+ * Destroy RPC object and all associated data
+ */
+static ansa_Boolean Destroy_RPC_Object( state )
+ansa_StatePtr state;
+{
+    report("executing Destroy_RPC_Object()");
+!   {} :: RPC$Destroy(ir)
+    return ansa_TRUE;
+}
+
+
+/*
+ * RPC_Call
+ *   This is the ANSA upcall, containing the parameters to sent to the server
+ *   This information is placed into storage and arjuna side of things
+ *   informed that data is available (via the sequencers & event counters)
+ *   Wait until arjuna side informs that reply data is available (as above), 
+ *   return with reply data in 'results'.
+ */
+int RPC_Call( _attr, parameters, results )
+ansa_InterfaceAttr *_attr;
+RPCBuff parameters, *results;
+{
+    report("entry into RPC_Call()\n");
+    dump_buffer(&parameters);
+
+    ecs_advance(ev_sent);				    /* signal that previous data sent */
+
+    temp_in = (RPCBuff *) malloc(sizeof(RPCBuff));	    /* allocate new temp buffer (temp_in) & copy received parameters into it */
+    temp_in->Opcode = parameters.Opcode;
+
+    temp_in->Buffer1.length = parameters.Buffer1.length;
+    temp_in->Buffer1.data = (ansa_Octet *) malloc(parameters.Buffer1.length);
+    memcpy(temp_in->Buffer1.data, parameters.Buffer1.data, parameters.Buffer1.length);
+
+    temp_in->Buffer2.length = parameters.Buffer2.length;
+    temp_in->Buffer2.data = (ansa_Octet *) malloc(parameters.Buffer2.length);
+    memcpy(temp_in->Buffer2.data, parameters.Buffer2.data, parameters.Buffer2.length);
+
+    ecs_advance(ev_get);				    /* signal getwork that parameters available */
+
+    report("RPC_Call() waiting for results\n");
+    ecs_await(ev_send, ecs_ticket(sq_send));		    /* then wait for signal from sendresults */
+
+    results->Opcode         = temp_out->Opcode;
+    results->Buffer1.length = temp_out->Buffer1.length;
+    results->Buffer1.data   = temp_out->Buffer1.data;
+    results->Buffer2.length = temp_out->Buffer2.length;
+    results->Buffer2.data   = temp_out->Buffer2.data;
+    
+
+    report("RPC_Call() results received\n");
+    dump_buffer(results);
+
+    report("exit from RPC_Call()\n");
+    return SuccessfulInvocation;
+}

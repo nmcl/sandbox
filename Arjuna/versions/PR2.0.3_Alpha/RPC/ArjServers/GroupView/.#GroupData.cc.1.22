@@ -1,0 +1,282 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ */
+
+/*
+ * $Id: GroupData.cc,v
+ */
+
+#ifndef BOOLEAN_H_
+#  include <Common/Boolean.h>
+#endif
+
+#ifndef ERROR_H_
+#  include <Common/Error.h>
+#endif
+
+#ifndef IOSTREAM_H_
+#  include <System/iostream.h>
+#endif
+
+#ifndef STRING_H_
+#  include <System/string.h>
+#endif
+
+#ifndef MEMORY_H_
+#  include <System/memory.h>
+#endif
+
+#if defined(DEBUG) && !defined(DEBUG_H_)
+#  include <Common/Debug.h>
+#endif
+
+
+#include "RepDesc_stub.h"
+
+#ifndef REPLICADATA_H_
+#  include "ReplicaData.h"
+#endif
+
+#ifndef GROUPDATA_H_
+#  include <RPC/ArjServers/GroupData.h>
+#endif
+
+
+const GroupData NIL_GD;
+
+
+GroupData::GroupData () 
+                      : ReplicaData (),
+			next(0)
+{
+#ifdef DEBUG
+    debug_stream << CONSTRUCTORS << FAC_NAMING_AND_BINDING << VIS_PUBLIC;
+    debug_stream << "GroupData::GroupData ()" << endl;
+#endif
+}
+   
+GroupData::~GroupData ()
+{
+#ifdef DEBUG
+    debug_stream << DESTRUCTORS << FAC_NAMING_AND_BINDING << VIS_PUBLIC;
+    debug_stream << "GroupData::~GroupData ()" << endl;
+#endif
+}
+
+long GroupData::getNumber () const
+{
+    long number = 0;
+    const GroupData* ptr = this;
+
+    while (ptr)
+    {
+        number++;
+	ptr = ptr->next;
+    }
+
+    return number;
+}
+
+Boolean GroupData::groupIsMember (const Uid& u) const
+{
+    Boolean found = FALSE;
+
+    if (getGroupUid() == u)
+        found = TRUE;
+    else
+    {
+        if (next)
+	    found = next->groupIsMember(u);
+    }
+
+    return found;
+}
+
+Boolean GroupData::pack (Buffer& packInto, int sizeL) const
+{
+#ifdef DEBUG
+    debug_stream << OPERATORS << FAC_NAMING_AND_BINDING << VIS_PUBLIC;
+    debug_stream << "Boolean GroupData::pack (Buffer& packInto) const" << endl;
+#endif
+
+    Boolean result = TRUE;
+
+    if (sizeL == -1)
+        result = packInto.pack(getNumber());
+    result = result && ReplicaData::pack(packInto);
+    if ((next) && (result))
+        result = next->pack(packInto, 0);
+
+    return result;
+}
+
+Boolean GroupData::unpack (Buffer& unpackFrom, int number)
+{
+#ifdef DEBUG
+    debug_stream << OPERATORS << FAC_NAMING_AND_BINDING << VIS_PUBLIC;
+    debug_stream << "Boolean GroupData::unpack (Buffer& unpackFrom)" << endl;
+#endif
+
+    Boolean result = TRUE;
+    
+    if (number == -1)
+        result = unpackFrom.unpack(number);
+    result = result && ReplicaData::unpack(unpackFrom);
+    number--;
+
+    if ((result) && (number > 0))
+    {
+        if (!next)
+	    next = new GroupData;
+	result = next->unpack(unpackFrom, number);
+    }
+
+    // This should never happen, but just in case ...
+    if ((number == 0) && (next != 0))
+    {
+        GroupData *indx = next, *ptr = 0;
+	while (indx)
+	{
+	    ptr = indx;
+	    indx = indx->next;
+	    delete ptr;
+	}
+	next = 0;
+    }
+
+    return result;
+}
+
+ostream& GroupData::print (ostream& strm) const
+{
+    ReplicaData::print(strm);
+    if (next)
+    {
+	strm << "****\n";
+	strm << *next;
+    }
+    else
+	strm << "****" << endl;
+    
+    return strm;
+}
+
+GroupData& GroupData::operator= (const ReplicaDescriptor& rd)
+{
+#ifdef DEBUG
+    debug_stream << OPERATORS << FAC_NAMING_AND_BINDING << VIS_PUBLIC;
+    debug_stream << "GroupData& GroupData::operator=" << endl;
+#endif
+
+    setHost((char*) rd.getHost());
+    setObjectName((char*) rd.getObjectName());
+    setUid(rd.getUid());
+    setGroupUid(rd.getGroupUid());
+    setActive(rd.getActive());
+    return *this;
+}
+
+GroupData& GroupData::operator= (const GroupData& gd)
+{
+#ifdef DEBUG
+    debug_stream << OPERATORS << FAC_NAMING_AND_BINDING << VIS_PUBLIC;
+    debug_stream << "GroupData& GroupData::operator=" << endl;
+#endif
+
+    if (&gd == this)
+	return *this;
+
+    setHost((char*) gd.getHost());
+    setObjectName((char*) gd.getObjectName());
+    setUid(gd.getUid());
+    setGroupUid(gd.getGroupUid());
+    setActive(gd.getActive());
+    return *this;
+}
+    
+GroupData& GroupData::operator+= (const GroupData& gd)
+{
+#ifdef DEBUG
+    debug_stream << OPERATORS << FAC_NAMING_AND_BINDING << VIS_PUBLIC;
+    debug_stream << "GroupData& GroupData::operator+=" << endl;
+#endif
+
+    GroupData* tempPtr = this;
+    const GroupData* indx = &gd;
+    
+    if (&gd == this)
+        return *this;
+
+    while (tempPtr->next)
+	tempPtr = tempPtr->next;
+    
+    while (indx)
+    {
+	if (tempPtr->next == 0)
+	    tempPtr->next = new GroupData;
+	
+	tempPtr = tempPtr->next;
+	*tempPtr = *indx;
+	indx = indx->next;
+    }
+    
+    return *this;
+}
+
+Boolean GroupData::operator== (const GroupData& gd)
+{
+#ifdef DEBUG
+    debug_stream << OPERATORS << FAC_NAMING_AND_BINDING << VIS_PUBLIC;
+    debug_stream << "Boolean GroupData::operator==" << endl;
+#endif
+
+    if ((gd.getUid() == getUid()) && (::strcmp(getHost(), gd.getHost()) == 0)
+	&& (::strcmp(getObjectName(), gd.getObjectName()) == 0) && (gd.getGroupUid() == getGroupUid()))
+	return TRUE;
+    else
+	return FALSE;
+}
+    
+Boolean GroupData::operator== (const ReplicaDescriptor& rd)
+{
+#ifdef DEBUG
+    debug_stream << OPERATORS << FAC_NAMING_AND_BINDING << VIS_PUBLIC;
+    debug_stream << "Boolean GroupData::operator==" << endl;
+#endif
+
+    if ((rd.getUid() == getUid()) && (::strcmp(getHost(), rd.getHost()) == 0)
+	&& (::strcmp(getObjectName(), rd.getObjectName()) == 0) && (rd.getGroupUid() == getGroupUid()))
+	return TRUE;
+    else
+	return FALSE;
+}
+
+Boolean GroupData::operator!= (const ReplicaDescriptor& rd)
+{
+#ifdef DEBUG
+    debug_stream << OPERATORS << FAC_NAMING_AND_BINDING << VIS_PUBLIC;
+    debug_stream << "Boolean GroupData::operator!=" << endl;
+#endif
+
+    return ((*this == rd) ? FALSE : TRUE);
+}
+
+Boolean GroupData::operator!= (const GroupData& gd)
+{
+#ifdef DEBUG
+    debug_stream << OPERATORS << FAC_NAMING_AND_BINDING << VIS_PUBLIC;
+    debug_stream << "Boolean GroupData::operator!=" << endl;
+#endif
+
+    return ((*this == gd) ? FALSE : TRUE);
+}
+
+ostream& operator<< (ostream& strm, const GroupData& gd)
+{
+    return gd.print(strm);
+}

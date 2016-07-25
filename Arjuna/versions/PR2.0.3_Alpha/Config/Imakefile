@@ -1,0 +1,42 @@
+COMMENT 
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.9 1993/08/03 15:53:07 nsmw Exp $
+COMMENT
+
+MakeDummyAllTarget
+
+MakeMakefile
+
+MakeNonRecursiveInstall
+
+CreateInstallTopDirectory(Config)
+InstallFile(Config,Arch.def)
+InstallFile(Config,Arj-DEC.cf)
+InstallFile(Config,Arj-HP.cf)
+InstallFile(Config,Arj-IBM.cf)
+InstallFile(Config,Arj-I386.cf)
+InstallFile(Config,Arj-Other.cf)
+InstallFile(Config,Arj-Sun.cf)
+InstallFile(Config,Arjuna.tmpl)
+InstallFile(Config,Flag.def)
+InstallFile(Config,Local.def)
+InstallFile(Config,Macro.def)
+InstallFile(Config,Make.def)
+InstallFile(Config,Override.def)
+InstallFile(Config,Prog.def)
+InstallFile(Config,Rule.def)
+InstallFile(Config,StdParam.def)
+
+MakeDummyMakefiles
+
+MakeEmptyNonRecursiveTidyCleanPurge
+
+MakeDummyMakedepend
+
+MakeDummyStripdepend

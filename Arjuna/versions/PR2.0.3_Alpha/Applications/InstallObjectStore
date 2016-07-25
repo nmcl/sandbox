@@ -1,0 +1,24 @@
+#!/bin/sh
+tar xf ObjectStore.tar
+cd ObjectStore/StateManager/LockManager
+for i in SeatPersis TheatrePersis TowerPersis WorkStack
+do
+	echo $i
+	( cd $i
+	echo "Converting file names"
+	for j in *
+	do
+		echo $j
+		../../../../bin/UidConverter -TypeName StateManager/LockManager/$i -oldUid $j
+	done
+	echo "Converting object store formats"
+	for j in *
+	do
+		echo $j
+		../../../../bin/OSConverter -TypeName StateManager/LockManager/$i -oldUid $j
+	done
+	)
+done
+
+
+		

@@ -1,0 +1,61 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.3 1993/10/06 09:26:04 nsmw Exp $
+COMMENT
+COMMENT
+COMMENT Imakefile. (Distributed)
+COMMENT
+
+LIBRARIES = $(LIBSTUB) $(LIBRPC) $(LIBARJUNA) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+SOURCES = Driver.cc \
+          Stack_client.cc \
+          Stack_server.cc \
+          Stack_servermain.cc \
+          stackOutcome_marshall.cc \
+          Stack.cc
+
+CLIOBJS = Driver.o \
+          Stack_client.o \
+          stackOutcome_marshall.o
+
+SEROBJS = Stack_server.o \
+          Stack_servermain.o \
+          stackOutcome_marshall.o \
+          Stack.o
+
+STUB_HEADERS = Stack_stub.h Stack_stubclass.h
+
+MakeNonRecursiveAllTarget($(STUB_HEADERS) Driver Stack)
+
+MakeNonRecursiveInstall
+
+CreateInstallTopDirectory(servers)
+InstallProgram(servers,Stack)
+
+MakeProgramCPLUSPLUS(Driver,$(CLIOBJS) $(LIBRARIES),)
+MakeProgramCPLUSPLUS(Stack,$(SEROBJS) $(LIBRARIES),)
+
+MakeStubGen(Stack,Stack,Stack,)
+
+MakeObjectCPLUSPLUS(Driver,)
+MakeObjectCPLUSPLUS(Stack,)
+MakeObjectCPLUSPLUS(stackOutcome_marshall,)
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(Driver Stack Stack_stub.h Stack_stubclass.h Stack_client.cc Stack_server.cc Stack_servermain.cc stackOutcome_marshall.cc)
+
+MakeNonRecursiveMakedepend($(STUB_HEADERS) $(SOURCES))
+
+MakeNonRecursiveStripdepend

@@ -1,0 +1,47 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.3 1993/08/23 10:32:46 nmcl Exp $
+COMMENT
+COMMENT
+
+SOURCES = AAStatus.cc \
+          AAStatus_client.cc \
+          AAStatus_server.cc \
+          AAStatus_servermain.cc
+
+OBJECTS = AAStatus_server.o \
+          AAStatus_servermain.o \
+          AAStatus.o
+
+LIBRARIES = $(LIBARJSERVERS) $(LIBSTUB) $(LIBRPC) $(LIBARJUNA) $(LIBCOMMON) $(LIBRPC)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+MakeNonRecursiveAllTarget(AAStatus AAStatus_client.o)
+
+MakeNonRecursiveInstall
+
+CreateInstallTopDirectory(servers)
+InstallProgram(servers,AAStatus)
+
+MakeProgramCPLUSPLUS(AAStatus,$(OBJECTS) $(LIBRARIES),)
+
+MakeObjectCPLUSPLUS(AAStatus,)
+
+MakeStubGen(AAStatus,AAStatus,AAStatus,)
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(AAStatus AAStatus_client.cc AAStatus_server.cc AAStatus_servermain.cc AAStatus_stub.h AAStatus_stubclass.h)
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend

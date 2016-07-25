@@ -1,0 +1,43 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: RPObjStore.n,v
+ */
+
+#if defined(NO_INLINES) && !defined(RPOBJSTORE_CC_)
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+
+INLINEF const TypeName RemotePersistentObjectStore::type () const
+{
+    return "RemotePersistentObjectStore";
+}
+
+INLINEF void RemotePersistentObjectStore::useStoreLocation (const Boolean b)
+{
+    isRemoteOnly = b;
+}
+
+INLINEF const char* RemotePersistentObjectStore::getStoreName () const
+{
+    return storeName;
+}
+
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif

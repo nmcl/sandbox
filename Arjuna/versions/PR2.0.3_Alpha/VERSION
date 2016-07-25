@@ -1,0 +1,31 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ */
+
+/*
+ * $Id: VERSION,v 1.7 1993/06/18 10:20:19 nmcl Exp $
+ */
+
+Welcome  to the  world  of Arjuna! This  source  tree contains version
+PR2.0 Alpha of the system and fixes numerous bugs present in version PR1.2B.
+
+Thanks to all the people who took the  time and effort to  port Arjuna
+to systems and compilers that  we do not have access too and reporting
+the problems (and fixes) that were needed, in particular:
+
+David "W." Forslund <dwf@gov.lanl.acl>
+Conrad Huang <conrad@cgl.ucsf.edu>
+Randy S Johnston <johnston@rtc.atk.com>
+David Joyner <nsysdbj@straylight.acs.ncsu.edu>
+Tage Stabell-Kulo <tage@cs.utwente.nl>
+Robb Wheatley <wheatley@enel.ucalgary.ca>
+Joao Geada <joao@com.ibm.watson>
+
+If   you   find   bugs  or   have   problems  please  report  them  to
+arjuna@newcastle.ac.uk
+

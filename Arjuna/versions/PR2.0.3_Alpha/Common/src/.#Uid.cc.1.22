@@ -1,0 +1,349 @@
+/*
+ * Copyright (C) 1993
+ * 
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ * 
+ * $Id: Uid.cc,v 1.22 1993/09/07 13:51:50 ngdp Exp $
+ */
+
+/*
+ * 
+ * Unique Identifier implementation. This version uses the internet
+ * number of the creating host concatenated with timestamp information.
+ */
+
+#ifndef STDDEF_H_
+#  include <System/stddef.h>
+#endif
+
+#ifndef UNISTD_H_
+#  include <System/unistd.h>
+#endif
+
+#ifndef MEMORY_H_
+#  include <System/memory.h>
+#endif
+
+#ifndef PROTOS_H_
+#  include <System/protos.h>
+#endif
+
+#ifndef NETDB_H_
+#  include <System/netdb.h>
+#endif
+
+#ifndef ARPA_INET_H_
+#  include <System/arpa/inet.h>
+#endif
+
+#ifndef NETINET_IN_H_
+#  include <System/netinet/in.h>
+#endif 
+
+#ifndef SYS_TIME_H_
+#  include <System/sys/time.h>
+#endif
+
+#ifndef STRING_H_
+#  include <System/string.h>
+#endif
+
+#ifndef STRSTREAM_H_
+#  include <System/strstream.h>
+#endif
+
+#if defined(DEBUG) && !defined(DEBUG_H_)
+#  include <Common/Debug.h>
+#endif
+
+#ifndef ERROR_H_
+#  include <Common/Error.h>
+#endif
+
+#ifndef BUFFER_H_
+#  include <Common/Buffer.h>
+#endif
+
+#ifndef UID_H_
+#  include <Common/Uid.h>
+#endif
+
+static const char RCSid[] = "$Id: Uid.cc,v 1.22 1993/09/07 13:51:50 ngdp Exp $";
+
+/*
+ * The NIL_UID
+ */
+
+const Uid NIL_UID("0:0:0:0");
+static unsigned long uidsCreated = 0;
+
+/*
+ * Public constructors and destructor
+ */
+
+Uid::Uid ()
+{
+    hostAddr = hostInetAddr();		/* calculated only once */
+    process = ::getpid();
+
+    sec = ::time(0);
+    
+    other = uidsCreated++;
+
+#ifdef DEBUG
+    debug_stream << CONSTRUCTORS << FAC_BUFFER_MAN << VIS_PUBLIC;
+    debug_stream << "Uid::Uid() generated uid is :";
+    debug_stream << *this << "\n" << flush;
+#endif
+}
+
+Uid::Uid (const Uid& copyFrom )
+{
+#ifdef DEBUG    
+/* 
+     * The void * cast in the next statement should really be to
+     * a const void * but there is no ostream.operator<<(const void *)
+     * in iostream.h (as of Cfront 3.0). Thus we have to put up with
+     * a warning message or else 3.0 will not compile the code!
+     */
+
+    debug_stream << CONSTRUCTORS << FAC_BUFFER_MAN << VIS_PUBLIC;
+    debug_stream << "Uid::Uid(" << (void *)&copyFrom
+	         << "{" << copyFrom << "})\n" << flush;
+#endif
+
+    *this = copyFrom;
+}
+
+/*
+ * Create Uid from string representation. Boolean arg says whether
+ * to give up if an error is detected or to simply replace with NIL_UID
+ */
+
+Uid::Uid ( const char *uidString, Boolean errsOk )
+{
+#ifdef DEBUG
+    debug_stream << CONSTRUCTORS << FAC_BUFFER_MAN << VIS_PUBLIC;
+    debug_stream << "Uid::Uid (" << uidString << ")\n" << flush;
+#endif
+    
+    int slen = (uidString != 0 ? strlen(uidString): 0);
+    char *cp = new char[slen+1];
+    char *breakp = 0;
+    Boolean newFormat = TRUE;
+    char dummy;
+
+    /* Copy incoming string and split into two parts */
+
+    if (slen > 0)
+    {        
+	::strcpy(cp, uidString);
+        breakp = ::strchr(cp, ':');
+        if (breakp)
+            *breakp++ = 0;
+
+        /* Pull out inet addr from first part */
+
+        if ((hostAddr = inet_addr(cp)) != -1)
+	{
+	    /* old format uid */
+	    newFormat = FALSE;
+	}
+	else
+	{
+	    /* new hex format */
+	    breakp = cp;
+	}
+
+	/* Extract fields with istream ops */
+
+	istrstream uid_source(breakp);
+	
+	if (newFormat)
+	{
+	    hex(uid_source);
+	    uid_source >> hostAddr >> dummy;
+	}
+
+	uid_source >> process >> dummy;
+	uid_source >> sec >> dummy;
+	uid_source >> other;
+
+	cout << "<" << process << ", " << sec << ", " << other << ">" << endl;
+	if ((hostAddr == -1) || uid_source.bad())
+	{
+	    if (errsOk)
+		*this = NIL_UID;
+	    else
+	    {
+		error_stream << FATAL << "Uid::Uid string constructor incorrect\n";
+		ArjunaFatal();
+	    }
+	}
+    }
+    else
+    {
+	if (errsOk)
+		*this = NIL_UID;
+	    else
+	    {
+		error_stream << FATAL << 
+		    "Uid::Uid(char *) constructor called with NULL pointer\n";
+		ArjunaFatal();
+	    }
+    }
+
+#ifndef __GNUG__
+    delete [] cp;
+#else
+    delete cp;
+#endif
+}
+
+Uid::~Uid ()
+{
+#ifdef DEBUG
+    debug_stream << DESTRUCTORS << FAC_BUFFER_MAN << VIS_PUBLIC;
+    debug_stream << "Uid::~Uid() for uid " << *this << "\n" << flush;
+#endif
+}
+
+/*
+ * Public non-virtual functions and operators
+ */
+
+/*
+ * Function to return a value that can be used as an index in a hash table
+ * which has been ordered using Uids. 
+ */ 
+
+unsigned long Uid::hash ( ) const
+{
+    char buffer[256];			/* conversion buffer */
+    strstream tos(buffer, 256, ios::out);
+    register const char *cp;
+    register unsigned long g, h = 0;
+
+    tos << *this << ends;
+
+    cp = buffer;
+
+    while (cp && (*cp != '\0'))
+    {
+        h = (h << 4) + (*cp);
+        if (g = h & 0xf0000000)
+        {
+            h = h ^ (g >> 24);
+            h = h ^ g;
+        }
+        cp++;
+    }
+
+    return h;
+}
+
+/*
+ * Routines to pack and unpack Uids into Buffers (for RPC, storage etc)
+ */
+
+Boolean Uid::pack ( Buffer& packInto ) const
+{
+    return ((packInto.pack(hostAddr) && packInto.pack(process) &&
+	     packInto.pack(sec) && packInto.pack(other)));
+}
+
+ostream& Uid::print ( ostream& strm ) const
+{
+    return strm << hex << hostAddr << ":" << process << ":" << sec << ":" 
+		<< other << dec;
+}
+
+Boolean Uid::unpack ( Buffer& unpackFrom )
+{
+    return ((unpackFrom.unpack(hostAddr) && unpackFrom.unpack(process) &&
+	     unpackFrom.unpack(sec) &&unpackFrom.unpack(other)));
+}
+
+/*
+ * Uid comarisons
+ */
+
+int Uid::operator== ( const Uid& u ) const
+{
+    return ((other == u.other) &&
+	    (sec == u.sec) &&
+	    (process == u.process) &&
+	    (hostAddr == u.hostAddr));
+}
+
+int Uid::operator!= ( const Uid& u ) const
+{
+    return ((other != u.other) ||
+	    (sec != u.sec) ||
+	    (process != u.process) ||
+	    (hostAddr != u.hostAddr));
+}
+
+int Uid::operator< ( const Uid& u ) const
+{
+    if (hostAddr < u.hostAddr)
+	return TRUE;
+    else if (hostAddr == u.hostAddr)
+    {
+	if (process < u.process)
+	    return TRUE;
+	else if (process == u.process)
+	{
+	    if (sec < u.sec)
+		return TRUE;
+	    else if ((sec == u.sec) && (other < u.other))
+		return TRUE;
+	}
+    }
+    return FALSE;
+}
+
+int Uid::operator> ( const Uid& u ) const
+{
+    if (hostAddr > u.hostAddr)
+	return TRUE;
+    else if (hostAddr == u.hostAddr)
+    {
+	if (process > u.process)
+	    return TRUE;
+	else if (process == u.process)
+	{
+	    if (sec > u.sec)
+		return TRUE;
+	    else if ((sec == u.sec) && (other > u.other))
+		return TRUE;
+	}
+    }
+    return FALSE;
+}
+
+unsigned long Uid::hostInetAddr ()
+{
+    static unsigned long myAddr;	/* init to 0 by definition */
+    static char hostname[256];
+
+    if (myAddr == 0)
+    {
+	struct hostent *h;
+
+	::gethostname(hostname, 256);
+	h = ::gethostbyname(hostname);
+	::memcpy(&myAddr, h->h_addr, h->h_length);
+    }
+
+    return myAddr;
+}
+
+#ifdef NO_INLINES
+#  define UID_CC_
+#  include <Common/Uid.n>
+#  undef UID_CC_
+#endif

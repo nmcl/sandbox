@@ -1,0 +1,31 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: LockR.n,v 1.4 1993/03/22 09:16:20 ngdp Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(LOCKR_CC_)
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF Boolean LockRecord::isReadOnly () const
+{
+    return readOnly;
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif

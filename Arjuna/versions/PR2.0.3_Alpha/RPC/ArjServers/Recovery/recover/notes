@@ -1,0 +1,17 @@
+/*
+ * Copyright (C) 1993
+ * 
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: notes,v 1.2 1993/03/18 15:43:39 n048z Exp $
+ */
+
+Format of ServerAtomicAction content
+
+	- uid of AtomicAction (string)
+	- name of coordinator node (string)
+	- pid of local server process (string)
+	- paths of objectstate files (strings)

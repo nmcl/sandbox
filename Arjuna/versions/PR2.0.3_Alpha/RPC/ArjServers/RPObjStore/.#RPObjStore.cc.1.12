@@ -1,0 +1,1097 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: RPObjStore.cc,v 
+ */
+
+
+
+#ifndef STDLIB_H_
+#  include <System/stdlib.h>
+#endif
+
+#ifndef SYSENT_H_
+#  include <System/unistd.h>
+#endif
+
+#ifndef PROTOS_H_
+#  include <System/protos.h>
+#endif
+
+#ifndef STRSTREAM_H_
+#  include <System/strstream.h>
+#endif
+
+#ifndef MEMORY_H_
+#  include <System/memory.h>
+#endif
+
+#ifndef SYS_STAT_H_
+#  include <System/sys/stat.h>
+#endif
+
+#ifndef ERRNO_H_
+#  include <System/errno.h>
+#endif
+
+#ifndef STRING_H_
+#  include <System/string.h>
+#endif
+
+#ifndef CTYPE_H_
+#  include <System/ctype.h>
+#endif
+
+#ifndef DIRENT_H_
+#  include <System/dirent.h>
+#endif
+
+#ifndef FCNTL_H_
+#  include <System/fcntl.h>
+#endif
+
+#ifndef SYS_FILE_H_
+#  include <System/sys/file.h>
+#endif
+
+#ifndef SYS_TYPES_H_
+#  include <System/sys/types.h>
+#endif
+
+#ifndef SIGNAL_H_
+#  include <System/signal.h>
+#endif
+
+#ifndef SYS_PARAM_H_
+#  include <System/sys/param.h>
+#endif 
+
+#ifndef NETDB_H_
+#  include <System/netdb.h>
+#endif 
+
+#ifndef PROTOS_H_
+#  include <System/protos.h>
+#endif
+
+#ifndef BUFFER_H_
+#  include <Common/Buffer.h>
+#endif
+
+#ifndef ERROR_H_
+#  include <Common/Error.h>
+#endif
+
+#ifndef ARJNAME_H_
+#  include <RPC/ArjServers/ArjName.h>
+#endif
+
+#ifndef ATOMICA_H_
+#  include <Arjuna/AtomicA.h>
+#endif
+
+#ifndef OBJSTATE_H_
+#  include <Arjuna/ObjState.h>
+#endif
+
+#ifndef OBJSTORE_H_
+#  include <Arjuna/ObjStore.h>
+#endif
+
+#ifndef ABORT_H_
+#  include <StubGen/Abort.h>
+#endif
+
+#ifndef RPOBJSTORE_H_
+#  include <RPC/ArjServers/RPObjStore.h>
+#endif
+
+#ifndef RPOBJSTOREIF_H_
+#  include <RPC/ArjServers/RPObjStoreIF.h>
+#endif
+
+#ifndef DAEMONLIST_H_
+#  include <RPC/ArjServers/DaemonList.h>
+#endif
+
+#ifndef DAEMONDATA_H_
+#  include <RPC/ArjServers/DaemonData.h>
+#endif
+
+#ifndef MEMBERS_H_
+#  include <RPC/ArjServers/Members.h>
+#endif
+
+#ifndef STATEDAEMON_H_
+#  include <RPC/ArjServers/StateDaemon_stub.h>
+#endif
+
+#ifndef NAMESERV_H_
+#  include <RPC/ArjServers/NameServ_stub.h>
+#endif
+
+#ifndef NSINTERFACE_H_
+#  include <RPC/ArjServers/NSInterface.h>
+#endif
+
+#ifndef DEBUG_H_
+#  include <Common/Debug.h>
+#endif
+
+#ifndef CONFIGURE_H_
+#  include <Configure.h>
+#endif
+
+
+static const char RCSid[] = "$Id: RPObjStore.cc,v 1.12 1993/08/31 16:07:54 nmcl Exp $";
+
+
+int RemotePersistentObjectStore::use_count = 0;
+DaemonList* RemotePersistentObjectStore::daemons = 0;
+Boolean RPObjStoreSetUp::setUp = FALSE;
+
+
+/*
+ * The following class has an equivalent in every type of object store.
+ * This is used to cut down the size of the binaries at link time by
+ * dynamically assembling a linked list of only those types of object stores
+ * which the application needs to use.
+ */
+
+RPObjStoreSetUp::RPObjStoreSetUp ()
+{
+#ifdef DEBUG
+    debug_stream << CONSTRUCTORS << FAC_OBJECT_STORE << VIS_PUBLIC;
+    debug_stream << "RPObjStoreSetUp::RPObjStoreSetUp ()" << endl;
+#endif
+
+    if (!setUp)
+    {
+	ObjectStore::addToList(RPObjStoreSetUp::create, RPObjStoreSetUp::destroy, "RemotePersistentObjectStore");
+	setUp = TRUE;
+    }
+}
+
+RPObjStoreSetUp::~RPObjStoreSetUp () {}
+
+ObjectStore* RPObjStoreSetUp::create (const char*)
+{
+    return new RPObjStoreInterface;
+}
+
+void RPObjStoreSetUp::destroy (const char*) {}
+
+
+
+/*
+ * Public constructors and destructor
+ */
+
+	
+RemotePersistentObjectStore::RemotePersistentObjectStore ()
+                                                          : storeName(OBJECTSTOREDIR_Q),
+                                                            storeValid(TRUE),
+							    replica_members(0),
+							    NS(0)
+{
+#ifdef DEBUG
+    debug_stream << CONSTRUCTORS << FAC_OBJECT_STORE << VIS_PUBLIC;
+    debug_stream << "RemotePersistentObjectStore::RemotePersistentObjectStore ()\n" << flush;
+#endif
+
+    isRemoteOnly = FALSE;
+    StoreLocation = 0;
+    
+    if (RemotePersistentObjectStore::daemons == 0)
+	RemotePersistentObjectStore::daemons = new DaemonList;
+    RemotePersistentObjectStore::use_count++;
+
+    hostName = ::new char[MAXHOSTNAMELEN+1];
+    ::memset(hostName, '\0', MAXHOSTNAMELEN+1);
+    (void) ::gethostname(hostName, MAXHOSTNAMELEN);
+    myData.pid = ::getpid();
+    myData.groupCreated = FALSE;
+    myData.group_view = 0;
+    myData.compositeView = 0;
+    myData.group_uid = 0;
+}
+
+RemotePersistentObjectStore::~RemotePersistentObjectStore ()
+{
+#ifdef DEBUG
+    debug_stream << DESTRUCTORS << FAC_OBJECT_STORE << VIS_PUBLIC;
+    debug_stream << "RemotePersistentObjectStore::~RemotePersistentObjectStore()\n" << flush;
+#endif
+
+    // Cannot release group here as other objects may have implicit lock.
+
+    if (NS)
+	delete NS;
+
+    RemotePersistentObjectStore::use_count--;
+    if (RemotePersistentObjectStore::use_count == 0)
+    {
+	if (RemotePersistentObjectStore::daemons)
+	{
+	    delete RemotePersistentObjectStore::daemons;
+	    RemotePersistentObjectStore::daemons = 0;
+	}
+    }
+
+    if (StoreLocation)
+#ifndef __GNUG__
+	::delete [] StoreLocation;
+#else
+	::delete StoreLocation;
+#endif
+
+    if (hostName)
+#ifndef __GNUG__
+	::delete [] hostName;
+#else
+        ::delete hostName;
+#endif
+
+    undo();
+
+    if (myData.group_view)
+    {
+	delete myData.group_view;
+	myData.group_view = 0;
+    }
+    if (myData.compositeView)
+    {
+        delete myData.compositeView;
+	myData.compositeView = 0;
+    }
+    if (myData.group_uid)
+    {
+	delete myData.group_uid;
+	myData.group_uid = 0;
+    }
+
+    setHandler(old_handler);
+}
+
+Boolean RemotePersistentObjectStore::rpc_handler () { return FALSE; }
+
+void RemotePersistentObjectStore::storeLocation (const char* location)
+{
+    int size = ((location != 0) ? ::strlen(location) : MAXHOSTNAMELEN);
+    const char* tempPtr = ((location != 0) ? location : hostName);
+    StoreLocation = ::new char[size+1];
+    ::memset(StoreLocation, '\0', size+1);
+    ::memcpy(StoreLocation, tempPtr, size);
+}
+
+
+/*
+ * Private functions
+ */
+
+
+
+Boolean RemotePersistentObjectStore::createDaemon (ReplicaDescriptor* indx, Members* ptrToMembers)
+{
+#ifdef DEBUG
+    debug_stream << FUNCTIONS << FAC_OBJECT_STORE << VIS_PRIVATE;
+    debug_stream << "void RemotePersistentObjectStore::createDaemon (ReplicaDescriptor* indx, Members* ptrToMembers)" << endl;
+#endif
+
+    int res = -1;
+    ArjunaName AN2;
+    Members* ptm = 0;
+    Boolean activated = FALSE;
+#if (RPC_SYSTEM_TYPE == RPC_RajdootAction_) || (RPC_SYSTEM_TYPE == RPC_Radjoot_)
+    UNIQUEID rUid;                                   // Uid for Rajdoot
+#endif
+
+#if (RPC_SYSTEM_TYPE == RPC_RajdootAction_) || (RPC_SYSTEM_TYPE == RPC_Radjoot_)
+    rUid.host = rUid.sec = rUid.msec = STATEDAEMONUID;
+#endif
+
+    AN2.SetObjName("StateDaemon");
+    AN2.SetServiceName("StateDaemon");
+    AN2.SetHostName(indx->getHost());
+
+    if (!replica_members)
+    {
+	replica_members = new Members;
+	ptrToMembers = replica_members;
+    }
+    else
+    {
+	ptm = ptrToMembers;
+	ptrToMembers->next = new Members;
+	ptrToMembers = ptrToMembers->next;
+    }
+
+    ptrToMembers->CRPC = new ClientRpc(&AN2);
+#if (RPC_SYSTEM_TYPE == RPC_RajdootAction_) || (RPC_SYSTEM_TYPE == RPC_Radjoot_)
+#ifdef DEBUG
+    ptrToMembers->CRPC->SetTimeout(8000);
+    ptrToMembers->CRPC->SetRetry(5);
+    ptrToMembers->CRPC->SetObjectUid(rUid);
+#else
+    ptrToMembers->CRPC->SetTimeout(2000);
+    ptrToMembers->CRPC->SetObjectUid(rUid);
+#endif
+#endif
+
+    old_handler = setHandler(RemotePersistentObjectStore::rpc_handler);
+    ptrToMembers->RPCCont = new RpcControl(ptrToMembers->CRPC);
+    ptrToMembers->r_state_daemon = new RemoteStateDaemon(res, FALSE, ptrToMembers->RPCCont);
+    setHandler(old_handler);
+
+    if (res == 0)
+    {
+	ptrToMembers->rd = indx;
+	RemotePersistentObjectStore::daemons->put(ptrToMembers, indx->getHost());
+	activated = TRUE;
+    }
+    else
+    {
+	indx->setActive(FALSE); // flag replica as unavailable
+
+	// remove element from list of daemons
+
+	if (ptrToMembers == replica_members)
+	    replica_members = 0;
+
+	if (ptm)
+	{
+	    delete ptm->next;
+	    ptm->next = 0;
+	}
+	
+	delete ptrToMembers;
+	ptrToMembers = 0;
+    }
+
+    return activated;
+}
+
+Boolean RemotePersistentObjectStore::tryOldDaemon (Members* touse, ReplicaDescriptor* indx, Members* ptrToMembers)
+{
+#ifdef DEBUG
+    debug_stream << FUNCTIONS << FAC_OBJECT_STORE << VIS_PRIVATE;
+    debug_stream << "Boolean RemotePersistentObjectStore::tryOldDaemon ()" << endl;
+#endif
+
+    Boolean IsAlive = FALSE, activated = FALSE;
+
+    touse->r_state_daemon->areYouAlive(IsAlive);
+    if (IsAlive)
+    {
+	if (!replica_members)
+	{
+	    replica_members = new Members;
+	    ptrToMembers = replica_members;
+	}
+	else
+	{
+	    ptrToMembers->next = new Members;
+	    ptrToMembers = ptrToMembers->next;
+	}
+
+	ptrToMembers->r_state_daemon = touse->r_state_daemon;
+	ptrToMembers->CRPC = touse->CRPC;
+	ptrToMembers->rd = indx;
+	activated = TRUE;
+    }
+    else
+    {
+#ifdef DEBUG
+	debug_stream << FUNCTIONS << FAC_OBJECT_STORE << VIS_PRIVATE;
+	debug_stream << "RemotePersistentObjectStore::activateDaemon - old StateDaemon non-responsive\n" << flush;
+#endif
+	// remove daemon from cached list
+
+	RemotePersistentObjectStore::daemons->remove(indx->getHost());
+    }
+
+    return activated;
+}
+    
+Boolean RemotePersistentObjectStore::activateDaemon (ReplicaDescriptor* indx, Members* ptrToMembers)
+{
+#ifdef DEBUG
+    debug_stream << FUNCTIONS << FAC_OBJECT_STORE << VIS_PRIVATE;
+    debug_stream << "Boolean RemotePersistentObjectStore::activateDaemon (ReplicaDescriptor* indx, Members* ptrToMembers)" << endl;
+#endif
+
+    Boolean activated = FALSE;
+    Members* touse = 0;
+
+    if (indx->getActive())
+    {
+	for (;;)
+	{
+	    touse = RemotePersistentObjectStore::daemons->get(indx->getHost());
+
+	    if (!touse)
+	    {
+		// statedaemon not currently registered, so create new one.
+#ifdef DEBUG
+		debug_stream << FUNCTIONS << FAC_OBJECT_STORE << VIS_PRIVATE;
+		debug_stream << "RemotePersistentObjectStore::activateDaemon - trying to create StateDaemon\n" << flush;
+#endif
+		return createDaemon(indx, ptrToMembers);
+	    }
+	    else
+	    {
+		// statedaemon already registered so try to use it.
+#ifdef DEBUG
+		debug_stream << FUNCTIONS << FAC_OBJECT_STORE << VIS_PRIVATE;
+		debug_stream << "RemotePersistentObjectStore::activateDaemon - trying old StateDaemon\n" << flush;
+#endif
+		activated = tryOldDaemon(touse, indx, ptrToMembers);
+
+		if (activated)
+		    return TRUE;
+	    }
+	}
+    }
+
+    return activated;
+}
+
+Boolean RemotePersistentObjectStore::activateGroup (Boolean& replicaFailure)
+{
+#ifdef DEBUG
+    debug_stream << FUNCTIONS << FAC_OBJECT_STORE << VIS_PRIVATE;
+    debug_stream << "Boolean RemotePersistentObjectStore::activateGroup ( Boolean& replicaFailure )" << endl;
+#endif
+
+    ReplicaDescriptor* ptr = myData.group_view;
+    Boolean groupFailure = TRUE, activated;
+
+    if (replica_members)
+    {
+	delete replica_members;
+	replica_members = 0;
+    }
+
+    while (ptr != 0)
+    {
+	if (ptr->getActive())
+	    activated = activateDaemon(ptr, replica_members);
+	
+	if (activated)
+	{
+	    groupFailure = FALSE;
+	    myData.groupCreated = TRUE;
+	}
+	else
+	    replicaFailure = TRUE;
+
+	ptr = ptr->next;
+    }
+
+#ifdef DEBUG
+    debug_stream << FUNCTIONS << FAC_OBJECT_STORE << VIS_PRIVATE;
+    debug_stream << "Boolean RemotePersistentObjectStore::activateGroup () returning "
+		 << (groupFailure == TRUE ? "Not OK" : "OK") << "\n" << flush;
+#endif
+    
+    return groupFailure;
+}
+						 
+/*
+ * Public non-virtual functions
+ */
+
+Boolean RemotePersistentObjectStore::createNewObject (const Uid& u)
+{
+#ifdef DEBUG
+    debug_stream << FUNCTIONS << FAC_OBJECT_STORE << VIS_PRIVATE;
+    debug_stream << "Boolean RemotePersistentObjectStore::createNewObject ( " << u << " )\n" << flush;
+#endif
+
+    Boolean groupFailure, replicaFailure = TRUE;
+
+    isRemoteOnly = TRUE;
+    
+    if (myData.group_view)
+	delete myData.group_view;
+
+    myData.group_view = new ReplicaDescriptor;
+    
+    if (!StoreLocation)
+        storeLocation(0);
+
+#ifdef DEBUG
+    debug_stream << FUNCTIONS << FAC_OBJECT_STORE << VIS_PRIVATE;
+    debug_stream << "RemotePersistentObjectStore - Object store location is " << StoreLocation << "\n" << flush;
+#endif
+
+    myData.group_view->setHost(StoreLocation);
+    myData.group_view->setUid(u);
+    myData.group_view->setActive(TRUE);
+
+    groupFailure = activateGroup(replicaFailure);
+    
+    if (groupFailure)
+    {
+#ifdef DEBUG
+	debug_stream << FUNCTIONS << FAC_OBJECT_STORE << VIS_PRIVATE;
+	debug_stream << "RemotePersistentObjectStore - Could not activate group" << endl;
+#endif
+	undo();
+	storeValid = FALSE;
+    }
+    else
+	myData.groupCreated = TRUE;
+
+    return groupFailure;
+}
+
+Boolean RemotePersistentObjectStore::deactivateDatabase ()
+{
+#ifdef DEBUG
+    debug_stream << FUNCTIONS << FAC_OBJECT_STORE << VIS_PRIVATE;
+    debug_stream << "Boolean RemotePersistentObjectStore::deactivateDatabase ()" << endl;
+#endif
+
+    Boolean status = FALSE;
+    
+    if ((NS) && (myData.group_uid))
+    {
+	TopLevelAction TL;
+	
+	// Start nested top-level action
+
+	TL.Begin();
+	
+	OutCome result = NS->releaseGroup(*myData.group_uid, hostName, myData.pid);
+	if (result != Done)
+	    error_stream << WARNING << "Could not release group "
+	                 << *myData.group_uid << " at database" << endl;
+	else
+	    status = TRUE;
+
+	TL.End();
+    }
+
+    return status;
+}
+    
+Boolean RemotePersistentObjectStore::activateDatabase ()
+{
+#ifdef DEBUG
+    debug_stream << FUNCTIONS << FAC_OBJECT_STORE << VIS_PRIVATE;
+    debug_stream << "Boolean RemotePersistentObjectStore::activateDatabase ()" << endl;
+#endif
+    
+    TopLevelAction T;
+    Boolean result = FALSE;
+    int res = -1;
+    
+    if (!NS)
+    {
+	T.Begin();
+
+	NS = new NSInterface(res);
+
+	if (res != 0)
+	{
+	    error_stream << WARNING << "RemotePersistentObjectStore - Could not create groupview database\n" << flush;
+	    T.Abort();
+	    undo();
+	    storeValid = FALSE;
+	}
+
+	if (T.End() != COMMITTED)
+	    undo();
+	else
+	    result = TRUE;
+    }
+    else
+	result = TRUE;
+    
+    return result;
+}
+    
+Boolean RemotePersistentObjectStore::createGroupView (const Uid& u, const TypeName tn)
+{
+#ifdef DEBUG
+    debug_stream << FUNCTIONS << FAC_OBJECT_STORE << VIS_PRIVATE;
+    debug_stream << "RemotePersistentObjectStore::createGroupView (" << u << ", " << tn << ")\n" << flush;
+#endif
+
+    Boolean opcode = FALSE, replicaFailure = FALSE;
+    Boolean result = FALSE;
+    Boolean new_object = (Boolean) (AtomicAction::Current() != 0);
+    TopLevelAction TLA;
+
+    if (new_object)
+	new_object = (Boolean) (AtomicAction::Current()->status() == PREPARING);
+
+    if (myData.groupCreated)
+    {
+	// should do this for entire group.
+
+	if (replica_members->CRPC->GetServerStatus() == DEAD)
+	{
+		RemotePersistentObjectStore::daemons->remove(replica_members->rd->getHost());
+		myData.groupCreated = FALSE;
+	}
+	else
+	    return TRUE;
+    }
+
+    /*
+     * Create new object or access non-replicated object without going to
+     * database. Objects can have remote state without being logged at
+     * database.
+     */
+
+    if ((new_object) || (isRemoteOnly))
+	return createNewObject(u);
+
+    if (activateDatabase())
+    {
+	TLA.Begin(); // nested top-level atomic action
+	
+	if (myData.group_view == 0)
+	{
+	    myData.compositeView = new ReplicaDescriptor;
+	    myData.compositeView->setUid(u);
+	    myData.group_uid = new Uid(u);
+
+	    opcode = NS->getView(*myData.compositeView, u, hostName, myData.pid);
+	
+	    if (opcode)
+		myData.compositeView->getGroupList(u, myData.group_view);
+	}
+
+	if (!activateGroup(replicaFailure))
+	{
+	    if (replicaFailure)
+		result = ((NS->exclude(*myData.group_view, u) == Done) ? TRUE : FALSE);
+	    else
+		result = TRUE;
+	}
+
+	if (result)
+	{
+	    if (TLA.End() != COMMITTED)
+	    {
+		undo();
+		storeValid = FALSE;
+		result = FALSE;
+	    }
+	}
+	else
+	{
+	    TLA.Abort();
+	    undo();
+	    storeValid = FALSE;
+	}
+    }
+    else
+    {
+	if (createNewObject(u))
+	    result = TRUE;
+	else
+	    result = FALSE;
+    }
+    
+    return result;
+}
+
+/*
+ * RemotePersistentObjectStore is not persistent but some of its state must be
+ * undone if a failure occurs which would cause the action to abort. This is
+ * so that if the action is retried then it appears as though the
+ * RemotePersistentObjectStore was untouched by the last action to use it.
+ */
+
+void RemotePersistentObjectStore::undo ()
+{
+#ifdef DEBUG
+    debug_stream << FUNCTIONS << FAC_OBJECT_STORE << VIS_PRIVATE;
+    debug_stream << "void RemotePersistentObjectStore::undo ()\n" << flush;
+#endif
+
+    myData.groupCreated = FALSE;
+    if (replica_members)
+    {
+	delete replica_members;
+	replica_members = 0;
+    }
+}
+
+/*
+ * Public non-virtual functions
+ */
+
+/*
+ * Given a type name return an objectstate that contains all of the
+ * uids of objects of that type
+ */
+
+ObjectState *RemotePersistentObjectStore::allObjUids ( const TypeName tName )
+{
+#ifdef DEBUG
+    debug_stream << FUNCTIONS << FAC_OBJECT_STORE << VIS_PUBLIC;
+    debug_stream << "RemotePersistentObjectStore::all_objuids ( " << tName << " )\n" << flush;
+#endif
+
+    Buffer buff;
+    ObjectState* objstate;
+    int res = -1;
+
+    if (!myData.groupCreated)
+    {
+	error_stream << WARNING << "RemotePersistentObjectStore - Attempt to use operation without creating group.\n" << flush;
+	return 0;
+    }
+
+    old_handler = setHandler(RemotePersistentObjectStore::rpc_handler);
+    buff = replica_members->r_state_daemon->allObjUids(tName, res);
+    setHandler(old_handler);
+
+    if (res == 0)
+    {
+	objstate = new ObjectState;
+	if (!objstate->unpackFrom(buff))
+	    return 0;
+	else
+	    return objstate;
+    }
+    else
+    {
+	RemotePersistentObjectStore::daemons->remove(replica_members->rd->getHost());
+	undo();
+    }
+
+    return 0;
+}
+
+/*
+ * The following operation commits a previous write_state operation which
+ * was made with the SHADOW FileType argument. This is achieved by
+ * renaming the shadow and removing the hidden version.
+ */
+
+Boolean RemotePersistentObjectStore::commit_state ( const Uid& objUid, const TypeName tName )
+{
+#ifdef DEBUG
+    debug_stream << FUNCTIONS << FAC_OBJECT_STORE << VIS_PUBLIC;
+    debug_stream << "RemotePersistentObjectStore::commit_state ( " << objUid << ", " << tName << " )\n" << flush;
+#endif
+
+    int res;
+    Boolean result;
+    Members* ptMembers = 0;
+
+    if (!createGroupView(objUid, tName))
+	return FALSE;
+
+    ptMembers = replica_members;
+
+    while (ptMembers != 0)
+    {
+	res = -1;
+
+	old_handler = setHandler(RemotePersistentObjectStore::rpc_handler);
+	result = ptMembers->r_state_daemon->commitState(ptMembers->rd->getUid(), tName, res);
+	setHandler(old_handler);
+
+	if (res != 0)
+	{
+	    RemotePersistentObjectStore::daemons->remove((char*) ptMembers->rd->getHost());
+	    undo();
+	    return FALSE;
+	}
+
+	ptMembers = ptMembers->next;
+    }
+
+    return TRUE;
+}
+
+/*
+ * Remove the ObjectState/file from the object store.
+ */
+
+Boolean RemotePersistentObjectStore::remove_state ( const Uid& objUid, const TypeName name)
+{
+#ifdef DEBUG
+    debug_stream << FUNCTIONS << FAC_OBJECT_STORE << VIS_PUBLIC;
+    debug_stream << "RemotePersistentObjectStore::remove_state ( " << objUid << ", " << name << " )\n" << flush;
+#endif
+
+    Boolean result = FALSE;
+    int res;
+    Members* ptMembers = 0;
+
+    if (!createGroupView(objUid, name))
+	return FALSE;
+
+    ptMembers = replica_members;
+
+    while (ptMembers != 0)
+    {
+	res = -1;
+
+	old_handler = setHandler(RemotePersistentObjectStore::rpc_handler);
+	(void) ptMembers->r_state_daemon->removeState(ptMembers->rd->getUid(), name, res);
+	setHandler(old_handler);
+
+	if (res == 0)
+	    result = TRUE;
+	else
+	    RemotePersistentObjectStore::daemons->remove((char*) ptMembers->rd->getHost());
+
+	ptMembers = ptMembers->next;
+    }
+
+    return result;
+}
+
+Boolean RemotePersistentObjectStore::remove_uncommitted (const Uid& storeUid, const TypeName tName)
+{
+#ifdef DEBUG
+    debug_stream << FUNCTIONS << FAC_OBJECT_STORE << VIS_PUBLIC;
+    debug_stream << "RemotePersistentObjectStore::remove_uncommitted ( " << storeUid << ", " << tName << " )\n" << flush;
+#endif
+
+    Boolean result = FALSE;
+    int res;
+    Members* ptMembers = 0;
+
+    if (!createGroupView(storeUid, tName))
+	return FALSE;
+
+    ptMembers = replica_members;
+
+    while (ptMembers != 0)
+    {
+	res = -1;
+
+	old_handler = setHandler(RemotePersistentObjectStore::rpc_handler);
+	(void) ptMembers->r_state_daemon->removeUnCommitted(ptMembers->rd->getUid(), tName, res);
+	setHandler(old_handler);
+
+	if (res == 0)
+	    result = TRUE;
+	else
+	    RemotePersistentObjectStore::daemons->remove((char*) ptMembers->rd->getHost());
+
+	ptMembers = ptMembers->next;
+    }
+
+    return result;
+}
+
+/*
+ * read an  uncommitted instance of ObjectState out of the object store. 
+ * The instance is identified by the unique id and type
+ */
+
+ObjectState* RemotePersistentObjectStore::read_uncommitted (const Uid& storeUid, const TypeName tName)
+{
+#ifdef DEBUG
+    debug_stream << FUNCTIONS << FAC_OBJECT_STORE << VIS_PUBLIC;
+    debug_stream << "RemotePersistentObjectStore::read_uncommitted ( " << storeUid << ", " << tName << " )\n" << flush;
+#endif
+
+    Buffer buff;
+    int res = -1;
+    ObjectState* os;
+
+    if (!createGroupView(storeUid, tName))
+	return 0;
+
+    old_handler = setHandler(RemotePersistentObjectStore::rpc_handler);
+    buff = replica_members->r_state_daemon->readUnCommitted(replica_members->rd->getUid(), tName, res);
+    setHandler(old_handler);
+
+    if (res == 0)
+    {
+	os = new ObjectState;
+	os->unpackFrom(buff);
+	return os;
+    }
+    else
+    {
+	RemotePersistentObjectStore::daemons->remove((char*) replica_members->rd->getHost());
+	undo();
+    }
+
+    return 0;
+}
+
+/*
+ * read a committed instance of ObjectState out of the object store. The
+ * instance is identified by the unique id and type
+ */
+
+ObjectState* RemotePersistentObjectStore::read_state ( const Uid& objUid, const TypeName tName)
+{
+#ifdef DEBUG
+    debug_stream << FUNCTIONS << FAC_OBJECT_STORE << VIS_PUBLIC;
+    debug_stream << "RemotePersistentObjectStore::read_state ( " << objUid << ", " << tName << " )\n" << flush;
+#endif
+
+    Buffer buff;
+    int res;
+    ObjectState* os;
+    Boolean ok = FALSE;
+    Members* ptMembers = 0;
+	
+    if (!createGroupView(objUid, tName))
+	return 0;
+
+    ptMembers = replica_members;
+    
+    while ((ptMembers != 0) && (!ok))
+    {
+	res = -1;
+
+	old_handler = setHandler(RemotePersistentObjectStore::rpc_handler);
+	buff = ptMembers->r_state_daemon->readState(ptMembers->rd->getUid(), tName, res);
+	setHandler(old_handler);
+
+	if (res == 0)
+	    ok = TRUE;
+	else
+	{
+	    RemotePersistentObjectStore::daemons->remove((char*) ptMembers->rd->getHost());
+	    ptMembers = ptMembers->next;
+	}
+    }
+
+    if (ok)
+    {
+	os = new ObjectState;
+	os->unpackFrom(buff);
+	return os;
+    }
+    else
+	undo();
+
+    return 0;
+}
+
+Boolean RemotePersistentObjectStore::write_committed (const Uid& objUid, const TypeName tName,
+						      const ObjectState& state)
+{
+#ifdef DEBUG
+    debug_stream << FUNCTIONS << FAC_OBJECT_STORE << VIS_PUBLIC;
+    debug_stream << "RemotePersistentObjectStore::write_committed ( " << objUid << ", " << tName
+	         << ", " << state << " )\n" << flush;
+#endif
+
+    Buffer buff;
+    int res;
+    Boolean result;
+    Members* ptMembers = 0;
+
+    if (!createGroupView(objUid, tName))
+	return FALSE;
+
+    ptMembers = replica_members;
+    state.packInto(buff);
+
+    while (ptMembers != 0)
+    {
+	res = -1;
+
+	old_handler = setHandler(RemotePersistentObjectStore::rpc_handler);
+	result = ptMembers->r_state_daemon->writeCommitted(ptMembers->rd->getUid(), tName, buff, res);
+	setHandler(old_handler);
+
+	if (res != 0)
+	{
+	    RemotePersistentObjectStore::daemons->remove((char*) ptMembers->rd->getHost());
+	    undo();
+	    return FALSE;
+	}
+
+	ptMembers = ptMembers->next;
+    }
+
+    return TRUE;
+}
+
+/*
+ * write_state saves the ObjectState in a file named by the type and Uid
+ * of the ObjectState. If the second argument is SHADOW, then the file name
+ * is different so that a subsequent commit_state invocation will rename
+ * the file. If writting a shadow the original file is hidden.
+ */
+
+Boolean RemotePersistentObjectStore::write_state ( const Uid& storeUid, const TypeName tName,
+						   const ObjectState& state)
+{
+#ifdef DEBUG
+    debug_stream << FUNCTIONS << FAC_OBJECT_STORE << VIS_PUBLIC;
+    debug_stream << "RemotePersistentObjectStore::write_state ( " << storeUid << ", "
+	         << tName << ", " << state << " )\n" << flush;
+#endif
+
+    Buffer buff;
+    int res;
+    Boolean result;
+    Members* ptMembers = 0;
+
+    if (!createGroupView(storeUid, tName))
+	return FALSE;
+
+    ptMembers = replica_members;
+    state.packInto(buff);
+
+    while (ptMembers != 0)
+    {
+	res = -1;
+
+	old_handler = setHandler(RemotePersistentObjectStore::rpc_handler);
+	result = ptMembers->r_state_daemon->writeState(ptMembers->rd->getUid(), tName, buff, res);
+	setHandler(old_handler);
+
+	/*
+	 * Assumes that non-responsive nodes have failed. Recovery daemon will
+	 * bring them up-to-date.
+	 */
+
+	if (res != 0)
+	{
+	    RemotePersistentObjectStore::daemons->remove((char*) ptMembers->rd->getHost());
+	    undo();
+	    return FALSE;
+	}
+
+	ptMembers = ptMembers->next;
+    }
+
+    return TRUE;
+}
+
+ReplicaDescriptor* RemotePersistentObjectStore::getCompositeView (const Uid& u) const
+{
+#ifdef DEBUG
+    debug_stream << FUNCTIONS << FAC_OBJECT_STORE << VIS_PRIVATE;
+    debug_stream << "ReplicaDescriptor* RemotePersistentObjectStore::getCompositeView ( " << u << " ) const" << endl;
+#endif
+
+    ReplicaDescriptor* ptr = 0;
+    
+    if (myData.compositeView != 0)
+	myData.compositeView->getGroupList(u, ptr);
+    
+    return ptr;
+}
+
+#ifdef NO_INLINES
+#  define RPOBJSTORE_CC_
+#  include <RPC/ArjServers/RPObjStore.n>
+#  undef RPOBJSTORE_CC_
+#endif

@@ -1,0 +1,46 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: FuncT.n,v 1.8 1993/06/17 15:07:53 ngdp Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(FUNCT_CC_)
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF void FctType::makeConversion ()
+{
+    ftype = CONVERSION;
+}
+
+INLINEF void FctType::setReturnType ( TypeDescriptor *rtype )
+{
+    funcReturnType = rtype;
+}
+
+INLINEF long FctType::getFuncHashval () const
+{
+    return funcHashval;
+}
+
+INLINEF TypeDescriptor *FctType::getReturnType () const
+{
+    return funcReturnType;
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif

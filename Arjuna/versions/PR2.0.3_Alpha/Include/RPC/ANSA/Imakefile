@@ -1,0 +1,32 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.4 1993/03/18 14:24:07 nmcl Exp $
+COMMENT
+
+MakeDummyAllTarget
+
+MakeNonRecursiveInstall
+
+CreateInstallTopDirectory(include)
+CreateInstallDirectory(include,RPC)
+CreateInstallDirectory(include/RPC,ANSA)
+InstallFile(include/RPC/ANSA,ClANSA.h)
+InstallFile(include/RPC/ANSA,SvANSA.h)
+InstallFile(include/RPC/ANSA,ClANSAAct.h)
+InstallFile(include/RPC/ANSA,SvANSAAct.h)
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeEmptyNonRecursiveTidyCleanPurge
+
+MakeDummyMakedepend
+
+MakeDummyStripdepend

@@ -1,0 +1,55 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.23 1993/09/20 13:00:21 nmcl Exp $
+COMMENT
+
+SetSubDirectorys(StubGen Common ClassLib ObjectConfig RPC Util Config Include)
+
+PrintConfig
+
+PrintEnviron
+
+MakeRecursiveAllTarget
+
+MakeRecursiveInstall
+
+install.local :: INSTALL_TOPDIR_VAR
+	-CHMOD_VAR ugo+rx INSTALL_TOPDIR_VAR
+
+install.local :: INSTALL_TOPDIR_VAR/ObjectStore
+	-CHMOD_VAR ugo+rwx INSTALL_TOPDIR_VAR/ObjectStore
+
+install.local :: INSTALL_TOPDIR_VAR/adm
+	-CHMOD_VAR ugo+rwx INSTALL_TOPDIR_VAR/adm
+
+install.local :: INSTALL_TOPDIR_VAR/servers
+	-CHMOD_VAR ugo+rwx INSTALL_TOPDIR_VAR/servers
+
+CreateInstallTopDirectory(ObjectStore)
+CreateInstallTopDirectory(adm)
+CreateInstallTopDirectory(servers)
+
+MakeRelDirectoryDependency(ClassLib)
+MakeRelDirectoryDependency(Config)
+MakeRelDirectoryDependency(Common)
+MakeRelDirectoryDependency(ObjectConfig)
+MakeRelDirectoryDependency(RPC)
+MakeRelDirectoryDependency(StubGen)
+MakeRelDirectoryDependency(Util)
+MakeRelDirectoryDependency(Tests)
+
+MakeMakefile
+
+MakeMakefiles
+
+MakeEmptyTidyCleanPurge
+
+MakeRecursiveMakedepend
+
+MakeRecursiveStripdepend

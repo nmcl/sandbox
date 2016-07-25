@@ -1,0 +1,32 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: SharedSeg.n,v 1.2 1993/03/22 09:16:25 ngdp Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(SHAREDSEG_CC_)
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+
+INLINEF Boolean SharedSegment::isValid () const
+{
+    return (segVaddr == 0 ? FALSE : TRUE);
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif

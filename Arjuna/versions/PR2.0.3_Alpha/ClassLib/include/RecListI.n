@@ -1,0 +1,50 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: RecListI.n,v 1.5 1993/03/22 09:16:24 ngdp Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(RECLISTI_CC_)
+
+#else
+
+#ifndef ABSTRACTR_H_
+#  include <Arjuna/AbstractR.h>
+#endif
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF RecordListI::RecordListI ( const RecordList& R )
+	                         : curList(R),
+				   curElem(0)
+{
+}
+    
+INLINEF void RecordListI:: restart ()
+{
+    curElem = 0;
+}
+
+INLINEF AbstractRecord *RecordListI::operator() ()
+{
+    if (curElem == 0)
+	curElem = curList.listHead;
+    else
+	curElem = curElem->getNext();
+    return curElem;
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif

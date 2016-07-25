@@ -1,0 +1,47 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.4 1993/03/18 15:05:51 nmcl Exp $
+COMMENT
+
+SOURCES = ClANSA.cc \
+          ClANSA_.cc \
+          SvANSA.cc \
+	  SvANSA_.cc \
+          MainBody.cc
+
+OBJECTS = ClANSA.o  \
+          ClANSA_.o \
+          SvANSA.o  \
+	  SvANSA_.o \
+          MainBody.o
+
+SetLocalCppFlags(-I""TOPDIR_VAR/Include)
+
+MakeNonRecursiveAllTarget(../../libANSA.a)
+
+MakeNonRecursiveInstall
+
+MakeLibrary(../../libANSA.a,$(OBJECTS))
+
+MakeObjectCPLUSPLUS(ClANSA,)
+MakeObjectCPLUSPLUS(ClANSA_,)
+MakeObjectCPLUSPLUS(SvANSA,)
+MakeObjectCPLUSPLUS(SvANSA_,)
+MakeObjectCPLUSPLUS(MainBody,)
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(../../libANSA.a)
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend
+
