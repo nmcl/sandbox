@@ -1,0 +1,94 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: Error.n,v 1.9 1993/09/20 14:09:15 ngdp Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(ERROR_CC_)
+
+class ostrstream;
+
+#if defined(_AIX)
+extern "C"
+{
+void yyerror (char *);
+};
+#else
+extern void yyerror (char *);
+#endif
+extern void error (ostrstream&);
+extern void caution (ostrstream&);
+extern void fatal (ostrstream& s);
+extern void warning (ostrstream& s);
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF void Error::enableWarnings ( Boolean global )
+{
+    if (global)
+	warningsWanted = TRUE;
+    warningsSupressed = FALSE;
+}
+
+INLINEF int Error::noOfErrors () const
+{
+    return errorCount;
+}
+
+INLINEF void Error::supressWarnings ( Boolean global )
+{
+    if (global)
+	warningsWanted = FALSE;
+    warningsSupressed = TRUE;
+}
+
+INLINEF Boolean Error::warningsEnabled () const
+{
+    return (((warningsWanted) && !warningsSupressed) ? TRUE : FALSE);
+}
+
+#if defined(_AIX)
+extern "C" void yyerror ( char *s )
+#else
+INLINEF void yyerror ( char *s )
+#endif
+{
+    error(s);
+}
+
+INLINEF void error ( ostrstream& s )
+{
+    errorLog.postError(s, ERROR);
+}
+
+INLINEF void caution ( ostrstream& s )
+{
+    errorLog.postError(s, CAUTION);
+}
+
+INLINEF void fatal ( ostrstream& s )
+{
+    errorLog.postError(s, FATAL);
+}
+
+INLINEF void warning ( ostrstream& s )
+{
+    errorLog.postError(s, WARNING);
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif

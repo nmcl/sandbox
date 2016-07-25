@@ -1,0 +1,42 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: Flag.def,v 1.1 1993/11/03 14:15:55 nmcl Exp $
+ */
+
+/*
+ *  Flag.def
+ */
+
+#ifndef MAKEFLAGS_DEFAULT
+#define MAKEFLAGS_DEFAULT -e 
+#endif
+
+#ifndef IMAKEFLAGS_DEFAULT
+#ifdef UseInstalled
+#define IMAKEFLAGS_DEFAULT -TArjuna.tmpl -I""INSTALL_TOPDIR_VAR/Config -DUseInstalled
+#else
+#define IMAKEFLAGS_DEFAULT -TArjuna.tmpl -I""TOPDIR_VAR/Config
+#endif
+#endif
+
+#ifndef MAKEDEPENDFLAGS_DEFAULT
+#define MAKEDEPENDFLAGS_DEFAULT -I""CPLUSPLUS_INCLUDE_VAR
+#endif
+
+#ifndef STRIPDEPENDFLAGS_DEFAULT
+#define STRIPDEPENDFLAGS_DEFAULT
+#endif
+
+#ifndef YACCFLAGS_DEFAULT
+#define YACCFLAGS_DEFAULT -v -d
+#endif
+
+#ifndef LEXFLAGS_DEFAULT
+#define LEXFLAGS_DEFAULT
+#endif

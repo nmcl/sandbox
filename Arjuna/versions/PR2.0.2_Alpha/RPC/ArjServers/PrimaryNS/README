@@ -1,0 +1,31 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ */
+
+/*
+ * $Id: README
+ */
+
+This is the interface to the nameserver which users of the passive replicated
+protocol must use. Because the servers and states are no longer necessarily
+on the same nodes it is important that all users of a replica group use the same
+primary server (because locks are held in shared memory). When wishing to use
+a replica group the user should create an instance of PrimaryNS (the constructor
+paramter will indicate whether or not it could be created ok). Then the user
+should invoke the Begin operation on the instance created. By invoking the
+FetchNameList operation as he would normally do for the nameserver the user instructs
+the PrimaryNS to obtain the groupview. By then invoking the GetPrimary operation
+PrimaryNS will return either the name of an already selected primary (indicated
+at the nameserver) or a likely candidate for the primary. The user can then use this
+to attempt to create an instance of the server. If this completes successfully
+then he should use the RegisterPrimary operation to register that this is the
+primary at the nameserver (this will return successfully if the nameserver update
+was completed). If the server given cannot be created then the user should keep
+calling GetPrimary until one can be obtained, or 0 is returned (indicates no
+more replicas available). If a primary cannot be created then user should call
+Abort on the instance of PrimaryNS. Otherwise he can call End.

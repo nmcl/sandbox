@@ -1,0 +1,58 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.22 1993/09/24 16:27:41 n048z Exp $
+COMMENT
+
+MakeDummyAllTarget
+
+MakeNonRecursiveInstall
+
+CreateInstallTopDirectory(include)
+CreateInstallDirectory(include,RPC)
+CreateInstallDirectory(include/RPC,ArjServers)
+InstallFile(include/RPC/ArjServers,ArjName.h)
+InstallFile(include/RPC/ArjServers,ArjName_stub.h)
+InstallFile(include/RPC/ArjServers,RPObjStore.h)
+InstallFile(include/RPC/ArjServers,RPObjStore.n)
+InstallFile(include/RPC/ArjServers,DaemonList.h)
+InstallFile(include/RPC/ArjServers,DaemonData.h)
+InstallFile(include/RPC/ArjServers,Members.h)
+InstallFile(include/RPC/ArjServers,RemoteOSTypes.h)
+InstallFile(include/RPC/ArjServers,RPObjStoreIF.h)
+InstallFile(include/RPC/ArjServers,NameInfo.h)
+InstallFile(include/RPC/ArjServers,NSInterface.h)
+InstallFile(include/RPC/ArjServers,Migration.h)
+InstallFile(include/RPC/ArjServers,PrimaryNS.h)
+InstallFile(include/RPC/ArjServers,NameServ_stub.h)
+InstallFile(include/RPC/ArjServers,NameServer_stubclass.h)
+InstallFile(include/RPC/ArjServers,Register.h)
+InstallFile(include/RPC/ArjServers,Register.n)
+InstallFile(include/RPC/ArjServers,RepDesc_stub.h)
+InstallFile(include/RPC/ArjServers,ReplicaData_stub.h)
+InstallFile(include/RPC/ArjServers,ReplicaData.n)
+InstallFile(include/RPC/ArjServers,GroupData.h)
+InstallFile(include/RPC/ArjServers,StateDaemon_stub.h)
+InstallFile(include/RPC/ArjServers,StateDaemon_stubclass.h)
+
+NameServ_stub.h : $(ARJUNA_INCLUDES)/RPC/ArjServers/NameServ_stub.h
+NameServer_stubclass.h : $(ARJUNA_INCLUDES)/RPC/ArjServers/NameServer_stubclass.h
+RepDesc_stub.h : $(ARJUNA_INCLUDES)/RPC/ArjServers/RepDesc_stub.h
+ReplicaData_stub.h : $(ARJUNA_INCLUDES)/RPC/ArjServers/ReplicaData_stub.h
+StateDaemon_stub.h : $(ARJUNA_INCLUDES)/RPC/ArjServers/StateDaemon_stub.h
+StateDaemon_stubclass.h : $(ARJUNA_INCLUDES)/RPC/ArjServers/StateDaemon_stubclass.h
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(ArjName_stub.h NameServ_stub.h NameServer_stubclass.h StateDaemon_stub.h StateDaemon_stubclass.h RepDesc_stub.h ReplicaData_stub.h)
+
+MakeDummyMakedepend
+
+MakeDummyStripdepend

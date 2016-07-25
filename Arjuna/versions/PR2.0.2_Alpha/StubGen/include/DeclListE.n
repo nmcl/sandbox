@@ -1,0 +1,46 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: DeclListE.n,v 1.5 1993/06/17 15:07:25 ngdp Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(DECLLISTE_CC_)
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF DeclarationListEntry::DeclarationListEntry ( Declaration *d )
+                                                  : entry(d),
+						    link(0)
+{
+}
+
+INLINEF Declaration *DeclarationListEntry::getEntry () const
+{
+    return entry;
+}
+
+INLINEF DeclarationListEntry *DeclarationListEntry::getLink () const
+{
+    return link;
+}
+
+INLINEF void DeclarationListEntry::setLink ( DeclarationListEntry *nlink )
+{
+    link = nlink;
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif

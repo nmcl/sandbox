@@ -1,0 +1,37 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1993/05/17 15:54:09 nmcl Exp $
+COMMENT
+
+SOURCES	  = ObjectDriver.cc
+
+OBJECTS	  = ObjectDriver.o \
+            ../Server/Object_client.o
+
+LIBRARIES = $(LIBARJUNA) $(LIBCOMMON) $(LIBARJSERVERS) $(LIBSTUB) $(LIBRPC) $(LIBARJUNA)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES) -I../Server)
+
+MakeNonRecursiveAllTarget(ObjectDriver)
+
+MakeNonRecursiveInstall
+
+MakeProgramCPLUSPLUS(ObjectDriver,$(OBJECTS) $(LIBRARIES),)
+
+MakeObjectCPLUSPLUS(ObjectDriver,)
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(ObjectDriver)
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend

@@ -1,0 +1,17 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ */
+
+/*
+ * $Id: README
+ */
+
+NSInterface is the interface to the replicated nameserver that all users
+should use. This handles the voting protocols and will only return a
+successful indication for an operation if a majority of up-to-date nameserver
+replicas respond correctly.

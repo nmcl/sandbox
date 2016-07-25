@@ -1,0 +1,39 @@
+COMMENT 
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1993/06/17 15:01:27 nmcl Exp $
+COMMENT
+
+SOURCES   = GroupViewDriver.cc
+
+OBJECTS   = GroupViewDriver.o
+
+LIBRARIES = $(LIBARJSERVERS) $(LIBSTUB) $(LIBRPC) $(LIBARJUNA) $(LIBARJSERVERS) $(LIBSTUB) $(LIBRPC) $(LIBARJUNA) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+MakeNonRecursiveAllTarget(GroupViewDriver)
+
+MakeNonRecursiveInstall
+
+CreateInstallTopDirectory(bin)
+InstallProgram(bin,GroupViewDriver)
+
+MakeProgramCPLUSPLUS(GroupViewDriver, $(OBJECTS) $(LIBRARIES),)
+
+MakeObjectCPLUSPLUS(GroupViewDriver,)
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(GroupViewDriver)
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend

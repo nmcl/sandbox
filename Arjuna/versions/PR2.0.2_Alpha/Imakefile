@@ -1,0 +1,51 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.8 1994/08/05 12:58:37 ndbi Exp $
+COMMENT
+
+#define IHaveSubDirs
+
+SetSubDirectorys(StubGen Common Include ClassLib ObjectStore ObjectConfig RPC ArjServers Replication CrashRecovery Utilities)
+
+PrintConfig
+
+PrintEnviron
+
+all depend install :: stubs
+stubs.local :: StubGen
+
+install.local :: INSTALL_TOPDIR_VAR
+	-CHMOD_VAR ugo+rx INSTALL_TOPDIR_VAR
+
+install.local :: INSTALL_TOPDIR_VAR/ObjectStore
+	-CHMOD_VAR ugo+rwx INSTALL_TOPDIR_VAR/ObjectStore
+
+install.local :: INSTALL_TOPDIR_VAR/adm
+	-CHMOD_VAR ugo+rwx INSTALL_TOPDIR_VAR/adm
+
+install.local :: INSTALL_TOPDIR_VAR/servers
+	-CHMOD_VAR ugo+rwx INSTALL_TOPDIR_VAR/servers
+
+CreateInstallTopDirectory(ObjectStore)
+CreateInstallTopDirectory(adm)
+CreateInstallTopDirectory(servers)
+
+MakeRelDirectoryDependency(ClassLib)
+MakeRelDirectoryDependency(Config)
+MakeRelDirectoryDependency(Common)
+MakeRelDirectoryDependency(RPC)
+MakeRelDirectoryDependency(ArjServers)
+MakeRelDirectoryDependency(ObjectStore)
+MakeRelDirectoryDependency(ObjectConfig)
+MakeRelDirectoryDependency(Replication)
+MakeRelDirectoryDependency(StubGen)
+MakeRelDirectoryDependency(Utilities)
+MakeRelDirectoryDependency(CrashRecovery)
+MakeRelDirectoryDependency(Tests)
+

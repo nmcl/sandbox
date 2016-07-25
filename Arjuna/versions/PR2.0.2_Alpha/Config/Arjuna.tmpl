@@ -1,0 +1,405 @@
+/*
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: Arjuna.tmpl,v 1.2 1993/11/10 13:47:58 nsmw Exp $
+ */
+
+/*
+ *  Inclusion of Overriding definitions.
+ */
+
+#include <Override.def>
+
+/*
+ *  Inclusion of Architecture definitions.
+ */
+
+#include <Arch.def>
+
+/*
+ *  Inclusion of Macro definitions.
+ */
+
+#include <Macro.def>
+
+/*
+ *  Inclusion of Local definitions.
+ */
+
+#include <Local.def>
+
+/*
+ *  Inclusion of Programs definitions.
+ */
+
+#include <Prog.def>
+
+/*
+ *  Inclusion of Flags definitions.
+ */
+
+#include <Flag.def>
+
+/*
+ *  Inclusion of Make definitions.
+ */
+
+#include <Make.def>
+
+/*
+ *  Inclusion of Standard Parameter definitions.
+ */
+
+#include <StdParam.def>
+
+/*
+ *  Inclusion of Rule definitions.
+ */
+
+#include <Rule.def>
+
+/*
+ * Generater Default flags
+ */
+
+COMMENT
+COMMENT Make generated for ArchitectureName Architecture
+COMMENT
+
+TOPDIR_DEFINE = TOPDIR_DEFAULT
+
+CURDIR_DEFINE = .
+
+MAKE_DEFINE = MAKE_PROGRAM
+IMAKE_DEFINE = IMAKE_PROGRAM
+
+MAKEDEPEND_DEFINE = MAKEDEPEND_PROGRAM
+STRIPDEPEND_DEFINE = STRIPDEPEND_PROGRAM
+
+CPLUSPLUS_DEFINE = CPLUSPLUS_PROGRAM
+
+AR_DEFINE = AR_PROGRAM
+RANLIB_DEFINE = RANLIB_PROGRAM
+
+YACC_DEFINE = YACC_PROGRAM
+LEX_DEFINE = LEX_PROGRAM
+
+MV_DEFINE = MV_PROGRAM
+CP_DEFINE = CP_PROGRAM
+RM_DEFINE = RM_PROGRAM
+CAT_DEFINE = CAT_PROGRAM
+MKDIR_DEFINE = MKDIR_PROGRAM
+CHMOD_DEFINE = CHMOD_PROGRAM
+
+MAKEFLAGS_DEFINE = MAKEFLAGS_DEFAULT
+IMAKEFLAGS_DEFINE = IMAKEFLAGS_DEFAULT
+
+MAKEDEPENDFLAGS_DEFINE = MAKEDEPENDFLAGS_DEFAULT
+STRIPDEPENDFLAGS_DEFINE = STRIPDEPENDFLAGS_DEFAULT
+
+CPPFLAGS_DEFINE = CPPFLAGS_DEFAULT
+CPLUSPLUSFLAGS_DEFINE = CPLUSPLUSFLAGS_DEFAULT
+LDFLAGS_DEFINE = LDFLAGS_DEFAULT
+LIBRARIES_DEFINE = xLIBRARIES_DEFAULT
+
+YACCFLAGS_DEFINE = YACCFLAGS_DEFAULT
+LEXFLAGS_DEFINE = LEXFLAGS_DEFAULT
+
+
+CPLUSPLUS_INCLUDE_DEFINE = CPLUSPLUS_INCLUDE_DEFAULT
+
+INSTALL_TOPDIR_DEFINE = INSTALL_TOPDIR_DEFAULT
+
+
+all :: Makefile
+
+#ifdef UseInstalled
+STUBGEN = INSTALL_TOPDIR_VAR/bin/tatsu
+#else
+STUBGEN = TOPDIR_VAR/StubGen/src/tatsu
+#if ! FAST_MAKE
+MakeAbsCheckDependency(TOPDIR_VAR/StubGen/src/tatsu,TOPDIR_VAR/StubGen/src,tatsu)
+#endif
+#endif
+
+#ifdef UseInstalled
+LIBCOMMON = INSTALL_TOPDIR_VAR/lib/libCommon.a
+#else
+LIBCOMMON = TOPDIR_VAR/Common/src/libCommon.a
+#if ! FAST_MAKE
+MakeAbsCheckDependency(TOPDIR_VAR/Common/src/libCommon.a,TOPDIR_VAR/Common/src,libCommon.a)
+#endif
+#endif
+
+#ifdef UseInstalled
+LIBSTUB = INSTALL_TOPDIR_VAR/lib/libStub.a
+#else
+LIBSTUB = TOPDIR_VAR/StubGen/lib/libStub.a
+#if ! FAST_MAKE
+MakeAbsCheckDependency(TOPDIR_VAR/StubGen/lib/libStub.a,TOPDIR_VAR/StubGen/lib,libStub.a)
+#endif
+#endif
+
+#ifdef UseInstalled
+LIBRAJDOOT = INSTALL_TOPDIR_VAR/lib/libRajdoot.a
+#else
+LIBRAJDOOT = TOPDIR_VAR/RPC/Rajdoot/libRajdoot.a
+#if ! FAST_MAKE
+MakeAbsCheckDependency(TOPDIR_VAR/RPC/Rajdoot/libRajdoot.a,TOPDIR_VAR/RPC/Rajdoot,libRajdoot.a)
+#endif
+#endif
+
+#ifdef UseInstalled
+LIBANSA = INSTALL_TOPDIR_VAR/lib/libANSA.a
+#else
+LIBANSA = TOPDIR_VAR/RPC/ANSA/libANSA.a
+#if ! FAST_MAKE
+MakeAbsCheckDependency(TOPDIR_VAR/RPC/ANSA/libANSA.a,TOPDIR_VAR/RPC/ANSA,libANSA.a)
+#endif
+#endif
+
+#if RPC_SYSTEM_TYPE == RPC_RajdootAction_
+LIBRPC = $(LIBRAJDOOT)
+#endif
+#if RPC_SYSTEM_TYPE == RPC_Rajdoot_
+LIBRPC = $(LIBRAJDOOT)
+#endif
+#if RPC_SYSTEM_TYPE == RPC_ANSAAction_
+LIBRPC = $(LIBANSA)
+#endif
+#if RPC_SYSTEM_TYPE == RPC_ANSA_
+LIBRPC = $(LIBANSA)
+#endif
+
+#ifdef UseInstalled
+LIBARJUNA = INSTALL_TOPDIR_VAR/lib/libArjuna.a
+#else
+LIBARJUNA = TOPDIR_VAR/ClassLib/src/libArjuna.a
+#if ! FAST_MAKE
+MakeAbsCheckDependency(TOPDIR_VAR/ClassLib/src/libArjuna.a,TOPDIR_VAR/ClassLib/src,libArjuna.a)
+#endif
+#endif
+
+#ifdef UseInstalled
+LIBOBJCONFIG = INSTALL_TOPDIR_VAR/lib/libObjConfig.a
+#else
+LIBOBJCONFIG = TOPDIR_VAR/ObjectConfig/libObjConfig.a
+#if ! FAST_MAKE
+MakeAbsCheckDependency(TOPDIR_VAR/ObjectConfiglibObjConfig.a,TOPDIR_VAR/ObjectConfig,libObjConfig.a)
+#endif
+#endif
+
+#ifdef UseInstalled
+LIBOBJECTSTORE = INSTALL_TOPDIR_VAR/lib/libObjectStore.a
+#else
+LIBOBJECTSTORE = TOPDIR_VAR/ObjectStore/src/libObjectStore.a
+#if ! FAST_MAKE
+MakeAbsCheckDependency(TOPDIR_VAR/ObjectStore/src/libObjectStore.a,TOPDIR_VAR/ObjectStore/src,libObjectStore.a)
+#endif
+#endif
+
+#ifdef UseInstalled
+LIBARJSERVERS = INSTALL_TOPDIR_VAR/lib/libArjServers.a
+#else
+LIBARJSERVERS = TOPDIR_VAR/ArjServers/libArjServers.a
+#if ! FAST_MAKE
+MakeAbsCheckDependency(TOPDIR_VAR/ArjServers/libArjServers.a,TOPDIR_VAR/ArjServers,libArjServers.a)
+#endif
+#endif
+
+#ifdef UseInstalled
+LIBREPLICATION = INSTALL_TOPDIR_VAR/lib/libReplication.a
+#else
+LIBREPLICATION = TOPDIR_VAR/Replication/libReplication.a
+#if ! FAST_MAKE
+MakeAbsCheckDependency(TOPDIR_VAR/Replication/libReplication.a,TOPDIR_VAR/Replication,libReplication.a)
+#endif
+#endif
+
+#ifdef UseInstalled
+ARJUNA_INCLUDES = INSTALL_TOPDIR_VAR/include
+#else
+ARJUNA_INCLUDES = TOPDIR_VAR/Include
+#endif
+
+#ifndef UseInstalled
+SMSTUB_H = TOPDIR_VAR/Include/Arjuna/StateMan_stub.h
+MakeAbsCheckDependency(TOPDIR_VAR/Include/Arjuna/StateMan_stub.h,TOPDIR_VAR/ArjServers/ClassLib,../../Include/Arjuna/StateMan_stub.h)
+#endif
+
+#ifndef UseInstalled
+SMSTUBCLASS_H = TOPDIR_VAR/Include/Arjuna/StateManager_stubclass.h
+MakeAbsCheckDependency(TOPDIR_VAR/Include/Arjuna/StateManager_stubclass.h,TOPDIR_VAR/ArjServers/ClassLib,../../Include/Arjuna/StateManager_stubclass.h)
+#endif
+
+#ifndef UseInstalled
+LMSTUB_H = TOPDIR_VAR/Include/Arjuna/LockMan_stub.h
+MakeAbsCheckDependency(TOPDIR_VAR/Include/Arjuna/LockMan_stub.h,TOPDIR_VAR/ArjServers/ClassLib,../../Include/Arjuna/LockMan_stub.h)
+#endif
+
+#ifndef UseInstalled
+LMSTUBCLASS_H = TOPDIR_VAR/Include/Arjuna/LockManager_stubclass.h
+MakeAbsCheckDependency(TOPDIR_VAR/Include/Arjuna/LockManager_stubclass.h,TOPDIR_VAR/ArjServers/ClassLib,../../Include/Arjuna/LockManager_stubclass.h)
+#endif
+
+#ifndef UseInstalled
+OBSTATESTUB_H = TOPDIR_VAR/Include/Arjuna/ObjState_stub.h
+MakeAbsCheckDependency(TOPDIR_VAR/Include/Arjuna/ObjState_stub.h,TOPDIR_VAR/ClassLib/src,../../Include/Arjuna/ObjState_stub.h)
+#endif
+
+#ifndef UseInstalled
+UIDSTUB_H = TOPDIR_VAR/Include/Common/Uid_stub.h
+MakeAbsCheckDependency(TOPDIR_VAR/Include/Common/Uid_stub.h,TOPDIR_VAR/Common/src,../../Include/Common/Uid_stub.h)
+#endif
+
+#ifndef UseInstalled
+BUFFSTUB_H = TOPDIR_VAR/Include/Common/Buffer_stub.h
+MakeAbsCheckDependency(TOPDIR_VAR/Include/Common/Buffer_stub.h,TOPDIR_VAR/Common/src,../../Include/Common/Buffer_stub.h)
+#endif
+
+#ifndef UseInstalled
+ANSTUB_H = TOPDIR_VAR/Include/ArjServers/ArjName_stub.h
+MakeAbsCheckDependency(TOPDIR_VAR/Include/ArjServers/ArjName_stub.h,TOPDIR_VAR/ArjServers/ArjName,../../Include/ArjServers/ArjName_stub.h)
+#endif
+
+#ifndef UseInstalled
+NSSTUB_H = TOPDIR_VAR/Include/ArjServers/NameServ_stub.h
+MakeAbsCheckDependency(TOPDIR_VAR/Include/ArjServers/NameServ_stub.h,TOPDIR_VAR/ArjServers/GroupView,../../Include/ArjServers/NameServ_stub.h)
+#endif
+
+#ifndef UseInstalled
+NSSTUBCLASS_H = TOPDIR_VAR/Include/ArjServers/NameServer_stubclass.h
+MakeAbsCheckDependency(TOPDIR_VAR/Include/ArjServers/NameServer_stubclass.h,TOPDIR_VAR/ArjServers/GroupView,../../Include/ArjServers/NameServer_stubclass.h)
+#endif
+
+#ifndef UseInstalled
+RDSTUB_H = TOPDIR_VAR/Include/ArjServers/RepDesc_stub.h
+MakeAbsCheckDependency(TOPDIR_VAR/Include/ArjServers/RepDesc_stub.h,TOPDIR_VAR/ArjServers/GroupView,../../Include/ArjServers/RepDesc_stub.h)
+#endif
+
+#ifndef UseInstalled
+RDSTUB_H = TOPDIR_VAR/Include/ArjServers/ReplicaData_stub.h
+MakeAbsCheckDependency(TOPDIR_VAR/Include/ArjServers/ReplicaData_stub.h,TOPDIR_VAR/ArjServers/GroupView,../../Include/ArjServers/ReplicaData_stub.h)
+#endif
+
+#ifndef UseInstalled
+SDSTUB_H = TOPDIR_VAR/Include/ArjServers/StateDaemon_stub.h
+MakeAbsCheckDependency(TOPDIR_VAR/Include/ArjServers/StateDaemon_stub.h,TOPDIR_VAR/ArjServers/StateDaemon,../../Include/ArjServers/StateDaemon_stub.h)
+#endif
+
+#ifndef UseInstalled
+SDSTUBCLASS_H = TOPDIR_VAR/Include/ArjServers/StateDaemon_stubclass.h
+MakeAbsCheckDependency(TOPDIR_VAR/Include/ArjServers/StateDaemon_stubclass.h,TOPDIR_VAR/ArjServers/StateDaemon,../../Include/ArjServers/StateDaemon_stubclass.h)
+#endif
+
+Makefile :: Imakefile
+	@echo
+	@echo "***"
+	@echo "*** WARNING : "CURDIR_VAR"/Makefile may be out of date,"
+	@echo "***         : older than "CURDIR_VAR"/Imakefile"
+	@echo "***"
+
+#ifndef UseInstalled
+Makefile :: TOPDIR_VAR/Config/Arch.def
+	@echo
+	@echo "***"
+	@echo "*** WARNING : "CURDIR_VAR"/Makefile may be out of date,"
+	@echo "***         : older than "TOPDIR_VAR"/Config/Arch.def"
+	@echo "***"
+
+Makefile :: TOPDIR_VAR/Config/Arj-HP.cf
+	@echo
+	@echo "***"
+	@echo "*** WARNING : "CURDIR_VAR"/Makefile may be out of date,"
+	@echo "***         : older than "TOPDIR_VAR"/Config/Arj-HP.cf"
+	@echo "***"
+
+Makefile :: TOPDIR_VAR/Config/Arj-Other.cf
+	@echo
+	@echo "***"
+	@echo "*** WARNING : "CURDIR_VAR"/Makefile may be out of date,"
+	@echo "***         : older than "TOPDIR_VAR"/Config/Arj-Other.cf"
+	@echo "***"
+
+Makefile :: TOPDIR_VAR/Config/Arj-Sun.cf
+	@echo
+	@echo "***"
+	@echo "*** WARNING : "CURDIR_VAR"/Makefile may be out of date,"
+	@echo "***         : older than "TOPDIR_VAR"/Config/Arj-Sun.cf"
+	@echo "***"
+
+Makefile :: TOPDIR_VAR/Config/Arjuna.tmpl
+	@echo
+	@echo "***"
+	@echo "*** WARNING : "CURDIR_VAR"/Makefile may be out of date,"
+	@echo "***         : older than "TOPDIR_VAR"/Config/Arjuna.tmpl"
+	@echo "***"
+
+Makefile :: TOPDIR_VAR/Config/Flag.def
+	@echo
+	@echo "***"
+	@echo "*** WARNING : "CURDIR_VAR"/Makefile may be out of date,"
+	@echo "***         : older than "TOPDIR_VAR"/Config/Flag.def"
+	@echo "***"
+
+Makefile :: TOPDIR_VAR/Config/Local.def
+	@echo
+	@echo "***"
+	@echo "*** WARNING : "CURDIR_VAR"/Makefile may be out of date,"
+	@echo "***         : older than "TOPDIR_VAR"/Config/Local.def"
+	@echo "***"
+
+Makefile :: TOPDIR_VAR/Config/Macro.def
+	@echo
+	@echo "***"
+	@echo "*** WARNING : "CURDIR_VAR"/Makefile may be out of date,"
+	@echo "***         : older than "TOPDIR_VAR"/Config/Macro.def"
+	@echo "***"
+
+Makefile :: TOPDIR_VAR/Config/Make.def
+	@echo
+	@echo "***"
+	@echo "*** WARNING : "CURDIR_VAR"/Makefile may be out of date,"
+	@echo "***         : older than "TOPDIR_VAR"/Config/Make.def"
+	@echo "***"
+
+Makefile :: TOPDIR_VAR/Config/Override.def
+	@echo
+	@echo "***"
+	@echo "*** WARNING : "CURDIR_VAR"/Makefile may be out of date,"
+	@echo "***         : older than "TOPDIR_VAR"/Config/Override.def"
+	@echo "***"
+
+Makefile :: TOPDIR_VAR/Config/Prog.def
+	@echo
+	@echo "***"
+	@echo "*** WARNING : "CURDIR_VAR"/Makefile may be out of date,"
+	@echo "***         : older than "TOPDIR_VAR"/Config/Prog.def"
+	@echo "***"
+
+Makefile :: TOPDIR_VAR/Config/Rule.def
+	@echo
+	@echo "***"
+	@echo "*** WARNING : "CURDIR_VAR"/Makefile may be out of date,"
+	@echo "***         : older than "TOPDIR_VAR"/Config/Rule.def"
+	@echo "***"
+
+Makefile :: TOPDIR_VAR/Config/StdParam.def
+	@echo
+	@echo "***"
+	@echo "*** WARNING : "CURDIR_VAR"/Makefile may be out of date,"
+	@echo "***         : older than "TOPDIR_VAR"/Config/StdParam.def"
+	@echo "***"
+#endif
+
+/*
+ * Include the local Imakefile.
+ */
+
+#include INCLUDE_IMAKEFILE

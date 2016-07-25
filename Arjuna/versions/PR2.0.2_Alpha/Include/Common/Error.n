@@ -1,0 +1,53 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: Error.n,v 1.7 1993/03/18 14:30:41 nsmw Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(ERROR_CC_)
+
+extern ostream& operator<< (ostream&, ErrorSeverity);
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+#ifndef IOSTREAM_H_
+#  include <System/iostream.h>
+#endif
+
+#ifndef STDLIB_H_
+#  include <System/stdlib.h>
+#endif
+
+#ifndef UNISTD_H_
+#  include <System/unistd.h>
+#endif
+
+INLINEF void ArjunaFatal ()
+{
+    abort();
+}
+
+INLINEF ostream& operator<< ( ostream& strm, enum ErrorSeverity es )
+{
+    strm << (es == FATAL ? "\007FATAL ERROR" : "WARNING");
+    strm << "(process id : " << getpid() << ") : ";
+    
+    return strm;
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif

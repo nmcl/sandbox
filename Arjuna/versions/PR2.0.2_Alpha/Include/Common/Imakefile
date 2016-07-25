@@ -1,0 +1,41 @@
+COMMENT 
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.11 1993/09/21 10:20:17 nmcl Exp $
+COMMENT
+
+MakeDummyAllTarget
+
+MakeNonRecursiveInstall
+
+CreateInstallTopDirectory(include)
+CreateInstallDirectory(include,Common)
+InstallFile(include/Common,Boolean.h)
+InstallFile(include/Common,Buffer.h)
+InstallFile(include/Common,Buffer.n)
+InstallFile(include/Common,Buffer_stub.h)
+InstallFile(include/Common,CommonT.h)
+InstallFile(include/Common,Debug.h)
+InstallFile(include/Common,Debug.n)
+InstallFile(include/Common,Error.h)
+InstallFile(include/Common,Error.n)
+InstallFile(include/Common,Filtsbuf.h)
+InstallFile(include/Common,Uid.h)
+InstallFile(include/Common,Uid.n)
+InstallFile(include/Common,Uid_stub.h)
+InstallFile(include/Common,Utility.h)
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(Buffer_stub.h Uid_stub.h)
+
+MakeDummyMakedepend
+
+MakeDummyStripdepend

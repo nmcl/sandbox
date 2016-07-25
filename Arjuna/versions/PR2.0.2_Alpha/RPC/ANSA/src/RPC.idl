@@ -1,0 +1,45 @@
+--
+-- Copyright (C) 1993
+-- 
+-- Department of Computing Science,
+-- The University,
+-- Newcastle upon Tyne,
+-- UK.
+--
+-- Interface definition for RPC mechanism used in ANSA port of Arjuna
+--
+-- $Id: RPC.idl,v 1.2 1993/03/18 15:19:03 n048z Exp $
+--
+
+RPC : INTERFACE =
+NEEDS Capsule;
+BEGIN
+
+-- Type definitions;
+
+   OBJECT_DESC : TYPE = RECORD
+   [
+       hostName   : STRING,
+       objectName : STRING,
+       factory    : ansa_InterfaceRef,
+       capsule    : ansa_InterfaceRef,
+       cid        : ansa_CapsuleId,
+       id         : ansa_InterfaceRef,
+       server     : ansa_InterfaceRef,
+       initialised : ansa_Boolean
+   ];
+
+   ANSABuff : TYPE = SEQUENCE OF OCTET;
+
+   RPCBuff : TYPE = RECORD
+   [
+       Opcode  : CARDINAL,
+       Buffer1 : ANSABuff,
+       Buffer2 : ANSABuff
+   ];
+
+-- Operations
+    Call : OPERATION [ parameters : RPCBuff ]
+             RETURNS [ results : RPCBuff ];
+
+END.

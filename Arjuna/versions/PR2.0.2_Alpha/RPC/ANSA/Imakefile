@@ -1,0 +1,55 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.6 1993/03/18 15:00:27 nmcl Exp $
+COMMENT
+
+SetSubDirectorys(interface)
+
+all.local ::
+	@echo "Make of all in src"
+	(cd src; $(MAKE) all)
+
+MakeRecursiveAllTarget
+
+MakeRecursiveInstall
+
+CreateInstallTopDirectory(lib)
+InstallLibrary(lib,libANSA.a)
+
+MakeRecursiveTarget(libANSA.a,../libANSA.a,,src interface)
+
+MakeMakefile
+
+MakeMakefiles
+
+Makefiles ::	
+	@echo "Make of Makefiles in src"
+	(cd src; ansamkmf)
+
+MakeEmptyTidyCleanPurge
+
+tidy.local ::
+	@echo "Make of tidy.local in src"
+	(cd src; $(MAKE) tidy)
+
+clean.local ::
+	@echo "Make of clean.local in src"
+	(cd src; $(MAKE) clean.obj)
+
+purge.local ::
+	@echo "Make of purge.local in src"
+	(cd src; $(MAKE) purge)
+
+depend.local::
+	@echo "Make of depend.local in src"
+	(cd src; $(MAKE) depend)
+	
+MakeRecursiveMakedepend
+
+MakeRecursiveStripdepend

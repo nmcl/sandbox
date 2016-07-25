@@ -1,0 +1,20 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ */
+
+This application is an appointments calendar. It is distributed and makes
+use of the name server and atomic actions and concurrency control.
+
+Usage:
+Each person requiring an appointments calendar object should run
+	CalendarCreate
+the only input required is that person's usual location (eg office)
+
+
+To actually view the appointments, run
+	CalendarClient

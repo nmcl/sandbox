@@ -1,0 +1,233 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.28 1993/07/21 13:52:03 nmcl Exp $
+COMMENT
+
+SOURCES = ADclCntxt.cc \
+          BaseClass.cc \
+          CDclCntxt.cc \
+          CLnkage.cc \
+          CharT.cc \
+          ClassT.cc \
+          CppLnkage.cc \
+          CvQuals.cc \
+          CvT.cc \
+          DclContxt.cc \
+          Debug.cc \
+          Decl.cc \
+          DeclList.cc \
+          DeclListE.cc \
+          DeclListI.cc \
+          DeclSpec.cc \
+          DirectivT.cc \
+          DummyArgT.cc \
+          DummyT.cc \
+          EnumT.cc \
+          Error.cc \
+          Expr.cc \
+	  AllocExpr.cc \
+	  ArrayExpr.cc \
+          BinExpr.cc \
+	  Literal.cc \
+	  NestExpr.cc \
+          FileInfo.cc \
+          FloatT.cc \
+          FuncMods.cc \
+          FuncT.cc \
+          GlobalInf.cc \
+          IncludeT.cc \
+          IntT.cc \
+          IntegralT.cc \
+          Interface.cc \
+          Linkage.cc \
+          Location.cc \
+          ModifiedT.cc \
+          PointerT.cc \
+          QualT.cc \
+          StoreSpec.cc \
+          String.cc \
+          StubMods.cc \
+          TDesc.cc \
+	  TemplateCT.cc \
+	  InstClassT.cc \
+	  TmplCntxt.cc \
+          Type.cc \
+          TypeDefT.cc \
+          TypeMods.cc \
+          Utility.cc \
+          VecT.cc \
+          VisSpec.cc \
+          VoidT.cc \
+          tatsu.cc \
+          c++21.gram.cc \
+          c++21.lex.cc
+
+OBJECTS = ADclCntxt.o \
+          BaseClass.o \
+          CDclCntxt.o \
+          CLnkage.o \
+          CharT.o \
+          ClassT.o \
+          CppLnkage.o \
+          CvQuals.o \
+          CvT.o \
+          DclContxt.o \
+          Debug.o \
+          Decl.o \
+          DeclList.o \
+          DeclListE.o \
+          DeclListI.o \
+          DeclSpec.o \
+          DirectivT.o \
+          DummyArgT.o \
+          DummyT.o \
+          EnumT.o \
+          Error.o \
+          Expr.o \
+	  AllocExpr.o \
+	  ArrayExpr.o \
+	  BinExpr.o \
+	  Literal.o \
+	  NestExpr.o \
+          FileInfo.o \
+          FloatT.o \
+          FuncMods.o \
+          FuncT.o \
+          GlobalInf.o \
+          IncludeT.o \
+          IntT.o \
+          IntegralT.o \
+          Interface.o \
+          Linkage.o \
+          Location.o \
+          ModifiedT.o \
+          PointerT.o \
+          QualT.o \
+          StoreSpec.o \
+          String.o \
+          StubMods.o \
+          TDesc.o \
+	  TemplateCT.o \
+	  InstClassT.o \
+	  TmplCntxt.o \
+          Type.o \
+          TypeDefT.o \
+          TypeMods.o \
+          Utility.o \
+          VecT.o \
+          VisSpec.o \
+          VoidT.o \
+          tatsu.o \
+          c++21.gram.o \
+          c++21.lex.o
+
+SetLocalYaccFlags(-d)
+SetLocalCppFlags(-I../include -I$(ARJUNA_INCLUDES) -DSTD_INCLUDE=\"-I""CPLUSPLUS_INCLUDE_VAR\" -DCOMPILER_NAME=\"CPLUSPLUS_VAR\" -D__EXTERN_C__)
+
+#ifdef hpux
+SetLocalLibraries(-ll -ly)
+#else
+#ifdef linux
+SetLocalLibraries()
+#else
+SetLocalLibraries(-ll)
+#endif
+#endif
+
+MakeNonRecursiveAllTarget(tatsu)
+
+MakeNonRecursiveInstall
+
+CreateInstallTopDirectory(bin)
+InstallProgram(bin,tatsu)
+
+MakeProgramCPLUSPLUS(tatsu,$(OBJECTS),)
+
+MakeObjectCPLUSPLUS(ADclCntxt,)
+MakeObjectCPLUSPLUS(BaseClass,)
+MakeObjectCPLUSPLUS(CDclCntxt,)
+MakeObjectCPLUSPLUS(CLnkage,)
+MakeObjectCPLUSPLUS(CharT,)
+#if RPC_SYSTEM_TYPE == RPC_ANSAAction_ || RPC_SYSTEM_TYPE == RPC_ANSA_
+MakeObjectCPLUSPLUS(ClassT,-DMAINNAME="\"mainbody\"")
+#else
+MakeObjectCPLUSPLUS(ClassT,)
+#endif
+MakeObjectCPLUSPLUS(CppLnkage,)
+MakeObjectCPLUSPLUS(CvQuals,)
+MakeObjectCPLUSPLUS(CvT,)
+MakeObjectCPLUSPLUS(DclContxt,)
+MakeObjectCPLUSPLUS(Debug,)
+MakeObjectCPLUSPLUS(Decl,)
+MakeObjectCPLUSPLUS(DeclList,)
+MakeObjectCPLUSPLUS(DeclListE,)
+MakeObjectCPLUSPLUS(DeclListI,)
+MakeObjectCPLUSPLUS(DeclSpec,)
+MakeObjectCPLUSPLUS(DirectivT,)
+MakeObjectCPLUSPLUS(DummyT,)
+MakeObjectCPLUSPLUS(DummyArgT,)
+MakeObjectCPLUSPLUS(EnumT,)
+MakeObjectCPLUSPLUS(Error,)
+MakeObjectCPLUSPLUS(Expr,)
+MakeObjectCPLUSPLUS(AllocExpr,)
+MakeObjectCPLUSPLUS(ArrayExpr,)
+MakeObjectCPLUSPLUS(BinExpr,)
+MakeObjectCPLUSPLUS(Literal,)
+MakeObjectCPLUSPLUS(NestExpr,)
+MakeObjectCPLUSPLUS(FileInfo,)
+MakeObjectCPLUSPLUS(FloatT,)
+MakeObjectCPLUSPLUS(FuncMods,)
+MakeObjectCPLUSPLUS(FuncT,)
+MakeObjectCPLUSPLUS(GlobalInf,)
+MakeObjectCPLUSPLUS(IncludeT,)
+MakeObjectCPLUSPLUS(IntT,)
+MakeObjectCPLUSPLUS(IntegralT,)
+MakeObjectCPLUSPLUS(Interface,)
+MakeObjectCPLUSPLUS(Linkage,)
+MakeObjectCPLUSPLUS(Location,)
+MakeObjectCPLUSPLUS(ModifiedT,)
+MakeObjectCPLUSPLUS(PointerT,)
+MakeObjectCPLUSPLUS(QualT,)
+MakeObjectCPLUSPLUS(StoreSpec,)
+MakeObjectCPLUSPLUS(String,)
+MakeObjectCPLUSPLUS(StubMods,)
+MakeObjectCPLUSPLUS(TDesc,)
+MakeObjectCPLUSPLUS(TemplateCT,)
+MakeObjectCPLUSPLUS(InstClassT,)
+MakeObjectCPLUSPLUS(TmplCntxt,)
+MakeObjectCPLUSPLUS(Type,)
+MakeObjectCPLUSPLUS(TypeDefT,)
+MakeObjectCPLUSPLUS(TypeMods,)
+MakeObjectCPLUSPLUS(Utility,)
+MakeObjectCPLUSPLUS(VecT,)
+MakeObjectCPLUSPLUS(VisSpec,)
+MakeObjectCPLUSPLUS(VoidT,)
+MakeObjectCPLUSPLUS(tatsu,)
+
+MakeYaccCPLUSPLUSSource(c++21.gram)
+
+MakeObjectCPLUSPLUS(c++21.gram,)
+
+MakeLexCPLUSPLUSSource(c++21.lex)
+
+MakeObjectCPLUSPLUS(c++21.lex,)
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(tatsu y.output c++21.gram.cc c++21.gram.h c++21.lex.cc)
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+#if FAST_MAKE
+depend.local :: tatsu
+#endif
+
+MakeNonRecursiveStripdepend

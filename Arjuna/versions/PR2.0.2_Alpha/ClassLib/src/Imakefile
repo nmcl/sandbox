@@ -1,0 +1,172 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.4 1993/12/17 11:47:12 ndbi Exp $
+COMMENT
+
+SOURCES = ../../Include/Arjuna/ObjState_stub.h \
+	  AbstractR.cc \
+	  AbsRecList.cc \
+	  ActionH.cc \
+          ActiveR.cc \
+          AtomicA.cc \
+	  CadaverAR.cc \
+          CadaverLM.cc \
+          CadaverLR.cc \
+          CadaverR.cc \
+          Lock.cc \
+          LockList.cc \
+          LockListI.cc \
+          LockMan.cc \
+          LockR.cc \
+	  LockSeg.cc \
+          LockStore.cc \
+          ObjState.cc \
+	  ObjectState_marshall.cc \
+          PersistR.cc \
+          RecList.cc \
+          RecListI.cc \
+          RecordT.cc \
+          RecoveryR.cc \
+          Semaphore.cc \
+	  ServerAA.cc \
+	  SharedSeg.cc \
+          StateMan.cc
+
+OBJECTS = AbstractR.o \
+	  AbsRecList.o \
+	  ActionH.o \
+          ActiveR.o \
+          AtomicA.o \
+	  CadaverAR.o \
+          CadaverLM.o \
+          CadaverLR.o \
+          CadaverR.o \
+          Lock.o \
+          LockList.o \
+          LockListI.o \
+          LockMan.o \
+          LockR.o \
+	  LockSeg.o \
+          LockStore.o \
+          ObjState.o \
+	  ObjectState_marshall.o \
+          PersistR.o \
+          RecList.o \
+          RecListI.o \
+          RecordT.o \
+          RecoveryR.o \
+	  ServerAA.o \
+          Semaphore.o \
+	  SharedSeg.o \
+          StateMan.o
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES) -I../include)
+
+MakeNonRecursiveAllTarget(../../Include/Arjuna/ObjState_stub.h libArjuna.a)
+
+MakeNonRecursiveInstall
+
+CreateInstallTopDirectory(lib)
+InstallLibrary(lib,libArjuna.a)
+
+ObjState.h : ../../Include/Arjuna/ObjState.h
+	@CP_VAR ../../Include/Arjuna/ObjState.h ObjState.h
+
+../../Include/Arjuna/ObjState_stub.h : ObjState_stub.h
+	@echo Copying ObjState_stub.h
+	@sed -e "s;\"ObjectState_stubclass.h\";\<Arjuna/ObjectState_stubclass.h\>;" ObjState_stub.h > ../../Include/Arjuna/ObjState_stub.h
+
+../../Include/Arjuna/ObjectState_stubclass.h : ObjectState_stubclass.h
+	@echo Copying ObjectState_stubclass.h
+	@CP_VAR ObjectState_stubclass.h ../../Include/Arjuna/ObjectState_stubclass.h
+
+MakeStubGen(ObjState,ObjState,ObjState,)
+
+MakeLibrary(libArjuna.a,$(OBJECTS))
+
+MakeObjectCPLUSPLUS(AbstractR,)
+MakeObjectCPLUSPLUS(AbsRecList,)
+MakeObjectCPLUSPLUS(ActionH,)
+MakeObjectCPLUSPLUS(ActiveR,)
+MakeObjectCPLUSPLUS(AtomicA,)
+MakeObjectCPLUSPLUS(CadaverLM,)
+MakeObjectCPLUSPLUS(CadaverAR,)
+MakeObjectCPLUSPLUS(CadaverLR,)
+MakeObjectCPLUSPLUS(CadaverR,)
+MakeObjectCPLUSPLUS(Lock,)
+MakeObjectCPLUSPLUS(LockList,)
+MakeObjectCPLUSPLUS(LockListI,)
+MakeObjectCPLUSPLUS(LockMan,)
+MakeObjectCPLUSPLUS(LockR,)
+MakeObjectCPLUSPLUS(LockSeg,)
+MakeObjectCPLUSPLUS(LockStore,)
+MakeObjectCPLUSPLUS(ObjState,)
+MakeObjectCPLUSPLUS(ObjectState_marshall,)
+MakeObjectCPLUSPLUS(PersistR,)
+MakeObjectCPLUSPLUS(RecList,)
+MakeObjectCPLUSPLUS(RecListI,)
+MakeObjectCPLUSPLUS(RecordT,)
+MakeObjectCPLUSPLUS(RecoveryR,)
+MakeObjectCPLUSPLUS(Semaphore,)
+MakeObjectCPLUSPLUS(ServerAA,)
+MakeObjectCPLUSPLUS(SharedSeg,)
+MakeObjectCPLUSPLUS(StateMan,)
+
+AbstractR.cc: $(ARJUNA_INCLUDES)/Arjuna/StateMan_stub.h
+AbstractR.cc: $(ARJUNA_INCLUDES)/Arjuna/StateManager_stubclass.h
+ActiveR.cc: $(ARJUNA_INCLUDES)/Arjuna/StateMan_stub.h
+ActiveR.cc: $(ARJUNA_INCLUDES)/Arjuna/StateManager_stubclass.h
+AtomicA.cc: $(ARJUNA_INCLUDES)/Arjuna/StateMan_stub.h
+AtomicA.cc: $(ARJUNA_INCLUDES)/Arjuna/StateManager_stubclass.h
+CadaverLM.cc: $(ARJUNA_INCLUDES)/Arjuna/LockMan_stub.h
+CadaverLM.cc: $(ARJUNA_INCLUDES)/Arjuna/LockManager_stubclass.h
+CadaverLR.cc: $(ARJUNA_INCLUDES)/Arjuna/LockMan_stub.h
+CadaverLR.cc: $(ARJUNA_INCLUDES)/Arjuna/LockManager_stubclass.h
+CadaverLR.cc: $(ARJUNA_INCLUDES)/Arjuna/StateMan_stub.h
+CadaverLR.cc: $(ARJUNA_INCLUDES)/Arjuna/StateManager_stubclass.h
+CadaverR.cc: $(ARJUNA_INCLUDES)/Arjuna/LockMan_stub.h
+CadaverR.cc: $(ARJUNA_INCLUDES)/Arjuna/LockManager_stubclass.h
+CadaverR.cc: $(ARJUNA_INCLUDES)/Arjuna/StateMan_stub.h
+CadaverR.cc: $(ARJUNA_INCLUDES)/Arjuna/StateManager_stubclass.h
+Lock.cc: $(ARJUNA_INCLUDES)/Arjuna/StateMan_stub.h
+Lock.cc: $(ARJUNA_INCLUDES)/Arjuna/StateManager_stubclass.h
+LockList.cc: $(ARJUNA_INCLUDES)/Arjuna/StateMan_stub.h
+LockList.cc: $(ARJUNA_INCLUDES)/Arjuna/StateManager_stubclass.h
+LockListI.cc: $(ARJUNA_INCLUDES)/Arjuna/StateMan_stub.h
+LockListI.cc: $(ARJUNA_INCLUDES)/Arjuna/StateManager_stubclass.h
+LockMan.cc: $(ARJUNA_INCLUDES)/Arjuna/LockMan_stub.h
+LockMan.cc: $(ARJUNA_INCLUDES)/Arjuna/LockManager_stubclass.h
+LockMan.cc: $(ARJUNA_INCLUDES)/Arjuna/StateMan_stub.h
+LockMan.cc: $(ARJUNA_INCLUDES)/Arjuna/StateManager_stubclass.h
+LockR.cc: $(ARJUNA_INCLUDES)/Arjuna/LockMan_stub.h
+LockR.cc: $(ARJUNA_INCLUDES)/Arjuna/LockManager_stubclass.h
+LockR.cc: $(ARJUNA_INCLUDES)/Arjuna/StateMan_stub.h
+LockR.cc: $(ARJUNA_INCLUDES)/Arjuna/StateManager_stubclass.h
+PersistR.cc: $(ARJUNA_INCLUDES)/Arjuna/StateMan_stub.h
+PersistR.cc: $(ARJUNA_INCLUDES)/Arjuna/StateManager_stubclass.h
+RecList.cc: $(ARJUNA_INCLUDES)/Arjuna/StateMan_stub.h
+RecList.cc: $(ARJUNA_INCLUDES)/Arjuna/StateManager_stubclass.h
+RecListI.cc: $(ARJUNA_INCLUDES)/Arjuna/StateMan_stub.h
+RecListI.cc: $(ARJUNA_INCLUDES)/Arjuna/StateManager_stubclass.h
+RecoveryR.cc: $(ARJUNA_INCLUDES)/Arjuna/StateMan_stub.h
+RecoveryR.cc: $(ARJUNA_INCLUDES)/Arjuna/StateManager_stubclass.h
+ServerAA.cc: $(ARJUNA_INCLUDES)/Arjuna/StateMan_stub.h
+ServerAA.cc: $(ARJUNA_INCLUDES)/Arjuna/StateManager_stubclass.h
+StateMan.cc: $(ARJUNA_INCLUDES)/Arjuna/StateMan_stub.h
+StateMan.cc: $(ARJUNA_INCLUDES)/Arjuna/StateManager_stubclass.h
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(ObjState.h ObjState_stub.h ObjectState_stubclass.h ObjectState_marshall.cc libArjuna.a)
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend

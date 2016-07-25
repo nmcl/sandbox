@@ -1,0 +1,26 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.6 1993/03/22 09:27:46 ngdp Exp $
+COMMENT
+
+SetSubDirectorys(include src lib)
+
+MakeRecursiveInstall
+
+MakeRecursiveAllTarget
+
+MakeMakefile
+
+MakeMakefiles
+
+MakeEmptyTidyCleanPurge
+
+MakeRecursiveMakedepend
+
+MakeRecursiveStripdepend

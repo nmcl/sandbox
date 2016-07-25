@@ -1,0 +1,38 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 1993/03/18 14:15:56 nmcl Exp $
+COMMENT
+COMMENT
+COMMENT Imakefile. (Basic)
+COMMENT
+
+SOURCES = Driver.cc \
+          Stack.cc
+
+OBJECTS = Driver.o \
+          Stack.o
+
+MakeNonRecursiveAllTarget(Driver)
+
+MakeNonRecursiveInstall
+
+MakeProgramCPLUSPLUS(Driver,$(OBJECTS),)
+
+MakeObjectCPLUSPLUS(Driver,)
+MakeObjectCPLUSPLUS(Stack,)
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(Driver)
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend

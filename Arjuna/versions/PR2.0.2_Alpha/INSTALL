@@ -1,0 +1,183 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ */
+
+/*
+ * $Id: INSTALL,v 1.1 1993/11/03 12:21:24 nmcl Exp $
+ */
+
+1. 	Installation
+********************
+
+ 	Installation  of   Arjuna  should  be  a  relatively  painless
+operation accomplished in the following way:
+
+a)
+	Run the 'configure' script and answer all of the questions
+asked. Most questions have default answers that you can accept simply
+by pressing 'return'. See below for more information on configure
+
+b)
+	Type 'make -f MakefileBoot' to build the root level makefile.
+
+c)
+	Type 'make Makefiles' to generate makefiles throughout the
+source tree.
+
+d)	Type 'make depend' to install appropriate dependencies into
+the newly generated makefiles.
+
+e)	Type 'make all' to build the system.
+
+f)
+	Type 'make install' to install the public headers, libraries
+etc.
+
+	If any of these steps fail check the section on known problems
+for potential remedies.
+
+2.	Configuration Specifics
+*******************************
+
+	Here is a walkthough of the questions asked by the 'configure'
+script togethor with an explaination of the required answers. Default
+answers in in square brackets.
+
+1)	Make is verbose (NO/YES) [NO]
+
+	Controls how verbose the make process is. Accept the default
+which is probably far too verbose as it is!
+
+2)	Make is fast (no inter module cross checks) (NO/YES) [NO]
+
+	Controls whether the  generated  makefiles  check  that  other
+parts of the source  tree are up to  date with respect to the  current
+directory. This  slows  the  make  process  down considerably but  the
+default  provides  maximum safety. 
+
+3)	Root  directory  of  source  tree [<path>]
+
+	The  default value is  the  directory from which configure  is
+run. This does not need changing.
+
+4)	C++  compiler [CC]
+
+	Which C++ compiler  to run to compile  the  system. NOTE:  the
+value you enter here  is also used by the stub generator to preprocess
+all future  header files. See the README file in the StubGen directory
+for more details.
+
+5)	C++ include directory [/usr/include/CC]
+
+	The directory containg your C++ header files.  NOTE: the value
+you enter here is also used by the stub generator in preprocessing all
+future  header files. See the README file in the StubGen directory for
+more details.
+
+6)	Which version of lex  (lex/lex++/flex) [lex] 
+
+	The  stub  generator  uses a  lex  scanner to tokenise the C++
+header  files it reads. This  configuration parameter determines which
+version of lex it uses.   If  you are using gcc/g++ we suggest you use
+flex (version  2.3.7), if using Sun C++ or HP C++ use lex++, otherwise
+try  lex.  See  the  README file in  the  StubGen  directory  for more
+details.
+	
+7)	lex flags []   
+
+	Can probably be left empty.
+	
+8)	Which  version of yacc (yacc/yacc++/bison)  [yacc] 
+ 
+	The stub generator uses a yacc grammer to parse the C++ header
+files it reads.  This configuration parameter determines which version
+of yacc it uses.   If you are using  gcc/g++  we suggest you use bison
+(version 1.18), if using Sun C++  or HP C++ use yacc++, otherwise  try
+yacc.  See the README file in the StubGen directory for more details.
+
+9)	yacc  flags  []   
+
+	Normally empty.  However if you  picked 'bison' as the version
+of  yacc to use in response  to the previous question then this should
+be set to '-y'.
+
+10)	Arjuna flags []
+
+	These  flags  (actually  cpp  defines)  govern  parts  of  the
+compilation of Arjuna. You may set -DDEBUG and -DYYDEBUG as  you like.
+Setting -DNO_INLINES causes all of  the inline code  in Arjuna  to  be
+non-inlined  (i.e.,  real  functions are generated  and called),  This
+option  is  useful  for  debugging  purposes.   Whether  you  set  the
+-DHAVE_UNION_WAIT flag  depends  upon the prototype of  your  'wait()'
+system call  - check /usr/include/sys/wait.h and/or  the  wait  manual
+page  for  help  here. In  general Cfront 2.1 based systems need  this
+flag, gcc based systems do not. -DHAVE_INTSIG set this if you 'signal'
+routine returns  an 'int'. -DNO_NESTED_TYPES forces the stub generator
+to implicitly export nested types to global  scope in an attempt to be
+compatible with Cfront 2.0 based systems. It's use is not recommended.
+
+11)	Additional compilation flags for optimisation and/or debugging []
+
+	Set -g or -O or whatever here.
+
+12)	Additional loader flags []
+
+	Set -g or -s or -L etc. flags here.
+
+13)	Root of directory tree for installation [/usr/local/ArjunaPR1.2] 
+
+	The root of the tree at which arjuna will be installed.
+
+14)	Name server location [<host>]
+
+	The name of the hosts on which the Arjuna nameserver will run.
+
+3.	Potential Problems
+**************************
+
+	The build procedure should complete without incident, however,
+in case it does not here are a few hints as to what might be wrong.
+
+a)	Stub Generator does not build.
+
+	There can be many causes for this. Most result from the use of
+a lex  scanner and a yacc grammer. The stub generator is built  in its
+entirety  using  whatever  C++  compiler  you specify - including  the
+generated lex scanner and yacc parsers. Unfortunately many versions of
+lex and yacc produce old style C code that modern C++ compilers cannot
+handle or  they produce valid  C++ with  'broken' function  prototypes
+(for example  assuming that yylex is extern "C" in  the yacc  output).
+There are a few ways round this:
+
+	(i) Use an appropriate lex and yacc. That is, use flex/bison
+	with gcc and lex++/yacc++ with Sun or HP C++.
+
+	(ii) Modify the lex and yacc skeletons (/usr/lib/lex/ncform
+	and /usr/lib/yacc/yaccpar) to be C++ friendly.
+
+	(iii) Hack the generated code in the stub generator source 
+	directory.
+	
+	Another problem is caused by different prototypes for the
+system functions 'wait', 'signal' and 'exec'. Make sure you specified
+-DHAVE_UNION_WAIT etc. as required by your system.
+
+b)	Stub generator does not run.
+
+	See the README in the StubGen directory.
+
+c)	Other sources do not build.
+
+	Probably  function  prototype  problems.  We  have   attempted
+wherever possible  to be POSIX compliant. Check the prototypes in  the
+files in Include/System against those provided with your compiler (and
+let us know  the differences). One common foul up is in the prototypes
+for 'malloc',  'free', etc. Sun in  particular like to make these  use
+char* whereas POSIX says void*. We believe we  have  fixed up most  of
+these errors but we may still have missed some - feedback appreciated.
+Simple casts will fix most of these kind of problems.

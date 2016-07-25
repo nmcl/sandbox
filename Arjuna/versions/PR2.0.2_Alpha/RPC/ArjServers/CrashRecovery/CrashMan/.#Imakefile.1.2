@@ -1,0 +1,53 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 1993/08/16 11:40:09 ndbi Exp $
+COMMENT
+COMMENT
+
+LIBRARIES = $(LIBARJSERVERS) $(LIBSTUB) $(LIBRPC) $(LIBARJUNA) $(LIBARJSERVERS) $(LIBSTUB) $(LIBRPC) $(LIBARJUNA) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES) -I../include -I../AAStatus)
+
+SOURCES = CrashMan.cc \
+          CRController.cc \
+          CrashRecR.cc \
+          ServerAAR.cc \
+          CRRecList.cc
+
+OBJECTS = CrashMan.o \
+          CRController.o \
+          CrashRecR.o \
+          ServerAAR.o \
+          CRRecList.o \
+          ../AAStatus/AAStatus_client.o
+
+MakeNonRecursiveAllTarget(CrashMan)
+
+MakeNonRecursiveInstall
+
+CreateInstallTopDirectory(etc)
+InstallProgram(etc,CrashMan)
+
+MakeProgramCPLUSPLUS(CrashMan,$(OBJECTS) $(LIBRARIES),)
+
+MakeObjectCPLUSPLUS(CrashMan,)
+MakeObjectCPLUSPLUS(CrashRecR,)
+MakeObjectCPLUSPLUS(ServerAAR,)
+MakeObjectCPLUSPLUS(CRRecList,)
+MakeObjectCPLUSPLUS(CRController,)
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(CrashMan)
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend

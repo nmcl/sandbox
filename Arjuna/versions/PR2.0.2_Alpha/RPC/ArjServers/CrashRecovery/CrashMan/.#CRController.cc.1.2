@@ -1,0 +1,327 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: CRController.cc,v 1.2 1993/08/19 14:31:47 ndbi Exp $
+ */
+
+#ifndef IOSTREAM_H_
+#  include <System/iostream.h>
+#endif
+
+#ifndef FCNTL_H_
+#  include <System/fcntl.h>
+#endif
+
+#ifndef STDLIB_H_
+#  include <System/stdlib.h>
+#endif
+
+#ifndef SYSENT_H_
+#  include <System/unistd.h>
+#endif
+
+#ifndef PROTOS_H_
+#  include <System/protos.h>
+#endif
+
+#ifndef STRSTREAM_H_
+#  include <System/strstream.h>
+#endif
+
+#ifndef PARAM_H_
+#  include <System/sys/param.h>
+#endif
+
+#ifndef MEMORY_H_
+#  include <System/memory.h>
+#endif
+
+#if defined(DEBUG) && !defined(DEBUG_H_)
+#  include <Common/Debug.h>
+#endif
+
+#ifndef COMMONT_H_
+#  include <Common/CommonT.h>
+#endif
+
+#ifndef UID_H_
+#  include <Common/Uid.h>
+#endif
+
+#ifndef LPOBJSTORE_H_
+#  include <Arjuna/LPObjStore.h>
+#endif
+
+#ifndef SERVERAA_H_
+#  include <Arjuna/ServerAA.h>
+#endif
+
+#ifndef OBJSTOREI_H_
+#  include <Arjuna/ObjStoreI.h>
+#endif
+
+#ifndef CRCONTROLLER_H_
+#  include "CRController.h"
+#endif
+
+/*
+ * Crash recovery Controller Class
+ */
+
+CRController::CRController ()
+                           : workList(new CRRecordList),
+                             recoveringHost(0),
+                             GV(0),
+                             gotSAAWork(FALSE),
+                             gotRepWork(FALSE),
+                             setupGroupView(FALSE),
+                             groupviewRecover(FALSE),
+                             managerRunning(FALSE)
+
+{
+#ifdef DEBUG
+    debug_stream << CONSTRUCTORS << FAC_CRASH_RECOVERY << VIS_PUBLIC;
+    debug_stream << "CRController::CRController()\n" << flush;
+#endif
+
+    recoveringHost = new char[MAXHOSTNAMELEN];
+    ::memset(recoveringHost, '\0', MAXHOSTNAMELEN);
+    ::gethostname(recoveringHost, MAXHOSTNAMELEN);
+}
+
+CRController::~CRController()
+{
+#ifdef DEBUG
+    debug_stream << DESTRUCTORS << FAC_CRASH_RECOVERY << VIS_PUBLIC;
+    debug_stream << "CRController::~CRController()\n" << flush;
+#endif
+
+    if (recoveringHost)
+        delete recoveringHost;
+
+    if (workList)
+        delete workList;
+
+    if (GV)
+        delete GV;
+}
+
+void CRController::getSAAWork()
+{
+#ifdef DEBUG
+    debug_stream << FUNCTIONS << FAC_CRASH_RECOVERY << VIS_PUBLIC;
+    debug_stream << "CRController::getSAAWork()\n" << flush;
+#endif
+
+    if (!gotSAAWork)
+    {
+        LocalPersistentObjectStore store; 
+        Uid *saa_uid;
+        ServerAtomicAction temp_saa(NIL_UID);
+        ObjectStoreIterator get_next_saa(store, temp_saa.type());
+
+        while ( (saa_uid = get_next_saa()) != 0 )
+        {
+            ServerAtomicAction saa(*saa_uid);
+            ServerAARecord *saar = new ServerAARecord(*saa_uid);
+            workList->insert(saar);
+         }
+         gotSAAWork = TRUE;
+    }
+}
+
+void CRController::getRepWork()
+{
+#ifdef DEBUG
+    debug_stream << FUNCTIONS << FAC_CRASH_RECOVERY << VIS_PUBLIC;
+    debug_stream << "CRController::getRepWork()\n" << flush;
+#endif
+
+    if (!gotRepWork)
+    {
+        OutCome GVResult;
+        ReplicaDescriptor *needsUpdate = new ReplicaDescriptor;
+        ReplicaDescriptor *mayNeedUpdate = new ReplicaDescriptor;
+
+        GVResult = GV->getNodeUpdateList(*needsUpdate,
+                                         *mayNeedUpdate,
+                                         recoveringHost);
+
+        if (GVResult != Done)
+        {
+#ifdef DEBUG
+	    debug_stream << FUNCTIONS << FAC_CRASH_RECOVERY << VIS_PUBLIC;
+	    debug_stream << "** WARNING ** GroupView getNodeUpdateList failed"
+	                 << endl;
+#endif
+            gotRepWork = FALSE;
+        }
+        else
+        {
+            /*
+             * Add the replicas that are known to require update
+             */
+
+            ReplicaDescriptor *temp = needsUpdate;
+            Boolean sureOfUpdate = TRUE;
+
+            while (temp != 0)
+            {
+                ReplicaRecord *reprec = new ReplicaRecord(*temp, sureOfUpdate);
+                workList->insert(reprec);
+                temp = temp->next;
+            }
+
+            /*
+             * Now add the replicas that may require update
+             */
+
+            temp = mayNeedUpdate;
+            sureOfUpdate = FALSE;
+
+            while (temp != 0)
+            {
+                ReplicaRecord *reprec = new ReplicaRecord(*temp, sureOfUpdate);
+                workList->insert(reprec);
+                temp = temp->next;
+            }
+
+            gotRepWork = TRUE;
+        }
+
+    }
+}
+
+
+ostream& CRController::printStatus ( ostream& strm ) const
+{
+    strm << "Current status of crash controller:" << endl;
+    strm << "recovering host   = " << recoveringHost << endl;
+    strm << "got SAA Work      = " << gotSAAWork << endl;
+    strm << "got Rep Work      = " << gotRepWork << endl;
+    strm << "setup GroupView   = " << setupGroupView << endl;
+    strm << "GroupView recover = " << groupviewRecover << endl;
+    strm << "manager running   = " << managerRunning << endl;
+    strm << endl << "Work list follows:" << endl;
+    workList->print(strm);
+    return strm;
+}
+
+void CRController::makeRecoveryPass()
+{
+#ifdef DEBUG
+    debug_stream << FUNCTIONS << FAC_CRASH_RECOVERY << VIS_PUBLIC;
+    debug_stream << "CRController::makeRecoveryPass()\n" << flush;
+#endif
+
+    recoverGroupView();
+    workList->resolve();
+    workList->purge();
+}
+
+Boolean CRController::recoverGroupView()
+{
+#ifdef DEBUG
+    debug_stream << FUNCTIONS << FAC_CRASH_RECOVERY << VIS_PUBLIC;
+    debug_stream << "CRController::recoverGroupView()\n" << flush;
+#endif
+
+    /*
+     * Only attempt recover if we have a GroupView database and we haven't
+     * previously recovered.
+     */
+
+    if (setupGroupView && !groupviewRecover)
+    {
+        OutCome GVResult;
+
+        GVResult = GV->recover(recoveringHost);
+
+        if (GVResult != Done)
+        {
+#ifdef DEBUG
+	    debug_stream << FUNCTIONS << FAC_CRASH_RECOVERY << VIS_PUBLIC;
+	    debug_stream << "** WARNING ** GroupView recover failed"
+                         << endl;
+#endif
+            groupviewRecover = FALSE;
+        }
+        else
+            groupviewRecover = TRUE;
+    }
+    return(setupGroupView && groupviewRecover);
+}
+
+Boolean CRController::setup()
+{
+#ifdef DEBUG
+    debug_stream << FUNCTIONS << FAC_CRASH_RECOVERY << VIS_PUBLIC;
+    debug_stream << "CRController::setup()\n" << flush;
+#endif
+
+    /*
+     * Get a pointer to the Group View database
+     */
+
+    if (!setupGroupView)
+    {
+        int result;
+        GV = new NSInterface(result);
+        if (result != 0)
+        {
+#ifdef DEBUG
+	    debug_stream << FUNCTIONS << FAC_CRASH_RECOVERY << VIS_PUBLIC;
+	    debug_stream << "** WARNING ** Failed to create Group View database"
+                         << endl;
+#endif
+            setupGroupView = FALSE;
+        }
+        else
+        {
+            setupGroupView = TRUE;
+        }
+    }
+    return(setupGroupView);
+}
+
+long CRController::getccount ()
+{
+/* 
+ * Read C_COUNT file and return the crash count of the local node,
+ * if successful; otherwise -1.
+ */
+
+  static long   crashcount = -1L;
+  int           ccountfd;
+
+  if (crashcount < 0)
+  {
+    if ((ccountfd = open(C_COUNT_Q, O_RDWR, 0444)) >= 0)
+    {
+      struct flock arg;
+
+      arg.l_whence = 0;
+      arg.l_start = 0;
+      arg.l_len = 0;
+      arg.l_type = F_WRLCK;
+      if (fcntl(ccountfd, F_SETLKW, (int)&arg) >= 0)
+      {         /* Read C_COUNT */
+        if(read(ccountfd, (char *) & crashcount, sizeof(crashcount))
+           != sizeof(crashcount))
+        {    /* Read failed - reset crashcount to error code */
+          crashcount = -1L;
+        }
+        arg.l_type = F_UNLCK;
+        fcntl(ccountfd, F_SETLKW, (int)&arg);
+      }
+      close(ccountfd);
+    }
+  }
+  return(crashcount);
+}
+

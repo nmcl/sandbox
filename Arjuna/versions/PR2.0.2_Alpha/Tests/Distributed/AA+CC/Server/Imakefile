@@ -1,0 +1,48 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.11 1993/03/18 15:05:30 n048z Exp $
+COMMENT
+
+SOURCES	  = Object.cc \
+	    Object_client.cc \
+	    Object_server.cc \
+	    Object_servermain.cc \
+	    Object_stub.h \
+	    Object_stubclass.h
+
+OBJECTS	  = Object_server.o \
+	    Object_servermain.o \
+	    Object.o
+
+LIBRARIES = $(LIBARJUNA) $(LIBCOMMON) $(LIBARJSERVERS) $(LIBSTUB) $(LIBRPC)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+MakeNonRecursiveAllTarget(Object Object_client.o)
+
+MakeNonRecursiveInstall
+
+CreateInstallTopDirectory(servers)
+InstallProgram(servers,Object)
+
+MakeProgramCPLUSPLUS(Object,$(OBJECTS) $(LIBRARIES),)
+
+MakeObjectCPLUSPLUS(Object,)
+
+MakeStubGen(Object,Object,Object,)
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(Object Object_client.cc Object_server.cc Object_servermain.cc Object_stub.h Object_stubclass.h)
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend

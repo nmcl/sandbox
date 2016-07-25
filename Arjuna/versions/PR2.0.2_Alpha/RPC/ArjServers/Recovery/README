@@ -1,0 +1,76 @@
+/*
+ * Copyright (C) 1993
+ * 
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: README,v 1.3 1993/03/18 16:02:43 n048z Exp $
+ */
+
+
+This subtree contains code for Arjuna I crash recovery.
+There are two programs required- the recovery demon, and the recovery
+manager.
+
+Contents:
+
+-rw-r-----  1 nis           946 Nov 13 15:24 Makefile
+-rw-r-----  1 nis          2755 Nov 13 15:35 README
+drwxr-x---  2 nis           512 Nov 13 13:26 acrdemon
+drwxr-x---  2 nis           512 Sep 11 15:16 include
+drwxr-x---  2 nis           512 Nov 13 13:26 lib
+drwxr-x---  2 nis           512 Nov 13 13:27 recover
+
+acrdemon- is the directory containing the recovery demon.
+
+recover- is the directory containing the recovery manager program.
+
+lib- contains the class (and function) library
+
+include- contains header files
+
+==============================================================================
+
+The recovery demon
+------------------
+
+This program is started at boot time and never terminates. It acts as a
+network server fielding inquiries about the termination status of
+atomic actions.  It answers these by inspecting the directory
+$(ObjectStore)/StateManager/AtomicAction.  Any atomic action
+whose uid is present as an entry in this directory has been committed
+by a coordinator process on this node.  About any others we know
+nothing, and function on a presumed abort basis.  We presume that a
+caller presenting a query has determined that this is indeed the node
+on which the coordinator ran.  If he is wrong then he will get an
+'abort' answer that might be wrong.
+
+
+The recovery manager
+--------------------
+
+It is the job of the recovery manager to scan the directory
+$(ObjectStore)/StateManager/ServerAtomicAction looking for
+prepare records of atomic actions that could not be completed normally
+due to a node or process crash.
+
+A list of objects involved in such actions is made and all the objects
+are renamed to prevent anybody else from modifying them before we
+finish fixing them up.  At this point all involved objects have two
+specially named versions-  a 'shadow' version containing the updated
+state if commit is to be applied, and a 'hidden' version containing the
+old state to be used if abort is applied.  The difference at this point
+between commit and abort is simply which version (shadow/hidden
+respectively) is renamed to the original name by which the object is
+known.
+
+We then go through the set of atomic actions.  In each case we call the
+recovery demon on the node named in the record as that containing the
+coordinator.  Each of the incomplete actions at that coordinator node
+is queried and the appropriate rename done according the the final
+decision (commit/abort.)  Finally each server atomic action record
+which has been completely resolved is deleted.
+
+

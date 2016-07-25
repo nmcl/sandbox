@@ -1,0 +1,38 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.9 1993/03/18 15:00:03 nmcl Exp $
+COMMENT
+
+
+#if RPC_SYSTEM_TYPE == RPC_RajdootAction_
+SetSubDirectorys(Rajdoot ArjServers)
+#endif
+#if RPC_SYSTEM_TYPE == RPC_Rajdoot_
+SetSubDirectorys(Rajdoot ArjServers)
+#endif
+#if RPC_SYSTEM_TYPE == RPC_ANSAAction_
+SetSubDirectorys(ANSA ArjServers)
+#endif
+#if RPC_SYSTEM_TYPE == RPC_ANSA_
+SetSubDirectorys(ANSA ArjServers)
+#endif
+
+MakeRecursiveAllTarget
+
+MakeRecursiveInstall
+
+MakeMakefile
+
+MakeMakefiles
+
+MakeEmptyTidyCleanPurge
+
+MakeRecursiveMakedepend
+
+MakeRecursiveStripdepend

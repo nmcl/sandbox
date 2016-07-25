@@ -1,0 +1,56 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.10 1993/10/06 10:27:33 nsmw Exp $
+COMMENT
+
+SOURCES = ArjName.cc \
+	  ArjunaName_marshall.cc \
+	  ../../../Include/RPC/ArjServers/ArjName.h
+
+OBJECTS = ArjName.o \
+	  ArjunaName_marshall.o
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+MakeNonRecursiveAllTarget(../../../Include/RPC/ArjServers/ArjName_stub.h ../libArjServers.a)
+
+MakeNonRecursiveInstall
+
+ArjName.h : ../../../Include/RPC/ArjServers/ArjName.h
+	@CP_VAR ../../../Include/RPC/ArjServers/ArjName.h ArjName.h
+
+../../../Include/RPC/ArjServers/ArjName_stub.h : ArjName_stub.h
+	@echo Copying ArjName_stub.h
+	@sed -e "s;\"ArjName_stubclass.h\";\<RPC/ArjServers/ArjName_stubclass.h\>;" ArjName_stub.h > ../../../Include/RPC/ArjServers/ArjName_stub.h
+
+../../../Include/RPC/ArjServers/ArjName_stubclass.h : ArjName_stubclass.h
+	@echo Copying ArjName_stubclass.h
+	@CP_VAR ArjName_stubclass.h ../../../Include/RPC/ArjServers/ArjName_stubclass.h
+
+MakeStubGen(ArjName,ArjunaName,ArjName,)
+MakeObjectCPLUSPLUS(ArjName,)
+
+MakeLibrary(../libArjServers.a,$(OBJECTS))
+
+ArjName.cc : $(ARJUNA_INCLUDES)/RPC/ArjServers/NameServ_stub.h
+ArjName.cc : $(ARJUNA_INCLUDES)/RPC/ArjServers/NameServer_stubclass.h
+ArjName.cc : $(ARJUNA_INCLUDES)/RPC/ArjServers/RepDesc_stub.h
+ArjName.cc : $(ARJUNA_INCLUDES)/RPC/ArjServers/ReplicaData_stub.h
+ArjName.cc : $(ARJUNA_INCLUDES)/Arjuna/StateMan_stub.h
+ArjName.cc : $(ARJUNA_INCLUDES)/Arjuna/StateManager_stubclass.h
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(ArjName.h ArjunaName_marshall.cc ArjName_stub.h)
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend

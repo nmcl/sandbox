@@ -1,0 +1,65 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.21 1993/03/18 15:24:28 nmcl Exp $
+COMMENT
+
+SOURCES        = NameServ.cc          \
+                 NameServer_server.cc \
+                 NameServer_client.cc \
+                 ../../../Include/RPC/ArjServers/NameServ_stub.h \
+                 ../../../Include/RPC/ArjServers/NameServer_stubclass.h
+
+OBJECTS_SERVER = NameServ.o          \
+                 NameServer_server.o \
+                 NameServer_servermain.o
+
+OBJECTS_CLIENT = NameServer_client.o
+
+LIBRARIES      = $(LIBSTUB) ../libArjServers.a $(LIBRPC) $(LIBARJUNA) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+MakeNonRecursiveAllTarget(NameServ ../../../Include/RPC/ArjServers/NameServ_stub.h ../../../Include/RPC/ArjServers/NameServer_stubclass.h ../libArjServers.a)
+
+MakeNonRecursiveInstall
+
+CreateInstallTopDirectory(servers)
+InstallProgram(servers,NameServ)
+
+../../../Include/RPC/ArjServers/NameServ_stub.h : NameServ_stub.h
+	@echo Copying NameServ_stub.h
+	@sed -e "s;\"NameServer_stubclass.h\";\<RPC/ArjServers/NameServer_stubclass.h\>;" NameServ_stub.h > ../../../Include/RPC/ArjServers/NameServ_stub.h
+
+../../../Include/RPC/ArjServers/NameServer_stubclass.h : NameServer_stubclass.h
+	@echo Copying NameServer_stubclass.h
+	@CP_VAR NameServer_stubclass.h ../../../Include/RPC/ArjServers/NameServer_stubclass.h
+
+#ifdef hpux
+MakeProgramCPLUSPLUS(NameServ,$(OBJECTS_SERVER) $(LIBRARIES),-lndbm)
+#else
+MakeProgramCPLUSPLUS(NameServ,$(OBJECTS_SERVER) $(LIBRARIES),)
+#endif
+
+NameServ.cc: NameServ_stub.h
+
+MakeObjectCPLUSPLUS(NameServ,)
+
+MakeStubGen(NameServ,NameServer,NameServ,)
+
+MakeLibrary(../libArjServers.a,$(OBJECTS_CLIENT))
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(NameServ NameServ_stub.h NameServer_client.cc NameServer_server.cc NameServer_clientmain.cc NameServer_clientmain.cc NameServer_servermain.cc NameServer_stubclass.h)
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend

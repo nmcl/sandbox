@@ -1,0 +1,31 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: Literal.n,v 1.2 1993/03/22 09:28:27 ngdp Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(LITERAL_CC_)
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF Literal::Literal ( const String& lit )
+                         : Expression(),
+			   theLiteral(lit)
+{
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif
