@@ -1,0 +1,81 @@
+#! /bin/csh
+COMMENT 
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.23 1995/10/24 12:29:15 nmcl Exp $
+COMMENT
+
+SOURCES	  = shutdown_manager.cc shutdown_ping.cc manager_mode.cc unlock_shmem.cc typetokey.cc uidToLocation.cc dump_clist.cc
+
+OBJECTS   = shutdown_manager.o shutdown_ping.o manager_mode.o unlock_shmem.o typetokey.o uidToLocation.o dump_clist.o
+
+LIBRARIES = $(LIBRPC) $(LIBARJUNA) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES) -I$(TOPDIR)/RPC/Rajdoot/src/include)
+
+AllTarget(arjmkmf arjmkmf_install ipcclean shutdown_manager shutdown_ping typetokey manager_mode unlock_shmem uidToLocation dump_clist)
+
+CreateInstallTopDirectory(bin)
+InstallProgramAs(bin,arjmkmf_install,arjmkmf)
+InstallProgram(bin,ipcclean)
+InstallProgram(bin,includecheck)
+InstallProgram(bin,makedepend)
+InstallProgram(bin,stripdepend)
+InstallProgram(bin,shutdown_manager)
+InstallProgram(bin,manager_mode)
+InstallProgram(bin,shutdown_ping)
+InstallProgram(bin,typetokey)
+InstallProgram(bin,unlock_shmem)
+InstallProgram(bin,Create_NS_State)
+InstallProgram(bin,Create_NS_Tar)
+InstallProgram(bin,uidToLocation)
+InstallProgram(bin,dump_clist)
+
+MakeProgramCPLUSPLUS(typetokey, typetokey.o $(LIBCOMMON),NOPARAM)
+MakeProgramCPLUSPLUS(shutdown_manager, shutdown_manager.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(shutdown_ping, shutdown_ping.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(manager_mode, manager_mode.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(unlock_shmem, unlock_shmem.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(uidToLocation, uidToLocation.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(dump_clist, dump_clist.o $(LIBRARIES),NOPARAM)
+
+MakeObjectCPLUSPLUS(typetokey,NOPARAM)
+MakeObjectCPLUSPLUS(shutdown_manager,NOPARAM)
+MakeObjectCPLUSPLUS(shutdown_ping,NOPARAM)
+MakeObjectCPLUSPLUS(manager_mode,NOPARAM)
+MakeObjectCPLUSPLUS(unlock_shmem,NOPARAM)
+MakeObjectCPLUSPLUS(uidToLocation,NOPARAM)
+MakeObjectCPLUSPLUS(dump_clist,NOPARAM)
+
+arjmkmf_install : arjmkmf.tmpl
+	@echo Creating $@
+	COMMAND_PREFIX(sed) -e "s;CONFIGDIRECTORY;"$(INSTALL_TOPDIR)"/include;" -e "s;IMAKEFLAGS;-DUseInstalled -DTOPDIR_DEFAULT="$(INSTALL_TOPDIR)";" < arjmkmf.tmpl > arjmkmf_install
+	COMMAND_PREFIX(CHMOD_VAR) ug+rx arjmkmf_install
+
+arjmkmf : arjmkmf.tmpl
+	@echo Creating $@
+	COMMAND_PREFIX(sed) -e "s;CONFIGDIRECTORY;"$(TOPDIR)"/Include;" -e "s;IMAKEFLAGS;-DTOPDIR_DEFAULT="$(TOPDIR)";" < arjmkmf.tmpl > arjmkmf
+	COMMAND_PREFIX(CHMOD_VAR) ug+rx arjmkmf
+
+#ifdef linux
+ipcclean : ipcclean_linux
+	@echo Creating $@
+	COMMAND_PREFIX(CP_VAR) ipcclean_linux ipcclean
+#else
+#ifndef hpux
+ipcclean : ipcclean_sysv
+	@echo Creating $@
+	COMMAND_PREFIX(CP_VAR) ipcclean_sysv ipcclean
+#else
+ipcclean : ipcclean_hpux
+	@echo Creating $@
+	COMMAND_PREFIX(CP_VAR) ipcclean_hpux ipcclean
+#endif
+#endif
+
+TidyTarget(arjmkmf arjmkmf_install ipcclean shutdown_manager shutdown_ping typetokey manager_mode unlock_shmem uidToLocation dump_clist)

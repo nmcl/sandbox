@@ -1,0 +1,42 @@
+#!/bin/sh
+
+#
+# Copyright (C) 1993
+#
+# Department of Computing Science,
+# The University,
+# Newcastle upon Tyne,
+# UK.
+#
+# $Id: ipcclean_linux,v 1.1 1993/11/03 15:07:51 nmcl Exp $
+#
+
+TMPFILE=/tmp/ipcclean.$$
+
+ipcs -s | awk '{ print $1 }' > $TMPFILE
+cat $TMPFILE | while read id
+do
+	if test $id != ------ >& /dev/null
+	then
+		if test $id != semid
+		then
+			echo "Removing semaphore : $id"
+			ipcrm sem $id
+		fi
+	fi
+done
+rm -f $TMPFILE
+
+ipcs -m | awk '{ print $1 }' > $TMPFILE
+cat $TMPFILE | while read id
+do
+	if test $id != ------ >& /dev/null
+	then
+		if test $id != shmid
+		then
+			echo "Removing memory : $id"
+			ipcrm shm $id
+		fi
+	fi
+done
+rm -f $TMPFILE

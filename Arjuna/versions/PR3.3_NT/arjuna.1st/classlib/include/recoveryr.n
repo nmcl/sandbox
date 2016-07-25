@@ -1,0 +1,36 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: RecoveryR.n,v 1.1 1993/11/16 09:33:26 ngdp Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(RECOVERYR_CC_)
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF StateManager * const RecoveryRecord::getObjectAddr () const
+{
+    return objectAddr;
+}
+
+INLINEF ObjectState * const RecoveryRecord::getState () const
+{
+    return state;
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif
