@@ -1,0 +1,3 @@
+#!/bin/sh
+
+remsh $1 /home/nmcl/Install/RegistrationInstall/bin/local/Unlocker $2
