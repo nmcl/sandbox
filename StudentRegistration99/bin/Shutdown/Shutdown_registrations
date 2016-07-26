@@ -1,0 +1,9 @@
+#!/bin/sh
+
+for i in tarry-f
+do
+    echo
+    echo "---- "$i" ----"
+    echo "Killing Registrations on $i"
+    remsh $i /home/nmcl/Install/RegistrationInstall/bin/local/Signal_registration
+done

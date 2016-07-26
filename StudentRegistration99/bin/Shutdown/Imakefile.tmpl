@@ -1,0 +1,22 @@
+COMMENT
+COMMENT Copyright (C) 1994,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile.tmpl,v 1.1 1996/09/02 09:24:55 arjuna Exp $
+COMMENT
+
+CreateInstallAbsoluteDirectory(INSTALL/bin/Shutdown)
+
+InstallAbsoluteProgram(INSTALL/bin/Shutdown,NodeShutdown)
+InstallAbsoluteProgram(INSTALL/bin/Shutdown,ObjStoreResourcesRemove)
+InstallAbsoluteProgram(INSTALL/bin/Shutdown,ObjStoreShutdown)
+InstallAbsoluteProgram(INSTALL/bin/Shutdown,Shutdown_drivers)
+InstallAbsoluteProgram(INSTALL/bin/Shutdown,Shutdown_registrations)
+InstallAbsoluteProgram(INSTALL/bin/Shutdown,WorkResourcesRemove)
+InstallAbsoluteProgram(INSTALL/bin/Shutdown,WorkShutdown)
+
+TidyTarget(Imakefile NodeShutdown ObjStoreResourcesRemove ObjStoreShutdown Shutdown_drivers Shutdown_registrations WorkResourcesRemove WorkShutdown)

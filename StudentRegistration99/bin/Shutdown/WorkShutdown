@@ -1,0 +1,11 @@
+#!/bin/sh
+
+for i in tarry-f
+do
+    echo "---- "$i" ----"
+    echo "-- Stopping manager --"
+    remsh $i -n /home/nmcl/Install/ArjunaInstall/bin/shutdown_manager
+    sleep 2
+    echo "-- Stopping pingdaemon --"
+    remsh $i -n /home/nmcl/Install/ArjunaInstall/bin/shutdown_ping
+done

@@ -1,0 +1,11 @@
+#!/bin/sh
+
+for i in DRIVERS
+do
+    echo "---- "$i" ----"
+    echo "-- Stopping manager --"
+    remsh $i -n ARJUNA/bin/shutdown_manager
+    sleep 2
+    echo "-- Stopping pingdaemon --"
+    remsh $i -n ARJUNA/bin/shutdown_ping
+done

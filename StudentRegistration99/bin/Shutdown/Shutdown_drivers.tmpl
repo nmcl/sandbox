@@ -1,0 +1,10 @@
+#!/bin/sh
+
+for i in DRIVERS
+do
+    echo
+    echo "---- "$i" ----"
+    echo "Killing Driver on $i"
+    remsh $i LOCATION/bin/local/Signal_driver -USR1
+    remsh $i LOCATION/bin/local/Signal_driver -USR1
+done

@@ -1,0 +1,14 @@
+#!/bin/sh
+
+for i in DRIVERS
+do
+    echo "---- "$i" ----"
+    echo "-- Starting manager --"
+    remsh $i -n "sh -c \"ARJUNA/etc/manager -d 1>&- 2>&- &\""
+    sleep 2
+    echo "-- Starting pingdaemon --"
+    remsh $i -n "sh -c \"ARJUNA/etc/pingdaemon -d 1>&- 2>&- &\""
+    sleep 2
+    echo "-- Starting Driver --"
+    remsh $i -n "sh -c \"ARJUNA/bin/Driver -v -log /tmp/Driver_output_$$ 1>&- 2>&- &\""
+done

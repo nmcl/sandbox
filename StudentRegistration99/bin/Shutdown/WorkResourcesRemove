@@ -1,0 +1,7 @@
+#!/bin/sh
+
+for i in tarry-f
+do
+    echo "---- "$i" ----"
+    remsh $i -n /home/nmcl/Install/ArjunaInstall/bin/ipcclean
+done

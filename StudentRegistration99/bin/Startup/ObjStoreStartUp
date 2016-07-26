@@ -1,0 +1,14 @@
+#!/bin/sh
+
+for i in tarry-f
+do
+    echo "---- "$i" ----"
+    echo "-- Starting manager --"
+    remsh $i -n "sh -c \"/home/nmcl/Install/ArjunaInstall/etc/manager -d 1>&- 2>&- &\""
+    sleep 2
+    echo "-- Starting pingdaemon --"
+    remsh $i -n "sh -c \"/home/nmcl/Install/ArjunaInstall/etc/pingdaemon -d 1>&- 2>&- &\""
+    sleep 2
+    echo "-- Starting RPObjStore --"
+    remsh $i -n /home/nmcl/Install/ArjunaInstall/etc/BootRPObjStore
+done

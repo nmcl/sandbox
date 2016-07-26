@@ -1,0 +1,18 @@
+COMMENT
+COMMENT Copyright (C) 1994,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile.tmpl,v 1.2 1996/09/02 13:11:27 arjuna Exp $
+COMMENT
+
+CreateInstallAbsoluteDirectory(/home/nmcl/Install/RegistrationInstall/bin/Startup)
+
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin/Startup,NodeStartUp)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin/Startup,ObjStoreStartUp)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin/Startup,WorkStartUp)
+
+TidyTarget(Imakefile NodeStartUp ObjStoreStartUp WorkStartUp)

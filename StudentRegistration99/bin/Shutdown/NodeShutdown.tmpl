@@ -1,0 +1,7 @@
+#!/bin/sh
+
+echo "-- Stopping manager --"
+remsh $1 -n ARJUNA/bin/shutdown_manager
+sleep 2
+echo "-- Stopping pingdaemon --"
+remsh $1 -n ARJUNA/bin/shutdown_ping

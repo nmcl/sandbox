@@ -1,0 +1,14 @@
+#!/bin/sh
+
+for i in OBJSTORES
+do
+    echo "---- "$i" ----"
+    echo "-- Starting manager --"
+    remsh $i -n "sh -c \"ARJUNA/etc/manager -d 1>&- 2>&- &\""
+    sleep 2
+    echo "-- Starting pingdaemon --"
+    remsh $i -n "sh -c \"ARJUNA/etc/pingdaemon -d 1>&- 2>&- &\""
+    sleep 2
+    echo "-- Starting RPObjStore --"
+    remsh $i -n ARJUNA/etc/BootRPObjStore
+done

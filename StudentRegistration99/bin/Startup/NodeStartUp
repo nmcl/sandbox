@@ -1,0 +1,10 @@
+#!/bin/sh
+
+echo "-- Starting manager --"
+remsh $1 -n "sh -c \"/home/nmcl/Install/ArjunaInstall/etc/manager -d 1>&- 2>&- &\""
+sleep 2
+echo "-- Starting pingdaemon --"
+remsh $1 -n "sh -c \"/home/nmcl/Install/ArjunaInstall/etc/pingdaemon -d 1>&- 2>&- &\""
+sleep 2
+echo "-- Starting RPObjStore --"
+remsh $1 -n /home/nmcl/Install/ArjunaInstall/etc/BootRPObjStore
