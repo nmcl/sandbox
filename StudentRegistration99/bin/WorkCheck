@@ -1,0 +1,14 @@
+#!/bin/sh
+
+for i in tarry-f
+do
+    echo "==== "$i" ===="
+    echo "---- Logs ----"
+    remsh $i -n ls -l /tmp | grep snowman
+
+    echo "---- Processes ----"
+    remsh $i -n ps -lu snowman
+
+    echo "---- Resources ----"
+    remsh $i -n ipcs | grep snowman
+done

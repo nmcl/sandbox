@@ -1,0 +1,14 @@
+#!/bin/sh
+
+for i in DRIVERS
+do
+    echo "==== "$i" ===="
+    echo "---- Logs ----"
+    remsh $i -n ls -l /tmp | grep USER
+
+    echo "---- Processes ----"
+    remsh $i -n ps -lu USER
+
+    echo "---- Resources ----"
+    remsh $i -n ipcs | grep USER
+done

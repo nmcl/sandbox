@@ -1,0 +1,31 @@
+#!/bin/sh
+
+for i in DRIVERS
+do
+    (
+        echo "-- Removing All on "$i" --"
+        remsh $i -n rm -rf LOCATION/\*
+        echo "-- Removed All on "$i" --"
+    ) &
+done
+wait
+
+for i in DRIVERS
+do
+    (
+        echo "-- Installing Arjuna on "$i" --"
+        remsh $i -n tar xpf ArjunaInstall.tar
+        echo "-- Installed Arjuna on "$i" --"
+    ) &
+done
+wait
+
+for i in DRIVERS
+do
+    (
+        echo "-- Installing Registration files on "$i" --"
+        remsh $i -n tar xpf RegistrationInstall.tar
+        echo "-- Installed Registration files on "$i" --"
+    ) &
+done
+wait
