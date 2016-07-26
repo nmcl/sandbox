@@ -1,0 +1,15 @@
+#ifdef HAVE_IMPORT
+#  import "CosPersistencePDS.idl"
+#else
+#  include "CosPersistencePDS.idl"
+#endif
+
+interface PDSFactory
+{
+    exception CreateFailure {};
+
+    CosPersistencePDS::PDS create_from_string (in string key) raises (CreateFailure);
+    CosPersistencePDS::PDS create_from_PID (in CosPersistencePID::PID p) raises (CreateFailure);
+
+    CosPersistencePDS::PDS create_from_pidstring (in string pidstring) raises (CreateFailure);    
+};

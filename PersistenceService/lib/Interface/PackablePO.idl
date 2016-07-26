@@ -1,0 +1,15 @@
+#ifdef HAVE_IMPORT
+#  import "CosPersistencePO.idl"
+#  import "ObjectBuffer.idl"
+#else
+#  include "CosPersistencePO.idl"
+#  include "ObjectBuffer.idl"
+#endif
+
+interface PackablePO : CosPersistencePO::PO
+{
+    readonly attribute string type;
+    
+    void unpackState (in ObjectBuffer os) raises (ObjectBuffer::UnpackError);
+    void packState   (in ObjectBuffer os) raises (ObjectBuffer::PackError);
+};

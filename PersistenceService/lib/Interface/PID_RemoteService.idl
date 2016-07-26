@@ -1,0 +1,11 @@
+#ifdef HAVE_IMPORT
+#  import "CosPersistencePID.idl"
+#else
+#  include "CosPersistencePID.idl"
+#endif
+
+interface PID_RemoteService : CosPersistencePID::PID
+{
+    attribute string hostName;
+    attribute string pidString;
+};
