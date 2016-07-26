@@ -1,0 +1,2 @@
+Move default definitions into OrbPortability, which harnesses simply override.
+Various routines in Common for PersistenceService should be in the Portability library, e.g., the OrbInterface.

@@ -1,0 +1,47 @@
+COMMENT
+COMMENT Copyright (C) 1994, 1995, 1996
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.4 1996/02/02 14:46:41 nmcl Exp $
+COMMENT
+
+SOURCES = Uid.cc \
+	  Semaphore.cc \
+	  Utility.cc \
+	  ProcessMutex.cc \
+	  SharedSeg.cc \
+	  Buffer.cc \
+	  ObjState.cc \
+	  PointerMap.cc \
+	  Kubera.cc \
+	  ORBInterface.cc
+
+OBJECTS = Uid.o \
+	  Semaphore.o \
+	  Utility.o \
+	  ProcessMutex.o \
+	  SharedSeg.o \
+	  Buffer.o \
+	  ObjState.o \
+	  PointerMap.o \
+	  Kubera.o \
+	  ORBInterface.o
+
+Target($(OBJECTS))
+
+BuildObject(Uid,NullParam,NullParam)
+BuildObject(Semaphore,NullParam,NullParam)
+BuildObject(Utility,NullParam,NullParam)
+BuildObject(ProcessMutex,NullParam,NullParam)
+BuildObject(SharedSeg,NullParam,NullParam)
+BuildObject(Buffer,NullParam,NullParam)
+BuildObject(ObjState,NullParam,NullParam)
+BuildObject(PointerMap,NullParam,NullParam)
+BuildObject(Kubera,NullParam,NullParam)
+BuildObject(ORBInterface,NullParam,NullParam)
+
+AddDependences($(SOURCES),NullParam)

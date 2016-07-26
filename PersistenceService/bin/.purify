@@ -1,0 +1,2 @@
+suppress umr static Uid::hostInetAddr(void)
+suppress mlk malloc; __0OnWuI
