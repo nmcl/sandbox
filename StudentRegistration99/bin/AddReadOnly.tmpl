@@ -1,0 +1,7 @@
+#!/bin/sh
+
+for i in DRIVERS
+do
+    echo "Adding to "$i
+    remsh $i -n touch LOCATION/ReadOnly
+done

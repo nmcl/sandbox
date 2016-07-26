@@ -1,0 +1,7 @@
+#!/bin/sh
+
+for i in tarry-f
+do
+    echo "Adding to "$i
+    remsh $i -n touch /home/nmcl/Install/isDumping
+done

@@ -1,0 +1,107 @@
+#!/usr/bin/ksh
+
+# 
+# $id$
+#
+
+typeset -r DESTFILE=Stud.info
+typeset -r REDUCESTUD=ARJUNA/bin/ReduceStud
+
+if [ "$#" != "1" ] || [ ! -r "$1" ]
+then
+        echo ""
+        echo "Error: Incorrect parameter."
+        echo "Unable to open the source file due to:"
+        echo "\t1. You have fail to supply a filename parameter, or"
+        echo "\t2. You have miss spelt the filename given."
+        echo ""
+        echo "Program finishes."
+        echo ""
+        exit 1
+fi
+
+typeset -r SRCFILE=$1
+
+showTime(){
+typeset -r TIME=`date | cut -c12-19`
+typeset -r DATE=`date | cut -c5-10`
+
+echo "The time now is ${TIME} on ${DATE}."
+
+return
+} # End the definition of the showTime function.
+
+Ask(){
+	
+	GetResult()
+	{ 
+		read theResult
+		return
+	} # End the definition of the GetResult function.
+	
+	AskQuestion()
+	{
+		typeset -r theQuestion="$1"
+	
+		echo "${theQuestion} (Y/N)"
+	
+		return
+	} # End the definition of the AskQuestion function.
+	
+	
+	if [ "$#" != "1" ]
+	then
+		echo "Program has passed an incorrect number of args to $0."
+		echo ""
+		echo "Program finishes."
+		echo ""
+		exit 1
+	fi
+	
+	typeset -r QUESTION="$1"
+	
+	while [ "${theResult}" != Y ] && [ "${theResult}" != N ];
+	do AskQuestion "${QUESTION}" ; GetResult ; done
+	
+	return
+} #End the definition of the Ask function.
+
+echo ""
+
+showTime
+
+if [ -a "${DESTFILE}" ]
+then
+	typeset -xu theResult
+
+	echo "WARNING: The destination file already exists."
+	echo ""
+	Ask "Do you wish to over write this file?"
+	case ${theResult} in
+	N)	echo "Please delete/rename this file before re-running this program."
+		echo ""
+		echo "Program finishes."
+		echo ""
+		exit 0
+		;;
+	Y)	echo "Deleting the file."
+		rm -f ${DESTFILE}
+		;;
+	esac
+fi
+
+echo ""
+/usr/ucb/echo -n "Reducing the data now..."
+
+${REDUCESTUD} <${SRCFILE} >${DESTFILE}
+chmod 0660 ${DESTFILE}
+
+echo "done."
+
+echo ""
+showTime
+echo ""
+echo "Program finishes."
+echo ""
+
+exit 0
