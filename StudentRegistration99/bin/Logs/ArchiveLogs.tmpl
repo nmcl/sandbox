@@ -1,0 +1,10 @@
+#!/bin/sh
+
+for i in DRIVERS OBJSTORES
+do
+    echo "---- "$i" ----"
+    remsh $i -n cp /tmp/NewStudentRecordNumber_* /tmp/RPObjStore* ARCHIVE
+    remsh $i -n cp LOCATION/Logs/Registration* ARCHIVE
+    remsh $i -n find /tmp -name Driver_\* -exec cp {} ARCHIVE \,
+    remsh $i -n find /tmp -name RecordServer_\* -exec cp {} ARCHIVE \,
+done
