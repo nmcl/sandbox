@@ -1,0 +1,29 @@
+COMMENT 
+COMMENT Copyright (C) 1996,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1996/02/12 13:09:48 nmcl Exp $
+COMMENT
+
+CreateInstallDirectory(/include,/include/Common)
+
+InstallFile(/include/Common,Buffer.h)
+InstallFile(/include/Common,Buffer.n)
+InstallFile(/include/Common,CommonT.h)
+InstallFile(/include/Common,Exceptions.h)
+InstallFile(/include/Common,ObjState.h)
+InstallFile(/include/Common,ObjState.n)
+InstallFile(/include/Common,ORBInterface.h)
+InstallFile(/include/Common,PointerMap.h)
+InstallFile(/include/Common,ProcessMutex.h)
+InstallFile(/include/Common,Semaphore.h)
+InstallFile(/include/Common,SharedSeg.h)
+InstallFile(/include/Common,SharedSeg.n)
+InstallFile(/include/Common,Uid.h)
+InstallFile(/include/Common,Uid.n)
+InstallFile(/include/Common,Utility.h)
+InstallFile(/include/Common,CosPersisNames.h)
