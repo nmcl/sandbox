@@ -1,0 +1,14 @@
+#!/bin/sh
+
+if test -r /tmp/running
+then
+	echo "System already running" >$1
+else
+	Startup/OFF
+	Startup/ObjStoreStartup
+	Startup/WorkStartup
+
+	touch /tmp/running
+
+	echo "System started" >$1
+fi

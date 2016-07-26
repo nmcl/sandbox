@@ -1,0 +1,32 @@
+COMMENT
+COMMENT Copyright (C) 1994,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile.tmpl,v 1.8 1996/12/06 11:43:30 snowman Exp $
+COMMENT
+
+#define IHaveSubDirs
+SetSubDirectorys(src tests DIR)
+
+CreateInstallAbsoluteDirectory(INSTALL)
+CreateInstallAbsoluteDirectory(INSTALL/Logs)
+CreateInstallAbsoluteDirectory(INSTALL/bin)
+CreateInstallAbsoluteDirectory(INSTALL/configurations)
+CreateInstallAbsoluteDirectory(INSTALL/datafiles)
+CreateInstallAbsoluteDirectory(INSTALL/mapfiles)
+CreateInstallAbsoluteDirectory(INSTALL/resource)
+CreateInstallAbsoluteDirectory(INSTALL/resource/find_tmp)
+CreateInstallAbsoluteDirectory(INSTALL/resource/user_dir)
+InstallAbsoluteProgram(INSTALL,Version.info)
+InstallAbsoluteProgram(INSTALL,Makefile.gen)
+InstallAbsoluteProgram(INSTALL/configurations,ObjectStore)
+InstallAbsoluteProgram(INSTALL/configurations,Index)
+InstallAbsoluteProgram(INSTALL/configurations,Server)
+
+Version.info: INSTALL/Logs INSTALL/configurations INSTALL/datafiles INSTALL/mapfiles INSTALL/resource INSTALL/resource/find_tmp INSTALL/resource/user_dir INSTALL/bin
+
+TidyTarget(MakefileBoot Makefile.gen Imakefile ObjectStore Index Server)

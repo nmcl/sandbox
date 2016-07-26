@@ -1,0 +1,20 @@
+COMMENT
+COMMENT Copyright (C) 1994,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile.tmpl,v 1.4 1996/09/02 13:11:29 arjuna Exp $
+COMMENT
+
+CreateInstallAbsoluteDirectory(INSTALL/webscripts/local)
+
+InstallAbsoluteProgram(INSTALL/webscripts/local,Finder_student)
+InstallAbsoluteProgram(INSTALL/webscripts/local,Finder_user)
+InstallAbsoluteProgram(INSTALL/webscripts/local,Signal_driver)
+InstallAbsoluteProgram(INSTALL/webscripts/local,UserChecker)
+InstallAbsoluteProgram(INSTALL/webscripts/local,Unlocker)
+
+TidyTarget(Imakefile Finder_student Finder_user UserChecker Signal_driver)

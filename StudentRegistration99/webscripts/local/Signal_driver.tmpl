@@ -1,0 +1,13 @@
+#!/bin/sh
+
+ps -u USER | grep Driver > foo
+PID=`awk '{print $1}' foo`
+
+if test -n "$PID"
+then	
+	echo "**Sending $1 to $PID"
+	kill $1 $PID
+fi
+
+rm foo
+

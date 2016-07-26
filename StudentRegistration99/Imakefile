@@ -1,0 +1,32 @@
+COMMENT
+COMMENT Copyright (C) 1994,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile.tmpl,v 1.8 1996/12/06 11:43:30 snowman Exp $
+COMMENT
+
+#define IHaveSubDirs
+SetSubDirectorys(src tests bin)
+
+CreateInstallAbsoluteDirectory(/home/nmcl/Install/RegistrationInstall)
+CreateInstallAbsoluteDirectory(/home/nmcl/Install/RegistrationInstall/Logs)
+CreateInstallAbsoluteDirectory(/home/nmcl/Install/RegistrationInstall/bin)
+CreateInstallAbsoluteDirectory(/home/nmcl/Install/RegistrationInstall/configurations)
+CreateInstallAbsoluteDirectory(/home/nmcl/Install/RegistrationInstall/datafiles)
+CreateInstallAbsoluteDirectory(/home/nmcl/Install/RegistrationInstall/mapfiles)
+CreateInstallAbsoluteDirectory(/home/nmcl/Install/RegistrationInstall/resource)
+CreateInstallAbsoluteDirectory(/home/nmcl/Install/RegistrationInstall/resource/find_tmp)
+CreateInstallAbsoluteDirectory(/home/nmcl/Install/RegistrationInstall/resource/user_dir)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall,Version.info)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall,Makefile.gen)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/configurations,ObjectStore)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/configurations,Index)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/configurations,Server)
+
+Version.info: /home/nmcl/Install/RegistrationInstall/Logs /home/nmcl/Install/RegistrationInstall/configurations /home/nmcl/Install/RegistrationInstall/datafiles /home/nmcl/Install/RegistrationInstall/mapfiles /home/nmcl/Install/RegistrationInstall/resource /home/nmcl/Install/RegistrationInstall/resource/find_tmp /home/nmcl/Install/RegistrationInstall/resource/user_dir /home/nmcl/Install/RegistrationInstall/bin
+
+TidyTarget(MakefileBoot Makefile.gen Imakefile ObjectStore Index Server)

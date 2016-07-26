@@ -1,0 +1,8 @@
+#!/bin/sh
+
+PurgeLogs/ObjStoreLogsRemove
+PurgeLogs/WorkLogsRemove
+PurgeLogs/RecordServerLogsRemove
+PurgeLogs/NewStudentRecordNumberServerLogsRemove
+PurgeLogs/RegistrationLogsRemove
+PurgeLogs/WorkOperLogsRemove

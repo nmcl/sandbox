@@ -1,0 +1,3 @@
+#!/bin/sh
+
+cat /home/nmcl/Install/RegistrationInstall/Logs/Registration_* | grep $1

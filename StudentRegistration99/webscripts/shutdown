@@ -1,0 +1,18 @@
+#!/bin/sh
+
+if test -r /tmp/running
+then
+	Shutdown/ON
+	Shutdown/Shutdown_drivers
+	Shutdown/Shutdown_registrations
+	Shutdown/ObjStoreShutdown
+	Shutdown/WorkShutdown
+	Shutdown/ObjStoreResourcesRemove
+	Shutdown/WorkResourcesRemove
+
+	rm /tmp/running
+
+	echo "System is shutdown" >$1
+else
+	echo "System is not running" >$1
+fi

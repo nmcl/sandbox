@@ -1,0 +1,24 @@
+#!/bin/sh
+
+HOST=`hostname`
+
+ps -u USER | grep Registra > foo
+PIDS=`awk '{print $1}' foo`
+
+rm foo
+
+for i in $PIDS
+do
+	grep $i LOCATION/Logs/Registration_* | grep started >> users
+done
+
+echo "Host $HOST"
+if test -r users
+then
+	grep $1 users
+	rm users
+fi
+
+
+
+
