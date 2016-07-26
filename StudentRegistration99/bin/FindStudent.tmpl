@@ -1,0 +1,9 @@
+#!/bin/sh
+
+for i in DRIVERS
+do
+    echo
+    echo "---- "$i" ----"
+    echo "searching for $1"
+    remsh $i LOCATION/bin/local/Finder_student $1
+done

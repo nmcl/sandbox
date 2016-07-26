@@ -1,0 +1,6 @@
+#!/bin/sh
+
+for i in tarry-f
+do
+    remsh $i /home/nmcl/Install/RegistrationInstall/bin/local/Finder_user $1
+done

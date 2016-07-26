@@ -1,0 +1,9 @@
+#!/bin/sh
+
+for i in DRIVERS
+do
+    echo
+    echo "---- "$i" ----"
+    echo "Checking host tcp/ip connections $i"
+    remsh $i netstat | grep ".PORT "
+done

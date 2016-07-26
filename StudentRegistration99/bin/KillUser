@@ -1,0 +1,3 @@
+#!/bin/sh
+
+remsh $1 kill -USR1 $2

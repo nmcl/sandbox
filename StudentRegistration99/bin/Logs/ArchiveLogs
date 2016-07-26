@@ -1,0 +1,10 @@
+#!/bin/sh
+
+for i in tarry-f tarry-f
+do
+    echo "---- "$i" ----"
+    remsh $i -n cp /tmp/NewStudentRecordNumber_* /tmp/RPObjStore* /tmp
+    remsh $i -n cp /home/nmcl/Install/RegistrationInstall/Logs/Registration* /tmp
+    remsh $i -n find /tmp -name Driver_\* -exec cp {} /tmp \,
+    remsh $i -n find /tmp -name RecordServer_\* -exec cp {} /tmp \,
+done

@@ -1,0 +1,7 @@
+#!/bin/sh
+
+for i in tarry-f tarry-f
+do
+    echo "---- "$i" ----"
+    remsh $i -n rm -f /tmp/core
+done

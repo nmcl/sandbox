@@ -1,0 +1,9 @@
+#!/bin/sh
+
+for i in tarry-f
+do
+    echo
+    echo "---- "$i" ----"
+    echo "Checking host tcp/ip connections $i"
+    remsh $i netstat | grep ".5500 "
+done

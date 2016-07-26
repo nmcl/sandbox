@@ -1,0 +1,49 @@
+COMMENT
+COMMENT Copyright (C) 1994,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile.tmpl,v 1.7 1996/12/06 11:43:33 snowman Exp $
+COMMENT
+
+#define IHaveSubDirs
+SetSubDirectorys(Logs PurgeLogs Shutdown Startup local)
+
+CreateInstallAbsoluteDirectory(/home/nmcl/Install/RegistrationInstall/bin)
+
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin,BuildData)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin,cleanup)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin,purgeLogs)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin,shutdown)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin,startup)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin,ON)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin,OFF)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin,AddDumping)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin,AddReadOnly)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin,RemoveReadOnly)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin,CListCheck)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin,CoreRemove)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin,FindStudent)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin,FindUser)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin,Hosts)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin,KillUser)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin,NodeCheck)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin,ObjStoreCheck)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin,ObjStoreInstall)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin,ObjStoreLoadCheck)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin,ObjStoreProcessCheck)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin,ObjStoreResourcesCheck)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin,Pause_drivers)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin,RemoveDumping)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin,UnlockStudent)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin,Users)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin,WorkCheck)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin,WorkInstall)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin,WorkLoadCheck)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin,WorkProcessCheck)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin,WorkResourcesCheck)
+
+TidyTarget(Imakefile AddDumping CoreRemove CListCheck FindStudent FindUser ObjStoreLoadCheck ObjStoreProcessCheck ObjStoreResourcesCheck Pause_drivers RemoveDumping UnlockStudent Users WorkLoadCheck WorkProcessCheck WorkResourcesCheck NodeCheck WorkInstall ObjStoreInstall Hosts ObjStoreCheck WorkCheck AddReadOnly RemoveReadOnly)

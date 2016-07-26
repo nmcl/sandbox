@@ -1,0 +1,49 @@
+COMMENT
+COMMENT Copyright (C) 1994,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile.tmpl,v 1.7 1996/12/06 11:43:33 snowman Exp $
+COMMENT
+
+#define IHaveSubDirs
+SetSubDirectorys(Logs PurgeLogs Shutdown Startup local)
+
+CreateInstallAbsoluteDirectory(INSTALL/bin)
+
+InstallAbsoluteProgram(INSTALL/bin,BuildData)
+InstallAbsoluteProgram(INSTALL/bin,cleanup)
+InstallAbsoluteProgram(INSTALL/bin,purgeLogs)
+InstallAbsoluteProgram(INSTALL/bin,shutdown)
+InstallAbsoluteProgram(INSTALL/bin,startup)
+InstallAbsoluteProgram(INSTALL/bin,ON)
+InstallAbsoluteProgram(INSTALL/bin,OFF)
+InstallAbsoluteProgram(INSTALL/bin,AddDumping)
+InstallAbsoluteProgram(INSTALL/bin,AddReadOnly)
+InstallAbsoluteProgram(INSTALL/bin,RemoveReadOnly)
+InstallAbsoluteProgram(INSTALL/bin,CListCheck)
+InstallAbsoluteProgram(INSTALL/bin,CoreRemove)
+InstallAbsoluteProgram(INSTALL/bin,FindStudent)
+InstallAbsoluteProgram(INSTALL/bin,FindUser)
+InstallAbsoluteProgram(INSTALL/bin,Hosts)
+InstallAbsoluteProgram(INSTALL/bin,KillUser)
+InstallAbsoluteProgram(INSTALL/bin,NodeCheck)
+InstallAbsoluteProgram(INSTALL/bin,ObjStoreCheck)
+InstallAbsoluteProgram(INSTALL/bin,ObjStoreInstall)
+InstallAbsoluteProgram(INSTALL/bin,ObjStoreLoadCheck)
+InstallAbsoluteProgram(INSTALL/bin,ObjStoreProcessCheck)
+InstallAbsoluteProgram(INSTALL/bin,ObjStoreResourcesCheck)
+InstallAbsoluteProgram(INSTALL/bin,Pause_drivers)
+InstallAbsoluteProgram(INSTALL/bin,RemoveDumping)
+InstallAbsoluteProgram(INSTALL/bin,UnlockStudent)
+InstallAbsoluteProgram(INSTALL/bin,Users)
+InstallAbsoluteProgram(INSTALL/bin,WorkCheck)
+InstallAbsoluteProgram(INSTALL/bin,WorkInstall)
+InstallAbsoluteProgram(INSTALL/bin,WorkLoadCheck)
+InstallAbsoluteProgram(INSTALL/bin,WorkProcessCheck)
+InstallAbsoluteProgram(INSTALL/bin,WorkResourcesCheck)
+
+TidyTarget(Imakefile AddDumping CoreRemove CListCheck FindStudent FindUser ObjStoreLoadCheck ObjStoreProcessCheck ObjStoreResourcesCheck Pause_drivers RemoveDumping UnlockStudent Users WorkLoadCheck WorkProcessCheck WorkResourcesCheck NodeCheck WorkInstall ObjStoreInstall Hosts ObjStoreCheck WorkCheck AddReadOnly RemoveReadOnly)
