@@ -1,0 +1,21 @@
+/*
+ * Copyright (C) 1994, 1995, 1996,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id$
+ */
+
+module CosPersistencePID
+{
+    interface PID
+	{
+	    attribute string datastore_type;
+    
+	    string get_PIDString ();
+	};
+};
+
