@@ -1,0 +1,36 @@
+/*
+ * Copyright (C) 1994, 1995, 1996,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id$
+ */
+
+#ifdef HAVE_IMPORT
+#  import "CosPersistencePDS.idl"
+#else
+#  include "CosPersistencePDS.idl"
+#endif
+
+module CosPersistencePO
+{
+    interface PO
+	{
+	    attribute CosPersistencePID::PID p;
+
+	    CosPersistencePDS::PDS connect (in CosPersistencePID::PID p);
+	    void disconnect (in CosPersistencePID::PID p);
+	    void store (in CosPersistencePID::PID p);
+	    void restore (in CosPersistencePID::PID p);
+	    void deleteState (in CosPersistencePID::PID p);
+	};
+
+    interface SD
+	{
+	    void pre_store ();
+	    void post_restore ();
+	};
+};
