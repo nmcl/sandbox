@@ -1,0 +1,81 @@
+COMMENT
+COMMENT Copyright (C) 1994,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.4 1996/08/16 11:42:47 arjuna Exp $
+COMMENT
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES) -I../include -I. -DDEBUG)
+
+LIBRARIES = $(LIBARJSERVERS) $(LIBARJUNA) $(LIBRPC) $(LIBCOMMON) $(LIBREPLICATION) $(LIBCOMMON) $(LIBARJSERVERS)
+
+STUBS = StudentRecord_stub.h \
+	StudentRecord_stubclass.h \
+	SOutCome_stub.h \
+	NewStudentRecordNumber_stub.h \
+	NewStudentRecordNumber_stubclass.h \
+	StudentRecord_client.cc \
+	StudentRecord_server.cc \
+	StudentRecord_servermain.cc \
+	SOutCome_marshall.cc \
+	NewStudentRecordNumber_client.cc \
+	NewStudentRecordNumber_server.cc \
+	NewStudentRecordNumber_servermain.cc
+
+SOURCES = StudentRecord.cc \
+	  $(STUBS) \
+	  NewStudentRecordNumber.cc
+
+#ifdef GCC_LINK_BUG
+OBJECTS1 = StudentRecord_server.o \
+	   StudentRecord_servermain.o \
+	   StudentRecord.o \
+	   StudentRecord_client.o \
+	   SOutCome_marshall.o
+#else
+OBJECTS1 = StudentRecord_server.o \
+	   StudentRecord_servermain.o \
+	   StudentRecord.o \
+	   SOutCome_marshall.o
+#endif
+
+#ifdef GCC_LINK_BUG
+OBJECTS2 = NewStudentRecordNumber_server.o \
+	   NewStudentRecordNumber_servermain.o \
+	   NewStudentRecordNumber.o \
+	   NewStudentRecordNumber_client.o \
+	   SOutCome_marshall.o
+#else
+OBJECTS2 = NewStudentRecordNumber_server.o \
+	   NewStudentRecordNumber_servermain.o \
+	   NewStudentRecordNumber.o \
+	   SOutCome_marshall.o
+#endif
+
+OBJECTS = $(OBJECTS1) $(OBJECTS2) \
+	  StudentRecord_client.o \
+	  NewStudentRecordNumber_client.o
+
+AllTarget(RecordServer StudentRecord_client.o NewStudentRecordNumberServer NewStudentRecordNumber_client.o)
+
+StubTarget($(STUBS))
+
+CreateInstallTopDirectory(servers)
+InstallProgram(servers,RecordServer)
+InstallProgram(servers,NewStudentRecordNumberServer)
+
+MakeProgramCPLUSPLUS(RecordServer,$(OBJECTS1) $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(NewStudentRecordNumberServer,$(OBJECTS2) $(LIBRARIES),NOPARAM)
+
+MakeObjectCPLUSPLUS(StudentRecord,NOPARAM)
+MakeObjectCPLUSPLUS(NewStudentRecordNumber,NOPARAM)
+
+MakeStubGen(StudentRecord,StudentRecord,RecordServer,NOPARAM)
+MakeStubGen(NewStudentRecordNumber,NewStudentRecordNumber,NewStudentRecordNumberServer,NOPARAM)
+MakeStubGen(SOutCome,SOutCome,SOutCome,NOPARAM)
+
+TidyTarget(RecordServer NewStudentRecordNumberServer $(STUBS))

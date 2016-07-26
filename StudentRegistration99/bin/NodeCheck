@@ -1,0 +1,10 @@
+#!/bin/sh
+
+echo "---- Logs ----"
+remsh $1 -n ls -l /tmp | grep snowman
+
+echo "---- Process ----"
+remsh $1 -n ps -lu snowman
+
+echo "---- Resources ----"
+remsh $1 -n ipcs | grep snowman

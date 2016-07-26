@@ -1,0 +1,177 @@
+The current host is tarry-f.ncl.ac.uk.
+Local address is: 128.240.208.102
+
+Open request for student:  988253940
+Total time taken: 2792 milliseconds. Status: OS
+1: Time waited 10
+Close request for student: 988253940
+Total time taken: 50 milliseconds. Status: CS
+Request successful.
+
+Open request for student:  988249666
+Total time taken: 2659 milliseconds. Status: OS
+2: Time waited 10
+Close request for student: 988249666
+Total time taken: 80 milliseconds. Status: CS
+Request successful.
+
+Open request for student:  988252769
+Total time taken: 2796 milliseconds. Status: OS
+3: Time waited 10
+Close request for student: 988252769
+Total time taken: 40 milliseconds. Status: CS
+Request successful.
+
+Open request for student:  988265013
+Total time taken: 2701 milliseconds. Status: OS
+4: Time waited 10
+Save request for student:  988265013
+Total time taken: 8831 milliseconds. Status: SS
+Request successful.
+
+Open request for student:  988248094
+Total time taken: 106942 milliseconds. Status: OS
+5: Time waited 10
+Close request for student: 988248094
+Total time taken: 16512 milliseconds. Status: CS
+Request successful.
+
+Open request for student:  988259322
+Total time taken: 13390 milliseconds. Status: OS
+6: Time waited 10
+Close request for student: 988259322
+Total time taken: 9288 milliseconds. Status: CS
+Request successful.
+
+Open request for student:  988260591
+Total time taken: 13310 milliseconds. Status: OS
+7: Time waited 10
+Close request for student: 988260591
+Total time taken: 10868 milliseconds. Status: CS
+Request successful.
+
+Open request for student:  988252611
+Total time taken: 12202 milliseconds. Status: OS
+8: Time waited 10
+Save request for student:  988252611
+Total time taken: 7973 milliseconds. Status: SS
+Request successful.
+
+Open request for student:  988256697
+Total time taken: 11791 milliseconds. Status: OS
+9: Time waited 10
+Close request for student: 988256697
+Total time taken: 10852 milliseconds. Status: CS
+Request successful.
+
+Open request for student:  988248865
+Total time taken: 7786 milliseconds. Status: OS
+10: Time waited 10
+Close request for student: 988248865
+Total time taken: 2182 milliseconds. Status: CS
+Request successful.
+
+Open request for student:  988253928
+Total time taken: 12089 milliseconds. Status: OS
+11: Time waited 10
+Save request for student:  988253928
+Total time taken: 6516 milliseconds. Status: SS
+Request successful.
+
+Open request for student:  988245325
+Total time taken: 15059 milliseconds. Status: OS
+12: Time waited 10
+Save request for student:  988245325
+Total time taken: 7395 milliseconds. Status: SS
+Request successful.
+
+Open request for student:  988262838
+Total time taken: 13505 milliseconds. Status: OS
+13: Time waited 10
+Close request for student: 988262838
+Total time taken: 12372 milliseconds. Status: CS
+Request successful.
+
+Open request for student:  988248795
+Total time taken: 7038 milliseconds. Status: OS
+14: Time waited 10
+Close request for student: 988248795
+Total time taken: 1307 milliseconds. Status: CS
+Request successful.
+
+Open request for student:  988249334
+Total time taken: 16642 milliseconds. Status: OS
+15: Time waited 10
+Close request for student: 988249334
+Total time taken: 7671 milliseconds. Status: CS
+Request successful.
+
+Open request for student:  988247879
+Total time taken: 15471 milliseconds. Status: OS
+16: Time waited 10
+Close request for student: 988247879
+Total time taken: 10825 milliseconds. Status: CS
+Request successful.
+
+Open request for student:  988247042
+Total time taken: 7388 milliseconds. Status: OS
+17: Time waited 10
+Close request for student: 988247042
+Total time taken: 13356 milliseconds. Status: CS
+Request successful.
+
+Open request for student:  988252552
+Total time taken: 3103 milliseconds. Status: OS
+18: Time waited 10
+Close request for student: 988252552
+Total time taken: 1527 milliseconds. Status: CS
+Request successful.
+
+Open request for student:  988247721
+Total time taken: 15487 milliseconds. Status: OS
+19: Time waited 10
+Save request for student:  988247721
+Total time taken: 7258 milliseconds. Status: SS
+Request successful.
+
+Open request for student:  988252943
+Total time taken: 18357 milliseconds. Status: OS
+20: Time waited 10
+Save request for student:  988252943
+Total time taken: 12832 milliseconds. Status: SS
+Request successful.
+
+Open request for student:  988246218
+Total time taken: 16726 milliseconds. Status: OS
+21: Time waited 10
+Save request for student:  988246218
+Total time taken: 8537 milliseconds. Status: SS
+Request successful.
+
+Open request for student:  988256572
+Total time taken: 10070 milliseconds. Status: OS
+22: Time waited 10
+Close request for student: 988256572
+Total time taken: 4848 milliseconds. Status: CS
+Request successful.
+
+Open request for student:  988264393
+Total time taken: 10700 milliseconds. Status: OS
+23: Time waited 10
+Save request for student:  988264393
+Total time taken: 5755 milliseconds. Status: SS
+Request successful.
+
+Open request for student:  988246470
+Total time taken: 16534 milliseconds. Status: OS
+24: Time waited 10
+Close request for student: 988246470
+Total time taken: 4088 milliseconds. Status: CS
+Request successful.
+
+Open request for student:  988245565
+Total time taken: 9948 milliseconds. Status: OS
+25: Time waited 10
+Save request for student:  988245565
+Total time taken: 9488 milliseconds. Status: SS
+Request successful.

@@ -1,0 +1,166 @@
+COMMENT
+COMMENT Copyright (C) 1994-1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile.tmpl,v 1.2 1996/12/06 11:43:34 snowman Exp $
+COMMENT
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES) -I../include -I../server -DARJUNA)
+#ifdef hpux
+SetLocalLibraries(-ldbm)
+#endif
+#ifdef __LINUX__
+SetLocalLibraries(-lgdbm)
+#endif
+
+LIBRARIES = ../lib/libStudReg.a $(LIBARJSERVERS) $(LIBARJUNA) $(LIBRPC) $(LIBCOMMON) $(LIBREPLICATION) $(LIBCOMMON) $(LIBARJSERVERS)
+
+SOURCES = AddRec.cc \
+	  BatchAdd.cc \
+	  Driver.cc \
+	  GetModified.cc \
+	  MakeMainIndex.cc \
+	  MakeSurnameIndex.cc \
+	  MakeSurnameTab.cc \
+	  Mapper.cc \
+	  ReduceStud.cc \
+	  ReduceSurname.cc \
+	  Registration.cc \
+	  addUser.cc \
+	  decode.cc \
+	  download.cc \
+	  dump.cc \
+	  encode.cc \
+	  listUser.cc \
+	  showRec.cc \
+	  userdb.cc \
+	  DBEdit.cc \
+	  DBList.cc \
+	  CounterSetup.cc \
+	  MapSetup.cc \
+	  NewMapSetup.cc \
+	  RecordExtractor.cc \
+	  RecordInspector.cc \
+	  RecordLoader.cc \
+	  LocalStudentRecord.cc \
+	  LocalNewStudentRecordNumber.cc \
+	  RecordResolver.cc \
+	  StateChecker.cc \
+	  BlankRecords.cc
+	  
+OBJECTS = AddRec.o \
+	  BatchAdd.o \
+	  Driver.o \
+	  GetModified.o \
+	  MakeMainIndex.o \
+	  MakeSurnameIndex.o \
+	  MakeSurnameTab.o \
+	  Mapper.o \
+	  ReduceStud.o \
+	  ReduceSurname.o \
+	  Registration.o \
+	  addUser.o \
+	  decode.o \
+	  download.o \
+	  dump.o \
+	  encode.o \
+	  listUser.o \
+	  showRec.o \
+	  userdb.o \
+	  DBEdit.o \
+	  DBList.o \
+	  CounterSetup.o \
+	  MapSetup.o \
+	  NewMapSetup.o \
+	  RecordExtractor.o \
+	  RecordInspector.o \
+	  RecordLoader.o \
+	  LocalStudentRecord.o \
+	  LocalNewStudentRecordNumber.o \
+	  RecordResolver.o \
+	  StateChecker.o \
+	  BlankRecords.o
+
+AllTarget(Registration Driver DBEdit DBList CounterSetup NewMapSetup RecordExtractor RecordInspector RecordLoader userdb Mapper RecordResolver StateChecker BlankRecords MakeSurnameIndex MakeSurnameTab ReduceStud ReduceSurname)
+
+CreateInstallTopDirectory(bin)
+InstallProgram(bin,Registration)
+InstallProgram(bin,Driver)
+InstallProgram(bin,RecordLoader)
+InstallProgram(bin,RecordExtractor)
+InstallProgram(bin,RecordInspector)
+InstallProgram(bin,userdb)
+InstallProgram(bin,CounterSetup)
+InstallProgram(bin,NewMapSetup)
+InstallProgram(bin,RecordResolver)
+InstallProgram(bin,StateChecker)
+InstallProgram(bin,BlankRecords)
+InstallProgram(bin,MakeSurnameIndex)
+InstallProgram(bin,MakeSurnameTab)
+InstallProgram(bin,ReduceStud)
+InstallProgram(bin,ReduceSurname)
+
+MakeProgramCPLUSPLUS(BlankRecords,BlankRecords.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(StateChecker,StateChecker.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(RecordResolver,RecordResolver.o LocalStudentRecord.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(CounterSetup,CounterSetup.o LocalNewStudentRecordNumber.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(MapSetup,MapSetup.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(NewMapSetup,NewMapSetup.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(RecordExtractor,RecordExtractor.o LocalStudentRecord.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(RecordLoader,RecordLoader.o LocalStudentRecord.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(RecordInspector,RecordInspector.o LocalStudentRecord.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(Mapper,Mapper.o OBJCODE $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(DBEdit,DBEdit.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(DBList,DBList.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(Registration,Registration.o OBJCODE $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(Driver,Driver.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(encode,encode.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(decode,decode.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(userdb,userdb.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(GetModified,GetModified.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(BatchAdd,BatchAdd.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(AddRec,AddRec.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(download,download.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(MakeMainIndex,MakeMainIndex.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(MakeSurnameIndex,MakeSurnameIndex.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(ReduceSurname,ReduceSurname.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(ReduceStud,ReduceStud.o $(LIBRARIES),NOPARAM)
+
+MakeObjectCPLUSPLUS(BlankRecords,NOPARAM)
+MakeObjectCPLUSPLUS(StateChecker,NOPARAM)
+MakeObjectCPLUSPLUS(RecordResolver,NOPARAM)
+MakeObjectCPLUSPLUS(LocalStudentRecord,NOPARAM)
+MakeObjectCPLUSPLUS(LocalNewStudentRecordNumber,NOPARAM)
+MakeObjectCPLUSPLUS(CounterSetup,NOPARAM)
+MakeObjectCPLUSPLUS(MapSetup,NOPARAM)
+MakeObjectCPLUSPLUS(Mapper,NOPARAM)
+MakeObjectCPLUSPLUS(NewMapSetup,NOPARAM)
+MakeObjectCPLUSPLUS(RecordExtractor,NOPARAM)
+MakeObjectCPLUSPLUS(RecordLoader,NOPARAM)
+MakeObjectCPLUSPLUS(RecordInspector,NOPARAM)
+MakeObjectCPLUSPLUS(DBEdit,NOPARAM)
+MakeObjectCPLUSPLUS(DBList,NOPARAM)
+MakeObjectCPLUSPLUS(AddRec,NOPARAM)
+MakeObjectCPLUSPLUS(BatchAdd,NOPARAM)
+MakeObjectCPLUSPLUS(Driver,NOPARAM)
+MakeObjectCPLUSPLUS(GetModified,NOPARAM)
+MakeObjectCPLUSPLUS(MakeMainIndex,NOPARAM)
+MakeObjectCPLUSPLUS(MakeSurnameIndex,NOPARAM)
+MakeObjectCPLUSPLUS(MakeSurnameTab,NOPARAM)
+MakeObjectCPLUSPLUS(ReduceStud,NOPARAM)
+MakeObjectCPLUSPLUS(ReduceSurname,NOPARAM)
+MakeObjectCPLUSPLUS(Registration,NOPARAM)
+MakeObjectCPLUSPLUS(addUser,NOPARAM)
+MakeObjectCPLUSPLUS(decode,NOPARAM)
+MakeObjectCPLUSPLUS(download,NOPARAM)
+MakeObjectCPLUSPLUS(dump,NOPARAM)
+MakeObjectCPLUSPLUS(encode,NOPARAM)
+MakeObjectCPLUSPLUS(listUser,NOPARAM)
+MakeObjectCPLUSPLUS(showRec,NOPARAM)
+MakeObjectCPLUSPLUS(userdb,NOPARAM)
+
+TidyTarget(Registration Driver encode decode userdb GetModified BatchAdd AddRec download MakeMainIndex MakeSurnameIndex ReduceSurname ReduceStud DistRecordExtractor DBEdit DBList CounterSetup MapSetup NewMapSetup RecordExtractor RecordLoader RecordInspector Mapper RecordResolver StateChecker BlankRecords Imakefile)

@@ -1,0 +1,7 @@
+#!/bin/sh
+
+for i in OS CS SS OF CF SF
+do
+    echo $i" "
+    grep ": "$i res/out* | wc -l
+done

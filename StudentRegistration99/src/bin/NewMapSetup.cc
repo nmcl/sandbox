@@ -1,0 +1,120 @@
+/*
+ * Copyright (C) 1994, 1995, 1996
+ * 
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: NewMapSetup.cc,v 1.3 1996/09/06 14:49:48 arjuna Exp $
+ */
+
+#include <System/ndbm.h>
+#include <System/sys/file.h>
+#include <System/iostream.h>
+#include <System/string.h>
+#include <System/fstream.h>
+#include <System/sys/types.h>
+#include <System/sys/stat.h>
+#include <System/fcntl.h>
+
+#include <local.h>
+#include <arjuna.h>
+
+void usage (const char* name)
+{
+    cout << "Usage: " << name << " -file <data file> [-help]" << endl;
+}
+
+int main (int argc, char** argv)
+{
+    char studentNumber[STUDENTNUMBERSIZE+1];
+    char dbData[UidSize+STUDENTNUMBERSIZE+1];
+    char uidBuff[UidSize+1];
+    char* file = 0;
+    int counter = 0;
+    DBM* dbFile = 0;
+
+    for (int i = 1; i < argc; i++)
+    {
+	if (::strcmp(argv[i], "-help") == 0)
+	{
+	    usage(argv[0]);
+	    return 0;
+	}
+	else
+	{
+	    if (::strcmp(argv[i], "-file") == 0)
+	    {
+		file = argv[i+1];
+		i++;
+	    }
+	    else
+	    {
+		cout << "Unknown option " << argv[i] << endl;
+		usage(argv[0]);
+		return -1;
+	    }
+	}
+    }
+
+    if (!file)
+    {
+	cout << "Error - no file name given." << endl;
+	return 1;
+    }
+
+    ifstream input(file);
+
+    if (!input)
+    {
+	cout << "Could not open file." << endl;
+	return 1;
+    }
+
+    dbFile = dbm_open(newKeyMap, O_RDWR | O_CREAT, 0666);    
+
+    if (!dbFile)
+    {
+	cout << "Could not create/open " << newKeyMap << " file." << endl;
+	return 1;
+    }
+
+    while (input.peek() != EOF)
+    {
+	::memset(studentNumber, '\0', STUDENTNUMBERSIZE+1);
+	::memset(dbData, '\0', UidSize+STUDENTNUMBERSIZE+1);
+	::memset(uidBuff, '\0', UidSize+1);
+
+	input >> studentNumber >> uidBuff;
+
+	if (::strlen(studentNumber) != STUDENTNUMBERSIZE)
+	    break;
+	
+	datum key, record;
+
+	::memcpy(dbData, studentNumber, STUDENTNUMBERSIZE);
+	::memcpy(dbData+STUDENTNUMBERSIZE, uidBuff, ::strlen(uidBuff)+1);
+
+	key.dptr = (char*) &counter;
+	key.dsize = sizeof(counter);
+
+	record.dptr = dbData;
+	record.dsize = ::strlen(dbData)+1;
+	
+	if (dbm_store(dbFile, key, record, DBM_REPLACE) != 0)
+	{
+	    cout << "An error occured while inserting." << endl;
+	    dbm_close(dbFile);
+	    return 1;
+	}
+
+	counter++;
+    }
+
+    dbm_close(dbFile);
+
+    cout << counter << " records inserted successfully." << endl;
+
+    return 0;
+}

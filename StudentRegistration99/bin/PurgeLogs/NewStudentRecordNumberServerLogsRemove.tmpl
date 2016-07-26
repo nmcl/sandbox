@@ -1,0 +1,7 @@
+#!/bin/sh
+
+for i in DRIVERS
+do
+    echo "---- "$i" ----"
+    remsh $i -n rm -r /tmp/NewStudentRecordNumberServer_\*
+done

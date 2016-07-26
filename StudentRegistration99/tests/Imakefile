@@ -1,0 +1,36 @@
+COMMENT
+COMMENT Copyright (C) 1994-1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.3 1996/08/16 11:42:48 arjuna Exp $
+COMMENT
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES) -I../src/include)
+#ifdef hpux
+SetLocalLibraries(../src/lib/libStudReg.a -ldbm)
+#else
+#ifdef __LINUX__
+SetLocalLibraries(../src/lib/libStudReg.a -lgdbm)
+#else
+SetLocalLibraries(../src/lib/libStudReg.a)
+#endif
+#endif
+
+SOURCES = SimulationRun.cc \
+	  EventLoop.cc
+
+OBJECTS = SimulationRun.o \
+	  EventLoop.o
+
+AllTarget(SimulationRun)
+
+MakeProgramCPLUSPLUS(SimulationRun,$(OBJECTS),NOPARAM)
+
+MakeObjectCPLUSPLUS(SimulationRun,NOPARAM)
+MakeObjectCPLUSPLUS(EventLoop,NOPARAM)
+
+TidyTarget(SimulationRun)

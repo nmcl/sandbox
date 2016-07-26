@@ -1,0 +1,7 @@
+#!/bin/sh
+
+for i in DRIVERS
+do
+    echo "---- "$i" ----" >$1
+    rsh -l USER $i cat /tmp/Driver_output_*\* >$1 2>$2
+done

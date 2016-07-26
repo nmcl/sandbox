@@ -1,0 +1,133 @@
+The current host is tarry-f.ncl.ac.uk.
+Local address is: 128.240.208.102
+
+Open request for student:  988263938
+Total time taken: 5534 milliseconds. Status: OS
+1: Time waited 10
+Close request for student: 988263938
+Total time taken: 86929 milliseconds. Status: CS
+Request successful.
+
+Open request for student:  988252161
+Total time taken: 13708 milliseconds. Status: OS
+2: Time waited 10
+Save request for student:  988252161
+Total time taken: 23842 milliseconds. Status: SS
+Request successful.
+
+Open request for student:  988249541
+Total time taken: 9374 milliseconds. Status: OS
+3: Time waited 10
+Close request for student: 988249541
+Total time taken: 6632 milliseconds. Status: CS
+Request successful.
+
+Open request for student:  988263846
+Total time taken: 11338 milliseconds. Status: OS
+4: Time waited 10
+Save request for student:  988263846
+Total time taken: 13676 milliseconds. Status: SS
+Request successful.
+
+Open request for student:  988251625
+Total time taken: 16590 milliseconds. Status: OF
+Did not get OS message for student 988251625.
+
+Open request for student:  988260340
+Total time taken: 10522 milliseconds. Status: OS
+6: Time waited 10
+Save request for student:  988260340
+Total time taken: 10040 milliseconds. Status: SS
+Request successful.
+
+Open request for student:  988263949
+Total time taken: 14955 milliseconds. Status: OS
+7: Time waited 10
+Close request for student: 988263949
+Total time taken: 10897 milliseconds. Status: CS
+Request successful.
+
+Open request for student:  988259517
+Total time taken: 12319 milliseconds. Status: OS
+8: Time waited 10
+Close request for student: 988259517
+Total time taken: 4499 milliseconds. Status: CS
+Request successful.
+
+Open request for student:  988245819
+Total time taken: 8713 milliseconds. Status: OS
+9: Time waited 10
+Close request for student: 988245819
+Total time taken: 8537 milliseconds. Status: CS
+Request successful.
+
+Open request for student:  988261141
+Total time taken: 14317 milliseconds. Status: OS
+10: Time waited 10
+Close request for student: 988261141
+Total time taken: 3234 milliseconds. Status: CS
+Request successful.
+
+Open request for student:  988254682
+Total time taken: 16021 milliseconds. Status: OS
+11: Time waited 10
+Save request for student:  988254682
+Total time taken: 7480 milliseconds. Status: SS
+Request successful.
+
+Open request for student:  988254109
+Total time taken: 16704 milliseconds. Status: OS
+12: Time waited 10
+Save request for student:  988254109
+Total time taken: 8752 milliseconds. Status: SS
+Request successful.
+
+Open request for student:  988254383
+Total time taken: 15398 milliseconds. Status: OS
+13: Time waited 10
+Close request for student: 988254383
+Total time taken: 9639 milliseconds. Status: CS
+Request successful.
+
+Open request for student:  988261484
+Total time taken: 8047 milliseconds. Status: OS
+14: Time waited 10
+Close request for student: 988261484
+Total time taken: 12772 milliseconds. Status: CS
+Request successful.
+
+Open request for student:  988249242
+Total time taken: 11415 milliseconds. Status: OF
+Did not get OS message for student 988249242.
+
+Open request for student:  988247019
+Total time taken: 3287 milliseconds. Status: OS
+16: Time waited 10
+Save request for student:  988247019
+Total time taken: 7438 milliseconds. Status: SS
+Request successful.
+
+Open request for student:  988245428
+Total time taken: 11219 milliseconds. Status: OS
+17: Time waited 10
+Close request for student: 988245428
+Total time taken: 13059 milliseconds. Status: CS
+Request successful.
+
+Open request for student:  988264223
+Total time taken: 9281 milliseconds. Status: OS
+18: Time waited 10
+Close request for student: 988264223
+Total time taken: 4417 milliseconds. Status: CS
+Request successful.
+
+Open request for student:  988250606
+Total time taken: 4409 milliseconds. Status: OF
+Did not get OS message for student 988250606.
+
+Open request for student:  988246469
+Read failed on connection: Broken pipe
+Total time taken: 2 milliseconds. Status: OF
+Did not get OS message for student 988246469.
+
+Open request for student:  988262883

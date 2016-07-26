@@ -1,0 +1,7 @@
+#!/bin/sh
+
+for i in DRIVERS
+do
+    echo "---- "$i" ----" >$1
+    rsh $i -l USER ls -l /tmp | grep USER >>$1
+done

@@ -1,0 +1,561 @@
+#!/bin/sh
+#
+# Copyright (C) 1994, 1995, 1996
+# 
+# Department of Computing Science,
+# The University,
+# Newcastle upon Tyne,
+# UK.
+# 
+# $Id: configure,v 1.29 1996/12/06 11:43:31 snowman Exp $
+#
+
+ECHO_TEST=`echo "Test \c"`
+if test "$ECHO_TEST" = "Test "
+then 
+	PRE_ECHO=""
+	POST_ECHO="\c"
+else
+	PRE_ECHO="-n"
+	POST_ECHO=""
+fi
+
+ARJUNA_INSTALL="/registration"
+ROOT_DIR="/registration"
+USER_DIR=$HOME"/shared"
+OVERFLOW=$HOME"/shared"
+ARCHIVE_DIR=$HOME"/shared/LogsArchive"
+REGTCPPORT=5500
+IS_REGISTRATION="Y"
+DEBUG="N"
+NOSAVE="N"
+CGIBIN="/home/user01/webserver/cgi-bin"
+HTDOCS="/home/user01/webserver/htdocs"
+DRIVER_MACHINES="regis1 regis2 regis3 regis4 regis5 regis6 regis7"
+OBJSTORE_MACHINES="regis8 regis9 regis10"
+WEBSUPPORT="N"
+MACHINE=`hostname`
+USER="snowman"
+DRIVER_NUMBER=0
+MIN_SERVERS=1
+
+echo
+echo $PRE_ECHO "Directory containing the root of Arjuna installation ["$ARJUNA_INSTALL"] : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then  
+	ARJUNA_INSTALL=$INPUT
+fi
+
+echo $PRE_ECHO "Directory containing the root of registration installation ["$ROOT_DIR"] : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then  
+	ROOT_DIR=$INPUT
+fi
+
+echo $PRE_ECHO "Directory where logs can be archived (must be shared) ["$ARCHIVE_DIR"] : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then  
+	ARCHIVE_DIR=$INPUT
+fi
+
+#
+#echo $PRE_ECHO "Registration user ["$USER"] : " $POST_ECHO
+#read INPUT
+#echo
+#if test "'x$INPUT'" != "'x'"
+#then  
+#	USER=$INPUT
+#fi
+#
+
+echo $PRE_ECHO "Location of the user lock directory (must be on a shared disk) ["$USER_DIR"] : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then  
+	USER_DIR=$INPUT
+fi
+
+echo $PRE_ECHO "Is this build for the registration period [distributed version] (Y/N)? ["$IS_REGISTRATION"] : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then  
+	IS_REGISTRATION=$INPUT
+fi
+
+if test "'x$IS_REGISTRATION'" = "'xY'" -o "'x$IS_REGISTRATION'" = "'xy'"
+then
+
+echo $PRE_ECHO "Location of overflow keymap (must be on a shared disk) ["$OVERFLOW"] : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then  
+	OVERFLOW=$INPUT
+fi
+
+fi
+
+echo $PRE_ECHO "Do you want Web support (Y/N)? ["$WEBSUPPORT"] : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then  
+	WEBSUPPORT=$INPUT
+fi
+
+if test "'x$WEBSUPPORT'" = "'xY'" -o "'x$WEBSUPPORT'" = "'xy'"
+then
+	echo $PRE_ECHO "Name of Web server machine ["$MACHINE"] : " $POST_ECHO
+	read INPUT
+	echo
+	if test "'x$INPUT'" != "'x'"
+	then  
+		MACHINE=$INPUT
+	fi
+
+	echo $PRE_ECHO "Location of cgi-bin directory ["$CGIBIN"] : " $POST_ECHO
+	read INPUT
+	echo
+	if test "'x$INPUT'" != "'x'"
+	then  
+		CGIBIN=$INPUT
+	fi
+
+	echo $PRE_ECHO "Location of htdocs directory ["$HTDOCS"] : " $POST_ECHO
+	read INPUT
+	echo
+	if test "'x$INPUT'" != "'x'"
+	then  
+		HTDOCS=$INPUT
+	fi
+fi
+
+echo $PRE_ECHO "Driver port ["$REGTCPPORT"] : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then  
+	REGTCPPORT=$INPUT
+fi
+
+echo $PRE_ECHO "Give the number of driver/server machines : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then  
+	DRIVER_NUMBER=$INPUT
+fi
+
+echo $PRE_ECHO "Give the minimum number of driver/server machines allowed : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then  
+	MIN_SERVERS=$INPUT
+fi
+
+echo $PRE_ECHO "Give the names of the driver/server machines (single line) ["$DRIVER_MACHINES"] : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then  
+	DRIVER_MACHINES=$INPUT
+fi
+
+echo $PRE_ECHO "Give the names of the object store machines (single line) ["$OBJSTORE_MACHINES"] : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then  
+	OBJSTORE_MACHINES=$INPUT
+fi
+
+echo $PRE_ECHO "Is this build for the simulated front-end (Y/N)? ["$DEBUG"] : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then  
+	DEBUG=$INPUT
+fi
+
+echo $PRE_ECHO "Do you want the NoSave message displayed (Y/N)? ["$NOSAVE"] : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then  
+	NOSAVE=$INPUT
+fi
+
+echo Creating MakefileBoot
+sed -e "s;CONFIGDIRECTORY;$ARJUNA_INSTALL/ArjunaInstall/include;" < MakefileBoot.tmpl > MakefileBoot
+sed -e "s;INSTALL;$ROOT_DIR/RegistrationInstall;g" < Imakefile.tmpl > Imakefile
+if test "'x$IS_REGISTRATION'" = "'xN'" -o "'x$IS_REGISTRATION'" = "'xn'"
+then
+    sed -e "s;OBJCODE;../server/StudentRecord.o;" < src/bin/Imakefile.tmpl > src/bin/Imakefile
+else
+    sed -e "s;OBJCODE;;" < src/bin/Imakefile.tmpl > src/bin/Imakefile
+fi
+sed -e "s;INSTALL;$ROOT_DIR/RegistrationInstall;" < bin/Imakefile.tmpl > bin/Imakefile
+sed -e "s;INSTALL;$ROOT_DIR/RegistrationInstall;" < bin/Logs/Imakefile.tmpl > bin/Logs/Imakefile
+sed -e "s;INSTALL;$ROOT_DIR/RegistrationInstall;" < bin/local/Imakefile.tmpl > bin/local/Imakefile
+sed -e "s;INSTALL;$ROOT_DIR/RegistrationInstall;" < bin/PurgeLogs/Imakefile.tmpl > bin/PurgeLogs/Imakefile
+sed -e "s;INSTALL;$ROOT_DIR/RegistrationInstall;" < bin/Shutdown/Imakefile.tmpl > bin/Shutdown/Imakefile
+sed -e "s;INSTALL;$ROOT_DIR/RegistrationInstall;" < bin/Startup/Imakefile.tmpl > bin/Startup/Imakefile
+
+if test "'x$WEBSUPPORT'" != "'xN'" -a "'x$WEBSUPPORT'" != "'xn'"
+then
+	sed -e "s;CGIBIN;$CGIBIN;" < src/web/Imakefile.tmpl > src/web/Imakefile
+	sed -e "s;INSTALL;$ROOT_DIR/RegistrationInstall;" < webscripts/Imakefile.tmpl > webscripts/Imakefile
+	sed -e "s;INSTALL;$ROOT_DIR/RegistrationInstall;" < webscripts/Logs/Imakefile.tmpl > webscripts/Logs/Imakefile
+	sed -e "s;INSTALL;$ROOT_DIR/RegistrationInstall;" < webscripts/local/Imakefile.tmpl > webscripts/local/Imakefile
+
+	sed -e "s;DIR;web include;" < src/Imakefile.tmpl > src/Imakefile
+	sed -e "s;DIR;bin webscripts htdocs;" < Imakefile > Imakefile.tmp
+	mv Imakefile.tmp Imakefile
+
+	sed -e "s;HTDOCS;$HTDOCS;" < htdocs/Imakefile.tmpl > htdocs/Imakefile
+else
+	sed -e "s;DIR;include;" < src/Imakefile.tmpl > src/Imakefile
+	sed -e "s;DIR;bin;" < Imakefile > Imakefile.tmp
+	mv Imakefile.tmp Imakefile
+fi
+
+echo
+echo $PRE_ECHO "Creating include files ..." $POST_ECHO
+
+(
+echo "/*"
+echo " *  Do not edit by hand - automatically generated by configure."
+echo " */"
+echo
+echo "#ifndef LOCALCONFIG_H_"
+echo "#define LOCALCONFIG_H_"
+echo
+if test "'x$DEBUG'" = "'xY'" -o "'x$DEBUG'" = "'xy'"
+then
+echo "#ifndef DEBUG"
+echo "#define DEBUG"
+echo "#endif"
+echo
+fi
+if test "'x$NOSAVE'" = "'xY'" -o "'x$NOSAVE'" = "'xy'"
+then
+echo "#ifndef NO_SAVE"
+echo "#define NO_SAVE"
+echo "#endif"
+echo
+fi
+echo "#define IndexFile \""$ROOT_DIR"/RegistrationInstall/datafiles/IndexDB\""
+echo "#define IndexFileLock \""$ROOT_DIR"/RegistrationInstall/datafiles/IndexDB.lock\""
+echo "#define DataFile \""$ROOT_DIR"/RegistrationInstall/datafiles/Stud.info\""
+echo "#define DataFileLock \""$ROOT_DIR"/RegistrationInstall/datafiles/Stud.info.lock\""
+echo "#define SurDataFile \""$ROOT_DIR"/RegistrationInstall/datafiles/Surname.info\""
+echo "#define SurIndexFile \""$ROOT_DIR"/RegistrationInstall/datafiles/SurnameIndex\""
+echo "#define REGFILE \""$ROOT_DIR"/RegistrationInstall/datafiles/Doing_Registration\""
+echo "#define DBFile \""$ROOT_DIR"/RegistrationInstall/datafiles/SKDatabase\""
+echo "#define DBMLockFile \""$ROOT_DIR"/RegistrationInstall/datafiles/SKLock\""
+echo "#define LogFile \""$ROOT_DIR"/RegistrationInstall/Logs/Registration_%d\""
+echo
+echo "#define TMPFILETEMPLATE \""$USER_DIR"/resource/find_tmp/find.XXXXXX\""
+echo "#define UserDIR \""$USER_DIR"/resource/user_dir\""
+echo
+echo "#define VersionFile \""$ROOT_DIR"/RegistrationInstall/Version.info\""
+echo
+echo "#define REGTCPPORT "$REGTCPPORT
+echo
+echo "#define SERVER \""$ARJUNA_INSTALL"/ArjunaInstall/bin/Registration\""
+echo
+echo "#define CGIBIN \"$CGIBIN\""
+echo "#define scriptRoot \""$ROOT_DIR"/RegistrationInstall/webscripts/\""
+echo
+echo "#endif"
+) > src/include/localconfig.h
+
+(
+echo "/*"
+echo " *  Do not edit by hand - automatically generated by configure."
+echo " */"
+echo
+echo "#ifndef ARJUNACONFIG_H_"
+echo "#define ARJUNACONFIG_H_"
+echo
+if test "'x$IS_REGISTRATION'" = "'xN'" -o "'x$IS_REGISTRATION'" = "'xn'"
+then
+echo "#define LOCAL_ONLY"
+echo
+fi
+echo "#define NUMBER_SERVERS "$DRIVER_NUMBER
+echo "#define MIN_SERVERS "$MIN_SERVERS
+echo "#define staticKeyMap \""$ROOT_DIR"/RegistrationInstall/mapfiles/keymap\""
+echo "#define overflowKeyMap \""$OVERFLOW"/overflowmap\""
+echo "#define overflowLockFile \""$OVERFLOW"/overflowmap.lock\""
+echo "#define newKeyMap \""$ROOT_DIR"/RegistrationInstall/mapfiles/newstudents\""
+echo
+echo "#define ObjectStoreConfiguration \""$ROOT_DIR"/RegistrationInstall/configurations/ObjectStore\""
+echo "#define IndexConfigurationFile \""$ROOT_DIR"/RegistrationInstall/configurations/Index\""
+echo "#define ServerConfigurationFile \""$ROOT_DIR"/RegistrationInstall/configurations/Server\""
+echo
+echo "#define dumpingFile \""$ROOT_DIR"/isDumping\""
+echo "#define readonlyFile \""$ROOT_DIR"/ReadOnly\""
+echo
+echo "#endif"
+) > src/include/arjunaconfig.h
+
+echo "... include files created."
+echo
+echo $PRE_ECHO "Creating replica configuration files ..." $POST_ECHO
+
+echo $OBJSTORE_MACHINES > foo
+NUMBER=`awk '{print NF}' foo`
+echo $NUMBER > ObjectStore
+
+for i in $OBJSTORE_MACHINES
+do
+    echo $i >> ObjectStore
+done
+
+
+echo $DRIVER_MACHINES > foo
+NUMBER=`awk '{print NF}' foo`
+echo $NUMBER > Index
+echo $NUMBER > Server
+rm -f foo
+
+for i in $DRIVER_MACHINES
+do
+    echo $i >> Index
+    echo $i >> Server
+done
+
+echo "... replica configuration files created."
+echo
+echo $PRE_ECHO "Creating management scripts ..." $POST_ECHO
+
+for i in FindStudent FindUser Pause_drivers Users WorkCheck WorkLoadCheck WorkProcessCheck WorkResourcesCheck UnlockStudent
+do
+	sed -e "s;DRIVERS;$DRIVER_MACHINES;" < bin/$i.tmpl > bin/$i.foo
+	sed -e "s;LOCATION;$ROOT_DIR/RegistrationInstall;" < bin/$i.foo > bin/$i.bar
+	sed -e "s;USER;$USER;" < bin/$i.bar > bin/$i
+	rm bin/$i.foo bin/$i.bar
+done
+
+for i in AddDumping WorkInstall RemoveDumping AddReadOnly RemoveReadOnly
+do
+	sed -e "s;DRIVERS;$DRIVER_MACHINES;" < bin/$i.tmpl > bin/$i.foo
+	sed -e "s;LOCATION;$ROOT_DIR;" < bin/$i.foo > bin/$i
+	rm bin/$i.foo
+done
+
+for i in ObjStoreCheck ObjStoreInstall ObjStoreLoadCheck ObjStoreProcessCheck ObjStoreResourcesCheck
+do
+	sed -e "s;OBJSTORES;$OBJSTORE_MACHINES;" < bin/$i.tmpl > bin/$i.foo
+	sed -e "s;USER;$USER;" < bin/$i.foo > bin/$i
+	rm bin/$i.foo
+done
+
+for i in ObjStoreInstall WorkInstall
+do
+	sed -e "s;LOCATION;$ROOT_DIR;" < bin/$i > bin/$i.foo
+	mv bin/$i.foo bin/$i
+done
+
+for i in NodeCheck
+do
+	sed -e "s;USER;$USER;" < bin/$i.tmpl > bin/$i
+done
+	
+for i in Hosts
+do
+	sed -e "s;DRIVERS;$DRIVER_MACHINES;" < bin/$i.tmpl > bin/$i.foo
+	sed -e "s;PORT;$REGTCPPORT;" < bin/$i.foo > bin/$i
+	rm bin/$i.foo
+done
+
+for i in Makefile.gen.tmpl
+do
+	sed -e "s;ARJUNA;$ARJUNA_INSTALL/ArjunaInstall;" < $i > $i.foo
+	sed -e "s;LOCATION;$ROOT_DIR/RegistrationInstall;" < $i.foo > Makefile.gen
+	rm $i.foo
+done
+
+for i in CListCheck CoreRemove BuildData
+do
+	sed -e "s;ALL;$DRIVER_MACHINES $OBJSTORE_MACHINES;" < bin/$i.tmpl > bin/$i.foo
+	sed -e "s;ARJUNA;$ARJUNA_INSTALL/ArjunaInstall;" < bin/$i.foo > bin/$i
+	rm bin/$i.foo
+done
+
+for i in DriverLogsList NewStudentRecordNumberServerLogsList RecordServerLogsList RegistrationLogsList WorkErrorLogsCheck WorkLogsCheck WorkOutputLogsCheck
+do
+	sed -e "s;DRIVERS;$DRIVER_MACHINES;" < bin/Logs/$i.tmpl > bin/Logs/$i.foo
+	sed -e "s;LOCATION;$ROOT_DIR/RegistrationInstall;" < bin/Logs/$i.foo > bin/Logs/$i
+	rm bin/Logs/$i.foo
+done
+
+for i in ArchiveLogs
+do
+	sed -e "s;DRIVERS;$DRIVER_MACHINES;" < bin/Logs/$i.tmpl > bin/Logs/$i.foo
+	sed -e "s;LOCATION;$ROOT_DIR/RegistrationInstall;" < bin/Logs/$i.foo > bin/Logs/$i.foo2
+	sed -e "s;OBJSTORES;$OBJSTORE_MACHINES;" < bin/Logs/$i.foo2 > bin/Logs/$i.foo3
+	sed -e "s;ARCHIVE;$ARCHIVE_DIR;" < bin/Logs/$i.foo3 > bin/Logs/$i
+
+	rm bin/Logs/$i.foo bin/Logs/$i.foo2 bin/Logs/$i.foo3
+done
+    
+for i in ObjStoreLogsCheck
+do
+	sed -e "s;OBJSTORES;$OBJSTORE_MACHINES;" < bin/Logs/$i.tmpl > bin/Logs/$i
+done
+
+for i in ObjStoreLogsCheck WorkErrorLogsCheck WorkLogsCheck WorkOutputLogsCheck
+do
+	sed -e "s;USER;$USER;" < bin/Logs/$i > bin/Logs/$i.foo
+	mv bin/Logs/$i.foo bin/Logs/$i
+done
+	
+for i in NewStudentRecordNumberServerLogsRemove RecordServerLogsRemove RegistrationLogsRemove WorkLogsRemove
+do
+	sed -e "s;DRIVERS;$DRIVER_MACHINES;" < bin/PurgeLogs/$i.tmpl > bin/PurgeLogs/$i.foo
+	sed -e "s;LOCATION;$ROOT_DIR/RegistrationInstall;" < bin/PurgeLogs/$i.foo > bin/PurgeLogs/$i
+	rm bin/PurgeLogs/$i.foo
+done
+
+for i in ObjStoreLogsRemove
+do
+	sed -e "s;OBJSTORES;$OBJSTORE_MACHINES;" < bin/PurgeLogs/$i.tmpl > bin/PurgeLogs/$i
+done
+
+for i in NodeShutdown ObjStoreResourcesRemove ObjStoreShutdown
+do
+	sed -e "s;ARJUNA;$ARJUNA_INSTALL/ArjunaInstall;" < bin/Shutdown/$i.tmpl > bin/Shutdown/$i.foo
+	sed -e "s;OBJSTORES;$OBJSTORE_MACHINES;" < bin/Shutdown/$i.foo > bin/Shutdown/$i
+	rm bin/Shutdown/$i.foo
+done
+
+for i in Shutdown_drivers Shutdown_registrations
+do
+	sed -e "s;DRIVERS;$DRIVER_MACHINES;" < bin/Shutdown/$i.tmpl > bin/Shutdown/$i.foo
+	sed -e "s;LOCATION;$ROOT_DIR/RegistrationInstall;" < bin/Shutdown/$i.foo > bin/Shutdown/$i
+	rm bin/Shutdown/$i.foo
+done
+
+for i in WorkResourcesRemove WorkShutdown
+do
+	sed -e "s;DRIVERS;$DRIVER_MACHINES;" < bin/Shutdown/$i.tmpl > bin/Shutdown/$i.foo
+	sed -e "s;ARJUNA;$ARJUNA_INSTALL/ArjunaInstall;" < bin/Shutdown/$i.foo > bin/Shutdown/$i
+	rm bin/Shutdown/$i.foo
+done
+
+for i in NodeStartUp
+do
+	sed -e "s;ARJUNA;$ARJUNA_INSTALL/ArjunaInstall;" < bin/Startup/$i.tmpl > bin/Startup/$i
+done
+
+for i in ObjStoreStartUp
+do
+	sed -e "s;ARJUNA;$ARJUNA_INSTALL/ArjunaInstall;" < bin/Startup/$i.tmpl > bin/Startup/$i.foo
+	sed -e "s;OBJSTORES;$OBJSTORE_MACHINES;" < bin/Startup/$i.foo > bin/Startup/$i
+	rm bin/Startup/$i.foo
+done
+
+for i in WorkStartUp
+do
+	sed -e "s;ARJUNA;$ARJUNA_INSTALL/ArjunaInstall;" < bin/Startup/$i.tmpl > bin/Startup/$i.foo
+	sed -e "s;DRIVERS;$DRIVER_MACHINES;" < bin/Startup/$i.foo > bin/Startup/$i
+	rm bin/Startup/$i.foo
+done
+
+for i in Finder_student Finder_user UserChecker
+do
+	sed -e "s;LOCATION;$ROOT_DIR/RegistrationInstall;" < bin/local/$i.tmpl > bin/local/$i.foo
+	sed -e "s;USER;$USER;" < bin/local/$i.foo > bin/local/$i
+	rm bin/local/$i.foo
+done
+
+for i in Signal_driver Signal_registration
+do
+	sed -e "s;USER;$USER;" < bin/local/$i.tmpl > bin/local/$i
+done
+
+echo "... management scripts created."
+if test "'x$WEBSUPPORT'" != "'xN'"
+then
+    echo
+    echo $PRE_ECHO "Creating webscripts ..." $POST_ECHO
+
+    for i in FindStudent FindUser Pause_drivers Users WorkLoadCheck WorkProcessCheck WorkResourcesCheck UnlockStudent
+    do
+	sed -e "s;DRIVERS;$DRIVER_MACHINES;" < webscripts/$i.tmpl > webscripts/$i.foo
+	sed -e "s;LOCATION;$ROOT_DIR/RegistrationInstall;" < webscripts/$i.foo > webscripts/$i.bar
+	sed -e "s;USER;$USER;g" < webscripts/$i.bar > webscripts/$i
+	rm webscripts/$i.foo webscripts/$i.bar
+    done
+
+    for i in AddDumping RemoveDumping
+    do
+	sed -e "s;DRIVERS;$DRIVER_MACHINES;" < webscripts/$i.tmpl > webscripts/$i.foo
+	sed -e "s;LOCATION;$ROOT_DIR;" < webscripts/$i.foo > webscripts/$i
+	rm webscripts/$i.foo
+    done
+
+    for i in KillUser
+    do
+	sed -e "s;USER;$USER;" < webscripts/$i.tmpl > webscripts/$i
+    done
+
+    for i in ObjStoreLoadCheck ObjStoreProcessCheck ObjStoreResourcesCheck
+    do
+	sed -e "s;OBJSTORES;$OBJSTORE_MACHINES;" < webscripts/$i.tmpl > webscripts/$i.foo
+	sed -e "s;USER;$USER;g" < webscripts/$i.foo > webscripts/$i
+	rm webscripts/$i.foo
+    done
+
+    for i in DriverLogsList NewStudentRecordNumberServerLogsList RecordServerLogsList RegistrationLogsList WorkLogsCheck
+    do
+	sed -e "s;DRIVERS;$DRIVER_MACHINES;" < webscripts/Logs/$i.tmpl > webscripts/Logs/$i.foo
+	sed -e "s;LOCATION;$ROOT_DIR/RegistrationInstall;" < webscripts/Logs/$i.foo > webscripts/Logs/$i.bar
+	sed -e "s;USER;$USER;g" < webscripts/Logs/$i.bar > webscripts/Logs/$i
+	rm webscripts/Logs/$i.foo webscripts/Logs/$i.bar
+    done
+
+    for i in ObjStoreLogsCheck
+    do
+	sed -e "s;OBJSTORES;$OBJSTORE_MACHINES;" < webscripts/Logs/$i.tmpl > webscripts/Logs/$i.foo
+	sed -e "s;USER;$USER;g" < webscripts/Logs/$i.foo > webscripts/Logs/$i
+	rm webscripts/Logs/$i.foo
+    done
+
+    for i in Finder_student Finder_user UserChecker
+    do
+	sed -e "s;LOCATION;$ROOT_DIR/RegistrationInstall;" < webscripts/local/$i.tmpl > webscripts/local/$i.foo
+	sed -e "s;USER;$USER;g" < webscripts/local/$i.foo > webscripts/local/$i
+	rm webscripts/local/$i.foo
+    done
+
+    for i in Signal_driver
+    do
+	sed -e "s;USER;$USER;g" < webscripts/local/$i.tmpl > webscripts/local/$i
+    done
+
+    echo "... webscripts created."
+
+    echo
+    echo $PRE_ECHO "Creating html pages ..." $POST_ECHO
+
+    for i in Student System finduser index inspectstudent killuser unlockstudent
+do
+	sed -e "s;MACHINE;$MACHINE;" < htdocs/$i.tmpl > htdocs/$i.html
+    done
+
+    echo "... html pages created."
+
+fi
+

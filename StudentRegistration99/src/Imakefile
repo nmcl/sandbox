@@ -1,0 +1,15 @@
+COMMENT
+COMMENT Copyright (C) 1994,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile.tmpl,v 1.1 1996/09/02 09:25:09 arjuna Exp $
+COMMENT
+
+#define IHaveSubDirs
+SetSubDirectorys(server lib bin include)
+
+TidyTarget(Imakefile)

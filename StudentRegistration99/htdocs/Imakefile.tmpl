@@ -1,0 +1,25 @@
+COMMENT
+COMMENT Copyright (C) 1994,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile.tmpl,v 1.1 1996/09/02 12:57:50 arjuna Exp $
+COMMENT
+
+CreateInstallAbsoluteDirectory(HTDOCS/Registration)
+
+InstallAbsoluteProgram(HTDOCS/Registration,Student.html)
+InstallAbsoluteProgram(HTDOCS/Registration,System.html)
+InstallAbsoluteProgram(HTDOCS/Registration,finduser.html)
+InstallAbsoluteProgram(HTDOCS/Registration,finduserhelp.html)
+InstallAbsoluteProgram(HTDOCS/Registration,index.html)
+InstallAbsoluteProgram(HTDOCS/Registration,inspectstudent.html)
+InstallAbsoluteProgram(HTDOCS/Registration,killuser.html)
+InstallAbsoluteProgram(HTDOCS/Registration,machinehelp.html)
+InstallAbsoluteProgram(HTDOCS/Registration,studenthelp.html)
+InstallAbsoluteProgram(HTDOCS/Registration,unlockstudent.html)
+
+TidyTarget(Student.html System.html finduser.html index.html inspectstudent.html killuser.html unlockstudent.html Imakefile)

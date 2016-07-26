@@ -1,0 +1,1150 @@
+/*
+ * Copyright (C) 1994, 1995, 1996
+ * 
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: ArjunaDBAccess-utils.cc,v 1.10 1996/09/03 15:25:11 arjuna Exp $
+ */
+
+#include <System/sys/types.h>
+#include <System/sys/stat.h>
+#include <System/ctype.h>
+#include <System/sys/param.h>
+#include <System/fcntl.h>
+#include <System/netdb.h>
+#include <System/stdlib.h>
+#include <System/unistd.h>
+#include <System/string.h>
+#include <System/iostream.h>
+#include <System/strstream.h>
+#include <System/fstream.h>
+#include <System/netdb.h>
+#include <System/signal.h>
+#include <System/stdio.h>
+#include <System/ndbm.h>
+#include <System/sys/file.h>
+#include <Common/Debug.h>
+#include <Arjuna/AtomicA.h>
+#include <ObjectStore/ActionStore.h>
+#include <ObjectStore/MappedStore.h>
+#include <Replication/ReplicaConfiguration.h>
+#include <StubGen/ClientRpc.h>
+#include <StubGen/ClientRpcMan.h>
+#include <SOutCome_stub.h>
+#include <StudentRecord_stub.h>
+#include <NewStudentRecordNumber_stub.h>
+
+#include "arjuna.h"
+
+#include "userdb.h"
+#include "local.h"
+#include "Requests.h"
+#include "Defs.h"
+
+AtomicAction* action = 0;
+StudentRecord* theRecord = 0;
+NewStudentRecordNumber* counter = 0;
+ClientRpc* clientRpc = 0;
+ClientRpc* cRpc = 0;
+ClientRpcManager* RpcCont = 0;
+ClientRpcManager* RpcC = 0;
+ofstream* target1 = 0;
+ofstream* target2 = 0;
+Iostream_init* iosys = 0;
+DBM *dbFile = 0;
+Boolean (*oldHandler) (RPC_Status, Int32);
+Boolean init = FALSE;
+datum Key, Data;
+char* tmpName1 = 0;
+char* tmpName2 = 0;
+ReplicaConfiguration* conf = 0;
+char** ServerList = 0;
+int NumberOfServers = 0;
+
+extern char *RecordLocked;
+
+Boolean rpc_handler (RPC_Status, Int32) 
+{
+    cerr << "RecordServer rpc handler called." << endl;
+    
+    return FALSE;
+}
+
+Boolean checkNumber (const char* studentNumber)
+{
+    if ((!studentNumber) || (::strlen(studentNumber) < STUDENTNUMBERSIZE))
+	return FALSE;
+    
+    for (int i = 0; i < STUDENTNUMBERSIZE; i++)
+    {
+	if (!isdigit(studentNumber[i]))
+	    return FALSE;
+    }
+
+    return TRUE;
+}
+
+/*
+ * There is no need to abort the action in this routine as we should
+ * only call it when we have already terminated the action.
+ */
+
+void CleanUp ()
+{
+    if (action)
+    {
+	delete action;
+	action = (AtomicAction*) 0;
+    }
+
+    if (theRecord)
+    {
+	delete theRecord;
+	theRecord = (StudentRecord*) 0;
+    }
+    
+    if (RpcCont)
+    {
+	delete RpcCont;
+	delete clientRpc;
+	RpcCont = 0;
+	clientRpc = 0;
+    }
+
+    if (counter)
+    {
+	delete counter;
+	counter = 0;
+    }
+
+    if (RpcC)
+    {
+	delete RpcC;
+	delete cRpc;
+	RpcC = 0;
+	cRpc = 0;
+    }
+
+    ::memcpy(RecordLocked, NORECORD, STUDENTNUMBERSIZE);
+}
+
+void AbortAndCleanUp ()
+{
+    if (action)
+	action->Abort();
+    
+    CleanUp();
+}
+
+/*
+ * Cycle through the list of available server machines, based upon
+ * the student id, trying to activate the server.
+ */
+
+int getServer (const char* stunumber, Uid& id)
+{
+    if (NumberOfServers <= MIN_SERVERS)
+	return 25;
+    
+    if (theRecord != (StudentRecord*) 0)  // we already have a record server!
+    {
+	reportf("getServer called with server already running.\n");
+	return 26;
+    }
+  
+    char hostName[MAXHOSTNAMELEN];
+    Boolean virtualFailure = FALSE;
+    
+    for (;;)
+    {
+	int rem = atoi(stunumber) % 60;
+	int pref = rem % NumberOfServers;
+	SOutCome result = UNKNOWN;
+  
+	::strcpy(hostName, ServerList[pref]);
+
+	oldHandler = setHandler(rpc_handler);
+	clientRpc = new ClientRpc("RecordServer");
+	clientRpc->setHost(hostName);
+	clientRpc->setRetry(serverRetry);
+	clientRpc->setTimeout(serverTimeout);
+	RpcCont = new ClientRpcManager(clientRpc);
+
+	/*
+	 * Recreate existing record, or create a new record?
+	 */
+
+	if (id != NIL_UID)
+	    theRecord = new StudentRecord(result, id, RpcCont);
+	else
+	{
+	    theRecord = new StudentRecord(result, RpcCont);
+	    id = theRecord->get_uid();
+	}
+
+	if (result == DONE)
+	    return 0;
+
+	if (clientRpc->getServerStatus() == INIT_UNABLE)
+	    virtualFailure = TRUE;
+
+	delete theRecord;
+	theRecord = 0;
+	delete RpcCont;
+	RpcCont = 0;
+	delete clientRpc;
+	clientRpc = 0;
+
+	if (virtualFailure)
+	{
+	    error_stream << WARNING << "Virtual failure occurred for " << hostName << endl;
+	    return 31;
+	}
+	else
+	    cerr << "Host " << hostName << " failed for student "
+		 << stunumber << " with " << result << endl;
+	
+	for (int i = pref; i < NumberOfServers -1; i++)
+	    ServerList[i] = ServerList[i+1];
+	NumberOfServers--;
+
+	if (NumberOfServers <= MIN_SERVERS)
+	    return 24;
+    }
+}
+
+Boolean createIndex (int& error)
+{
+    Uid counterId(counterUid);
+    
+    error = 0;
+    
+    if (counter)  // this should never happen
+	return TRUE;
+
+    oldHandler = setHandler(rpc_handler);    
+    
+    for (int i = 0; i < NumberOfServers; i++)
+    {
+	SOutCome res = UNKNOWN;
+
+	cRpc = new ClientRpc("NewStudentRecordNumberServer");
+	cRpc->setHost(ServerList[i]);
+	cRpc->setRetry(serverRetry);
+	cRpc->setTimeout(serverTimeout);
+	RpcC = new ClientRpcManager(cRpc);
+	    
+	counter = new NewStudentRecordNumber(res, counterId, RpcC);
+	
+	if (res == DONE)
+	    return TRUE;
+
+	delete counter;
+	counter = 0;
+	delete RpcC;
+	RpcC = 0;
+	delete cRpc;
+	cRpc = 0;
+
+	cerr << "getCounter host " << ServerList[i] << " failed." << endl;
+	reportf("getCounter could not create atomic index.\n");	
+    }
+
+    cerr << "getCounter complete host failure." << endl;
+
+    error = 2;
+    
+    return FALSE;
+}
+    
+/*
+ * Returns a counter value.
+ */
+
+int getCounter (int& error)
+{
+    if (!counter)
+	return 2;
+    
+    SOutCome res = UNKNOWN;
+    int counterValue = -1;
+    AtomicAction B;
+    
+    error = 0;
+
+    B.Begin();
+
+    res = UNKNOWN;
+
+    counter->getThenIncreaseNumber(res, counterValue);
+
+    if (res == DONE)
+    {
+	if (B.End() != COMMITTED)
+	{
+	    cerr << "getCounter action commit failed." << endl;
+	    error = 28;
+	}
+    }
+    else
+    {
+	cerr << "getCounter could not get index number." << endl;
+	B.Abort();
+	counterValue = -1;
+	error = 27;
+    }
+
+    return counterValue;
+}
+
+/*
+ * Using the counter value as the key into the db, get the data entry,
+ * and extract from that the student number and the id.
+ * This is the only database which does not key on the student number.
+ */
+
+int getNewStudentNumber (int counterValue, char* StudNumb, Uid& id)
+{
+    dbFile = dbm_open(newKeyMap, O_RDONLY, 0);
+
+    if (!dbFile)
+	return 3;
+
+    int value = 2;
+    
+    Key.dptr = (char*) &counterValue;
+    Key.dsize = sizeof(counterValue);
+
+    Data = dbm_fetch(dbFile, Key);
+
+    if (Data.dsize > 0)
+    {
+	::memcpy(StudNumb, Data.dptr, STUDENTNUMBERSIZE);
+	
+	char* temp = ::new char[Data.dsize-STUDENTNUMBERSIZE+1];
+	::memset(temp, '\0', Data.dsize-STUDENTNUMBERSIZE+1);
+	::memcpy(temp, Data.dptr+STUDENTNUMBERSIZE, Data.dsize-STUDENTNUMBERSIZE);
+	Uid tempId(temp);
+	
+	id = tempId;
+	::delete [] temp;
+	value = 0;
+    }
+    else
+	value = 16;
+
+    dbm_close(dbFile);
+
+    cout << "Assigning new number " << StudNumb << " to Uid "
+	 << id << " and index " << counterValue << endl;
+    
+    return value;
+}
+
+/*
+ * Try to get the overflow lock. We attempt this a few times in
+ * case of lock conflict.
+ */
+
+Boolean lock (int fd)
+{
+    struct flock arg;
+    Boolean result = FALSE;
+    int retry = fileRetry;
+    
+    arg.l_whence = SEEK_SET;
+    arg.l_start = 0;
+    arg.l_len = 0;
+    arg.l_type = F_WRLCK;
+
+    do
+    {
+	if (::fcntl(fd, F_SETLK, &arg) == -1)
+	{
+	    retry--;
+	    sleep(fileTimeout);
+	}
+	else
+	    result = TRUE;
+      
+    } while ((retry > 0) && (!result));
+
+    return result;
+}
+
+/*
+ * Release the lock. If this fails, then there's very little we
+ * can do anyway.
+ */
+ 
+void unlock (int fd)
+{
+    struct flock arg;
+
+    arg.l_whence = SEEK_SET;
+    arg.l_start = 0;
+    arg.l_len = 0;
+    arg.l_type = F_UNLCK;
+
+    ::fcntl(fd, F_SETLK, &arg);
+}
+
+/*
+ * Given the student number, find the corresponding Uid. This may
+ * involve looking in all of the dbm files.
+ */
+
+Boolean mapId (const char* stunumber, Uid& id)
+{
+    Uid* tempId = (Uid*) 0;  
+    dbFile = dbm_open(staticKeyMap, O_RDONLY, 0);
+
+    if (dbFile == 0)
+	return FALSE;
+
+    char* tempNumber = new char[STUDENTNUMBERSIZE];
+    ::memcpy(tempNumber, stunumber, STUDENTNUMBERSIZE);
+    
+    Key.dptr = tempNumber;
+    Key.dsize = STUDENTNUMBERSIZE;
+  
+    Data = dbm_fetch(dbFile, Key);
+
+    /*
+     * If not in standard mapping file, look in overflow file.
+     * The file is for unexpected returning students (writable).
+     * (The block of unallocated student numbers for new students
+     * is assumed to be in the main db).
+     */
+  
+    if (Data.dsize <= 0)
+    {
+	dbm_close(dbFile);  // main db
+
+	/*
+	 * Try mapping for unexpected returners.
+	 * Open and get lock to prevent inconsistent accesses.
+	 */
+	    
+	int fd = ::open(overflowLockFile, O_RDWR | O_CREAT | O_SYNC, 0666);
+
+	if ((fd == -1) || (!lock(fd)))
+	{
+	    ::close(fd);
+	    ::unlink(overflowLockFile);
+	    ::delete [] tempNumber;
+	    return FALSE;
+	}
+
+	/*
+	 * We only need this in read mode, since we are not
+	 * about to modify its contents.
+	 */
+	    
+	dbFile = dbm_open(overflowKeyMap, O_RDONLY | O_CREAT, 0666);
+
+	if (dbFile == 0)
+	{
+	    ::delete [] tempNumber;
+	    return FALSE;
+	}
+	    
+	Data = dbm_fetch(dbFile, Key);
+
+	Boolean result = FALSE;
+	    
+	if (Data.dsize > 0)
+	{
+	    char* temp = ::new char[Data.dsize+1];
+	    ::memset(temp, '\0', Data.dsize+1);
+	    ::memcpy(temp, Data.dptr, Data.dsize);
+	    tempId = new Uid(temp);
+	    result = TRUE;
+	    ::delete [] temp;
+	}
+	
+	dbm_close(dbFile);  // overflow db
+	unlock(fd);
+	::close(fd);
+	::unlink(overflowLockFile);
+	
+	if (!result)
+	{
+	    ::delete [] tempNumber;
+	    return FALSE;
+	}
+    }
+    else
+    {
+	char* temp = ::new char[Data.dsize+1];
+	::memset(temp, '\0', Data.dsize+1);
+	::memcpy(temp, Data.dptr, Data.dsize);
+	tempId = new Uid(temp);
+	dbm_close(dbFile);  // main db
+	::delete [] temp;
+    }
+
+    ::delete [] tempNumber;
+    
+    id = *tempId;
+    delete tempId;
+
+    return TRUE;
+}
+
+/*
+ * Lock is used to determine whether we open-read-close within
+ * this routine.
+ */
+
+void tidyupArjuna ()
+{
+    AbortAndCleanUp();
+    
+    struct stat buf;
+    
+    if ((tmpName1) && (stat(tmpName1, &buf) == 0))
+    {
+	if (buf.st_size == 0)
+	    unlink(tmpName1);
+    }
+
+    if ((tmpName2) && (stat(tmpName2, &buf) == 0))
+    {
+	if (buf.st_size == 0)
+	    unlink(tmpName2);
+    }
+
+    if (tmpName1)
+	::delete [] tmpName1;
+    if (tmpName2)
+	::delete [] tmpName2;
+
+    if (iosys)
+    {
+	delete iosys;
+	iosys = 0;
+    }
+
+    if (ServerList)
+    {
+	for (int i = 0; i < conf->number(); i++)
+	{
+	    if (ServerList[i])
+		::delete [] ServerList[i];
+	}
+
+	::delete [] ServerList;
+	ServerList = 0;
+    }
+    
+    if (conf)
+	delete conf;
+
+    init = FALSE;
+}
+
+static void addHandlers ();  // forward declaration
+
+static void handle_user_interrupt (int dummy DOTDOTDOT)
+{
+    reportf("Got user signal. Tidying up.\n");
+
+    if (action)
+	reportf("Ignoring signal, as atomic action is running.\n");
+    else
+	tidyupArjuna();
+
+    addHandlers();
+}
+
+/*
+ * System signal handler. We attempt to abort any running action, but
+ * if the action is within the commit phase exiting may leave system
+ * resources locked. We attempt to check the action status, and ignore the
+ * signal if it could compromise the action. If the system needs to be
+ * killed then use SIGKILL, but be warned: resources may be held.
+ */
+
+static void handle_interrupt (int dummy DOTDOTDOT)
+{
+    if (action)
+    {
+	if ((action->status() == PREPARING) || (action->status() == ABORTING)
+	    || (action->status() == PREPARED) || (action->status() == COMMITTING)
+	    || (action->status() == CLEANUP))
+	{
+	    reportf("Got system signal. Ignoring as atomic action is running.\n");
+	    return;
+	}
+    }
+
+    reportf("Got system signal. Tidying up and exiting.\n");
+    tidyupArjuna();
+    
+    exit(1);
+}
+
+static void tidyupAndExit (int dummy DOTDOTDOT)
+{
+    reportf("Got signal. Tidying up and exiting.\n");
+
+    if (action)
+	reportf("Ignoring signal, as atomic action is running.\n");
+    else
+    {
+	tidyupArjuna();
+	exit(1);
+    }
+
+    addHandlers();
+}
+
+/*
+ * We need this for some flavours of Unix where signal handlers need to
+ * be re-established whenever they are raised.
+ */
+
+static void addHandlers ()
+{
+    signal(SIGABRT, handle_interrupt);
+    signal(SIGQUIT, handle_interrupt);
+    signal(SIGINT, handle_interrupt);
+    signal(SIGTERM, handle_interrupt);
+    signal(SIGUSR2, handle_user_interrupt);
+    signal(SIGUSR1, tidyupAndExit);    
+}
+    
+
+/*
+ * Set cout, cerr and signal handlers.
+ */
+
+void initArjuna ()
+{
+    /*
+     * Make sure we only do this once!
+     */
+    
+    if (init)
+	return;
+    
+    addHandlers();
+
+    /*
+     * Make sure iostream and object store are initialised before use.
+     */
+    
+    static MappedStoreSetUp MStoreSetUp;
+    static ActionStoreSetUp ActionSetUp;
+    
+    iosys = new Iostream_init;
+
+    tmpName1 = ::new char[::strlen(outputFile)+10];
+    ::memset(tmpName1, '\0', ::strlen(outputFile)+10);
+
+    sprintf(tmpName1, outputFile, getpid());
+    
+    target1 = new ofstream(tmpName1);
+    if (!(*target1))
+	reportf("Cannot open arjuna output file.\n");
+    else
+	cout = *target1;
+
+    tmpName2 = ::new char[::strlen(errorFile)+10];
+    ::memset(tmpName2, '\0', ::strlen(errorFile)+10);
+
+    sprintf(tmpName2, errorFile, getpid());
+    
+    target2 = new ofstream(tmpName2);
+    if (!(*target2))
+	reportf("Cannot open arjuna error file.\n");
+    else
+	cerr = *target2;
+
+    Boolean res = FALSE;
+
+    conf = new ReplicaConfiguration(ServerConfigurationFile, res);
+
+    if (!res)
+    {
+	cerr << "Error - no replica configuration file found!" << endl;
+	abort();
+    }
+    else
+    {
+	if (conf->number() > 0)
+	{
+	    NumberOfServers = conf->number();
+	    ServerList = ::new char* [NumberOfServers];
+
+	    for (int i = 0; i < NumberOfServers; i++)
+	    {
+		ServerList[i] = ::new char[::strlen(conf->hosts()[i])+1];
+		::strcpy(ServerList[i], conf->hosts()[i]);
+	    }
+	}
+	else
+	{
+	    cerr << "Error - not enough replicas specified!" << endl;
+	    abort();
+	}
+    }
+
+    init = TRUE;
+}
+
+Boolean isDumping ()
+{
+    struct stat buf;
+
+    if (stat(dumpingFile, &buf) == 0)
+	return TRUE;
+    else
+	return FALSE;
+}
+    
+int DBFetch (char* StudNumb, char* Reply, Boolean Lock)
+{
+    if (!checkNumber(StudNumb))
+	return 29;
+    
+    /*
+     * Check we are not already servicing a student record.
+     */
+
+    if ((::memcmp(RecordLocked, NORECORD, STUDENTNUMBERSIZE) != 0) && (Lock))
+	return 11;
+
+    if (isDumping())
+	return 32;
+    
+    /*
+     * If we have a running action, then abort it. (We should
+     * never encounter this situation, but ...)
+     */
+
+    AbortAndCleanUp();
+
+    cout << "Process " << getpid() << " working for student number " << StudNumb << endl;
+    
+    /*
+     * Get mapping of student id to Uid. If this fails, then
+     * we must give up.
+     */
+
+    Uid id;
+    int value;  // return code
+
+    if (!mapId(StudNumb, id))
+    {
+	reportf("Failed to map student number to Uid.\n");
+	return 3;
+    }
+    
+    /*
+     * Now try to activate a server to access the object through.
+     */
+
+    value = getServer(StudNumb, id);
+
+    if (value > 0)
+    {
+	reportf("Failed to get student record server.\n");
+	return value;
+    }
+    else
+	value = 4;  // reset
+
+    SOutCome res = UNKNOWN;
+    Buffer buff;
+
+    /*
+     * This action will typically out-live this routine, and only
+     * get terminated within save or close.
+     */
+    
+    action = new AtomicAction;
+    action->Begin();
+
+    if (!Lock)  // open, get record, close.
+    {
+	theRecord->fetchRecord(res, buff);
+
+	if (res != DONE)  // lock conflict or empty?
+	{
+	    if (res == EMPTY)
+	    {
+		reportf("Record is empty. Try using new.\n");
+		value = 12;
+	    }
+	    else
+	    {
+		if (res == UNKNOWN)
+		    value = 30;
+		else
+		    value = 2;
+		
+		reportf("Failed to fetch record.\n");
+	    }
+	    
+	    action->Abort();
+	}
+	else
+	{
+	    void* ptr = 0;
+	    size_t length = 0;
+	    
+	    if (buff.unpack(ptr, length))
+	    {
+		::memcpy(Reply, ptr, length);
+		::delete [] ptr;
+	    
+		if (action->End() != COMMITTED)
+		{
+		    reportf("Fetch action commit failed.\n");
+		    Reply[0] = '\0';
+		    value = 20;
+		}
+		else
+		{
+		    value = 0;    // finished ok
+		    reportf("Fetched record:\n%s", Reply);
+		}
+	    }
+	    else
+		action->Abort();  // unpack error
+	}
+
+	CleanUp();  // finished with this server and action.
+
+	return value;
+    }
+    
+    /*
+     * Keep the atomic action running until close/save called.
+     */
+    
+    theRecord->fetchExclusiveRecord(res, buff);
+
+    if (res != DONE)
+    {
+	if (res == EMPTY)
+	{
+	    reportf("Record is empty. Try using new.\n");	    
+	    value = 12;
+	}
+	if (res == UNKNOWN)
+	    value = 30;
+	else
+	    value = 2;
+	
+	AbortAndCleanUp();
+    }
+    else
+    {
+	::memcpy(RecordLocked, StudNumb, STUDENTNUMBERSIZE);
+
+	/*
+	 * Keep the atomic action running until close/save called.
+	 */
+	    
+	void* ptr = 0;
+	size_t length = 0;
+
+	if (buff.unpack(ptr, length))
+	{
+	    ::memcpy(Reply, ptr, length);
+	    ::delete [] ptr;
+	    value = 0;
+	    reportf("Opened record:\n%s", Reply);
+	}
+	else
+	{
+	    AbortAndCleanUp();	    
+	    Reply[0] = '\0';
+	    value = 13;  // any value to get default error.
+	}
+    }
+
+    return value;
+}
+
+int DBStore (char* NewData)
+{
+    if (!checkNumber(NewData))
+	return 21;
+    
+    /*
+     * Are we running an action and servicing a student?
+     */
+
+    if ((!action) || (::memcmp(RecordLocked, NewData, STUDENTNUMBERSIZE) != 0))
+	return 11;
+
+    SOutCome res = UNKNOWN;
+    Buffer buff;
+    int value = 4;  // return code
+
+    if (!buff.packNonMappedBlock(NewData, RECSIZE))
+    {
+	action->Abort();
+	value = 12;       // general fault (default error message)
+    }
+    else
+    {
+	theRecord->replaceRecord(res, buff);
+
+	if (res != DONE)
+	{
+	    action->Abort();
+	    if (res == UNKNOWN)
+		value = 30;
+	}
+	else
+	{
+	    if (action->End() != COMMITTED)
+		value = 20;
+	    else
+	    {
+		value = 0;
+		reportf("Saved record:\n%s", NewData);
+	    }
+	}
+    }
+
+    CleanUp();
+    
+    return value;
+}
+
+/*
+ * Since this operation means close and do not modify the record, we
+ * may as well abort.
+ */
+
+int DBClose (char* StudNum)
+{
+    if (!checkNumber(StudNum))
+	return 29;
+
+    if ((!action) || (::memcmp(RecordLocked, StudNum, STUDENTNUMBERSIZE) != 0))
+	return 6;
+    
+    AbortAndCleanUp();
+
+    return 0;
+}
+
+/*
+ * If the student number is all 0s then we must get a new one from
+ * the newKeyMap, where the mapping to Uid is already set. Otherwise
+ * we must create a new student is and assign the mapping to Uid in
+ * the overflowKeyMap.
+ */
+
+int DBNew (char* StudNumb, char* Reply)
+{
+    if (!checkNumber(StudNumb))
+	return 29;
+    
+    /*
+     * Is there a running action, or are we servicing a student?
+     */
+
+    if ((action) || (::memcmp(RecordLocked, NORECORD, STUDENTNUMBERSIZE) != 0))
+    	return 15;
+    
+    if (isDumping())
+	return 32;
+
+    Uid id(NIL_UID);
+    char NewKey[STUDENTNUMBERSIZE+1];
+    int error = 0;
+
+    ::memset(NewKey, '\0', STUDENTNUMBERSIZE+1);
+
+    if (::memcmp(StudNumb, CREATENEWPATTERN, STUDENTNUMBERSIZE) == 0)
+    {
+	/*
+	 * All 0s.
+	 */
+
+	if (!createIndex(error))
+	{
+	    CleanUp();
+	    return error;
+	}
+	else
+	    error = 2;
+	
+	int counterValue = getCounter(error);
+
+	if (counterValue >= 0)
+	{
+	    error = getNewStudentNumber(counterValue, NewKey, id);
+
+	    if (error == 0)
+		error = getServer(NewKey, id);
+	}
+
+	if ((error != 0) || (counterValue < 0))
+	{
+	    CleanUp();
+	    return error;
+	}
+    }
+    else
+    {
+	if (mapId(StudNumb, id))
+	    return 33;
+	
+	::memcpy(NewKey, StudNumb, STUDENTNUMBERSIZE);
+
+	/*
+	 * Have a student number, but no mapping to Uid. So, create
+	 * a new persistent object, and get its Uid for insertion
+	 * in the overflow db. id is NIL_UID at this point, so we
+	 * create a new (blank) object.
+	 */
+
+	error = getServer(NewKey, id);
+
+	if (error > 0)
+	{
+	    CleanUp();
+	    return error;
+	}
+
+	int fd = ::open(overflowLockFile, O_RDWR | O_CREAT | O_SYNC, 0666);
+	
+	error = 6;
+	
+	if ((fd == -1) || (!lock(fd)))
+	{
+	    ::close(fd);
+	    ::unlink(overflowLockFile);
+	    CleanUp();
+	    return error;
+	}
+
+	dbFile = dbm_open(overflowKeyMap, O_RDWR | O_CREAT, 0666);
+	
+	if (dbFile)
+	{
+	    /*
+	     * Get the Uid of the new object, and put it into a char*
+	     */
+	    
+	    char uidBuff[UidSize];
+
+	    ::memset(uidBuff, '\0', UidSize);
+	    ostrstream x(uidBuff, UidSize);
+	    
+	    x << theRecord->get_uid();
+	    
+	    Key.dptr = NewKey;
+	    Key.dsize = STUDENTNUMBERSIZE;
+	    Data.dptr = uidBuff;
+	    Data.dsize = ::strlen(uidBuff);
+
+	    if (dbm_store(dbFile, Key, Data, DBM_REPLACE) == 0)
+		error = 0;
+	}
+
+	dbm_close(dbFile);
+	unlock(fd);
+	::close(fd);
+	::unlink(overflowLockFile);	
+	
+	if (error > 0)
+	{
+	    CleanUp();
+	    return error;
+	}
+    }
+
+    /*
+     * Only start the atomic action at this point. Creation
+     * of servers happens outside of action.
+     */
+    
+    action = new AtomicAction;
+    action->Begin();
+    
+    cout << "Process " << getpid() << " working for student number " << NewKey << endl;    
+    
+    ::memset(&Reply[ 23 ], ' ', RECSIZE);
+    ::memcpy(&Reply[ 23 ], NewKey, STUDENTNUMBERSIZE);
+    CreateBlankRec(&Reply[ 23 ]);
+
+    Buffer buff;
+    SOutCome res = UNKNOWN;
+
+    /*
+     * If we fail at this point then we have already set the mapping
+     * up in the db file for unexpected arrivals. This should not be
+     * a problem for subsequent retries.
+     */
+	 
+    if (!buff.packNonMappedBlock((void*) &Reply[23], RECSIZE))
+    {
+	AbortAndCleanUp();
+	return 11;
+    }
+
+    theRecord->replaceRecord(res, buff);
+
+    if (res != DONE)
+    {
+	AbortAndCleanUp();
+	Reply[0] = '\0';
+	return 13;
+    }
+    
+    /*
+     * Set student record for later checks, and keep action and server
+     * running.
+     */
+    
+    ::memcpy(RecordLocked, NewKey, STUDENTNUMBERSIZE);
+    
+    return 0;
+}
+
+/*
+ * Delete a student record which has already been opened, i.e., we
+ * have an action and server running.
+ */
+
+int DBDel (char* StudNumb)
+{
+    if (!checkNumber(StudNumb))
+	return 29;
+
+    if ((::memcmp(RecordLocked, NORECORD, STUDENTNUMBERSIZE) == 0) ||
+	(::memcmp(RecordLocked, StudNumb, STUDENTNUMBERSIZE) != 0) || (!action))
+	return 6;
+    
+    SOutCome res = UNKNOWN;
+    int value = 5;
+    
+    theRecord->resetRecord(res);
+
+    if (res == DONE)
+    {
+	if (action->End() != COMMITTED)
+	    value = 20;
+	else
+	    value = 0;
+    }
+    else
+	action->Abort();
+
+    CleanUp();
+
+    return value;
+}

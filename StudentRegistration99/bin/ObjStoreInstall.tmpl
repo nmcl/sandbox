@@ -1,0 +1,29 @@
+#!/bin/sh
+
+for i in OBJSTORES
+do
+    (
+        echo "-- Removing All on "$i" --"
+        remsh $i -n rm -rf LOCATION/\*
+        echo "-- Removed All on "$i" --"
+    ) &
+done
+wait
+
+for i in OBJSTORES
+do
+    echo "-- Installing Arjuna on "$i"--"
+    remsh $i -n tar xpf ArjunaInstall.tar
+    echo "-- Installing Registration on "$i"--"
+    remsh $i -n tar xpf RegistrationInstall.tar
+done
+
+for i in OBJSTORES
+do
+    (
+        echo "-- Installing ObjectStore on "$i" --"
+        remsh $i -n tar xpf ObjectStore.tar
+        echo "-- Installed ObjectStore on "$i" --"
+    ) &
+done
+wait

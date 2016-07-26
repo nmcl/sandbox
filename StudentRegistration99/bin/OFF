@@ -1,0 +1,6 @@
+#!/bin/sh
+
+echo "Removing permissions"
+
+chmod a-rx CoreRemove Shutdown/* Startup/* PurgeLogs/*
+

@@ -1,0 +1,22 @@
+<HTML>
+<HEAD>
+<TITLE>Kill User</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<H1 ALIGN=CENTER>Kill User</H1>
+<HR>
+Please give the process id of the user you wish to kill, and the
+<A HREF="machinehelp.html">name</A> of the machine they are logged in at:
+<FORM METHOD="POST" ACTION="http://MACHINE/cgi-bin/killuser">
+<DL>
+<INPUT NAME="User Identifier" TYPE="text" MAXLENGTH=12> User Process ID
+</DL>
+<DL>
+<INPUT NAME="Machine Name" TYPE="text" MAXLENGTH=12> Machine Name
+</DL>
+<INPUT NAME="Submit" TYPE="submit" VALUE="OK">
+<INPUT NAME="Reset" TYPE="reset">
+</FORM>
+<HR>
+</BODY>
+</HTML>

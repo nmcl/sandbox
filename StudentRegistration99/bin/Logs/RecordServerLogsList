@@ -1,0 +1,8 @@
+#!/bin/sh
+
+for i in tarry-f
+do
+    echo "---- "$i" ----"
+    remsh $i -n ls -l /tmp/RecordServer_\*
+    remsh $i -n cat /tmp/RecordServer_\*
+done

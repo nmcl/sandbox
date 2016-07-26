@@ -1,0 +1,8 @@
+#!/bin/sh
+
+for i in DRIVERS
+do
+    echo "---- "$i" ----"
+    remsh $i -n ls -l /tmp/NewStudentRecordNumberServer_\*
+    remsh $i -n cat /tmp/NewStudentRecordNumberServer_\*
+done

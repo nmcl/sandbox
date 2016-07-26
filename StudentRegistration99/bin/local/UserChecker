@@ -1,0 +1,18 @@
+#!/bin/sh
+
+ps -u snowman | grep Registration > foo
+PIDS=`awk '{print $1}' foo`
+
+rm foo
+
+for i in $PIDS
+do
+	grep $i /home/nmcl/Install/RegistrationInstall/Logs/Registration* | grep started >> users
+done
+
+if test -r users
+then
+	cat users
+	wc -l users
+	rm users
+fi

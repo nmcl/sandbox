@@ -1,0 +1,20 @@
+COMMENT
+COMMENT Copyright (C) 1994,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile.tmpl,v 1.1 1996/09/02 09:24:51 arjuna Exp $
+COMMENT
+
+CreateInstallAbsoluteDirectory(INSTALL/bin/PurgeLogs)
+
+InstallAbsoluteProgram(INSTALL/bin/PurgeLogs,NewStudentRecordNumberServerLogsRemove)
+InstallAbsoluteProgram(INSTALL/bin/PurgeLogs,ObjStoreLogsRemove)
+InstallAbsoluteProgram(INSTALL/bin/PurgeLogs,RecordServerLogsRemove)
+InstallAbsoluteProgram(INSTALL/bin/PurgeLogs,RegistrationLogsRemove)
+InstallAbsoluteProgram(INSTALL/bin/PurgeLogs,WorkLogsRemove)
+
+TidyTarget(Imakefile NewStudentRecordNumberServerLogsRemove ObjStoreLogsRemove RecordServerLogsRemove RegistrationLogsRemove WorkLogsRemove)

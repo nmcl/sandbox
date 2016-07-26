@@ -1,0 +1,6 @@
+#!/bin/sh
+
+for i in DRIVERS
+do
+    rsh $i -l USER rm -f LOCATION/isDumping
+done

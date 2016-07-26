@@ -1,0 +1,12 @@
+#!/bin/sh
+
+rm -rf res/out*
+
+for i in 2 3 4 5
+do
+    for j in 00 01 02 03 04 05
+    do
+         ./SimulationRun -host tarry-f -port 5500 -user test$j$i -number 25 -v < ./dataset 1> res/out$j$i 2>&1 &
+         sleep 5
+    done
+done

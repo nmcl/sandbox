@@ -1,0 +1,61 @@
+COMMENT
+COMMENT Copyright (C) 1994,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile.tmpl,v 1.2 1996/08/27 18:00:14 arjuna Exp $
+COMMENT
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES) -I../include)
+
+LIBRARIES = 
+
+SOURCES = Util.cc \
+	  finduser.cc \
+	  inspectallusers.cc \
+	  inspectstudent.cc \
+	  killuser.cc \
+	  regsys.cc \
+	  unlockstudent.cc \
+	  logs.cc
+		  
+OBJECTS = Util.o \
+	  finduser.o \
+	  inspectallusers.o \
+	  inspectstudent.o \
+	  killuser.o \
+	  regsys.o \
+	  unlockstudent.o \
+	  logs.o
+
+AllTarget(finduser inspectallusers inspectstudent killuser regsys unlockstudent logs)
+
+InstallAbsoluteProgram(CGIBIN,finduser)
+InstallAbsoluteProgram(CGIBIN,inspectallusers)
+InstallAbsoluteProgram(CGIBIN,inspectstudent)
+InstallAbsoluteProgram(CGIBIN,killuser)
+InstallAbsoluteProgram(CGIBIN,regsys)
+InstallAbsoluteProgram(CGIBIN,unlockstudent)
+InstallAbsoluteProgram(CGIBIN,logs)
+
+MakeProgramCPLUSPLUS(finduser,finduser.o Util.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(inspectallusers,inspectallusers.o Util.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(inspectstudent,inspectstudent.o Util.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(killuser,killuser.o Util.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(regsys,regsys.o Util.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(unlockstudent,unlockstudent.o Util.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(logs,logs.o Util.o $(LIBRARIES),NOPARAM)
+
+MakeObjectCPLUSPLUS(Util,NOPARAM)
+MakeObjectCPLUSPLUS(finduser,NOPARAM)
+MakeObjectCPLUSPLUS(inspectallusers,NOPARAM)
+MakeObjectCPLUSPLUS(inspectstudent,NOPARAM)
+MakeObjectCPLUSPLUS(killuser,NOPARAM)
+MakeObjectCPLUSPLUS(regsys,NOPARAM)
+MakeObjectCPLUSPLUS(unlockstudent,NOPARAM)
+MakeObjectCPLUSPLUS(logs,NOPARAM)
+
+TidyTarget(finduser inspectallusers inspectstudent killuser regsys unlockstudent logs Imakefile)

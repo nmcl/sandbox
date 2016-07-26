@@ -1,0 +1,9 @@
+#!/bin/sh
+
+for i in DRIVERS
+do
+    echo >$1
+    echo "---- "$i" ----" >>$1
+    echo "Pausings Driver on $i" >>$1
+    rsh $i -l USER LOCATION/webscripts/local/Signal_driver -USR2 >>$1 2>>$2
+done

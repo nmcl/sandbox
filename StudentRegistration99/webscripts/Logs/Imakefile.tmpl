@@ -1,0 +1,21 @@
+COMMENT
+COMMENT Copyright (C) 1994,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile.tmpl,v 1.2 1996/09/02 09:25:21 arjuna Exp $
+COMMENT
+
+CreateInstallAbsoluteDirectory(INSTALL/webscripts/Logs)
+
+InstallAbsoluteProgram(INSTALL/webscripts/Logs,DriverLogsList)
+InstallAbsoluteProgram(INSTALL/webscripts/Logs,NewStudentRecordNumberServerLogsList)
+InstallAbsoluteProgram(INSTALL/webscripts/Logs,ObjStoreLogsCheck)
+InstallAbsoluteProgram(INSTALL/webscripts/Logs,RecordServerLogsList)
+InstallAbsoluteProgram(INSTALL/webscripts/Logs,RegistrationLogsList)
+InstallAbsoluteProgram(INSTALL/webscripts/Logs,WorkLogsCheck)
+
+TidyTarget(Imakefile DriverLogsList NewStudentRecordNumberServerLogsList ObjStoreLogsCheck RecordServerLogsList RegistrationLogsList WorkLogsCheck)

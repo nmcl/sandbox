@@ -1,0 +1,9 @@
+#!/bin/sh
+
+for i in DRIVERS
+do
+    echo
+    echo "---- "$i" ----"
+    echo
+    remsh $i -n cat LOCATION/Logs/Registration\*
+done

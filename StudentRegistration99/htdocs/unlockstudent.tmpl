@@ -1,0 +1,23 @@
+<HTML>
+<HEAD>
+<TITLE>Unlock Student</TITLE>
+</HEAD>
+<BODY BGCOLOR=#FFFFFF>
+<H1 ALIGN=CENTER>Unlock Student</H1>
+<HR>
+Please give the process ID of the student server you wish to unlock, and the
+<A HREF="machinehelp.html">name</A> of the machine
+on which they are currently being used:
+<FORM METHOD="POST" ACTION="http://MACHINE/cgi-bin/unlockstudent">
+<DL>
+<INPUT NAME="Student Number" TYPE="text" MAXLENGTH=12> Process ID
+</DL>
+<DL>
+<INPUT NAME="Machine Name" TYPE="text" MAXLENGTH=12> Machine Name
+</DL>
+<INPUT NAME="Submit" TYPE="submit" VALUE="OK">
+<INPUT NAME="Reset" TYPE="reset">
+</FORM>
+<HR>
+</BODY>
+</HTML>

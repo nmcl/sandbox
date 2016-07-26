@@ -1,0 +1,5 @@
+#!/bin/sh
+
+echo "Adding permissions"
+
+chmod +rx CoreRemove Shutdown/* Startup/* PurgeLogs/*

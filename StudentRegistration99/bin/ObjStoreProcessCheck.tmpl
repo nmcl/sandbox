@@ -1,0 +1,7 @@
+#!/bin/sh
+
+for i in OBJSTORES
+do
+    echo "---- "$i" ----"
+    remsh $i -n ps -lu USER
+done

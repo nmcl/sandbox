@@ -1,0 +1,6 @@
+#!/bin/sh
+
+for i in DRIVERS
+do
+    rsh -l USER $i LOCATION/webscripts/local/Finder_user $1 >$2 2> $3
+done

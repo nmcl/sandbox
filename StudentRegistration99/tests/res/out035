@@ -1,0 +1,132 @@
+The current host is tarry-f.ncl.ac.uk.
+Local address is: 128.240.208.102
+
+Open request for student:  988250949
+Total time taken: 45090 milliseconds. Status: OS
+1: Time waited 10
+Close request for student: 988250949
+Total time taken: 11266 milliseconds. Status: CS
+Request successful.
+
+Open request for student:  988262241
+Total time taken: 13308 milliseconds. Status: OS
+2: Time waited 10
+Save request for student:  988262241
+Total time taken: 3146 milliseconds. Status: SS
+Request successful.
+
+Open request for student:  988247581
+Total time taken: 14033 milliseconds. Status: OS
+3: Time waited 10
+Close request for student: 988247581
+Total time taken: 4398 milliseconds. Status: CS
+Request successful.
+
+Open request for student:  988261185
+Total time taken: 13414 milliseconds. Status: OS
+4: Time waited 10
+Close request for student: 988261185
+Total time taken: 11223 milliseconds. Status: CS
+Request successful.
+
+Open request for student:  988247802
+Total time taken: 12531 milliseconds. Status: OS
+5: Time waited 10
+Close request for student: 988247802
+Total time taken: 8973 milliseconds. Status: CS
+Request successful.
+
+Open request for student:  988259193
+Total time taken: 6809 milliseconds. Status: OS
+6: Time waited 10
+Save request for student:  988259193
+Total time taken: 3290 milliseconds. Status: SS
+Request successful.
+
+Open request for student:  988263318
+Total time taken: 9329 milliseconds. Status: OS
+7: Time waited 10
+Close request for student: 988263318
+Total time taken: 2899 milliseconds. Status: CS
+Request successful.
+
+Open request for student:  988263927
+Total time taken: 9763 milliseconds. Status: OS
+8: Time waited 10
+Save request for student:  988263927
+Total time taken: 10209 milliseconds. Status: SS
+Request successful.
+
+Open request for student:  988259218
+Total time taken: 16215 milliseconds. Status: OS
+9: Time waited 10
+Save request for student:  988259218
+Total time taken: 18095 milliseconds. Status: SS
+Request successful.
+
+Open request for student:  988252389
+Total time taken: 11309 milliseconds. Status: OS
+10: Time waited 10
+Save request for student:  988252389
+Total time taken: 10181 milliseconds. Status: SS
+Request successful.
+
+Open request for student:  988255427
+Total time taken: 13636 milliseconds. Status: OS
+11: Time waited 10
+Close request for student: 988255427
+Total time taken: 3053 milliseconds. Status: CS
+Request successful.
+
+Open request for student:  988246883
+Total time taken: 11063 milliseconds. Status: OS
+12: Time waited 10
+Save request for student:  988246883
+Total time taken: 9950 milliseconds. Status: SS
+Request successful.
+
+Open request for student:  988262322
+Total time taken: 16088 milliseconds. Status: OS
+13: Time waited 10
+Save request for student:  988262322
+Total time taken: 3969 milliseconds. Status: SS
+Request successful.
+
+Open request for student:  988261657
+Total time taken: 15939 milliseconds. Status: OS
+14: Time waited 10
+Close request for student: 988261657
+Total time taken: 5056 milliseconds. Status: CS
+Request successful.
+
+Open request for student:  988257030
+Total time taken: 16348 milliseconds. Status: OS
+15: Time waited 10
+Save request for student:  988257030
+Total time taken: 8095 milliseconds. Status: SS
+Request successful.
+
+Open request for student:  988253571
+Total time taken: 18498 milliseconds. Status: OS
+16: Time waited 10
+Close request for student: 988253571
+Total time taken: 12044 milliseconds. Status: CS
+Request successful.
+
+Open request for student:  988249275
+Total time taken: 11700 milliseconds. Status: OS
+17: Time waited 10
+Save request for student:  988249275
+Total time taken: 11970 milliseconds. Status: SS
+Request successful.
+
+Open request for student:  988245336
+Total time taken: 4158 milliseconds. Status: OF
+Did not get OS message for student 988245336.
+
+Open request for student:  988260041
+Read failed on connection: Broken pipe
+Total time taken: 1 milliseconds. Status: OF
+Did not get OS message for student 988260041.
+
+Open request for student:  988260856

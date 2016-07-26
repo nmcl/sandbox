@@ -1,0 +1,29 @@
+#!/bin/sh
+
+for i in tarry-f
+do
+    (
+        echo "-- Removing All on "$i" --"
+        remsh $i -n rm -rf /home/nmcl/Install/\*
+        echo "-- Removed All on "$i" --"
+    ) &
+done
+wait
+
+for i in tarry-f
+do
+    echo "-- Installing Arjuna on "$i"--"
+    remsh $i -n tar xpf ArjunaInstall.tar
+    echo "-- Installing Registration on "$i"--"
+    remsh $i -n tar xpf RegistrationInstall.tar
+done
+
+for i in tarry-f
+do
+    (
+        echo "-- Installing ObjectStore on "$i" --"
+        remsh $i -n tar xpf ObjectStore.tar
+        echo "-- Installed ObjectStore on "$i" --"
+    ) &
+done
+wait

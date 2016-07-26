@@ -1,0 +1,7 @@
+#!/bin/sh
+
+for i in DRIVERS
+do
+    echo "---- "$i" ----"
+    remsh $i -n "find /tmp -name RecordServer_\* -exec rm {} \;"
+done

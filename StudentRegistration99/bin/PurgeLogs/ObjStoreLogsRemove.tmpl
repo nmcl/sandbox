@@ -1,0 +1,7 @@
+#!/bin/sh
+
+for i in OBJSTORES
+do
+    echo "---- "$i" ----"
+    remsh $i -n rm -f /tmp/manager_\* /tmp/RPObjStore_\* /tmp/ping\*
+done

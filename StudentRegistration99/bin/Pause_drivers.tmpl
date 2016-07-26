@@ -1,0 +1,9 @@
+#!/bin/sh
+
+for i in DRIVERS
+do
+    echo
+    echo "---- "$i" ----"
+    echo "Pausings Driver on $i"
+    remsh $i LOCATION/bin/local/Signal_driver -USR2
+done

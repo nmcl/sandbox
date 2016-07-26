@@ -1,0 +1,13 @@
+#!/bin/sh
+
+ps -u snowman | grep Registration > foo
+PIDS=`awk '{print $1}' foo`
+
+for i in $PIDS
+do
+	echo "**Killing $i"
+	kill -USR1 $i
+done
+
+rm foo
+

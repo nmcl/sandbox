@@ -1,0 +1,8 @@
+#!/bin/sh
+
+for i in DRIVERS
+do
+    echo "---- "$i" ----"
+    rsh $i -l USER ls -l /tmp/RecordServer_\* >$1 2>$2
+    rsh $i -l USER cat /tmp/RecordServer_\* >>$1 2>>$2
+done

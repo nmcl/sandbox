@@ -1,0 +1,10 @@
+#!/bin/sh
+
+echo "---- Logs ----"
+remsh $1 -n ls -l /tmp | grep USER
+
+echo "---- Process ----"
+remsh $1 -n ps -lu USER
+
+echo "---- Resources ----"
+remsh $1 -n ipcs | grep USER

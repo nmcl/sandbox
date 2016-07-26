@@ -1,0 +1,7 @@
+#!/bin/sh
+
+for i in OBJSTORES
+do
+    echo "---- "$i" ----" >$1
+    rsh $i -l USER ps -lu USER >>$1
+done

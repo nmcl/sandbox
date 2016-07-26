@@ -1,0 +1,21 @@
+COMMENT
+COMMENT Copyright (C) 1994,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile.tmpl,v 1.1 1996/09/02 09:25:03 arjuna Exp $
+COMMENT
+
+CreateInstallAbsoluteDirectory(/home/nmcl/Install/RegistrationInstall/bin/local)
+
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin/local,Finder_student)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin/local,Finder_user)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin/local,Signal_driver)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin/local,Signal_registration)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin/local,Unlocker)
+InstallAbsoluteProgram(/home/nmcl/Install/RegistrationInstall/bin/local,UserChecker)
+
+TidyTarget(Imakefile Finder_student Finder_user UserChecker Signal_driver Signal_registration)
