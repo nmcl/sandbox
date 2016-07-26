@@ -1,0 +1,52 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: SingleTypeMS.n,v 1.3 1995/09/13 11:15:59 ngdp Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(SINGLETYPEMS_CC_)
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF off_t SingleTypeMappedStore::dataSegment ()
+{
+    return sizeof(stateCount) + sizeof(size_t) + (headerSize() * MAX_STATES);
+}
+
+INLINEF const TypeName SingleTypeMappedStore::type () const
+{
+    return MappedStoreType;
+}
+
+INLINEF Boolean SingleTypeMappedStore::supressEntry ( const char * ) const
+{
+    return FALSE;
+}
+
+INLINEF Boolean SingleTypeMappedStore::lock ( int, int ) const
+{
+    return FALSE;
+}
+
+INLINEF Boolean SingleTypeMappedStore::unlock ( int ) const
+{
+    return FALSE;
+}
+
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif
