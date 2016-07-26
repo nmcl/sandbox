@@ -1,0 +1,7 @@
+#!/bin/sh
+
+for i in tarry-f
+do
+    echo "---- "$i" ----"
+    remsh $i -n rm -f /tmp/manager_\* /tmp/pingdaemon_\* /tmp/Driver_\* /tmp/Regist_\* /tmp/RecordServer_\*
+done
