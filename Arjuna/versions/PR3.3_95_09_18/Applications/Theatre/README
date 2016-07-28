@@ -1,0 +1,18 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ */
+
+This is a simple distributed theatre booking application,
+using atomic actions and concurrency control.
+
+Usage:
+To create a new theatre object
+	Theatre -new
+
+To use a previous theatre object
+	Theatre -uid uid [-host host]

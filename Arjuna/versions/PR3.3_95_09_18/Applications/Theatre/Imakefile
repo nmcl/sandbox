@@ -1,0 +1,100 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.8 1996/07/04 12:57:50 nsmw Exp $
+COMMENT
+
+
+LIBRARIES = $(LIBARJSERVERS) $(LIBSTUB) $(LIBRPC) $(LIBOBJECTSTORE) $(LIBARJUNA) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES) $(IV_CPPFLAGS) -Div2_6_compatible)
+
+SetLocalLibraries($(IV_LDFLAGS) -lIV $(X11_LDFLAGS) -lX11 -lm)
+
+STUBS = TheatrePersis_stub.h SeatPersis_stub.h VersionPersis_stub.h
+
+SOURCES = MenuItemDispatch.cc \
+	  LogInter.cc \
+	  LogLevel1Event.cc \
+	  LogLevel2Event.cc \
+	  LogBaseEvent.cc \
+	  LogMark.cc \
+	  LogVoid.cc \
+          SeatInter.cc \
+          SeatPersis.cc \
+          VersionPersis.cc \
+          Theatre.cc \
+          TheatreDispatch.cc \
+          TheatreInter.cc \
+          TheatrePersis.cc \
+          TheatrePersis_client.cc \
+          TheatrePersis_server.cc \
+          TheatrePersis_servermain.cc \
+	  $(STUBS)
+
+#ifdef GCC_LINK_BUG
+OBJTHEATRE =       Theatre.o TheatreDispatch.o TheatreInter.o \
+                   TheatrePersis_client.o \
+                   SeatInter.o MenuItemDispatch.o \
+		   Seat_Status_marshall.o \
+                   LogInter.o LogMark.o \
+                   LogVoid.o LogLevel1Event.o \
+                   LogLevel2Event.o LogBaseEvent.o \
+		   SeatPersis.o VersionPersis.o TheatrePersis.o
+
+OBJTHEATREPERSIS = TheatrePersis_servermain.o TheatrePersis.o \
+		   TheatrePersis_server.o SeatPersis.o VersionPersis.o \
+                   Seat_Status_marshall.o TheatrePersis_client.o
+
+
+#else
+OBJTHEATRE =       Theatre.o TheatreDispatch.o TheatreInter.o \
+                   TheatrePersis_client.o \
+                   SeatInter.o MenuItemDispatch.o \
+		   Seat_Status_marshall.o \
+                   LogInter.o LogMark.o \
+                   LogVoid.o LogLevel1Event.o \
+                   LogLevel2Event.o LogBaseEvent.o
+
+OBJTHEATREPERSIS = TheatrePersis_servermain.o TheatrePersis.o \
+		   TheatrePersis_server.o SeatPersis.o VersionPersis.o \
+                   Seat_Status_marshall.o
+
+#endif
+
+OBJECTS = $(OBJTHEATRE) $(OBJTHEATREPERSIS)
+
+AllTarget($(STUBS) Theatre TheatrePersis)
+StubTarget($(STUBS))
+
+CreateInstallTopDirectory(servers)
+InstallProgram(servers,TheatrePersis)
+
+MakeProgramCPLUSPLUS(Theatre,$(OBJTHEATRE) $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(TheatrePersis,$(OBJTHEATREPERSIS) $(LIBRARIES),NOPARAM)
+
+MakeStubGen(TheatrePersis,TheatrePersis,TheatrePersis,NOPARAM)
+MakeStubGen(SeatPersis,SeatPersis,SeatPersis,NOPARAM)
+MakeStubGen(VersionPersis,VersionPersis,VersionPersis,NOPARAM)
+
+MakeObjectCPLUSPLUS(MenuItemDispatch,NOPARAM)
+MakeObjectCPLUSPLUS(LogInter,NOPARAM)
+MakeObjectCPLUSPLUS(LogLevel1Event,NOPARAM)
+MakeObjectCPLUSPLUS(LogLevel2Event,NOPARAM)
+MakeObjectCPLUSPLUS(LogBaseEvent,NOPARAM)
+MakeObjectCPLUSPLUS(LogMark,NOPARAM)
+MakeObjectCPLUSPLUS(LogVoid,NOPARAM)
+MakeObjectCPLUSPLUS(SeatInter,NOPARAM)
+MakeObjectCPLUSPLUS(SeatPersis,NOPARAM)
+MakeObjectCPLUSPLUS(VersionPersis,NOPARAM)
+MakeObjectCPLUSPLUS(Seat_Status_marshall,NOPARAM)
+MakeObjectCPLUSPLUS(Theatre,NOPARAM)
+MakeObjectCPLUSPLUS(TheatreDispatch,NOPARAM)
+MakeObjectCPLUSPLUS(TheatreInter,NOPARAM)
+MakeObjectCPLUSPLUS(TheatrePersis,NOPARAM)
+TidyTarget(Theatre TheatrePersis Seat_Status_marshall.cc *_stub.h *_stubclass.h *_server.cc *_client.cc *_servermain.cc)
