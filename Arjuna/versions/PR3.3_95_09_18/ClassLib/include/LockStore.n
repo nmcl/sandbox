@@ -1,0 +1,36 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: LockStore.n,v 1.1 1993/11/03 12:29:04 nmcl Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(LOCKSTORE_CC_)
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+
+INLINEF LockStore::LockStore ( const key_t key )
+                             : SimpleStore(key)
+{
+}
+
+INLINEF LockStore::~LockStore ()
+{
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif
