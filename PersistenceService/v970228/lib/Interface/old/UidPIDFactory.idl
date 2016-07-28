@@ -1,0 +1,8 @@
+#include "PIDFactory.idl"
+
+interface UidPIDFactory : PIDFactory
+{
+    CosPersistencePID::PID create_PID_from_key_and_store (in string key, in string store);
+    CosPersistencePID::PID create_PID_from_key_and_store_and_type (in string key, in string store, in string type);
+    CosPersistencePID::PID create_PID_from_key_and_store_and_type_and_uid (in string key, in string store, in string type, in string uid);
+};

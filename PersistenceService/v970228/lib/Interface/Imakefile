@@ -1,0 +1,74 @@
+COMMENT
+COMMENT Copyright (C) 1994, 1995, 1996
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.4 1996/02/02 14:46:41 nmcl Exp $
+COMMENT
+
+AddAllIDLSources(CosPersistencePID)
+AddAllIDLSources(CosPersistencePDS)
+AddAllIDLSources(CosPersistencePO)
+AddAllIDLSources(CosPersistencePOM)
+AddAllIDLSources(PIDFactory)
+AddAllIDLSources(PDSFactory)
+AddAllIDLSources(PID_Uid)
+AddAllIDLSources(PID_RemoteService)
+AddAllIDLSources(PID_ReplicatedService)
+AddAllIDLSources(ObjectBuffer)
+AddAllIDLSources(PackablePO)
+
+AddAllIDLObjects(CosPersistencePID)
+AddAllIDLObjects(CosPersistencePDS)
+AddAllIDLObjects(CosPersistencePO)
+AddAllIDLObjects(CosPersistencePOM)
+AddAllIDLObjects(PIDFactory)
+AddAllIDLObjects(PDSFactory)
+AddAllIDLObjects(PID_Uid)
+AddAllIDLObjects(PID_RemoteService)
+AddAllIDLObjects(PID_ReplicatedService)
+AddAllIDLObjects(ObjectBuffer)
+AddAllIDLObjects(PackablePO)
+
+Target($(OBJECTS))
+
+GenerateCodeFromIDL(CosPersistencePID)
+GenerateCodeFromIDL(CosPersistencePDS)
+GenerateCodeFromIDL(CosPersistencePO)
+GenerateCodeFromIDL(CosPersistencePOM)
+GenerateCodeFromIDL(PID_Uid)
+GenerateCodeFromIDL(PID_RemoteService)
+GenerateCodeFromIDL(PID_ReplicatedService)
+GenerateCodeFromIDL(PIDFactory)
+GenerateCodeFromIDL(PDSFactory)
+GenerateCodeFromIDL(PackablePO)
+GenerateCodeFromIDL(ObjectBuffer)
+
+BuildAllObjects(CosPersistencePID,NullParam,NullParam)
+BuildAllObjects(CosPersistencePDS,NullParam,NullParam)
+BuildAllObjects(CosPersistencePO,NullParam,NullParam)
+BuildAllObjects(CosPersistencePOM,NullParam,NullParam)
+BuildAllObjects(PIDFactory,NullParam,NullParam)
+BuildAllObjects(PDSFactory,NullParam,NullParam)
+BuildAllObjects(PID_Uid,NullParam,NullParam)
+BuildAllObjects(PID_RemoteService,NullParam,NullParam)
+BuildAllObjects(PID_ReplicatedService,NullParam,NullParam)
+BuildAllObjects(PackablePO,NullParam,NullParam)
+BuildAllObjects(ObjectBuffer,NullParam,NullParam)
+
+AddDependences($(SOURCES),NullParam)
+
+CleanIDLCode(CosPersistencePID)
+CleanIDLCode(CosPersistencePDS)
+CleanIDLCode(CosPersistencePO)
+CleanIDLCode(CosPersistencePOM)
+CleanIDLCode(PID_Uid)
+CleanIDLCode(PID_RemoteService)
+CleanIDLCode(PID_ReplicatedService)
+CleanIDLCode(PIDFactory)
+CleanIDLCode(PDSFactory)
+CleanIDLCode(PackablePO)
+CleanIDLCode(ObjectBuffer)

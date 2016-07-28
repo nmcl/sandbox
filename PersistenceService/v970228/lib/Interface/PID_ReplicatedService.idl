@@ -1,0 +1,12 @@
+#ifdef HAVE_IMPORT
+#  import "CosPersistencePID.idl"
+#else
+#  include "CosPersistencePID.idl"
+#endif
+
+interface PID_ReplicatedService : CosPersistencePID::PID
+{
+    attribute long numberOfReplicas;
+
+    string getPid (in long index);
+};

@@ -1,0 +1,47 @@
+#include <os/string.h>
+#include <os/strstream.h>
+#include <os/sys/types.h>
+#include <os/iostream.h>
+
+#include <Interface/CosPersistencePID.h>
+#include <Interface/OO_PID.h>
+#include <Interface/PIDFactory.h>
+
+#include <Implementation/PIDImple.h>
+#include <Implementation/FactoryImple.h>
+
+#include <Common/Names.h>
+
+int main (int argc, char** argv)
+{
+    CORBA::Environment env;
+
+    try
+    {
+	CORBA::Orbix.collocated(1);
+
+	PIDFactory_ptr factoryVar = new FactoryImple("MyFactory");
+	PIDFactory_var theFactory = PIDFactory::_bind(":MyFactory");
+
+	CosPersistencePID::PID_ptr thePID = theFactory->create_PID_from_key(Arjuna_pidName, env);
+
+	char* s = thePID->get_PIDString(env);
+
+	cout << "\nPID string: " << s << "\n" << endl;
+
+	::delete [] s;
+	
+	CORBA::release(thePID);
+	CORBA::release(factoryVar);
+    }
+    catch (const CORBA::SystemException& e)
+    {
+	cout << "System exception" << endl;
+    }
+    catch (...)
+    {
+	cout << "Some other exception" << endl;
+    }
+    
+    return 0;
+}

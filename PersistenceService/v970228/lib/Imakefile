@@ -1,0 +1,69 @@
+COMMENT 
+COMMENT Copyright (C) 1995, 1996
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.12 1996/09/16 13:47:49 nmcl Exp $
+COMMENT
+
+OBJECTS = Common/Uid.o \
+	  Common/Semaphore.o \
+	  Common/Utility.o \
+	  Common/ProcessMutex.o \
+	  Common/SharedSeg.o \
+	  Common/Buffer.o \
+	  Common/PointerMap.o \
+	  Common/ObjState.o \
+	  Common/ORBInterface.o \
+	  Common/Kubera.o \
+	  ObjectStore/ActionStore.o \
+	  ObjectStore/FSStore.o \
+	  ObjectStore/FdCache.o \
+	  ObjectStore/FragStore.o \
+	  ObjectStore/HashedStore.o \
+	  ObjectStore/MappedFile.o \
+	  ObjectStore/MappedStore.o \
+	  ObjectStore/ObjStore.o \
+	  ObjectStore/ObjStoreI.o \
+	  ObjectStore/ShadowStore.o \
+	  ObjectStore/SingleTypeMS.o \
+	  ObjectStore/StoreList.o \
+	  ObjectStore/VolatileStore.o \
+	  Implementation/Arjuna_BasicPID.o \
+	  Implementation/Arjuna_BasicPDS.o \
+	  Implementation/Arjuna_RemotePID.o \
+	  Implementation/Arjuna_RemotePDS.o \
+	  Implementation/Arjuna_ObjBuffer.o \
+	  Implementation/Arjuna_PIDFactory.o \
+	  Implementation/Arjuna_PO.o \
+	  Implementation/Arjuna_POM.o \
+	  Implementation/Arjuna_PDSFactory.o \
+	  Implementation/PDSInventory.o \
+	  Implementation/PIDInventory.o
+
+AddAllObjectsToLibrary(Interface,CosPersistencePID)
+AddAllObjectsToLibrary(Interface,CosPersistencePDS)
+AddAllObjectsToLibrary(Interface,CosPersistencePO)
+AddAllObjectsToLibrary(Interface,CosPersistencePOM)
+AddAllObjectsToLibrary(Interface,PIDFactory)
+AddAllObjectsToLibrary(Interface,PDSFactory)
+AddAllObjectsToLibrary(Interface,PID_Uid)
+AddAllObjectsToLibrary(Interface,PID_RemoteService)
+AddAllObjectsToLibrary(Interface,ObjectBuffer)
+AddAllObjectsToLibrary(Interface,PackablePO)
+
+SubDirectory(Common)
+SubDirectory(ObjectStore)
+SubDirectory(Interface)
+SubDirectory(Implementation)
+
+Target(libPersistence.a)
+
+InstallLibrary(/lib,libPersistence.a)
+
+BuildLibrary(libPersistence.a,$(OBJECTS))
+
+Clean(libPersistence.a)

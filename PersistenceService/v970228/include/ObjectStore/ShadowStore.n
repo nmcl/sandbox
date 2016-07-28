@@ -1,0 +1,37 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * ShadowStore.n,v
+ */
+
+#if defined(NO_INLINES) && !defined(SHADOWSTORE_CC_)
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF ShadowingStoreSetUp::ShadowingStoreSetUp ( SetUpInfo& info ) 
+						 : FileSystemStoreSetUp(info)
+{
+}
+
+INLINEF const TypeName ShadowingStore::type () const
+{
+    return ShadowStoreType;
+}
+ 
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif

@@ -1,0 +1,56 @@
+COMMENT
+COMMENT Copyright (C) 1994, 1995, 1996
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.4 1996/02/02 14:46:41 nmcl Exp $
+COMMENT
+
+SOURCES = ActionStore.cc \
+	  FSStore.cc \
+	  FdCache.cc \
+	  FragStore.cc \
+	  HashedStore.cc \
+	  MappedFile.cc \
+	  MappedStore.cc \
+	  ObjStore.cc \
+	  ObjStoreI.cc \
+	  ShadowStore.cc \
+	  SingleTypeMS.cc \
+	  StoreList.cc \
+	  VolatileStore.cc
+
+OBJECTS = ActionStore.o \
+	  FSStore.o \
+	  FdCache.o \
+	  FragStore.o \
+	  HashedStore.o \
+	  MappedFile.o \
+	  MappedStore.o \
+	  ObjStore.o \
+	  ObjStoreI.o \
+	  ShadowStore.o \
+	  SingleTypeMS.o \
+	  StoreList.o \
+	  VolatileStore.o
+
+Target($(OBJECTS))
+
+BuildObject(ActionStore,NullParam,NullParam)
+BuildObject(FSStore,NullParam,NullParam)
+BuildObject(FdCache,NullParam,NullParam)
+BuildObject(FragStore,NullParam,NullParam)
+BuildObject(HashedStore,NullParam,NullParam)
+BuildObject(MappedFile,NullParam,NullParam)
+BuildObject(MappedStore,NullParam,NullParam)
+BuildObject(ObjStore,NullParam,NullParam)
+BuildObject(ObjStoreI,NullParam,NullParam)
+BuildObject(ShadowStore,NullParam,NullParam)
+BuildObject(SingleTypeMS,NullParam,NullParam)
+BuildObject(StoreList,NullParam,NullParam)
+BuildObject(VolatileStore,NullParam,NullParam)
+
+AddDependences($(SOURCES),NullParam)

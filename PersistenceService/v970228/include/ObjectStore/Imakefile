@@ -1,0 +1,36 @@
+COMMENT 
+COMMENT Copyright (C) 1996,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1996/02/12 13:09:48 nmcl Exp $
+COMMENT
+
+CreateInstallDirectory(/include,/include/ObjectStore)
+
+InstallFile(/include/ObjectStore,ActionStore.h)
+InstallFile(/include/ObjectStore,ActionStore.n)
+InstallFile(/include/ObjectStore,FSStore.h)
+InstallFile(/include/ObjectStore,FSStore.n)
+InstallFile(/include/ObjectStore,FdCache.h)
+InstallFile(/include/ObjectStore,FragStore.h)
+InstallFile(/include/ObjectStore,FragStore.n)
+InstallFile(/include/ObjectStore,HashedStore.h)
+InstallFile(/include/ObjectStore,HashedStore.n)
+InstallFile(/include/ObjectStore,LocalOSTyes.h)
+InstallFile(/include/ObjectStore,MappedFile.h)
+InstallFile(/include/ObjectStore,MappedStore.h)
+InstallFile(/include/ObjectStore,MappedStore.n)
+InstallFile(/include/ObjectStore,ObjStore.h)
+InstallFile(/include/ObjectStore,ObjStore.n)
+InstallFile(/include/ObjectStore,ObjectStoreNames.h)
+InstallFile(/include/ObjectStore,ShadowStore.h)
+InstallFile(/include/ObjectStore,ShadowStore.n)
+InstallFile(/include/ObjectStore,SingleTypeMS.h)
+InstallFile(/include/ObjectStore,SingleTypeMS.n)
+InstallFile(/include/ObjectStore,StateDict.h)
+InstallFile(/include/ObjectStore,VolatileStore.h)
+InstallFile(/include/ObjectStore,VolatileStore.n)

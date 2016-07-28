@@ -1,0 +1,22 @@
+COMMENT 
+COMMENT Copyright (C) 1996,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1996/02/12 13:09:48 nmcl Exp $
+COMMENT
+
+CreateInstallDirectory(/include,/include/Implementation)
+
+InstallFile(/include/Implementation,Arjuna_ObjBuffer.h)
+InstallFile(/include/Implementation,Arjuna_BasicPID.h)
+InstallFile(/include/Implementation,Arjuna_BasicPDS.h)
+InstallFile(/include/Implementation,Arjuna_RemotePID.h)
+InstallFile(/include/Implementation,Arjuna_RemotePDS.h)
+InstallFile(/include/Implementation,Arjuna_PO.h)
+InstallFile(/include/Implementation,Arjuna_POM.h)
+InstallFile(/include/Implementation,Arjuna_PIDFactory.h)
+InstallFile(/include/Implementation,Arjuna_PDSFactory.h)

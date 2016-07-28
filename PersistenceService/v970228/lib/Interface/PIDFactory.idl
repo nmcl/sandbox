@@ -1,0 +1,14 @@
+#ifdef HAVE_IMPORT
+#  import "CosPersistencePID.idl"
+#else
+#  include "CosPersistencePID.idl"
+#endif
+
+interface PIDFactory
+{
+    exception CreateFailure {};
+    
+    CosPersistencePID::PID create_PID_from_key (in string key) raises (CreateFailure);
+    CosPersistencePID::PID create_PID_from_string (in string pid_string) raises (CreateFailure);
+    CosPersistencePID::PID create_PID_from_key_and_string (in string key, in string pid_string) raises (CreateFailure);
+};

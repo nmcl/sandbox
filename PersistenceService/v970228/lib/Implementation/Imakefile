@@ -1,0 +1,50 @@
+COMMENT
+COMMENT Copyright (C) 1994, 1995, 1996
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.4 1996/02/02 14:46:41 nmcl Exp $
+COMMENT
+
+SOURCES = Arjuna_BasicPID.cc \
+	  Arjuna_BasicPDS.cc \
+	  Arjuna_PIDFactory.cc \
+	  Arjuna_ObjBuffer.cc \
+	  Arjuna_PO.cc \
+	  Arjuna_POM.cc \
+	  PIDInventory.cc \
+	  PDSInventory.cc \
+	  Arjuna_PDSFactory.cc \
+	  Arjuna_RemotePID.cc \
+	  Arjuna_RemotePDS.cc
+
+OBJECTS = Arjuna_BasicPID.o \
+	  Arjuna_BasicPDS.o \
+	  Arjuna_PIDFactory.o \
+	  Arjuna_ObjBuffer.o \
+	  Arjuna_PO.o \
+	  Arjuna_POM.o \
+	  PIDInventory.o \
+	  PDSInventory.o \
+	  Arjuna_PDSFactory.o \
+	  Arjuna_RemotePID.o \
+	  Arjuna_RemotePDS.o
+
+Target($(OBJECTS))
+
+BuildObject(Arjuna_BasicPID,NullParam,NullParam)
+BuildObject(Arjuna_BasicPDS,NullParam,NullParam)
+BuildObject(Arjuna_RemotePID,NullParam,NullParam)
+BuildObject(Arjuna_RemotePDS,NullParam,NullParam)
+BuildObject(Arjuna_PIDFactory,NullParam,NullParam)
+BuildObject(Arjuna_ObjBuffer,NullParam,NullParam)
+BuildObject(Arjuna_PO,NullParam,NullParam)
+BuildObject(Arjuna_POM,NullParam,NullParam)
+BuildObject(Arjuna_PDSFactory,NullParam,NullParam)
+BuildObject(PIDInventory,NullParam,NullParam)
+BuildObject(PDSInventory,NullParam,NullParam)
+
+AddDependences($(SOURCES),NullParam)

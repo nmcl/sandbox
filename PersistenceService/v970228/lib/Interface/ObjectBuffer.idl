@@ -1,0 +1,35 @@
+interface ObjectBuffer
+{
+    exception PackError {};
+    exception UnpackError {};
+    
+    enum Status { BUFFER_GOOD, BUFFER_BAD };
+
+    readonly attribute string contents;
+    readonly attribute long length;
+    
+    Status readState ();
+    
+    /* pack operations for standard types */
+    
+    void packChar (in char c) raises (PackError);
+    void packBoolean (in boolean b) raises (PackError);
+    void packShort (in short s) raises (PackError);
+    void packUShort (in unsigned short us) raises (PackError);
+    void packLong (in long l) raises (PackError);
+    void packULong (in unsigned long ul) raises (PackError);
+    void packFloat (in float f) raises (PackError);
+    void packDouble (in double d) raises (PackError);
+    void packMappedString (in string s) raises (PackError);
+    void packNonMappedString (in string s) raises (PackError);
+
+    void unpackChar (inout char c) raises (UnpackError);
+    void unpackBoolean (inout boolean b) raises (UnpackError);
+    void unpackLong (inout long l) raises (UnpackError);
+    void unpackULong (inout unsigned long ul) raises (UnpackError);
+    void unpackShort (inout short s) raises (UnpackError);
+    void unpackUShort (inout unsigned short us) raises (UnpackError);
+    void unpackFloat (inout float f) raises (UnpackError);
+    void unpackDouble (inout double d) raises (UnpackError);
+    void unpackString (inout string s) raises (UnpackError);
+};
