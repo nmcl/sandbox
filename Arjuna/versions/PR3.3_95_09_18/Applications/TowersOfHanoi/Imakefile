@@ -1,0 +1,97 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.8 1996/07/04 12:57:51 nsmw Exp $
+COMMENT
+
+LIBRARIES = $(LIBOBJECTSTORE) $(LIBREPLICATION) $(LIBARJSERVERS) $(LIBSTUB) $(LIBRPC) $(LIBARJUNA) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES)  $(IV_CPPFLAGS) -Div2_6_compatible)
+SetLocalLibraries($(IV_LDFLAGS) -lIV $(X11_LDFLAGS) -lX11 -lm)
+
+STUBS = TowerPersis_stub.h WorkStack_stub.h
+
+SOURCES = TowerDispatch.cc \
+          TowerInter.cc \
+          TowerPersis.cc \
+          TowerView.cc \
+          TowersDispatch.cc \
+          TowersInter.cc \
+          TowersOfHanoi.cc \
+          WorkStack.cc \
+          \
+          TowerPersis_client.cc \
+          TowerPersis_server.cc \
+          TowerPersis_servermain.cc \
+          TowerState_marshall.cc \
+          WorkStack_client.cc \
+          WorkStack_server.cc \
+          WorkStack_servermain.cc \
+          Work_marshall.cc \
+	  $(STUBS)
+
+#ifdef GCC_LINK_BUG
+OBJMOVE  = TowersOfHanoi.o TowersDispatch.o TowersInter.o \
+           TowerInter.o TowerPersis_client.o TowerState_marshall.o \
+           WorkStack_client.o Work_marshall.o TowerPersis.o WorkStack.o 
+
+OBJVIEW  = TowerView.o TowerDispatch.o TowerInter.o \
+           TowerPersis_client.o TowerState_marshall.o TowerPersis.o
+
+OBJTOWER = TowerPersis.o TowerPersis_server.o TowerPersis_servermain.o \
+           TowerState_marshall.o TowerPersis_client.o WorkStack.o 
+
+OBJWORK  = WorkStack.o WorkStack_server.o WorkStack_servermain.o \
+           Work_marshall.o WorkStack_client.o 
+#else
+OBJMOVE  = TowersOfHanoi.o TowersDispatch.o TowersInter.o \
+           TowerInter.o TowerPersis_client.o TowerState_marshall.o \
+           WorkStack_client.o Work_marshall.o
+
+OBJVIEW  = TowerView.o TowerDispatch.o TowerInter.o \
+           TowerPersis_client.o TowerState_marshall.o
+
+OBJTOWER = TowerPersis.o TowerPersis_server.o TowerPersis_servermain.o \
+           TowerState_marshall.o
+
+OBJWORK  = WorkStack.o WorkStack_server.o WorkStack_servermain.o \
+           Work_marshall.o
+#endif
+
+OBJECTS = $(OBJMOVE) $(OBJVIEW) $(OBJTOWER) $(OBJWORK)
+AllTarget($(STUBS) TowersOfHanoi TowerView TowerPersis WorkStack)
+StubTarget($(STUBS))
+
+CreateInstallTopDirectory(servers)
+InstallProgram(servers,TowerPersis)
+InstallProgram(servers,WorkStack)
+
+MakeProgramCPLUSPLUS(TowersOfHanoi,$(OBJMOVE) $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(TowerView,$(OBJVIEW) $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(TowerPersis,$(OBJTOWER) $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(WorkStack,$(OBJWORK) $(LIBRARIES),NOPARAM)
+
+MakeStubGen(TowerPersis,TowerPersis,TowerPersis,NOPARAM)
+MakeStubGen(WorkStack,WorkStack,WorkStack,NOPARAM)
+
+MakeObjectCPLUSPLUS(TowerDispatch,NOPARAM)
+MakeObjectCPLUSPLUS(TowerInter,NOPARAM)
+MakeObjectCPLUSPLUS(TowerPersis,NOPARAM)
+MakeObjectCPLUSPLUS(TowerView,NOPARAM)
+MakeObjectCPLUSPLUS(TowersDispatch,NOPARAM)
+MakeObjectCPLUSPLUS(TowersInter,NOPARAM)
+MakeObjectCPLUSPLUS(TowersOfHanoi,NOPARAM)
+MakeObjectCPLUSPLUS(WorkStack,NOPARAM)
+
+MakeObjectCPLUSPLUS(TowerState_marshall,NOPARAM)
+MakeObjectCPLUSPLUS(Work_marshall,NOPARAM)
+TidyTarget(TowersOfHanoi TowerView TowerPersis WorkStack \
+       TowerPersis_client.cc TowerPersis_server.cc TowerPersis_servermain.cc \
+       TowerPersis_stub.h TowerPersis_stubclass.h TowerState_marshall.cc \
+       WorkStack_client.cc WorkStack_server.cc WorkStack_servermain.cc \
+      WorkStack_stub.h WorkStack_stubclass.h Work_marshall.cc)
