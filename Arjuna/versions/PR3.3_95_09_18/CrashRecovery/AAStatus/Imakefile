@@ -1,0 +1,57 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.12 1995/02/22 14:55:13 ngdp Exp $
+COMMENT
+COMMENT
+
+LIB = $(LIBCRASH)
+
+SOURCES = AAStatus.cc \
+          AAStatus_client.cc \
+          ActionCondition_marshall.cc \
+          AAStatus_server.cc \
+          AAStatus_servermain.cc
+
+STUBS =   ../include/AAStatus_stub.h \
+          ../include/AAStatus_stubclass.h
+
+OBJECTS = AAStatus.o \
+          AAStatus_client.o \
+          ActionCondition_marshall.o \
+          AAStatus_server.o \
+          AAStatus_servermain.o
+
+LIBRARIES = $(LIBARJSERVERS) $(LIBARJUNA) $(LIBRPC) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES) \
+                 -I../include \
+                 -I../../ClassLib/include \
+                 -I../../RPC/Rajdoot/interface/include \
+                 -I../../Replication/include)
+
+AllTarget($(STUBS) $(LIB) AAStatus)
+StubTarget($(STUBS))
+MakeLibrary($(LIB),AAStatus_client.o ActionCondition_marshall.o AAStatus.o)
+CreateInstallTopDirectory(servers)
+InstallProgram(servers,AAStatus)
+
+../include/AAStatus_stub.h : AAStatus_stub.h
+	@echo Copying AAStatus_stub.h
+	@CP_VAR AAStatus_stub.h ../include/AAStatus_stub.h
+
+../include/AAStatus_stubclass.h : AAStatus_stubclass.h
+	@echo Copying AAStatus_stubclass.h
+	@CP_VAR AAStatus_stubclass.h ../include/AAStatus_stubclass.h
+
+MakeProgramCPLUSPLUS(AAStatus,$(OBJECTS) $(LIBRARIES),NOPARAM)
+MakeObjectCPLUSPLUS(AAStatus,NOPARAM)
+MakeStubGen(AAStatus,AAStatus,AAStatus,NOPARAM)
+MakeObjectCPLUSPLUS(ActionCondition_marshall,NOPARAM)
+
+TidyTarget(AAStatus AAStatus_client.cc AAStatus_server.cc AAStatus_servermain.cc ActionCondition_marshall.cc AAStatus_stub.h AAStatus_stubclass.h)
