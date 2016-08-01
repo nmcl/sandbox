@@ -1,0 +1,32 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.7 1996/10/11 09:33:18 ngdp Exp $
+COMMENT
+
+CreateInstallTopDirectory(include)
+CreateInstallDirectory(include,ArjServers)
+InstallFile(include/ArjServers,ArjName.h)
+InstallFile(include/ArjServers,ArjName_stub.h)
+InstallFile(include/ArjServers,GroupData.h)
+InstallFile(include/ArjServers,GroupDataIterator.h)
+InstallFile(include/ArjServers,LockDaemon.h)
+InstallFile(include/ArjServers,NameInfo.h)
+InstallFile(include/ArjServers,NSInterface.h)
+InstallFile(include/ArjServers,NameServ_stub.h)
+InstallFile(include/ArjServers,NameServer_stubclass.h)
+InstallFile(include/ArjServers,RepDesc_stub.h)
+InstallFile(include/ArjServers,ReplicaData_stub.h)
+InstallFile(include/ArjServers,ReplicaData.n)
+InstallFile(include/ArjServers,TemplateObject.h)
+InstallFile(include/ArjServers,RPObjStore_stub.h)
+InstallFile(include/ArjServers,RPObjStore_stubclass.h)
+InstallFile(include/ArjServers,RepDescIterator.h)
+
+TidyTarget(ArjName_stub.h NameServ_stub.h NameServer_stubclass.h RPObjStore_stub.h RPObjStore_stubclass.h RepDesc_stub.h ReplicaData_stub.h)
+
