@@ -1,0 +1,83 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.5 1994/11/29 14:00:50 ngdp Exp $
+COMMENT
+COMMENT
+COMMENT Imakefile. (Distributed)
+COMMENT
+
+LIBRARIES = $(LIBARJSERVERS) $(LIBARJUNA) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+STUB_HEADERS = Queue_stub.h Queue_stubclass.h QueueElement_stub.h QueueElement_stubclass.h
+
+SOURCES = Driver.cc \
+          Queue_client.cc \
+          Queue_server.cc \
+          Queue_servermain.cc \
+          QueueStatus_marshall.cc \
+          Queue.cc \
+	  QueueElement.cc \
+	  QueueElement_client.cc \
+	  QueueElement_server.cc \
+	  QueueElement_servermain.cc \
+	  $(STUB_HEADERS)
+
+#ifdef GCC_LINK_BUG
+CLIOBJS = Driver.o \
+          Queue_client.o \
+          QueueStatus_marshall.o Queue.o QueueElement_client.o QueueElement.o
+
+SER1OBJS = Queue_server.o \
+    	   Queue_servermain.o \
+           QueueStatus_marshall.o \
+           Queue.o \
+	   QueueElement_client.o Queue_client.o QueueElement.o
+
+SER2OBJS = QueueElement_server.o \
+	   QueueElement_servermain.o \
+	   QueueElement.o QueueElement_client.o
+#else
+CLIOBJS = Driver.o \
+          Queue_client.o \
+          QueueStatus_marshall.o
+
+SER1OBJS = Queue_server.o \
+    	   Queue_servermain.o \
+           QueueStatus_marshall.o \
+           Queue.o \
+	   QueueElement_client.o
+
+SER2OBJS = QueueElement_server.o \
+	   QueueElement_servermain.o \
+	   QueueElement.o
+#endif
+
+OBJECTS = $(CLIOBJS) $(SER1OBJS) $(SER2OBJS)
+AllTarget(Driver Queue_D QueueElement_D)
+StubTarget($(STUB_HEADERS))
+
+CreateInstallTopDirectory(servers)
+InstallProgram(servers,Queue_D)
+InstallProgram(servers,QueueElement_D)
+
+
+MakeProgramCPLUSPLUS(Driver,$(CLIOBJS) $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(Queue_D,$(SER1OBJS) $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(QueueElement_D,$(SER2OBJS) $(LIBRARIES),NOPARAM)
+
+MakeStubGen(Queue,Queue,Queue_D,NOPARAM)
+MakeStubGen(QueueElement,QueueElement,QueueElement_D,NOPARAM)
+
+MakeObjectCPLUSPLUS(Driver,NOPARAM)
+MakeObjectCPLUSPLUS(Queue,NOPARAM)
+MakeObjectCPLUSPLUS(QueueElement,NOPARAM)
+MakeObjectCPLUSPLUS(QueueStatus_marshall,NOPARAM)
+
+TidyTarget(Driver Queue_D QueueElement_D Queue_stub.h Queue_stubclass.h Queue_client.cc Queue_server.cc Queue_servermain.cc QueueStatus_marshall.cc QueueElement_client.cc QueueElement_server.cc QueueElement_servermain.cc QueueElement_stub.h QueueElement_stubclass.h)
