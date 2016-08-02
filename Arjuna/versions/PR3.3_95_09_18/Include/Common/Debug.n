@@ -1,0 +1,68 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: Debug.n,v 1.1 1993/11/03 14:28:23 nmcl Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(DEBUG_CC_)
+
+extern Dbg_Ostream& operator<< (Dbg_Ostream&, FacilityCode);
+extern Dbg_Ostream& operator<< (Dbg_Ostream&, DebugLevel);
+extern Dbg_Ostream& operator<< (Dbg_Ostream&, VisibilityLevel);
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF Dbg_Ostream& DebugController::stream ()
+{
+    return *dbg_stream;
+}
+
+INLINEF int Dbg_Ostream::fac () const
+{
+    return dbgFac;
+}
+
+INLINEF int Dbg_Ostream::lvl () const
+{
+    return dbgLevel;
+}
+
+INLINEF int Dbg_Ostream::vis () const
+{
+    return dbgVis;
+}
+
+INLINEF Dbg_Ostream& operator<<  ( Dbg_Ostream& strm, FacilityCode fac )
+{
+    strm.set_fac(fac);
+    return strm;
+}
+
+INLINEF Dbg_Ostream& operator<<  ( Dbg_Ostream& strm, DebugLevel lvl )
+{
+    strm.set_lvl(lvl);
+    return strm;
+}
+
+INLINEF Dbg_Ostream& operator<<  ( Dbg_Ostream& strm,  VisibilityLevel vis )
+{
+    strm.set_vis(vis);
+    return strm;
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif

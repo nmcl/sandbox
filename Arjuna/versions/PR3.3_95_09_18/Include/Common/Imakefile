@@ -1,0 +1,42 @@
+COMMENT 
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.6 1996/10/11 09:33:19 ngdp Exp $
+COMMENT
+
+CreateInstallTopDirectory(include)
+CreateInstallDirectory(include,Common)
+InstallFile(include/Common,Boolean.h)
+InstallFile(include/Common,Buffer.h)
+InstallFile(include/Common,Buffer.n)
+InstallFile(include/Common,Buffer_stub.h)
+InstallFile(include/Common,CommonT.h)
+InstallFile(include/Common,Debug.h)
+InstallFile(include/Common,Debug.n)
+InstallFile(include/Common,ErrCodes.h)
+InstallFile(include/Common,Error.h)
+InstallFile(include/Common,Error_stub.h)
+InstallFile(include/Common,Error.n)
+InstallFile(include/Common,ErrorList.h)
+InstallFile(include/Common,ErrorList_stub.h)
+InstallFile(include/Common,ErrorList.n)
+InstallFile(include/Common,ErrorListI.h)
+InstallFile(include/Common,ErrorListI.n)
+InstallFile(include/Common,FacCode.h)
+InstallFile(include/Common,FacCode_stub.h)
+InstallFile(include/Common,Filtsbuf.h)
+InstallFile(include/Common,PointerMap.h)
+InstallFile(include/Common,ProcessMutex.h)
+InstallFile(include/Common,Semaphore.h)
+InstallFile(include/Common,Uid.h)
+InstallFile(include/Common,Uid.n)
+InstallFile(include/Common,Uid_stub.h)
+InstallFile(include/Common,Utility.h)
+
+TidyTarget(Buffer_stub.h Uid_stub.h Error_stub.h ErrorList_stub.h FacCode_stub.h)
+
