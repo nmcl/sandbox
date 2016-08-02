@@ -1,0 +1,17 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ */
+
+/*
+ * $Id: README
+ */
+
+This class provides a means of obtaining various information about a replica
+group, e.g., the number of replicas in it. If there is no action currently
+using the group in question then all queries are sent to the naming and
+binding service, otherwise we look locally first.

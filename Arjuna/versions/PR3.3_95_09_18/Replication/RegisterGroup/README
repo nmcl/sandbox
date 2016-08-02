@@ -1,0 +1,30 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ */
+
+/*
+ * $Id: README
+ */
+
+This class provides transparent registering of replica groups.  Once a
+user has  created  the  replica view  (e.g., using  the  ReplicaCreate
+class) then it should be registered with the database before it can be
+used.   The user  must first register the  Uid  of the  object he  has
+previously  created  (this will become the new group's Uid). The group
+list is given  either at  construction time  or  in  one of  the other
+method's parameters.
+
+recordGroup will  register the group at the database. If  the group is
+already present then only new replicas will be added. removeGroup will
+remove the entire group from the database.
+
+modifyGroup removes the old view  from  the  database  and replaces it
+with the new one.
+
+lockGroup is  used  to lock the group at  the database  in the desired
+mode.
