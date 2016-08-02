@@ -1,0 +1,44 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: RepObjStoreIF.n,v 1.2 1994/08/10 14:10:44 nmcl Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(REPOBJSTOREIF_CC_)
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+
+INLINEF const TypeName RepObjStoreInterface::type () const
+{
+    return ReplicatedStoreType;
+}
+
+    
+INLINEF Boolean RepObjStoreInterface::supressEntry (const char *) const
+{
+    return FALSE;
+}
+
+INLINEF const char* RepObjStoreInterface::getStoreName () const
+{
+    return localStoreName;
+}
+
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif

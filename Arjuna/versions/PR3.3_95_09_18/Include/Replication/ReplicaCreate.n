@@ -1,0 +1,43 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: ReplicaCreate.n,v 1.3 1994/05/24 15:06:14 nmcl Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(REPCREATE_CC_)
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+
+INLINEF Boolean ReplicaCreate::needToRelease () const
+{
+    return doRelease;
+}
+
+INLINEF Boolean ReplicaCreate::addToGroup (const char* location, const Uid& replicaUid, Boolean isTemplate)
+{
+    return addToGroup(location, replicaUid, WRITE, isTemplate);
+}
+
+INLINEF Boolean ReplicaCreate::removeFromGroup (const char* location, const Uid& replicaUid)
+{
+    return removeFromGroup(location, replicaUid, WRITE);
+}
+
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif
