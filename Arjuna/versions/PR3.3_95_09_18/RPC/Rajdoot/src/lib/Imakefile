@@ -1,0 +1,49 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.6 1994/12/01 13:37:21 ngdp Exp $
+COMMENT
+
+LIB = $(LIBRAJDOOT)
+
+SOURCES = clientops.cc \
+          common.cc \
+          longmltcst.cc \
+          multicast.cc \
+	  ondeadline.cc \
+          rpc.cc \
+          rpcops.cc \
+          rpcserver.cc \
+          serverops.cc
+
+OBJECTS = clientops.o \
+          common.o \
+          longmltcst.o \
+          multicast.o \
+	  ondeadline.o \
+          rpc.o \
+          rpcops.o \
+          rpcserver.o \
+          serverops.o
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES) -I../include)
+
+AllTarget($(LIBRAJDOOT))
+
+MakeLibrary($(LIBRAJDOOT),$(OBJECTS))
+
+MakeObjectCPLUSPLUS(clientops,NOPARAM)
+MakeObjectCPLUSPLUS(common,NOPARAM)
+MakeObjectCPLUSPLUS(longmltcst,NOPARAM)
+MakeObjectCPLUSPLUS(multicast,NOPARAM)
+MakeObjectCPLUSPLUS(ondeadline,NOPARAM)
+MakeObjectCPLUSPLUS(rpc,NOPARAM)
+MakeObjectCPLUSPLUS(rpcops,NOPARAM)
+MakeObjectCPLUSPLUS(rpcserver,NOPARAM)
+MakeObjectCPLUSPLUS(serverops,NOPARAM)
+

@@ -1,0 +1,38 @@
+rpc.cc:    if (clist->s_desc[j].process_id == pid)
+rpc.cc:	       ((newnode = clist->s_desc[j].linkspath[i].rpcpath[k].node) != 0))
+rpc.cc:	  p_path->c_count = clist->s_desc[j].linkspath[i].rpcpath[k].c_count;
+rpcops.cc:    reset_server_info(&(clist->s_desc[j]));
+rpcops.cc:    reset_pathel(&(clist->client[i]));
+rpcops.cc:    if (clist->client[i].node == client_node)
+rpcops.cc:  check_sindx = clist->client[client_indx].s_indx[srindx];
+rpcops.cc:	     (clist->s_desc[check_sindx].no_links > 0))
+rpcops.cc:	current_link = &(clist->s_desc[check_sindx].linkspath[fullptindx]);
+rpcops.cc:	  clist->s_desc[check_sindx].no_links--;
+rpcops.cc:      if (clist->s_desc[check_sindx].no_links == 0)
+rpcops.cc:		       << clist->s_desc[check_sindx].process_id << "\n" << flush;
+rpcops.cc:	kill((int) clist->s_desc[check_sindx].process_id, ORPHAN_SIGNAL);   
+rpcops.cc:	reset_server_info(&(clist->s_desc[check_sindx]));
+rpcops.cc:      check_sindx = clist->client[client_indx].s_indx[srindx];
+rpcops.cc:  currentptr = rpclist->head_rpc;
+rpcops.cc:  rpclist->head_rpc = NULL;
+rpcserver.cc:    found = ((pclist->s_desc[srvrindx] . process_id == mypid) ? TRUE : FALSE);
+rpcserver.cc:	::p_orphan = pclist->s_desc[srvrindx].poflag = value;
+rpcserver.cc:      found = ((clist->s_desc[server_indx].process_id == mypid) ? TRUE : FALSE);
+rpcserver.cc:      clist->s_desc[server_indx].myunicastid = myunicastid;
+rpcserver.cc:      clist->s_desc[server_indx].sender = myaddress;
+rpcserver.cc:    found = ((pclist->s_desc[srvrindx] . process_id == mypid) ? TRUE : FALSE);
+rpcserver.cc:  reset_server_info(&(pclist->s_desc[srvrindx]));
+rpcserver.cc:    if (pclist->client[i] . node != 0)
+rpcserver.cc:	if (pclist->client[i] . s_indx[k] == srvrindx)
+rpcserver.cc:	  pclist->client[i] . s_indx[k] = -1;
+rpcserver.cc:    debug_stream << "removelink(): pid in clist: " << pclist->s_desc[i].process_id << "\n" << flush;
+rpcserver.cc:    found = ((pclist->s_desc[i] . process_id == mypid) ?TRUE : FALSE);
+rpcserver.cc:	printgid(pclist->s_desc[i].linkspath[j].groupid);
+rpcserver.cc:	found = (identical_group(&(pclist->s_desc[i].linkspath[j].groupid), givenmid));
+rpcserver.cc:      pclist->s_desc[i] . no_links--;
+rpcserver.cc:      if (pclist->s_desc[i] . no_links == 0)
+rpcserver.cc:	reset_path(&(pclist->s_desc[i].linkspath[j]));
+serverops.cc:      while ((clist->s_desc[indx].linkspath[m].rpcpath[path_indx].node != 0) && (!retry))
+serverops.cc:	  debug_stream << "find_retry: comparing " << clist->s_desc[indx].linkspath[m].rpcpath[path_indx].node << " and " << clientnode << endl;
+serverops.cc:	  if ((clist->s_desc[indx].linkspath[m].rpcpath[path_indx].node == clientnode) &&
+serverops.cc:	      (identical_sn(&(clist->s_desc[indx].linkspath[m].timestamp),

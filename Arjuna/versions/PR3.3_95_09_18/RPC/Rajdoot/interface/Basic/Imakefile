@@ -1,0 +1,31 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.4 1994/11/29 14:01:10 ngdp Exp $
+COMMENT
+
+LIB = $(LIBARJUNA)
+
+SOURCES = ClRaj.cc  \
+          ClRaj_.cc \
+          SvRaj.cc
+
+OBJECTS = ClRaj.o  \
+          ClRaj_.o \
+          SvRaj.o
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES) -I../include)
+
+AllTarget($(LIB))
+
+MakeLibrary($(LIB),$(OBJECTS))
+
+MakeObjectCPLUSPLUS(ClRaj,NOPARAM)
+MakeObjectCPLUSPLUS(ClRaj_,NOPARAM)
+MakeObjectCPLUSPLUS(SvRaj,NOPARAM)
+
