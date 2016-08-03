@@ -1,0 +1,16 @@
+/*
+ * Copyright (C) 1993
+ * 
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ * 
+ * 
+ * $Id: README,v 1.1 1993/11/13 10:59:34 nmcl Exp $
+ */
+
+This directory contains tests  for the object configuration system and
+complex  object replication. Various subdirectories exist within these
+main directories to test these mechanisms in various ways.
+

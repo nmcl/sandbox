@@ -1,0 +1,46 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.6 1994/11/29 14:01:46 ngdp Exp $
+COMMENT
+
+STUBS     = BufferCheck_stub.h \
+	    BufferCheck_stubclass.h
+
+SOURCES	  = BufferCheck.cc \
+	    BufferCheck_client.cc \
+	    BufferCheck_server.cc \
+	    BufferCheck_servermain.cc \
+	    $(STUBS)
+
+#ifdef GCC_LINK_BUG
+OBJECTS	  = BufferCheck_server.o \
+	    BufferCheck_servermain.o \
+	    BufferCheck.o
+#else
+OBJECTS	  = BufferCheck_server.o \
+	    BufferCheck_servermain.o \
+	    BufferCheck.o
+#endif
+
+LIBRARIES = $(LIBARJSERVERS) $(LIBARJUNA) $(LIBRPC) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+AllTarget(BufferCheck BufferCheck_client.o)
+StubTarget($(STUBS))
+CreateInstallTopDirectory(servers)
+InstallProgram(servers,BufferCheck)
+
+MakeProgramCPLUSPLUS(BufferCheck,$(OBJECTS) $(LIBRARIES),NOPARAM)
+
+MakeObjectCPLUSPLUS(BufferCheck,NOPARAM)
+
+MakeStubGen(BufferCheck,BufferCheck,BufferCheck,NOPARAM)
+
+TidyTarget(BufferCheck BufferCheck_client.cc BufferCheck_server.cc BufferCheck_servermain.cc $(STUBS))
