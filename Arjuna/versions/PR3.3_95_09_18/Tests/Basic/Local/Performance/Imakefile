@@ -1,0 +1,45 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.8 1994/11/29 14:02:19 ngdp Exp $
+COMMENT
+
+LIBRARIES = ../../PUtils/libPUtils.a $(LIBARJUNA) $(LIBCOMMON)
+
+SetLocalCppFlags(-I../../PUtils -I$(ARJUNA_INCLUDES))
+
+SOURCES = OperActions.cc         \
+          OperActionsDriver.cc 
+
+OAOBJ = OperActionsDriver.o OperActions.o
+
+OBJECTS = $(OAOBJ) 
+AllTarget(OperActionsDriver coretest1 coretest2 coretest3 coretest4)
+
+coretest1 : core1.SH
+	sed -e "s?{IT}?$(INSTALL_TOPDIR)?" < core1.SH > coretest1
+	chmod u+x coretest1
+
+coretest2 : core2.SH
+	sed -e "s?{IT}?$(INSTALL_TOPDIR)?" < core2.SH > coretest2
+	chmod u+x coretest2
+
+coretest3 : core3.SH
+	sed -e "s?{IT}?$(INSTALL_TOPDIR)?" < core3.SH > coretest3
+	chmod u+x coretest3
+
+coretest4 : core4.SH
+	sed -e "s?{IT}?$(INSTALL_TOPDIR)?" < core4.SH > coretest4
+	chmod u+x coretest4
+
+MakeProgramCPLUSPLUS(OperActionsDriver,$(OAOBJ) $(LIBRARIES),NOPARAM)
+
+MakeObjectCPLUSPLUS(OperActionsDriver,NOPARAM)
+MakeObjectCPLUSPLUS(OperActions,NOPARAM)
+
+TidyTarget(OperActionsDriver coretest1 coretest2 coretest3 coretest4)

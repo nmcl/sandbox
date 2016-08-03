@@ -1,0 +1,15 @@
+#!/bin/sh
+
+#
+# Copyright (C) 1993
+# 
+# Department of Computing Science,
+# The University,
+# Newcastle upon Tyne,
+# UK.
+#
+# $Id: run,v 1.1 1993/11/11 15:32:26 nmcl Exp $
+#
+
+./Test1 -rec -num 10
+./Test2 -rec -iter 5

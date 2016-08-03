@@ -1,0 +1,29 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.7 1994/11/29 14:02:15 ngdp Exp $
+COMMENT
+
+SOURCES  = Object.cc \
+           Test.cc
+
+OBJECTS  = Object.o \
+           Test.o
+
+
+LIBRARYS = $(LIBARJUNA) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+AllTarget(Test)
+
+MakeProgramCPLUSPLUS(Test,$(OBJECTS) $(LIBRARYS),NOPARAM)
+
+MakeObjectCPLUSPLUS(Object,NOPARAM)
+MakeObjectCPLUSPLUS(Test,NOPARAM)
+TidyTarget(Test)
