@@ -1,0 +1,47 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.5 1994/11/29 14:01:55 ngdp Exp $
+COMMENT
+
+STUBS	  = ObjTest_stub.h \
+	    ObjTest_stubclass.h
+
+SOURCES	  = ObjTest.cc \
+	    ObjTest_client.cc \
+	    ObjTest_server.cc \
+	    ObjTest_servermain.cc \
+	    $(STUBS) 
+
+#ifdef GCC_LINK_BUG
+OBJECTS	  = ObjTest_server.o \
+	    ObjTest_servermain.o \
+	    ObjTest.o \
+	    ObjTest_client.o
+#else
+OBJECTS	  = ObjTest_server.o \
+	    ObjTest_servermain.o \
+	    ObjTest.o
+#endif
+
+LIBRARIES = $(LIBARJSERVERS) $(LIBARJUNA) $(LIBRPC) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+AllTarget(ObjTest ObjTest_client.o)
+StubTarget($(STUBS))
+CreateInstallTopDirectory(servers)
+InstallProgram(servers,ObjTest)
+
+MakeProgramCPLUSPLUS(ObjTest,$(OBJECTS) $(LIBRARIES),NOPARAM)
+
+MakeObjectCPLUSPLUS(ObjTest,NOPARAM)
+
+MakeStubGen(ObjTest,ObjTest,ObjTest,NOPARAM)
+
+TidyTarget(ObjTest ObjTest_client.cc ObjTest_server.cc ObjTest_servermain.cc ObjTest_stub.h ObjTest_stubclass.h)
+
