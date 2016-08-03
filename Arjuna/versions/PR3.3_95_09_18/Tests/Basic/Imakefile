@@ -1,0 +1,14 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT 
+COMMENT $Id: Imakefile,v 1.6 1994/11/29 14:01:41 ngdp Exp $
+COMMENT
+
+#define IHaveSubDirs
+SetSubDirectorys(PUtils Local Distributed RawUNIX)
+all depend install :: stubs

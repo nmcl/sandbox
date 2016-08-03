@@ -1,0 +1,52 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.5 1994/11/29 14:02:01 ngdp Exp $
+COMMENT
+
+SOURCES  = BasicServer.cc \
+	   GroupsDriver.cc \
+	   BasicServer_client.cc \
+	   BasicServer_server.cc \
+	   BasicServer_servermain.cc
+
+#ifdef GCC_LINK_BUG
+SERVEROBJECTS  = BasicServer.o \
+		 BasicServer_server.o \
+		 BasicServer_servermain.o \
+		 BasicServer_client.o
+#else
+SERVEROBJECTS  = BasicServer.o \
+		 BasicServer_server.o \
+		 BasicServer_servermain.o
+#
+#endif
+CLIENTOBJECTS =  GroupsDriver.o \
+	         BasicServer_client.o
+
+
+OBJECTS = $(SERVEROBJECTS) $(CLIENTOBJECTS)
+
+LIBRARIES = $(LIBREPLICATION) $(LIBARJSERVERS)  $(LIBARJUNA) $(LIBRPC) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+AllTarget(GroupsDriver BasicServer BasicServer_client.o)
+StubTarget(BasicServer_stub.h)
+CreateInstallTopDirectory(servers)
+InstallProgram(servers,BasicServer)
+
+MakeProgramCPLUSPLUS(GroupsDriver,$(CLIENTOBJECTS) $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(BasicServer,$(SERVEROBJECTS) $(LIBRARIES),NOPARAM)
+
+MakeObjectCPLUSPLUS(GroupsDriver,NOPARAM)
+MakeObjectCPLUSPLUS(BasicServer,NOPARAM)
+
+MakeStubGen(BasicServer,BasicServer,BasicServer,NOPARAM)
+TidyTarget(GroupsDriver BasicServer BasicServer_client.cc BasicServer_server.cc BasicServer_servermain.cc BasicServer_stub.h BasicServer_stubclass.h)
+
