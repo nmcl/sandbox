@@ -1,0 +1,50 @@
+COMMENT 
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.5 1994/11/29 14:01:40 ngdp Exp $
+COMMENT
+
+LIBRARIES = $(LIBOBJCONFIG) $(LIBARJSERVERS) $(LIBARJUNA) $(LIBCOMMON) 
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES) -I../Theatre)
+
+SetLocalLdFlags(-L../Theatre)
+SetLocalLibraries(-lTheatre)
+
+SOURCES = Operation.cc \
+          ParArgs.cc \
+          Theatre.cc \
+          TheatreDisplay.cc
+
+OBJTHEATREEVAL    = Operation.o \
+                    ParArgs.o \
+                    TheatreEval.o
+
+OBJTHEATREDISPLAY = ParArgs.o \
+                    TheatreDisplay.o
+
+OBJTHEATRE        = ParArgs.o \
+                    Time.o \
+                    Theatre.o
+
+OBJECTS = $(OBJTHEATREEVAL) $(OBJTHEATREDISPLAY) $(OBJTHEATRE)
+AllTarget(TheatreEval TheatreDisplay Theatre)
+
+MakeProgramCPLUSPLUS(TheatreEval,$(OBJTHEATREEVAL) $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(TheatreDisplay,$(OBJTHEATREDISPLAY) $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(Theatre,$(OBJTHEATRE) $(LIBRARIES),NOPARAM)
+
+MakeObjectCPLUSPLUS(SeatPersis,NOPARAM)
+MakeObjectCPLUSPLUS(TheatrePersis,NOPARAM)
+MakeObjectCPLUSPLUS(Operation,NOPARAM)
+MakeObjectCPLUSPLUS(ParArgs,NOPARAM)
+MakeObjectCPLUSPLUS(Time,NOPARAM)
+MakeObjectCPLUSPLUS(TheatreEval,NOPARAM)
+MakeObjectCPLUSPLUS(TheatreDisplay,NOPARAM)
+MakeObjectCPLUSPLUS(Theatre,NOPARAM)
+
+TidyTarget(TheatreEval TheatreDisplay Theatre)
