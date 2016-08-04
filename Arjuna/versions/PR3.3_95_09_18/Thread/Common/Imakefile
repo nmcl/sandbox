@@ -1,0 +1,32 @@
+COMMENT 
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.3 1995/07/26 15:22:52 ngdp Exp $
+COMMENT
+
+SOURCES = ThreadList.cc \
+	  ThreadListI.cc \
+	  InitThreads.cc \
+	  ThreadID.cc
+
+OBJECTS = ThreadList.o \
+	  ThreadListI.o \
+	  InitThreads.o \
+	  ThreadID.o
+
+SetLocalCppFlags(-I../include -I$(ARJUNA_INCLUDES))
+
+LIB = $(LIBCOMMON)
+
+AllTarget($(LIB))
+
+MakeObjectCPLUSPLUS(ThreadList,NOPARAM)
+MakeObjectCPLUSPLUS(ThreadListI,NOPARAM)
+MakeObjectCPLUSPLUS(InitThreads,NOPARAM)
+MakeObjectCPLUSPLUS(ThreadID,NOPARAM)
+MakeLibrary($(LIB), $(OBJECTS))
