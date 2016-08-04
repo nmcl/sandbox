@@ -1,0 +1,26 @@
+COMMENT 
+COMMENT Copyright (C) 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1998/05/27 11:22:05 nmcl Exp $
+COMMENT
+
+AllTarget(dummy_i.o)
+
+AddLibraries($(LIBOTS) $(LIBORBCOMMON) $(LIBARJUNA) $(LIBOTS))
+
+CorbaStubs(dummy,NOPARAM)
+
+BuildClientObjects(dummy,NOPARAM,CLIENT_OBJ)
+BuildServerObjects(dummy,NOPARAM,SERVER_OBJ)
+BuildCommonObjects(dummy,NOPARAM,COMMON_OBJ)
+
+BuildObjectCPLUSPLUS(dummy_i,NOPARAM)
+
+Target($(CLIENT_OBJ) $(COMMON_OBJ))
+
+TidyTarget($(IDL_GEN_FILES) *.o)

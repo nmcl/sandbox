@@ -1,0 +1,31 @@
+COMMENT 
+COMMENT Copyright (C) 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1998/05/27 11:21:59 nmcl Exp $
+COMMENT
+
+SOURCES = Populator.cc \
+	  Searcher.cc
+
+AddCppFlags(-I../idl)
+
+AddLibraries($(LIBOTS) $(LIBORBCOMMON) $(LIBARJUNA) $(LIBOTS) $(LIBARJUNA) $(LIBORBCOMMON) $(ORB_LIBS))
+
+AllTarget(Populator Searcher)
+
+AddClientObjects(../idl/,dummy,CLIENT_OBJ)
+AddServerObjects(../idl/,dummy,SERVER_OBJ)
+AddCommonObjects(../idl/,dummy,COMMON_OBJ)
+
+BuildObjectCPLUSPLUS(Populator,NOPARAM)
+BuildObjectCPLUSPLUS(Searcher,NOPARAM)
+
+MakeProgramCPLUSPLUS(Populator, Populator.o ../idl/dummy_i.o $(SERVER_OBJ) $(COMMON_OBJ),NOPARAM)
+MakeProgramCPLUSPLUS(Searcher, Searcher.o $(CLIENT_OBJ) $(COMMON_OBJ),NOPARAM)
+
+TidyTarget(Populator Searcher)

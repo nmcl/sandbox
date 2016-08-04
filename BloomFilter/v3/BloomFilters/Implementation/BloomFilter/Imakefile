@@ -1,0 +1,26 @@
+COMMENT 
+COMMENT Copyright (C) 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1998/06/02 16:51:18 nmcl Exp $
+COMMENT
+
+SOURCES = Searcher.cc
+
+AddCppFlags(-I../idl -I/home/nmcl/C++SIM/Include)
+
+AddLibraries($(LIBOTS) $(LIBORBCOMMON) $(LIBARJUNA) $(LIBOTS) $(LIBARJUNA) $(LIBORBCOMMON) $(ORB_LIBS) /home/nmcl/C++SIM/lib/libC++SIM.a)
+
+AllTarget(Searcher)
+
+BuildObjectCPLUSPLUS(Searcher,NOPARAM)
+BuildObjectCPLUSPLUS(BloomFilter,NOPARAM)
+BuildObjectCPLUSPLUS(BloomFilterNameService,NOPARAM)
+
+MakeProgramCPLUSPLUS(Searcher, BloomFilter.o BloomFilterNameService.o Searcher.o $(CLIENT_OBJ) $(COMMON_OBJ),NOPARAM)
+
+TidyTarget(Searcher)
