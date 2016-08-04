@@ -1,0 +1,29 @@
+COMMENT 
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.4 1994/06/01 14:39:56 ngdp Exp $
+COMMENT
+
+SOURCES   = OSConverter.cc
+
+OBJECTS   = OSConverter.o
+
+LIBRARIES = $(LIBOBJECTSTORE) $(LIBARJUNA) $(LIBCOMMON) $(LIBSTUB)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+AllTarget(OSConverter)
+
+CreateInstallTopDirectory(bin)
+InstallProgram(bin,OSConverter)
+
+MakeProgramCPLUSPLUS(OSConverter, $(OBJECTS) $(LIBRARIES),NOPARAM)
+
+MakeObjectCPLUSPLUS(OSConverter,NOPARAM)
+
+TidyTarget(OSConverter)
