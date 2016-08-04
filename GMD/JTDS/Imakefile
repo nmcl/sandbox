@@ -1,0 +1,16 @@
+COMMENT
+COMMENT Copyright (C) 1998,
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT 
+COMMENT $Id: Imakefile,v 1.1 1998/04/06 14:17:18 nmcl Exp $
+COMMENT
+
+#define IHaveSubDirs
+
+AddSubDirectories(include)
+AddSubDirectories(src)
+AddSubDirectories(bin)

@@ -1,0 +1,26 @@
+COMMENT
+COMMENT Copyright (C) 1998,
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 1998/04/08 10:52:41 nmcl Exp $
+COMMENT
+
+SOURCES  = ObjectStore.cc
+
+OBJECTS  = ObjectStore.o \
+	   ../src/ObjectData.o
+
+AddCppFlags(-I$(ARJUNA_INCLUDES) -I../include -I/home/nmcl/DistC++/RPC/SimpleRpc/include)
+AddLibraries($(LIBARJUNA) -L/home/nmcl/Install/DistC++/lib -lCommon)
+
+AllTarget(ObjectStore)
+
+MakeProgramCPLUSPLUS(ObjectStore,$(OBJECTS),NOPARAM)
+
+BuildObjectCPLUSPLUS(ObjectStore,NOPARAM)
+
+TidyTarget(ObjectStore)
