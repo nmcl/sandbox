@@ -1,0 +1,17 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.4 1996/09/25 17:07:14 n048z Exp $
+COMMENT
+
+#define IHaveSubDirs
+#if HAVE_INTERVIEWS
+SetSubDirectorys(ActionMonitor GroupViewDriver NameInfoDriver NameServEdit ServerGroupEdit Interface)
+#else
+SetSubDirectorys(ActionMonitor GroupViewDriver NameInfoDriver NameServEdit ServerGroupEdit)
+#endif
