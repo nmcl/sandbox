@@ -1,0 +1,36 @@
+<HTML>
+<HEAD>
+<TITLE>Stabilis:   A  Case   Study  in   Writing  Fault-Tolerant  Distributed
+Applications Using Persistent Objects</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<H1>Stabilis:   A  Case   Study  in   Writing  Fault-Tolerant  Distributed
+Applications Using Persistent Objects</H1>
+<P><I>L.E. Buzato and A. Calsavara</I></P>
+<P><B>Abstract:</B> This paper presents Stabilis, a fault-tolerant
+object-oriented distributed database management system that has been
+written as an exercise in persistent programming. Stabilis is
+implemented on top of Arjuna, an object-oriented programming system
+that provides the basic mechanisms for fault tolerance and
+distribution.  The computational model used by Arjuna is based upon
+the concept of using atomic actions to control operations upon
+persistent objects.  Stabilis aims at experimenting with Arjuna to
+build large applications that use persistent objects. Such experiment
+has led us to extend some of the mechanisms for persistent programming
+already existent in Arjuna.  Stabilis manages objects that are
+persistent, recoverable and can be accessed remotely and concurrently
+in a consistent manner.  Objects with such properties have an
+important function in the overall operation of Stabilis.  The database
+manager can be operated either through a visual database interface or
+a query interpreter; both translate commands into a series of
+operations of the database manager.  All operations of the database
+manager make use of atomic actions and locks to structure and control
+accesses to objects.  A flexible use of nested atomic actions permits
+objects to retrogress to previous consistent states. Stabilis has been
+developed using C++; dispensing with the use of any specifically
+designed language for persistent programming.</P>
+<HR>
+<A HREF="../../index.html"><IMG SRC="../../buttons/Home.gif" ALT="[HOME]" WIDTH=96 HEIGHT=24></A>
+<A HREF="../publications.html"><IMG SRC="../../buttons/Publications.gif" ALT="[PUBLICATIONS]" WIDTH=96 HEIGHT=24></A>
+</BODY>
+</HTML>

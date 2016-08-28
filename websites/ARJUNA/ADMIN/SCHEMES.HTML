@@ -1,0 +1,73 @@
+<HTML>
+<HEAD>
+<TITLE>Schemes</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<H1 ALIGN=CENTER>Schemes</H1>
+<H2>Publication organisation scheme</H2>
+<P>This scheme describes to naming and organising of the files which
+make up publications on the web site. In particular it specifies:</P>
+<UL>
+<LI><B>Publications entry points</B>: The naming of files which form
+the entry points publications.</LI>
+<LI><B>Organisation of multi-part publications</B>: The structuring of
+files which makes up a publications.</LI>
+</UL>
+<H3>Publications entry pointer</H3>
+<P>All publication entry points are place with in the same directory
+and named using the following scheme:</P>
+<P ALIGN=CENTER><B>&lt;publication name&gt</B>.<B>&ltformat postfix&gt;</B><BR>
+or<BR>
+<B>&lt;publication name&gt;</B>_<B>&lt;format sub-type&gt</B>.<B>&lt;format postfix&gt;</B></P>
+<P>For example: <I>p023.ps</I>, <I>p012_A4.ps</I>, <I>p045.html</I> and <I>p066_MP.html</I></P>
+<UL>
+<LI><B>publication name</B>: The name of the publication, for example,
+<I>p023</I> for the 23rd publication on the web site.</LI>
+<LI><B>format sub-type</B>: The name of a format sub-type, for
+example, <I>USL</I> and <I>A4</I> for US Letter and European A4
+postscript respectively,and <I>MP</I> for multi-page HTML.</LI>
+<LI><B>format postfix</B>: The postfix of the format of the
+publication, for example, <I>ps</I> for postscript, <I>html</I> for
+HTML and <I>ps.gz</I> for gziped postscript.</LI>
+</UL>
+<H3>Organisation of multi-part publications</H3>
+<P>For publication which comprise of multiple files (such as html) the
+files, except the publications entry point, should be placed in a
+directory in the same directory as the publications entry point which
+is named using the following scheme:</P>
+<P ALIGN=CENTER><B>&lt;publication name&gt</B>_<B>&ltformat postfix&gt;</B><BR>
+or<BR>
+<B>&lt;publication name&gt;</B>_<B>&lt;format sub-type&gt</B>_<B>&lt;format postfix&gt;</B></P>
+<P>For example: <I>p045_html</I> and <I>p066_MP_html</I></P>
+<P><B>publication name</B>, <B>format sub-type</B> and <B>format
+postfix</B> are as defined in the previous section.</P>
+<P>An example of the resulting structure, for a publication called
+<I>p053</I> is given below:</P>
+<PRE>
+p053.ps                     &lt;entry point for postscript&gt;
+p053.ps.gz                  &lt;entry point for gziped postscript&gt;
+p053.html                   &lt;entry point for html&gt;
+p053_html/img1.gif
+         /img2.gif
+p053.html.tar               &lt;entry point for tared html&gt;
+p053_MP.html                &lt;entry point for multi-page html&gt;
+p053_MP_html/img1.gif
+            /img2.gif
+            /page1.html
+            /page2.html
+p053_MP.html.tar           &lt;entry point multi-page tared html&gt;
+</PRE>
+<H2>HTML publications maintenance</H2>
+<P>Publications which are provided as HTML should be maintained to ensure:</P>
+<UL>
+<LI>The publications does not contain "broken"</LI>
+<LI>Browsers can display/print the publications correctly</LI>
+</UL>
+<P>If the publication was originally provided in HTML then the
+original should also be provided. The "maintained" publications should
+be indicated as such.</P>
+<HR>
+<A HREF="../index.html"><IMG SRC="../buttons/Home.gif" ALT="[HOME]" WIDTH=96 HEIGHT=24></A>
+<A HREF="index.html"><IMG SRC="../buttons/Admin.gif" ALT="[ADMIN]" WIDTH=96 HEIGHT=24></A>
+</BODY>
+</HTML>

@@ -1,0 +1,826 @@
+<HTML>
+
+<HEAD>
+
+<TITLE>ANSAworks 96</TITLE>
+
+<META NAME="GENERATOR" CONTENT="Internet Assistant for Microsoft Word 2.0z">
+</HEAD>
+
+<BODY>
+
+<H1>Notes from ANSAworks 96 </H1>
+
+<P>
+<FONT SIZE=2>Cambridge, UK, 22nd-24th May 1996</FONT>
+<P>
+<FONT SIZE=2>by <A HREF="http://arjuna.ncl.ac.uk/people/dave/" >David Ingham</A></FONT>
+<P>
+<HR><H2>INTRODUCTION - CHRIS MAYERS, APM </H2><HR>
+
+<H3>client-server system </H3>
+
+<UL>
+<LI><FONT SIZE=2>typically 1 server + PCs</FONT>
+<LI><FONT SIZE=2>Scaleability</FONT>
+<LI><FONT SIZE=2>interoperability</FONT>
+<LI><FONT SIZE=2>dependability - reliable &amp; secure</FONT>
+
+</UL>
+
+<H3>distributed systems </H3>
+
+<UL>
+<LI><FONT SIZE=2>diversity of hardware &amp; networking</FONT>
+<LI><FONT SIZE=2>legacy - many versions of software</FONT>
+<LI><FONT SIZE=2>decentralisation - many points of control</FONT>
+<LI><FONT SIZE=2>&amp; client-server issues on a large scale</FONT>
+
+</UL>
+
+<H3>example: US telecoms planning </H3>
+
+<UL>
+<LI><FONT SIZE=2>100 M nodes with 100Mips each</FONT>
+<LI><FONT SIZE=2>1000 organisational units</FONT>
+<LI><FONT SIZE=2>100 versions of each software package</FONT>
+
+</UL>
+
+<H3>different policies for different apps, trade-offs: </H3>
+
+<UL>
+<LI><FONT SIZE=2>availability Vs consistency</FONT>
+<LI><FONT SIZE=2>autonomy Vs uniformity</FONT>
+<LI><FONT SIZE=2>security Vs convenience</FONT> 
+</UL>
+
+<H3>key issues </H3>
+
+<UL>
+<LI><FONT SIZE=2>props of distributed systems are different from
+centralised ones</FONT>
+<LI><FONT SIZE=2>different apps need different solutions</FONT>
+
+</UL>
+
+<H3>ANSA architecture </H3>
+
+<UL>
+<LI><FONT SIZE=2>trading + federation - controlled interoperability</FONT>
+<UL>
+<LI><FONT SIZE=2>distributed control requires evolution - late
+bindings</FONT>
+<LI><FONT SIZE=2>services are registered in trader - chosen at
+runtime</FONT> 
+</UL>
+
+<LI><FONT SIZE=2>transparency - selective</FONT>
+<UL>
+<LI><FONT SIZE=2>one size does not fit all</FONT>
+<LI><FONT SIZE=2>application requires finer grade control</FONT>
+<LI><FONT SIZE=2>puts policy into transparency</FONT> 
+</UL>
+
+<LI><FONT SIZE=2>abstract + automate</FONT>
+<UL>
+<LI><FONT SIZE=2>tools replace APIs</FONT>
+<LI><FONT SIZE=2>raise the level of abstraction</FONT>
+<LI><FONT SIZE=2>cf. assembler -&gt; C</FONT> 
+</UL>
+
+<LI><FONT SIZE=2>modular engineering</FONT>
+<UL>
+<LI><FONT SIZE=2>plug + play infrastructure</FONT>
+<LI><FONT SIZE=2>architecture shouldn't provide functions that
+aren't used</FONT>
+<LI><FONT SIZE=2>e.g. embedded systems have tight size constraints</FONT>
+
+</UL>
+
+</UL>
+
+<H3>ANSA Vision </H3>
+
+<UL>
+<LI><FONT SIZE=2>electronic commerce</FONT>
+<UL>
+<LI><FONT SIZE=2>market has been created</FONT>
+<LI><FONT SIZE=2>underlying system is flimsy</FONT>
+<LI><FONT SIZE=2>require dependability, security etc.</FONT> 
+</UL>
+
+<UL>
+<LI><FONT SIZE=2>requirements</FONT>
+<UL>
+<LI><FONT SIZE=2>interactive multimedia - corba++</FONT>
+<LI><FONT SIZE=2>open networks - www+++</FONT>
+<LI><FONT SIZE=2>distributed information cgi,java++</FONT>
+<LI><FONT SIZE=2>embedded systems - corba--</FONT> 
+</UL>
+
+</UL>
+
+<LI><FONT SIZE=2>web creates uniform information space</FONT>
+<UL>
+<LI><FONT SIZE=2>good presentation + authoring tools</FONT>
+<LI><FONT SIZE=2>poor navigation, administration, and development
+tools</FONT>
+<LI><FONT SIZE=2>inefficient protocols - HTTP - min 4 messages
+per page (?)</FONT>
+<LI><FONT SIZE=2>no support for active documents</FONT> 
+</UL>
+
+<LI><FONT SIZE=2>distributed objects can help</FONT>
+<UL>
+<LI><FONT SIZE=2>tool-based approach</FONT>
+<LI><FONT SIZE=2>applying experience with protocols</FONT>
+<LI><FONT SIZE=2>applying federation principles</FONT> 
+</UL>
+
+<LI><FONT SIZE=2>key technologies</FONT>
+<UL>
+<LI><FONT SIZE=2>Internet, web + protocols</FONT>
+<LI><FONT SIZE=2>new capabilities evolving + being standardised</FONT>
+<LI><FONT SIZE=2>CORBA IIOP: for integrating distributed apps</FONT>
+<LI><FONT SIZE=2>Java: mature, programming language for Internet
+apps</FONT> 
+</UL>
+
+<UL>
+<LI><FONT SIZE=2>ANSA ISF projects</FONT>
+<UL>
+<LI><FONT SIZE=2>quartz - email delivery</FONT>
+<LI><FONT SIZE=2>ANSAweb - http over IIOP</FONT>
+<LI><FONT SIZE=2>jade - Java access to corba</FONT>
+<LI><FONT SIZE=2>also partner in end-to-end security project (E2S)
+for Internet electronic commerce</FONT> 
+</UL>
+
+</UL>
+
+<LI><FONT SIZE=2>Distributed Multimedia Architecture - DIMMA</FONT>
+<UL>
+<LI><FONT SIZE=2>aims</FONT>
+<UL>
+<LI><FONT SIZE=2>extend corba to handle multimedia streams, peer
+to peer comms</FONT> 
+</UL>
+
+<LI><FONT SIZE=2>key tech</FONT>
+<UL>
+<LI><FONT SIZE=2>ATM</FONT>
+<LI><FONT SIZE=2>lightweight operating systems</FONT> 
+</UL>
+
+<LI><FONT SIZE=2>current ANSA work</FONT>
+<UL>
+<LI><FONT SIZE=2>real-time ANSA/RT</FONT>
+<LI><FONT SIZE=2>protocols for corba streams</FONT>
+<LI><FONT SIZE=2>multimedia demos - amber</FONT>
+<LI><FONT SIZE=2>distributed control of ATM - DCAN</FONT>
+<LI><FONT SIZE=2>ReTINA - orb for telecoms</FONT> 
+</UL>
+
+</UL>
+
+</UL>
+
+<HR><H2>FUTURES - ROB &amp; ANDREW, APM </H2><HR>
+
+<H3>OVERVIEW </H3>
+
+<UL>
+<LI><FONT SIZE=2>1995: 60% of Europeans don't know what the web
+is; 2000: 95% will have access</FONT>
+<LI><FONT SIZE=2>systems integration business declines</FONT>
+<LI><FONT SIZE=2>small companies supply all special apps</FONT>
+<LI><FONT SIZE=2>middleman companies vanish</FONT>
+<LI><FONT SIZE=2>intelligence in network vanishes</FONT>
+<LI><FONT SIZE=2>many telcos marooned shipping bits over dumb
+networks</FONT>
+<LI><FONT SIZE=2>Europe at risk as '2-year lag' vanishes</FONT>
+
+</UL>
+
+<H3>PART 1: CULTURE </H3>
+
+<UL>
+<LI><FONT SIZE=2>1978 capture the desktop - Xerox - paper-less
+office</FONT>
+<UL>
+<LI><FONT SIZE=2>paper-less didn't happen, filing cabinet-less
+did</FONT> 
+</UL>
+
+<LI><FONT SIZE=2>2000 capture the person</FONT>
+<UL>
+<LI><FONT SIZE=2>at home and in the office and thereby the person</FONT>
+<LI><FONT SIZE=2>closer ties between home and work computing systems</FONT>
+<LI><FONT SIZE=2>focus on the person</FONT> 
+</UL>
+
+<LI><FONT SIZE=2>current technology isn't a window to an information
+world</FONT>
+<UL>
+<LI><FONT SIZE=2>its a door through which more &amp; more people
+can walk</FONT> 
+</UL>
+
+<LI><FONT SIZE=2>kids will grow up with new intolerance levels</FONT>
+<UL>
+<LI><FONT SIZE=2>response, ease of use, access, resistance to
+inertia</FONT> 
+</UL>
+
+</UL>
+
+<H3>PART 2: CHARACTERISTICS </H3>
+
+<H3>seamless </H3>
+
+<UL>
+<LI><FONT SIZE=2>Internet has achieved this (WWW)</FONT>
+<LI><FONT SIZE=2>boundaries will still be visible</FONT>
+<LI><FONT SIZE=2>local Vs remote access - user based choices,
+e.g. remote management of PCs</FONT> 
+</UL>
+
+<H3>The 4 personals </H3>
+
+<UL>
+<LI><FONT SIZE=2>response</FONT>
+<UL>
+<LI><FONT SIZE=2>real-time - world becomes more asynchronous -
+e.g. autosurfing</FONT> 
+</UL>
+
+<LI><FONT SIZE=2>discovery</FONT>
+<UL>
+<LI><FONT SIZE=2>find it anywhere</FONT>
+<LI><FONT SIZE=2>URLs not suitable</FONT>
+<LI><FONT SIZE=2>trading ideas are useful for describing things</FONT>
+<LI><FONT SIZE=2>Andy Herbert writing IETF paper</FONT> 
+</UL>
+
+<LI><FONT SIZE=2>diversity</FONT>
+<UL>
+<LI><FONT SIZE=2>not limited by installed software</FONT> 
+</UL>
+
+<LI><FONT SIZE=2>empowerment</FONT>
+<UL>
+<LI><FONT SIZE=2>sub-contract chores</FONT> 
+</UL>
+
+</UL>
+
+<H3>Space </H3>
+
+<UL>
+<LI><FONT SIZE=2>time is precious</FONT>
+<UL>
+<LI><FONT SIZE=2>hide complexity</FONT> 
+</UL>
+
+<LI><FONT SIZE=2>mobility</FONT>
+<UL>
+<LI><FONT SIZE=2>wrong concept - its contactability</FONT>
+<LI><FONT SIZE=2>filtering, agents</FONT>
+<LI><FONT SIZE=2>people hate travel + hate being out of contact</FONT>
+<LI><FONT SIZE=2>maintain linkages between components</FONT> 
+</UL>
+
+</UL>
+
+<H3>Openness </H3>
+
+<UL>
+<LI><FONT SIZE=2>universality</FONT>
+<UL>
+<LI><FONT SIZE=2>car analogy - we can drive anything</FONT>
+<LI><FONT SIZE=2>common interface, many implementations</FONT>
+<LI><FONT SIZE=2>implementations tuned to particular needs</FONT>
+<LI><FONT SIZE=2>fashion differentiates</FONT> 
+</UL>
+
+<LI><FONT SIZE=2>no one size fits all</FONT>
+<UL>
+<LI><FONT SIZE=2>many different car models</FONT> 
+</UL>
+
+</UL>
+
+<H3>Software quality </H3>
+
+<UL>
+<LI><FONT SIZE=2>will reduce e.g. word6, PowerPoint - people will
+pay</FONT>
+<LI><FONT SIZE=2>will improve e.g. GNU</FONT>
+<LI><FONT SIZE=2>(US MOD spent lots on ADA - GNU C is better quality
+software)</FONT> 
+</UL>
+
+<H3>PART 3: INGREDIANTS </H3>
+
+<UL>
+<LI><FONT SIZE=2>computing intelligence moves to edge</FONT>
+<UL>
+<LI><FONT SIZE=2>was: intelligent mainframe talking to dumb terms
++ disks</FONT>
+<LI><FONT SIZE=2>now: dumb network, clever terminals, clever apps
+(DBs) (disks)</FONT> 
+</UL>
+
+<LI><FONT SIZE=2>same story in telephone systems</FONT>
+<UL>
+<LI><FONT SIZE=2>was: dumb phones, clever exchange</FONT>
+<LI><FONT SIZE=2>now: clever phones, dumb network, clever services</FONT>
+
+</UL>
+
+</UL>
+
+<P>
+<FONT SIZE=2>Currently we describe machine by the OS, in the future
+it will be by the browser we run - this will define the semantics.
+Browsers are duplicating OS functions - managing UI, cache management.
+This will promote the microkernel based operating systems - boot
+ROM of system. OS services e.g. persistence will be downloadable.
+CORBA orb acts like microkernel. Orbs may move down and sit above
+raw machine, providing common API on top of which services are
+downloaded. Feature interaction is a problem.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>We also need service manager (network operating system),
+managing downloaded software components e.g. controlling services
+that are available to a downloadable component.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>Web ideas: remembering routes traveled through the
+web and recognises when we start following it again. Automatic
+classifications, if I access an item, other items of the same
+category could be located for the user.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>Evolution: Java app may be around for 100 years,
+encoding formats change. Reflective systems - apps can change
+internals e.g. smalltalk.<BR>
+</FONT>
+<P>
+<FONT SIZE=2>Intentional programming (Microsoft) - abstract syntax
+trees - high level data is still intact but can be mapped to different
+architecture. If all tools are IP equipped, different bits can
+be written in different languages.</FONT>
+<P>
+<FONT SIZE=2>Perhaps can move from AST back to new programming
+languages. This means keeping the meta-data with the application.</FONT>
+<H3>WebServer 2000 </H3>
+
+<UL>
+<LI><FONT SIZE=2>web server becomes distributed server</FONT>
+<LI><FONT SIZE=2>manage as a single system but spread out over
+many hosts</FONT>
+<LI><FONT SIZE=2>CORBA provides backbone</FONT>
+<LI><FONT SIZE=2>object wrapping - access to legacy apps, OLE
+SQL + CGI apps</FONT>
+<LI><FONT SIZE=2>session management - state, location in system,
+security, things already bought, accounting mechanisms, QoS</FONT>
+<LI><FONT SIZE=2>scripts - declarative descriptions of payment
+policies, management, access control, replication</FONT>
+<LI><FONT SIZE=2>page generator - generates pages based on script
+information</FONT> 
+</UL>
+
+<HR><H2>ReTINA - JEAN-BERNARD STEFANI, FRANCE TELECOM </H2><HR>
+
+<H3>Objectives </H3>
+
+<UL>
+<LI><FONT SIZE=2>build a TINA compliant DPE (distributed programming
+environment)</FONT>
+<LI><FONT SIZE=2>complement CORBA for real-time &amp; telecom
+specifics</FONT>
+<LI><FONT SIZE=2>validate DPE through demonstrators</FONT>
+<LI><FONT SIZE=2>influence standards: OMG telecom taskforce, TINA-C</FONT>
+
+</UL>
+
+<H3>Requirements </H3>
+
+<UL>
+<LI><FONT SIZE=2>conformance: upward compatibility with CORBA2</FONT>
+<LI><FONT SIZE=2>modularity and Scaleability: an ORB everywhere</FONT>
+<UL>
+<LI><FONT SIZE=2>ORB on top of every piece of network hardware</FONT>
+<LI><FONT SIZE=2>including mobile phones - change interfaces -
+locale</FONT>
+<LI><FONT SIZE=2>modularity is essential</FONT> 
+</UL>
+
+<LI><FONT SIZE=2>flexibility: protocols, bindings &amp; policies</FONT>
+<UL>
+<LI><FONT SIZE=2>micro-ORB + special modules depending on environment</FONT>
+<LI><FONT SIZE=2>telecoms system have many protocols not just
+TCP/IP</FONT>
+<LI><FONT SIZE=2>indeed new protocols will appear on the web</FONT>
+<LI><FONT SIZE=2>plug in policies too</FONT>
+<LI><FONT SIZE=2>plug in new bindings - client-server not always
+suitable</FONT>
+<LI><FONT SIZE=2>e.g. add caching different caching strategies</FONT>
+<LI><FONT SIZE=2>these transparencies are essentially different
+bindings</FONT>
+<LI><FONT SIZE=2>many different binding models available</FONT>
+<LI><FONT SIZE=2>e.g. multi-cast or multi-point to multi-point
+comms</FONT>
+<LI><FONT SIZE=2>ORB currently gives 1 binding option &amp; only
+2 transports</FONT> 
+</UL>
+
+<LI><FONT SIZE=2>real-time: resource control &amp; kernel determinism</FONT>
+<UL>
+<LI><FONT SIZE=2>fine control of low level resources e.g. threads,
+memory etc.</FONT>
+<LI><FONT SIZE=2>KD: guarantees of well-known temporal behaviour</FONT>
+
+</UL>
+
+</UL>
+
+<H3>Technical Approach </H3>
+
+<UL>
+<LI><FONT SIZE=2>small, portable DPE kernel</FONT>
+<LI><FONT SIZE=2>DPE services 'layered' on the DPE kernel</FONT>
+<LI><FONT SIZE=2>different DPE profiles in different environments</FONT>
+<UL>
+<LI><FONT SIZE=2>real-time profile - chorus</FONT>
+<LI><FONT SIZE=2>general purpose profile - standard UNIX</FONT>
+
+</UL>
+
+<LI><FONT SIZE=2>Scaleability: kernel ported on different micro-kernels
+configurations</FONT>
+<UL>
+<LI><FONT SIZE=2>10K to 1Meg kernels</FONT> 
+</UL>
+
+<LI><FONT SIZE=2>flexibility: remove bindings from the kernel</FONT>
+<UL>
+<LI><FONT SIZE=2>add binding libraries</FONT>
+<LI><FONT SIZE=2>adapter classes</FONT> 
+</UL>
+
+<LI><FONT SIZE=2>real-time: generic resource control frameworks</FONT>
+<LI><FONT SIZE=2>bindings as object: access path to object</FONT>
+<UL>
+<LI><FONT SIZE=2>set of names</FONT>
+<LI><FONT SIZE=2>set of resources that are required to provide
+the path</FONT>
+<LI><FONT SIZE=2>possibly distributed objects</FONT> 
+</UL>
+
+<LI><FONT SIZE=2>bindings created through binding factories</FONT>
+<LI><FONT SIZE=2>bindings with interfaces for specific control</FONT>
+<LI><FONT SIZE=2>CORBA extension: binding factories as object
+adapters</FONT>
+<LI><FONT SIZE=2>data management services in ReTINA DPE through
+O2 DBMS</FONT>
+<UL>
+<LI><FONT SIZE=2>fully fledged query language</FONT> 
+</UL>
+
+<LI><FONT SIZE=2>query and persistence through O2 objects</FONT>
+<LI><FONT SIZE=2>O2 transactions embedded in CORBA-compliant transactions</FONT>
+<LI><FONT SIZE=2>generic connection management framework as a
+telecom specific DPE service</FONT>
+<LI><FONT SIZE=2>connections as specialised forms of bindings</FONT>
+
+</UL>
+
+<HR><H2>DISTRIBUTED CONTROL OF ATM NETWORKS - IAN LESLIE (CUCL) </H2><HR>
+
+<H3>Summary </H3>
+
+<UL>
+<LI><FONT SIZE=2>get out of band processing out of switches</FONT>
+<LI><FONT SIZE=2>provide control (signaling &amp; management)
+via distributed platform</FONT> 
+</UL>
+
+<UL>
+<LI><FONT SIZE=2>separate functions of switching cells from controlling
+switches</FONT>
+<UL>
+<LI><FONT SIZE=2>people agree on in-band characteristics</FONT>
+<LI><FONT SIZE=2>out-of-band protocols is very difficult to predict</FONT>
+<LI><FONT SIZE=2>evolution of protocols</FONT>
+<LI><FONT SIZE=2>experimentation</FONT>
+<LI><FONT SIZE=2>companies can just build the bit they are good
+at</FONT> 
+</UL>
+
+</UL>
+
+<HR><H2>AMBER - STREAMS &amp; MBONE-BASED MULTI-MEDIA - A. KRAMER
+(APM) </H2><HR>
+
+<H3>Extensions to CORBA </H3>
+
+<UL>
+<LI><FONT SIZE=2>streams- directional flow of typed frames</FONT>
+<LI><FONT SIZE=2>explicit bindings - stream interfaces &amp; comms
+end-points</FONT> 
+</UL>
+
+<H3>Implications </H3>
+
+<UL>
+<LI><FONT SIZE=2>minimal IDL extensions</FONT>
+<LI><FONT SIZE=2>overload adapter concept - add adapters at client
+&amp; server</FONT> 
+</UL>
+
+<H3>Overload adapter concept </H3>
+
+<UL>
+<LI><FONT SIZE=2>form basis for standardisation &amp; vendor differentiation</FONT>
+<LI><FONT SIZE=2>examples: multicast groups, http-ng, mm-data
+flow</FONT> 
+</UL>
+
+<HR><H2>END-TO-END SECURITY (E2S) [ESPRIT] - A. HERBERT (APM) </H2><HR>
+
+<UL>
+<LI><FONT SIZE=2>lots of IT in embedded systems, e.g. Phillips
+razor has processor + memory! (also mob phones)</FONT>
+<LI><FONT SIZE=2>Fast, slow Phenomenon:</FONT>
+<UL>
+<LI><FONT SIZE=2>the Web year - 1/3 of a real year</FONT>
+<LI><FONT SIZE=2>however there are lots of COBOL apps that we
+want to link into</FONT> 
+</UL>
+
+<LI><FONT SIZE=2>Internet - we must secure above the infrastructure</FONT>
+<UL>
+<LI><FONT SIZE=2>all security must be in the application - end-to-end
+security</FONT> 
+</UL>
+
+<LI><FONT SIZE=2>Objective</FONT>
+<UL>
+<LI><FONT SIZE=2>secure electronic commerce on the Internet</FONT>
+
+</UL>
+
+<LI><FONT SIZE=2>Smart TV</FONT>
+<UL>
+<LI><FONT SIZE=2>paging, bar-codes, advertising tracing, electronic
+coupons</FONT> 
+</UL>
+
+<LI><FONT SIZE=2>24M Internet users</FONT>
+<LI><FONT SIZE=2>credit card infrastructure</FONT>
+<UL>
+<LI><FONT SIZE=2>international clearing &amp; risk management</FONT>
+<UL>
+<LI><FONT SIZE=2>merchants pay different charges for when they
+want crediting</FONT> 
+</UL>
+
+<LI><FONT SIZE=2>international purchasing as well as payment</FONT>
+
+</UL>
+
+<LI><FONT SIZE=2>Key service providers emerging</FONT>
+<UL>
+<LI><FONT SIZE=2>Verisign certification authority (RSA off shoot)</FONT>
+<UL>
+<LI><FONT SIZE=2>issue digital certificate. user supplies passport,
+birth certificate</FONT> 
+</UL>
+
+</UL>
+
+<LI><FONT SIZE=2>SMEs</FONT>
+<UL>
+<LI><FONT SIZE=2>small businesses can get involved</FONT>
+<LI><FONT SIZE=2>direct sales over the Web</FONT> 
+</UL>
+
+<LI><FONT SIZE=2>smartcard contains credentials not users &amp;
+passwords with machines</FONT>
+<UL>
+<LI><FONT SIZE=2>security can go in modem rather than smartcard</FONT>
+
+</UL>
+
+<LI><FONT SIZE=2>certification service - depends on whether limited
+number of known customers or whether its open to the public</FONT>
+<LI><FONT SIZE=2>difficult problem is managing all the sets of
+credentials</FONT>
+<LI><FONT SIZE=2>some US states (&amp; some European companies)
+are already accepting digital certificates </FONT>
+</UL>
+
+<H3>E2S Partners </H3>
+
+<UL>
+<LI><FONT SIZE=2>HP Grenoble</FONT>
+<UL>
+<LI><FONT SIZE=2>managing service contracts</FONT> 
+</UL>
+
+<LI><FONT SIZE=2>Tech Univ. Berlin</FONT>
+<UL>
+<LI><FONT SIZE=2>very strict data protection culture</FONT>
+<LI><FONT SIZE=2>Univ. administration</FONT>
+<LI><FONT SIZE=2>secure access to student data</FONT>
+<LI><FONT SIZE=2>case-work scenario - problems involve many partners</FONT>
+<LI><FONT SIZE=2>e-mail rather than web-based</FONT> 
+</UL>
+
+<LI><FONT SIZE=2>Swiss Bank</FONT>
+<UL>
+<LI><FONT SIZE=2>deploy swiskey product across the Internet</FONT>
+<UL>
+<LI><FONT SIZE=2>portfolio management, current product is closed
+network based</FONT>
+<LI><FONT SIZE=2>there is an issue regarding the path that data
+takes over Internet</FONT>
+<LI><FONT SIZE=2>if data passes through country in which data
+can be examined </FONT>
+</UL>
+
+<LI><FONT SIZE=2>download 'branded' application to user (Java)</FONT>
+<LI><FONT SIZE=2>secure hole punching to back office</FONT>
+<UL>
+<LI><FONT SIZE=2>back-end Sybase databases</FONT> 
+</UL>
+
+<LI><FONT SIZE=2>do key management</FONT> 
+</UL>
+
+<LI><FONT SIZE=2>Octocon</FONT>
+<UL>
+<LI><FONT SIZE=2>host web front office for SMEs</FONT>
+<LI><FONT SIZE=2>catalogue - find products by area etc.</FONT>
+<LI><FONT SIZE=2>purchasing - one stop shop</FONT>
+<LI><FONT SIZE=2>payment reconciliation</FONT>
+<LI><FONT SIZE=2>business service provider</FONT> 
+</UL>
+
+</UL>
+
+<H3>Secure Electronic Transactions (SET) </H3>
+
+<UL>
+<LI><FONT SIZE=2>public keys for authentication (not identification)</FONT>
+<UL>
+<LI><FONT SIZE=2>cf. selling fireworks which requires another
+mechanism for id</FONT> 
+</UL>
+
+<LI><FONT SIZE=2>symmetric session keys for privacy</FONT>
+<LI><FONT SIZE=2>certification hierarchy rooted at card agency</FONT>
+<LI><FONT SIZE=2>supports both online &amp; offline working</FONT>
+<LI><FONT SIZE=2>clearing system will still be private</FONT>
+<LI><FONT SIZE=2>link between customer &amp; merchant connected
+via Internet</FONT>
+<LI><FONT SIZE=2>supports off-line working</FONT>
+<LI><FONT SIZE=2>(AMEX now in)</FONT> 
+</UL>
+
+<H3>digicash </H3>
+
+<UL>
+<LI><FONT SIZE=2>requires online working</FONT>
+<UL>
+<LI><FONT SIZE=2>ecash is secure pointer into state held within
+server, transactions perform add &amp; subtract operations on
+this state</FONT> 
+</UL>
+
+</UL>
+
+<H3>secure download </H3>
+
+<UL>
+<LI><FONT SIZE=2>authentication</FONT>
+<UL>
+<LI><FONT SIZE=2>applet to backoffice</FONT>
+<LI><FONT SIZE=2>applet to user</FONT> 
+</UL>
+
+<LI><FONT SIZE=2>download privs to applet depending on user</FONT>
+
+</UL>
+
+<H3>strong cryptography </H3>
+
+<UL>
+<LI><FONT SIZE=2>problems with upsetting people</FONT>
+<LI><FONT SIZE=2>put PGP in swiskey pilot</FONT> 
+</UL>
+
+<HR><H2>CURRENT OMG ACTIVITIES - A. WATSON (OMG) </H2><HR>
+
+<H3>Services </H3>
+
+<UL>
+<LI><FONT SIZE=2>Messaging</FONT>
+<UL>
+<LI><FONT SIZE=2>up to now comms is synchronous</FONT>
+<LI><FONT SIZE=2>1-way message delivery</FONT>
+<LI><FONT SIZE=2>reliable 1-way message delivery</FONT>
+<LI><FONT SIZE=2>asynchronous comms</FONT>
+<LI><FONT SIZE=2>proposals coming from mainframe manufacturers
+stuck in single threaded environment</FONT>
+<LI><FONT SIZE=2>some valid points about disconnected operation</FONT>
+
+</UL>
+
+<LI><FONT SIZE=2>Trading</FONT> 
+</UL>
+
+<P>
+<FONT SIZE=2>ODP trading</FONT>
+<UL>
+<LI><FONT SIZE=2>Startup</FONT>
+<UL>
+<LI><FONT SIZE=2>kick off transaction processor for example</FONT>
+
+</UL>
+
+<LI><FONT SIZE=2>Collections</FONT>
+<UL>
+<LI><FONT SIZE=2>2 proposals - C++ collections &amp; IBM</FONT>
+
+</UL>
+
+<LI><FONT SIZE=2>Secure IIOP</FONT> 
+</UL>
+
+<H3>Orb<BR>
+</H3>
+
+<UL>
+<LI><FONT SIZE=2>Java mapping expected in Washington</FONT>
+<UL>
+<LI><FONT SIZE=2>Java 'ORBlets' from PostModern, Iona, Sun, Stanford
+(Jylu), Sandia Labs (JIDL)</FONT> 
+</UL>
+
+<LI><FONT SIZE=2>RFPs</FONT>
+<UL>
+<LI><FONT SIZE=2>versioning</FONT>
+<LI><FONT SIZE=2>multiple interfaces &amp; composition</FONT>
+<LI><FONT SIZE=2>ORB portability</FONT>
+<UL>
+<LI><FONT SIZE=2>fixing problems in server portability</FONT>
+
+</UL>
+
+</UL>
+
+<LI><FONT SIZE=2>Microsoft!</FONT>
+<UL>
+<LI><FONT SIZE=2>OLE, COM, DCOM, Network OLE, ActiveX (new name
+each meeting!)</FONT>
+<LI><FONT SIZE=2>Interworking between CORBA and COM</FONT>
+<UL>
+<LI><FONT SIZE=2>current COM is local, DCOM is distributed (late
+96)</FONT>
+<LI><FONT SIZE=2>ms refuse to acknowledge differences</FONT>
+<LI><FONT SIZE=2>OMG wanted COM &amp; DCOM separate</FONT> 
+</UL>
+
+</UL>
+
+</UL>
+
+<HR><H2>OTS - RICHARD HERBERT (ICL) </H2><HR>
+
+<UL>
+<LI><FONT SIZE=2>r.herbert@man0521.wins.icl.co.uk</FONT>
+<LI><FONT SIZE=2>DAIS -about to ship OTS component in 3 months</FONT>
+<LI><FONT SIZE=2>supports implicit prop</FONT>
+<LI><FONT SIZE=2>no sub transactions - no standards yet</FONT>
+<LI><FONT SIZE=2>maybe get orb to play with - mail Richard</FONT>
+<LI><FONT SIZE=2>hasn't heard of Arjuna!</FONT> 
+</UL>
+
+<P>
+<FONT SIZE=2>questions - can transactions be brought to the desktop
+via COM</FONT>
+<P>
+<FONT SIZE=2>answer- passing transactions through COM is easy
+- having co-ordinator on desktop is not desirable - state requires
+dependability, move co-ordinator off the desktop, however must
+ensure that when the transaction context is passed around, a path
+to the co-ordinator is required too. can the current spec support
+this?<BR>
+</FONT>
+</BODY>
+
+</HTML>

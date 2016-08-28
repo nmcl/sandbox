@@ -1,0 +1,23 @@
+<HTML>
+<HEAD>
+<TITLE>Replicated K-Resilient Objects in Arjuna</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<H1>Replicated K-Resilient Objects in Arjuna</H1>
+<P><I>Mark C Little and Santosh K Shrivastava</I></P>
+<P><B>Abstract:</B> This paper describes the design of an object
+replication scheme for the Arjuna distributed system. The design
+supports K-resiliency, where, in the absence of network partitions, K
+out of a total of K+1 replica failures can be tolerated before an
+object becomes unavailable. The scheme chosen employs active
+replication where each and every functioning replica of an object
+carries out processing.  Computations are structured as atomic actions
+(atomic transactions). The paper presents the details of how object
+groups are created and terminated, how a group can be invoked and
+object replicas inserted and removed in a consistent manner in the
+presence of node failures.</P>
+<HR>
+<A HREF="../../index.html"><IMG SRC="../../buttons/Home.gif" ALT="[HOME]" WIDTH=96 HEIGHT=24></A>
+<A HREF="../publications.html"><IMG SRC="../../buttons/Publications.gif" ALT="[PUBLICATIONS]" WIDTH=96 HEIGHT=24></A>
+</BODY>
+</HTML>

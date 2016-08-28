@@ -1,0 +1,121 @@
+<HTML>
+<HEAD>
+<TITLE>Shadows</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<H1 ALIGN=CENTER>Shadows</H1>
+<H2>Introduction</H2>
+<P>Shadows is a distributed programming paradigm and a class library
+which supports that paradigm for C++. The paradigm is one of
+potentially mobile objects which may belong to large-scale,
+long-lasting, independent but potentially interacting,
+applications. Shadows has been designed without any reliance upon
+centralised services on the principle that only those parts of a
+system which have chosed to be involved in some interaction should
+suffer the costs. Applying this principle rigorously has resulted in
+the means to create applications which have no external dependencies
+(beyond the inevitable shared use of physical resources) and are
+therefore capable of scaling to arbitrary size.</P>
+<P>The use of Shadows enables the creation of distributed C++
+applications, and for existing non-distributed C++ applications to be
+made distributed, with the minimum of programming effort. Shadows also
+manages many of the related issues of distribution. For example, a
+flexible naming and lightweight location system are provided as is
+distributed garbage collection. Multi-level caching hierarchies may be
+created for improved performance, with cache consistency requirements
+specified on a per object basis if required. Shadows supports object
+persistence (by reachability) and has a crash recovery mechanism which
+allows the restoration of a distributed application's environment with
+the minimum of user intervention. Classes which provide in-memory
+checkpointing (for recovery purposes) and concurrency-control are also
+available. Each feature may be specifically enabled/disabled at
+run-time and objects which do not require specific features suffer a
+minimal overhead in exchange for the potential to utilise that
+feature.</P>
+<P>The Shadows programmer uses straight C++ i.e. there are no
+extensions, or restrictions, to the language. Shadows functionality is
+added to a programmer's classes through the use of multiple
+inheritance and the insertion of simple macros into the user's
+code. Programmers operate using a familiar, simple, distributed shared
+object programming paradigm.  Although Shadows is not an ORB it does
+supply similiar functionality and has the benefits of being open to
+user extension, simple and free!</P>
+<H2>Current status</H2>
+<P>Shadows has been designed to be highly portable, relying only upon
+standard operating system functionality, with system specifics hidden
+behind simple common interfaces. A Unix-based, singled-threaded
+version is currently available. The W3Objects project utilises Shadows
+to provide flexible objects for the World Wide Web.  A multi-threaded
+version is under development as is a pre-processor intended to further
+simplify the programming effort required.</P>
+<H2>Source</H2>
+<P>The source for the C++ class library is available from
+<A HREF="mailto:S.J.Caughey@newcastle.ac.uk">S.J.Caughey@newcastle.ac.uk</A> and
+has been ported to the following architectures/compilers:</P>
+<UL>
+<LI>Helios (Transputer architecture): Perihelion C++ compiler</LI>
+<LI>Solaris 2.5.X : cfront 3.0.1, g++ 2.7.2 and SC3.0.1</LI>
+<LI>SunOS 4.1.X : cfront 3.0.1 and g++ 2.7.2</LI>
+<LI>Linux 1.2.X : g++ 2.7.2</LI>
+<LI>Linux 2.0.X : g++ 2.7.2</LI>
+</UL>
+<H2>Manual</H2>
+<P>A manual is available from
+<A HREF="mailto:S.J.Caughey@newcastle.ac.uk">S.J.Caughey@newcastle.ac.uk</A>.</P>
+<H2>Publications</H2>
+
+<P><B>S. J. Caughey, D. B. Ingham, and M. C. Little</B>,
+<I>"Flexible Open Caching for the Web,"</I>
+Proceedings of the Sixth International World Wide Web Conference,
+Santa Clara, USA 7-11 April 1997.
+<A HREF="../group/abstracts/p055.html">View abstract (html)</A>
+<A HREF="../group/papers/p055.html">View paper (html)</A></P>
+
+<P><B>D. B. Ingham, M. C. Little, S. J. Caughey, and S. K. Shrivastava</B>,
+<I>"W3Objects: Distributed Objects and the Web,"</I>
+<A HREF="http://www.ddj.com/">Dr. Dobb's Sourcebook</A>, 
+<A HREF="http://www.ddj.com/ddsbk/1997/1997.01/index.htm">Vol. 22, No. 13</A>,
+pp. 19-25, January/February 1997.
+
+<P><B>D. B. Ingham, S. J. Caughey, and M. C. Little</B>, <I>"Fixing
+the Broken-Link Problem: The W3Objects Approach,"</I> Computing
+Networks & ISDN Systems, Vol. 28, No. 7-11, pp. 1255-1268: Proceedings
+of the Fifth International World Wide Web Conference, Paris, France,
+6-10 May 1996. <A HREF="../group/abstracts/p050.html">View abstract (html)</A>,
+<A HREF="../group/papers/p050.html">View paper (html)</A>
+<A HREF="../group/papers/p050.ps">View paper (ps)</A>
+<A HREF="../group/papers/p050.pdf">View paper (pdf)</A></P>
+
+<P><B>D. B. Ingham, M. C. Little, S. J. Caughey, and S. K. Shrivastava</B>,
+<I>"W3Objects: Bringing Object-Oriented Technology to the Web,"</I>
+World Wide Web Journal, Issue 1, pp. 89-105:
+Proceedings of the Fourth International World Wide Web Conference,
+Boston, Mass., USA, December 1995.
+<A HREF="../group/abstracts/p049.html">View abstract (html)</A>,
+<A HREF="../group/papers/p049.html">View paper (html)</A>
+<A HREF="../group/papers/p049.ps">View paper (ps)</A></P>
+
+<P><B>S. J. Caughey and S. K. Shrivastava</B>, <I>"Architectural Support
+for Mobile Objects in Large Scale Distributed Systems"</I>,
+IWOOOS-95, Lund, August 95.
+<A HREF="../group/papers/p044.ps">View paper (ps)</A></P>
+
+<P><B>S. J. Caughey, G. D. Parrington and S. K. Shrivastava</B>,
+<I>"SHADOWS - A Flexible Support System for Objects in Distributed
+Systems,"</I> IWOOOS-93, Ashville, North Carloina, December 1993.
+<A HREF="../group/papers/p028.ps">View paper (ps)</A></P>
+
+<P><B>Caughey, S. J. and S. K. Shrivastava</B>, <I>"Implementing
+fault-tolerant object systems on distributed memory
+multiprocessors,"</I>
+Proceedings of 2nd IEEE Interational Workshop on 
+Object Orientation in Operating Systems, pp. 172-179, Dourdan,
+France, September 1992.</P>
+
+<HR>
+<A HREF="../index.html"><IMG SRC="../buttons/Home.gif" ALT="[HOME]" WIDTH=96 HEIGHT=24></A>
+<A HREF="../group/index.html"><IMG SRC="../buttons/Arjuna_Group.gif" ALT="[ARJUNA GROUP]" WIDTH=96 HEIGHT=24></A>
+<A HREF="sources/index.html"><IMG SRC="../buttons/Source.gif" ALT="[SOURCE]" WIDTH=96 HEIGHT=24></A>
+<A HREF="manuals/index.html"><IMG SRC="../buttons/Manual.gif" ALT="[MANUAL]" WIDTH=96 HEIGHT=24></A>
+</BODY>
+</HTML>

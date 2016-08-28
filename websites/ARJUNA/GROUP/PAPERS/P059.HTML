@@ -1,0 +1,581 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1 (Feb 5, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE> A System For Fault-Tolerant Execution of Data and Compute Intensive Programs Over a Network Of Workstations </TITLE>
+<META NAME="description" CONTENT=" A System For Fault-Tolerant Execution of Data and Compute Intensive Programs Over a Network Of Workstations ">
+<META NAME="keywords" CONTENT="doc">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="p059/stylesheet.css">
+</HEAD>
+<BODY LANG="EN">
+ <H1 ALIGN=CENTER>
+	A System For Fault-Tolerant Execution of Data and Compute
+Intensive Programs
+	Over a Network Of Workstations
+</H1>
+<P ALIGN=CENTER><STRONG>
+	J.A.Smith and S.K.Shrivastava
+<BR> 
+	Department of Computing Science, <BR> 
+	The University of Newcastle upon Tyne, <BR> 
+	Newcastle upon Tyne, <BR> 
+	NE1 7RU UK <BR> 
+	{jim.smith,santosh.shrivastava}@newcastle.ac.uk
+</STRONG></P><P>
+<P ALIGN=CENTER><STRONG>18 february 1996</STRONG></P><P>
+<P>
+<H3 CLASS=ABSTRACT>Abstract:</H3>
+<P CLASS=ABSTRACT>The bag of tasks structure permits dynamic partitioning for a wide
+class of parallel applications.  This paper describes a fault-tolerant
+implementation of this structure using atomic actions (atomic
+transactions) to operate on persistent objects, which are accessed in
+a distributed setting via a Remote Procedure Call (RPC).  The system
+is suited to parallel execution of data and compute intensive programs
+that require persistent storage and fault tolerance, and runs on stock
+hardware and software platforms, <font size=-1><small>UNIX</small></font>, C++.  Its
+suitability is examined in the context of the measured performance of
+three applications; ray tracing, matrix multiplication and
+Cholesky factorization.
+<P>
+</P><P>
+<H1><A NAME="SECTION00010000000000000000">1 Introduction</A></H1>
+<P>
+Many computations manipulate very large amounts of data.  Matrix
+calculations represent one example class.  In a Massively Parallel
+Processor (MPP) such a vast data set is typically partitioned
+statically between the very many distributed processing elements and
+moved amongst them as necessary to perform the computation.  Such an
+approach is exemplified in Cannon's algorithm for matrix
+multiplication&nbsp;[<A HREF="p059.html#bookkggk94">14</A>].  One suggestion is that a Network
+Of Workstations (NOW) be modelled on such an
+architecture&nbsp;[<A HREF="p059.html#nowACP95">2</A>].  However, it may be that problem size
+can exceed even the aggregate memory of all available machines.  In
+such a situation, the problem cannot be statically partitioned between
+processors.
+<P>
+As the problem size increases so too does the computation time in any given
+configuration, and in a NOW potentially so too does the number of nodes
+which may be employed.  As the scale of a distributed computation
+is increased in this way, the possibility of a failure occurring which
+might affect the execution of the computation must increase.  If it is
+not possible to tolerate such an event, it is necessary to restart the
+entire computation.
+<P>
+The approach described here provides a solution for these problems by
+implementing a store on secondary storage which is shared
+between a collection of concurrent processes.  A computation is
+organized as a bag of tasks type structure&nbsp;[<A HREF="p059.html#lindacar91">7</A>] where
+the overall computation is divided up into a number of tasks which are
+then scheduled dynamically between a potentially varying collection of
+concurrent processes.  Computation data, including the bag
+of tasks is located in the shared store, which is
+organized as a repository of objects and fault tolerant access to it
+supported through atomic actions operating on the contained
+objects.  It is suggested that these mechanisms provide a clear model
+to the user.
+<P>
+In this experiment, these facilities are supported through an
+established distributed system which runs on many versions of <font size=-1><small>UNIX</small></font> and C++, without alteration to either.  The approach is
+investigated through implementation of applications of scale
+appropriate to parallelization and fault-tolerance in a NOW.
+Performance is shown to be fundamentally limited only in hardware
+bandwidths.
+<P>
+The paper continues with notes on related work in
+Sect.&nbsp;<A HREF="p059.html#relatedwork">2</A>, a description of the applications and
+fault-tolerance mechanisms in Sect.&nbsp;<A HREF="p059.html#secimplementation">3</A>, measured
+performance in Sect.&nbsp;<A HREF="p059.html#secperformance">4</A> and summary in
+Sect.&nbsp;<A HREF="p059.html#secsummary">5</A>.
+<P>
+<H1><A NAME="SECTION00020000000000000000">2 Related Work</A></H1>
+<P>
+<A NAME="relatedwork">&#160;</A>
+<P>
+The attraction of exploiting a readily available NOW to perform
+parallel computations is widely acknowledged.  It is also recognized
+that a NOW typically has disadvantages compared to a tightly coupled
+multiprocessor, including a lower performance interconnect and a
+greater need for fault-tolerance.
+<P>
+Experiments have been performed to statically partition data intensive
+computations over a NOW, e.g. [<A HREF="p059.html#parbs93">5</A>].  However, the size of
+the computation is bounded by aggregate memory of the machines.
+Structuring similar to the bag of tasks is often employed in practice,
+e.g.  for seismic migration in [<A HREF="p059.html#parag94">1</A>], but with limited
+provision for fault-tolerance and for problems which
+are less intensive in data.
+<P>
+Mechanisms to support fault-tolerance may be transparent to the
+application programmer, e.g.&nbsp;[<A HREF="p059.html#orcakaa92a">12</A>],
+&nbsp;[<A HREF="p059.html#checkpointLeon93">15</A>].  However, a transparent scheme is unlikely
+to take advantage of points in an application where data to be saved
+is minimum, such as when data has just been written to disk
+for instance.
+<P>
+One non transparent scheme for the static partitioning approach  
+[<A HREF="p059.html#lawnspkd94">17</A>] maintains a parity copy of distributed
+partitions of computation state.  While performance for a Cholesky
+factorization of 5000element square matrix , at 1700seconds
+employing 17&nbsp;Sparc-2 machines, is similar to that recorded here the
+computation is bounded by total memory and the approach here which
+employs fewer machines is resilient to a greater number of failures.
+<P>
+An early design study[<A HREF="p059.html#orcabal92b">4</A>] considered the use of atomic
+actions as a mechanism to support fault-tolerant parallel programming
+over a NOW.
+<P>
+Fault tolerance for a bag of tasks type structure
+has been considered before, e.g. [<A HREF="p059.html#lindabak94">3</A>],
+[<A HREF="p059.html#isisclar92">8</A>] but without providing access to large scale data on
+secondary storage.  Plinda&nbsp;[<A HREF="p059.html#lindajeo96">11</A>] which supports access to
+persistent tuple spaces and a transaction mechanism does have some
+similarity to this work.
+<P>
+The experiments described here attempt to exploit parallelism in a
+NOW of modest scale to perform large scale computations in a
+fault-tolerant way without altering operating system or language.
+<P>
+<H1><A NAME="SECTION00030000000000000000">3 Implementation</A></H1>
+<P>
+<A NAME="secimplementation">&#160;</A>
+<P>
+<H2><A NAME="SECTION00031000000000000000">3.1 Fault Tolerance</A></H2>
+<P>
+<A NAME="secfaulttolerancestrategy">&#160;</A>
+<P>
+It is assumed that a workstation fails by crashing and that then any
+data in volatile storage is lost, but that held on disk remains
+unaffected.  It is also assumed that the network does not partition.
+<P>
+Atomic actions operating on persistent state provide a convenient
+framework for introducing fault-tolerance&nbsp;[<A HREF="p059.html#tranreut93">10</A>] through
+ensuring defined concurrent behaviour and fault-tolerance.  Atomic
+actions have the well known properties of (1) serializability, (2)
+failure atomicity, and (3) permanence of effect.
+<P>
+A convenient model is for this state to be encapsulated in
+the instance variables of persistent objects and accessed through
+member functions.  
+Within these functions the programmer places lock requests, e.g.  read or
+write to suit the semantics of the operation, and typically surrounds
+the code within the function by an atomic action, starting with <EM>
+begin</EM> and ending with <EM>commit</EM> or <EM>abort</EM>.  Operations thus
+enclosed which can include calls on other atomic objects are then
+perceived as a single atomic operation.  The infrastructure manages
+the required access from and/or to disk based state.  Such objects may
+be distributed on separate machines, e.g. for performance, and
+replicated to increase availability.  The applications are implemented
+using the Arjuna tool kit&nbsp;[<A HREF="p059.html#arjunapswl95">16</A>], an object-oriented
+programming system that implements in C++ this object and action
+model.
+<P>
+The following enhancements add fault-tolerance to a bag of tasks
+application.
+<P>
+<OL><LI>
+The slave begins an atomic action before fetching a task from the bag,
+and commits the action after writing the corresponding result.  If the
+slave fails the action aborts, all work pertaining to the current
+task is recovered and the task itself becomes available again in the
+bag.<LI>
+The shared objects are replicated on at least <I>k</I>+1 machines, so that
+the failure of up to <I>k</I> of these machines may be tolerated.<LI>
+A computation object contains a description of the
+computation and data objects and the computation's completion status.
+This object may be queried at any time
+to determine the status of the computation and may be replicated for
+availability. It is a convenient interface for a process to be
+started on an arbitrary machine to join in an ongoing computation.
+</OL>
+<P>
+Arjuna requires an underlying RPC to implement distribution and object
+server process management; accessing these services through certain
+interface classes.  The RPC implementation employed here supports
+optional use of the TCP protocol with connection establishment on a
+per-call basis.  Some optimization of this RPC mechanism has been
+performed to exploit homogeneity of machines.  The RPC also
+supports reuse of an existing server process.  This facility is
+exploited in service of the main shared data objects in order to
+prevent excessive contention in the shared communications medium; the
+common server is single threaded and therefore serializes all slave
+requests.
+<P>
+In each application, the main operands are managed as
+collections of smaller objects.  Each task entails computation of some
+part of the result, which may be one or more of such objects.
+<P>
+At the start of the computation, the shared objects are installed in
+the object repository.  In the fault-tolerant version, a
+fault-tolerant bag of tasks is created and all task descriptions
+stored in it.  Then the chosen number of slaves is created on separate
+workstations.  In the non fault-tolerant implementation, each slave
+is informed of a unique allocation of tasks to perform.
+In these initial experiments, a master process is employed to perform
+these functions and then wait for the completion of the slaves before
+performing any final processing to the output, such as converting to a
+desired file format, and finally reporting on the elapsed time.  The
+master takes no active part during the main part of the application,
+so a shell script replacement is quite feasible.  Also at this time
+the shared objects are not replicated.
+<P>
+The fault-tolerant bag of tasks is implemented as a recoverable
+queue&nbsp;[<A HREF="p059.html#queuebhm90">6</A>] which relaxes the usual FIFO ordering to suit
+its use in a transactional environment.  If an element is dequeued
+within a transaction, then it is write-locked immediately, but only
+actually dequeued at the time the transaction commits.  Similar use of
+recoverable queues in asynchronous transaction processing is described
+in[<A HREF="p059.html#tranreut93">10</A>].  The <EM>dequeue</EM> operation returns a status
+which allows the caller to distinguish between the situation where the
+queue is empty and that where entries remain but are all locked by
+other users.
+<P>
+<H2><A NAME="SECTION00032000000000000000">3.2 Applications</A></H2>
+<P>
+Three applications are implemented.  The first is a port of a publicly
+available ray tracing package, <EM>
+rayshade</EM>&nbsp;[<A HREF="p059.html#softwarerayshade">13</A>].  Input data comprises only scene
+description and output is a two dimensional array of red-green-blue
+pixel values.  A task is defined as computation of a number of rows of
+the output array.  To display the output image, it is convenient to
+copy it to the file format used in the original package, Utah Raster
+RLE format.  In this implementation, this operation is performed
+serially by the master process.  A simple scene provided as an example
+in the package is traced for the purposes of the test.  For
+comparison, the unaltered package is built and run as a sequential
+program on one of the workstations.
+<P>
+The remaining applications are dense matrix computations, 
+matrix multiplication and Cholesky factorization.  A preliminary
+description of the former was given in&nbsp;[<A HREF="p059.html#smithsmi95">19</A>].  In
+linear algebra computations it is common to employ block structuring
+to benefit from increased locality&nbsp;[<A HREF="p059.html#matrixgol89">9</A>].  In the
+implementation of both matrix computations here,
+matrices are composed of square blocks and a task defined as the
+computation of a single block of the result.
+<P>
+In the case of matrix multiplication, a task entails a block dot
+product of a row of blocks in the first and column of blocks in the
+second operand matrices.  The implementation of Cholesky factorization
+employs the Pool-of-Tasks algorithm of&nbsp;[<A HREF="p059.html#matrixgol89">9</A>],&#167;6.3.8.
+The required inter task coordination is ultimately implemented through
+a two dimensional array of flags which indicate whether corresponding
+blocks in the output matrix have been written or not.  Concurrent
+operations on the flags are controlled through locks obtained within
+the scope of atomic actions and are therefore recoverable.
+A fuller description appears in&nbsp;[<A HREF="p059.html#smithsmi96c">18</A>].
+<P>
+<H1><A NAME="SECTION00040000000000000000">4 Performance</A></H1>
+<P>
+<A NAME="secperformance">&#160;</A>
+<P>
+Each experiment is conducted during off peak time in a cluster of
+HP9000/710 (HP710) machines each with 32Mbyte memory and 64Kbyte
+cache, connected by 10Mbit/s Ethernet.  A small number of HP9000/730
+(HP730) machines with 64Mbyte memory and 256Kbyte cache have
+sizeable temporary disk space space available.  For the matrix
+computations a cluster containing a HP730 is used, and the shared
+objects located on it, but HP710 machines are used otherwise.  In this
+way computations with data requirements of about 200Mbyte are
+performed.
+<P>
+<H2><A NAME="SECTION00041000000000000000">4.1 Cost of Queue Access</A></H2>
+<P>
+An indication of the failure free overhead cost may be obtained by
+comparing fault tolerant and non fault tolerant sequential
+computations running within a single workstation.  This is done for
+matrix multiplication by locating a single slave and the data objects
+on the same host, a HP730 machine.  The measured results are shown in
+Tab.&nbsp;<A HREF="p059.html#tableqoverhead">1</A> for a range of task sizes.
+<P><A NAME="37">&#160;</A><A NAME="tableqoverhead">&#160;</A> <IMG WIDTH=506 HEIGHT=187 ALIGN=BOTTOM ALT="table35" SRC="p059/img1.gif"  > <BR>
+<STRONG>Table 1:</STRONG> 
+	Cost of employing queue in sequential multiplication of 3000
+	square matrices.  The times in columns 3 and 4
+	are averages rounded to integer values.<BR>
+<P>
+<P>
+The fault-tolerance costs represent the following operations:
+<UL><LI>
+The cost of creating the queue and enqueueing one
+entry per block of the output matrix within a surrounding action, and
+committing that action.<LI>
+The cost incurred by the slave of
+binding to the queue object, essentially server creation, and
+then dequeuing an entry describing each piece of work.
+</UL>
+<P>
+The queue entries are simply small job descriptions and their size is
+independent of the data size so the cost of using the queue should be
+dependent on the number of tasks, rather than data size.  Therefore
+percentage overheads should reduce for larger scale computations, but
+even for the size of computation performed, fault tolerance does not
+appear to be the significant cost.
+<P>
+The queue is implemented as a collection of separately lockable
+persistent objects, and some breakdown of the costs associated with
+the use of atomic actions on individual persistent objects is given
+in&nbsp;[<A HREF="p059.html#arjunapswl95">16</A>].
+<P>
+<H2><A NAME="SECTION00042000000000000000">4.2 Parallel Execution</A></H2>
+<P>
+The parallel performance of the applications is shown in
+Fig.<A HREF="p059.html#figgraphdqnqpperf">1</A>.
+<P><A NAME="84">&#160;</A><A NAME="figgraphdqnqpperf">&#160;</A> <IMG WIDTH=468 HEIGHT=162 ALIGN=BOTTOM ALT="figure81" SRC="p059/img2.gif"  > <BR>
+<STRONG>Figure 1:</STRONG> 
+	Performance of parallel applications, comparing 
+	fault-tolerant (solid line) and non fault-tolerant (dashed line) 
+	versions for indicated task sizes.  <BR>
+<P>
+<P>
+In the event of slave failure and immediate resumption, or replacement
+by a spare, the failure free execution time is increased by a recovery
+time due to the loss of aborted work.  This recovery time is the cost
+of between zero and one task executions, the <EM>average recovery</EM>
+being half of the maximum.  A computation with non uniform tasks may
+still be characterized by a simple average recovery cost, though this
+may be misleading if the cost varies very considerably.  If data are
+cached at a slave which fails, then the slave that takes over the
+aborted task incurs an extra cost in cache misses.  If a slave fails
+and does not resume and there is no spare, then the increase in
+overall execution time depends on the exact point of failure, but may
+be regarded as comprising two components.  First, there is the cost of
+redoing the failed task and secondly, the execution of the remaining
+tasks is slowed since there is then one less slave.
+<P>
+Table<A HREF="p059.html#tableperfsummary">2</A> summarizes the performance of the
+parallel implementations, showing for each application a measure of
+the performance achieved and estimate of the average recovery time.
+The table also indicates the total data: input (<EM>input</EM>), written
+(<EM>put</EM>) and read collectively by slaves during the
+computation (<EM>get</EM>).
+<P><A NAME="95">&#160;</A><A NAME="tableperfsummary">&#160;</A> <IMG WIDTH=480 HEIGHT=189 ALIGN=BOTTOM ALT="table93" SRC="p059/img3.gif"  > <BR>
+<STRONG>Table 2:</STRONG> 
+	Fault-tolerant application parallel performance summary.  The
+	speedup shown for ray tracing is absolute, i.e. relative to
+	that of the sequential implementation.<BR>
+<P>
+<P>
+For all three experiments it is seen that increasing the task size
+improves the performance.  In the matrix computations, 
+the increase in total data read with
+decreasing block size seems to be the overwhelming effect.  In the ray
+tracing example little data is read, but at 25KByte and
+98Kbyte the task output is not so large as to be bandwidth limited
+and so the larger task is cheaper proportionally.
+<P>
+Noting that the data format conversion for ray tracing mentioned
+earlier takes about23 and 13seconds respectively for the task
+sizes,2 and8, the performance of this easy application appears
+promising.
+<P>
+The performance of the matrix computations is not exciting, though in
+the one case the peak performance of the memory based matrix
+multiplication on a single HP710, measured at 33Mflop/s, is
+exceeded.  Some intuition for the cost of the parallel computations
+may be gained by considering the cost of accessing the data.  Each
+data access entails both a memory to memory copy between slave and
+server machine and a local disk, or filesystem cache access on the
+server machine.  Some potential benefit exists both in pipelining data
+accesses and in caching blocks at slave machines but neither is
+attempted here.  For block sizes above250, the low level transfer
+rates for local memory to remote memory, local disk read and local
+disk write (new data) are found to be roughly constant at
+about1,1.6 and 0.2Mbyte/s.  Assuming no benefit is gained from
+caching blocks between tasks, an estimate for the total time involved
+in transfers for the matrix multiplication application with larger
+block size is 1368seconds.  This would then be a lower bound on the
+parallel computation time and since the implementation described
+almost achieves this minimum time it seems possible that bandwidth
+limitation is being observed.  Fuller analysis&nbsp;[<A HREF="p059.html#smithsmi96c">18</A>]
+finds that the benefit gained in this particular situation from involuntary
+filesystem caching is likely to be small, strengthening the case for
+bandwidth limitation.
+<P>
+<H1><A NAME="SECTION00050000000000000000">5 Summary</A></H1>
+<P>
+<A NAME="secsummary">&#160;</A>
+<P>
+The work described here considers the implementation of certain large
+scale computations each structured as a bag of tasks over a NOW
+employing Persistent objects and atomic actions to support
+fault-tolerance.  The first application is a public domain ray tracing
+package with moderate demands for space.  Experiment suggests that
+respectable performance can be achieved if a suitably large
+granularity is chosen.  The other two applications are both dense
+matrix computations where the space requirement can exceed available
+memory.  In such a case a model which employs a relatively small
+number of machines sharing large secondary storage space has some
+attraction.  For this type of execution, a realistic all-be-it
+prototype implementation has shown that the cost of introducing
+fault-tolerance is small and performance gain through parallelism is
+limited essentially by hardware bandwidths.
+<P>
+The system described here provides a practical solution to the question
+as to how to exploit commonly available clusters of workstations for
+running compute and data intensive programs by
+providing much needed support for fault-tolerance and moderate speedup.
+Since the toolkit developed here does not require any special hardware
+or software facilities other than those already available, it can
+readily be adapted to exploit new generations of hardware.
+[<A HREF="p059.html#smithsmi96c">18</A>] describes detailed performance analysis of
+applications reported here and enables prediction of the expected
+performance under higher network bandwidth.  For example, if the
+communications media is replaced by fast ethernet, at 100Mbits/s,
+but the configuration remains otherwise unchanged a performance of
+80Mflop/s is anticipated for matrix multiplication using 4
+slaves.
+<P>
+The overall conclusion is that objects and actions as employed in the
+computations described seem to be a convenient way
+to express fault tolerance in parallel applications, and for
+appropriate scale of computation impose small cost.
+<P>
+<H1><A NAME="SECTION00060000000000000000">Acknowledgements</A></H1>
+<P>
+The work reported here has been supported in part by research and
+studentship grants from the UK Ministry of Defence, Engineering and
+Physical Sciences Research Council (Grant Number GR/H81078) and ESPRIT
+project BROADCAST (Basic Research Project Number 6360).  The support
+of the Arjuna team is acknowledged, and in particular
+the assistance of M. Little, G.  Parrington, and S. Wheater with
+implementation issues relevant to this work.
+<P>
+<P><A NAME="SECTIONREF"><H2>References</H2></A><P>
+<DL COMPACT>
+<DT><A NAME="parag94"><STRONG>1</STRONG></A><DD>
+George&nbsp;S. Almasi and Allan Gottlieb.
+<EM>Highly Parallel Computing</EM>.
+Benjamin/Cummings, 2nd edition, 1994.
+ISBN 0-8053-0443-6.
+<P>
+<DT><A NAME="nowACP95"><STRONG>2</STRONG></A><DD>
+Thomas&nbsp;E. Anderson, David&nbsp;E. Culler, and David&nbsp;A. Patterson.
+A case for NOW (Networks of Workstations).
+<EM>IEEE Micro</EM>, 15(1):54-64, February 1995.
+<P>
+<DT><A NAME="lindabak94"><STRONG>3</STRONG></A><DD>
+David&nbsp;Edward Bakken.
+<EM>Supporting Fault-Tolerant Parallel Programming in Linda</EM>.
+PhD thesis, Department of Computer Science, The University of
+  Arizona, Tucson, Arizona 85721, August 1994.
+Available as technical report TR94-23.
+<P>
+<DT><A NAME="orcabal92b"><STRONG>4</STRONG></A><DD>
+Henri&nbsp;E. Bal.
+Fault tolerant parallel programming in Argus.
+<EM>Concurrency: Practice and Experience</EM>, 4(1):37-55, February
+  1992.
+<P>
+<DT><A NAME="parbs93"><STRONG>5</STRONG></A><DD>
+A.&nbsp;Benzoni and M.&nbsp;L. Sales.
+Concurrent matrix factorizations on workstation networks.
+In A.&nbsp;E. Fincham and B.&nbsp;Ford, editors, <EM>Parallel Computation</EM>,
+  pages 273-284. Clarendon Press, 1991.
+<P>
+<DT><A NAME="queuebhm90"><STRONG>6</STRONG></A><DD>
+Philip&nbsp;A. Bernstein, Meichun Hsu, and Bruce Mann.
+Implementing recoverable requests using queues.
+<EM>ACM SIGMOD</EM>, pages 112-122, 1990.
+<P>
+<DT><A NAME="lindacar91"><STRONG>7</STRONG></A><DD>
+Nicholas Carriero and David Gelernter.
+<EM>How To Write Parallel Programs: A First Course</EM>.
+MIT Press, 1991.
+ISBN 0-262-03171-X.
+<P>
+<DT><A NAME="isisclar92"><STRONG>8</STRONG></A><DD>
+Timothy Clark and Kenneth&nbsp;P. Birman.
+Using the ISIS resource manager for distributed, fault-tolerant
+  computing.
+Technical Report 92-1289, Cornell University Computer Science
+  Department, June 1992.
+<P>
+<DT><A NAME="matrixgol89"><STRONG>9</STRONG></A><DD>
+Gene&nbsp;H. Golub and Charles F.&nbsp;Van Loan.
+<EM>Matrix Computations</EM>.
+John Hopkins University Press, second edition, 1989.
+ISBN 0-8018-3772-3.
+<P>
+<DT><A NAME="tranreut93"><STRONG>10</STRONG></A><DD>
+Jim Gray and Andreas Reuter.
+<EM>Transaction Processing: Concepts and Techniques</EM>.
+Morgan Kauffman, 1993.
+<P>
+<DT><A NAME="lindajeo96"><STRONG>11</STRONG></A><DD>
+Karpjoo Jeong.
+<EM>Fault-Tolerant Parallel Processing Combining Linda,
+  Checkpointing, and Transactions</EM>.
+PhD thesis, New York University, Department of Computer Science,
+  January 1996.
+<P>
+<DT><A NAME="orcakaa92a"><STRONG>12</STRONG></A><DD>
+M.&nbsp;Frans Kaashoek, Raymond Michiels, Henri&nbsp;E. Bal, and Andrew&nbsp;S. Tanenbaum.
+Transparent fault-tolerance in parallel Orca programs.
+In <EM>Proceedings of the Symposium on Experiences with Distributed
+  and Multiprocessor Systems III</EM>, pages 297-312, Newport Beach, CA, March
+  1992.
+<P>
+<DT><A NAME="softwarerayshade"><STRONG>13</STRONG></A><DD>
+Craig Kolb.
+<EM>rayshade</EM>.
+ftp://ftp.cs.yale.edu, May 1990.
+version 3.0.
+<P>
+<DT><A NAME="bookkggk94"><STRONG>14</STRONG></A><DD>
+Vipin Kumar, Ananth Grama, Anshul Gupta, and George Karypis.
+<EM>Introduction to Parallel Computing</EM>.
+Benjamin Cummings, 1994.
+ISBN 0-8053-3170-0.
+<P>
+<DT><A NAME="checkpointLeon93"><STRONG>15</STRONG></A><DD>
+Juan Leon, Allan&nbsp;L. Fisher, and Peter Steenkiste.
+Fail-safe PVM: A portable package for distributed programming with
+  transparent recovery.
+Technical Report CMU-CS-93-124, School of Computer Science, Carnegie
+  Mellon University, Pittsburgh, PA 15213, February 1993.
+<P>
+<DT><A NAME="arjunapswl95"><STRONG>16</STRONG></A><DD>
+G.&nbsp;D. Parrington, S.&nbsp;K. Shrivastava, S.&nbsp;M. Wheater, and M.&nbsp;C. Little.
+The design and implementation of Arjuna.
+<EM>USENIX Computing Systems Journal</EM>, 8(3):225-308, summer 1995.
+<P>
+<DT><A NAME="lawnspkd94"><STRONG>17</STRONG></A><DD>
+James&nbsp;S. Plank, Youngbae Kim, and Jack&nbsp;J. Dongarra.
+Algorithm-based diskless checkpointing for fault tolerant matrix
+  operations.
+In <EM>25th International Symposium on Fault-Tolerant Computing</EM>,
+  June 1995.
+<P>
+<DT><A NAME="smithsmi96c"><STRONG>18</STRONG></A><DD>
+J.&nbsp;Smith.
+<EM>Fault Tolerant Parallel Applications Using a Network Of
+  Workstations</EM>.
+PhD thesis, University of Newcastle upon Tyne, Department of
+  Computing Science, 1996.
+Forthcoming.
+<P>
+<DT><A NAME="smithsmi95"><STRONG>19</STRONG></A><DD>
+J.&nbsp;Smith and Santosh Shrivastava.
+Fault-tolerant execution of computationally and storage intensive
+  programs over a network of workstations: A case study.
+In <EM>ESPRIT Basic Research Project 6360 Third Year Report</EM>,
+  volume&nbsp;4. BROADCAST, July 1995.
+chapter 3, part 2.
+</DL>
+<P>
+<H1><A NAME="SECTION00080000000000000000">  About this document ... </A></H1>
+<P>
+ <STRONG>
+	A System For Fault-Tolerant Execution of Data and Compute
+Intensive Programs
+	Over a Network Of Workstations
+</STRONG><P>
+This document was generated using the <A HREF="http://www-dsed.llnl.gov/files/programs/unix/latex2html/manual/"><STRONG>LaTeX</STRONG>2<tt>HTML</tt></A> translator Version 96.1 (Feb 5, 1996) Copyright &#169; 1993, 1994, 1995, 1996,  <A HREF="http://cbl.leeds.ac.uk/nikos/personal.html">Nikos Drakos</A>, Computer Based Learning Unit, University of Leeds. <P> The command line arguments were: <BR>
+<STRONG>latex2html</STRONG> <tt>-split 0 doc.tex</tt>. <P>The translation was initiated by jim.smith@ncl.ac.uk on Tue Apr 22 00:34:38 BST 1997<BR> <HR>
+<P><ADDRESS>
+<I>jim.smith@ncl.ac.uk <BR>
+Tue Apr 22 00:34:38 BST 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

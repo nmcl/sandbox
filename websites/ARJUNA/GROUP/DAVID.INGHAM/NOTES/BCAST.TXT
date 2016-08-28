@@ -1,0 +1,280 @@
+BROADCAST WORKSHOP - Rennes
+
+Wed 13/11/96
+
+Garbage collection in larchant - Shapiro
+
+persistent distributed store
+persistence by reachability
+
+options / problems
+-cannot perform full trace - big/distributed space
+-transactional approach - lock all data,major performance probs
+-take a snapshot, collect that but continue running application
+
+Dist cycles can be found only when objects are together in a single cache
+
+-----------------------------------------------------------
+Multi-level object-based caching - Steve
+
+Why should clients be aware of semantics?
+Client may know access patern info that object doesnt know.
+Clients may have different consistency requirements on objects.
+Maybe require co-operation between client and object policies.
+Vector clocks for versioning (see Liskov)
+Ozalp - How does it compare to Harvest?
+Distributed control
+
+-----------------------------------------------------------
+Co-operative Web caches - Guillaume Pierre, INRIA
+
+Possible solutions for better caching
+-huge caches - better perf
+-stronger conc control
+-better replacement policies
+-co-op caches
+
+Options for INRIA co-op cache
+-1 cache per project (84)
+-1 per research unit (5)
+-1 cache per research theme
+also hierachical structures
+
+Candidate protocols
+-harvest/squid
+  -sync broadcast of missed reqs (sync - during req)
+  -proxying of the request on the correct cache
+-Berkeley
+  -sync broadcast of missed reqs
+  -redirect to correct cache
+-Relais (SOR)
+  -async (ie not in reqs) diffusion of each cache's contents
+  -proxying of the request on the correct cache
+
+Evaluation metrics
+-irrelevant criterion - hit rate
+  -relevant for disc/memory caches, not Web
+  -doesnt take into account downloading cost, cache hit rate, inter-cache cost
+
+-better criterion - increase of subjective bandwidth
+  -all costs taken into account
+-second criterion - error rate of cache
+  -retrieved_document_date < actual_document_date
+
+Simulation
+-discrete event, trace-driven, real co-op protocols, simulate everything else
+-required input data for simulation
+  -client machine
+  -req date
+  -URL
+  -pragma (may contain no-cache)
+-required input to interpret results
+  -file size
+  -"correct date of file"
+  -latency & bandwidth of conection to server
+
+Collection of data
+-size&date of file
+   -impossible to get them from file
+   -HEAD gets all meta info (nightly off-line operation)
+   -special treatment of incomplete records (eg FTP)
+-latency/bandwidth
+   -impossible to use head - too small requests
+   -send 10K on echo port
+   -measure round-trip delay
+
+Output data
+-cache treatment - HIT, MISS, NEIGHBOUR_HIT, NEIGHBOUR_MISS
+-received file date
+-correct file date
+-download time
+
+Analysis
+-average b/width
+-error rate
+-neighbour_miss rate
+-network reqs
+
+Problems with analysis
+-human factors
+   -users browse more if their cache is better
+   -users dont click reload if they get up to date doc
+-data
+   -no  FTP, CGI, POST
+   -b/width estimation
+-simulator imprecisions
+   -cpu/disc time
+   -network load
+
+Future work
+  -replaceable co-op protocols
+  -mobile computers
+  -unify caches and mirrors
+
+-----------------------------------------------------------
+Configuration of Dist Apps - Luc Bellisard
+
+Desires
+-multiple variations based on
+  -available resources (eg b/width)
+  -desired behaviour (eg fault-tolerance)
+
+OLAN Project
+OPL definition language
+
+-----------------------------------------------------------
+Mobile & Widely Distributed Systems - Paulo
+
+Mobile characteristics
+-low b/width
+  -1-2Mbps vs. 100(FDDI) or 155(ATM)
+-variation in b/width  
+-low reliability
+  -block of signal path
+  -noise
+  -echoes
+
+WAN-of-LANs principle
+
+protocols that are aware of their environments
+ -hybrid solutions
+
+Conclusions
+  -weak best effort primitives
+  -configurable algorithms
+  -mobile is extreme of large scale systems
+
+-----------------------------------------------------------
+DSM vs. Dist. Objs
+
+Shapiro
+-------
+
+Remote Objs
+-narrow interfaces
+-object-level control
+-heterogeneous
+-distribution in code - early decision
+-no persistence
+Bad:
+-semantic objects equated to distribution objects
+-pollutes source code
+
+Dist Memory
+-whole memory replicated
+-wide interface
+-no forced model or language
+Bad:
+-contention
+-no fine control
+-no persistence
+
+Hayton
+------
+
+Dist objs give order & control
+
+DOC
+-better abstraction
+-better performance - can see where cost penalties are paid
+-better flexibility
+
+DSM
+simple distribution of exisiting apps?
+  -only multi-threaded
+  -only if good separation of functionality
+makes the world appear uniform (perf, failure, security)
+  -it isnt - bad abstraction
+distribution transparent?
+  -but interfaces are good (security, perf, separation)
+  -in DSM, data comes to you ->difficult security
+Uniform object space?
+  -binding to environment (machine, language, endian)
+  -closed world or global DSM?
+
+DSM-OS is outside (1 OS for all)
+DOC-OS is inside
+
+Security - cannot be done in DSM
+Accounting is difficult
+DOC is OO - this is a restriction
+Heterogeneity is possible
+
+
+-----------------------------------------------------------
+15/11/96
+Etel Newspaper - Valerie
+
+QoS Issues
+-Access quality
+  -security
+  -availabilty
+  -responsiveness
+-Content quality
+  -presentation close to paper one
+  -use pdf format
+
+Key issues
+-bounded response time
+-scalability
+
+Architecture
+-cluster of servers connected via ATM
+-clients connected via ISDN
+
+Client 
+-profile based predictive prefetching
+ ->responsiveness
+Server
+-profile based load balancing
+ ->responsiveness & scalability
+
+Related Prefetching Work
+J.Griffloen Usenix Summer 94
+-prob of accessing a file based on another single file access
+T.M.Kroeger Usenix Winter 96
+-prob of accessing a file based on a sequence of accesses
+V.N.Padmanabhan TR UCB 05/95
+-web based, prefetching info provided by server
+-decision made by client
+-graph made per client, session based
+
+Etal uses customised prefeteching
+-based on access profile
+-maintain profile info across sessions
+-NB: although data changes daily, structure stays same
+
+Frequency graph maintained by client
+-node=heading (set of pages) accessed by client
+-arc from A-B = freq of access from B->A
+-2 types of graph: cyclic & semi-cyclic
+  -cyclic only considers paper structure
+  -semi-cyclic considers linking structure
+-stats analysis to determine whether user habits are changing
+-typical graph size: 40 editions, 40 headings, 150 arcs
+
+simulation showed:
+-bounded response time
+-increased net traffic
+-increased server load
+
+Mapping clients to server, load balancing options
+-static mapping
+  -good data dist
+  -poor load balancing
+-dynamic
+  -poor data dist
+  -good load balance
+->profile-based mapping
+  -each server manages clients having similar profiles
+
+Observation: optimised for average -- poor for peak loads
+
+Improvements
+-identify subset of data accessed by large numbers of clients
+  -distribute this data over the servers
+
+-load balancing
+  -initial placement based on data groups-computed from profiles
+  -migration based on load
+

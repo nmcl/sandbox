@@ -1,0 +1,1116 @@
+<!doctype html public "-//IETF//DTD HTML//EN">
+<HTML>
+
+<HEAD>
+
+<TITLE>Dependable Web Service Provision</TITLE>
+
+<META NAME="GENERATOR" CONTENT="Internet Assistant for Word 1.0Z">
+<META NAME="AUTHOR" CONTENT="Arjuna Project">
+</HEAD>
+
+<BODY>
+
+<H1>Dependable Web Service Provision </H1>
+
+<P>
+Version 1.0, Friday, 08 November, 1996
+<P>
+David Ingham<BR>
+Department of Computing Science<BR>
+Newcastle University<BR>
+Newcastle upon Tyne<BR>
+NE1 7RU, UK
+<P>
+Email: <A HREF="mailto:dave.ingham@ncl.ac.uk">dave.ingham@ncl.ac.uk</A>
+<BR>
+Web: <A HREF="http://www.cs.ncl.ac.uk/~dave.ingham/">http://www.cs.ncl.ac.uk/~dave.ingham/</A>
+<H2><A NAME="_Toc372348784">Introduction</A> </H2>
+
+<P>
+In the context of Web service provision, the term dependable encompasses
+several different concepts. Firstly, it is desired that Web services
+be highly available even in the presence of component failures,
+since unavailability reflects badly on the service provider and
+may result in lost opportunities. Since access to Web services
+is international, 24 hour, 7 day availability is desired; there
+is no appropriate time to remove the service for maintenance purposes.
+Associated with availability is quality of service (QoS), that
+is, the perceived responsiveness of a site may degrade as the
+number of requests it receives increases. From a client's perspective,
+an overloaded service is perceived as an unavailable service.
+Therefore, scalable mechanisms are required to manage ever-increasing
+load requirements, while preserving high availability. Another
+feature of dependability is data integrity. The nature of Web
+services is rapidly changing from its original role as an information
+distribution medium to become a platform for complex services,
+such as electronic shops, that perform read/write actions on local
+data. In such systems, maintaining integrity of data in the face
+of concurrent access and occasional system failures is imperative.
+<P>
+This document first describes how these various aspects of dependability
+are currently being addressed by today's service providers. The
+dependability requirements of the CORBAWeb system are then analysed.
+A number of alternative techniques are presented as suggestions
+on how the current weaknesses could be addressed.
+<H2><A NAME="_Toc372348785">State of the Art Web Services</A>
+</H2>
+
+<P>
+The primary task of the majority of today's Web services is to
+disseminate read-only documentation-based information, for example,
+an academic site serving information about its teaching and research
+activities or a company using the Web as an advertising and public
+relations medium. In addition to serving read-only data, some
+services perform read/write actions initiated via Web requests.
+These interactions range from simple data collection tasks, such
+as filling in a reply-form to register for a conference to more
+sophisticated services such as an on-line electronic shop, such
+as CDnow [CDnow].
+<P>
+This section considers two major problems facing major Web service
+providers, namely, supporting high volume sites and maintaining
+highly available services. The current approaches are considered
+and their associated limitations are discussed.
+<H3><A NAME="_Toc372348786">Supporting High Volume Web Services</A>
+</H3>
+
+<P>
+As the popularity of a Web service increases, the load, i.e.,
+the number of incoming requests per second (rps), can reach a
+level that cannot be satisfied by a single machine<A HREF="#ref1">*</A>.
+The primary limiting factor is typically exhaustion of operating
+system resources, i.e., number of processes and available memory,
+as a result of high rates of opening and closing TCP/IP connections
+for long periods of time [Katz94]. To alleviate this situation,
+load sharing techniques are required to distribute the load among
+a number of machines.
+<P>
+There are two main issues to be addressed in order to distribute
+a Web service across several machines. Firstly, there is data
+distribution; is the data itself partitioned among the machines
+or do all of the servers serve copies of the same data and if
+so is the data replicated or shared? Secondly, how is the load
+distributed among the machines?
+<H4><A NAME="_Toc372348787">Data distribution in a Multi-Host
+Web Server</A> </H4>
+
+<P>
+In order to understand the implications of the possible approaches
+to data distribution, one has to be aware of the Web's native
+addressing mechanism. Web resources are named via their Uniform
+Resource Locator (URL), a location-based naming mechanism which
+specifies the Internet hostname of the machine on which the resource
+resides and the name of the resource on that machine. The Internet
+hostname is translated to an IP address which is used by the TCP/IP
+protocol to communicate with the server machine. This approach
+has the advantage of low processing and communication overheads
+but limits the flexibility of the system, by tightly coupling
+resource names with their physical location.
+<H5><A NAME="_Toc372348788">Partitioning the data</A> </H5>
+
+<P>
+One approach to providing a multi-host Web server is to utilise
+the inherent distribution of the Web itself, that is, by partitioning
+the data among the server machines. This means that resources
+are tied to a particular machine, i.e., the resource name contains
+the host name of the machine which manages it. This approach is
+suitable for both read-only and read/write services since resources
+are not replicated and therefore do not require any additional
+mechanisms to maintain consistency. Load-distribution is achieved
+without the use of any special load-sharing techniques but the
+approach has the disadvantage of unpredictable load distribution.
+If one set of resources is more popular than others then the machine
+which manages this set will receive a disproportionate load. Also,
+redistributing the load, i.e., moving resources between machines,
+would break both intra-site links and incoming links to the service
+as a whole, revealing a potentially unmanageable situation using
+existing off-the-shelf technology.
+<H5><A NAME="_Toc372348789">Serving the same data</A> </H5>
+
+<P>
+The alternative to partitioning the data set is to configure all
+machines to serve the same data. There are two variants of this
+approach, either each host possesses its own physical copy of
+the data set on a local disc or all of the servers share a common
+data set.
+<P>
+In the case of servers that only support read-only Web transactions,
+physically replicating the data set is a viable option. However,
+it is not well suited to read/write servers since data updates
+will be performed to the individual copies of the data. In certain
+specific situations, such as a conference registration system,
+where user data is simply being appended to a log, this may be
+an acceptable situation, although bespoke tools would be required
+to merge and synchronise the copies. Furthermore, the fact that
+multiple copies of the data exist complicates the management task
+of updating the contents of the server; additional tools (such
+as the UNIX&amp;reg; tools, <TT>rdist</TT> and <TT>tar</TT>) are
+required to synchronise the multiple copies of the data.
+<P>
+In order to support general read/write systems and to improve
+the manageability of the system, it is desirable that all servers
+share and manipulate a consistent view of the data. There are
+two ways of supporting this configuration, either through the
+use of multi-port discs (only suitable in a closely coupled physical
+environment) or by using distributed file systems, configured
+to share a master copy of the data among the servers<A HREF="#ref2">*</A>.
+<P>
+Distributing the load in either the replicated or shared-data
+configurations requires the use of additional techniques. If the
+Web infrastructure allowed for a loose coupling between resource
+name and physical address, this would allow support for resource
+migration, replication or reliability to be introduced at the
+Web level. Instead, one has to resort to exploiting low-level
+features of the networking protocol to achieve load sharing.
+<H4><A NAME="_Toc372348790">Load-sharing in a Multi-Host Web Server</A>
+</H4>
+
+<P>
+The most common form of load sharing currently in use for Web
+service provision is based upon exploitation of a feature of the
+Domain Name Service (DNS). The most common implementation of the
+DNS server software is the Berkeley Internet Name Domain (BIND).
+BIND version 4.9.3 and above support a <I>round-robinning</I>
+feature which allows a single hostname to be mapped to multiple
+IP addresses [Albitz92]. For example suppose a Web service is
+to be hosted by three machines, <TT>www1</TT>, <TT>www2</TT> and
+<TT>www3</TT>, the details of which are shown in Table 1.
+<P>
+<TABLE BORDERCOLOR=#000000 BORDER=1><TR><TD WIDTH=176>Internet
+host name</TD><TD WIDTH=158>IP Address </TD></TR><TR><TD WIDTH=176><TT>www1.ncl.ac.uk</TD><TD WIDTH=158>128.240.150.1</TT>
+</TD></TR><TR><TD WIDTH=176><TT>www2.ncl.ac.uk</TD><TD WIDTH=158>128.240.150.2</TT>
+</TD></TR><TR><TD WIDTH=176><TT>www3.ncl.ac.uk</TD><TD WIDTH=158>128.240.150.3</TT>
+</TD></TR></TABLE>
+<P>
+Table 1: Illustration of Internet hostname / address mappings
+<P>
+It is possible to create a single name for the three servers by
+creating special DNS <I>'A' records</I> as shown in Table 2.
+<P>
+<TABLE BORDER=1><TR><TD WIDTH=58><TT>www</TD><TD WIDTH=418>IN
+HINFO WWW-Server WWW</TT> </TD></TR><TR><TD WIDTH=58></TD><TD WIDTH=418><TT>IN
+A 128.240.150.1 ; www1.ncl.ac.uk</TT> </TD></TR><TR><TD WIDTH=58></TD><TD WIDTH=418><TT>IN
+A 128.240.150.2 ; www2.ncl.ac.uk</TT> </TD></TR><TR><TD WIDTH=58></TD><TD WIDTH=418><TT>IN
+A 128.240.150.3 ; www3.ncl.ac.uk</TT> </TD></TR></TABLE>
+<P>
+Table 2: Extract from a DNS table configured for round-robinning
+<P>
+When the BIND server is presented with a request to resolve host
+name, <TT>www.ncl.ac.uk</TT>, it responds with one of the three
+possible addresses, corresponding to <TT>www1</TT>, <TT>www2,
+or www3</TT>, selected in a round-robin fashion. Therefore two
+consecutive requests will receive different answers. The result
+of this technique is that the load associated with <TT>www.ncl.ac.uk</TT>
+will be shared by the three hosts <TT>www1</TT>, <TT>www2</TT>
+and <TT>www3</TT>.
+<P>
+There are, however, two main problems associated with this technique.
+Firstly, the DNS service is organised as a hierarchy; a client
+passes all resolution requests to a local DNS server, if this
+server cannot resolve a name it passes the request to another
+server using well-defined rules. This process continues until
+the request arrives at the server responsible for resolving the
+name in question (the <I>primary</I>). It is this server that
+performs the DNS round-robinning. The response is then passed
+back down the chain to the client's DNS server. To improve efficiency,
+DNS utilises caching techniques so that each server in the path
+between client and server will cache responses from servers further
+down the chain. The worst case scenario from the perspective of
+the load sharing is that a DNS server close to the primary caches
+one of the responses and continues to serve a single IP address
+thereby resulting in one host receiving a disproportionate percentage
+of the load. To alleviate this problem, the time-to-live value
+associated with a DNS entry can be tuned; by shortening the time-to-live
+the impact of caching can be reduced. However, there is a trade-off
+associated with this technique, since the lower the time-to-live
+value, the greater the load on the DNS server<A HREF="#ref3">*</A>.
+<P>
+The other main problem is concerned with maintaining service availability
+in the event of host failures. The DNS service was designed to
+support data that infrequently changes; it is not well equipped
+to propagate changes quickly throughout the system of co-operating
+servers. Therefore, in the event of a server crash, say <TT>www2</TT>,
+it is not possible to update the whole DNS system, in a timely
+fashion, to remove <TT>www2</TT> from the server set, therefore,
+many clients will continue to direct their requests for the service
+to the deceased machine and after appropriate network-level time-outs
+will receive a 'service not available' message.
+<P>
+Overcoming this problem requires the use of additional techniques
+to mask host failures. The next section describes current approaches
+for achieving this, namely through the use of <I>High Availability</I>
+solutions.
+<H3><A NAME="_Toc372348791">Providing High Availability Web Services</A>
+</H3>
+
+<P>
+High Availability (HA) solutions were designed to reduce or eliminate
+single points of failure (SPoF) from systems at a much lower cost
+than hardware fault-tolerance. HA solutions use a number of mechanisms
+to protect various aspects of the system, such as RAID and multi-port
+discs, redundant networks, and uninteruptable power supplies [Sauers96a].
+The following description of HA does not aim to provide a comprehensive
+review of the subject rather it focuses on the specific aspects
+of HA that are of particular interest to Web service provision.
+In particular, the mechanisms used for triggering failure masking
+techniques are not described; they are mentioned briefly later
+in the section entitled &quot;Limitations of Current Techniques&quot;.
+Furthermore, although most hardware manufacturers offer high availability
+products, they commonly only provide 'white paper' information
+rather than detailed technical discussions. This section aims
+to extract the technical mechanisms underlying such products.
+<P>
+Irrespective of the configuration of the Web server with respect
+to data distribution, achieving high availability requires the
+ability for the system to mask failures from clients. This discussion
+first considers host failures and then application failures. Finally,
+the implications of the alternative data distribution options
+are considered.
+<H4><A NAME="_Toc372348792">Masking Host Failures (host failover)</A>
+</H4>
+
+<P>
+To continue to provide availability in the event of a failure
+of one of the hosts that comprise the Web service, a second host
+is required to take over its responsibilities. Since clients access
+Web resources by directly specifying the IP address of the resources'
+host machine then this takeover has to occur at the network level,
+i.e., a second host has to takeover the address of the failed
+machine.
+<P>
+To understand how this takeover can be achieved it is necessary
+to understand the basic operation of internet routing [Halsall92].
+Each autonomous system (e.g., a University network) that comprises
+the Internet is connected to the core network (the Internet backbone)
+via an <I>exterior gateway</I>. Within each autonomous system
+there may exist a number of individual local area networks that
+are interconnected via <I>interior gateways</I>. Different routing
+protocols are employed at each of these three levels. It is the
+operation of the routing protocol at the local network level that
+is relevant to the discussion. To enable an interior gateway to
+deliver datagrams it receives for hosts that are attached to one
+of its local networks it maintains a mapping between IP <TT>hostid</TT>
+and the <I>network point of attachment </I>(NPA) address for all
+hosts connected to each of its local networks. In a LAN environment,
+the NPA corresponds to the <I>Medium Access Control</I> (MAC)
+address. Any host connected to either of an interior gateways'
+networks can send messages to any other local host by directing
+the message via the gateway. In old networking hardware, the IP/NPA
+address pairs had to be entered manually into the gateway whereas
+modern devices use <I>the Address Resolution Protocol</I> (ARP)
+to dynamically create the mapping tables (the <I>ARP cache</I>).
+To improve efficiency, each host also builds a cache of address
+pairs to enable direct communication without loading the gateway.
+In ARP aware hardware, the address pair entries held with the
+ARP cache are periodically refreshed.
+<P>
+Returning to the previous example of a multi-host Web service
+comprising three hosts, <TT>www1</TT>, <TT>www2</TT>, and <TT>www3</TT>,
+Table 3 illustrates an relevant extract from the IP/NPA mapping
+table, copies of which would be stored at any local interior gateways
+and at all of the hosts on this and the neighbouring networks.
+<P>
+<TABLE BORDERCOLOR=#000000 BORDER=1><TR><TD WIDTH=128><CENTER><TT>IP
+address</CENTER></TD><TD WIDTH=68><CENTER>NPA</CENTER> </TD><TD WIDTH=88></TD></TR><TR><TD WIDTH=128><CENTER>ip1</CENTER></TD><TD WIDTH=68><CENTER>mac1</CENTER>
+</TD><TD WIDTH=88>(www1)</TD></TR> <TR><TD WIDTH=128><CENTER>ip2</CENTER></TD><TD WIDTH=68><CENTER>mac2</CENTER>
+</TD><TD WIDTH=88>(www2)</TD></TR> <TR><TD WIDTH=128><CENTER>ip3</CENTER></TD><TD WIDTH=68><CENTER>mac3</CENTER>
+</TD><TD WIDTH=88>(www3)</TD></TR> </TABLE></TT>
+<P>
+Table 3: IP/NPA address pairs
+<H5><A NAME="_Toc372348793">Migrating an IP address</A> </H5>
+
+<P>
+Consider the situation when host <TT>www1</TT> fails and <TT>www2</TT>
+is elected to takeover <TT>www1</TT>'s duties in addition to its
+own. The networking software on host <TT>www2</TT><I> </I>can
+be configured to have <TT>www1</TT>'s IP address in addition to
+its own. Host <TT>www2</TT> would then respond to any subsequent
+ARP requests for <TT>ip1</TT> with MAC address <TT>mac2</TT>.
+However, many ARP caches, including the network's gateways, may
+maintain the stale mapping from <TT>www1</TT> to <TT>mac1</TT>,
+for a period of up to tens of minutes, until the cache entry is
+refreshed [Sauers96b].
+<P>
+Fortunately, this situation can be ameliorated by virtue of a
+feature of ARP which allows a redirection packet to be broadcast
+to all listening hosts. The redirection message, which contains
+a IP/NPA pair (e.g., {<TT>ip1</TT>, <TT>mac2</TT>}), causes the
+appropriate ARP cache entry to be invalidated and replaced with
+the address pair contained in the message [Plummer82, Cohen95].
+On most UNIX&amp;reg; platforms such a redirection packet can
+be triggered via the <TT>ifconfig alias</TT> command.
+<H5><A NAME="_Toc372348794">Migrating an IP/NPA address pair</A>
+</H5>
+
+<P>
+As mentioned briefly earlier, some old interior gateway hardware
+maintains a static mapping table of IP / NPA address pairs, entered
+directly into the device. If such devices are present then machine
+failover cannot be achieved by migrating an IP address alone.
+Instead both the IP address and the NPA (the MAC address) must
+be moved.
+<P>
+To support migration of both IP and MAC address requires that
+all hosts capable of taking over service from others contain additional
+NPA hardware (network cards connected to the same LAN); one additional
+card is required for each possible takeover. So, for example,
+to allow each of the three nodes that comprise our example Web
+server to each be capable of taking over one other machine, then
+each host would require two network cards. The secondary network
+cards must support dynamic configuration of their MAC address
+(a relatively common feature of current network cards).
+<P>
+In the event of a failover being triggered, the host nominated
+to takeover its service would configure the MAC address of its
+secondary network card to be that of the deceased machine and
+configure its networking software to associate the IP address
+of the deceased machine to this card This has the effect of transferring
+service without the use of features of the routing protocol<A HREF="#ref4">*</A>.
+<H4><A NAME="_Toc372348795">Masking Process Failures (application
+failover)</A> </H4>
+
+<P>
+Service unavailability can equally well be caused by the failure
+of an application as the host on which it is executes. To address
+this situation, many HA systems advocate the use of relocatable
+(application) IP addresses [Sauers96b]. The idea is that unique
+IP addresses are associated with particular services, and it is
+via these addresses that clients interact with them. The hosts
+on which a service executes configures its networking software
+to respond to the service IP address in addition to its own primary
+IP address. Applications can be moved between machines by updating
+the mappings between the application IP address and the NPA, using
+the ARP aliasing technique previously described. The advantage
+of employing this technique is the increased manageability it
+offers, in that an application can easily be moved between hosts,
+either due to failure, for load-balancing or for maintenance reasons,
+without causing unavailability of service. The disadvantage of
+this approach is the potentially large number of IP addresses
+it may consume.
+<H4><A NAME="_Toc372348796">Data Distribution Options for an HA
+Web Server</A> </H4>
+
+<P>
+In addition to requiring high availability for the Web server
+processes, the data which they serve must also be available in
+the event of failure. The diagram in Figure 1 illustrates two
+possible data distribution configurations.
+<P>
+<IMG SRC="img00001.gif"> 
+<P>
+<A NAME="_Toc372348822">Figure 1</A>: Data distribution configurations
+for a HA Web server
+<P>
+The shared SCSI bus configuration, shown in Figure 1(a), is a
+suitable configuration for a server cluster operating with partitioned
+data sets. Under normal operating conditions each Web server obtains
+an exclusive reservation on its primary disc, i.e., server 1 serves
+data from disc 1, etc. In the event of a host failure, say, server
+1, then in addition to taking over the IP address of the failed
+host, as previously described, the designated replacement machine,
+say, server 2, reserves the disc of the failed host in addition
+to its own. Server 2 is then capable of serving any requests for
+server 1's data in addition to its own.
+<P>
+For server clusters that require a shared data configuration,
+usually necessary for a server that is performing read/write access
+to data, a two tiered configuration is required as shown in Figure
+1(b). The data set is stored within a distributed file system,
+with the data being distributed across a number of servers as
+load demands. Each of the Web server hosts mount and serve the
+same data set from the distributed file system. AFS appears to
+be best suited to this task by virtue of its client side caching
+features that allows copies of frequently accessed data to be
+cached on the local discs of the Web servers. This dramatically
+improves performance since read-only operations can be performed
+locally. Write operations are <I>written-through</I> to the master
+copy and cache-consistency mechanisms ensure that <I>dirty-data</I>
+is not accessed. In this configuration the distributed file system
+is required to be highly available. This can be achieved using
+the shared SCSI bus techniques described previously.
+<H3><A NAME="_Toc372348797">Limitations of Current Techniques</A>
+</H3>
+
+<P>
+This section reviews the strengths and weaknesses of the current
+state-of-the-art techniques for high-end Web service provision
+and highlights where research techniques could be applied to overcome
+some current limitations.
+<H4><A NAME="_Toc372348798">Guaranteeing Data Integrity</A> </H4>
+
+<P>
+The HA techniques that have been described are solely concerned
+with masking process and host failures from clients. For a Web
+server that is solely providing read-only access to data, these
+mechanisms are sufficient. However, the provision of read/write
+services require additional mechanisms to guarantee integrity
+of data in the presence of failures during write operations. Similarly,
+with multiple servers potentially accessing data concurrently,
+techniques are required to provide serialised access to data to
+prevent corruption. Programming environments such as Arjuna [Parrington95]
+greatly simplify the task of implementing such systems.
+<H4><A NAME="_Toc372348799">Alternative Load-Balancing Techniques</A>
+</H4>
+
+<P>
+The DNS round-robin techniques for load balancing suffer from
+several shortcomings:
+<UL>
+<LI>DNS is not capable of determining the availability or performance
+of a given server and will continue to send client requests to
+overloaded or failed servers, hence the requirement for HA solutions
+to mask such failures.
+<LI>Round-robin DNS distributes traffic in a cyclic manner directing
+equal numbers of requests to each of the alternative servers.
+In some configurations this may be inappropriate, e.g., if the
+Web service hosts differ in terms of performance.
+<LI>To minimise the effects of caching, DNS entries are configured
+to have short time-to-live value. This result in increased load
+on the primary DNS server.
+<LI>Round-robin DNS does not scale continuously since records
+are restricted to 32 entries, translating into a maximum configuration
+of a 32 host Web server cluster.
+</UL>
+
+<P>
+A better approach would involve clients being aware of a single
+<I>service address</I> corresponding to the service as a whole<A HREF="#ref5">*</A>.
+Load balancing could be implemented within the server cluster
+itself. Such a configuration would be scalable in that more hosts
+could be added as the demand increased and in the event of a host
+failure, service could continue without requiring any special
+address-swapping techniques.
+<H5><A NAME="_Toc372348800">Group Communications</A> </H5>
+
+<P>
+One approach would be to accept all incoming service traffic at
+a single machine and then relay the request to a group of slave
+hosts, who would decide among themselves who will service the
+request. This is a group communications based solution. The main
+drawback with this approach is the fact that all machines in the
+cluster will be interrupted with all incoming requests. Furthermore,
+there is the system overhead in deciding whether to accept or
+drop a given packet. Any algorithm used to make this decision
+must be aware of the membership of the server group. One approach
+would be for the group to occasionally exchange group membership
+messages. This would reveal a small window in which some messages
+may not be answered, i.e., during the time between a host failure
+and the next membership update round. To achieve 100% service,
+then group membership would have to be validated for each message,
+requiring a second round of message transmission, as in the <I>virtual
+synchrony</I> protocols. The overhead introduced by this scheme
+would likely be prohibitive in many situations, however, it has
+the advantage of not requiring closely coupled cluster environments.
+<H5><A NAME="_Toc372348801">Network Address Translation</A> </H5>
+
+<P>
+Network address translation (NAT) is a technique for dynamically
+altering the destination address of a particular IP packet at
+a network border (i.e., a gateway) [Egevang94]. The mechanism
+operates by editing the IP headers of packets so as to change
+the destination address before the IP to NPA translation is performed.
+Similarly, return packets are edited to change their source IP
+address. Such translations can be performed on a per session basis
+so that all IP packets corresponding to a particular session are
+consistently redirected.
+<P>
+This technology can be applied to Web service load distribution
+over a host cluster. All clients communicate with the service
+by specifying a single IP address. At the gateway to the Web cluster
+network, the gateway can redirect incoming requests to one of
+a number of slave hosts. Clearly, there are fault-tolerance issues
+to be addressed in that the gateway is a single point of failure,
+so redundant networking and gateway hardware is required to overcome
+this.
+<P>
+Commercial products supporting this technology are just beginning
+to appear, the <I>LocalDirector</I> product from Cisco appears
+to be the first [Cisco96a]. LocalDirector performs redirection
+in an intelligent manner by monitoring the response times of the
+server hosts and directing requests so as to maximise the QoS
+as perceived by the client. In the event of a host failure, its
+response time becomes infinite and receives no subsequent requests
+until it returns to service.
+<H4><A NAME="_Toc372348802">Providing Widely Distributed Services</A>
+</H4>
+
+<P>
+For services that are inherently centralised a combination of
+DNS round-robinning and HA systems or the new NAT-based scheme,
+offer a simple and effective solution to the provision of highly
+available Web services that are capable of supporting high load.
+However, these techniques only operate in closely coupled systems,
+in particular the HA techniques require a common LAN for the IP
+aliasing mechanisms and a shared SCSI bus to allow takeover hosts
+to access the data of a failed one. For accurate failure detection,
+multiple communication paths between servers, for <I>heart-beat</I>
+message exchange, are also required.
+<P>
+There may be installations where this style of server in insufficient.
+Consider the requirements of a large multinational company's Web
+service provision. An ideal installation would consist of multiple
+Web access points in the various countries in which the company
+operated. This would have the advantage of improving the quality
+of service offered to customers, in terms of reduced access latency,
+since both the processing and communication load would be distributed.
+In such a scenario it is likely that the various access points
+would offer some common data and services customised with data
+of local interest.
+<P>
+Such a configuration raises the same two issues that have been
+discussed previously in closely coupled environments, that is,
+data distribution and load distribution.
+<H5><A NAME="_Toc372348803">Data Distribution</A> </H5>
+
+<P>
+To support a widely distributed configuration performance reasons
+would dictate that the common data would have to be replicated
+at each of the individual sites with a requirement to maintain
+consistency in the event of read/write data manipulation.
+<P>
+A system based upon an AFS distributed file system with site-based
+caching would be one approach to implementing such a system<A HREF="#ref6">*</A>.
+However, such a scheme is only really capable of supporting read-only
+Web services since AFS only provides UNIX&amp;reg; file system
+semantics, it does not enforce serialised access to data under
+concurrent access or guarantee integrity of data in the event
+of failure, which is particularly important when updating multiple
+items of data.
+<P>
+Such a system could be implemented by using a combination of the
+techniques previously described, to provide high availability
+and load-balancing at each access point, with distributed computing
+techniques, such as reliable group communication and atomic transactions,
+for reliably manipulating a replicated data set.
+<H5><A NAME="_Toc372348804">Load Distribution</A> </H5>
+
+<P>
+Directing clients to the most appropriate server for their particular
+locality can be achieved in several ways. In many current sites,
+users are asked to indicate their geographical location or a preference
+for a particular server and then select an appropriate URL from
+a list presented on a Web page. DNS round-robinning could also
+be used to automate distribution but this is not scalable and
+doesn't take client locality into account with a result that clients
+may not see the optimum QoS.
+<P>
+A new commercial product from Cisco, the DistributedDirector,
+aims to perform automatic selection of the optimum server for
+a particular client by utilising routing information inherent
+in the network [Cisco96b]. DistributedDirector can operate in
+two modes, as a DNS server, suitable for redirecting multiple
+application protocols, and as a HTTP redirector. In DNS mode,
+it acts as the primary nameserver and replies with a single address
+of the appropriate server. In HTTP mode, it acts as a Web server,
+accepting incoming HTTP requests and returning HTTP code 302 (temporarily
+moved) to redirect clients to the appropriate server.
+<P>
+In order to determine the optimum server for a particular client
+several different metrics are used, the most interesting use a
+proprietary protocol to query software agents running on the gateway
+devices closest to each of the distributed servers. The query
+contains the client address and the agents use the routing table
+information to determine the number of hops between the client
+and the particular server. The DistributedDirector collates the
+responses and chooses the host that is <I>closest</I> to the client.
+In order for this technique to work it requires that the appropriate
+agent software is running at each of the distributed sites, this
+naturally requires Cisco gateway systems.
+<H2><A NAME="_Toc372348805">HP CORBAWeb</A> </H2>
+
+<H3><A NAME="_Toc372348806">System Overview</A> </H3>
+
+<P>
+In the CORBAWeb system, the Web server is configured to pass requests
+for URLs whose base name is &quot;<TT>/orb</TT>&quot; to the CORBAWeb
+module which runs in the server. The module acts as a CORBA client;
+the required service is extracted from the remainder of the URL.
+For example, a request for <TT>&lt;URL:http://www.service.com/orb/bank&gt;</TT>
+will cause the client to look up the 'bank' gateway in the Nameserver
+and bind to it. The client then executes the <TT>invoke()</TT>
+method of the gateway, passing it any associated parameters, typically
+data that has been entered into an HTML form and passed from the
+browser using URL-encoding. The gateway performs the necessary
+processing and returns a response (usually HTML) to the CORBAWeb
+module which returns it to the browser, thereby completing the
+request.
+<P>
+A predicted use of this architecture is to provide Web connectivity
+to CORBA <I>back-office</I> applications (or CORBA-wrapped applications).
+In this situation, the gateway interprets the incoming URL-encoded
+data, performs the appropriate invocations on the back-office
+application and provides the necessary presentation logic to wrap
+the result, creating an appropriate response for the Web client.
+<P>
+The diagram shown in Figure 2 illustrates CORBAWeb architecture
+from a process-level perspective.
+<P>
+<IMG SRC="img00002.gif"> 
+<P>
+<A NAME="_Toc372348823">Figure 2</A>: CORBAWeb architecture
+(process-level view) 
+<H3><A NAME="_Toc372348807">Dependability Analysis of CORBAWeb
+Architecture</A> </H3>
+
+<P>
+Analysing the CORBAWeb architecture from a dependability perspective
+left to right as illustrated in the diagram in Figure 2
+<H4><A NAME="_Toc372348808">Web Server and CORBAWeb Module</A>
+</H4>
+
+<P>
+The combination of the Web server and the CORBAWeb module essentially
+acts as a protocol converter, translating HTTP requests into CORBA
+object invocations. Although, the CORBAWeb module may hold some
+state as a performance optimisation, such as maintaining an object
+reference cache, no critical, persistent, state is required to
+be maintained or manipulated. Therefore, from a dependability
+perspective, the challenge is to provide high availability of
+the service and possibly support load balancing over multiple
+hosts should popularity deem it necessary for a particular installation.
+<P>
+Most current web servers, including Apache &amp; Netscape, use
+a multi-threaded, multi-process architecture operating in a master/slave
+configuration. The master process accepts connections on the main
+port (usually 80, the <I>well-defined</I> HTTP port) and then
+passes the request on to one of the slave processes which actually
+complete the request. Therefore, multiple instances of the CORBA
+client will exist, i.e., one per server process.
+<P>
+This architecture provides some degree of process-level fault-tolerance,
+since the master server will recreate processes that terminate
+abnormally. In addition, the master will intentionally kill a
+slave process after it has performed a given number of requests,
+so as to minimise the possible effects of poor programming, notably
+memory leaks. This simple technique works successfully by virtue
+of the fact the server and plug-in modules do not maintain persistent
+state.
+<H4><A NAME="_Toc372348809">CORBA Processes</A> </H4>
+
+<P>
+In the current CORBAWeb architecture, the Object Locator, the
+Nameserver, and the gateway processes are all potential single
+points of failure.
+<P>
+The diagram in Figure 2 does not illustrate host boundaries since
+the architecture allows for many different distribution configurations,
+for example, there is no requirement for the Object Locator, the
+Nameserver, or the gateway processes to be co-located with the
+Web server processes.
+<H5><A NAME="_Toc372348810">The ORB Plus Object Locator</A> </H5>
+
+<P>
+CORBA objects are accessed via an <I>object reference</I>, an
+opaque string which is used by the ORB to locate and bind to distributed
+objects. CORBA objects may either be <I>transient</I>, an object
+exists for the lifetime of its containing process, or <I>persistent</I>,
+an object lifetime is not restricted to that of the process which
+created it (its <I>birth server</I>). In ORB Plus, persistent
+objects reside within <I>virtual servers</I>. Over the lifetime
+of a persistent object, its virtual server may reside in many
+different processes, however, its object reference is guaranteed
+to provide access to the object for its entire lifetime. In order
+to support this model, the ORB requires a mechanism for locating
+objects based on their object reference. In ORB Plus, this is
+achieved via the <I>Object Locator</I> daemon, which resolves
+requests for object references for objects which can no longer
+be accessed at their birth server<A HREF="#ref7">*</A>. The locator
+is also able to start server processes for virtual servers that
+are not active.
+<P>
+Considering the effect of the failure of the Object Locator daemon
+responsible for the CORBAWeb location domain. Object references
+that were valid at the time of the failure will continue to provide
+access to the objects to which they refer for as long as those
+objects remain in their existing server processes<A HREF="#ref8">*</A>.
+If a process holding a virtual server terminates (due to inactivity
+for example) and is subsequently requested then the CORBA client
+will be unable to bind to the object and the service will therefore
+be unavailable.
+<P>
+Unlike the Nameserver and the gateway processes, the Object Locator
+resides at a well known address (hostname and port) for a given
+location domain. In the event of the failure of the Locator's
+host, the daemon cannot simply be restarted on an arbitrary host,
+rather the system will be unavailable until the host recovers.
+<H5><A NAME="_Toc372348811">The ORB Plus Nameserver</A> </H5>
+
+<P>
+ORB Plus provides a Nameserver, compliant to naming service specified
+in the Common Object Services Specification (COSS) [OMG95]. The
+Nameserver allows a hierarchy of user defined names to be created
+which are mapped to object references, thereby removing the need
+for clients to manipulate object references directly. CORBAWeb
+uses the Nameserver to map from the service names, as specified
+in the URLs presented to the Web server, to the object reference
+corresponding to an object providing the service.
+<P>
+Should the Nameserver process fail, the next time an attempt is
+made to use it direct communication with the server at its old
+location will fail and the Locator process will be contacted to
+determine its new location. The locator will determine that the
+Nameserver is not currently running and can be configured to restart
+it, passing the address of the new process back to the client.
+<P>
+Should the Nameserver's host fail, then the process could be restarted
+on a secondary machine but again since persistent data is stored
+on the file system then this data must be available on the secondary
+host for the takeover to succeed. This could be automated by registering
+intelligent startup scripts with the Object Locator.
+<H5><A NAME="_Toc372348812">Gateway processes</A> </H5>
+
+<P>
+In common with the Nameserver, the gateways are potential single
+points of failure, albeit with more localised effects, i.e., a
+gateway process failure will cause only the service which it provides
+to be unavailable, other services (provided by other gateways)
+will continue to operate. As with the Nameserver, the Locator
+will attempt to restart failed servers which, in the case of failed
+hosts, could be configured to restart on a different host.
+<P>
+More significantly however, gateway failures have the potential
+to compromise the integrity of data held within back-office applications.
+In certain configurations, a single Web request may cause a gateway
+to perform update operations on a number of back-office objects,
+e.g., a money transfer between two accounts. In the event of a
+process or host failure during this update the overall system
+state may be left in an inconsistent state, e.g., the sum of the
+two account balances in the banking example may be different to
+that before the transaction took place.
+<H3><A NAME="_Toc372348813">CORBAWeb Availability using HA Techniques</A>
+</H3>
+
+<P>
+One approach to providing a highly available CORBAWeb system would
+be to use off-the-shelf HA products to mask process and host failures.
+Suitable products include HP's MC/ServiceGuard [Sauers96a], Digital's
+DECsafe [Cohen95] and Veritas' FirstWatch [Veritas96].
+<P>
+To provide a highly available service, it is first necessary to
+provide failure masking for the Web server and since clients communicate
+directly by specifying the IP address then IP switching is the
+only available option. For a particular location domain, the Object
+Locator process also resides at a specific address (host and port).
+Therefore IP aliasing is also required to tolerate failure of
+the Object Locator's host.
+<P>
+<IMG SRC="img00003.gif"> 
+<P>
+<A NAME="_Toc372348824">Figure 3</A>: CORBAWeb availability
+using HA techniques (normal operating condition) 
+<P>
+The diagram in Figure 3 illustrates one possible two-host configuration
+operating under normal, i.e., failure free, conditions. Web server
+processes are active on both hosts, sharing incoming load. The
+Object Locator and Nameserver are running on host 1 and gateway
+processes are running on both hosts, g/w<SUB>1</SUB> on host 1
+and g/w<SUB>2</SUB> on host 2.
+<P>
+To improve the manageability of the system, the Object Locator
+and each of the Web servers could be allocated their own IP addresses
+(<TT>ip<SUB>locator</SUB>,
+ip<SUB>www1</SUB>, ip<SUB>www2</SUB>
+respectively) as shown in the diagram. This would allow graceful
+migration of services between hosts for maintenance purposes.</TT>
+<P>
+The failure of host 1 would trigger the HA system running on host
+2 to configure its networking software to takeover the IP address
+of the services that were running on host 1, i.e., <TT>ip<SUB>www1</SUB></TT>
+and <TT>ip<SUB>www2</SUB></TT>,
+in addition to its own. ARP redirection packets would be broadcast
+to update these changes to the LAN routers and other local machines,
+i.e., {<TT>ip<SUB>www1</SUB>,
+mac<SUB>2</SUB></TT>} and {<TT>ip<SUB>locator</SUB>,
+mac<SUB>2</SUB></TT>}. The Object
+Locator would then be started locally on Host 2. The Nameserver
+and gateway process, g/w<SUB>1</SUB>, that were active on Host
+1 at the time of its failure are restarted on Host 2 when a CORBAWeb
+client next requests a binding to them via the Object Locator.
+The system configuration after the failover is shown in Figure
+4.</TT>
+<P>
+<IMG SRC="img00004.gif"> 
+<P>
+<A NAME="_Toc372348825">Figure 4</A>: CORBAWeb availability
+using HA techniques (after failure of host 1) 
+<P>
+Since the Object Locator, the Nameserver and optionally, the gateway
+processes maintain persistent state on the file system then the
+failover would require this data to be available to the secondary
+machine, either using a shared SCSI bus (as shown in the diagram)
+or a distributed file system (which would also be required to
+be highly available).
+<P>
+There are two primary limitations with this approach, namely,
+integrity of persistent state and possible message loss.
+<P>
+The Object Locator and Nameserver processes periodically update
+their persistent data. It is not known whether such updates are
+atomic or not (i.e., whether they are achieved in a single-block
+disc write operation). If these updates are non-atomic then it
+is possible that a host failure during such an operation could
+result in the persistent data being left in an inconsistent state.
+Such a situation could prevent the process from starting up and
+operating correctly on a secondary host. Similarly, the gateway
+processes would have to be carefully coded so that their persistent
+state updates would atomically move the state from one consistent
+view to another.
+<P>
+There is also a possibility that some messages may be lost during
+a host failover. Consider, as an example, a situation where the
+Object Locator on Host 1 has initiated the activation of a gateway
+virtual server on host 2 and then fails. When started, the gateway
+process will try to register itself with the Object Locator. The
+registration may fail if the failover is not complete, i.e., the
+Object Locator has not yet restarted on host 2. It is thought
+that the virtual server startup algorithm would handle such a
+situation by terminating the gateway process should its Locator
+registration fail. However, this assumption would have to be validated
+and other scenarios may not be catered for.
+<H3><A NAME="_Toc372348814">CORBAWeb Availability using Replicated
+Processes</A> </H3>
+
+<P>
+An alternative approach to providing a highly available CORBAWeb
+service would be to use process replication techniques. Somersault
+[Harry96] is a fault-tolerant distributed system based on active
+process replication. The Somersault FT Orb is implemented by layering
+Somersault underneath HP OrbLite to provide a fault-tolerant transport
+[Harry95].
+<P>
+Using the FT Orb, a virtual server may be actively replicated
+to form a <I>recovery unit</I> (RU) which consists of two processes,
+the <I>primary</I> (to which messages are first delivered) and
+the <I>secondary</I>. Somersault guarantees the consistency of
+the replica copies and supports very fast failover from primary
+to secondary in the event of a failure of the primary process.
+The system strives to maintain the cardinality of the group, so
+if the secondary process fails, the primary would start a new
+secondary and if the primary fails, the existing secondary is
+promoted to primary and then creates a new secondary. During such
+a failover, the system guarantees that no incoming messages to
+the RU are lost.
+<P>
+Client access to replicated objects is transparent, that is, they
+bind to what appears to be a single object by specifying its Object
+Reference.
+<P>
+Implementing replicated objects using FT Orb requires a few programming
+changes compared with a normal CORBA application. The first major
+difference concerns non-deterministic events which have to be
+identified, isolated and programmed using special non-deterministic
+choice objects so as to ensure that both the primary and secondary
+make the same decision in non-deterministic situations. Secondly,
+state transfer objects must be provided, which are used within
+the RU to transfer object state between the replica copies.
+<P>
+<IMG SRC="img00005.gif"> 
+<P>
+<A NAME="_Toc372348826">Figure 5</A>: CORBAWeb availability
+using Somersault FT Orb 
+<P>
+Figure 5 illustrates an available CORBAWeb configuration based
+upon the Somersault FT Orb model<A HREF="#ref9">*</A>. Since it
+is desired that CORBAWeb be used with standard unmodified Web
+servers, traditional HA techniques are used to provide high availability
+of the Web server component of the system, which operates in the
+same way as in the previous configuration.
+<P>
+The gateway processes are replicated within recovery units so
+that in the event of a failure of either host they will continue
+to provide service. Introducing a third host would allow Somersault
+to continue to maintain two active replica copies in the event
+of a single host failure.
+<H3><A NAME="_Toc372348815">Data Integrity of Gateways using Atomic
+Transactions</A> </H3>
+
+<P>
+The gateway processes are potentially the most sensitive part
+of the CORBAWeb design since they are able to perform read/write
+operations on back-office objects. It is imperative that the integrity
+of the data managed by these objects is not compromised.
+<P>
+In the simple case of a CORBAWeb gateway that updates the state
+of a single back-office object as a result of a Web request. Concurrency
+control mechanisms are clearly required in order to prevent update
+conflicts in the event of concurrent access.
+<P>
+A more complex gateway may manipulate the state of multiple objects
+in response to a single Web request. An example would be an electronic
+shop that is required to update a number of separate sub-systems
+in response to an order request, for example, payment processing
+(using SET-like systems), stock control, product dispatch etc.
+In such cases, it is necessary to ensure that the consistency
+of the entire system state (composed of the states of the individual
+objects) is maintained even in the presence of failures, either
+of the gateway or the object servers themselves.
+<P>
+The recognised approach to achieve these goals is to implement
+the system using Atomic Transactions, which guarantee that either
+all of the work conducted within the scope of an atomic transaction
+will be successfully performed or it will all be undone. The CORBA
+Object Transactional Service (OTS) specification describes a system
+that is able to co-ordinate atomic transactions comprised of operations
+on CORBA objects so as to provide the aforementioned guarantees.
+<P>
+An OTS service would provide a good fit for the fault-tolerance
+requirements of the CORBAWeb gateways assuming that the back-office
+objects could be implemented as transactional objects. Legacy
+applications could be wrapped by transactional CORBA objects if
+they themselves were implemented in an open transactional manner
+or could be made to behave in such a way. This is an important
+requirement as the wrapper objects must conform to the two-phase
+protocol as controlled by the OTS service, that is, it must be
+possible to atomically commit or roll-back state manipulations.
+<H2><A NAME="_Toc372348816">Footnotes</A></H2>
+
+<P>
+<A NAME="ref1"></A>[1] NCSA analysis revealed that server-class
+machines either crashed or exhibited severe signs of overloading
+when experiencing peak arrival rates of approximately 20 rps [Katz94].
+<P>
+<A NAME="ref2"></A>[2] Experiments with this style of configuration
+by NCSA revealed that NFS was not suitable for such a configuration
+as access times on the master server were too slow. The optimised
+client caching in AFS proved a more suitable platform [Katz94,
+Spasojevic96].
+<P>
+<A NAME="ref3"></A>[3] HP's main Web site, <TT>&lt;URL:http://www.hp.com/&gt;</TT>,
+is configured to use round-robin DNS resolution with records having
+a 10 minute time-to-live value. This compares to 2 hours for the
+Microsoft site. A typical time-to-live value for the DNS entry
+of an average host is around 24 hours.
+<P>
+<A NAME="ref4"></A>[4] Some manufacturer's HA solutions use this
+failover technique as their primary mechanism.
+<P>
+<A NAME="ref5"></A>[5] Multicasting immediately comes to mind
+as an appropriate technique to support such a configuration. Some
+local area network technologies, e.g., Ethernet, support hardware
+multicasting, and many modern operating systems provide support
+for its use. Furthermore it is possible to map multicast Ethernet
+addresses to special group IP addresses (ranging from 224.0.0.0
+to 239.255.255.255) [Comer95]. IP multicasting on a LAN environment
+is therefore a viable proposition. However, to use multicast IP
+over the Internet requires additional routing support, which is
+currently in an experimental phase, the most visible large-scale
+experiment being the mbone. Multicast IP is also a datagram based,
+whereas HTTP is a connection-oriented protocol, built on top of
+TCP, so protocol conversion would be necessary, requiring customisation
+of the protocol stack of the router machine on the server cluster
+LAN.
+<P>
+<A NAME="ref6"></A>[6] The Web services of the ESPRIT Networks
+of Excellence are implemented using this scheme, with access points
+in the UK (Newcastle University), France (LAAS-CNRS at Toulouse),
+the Netherlands (University of Twente), and Portugal (INESC at
+Lisbon). Access to data via the Web is read-only.<BR>
+See <TT>&lt;URL:http://www.newcastle.research.ec.org/&gt;</TT>.
+<P>
+<A NAME="ref7"></A>[7] The ORB Plus 2.01 on-line documentation
+provides details of the information maintained within an object
+reference and the algorithm used by the Object Locator to track
+persistent objects.
+<P>
+<A NAME="ref8"></A>[8] It is assumed that the CORBAWeb modules
+within each of the Web server processes maintain an object reference
+cache, typically containing object references for the Nameserver
+and other gateways that have been recently accessed.
+<P>
+<A NAME="ref9"></A>[9] For the sake of consistency with the previous
+configurations, the Object Locator and Nameserver are shown as
+RUs, in reality however, the implementation of replicated object
+location and naming mechanisms may differ.
+<H2>References </H2>
+
+<P>
+[Albitz92] P. Albitz and C. Liu, &quot;DNS and BIND in a Nutshell,&quot;
+O'Reilly and Associates, 1992.
+<P>
+[CDnow] CDnow Web Site.<BR>
+Available at <TT>&lt;URL:http://www.cdnow.com/&gt;</TT> 
+<P>
+[Cisco96a] &quot;Cisco LocalDirector,&quot; Cisco Systems, Inc.
+White paper, 1996.
+<P>
+[Cisco96b] &quot;Cisco DistributedDirector,&quot; Cisco Systems,
+Inc. White paper, 1996.
+<P>
+[Cisco96c] &quot;Scaling the World Wide Web,&quot; Cisco Systems,
+Inc. White paper, 1996.
+<P>
+[Cohen95] L. S. Cohen and J. H. Williams, &quot;Technical Description
+of the DECsafe Available Server Environment,&quot; Digital Technical
+Journal, 7(4), pp. 89-100, 1995.
+<P>
+[Comer95] D. E. Comer, &quot;Internetworking with TCP/IP, Volume
+1: Principles, Protocols and Architecture,&quot; 3rd ed., Prentice-Hall,
+1995.
+<P>
+[Egevang94] K. Egevang and P. Francis, &quot;The IP Network Address
+Translator (NAT),&quot; RFC 1631, Network Information Center,
+SRI International, May 1994.<BR>
+Available at <TT>&lt;URL:ftp://ds.internic.net/rfc/rfc1631.txt&gt;</TT>
+
+<P>
+[Fleming95] R. A. Fleming, &quot;The next Somersault architecture,&quot;
+Internal document, Hewlett-Packard Laboratories, Bristol, 8th
+September 1995.
+<P>
+[Garfinkel96] S. L. Garfinkel, &quot;The Wizard of Netscape,&quot;
+WebServer Magazine, 1(2), pp. 58-63, July 1996.
+<P>
+[Halsall92] F. Halsall, &quot;Data communications, computer networks,
+and open systems, &quot; 3rd ed., Addison-Wesley, 1992.
+<P>
+[Harry95] P. Harry, &quot;FT Orb programmers guide,&quot; Internal
+document, Hewlett-Packard Laboratories, Bristol, 19th October
+1995.
+<P>
+[Harry96] P. Harry, &quot;An Introduction to Somersault (Somersault
+95-2),&quot; Internal document, Hewlett-Packard Laboratories,
+Bristol, 7th March 1996.
+<P>
+[HP96] &quot;HP ORB Plus 2.01 Frequently Asked Questions (FAQ),&quot;
+Hewlett-Packard Company, January 1996.
+<P>
+[Katz94] E. D. Katz, M. Butler and R. McGrath, &quot;A Scalable
+HTTP Server: The NCSA Prototype,&quot; Computer Networks and ISDN
+Systems, 27(2), pp. 155-164, Special Issue Selected Papers of
+the First World-Wide Web Conference, November 1994.
+<P>
+[OMG95] &quot;CORBAservices: Common Object Services Specification,&quot;
+Object Management Group, OMG Document Number 95-3-31, March 95.
+<P>
+[Parrington95] G. D. Parrington et al., &quot;The Design and Implementation
+of Arjuna,&quot; USENIX Computing Systems Journal, 8 (3), pp.
+253-306, Summer 95.<BR>
+Available at <TT>&lt;URL:http://arjuna.ncl.ac.uk/papers/designimplearjuna.ps&gt;</TT>
+
+<P>
+[Plummer82] D. Plummer, &quot;Ethernet Address Resolution Protocol:
+or Converting Network Protocol Addresses to 48-bit Ethernet Address
+for Transmission on Ethernet Hardware,&quot; RFC 0826, Network
+Information Center, SRI International, 1st Nov. 1982.<BR>
+Available at <TT>&lt;URL:ftp://ds.internic.net/rfc/rfc826.txt&gt;</TT>
+
+<P>
+[Sauers96a] B. Sauers, &quot;Understanding High Availability,&quot;
+Hewlett-Packard Company, 1996.
+<P>
+[Sauers96b] B. Sauers, J. Foxcroft, and P. W. Dickerman, &quot;Designing
+Highly Available Cluster Applications,&quot; Hewlett-Packard Company,
+1996.
+<P>
+[Spasojevic96] M. Spasojevic and M. Satyanarayanan, &quot;An Empirical
+Study of a Wide-Area Distributed File System,&quot; ACM Transactions
+on Computer Systems, 14(2), pp. 200-222, May 1996.
+<P>
+[Veritas96] Veritas Software Corp., &quot;Veritas FirstWatch 2.2
+Technical White Paper.&quot;<BR>
+Available at <TT>&lt;URL:http://www.veritas.com/HA/fw22_wp.html&gt;</TT>
+
+</BODY>
+
+</HTML>

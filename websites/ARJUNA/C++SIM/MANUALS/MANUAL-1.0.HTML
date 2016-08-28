@@ -1,0 +1,2141 @@
+<HTML>
+
+<HEAD>
+
+<TITLE>Untitled</TITLE>
+
+<META NAME="GENERATOR" CONTENT="Internet Assistant for Microsoft Word 2.0z">
+</HEAD>
+
+<BODY>
+
+<P>
+<TABLE BORDER=1>
+<TR><TD WIDTH=401><BR>
+<FONT SIZE=6 FACE="Arial">Object-Oriented Discrete-Event Simulation in C++</FONT>
+</TD><TD WIDTH=389><B><IMG SRC="manual-1.0/fig1.gif"></B>
+<BR>
+</TD>
+</TR>
+
+</TABLE>
+
+<P>
+<TABLE BORDER=1>
+<TR><TD WIDTH=791><BR>
+<BR>
+<BR>
+<CENTER><IMG SRC="manual-1.0/fig2.gif"><BR>
+<BR>
+</CENTER>
+<P>
+<CENTER><I><B><FONT SIZE=6 FACE="Arial">C++SIM</FONT></B></I><B><FONT SIZE=6 FACE="Arial"> User's Guide</FONT></B></CENTER>
+<P>
+<CENTER><B><FONT SIZE=5 FACE="Arial">Public Release 1.5<BR>
+<BR>
+</FONT></B></CENTER>
+<P>
+<CENTER><B><FONT SIZE=5 FACE="Arial">Draft Version 1.0<BR>
+</FONT></B></CENTER>
+</TD></TR>
+
+</TABLE>
+
+<P>
+<TABLE BORDER=1>
+<TR><TD WIDTH=0><BR>
+<BR>
+
+<P>
+<CENTER><FONT SIZE=4 FACE="Arial">Department of Computing Science,<BR>
+Computing Laboratory,<BR>
+The University, Newcastle upon Tyne,</FONT></CENTER>
+<P>
+<CENTER><FONT SIZE=4 FACE="Arial">NE1 7RU, UK.</FONT></CENTER>
+</TD></TR>
+
+</TABLE>
+
+<P>
+<B><FONT SIZE=4 COLOR="#000000">Copyright Notice:</FONT></B>
+<P>
+<I>Copyright 1990, 1991, 1992, 1993, 1994<BR>
+Computing Laboratory, University of Newcastle upon Tyne, UK. </I>
+<P>
+<I>Permission to use, copy, modify and distribute the </I>C++SIM<I>
+software for evaluation, teaching and/or research purposes only
+and without fee is hereby granted, providing that this copyright
+and permission notice appear on all copies and supporting documentation,
+and that similar conditions are imposed on any individual or organisation
+to whom the program is distributed.</I>
+<P>
+<I>The University of Newcastle upon Tyne makes no representation
+about the suitability of this software for any purpose. It is
+provided &quot;as is&quot; without express or implied warranty.</I>
+<P>
+<B><FONT SIZE=4>Research Funding:</FONT></B>
+<P>
+<I>C++SIM</I> was developed as part of the research conducted
+for the <I>Arjuna</I> project.
+<P>
+<U><FONT COLOR="#000000">The <U><I>Arjuna</I> project began in 1985
+and is now funded by the UK Science and Engineering Research Council
+(SERC) grant No. GR/F 06494: The Design of High Performance Distributed
+Fault-Tolerant Systems, SERC grant No. GR/F 38402: Fault-Tolerant
+Multi-processor Systems and ESPRIT Project 2267: Integrated Systems
+Architecture (ISA) through a subcontract monitored by APM Ltd.,
+Cambridge.</U></FONT></U>
+<H1>Preface</H1>
+
+<P>
+<I>C++SIM</I> was developed as a direct consequence of research
+conducted for the <I>Arjuna</I> project [10]. <I>Arjuna</I> provides
+a set of tools for the development of fault-tolerant distributed
+applications in C++, using atomic actions and replication of objects.
+As part of the development of <I>Arjuna</I>, the <I>Replica Management
+System</I> [5][7] was designed which allows dynamic reconfiguration
+of object replica groups based upon changes in the characteristics
+of the underlying distributed system and the objects being replicated.
+To determine the best policies to use for this reconfiguration
+(e.g., the number and placement of replicas, based upon the desired
+quality of service), it was necessary to simulate them. Since
+<I>Arjuna</I> is written in C++ it was decided to write this simulation
+in C++ as well, as this would facilitate transferring the finished
+system to <I>Arjuna</I>.
+<H2>Design Decisions </H2>
+
+<P>
+When designing<I> C++SIM</I> the following requirements were identified:
+<UL>
+<LI><I>easy to learn and use</I>: the interface to the simulation
+library should be easy to understand. 
+<LI><I>correct abstraction</I>: existing C++ programmers should
+not find the simulation paradigm in conflict with the programming
+paradigm presented by C++. Simulation programmers used to other
+environments should find the transition to <I>C++SIM</I> straightforward.
+<LI><I>flexible and extensible</I>: it should be relatively easy
+for anyone to add new functionality to the system, such as new
+distribution functions.
+<LI><I>efficiency</I>: the system should be efficient and produce
+efficient simulation runs. Simulation packages which we have experience
+of tended to be extremely slow and consume large amounts of system
+resources.
+<LI><I>portable</I>: it should be possible to build the system
+on a range of different architectures and operating systems. It
+should be possible to write simulations in <I>C++SIM</I> which
+are architecturally neutral. In addition it should be possible
+to interface other packages/libraries to the simulation system.
+</UL>
+
+<P>
+These requirements were realised in the following design decisions:
+<UL>
+<LI>the discrete-event process based simulation facilities provided
+by SIMULA [1][2] and its simulation classes and libraries have
+a considerable experience and user community which have found
+them to be successful for a wide variety of simulations. In later
+versions of the system additional simulation classes were added
+which provide extra functionality.
+<LI>inheritance was to be used throughout the design to even a
+greater extent than is already provided in SIMULA. This certainly
+enable<I> C++SIM</I> to be more flexible and extensible, allowing
+new functionality to be added without affecting the overall system
+structure. For example, our I/O facilities, random number generators
+and probability distribution functions are entirely object-oriented,
+relying on inheritance to specialise their behaviour.
+<LI>No changes to the language or the operating system should
+be made, as this would affect portability. Because <I>C++SIM</I>
+is written in standard C++, this facilitates the ability to interface
+applications written in <I>C++SIM</I> with other C++ libraries.
+For example, we can use the <I>InterViews</I> or <I>Tcl</I> GUIs
+to easily build graphical simulations.
+<LI>The only architectural specific component of <I>C++SIM</I>
+is the threads package it uses to achieve the abstraction of active
+objects. However, by interacting with the threads package through
+a suitable abstract interface, portability has been achieved.
+Applications can be written in <I>C++SIM</I> without the programmer
+having to consider such issues as the architecture it will run
+on, the compiler, or the threads package.
+<LI>After having used both C++ and SIMULA it is our experience
+that C++ compilers typically generate code which is several times
+more efficient than similar SIMULA code, and as a result simulations
+execute correspondingly faster. We have attempted to make those
+core components of <I>C++SIM</I> as efficient as possible, in
+terms of speed and resource utilisation. The fact that these components
+are written in C++ means that new implementations can be derived
+from them, perhaps tailored for particular applications.
+</UL>
+
+<H2>Future Developments </H2>
+
+<P>
+Further modifications to <I>C++SIM </I>are under development.
+One of the possibilities we are investigating is making use of
+various facilities provided by <I>Arjuna</I> to enable us to build
+distributed simulations. Distribution transparency would be provided
+by <I>Arjuna</I>, and programmers could develop applications without
+having to consider whether or not they will eventually be distributed.
+<P>
+Further ports of the system to other architectures are being planned.
+For example, there is a requirement for <I>C++SIM</I> to be available
+on non-UNIX platforms, most notably the PC and its compatibles.
+As such, <I>C++SIM</I> has been ported to the <I>Windows-NT</I>
+and <I>OS/2</I> operating systems.
+<P>
+Graphical tools for building and viewing simulations have been
+written in various GUIs and for a variety of systems. These will
+be included in future releases.
+<H1>Introduction </H1>
+
+<P>
+This manual is not intended as a tutorial on the concepts of simulation
+in general, but rather how to write simulations in the<I> C++SIM</I>
+system. However, in order to be able to do this certain key simulation
+concepts will be briefly described. The interested reader is referred
+to [6] for detailed descriptions of these concepts and for further
+discussions on simulation modelling.
+<H2><FONT SIZE=4>Simulation Models</FONT><FONT SIZE=5> </FONT>
+</H2>
+
+<P>
+To model a system is to replace it by something which is:
+<UL>
+<LI>simpler and/or easier to study.
+<LI>equivalent to the original in all <I>important</I> respects.
+</UL>
+
+<P>
+Therefore, before constructing the actual simulation, it is first
+necessary to abstract from the real system those components and
+their interactions that are considered important for the actual
+model. Building a simulation system model involves making certain
+simplifying assumptions to aid in the actual implementation and
+study of the simulation (without such simplifications the model
+would be as complex as the system it is meant to be simulating).
+However, the accuracy of the results obtained from the simulation
+depend upon how valid the initial assumptions are. For example,
+when considering the trajectory of a projectile through the atmosphere,
+the friction due to the air molecules is usually ignored. This
+assumption is valid only within certain boundaries: if the size
+of the projectile is on the same scale as the air molecules and
+its speed is sufficiently small then friction plays a significant
+role in its movement.
+<P>
+Thus, the first step towards building a simulation model of a
+system is to determine exactly what are the important features
+which are to be measured, and what characteristics of the system
+have an affect on them. Any boundary conditions for the simulation
+(e.g., size of projectile) should be considered at the same time
+in order to simplify this procedure. Building a final model can
+often take several phases, where results from the initial model
+are compared with those obtained from the real system to determine
+their accuracy. Any discrepancies are taken into account by possibly
+adding new components to the simulation until, within certain
+error boundaries, the simulation results match those from the
+real system.
+<H2>Terminology </H2>
+
+<P>
+The system components chosen for the simulation are termed simulation
+<I>entities</I>. Associated with each entity in the simulation
+are zero or more <I>attributes</I> that describe the state of
+the entity and which may vary during the course of the simulation.
+The interaction of entities and the changes they cause in the
+system state are termed <I>events</I>.
+<P>
+The collection of these component attributes at any given time
+<I>t</I> defines the system state at <I>t</I>. In general, the
+system state can take any of a variety of values, and a given
+simulation run results in one realisation of a set of these values
+(the <I>operation path</I>) over the<I> observation period</I>.
+<H2>Categories of Simulation Models </H2>
+
+<P>
+There are three categories of simulation model, described by the
+way in which the system state changes as a function of time:
+<UL>
+<LI>C<I>ontinuous time:</I> is one whose state varies continuously
+with time; such systems are usually described by sets of differential
+equations.
+<LI><I>Discrete time</I>: the system is considered only at selected
+moments in time (the <I>observation points</I>). These moments
+are typically evenly spaced. Some economics models are examples
+of this, where economics data becomes available at fixed intervals.
+Changes in state are noticed only at observation points. By choosing
+a suitably small interval between observation points, a continuous
+time simulation can be approximated by a discrete time simulation.
+<LI><I>Continuous time-discrete event</I>: the time parameter
+is (conceptually) continuous and the observation period is a real
+interval, usually starting at zero for simplicity. The operation
+path is completely determined by the sequence of event times (which
+need not be evenly spaced and can be of arbitrary increments)
+and by the discrete changes in the system state which take place
+at these times (i.e., the interactions of the events). In between
+consecutive event times the system state may vary continuously.
+Although it is possible to model the passage of real time by suitable
+event timing, this is not necessary for a discrete event system:
+the simulation model can advance its own internal time directly
+from one discrete event to another, taking any appropriate action
+to advance the state accordingly.
+</UL>
+
+<P>
+It is this latter category of simulation modelling that <I>C++SIM</I>
+supports. Examples of discrete-event simulations are most queuing
+problems: entities (e.g., customers in a bank) arrive according
+to a given distribution and change the system state instantaneously
+(e.g., the number of customers in the queue). The operation paths
+for this system are step functions: they jump up (or down) by
+one when a customer joins (or leaves) the queue.
+<H2>Event Scheduling </H2>
+
+<P>
+Given that a simulation consists of a series of interacting events
+(the operation path), a simulator can be defined as that program
+devoted to the generation of operation paths. The simulator allows
+the creation of events and controls their interactions according
+to a set of rules, using an internal &quot;clock&quot; to keep
+track of the passage of (simulation) time.
+<P>
+It maintains an <I>event list</I>, which indicates which events
+are to be scheduled for execution at specific simulation times.
+Events are executed according to their simulation times. There
+are two approaches to the way in which a simulator can schedule
+events to produce an operation path:
+<UL>
+<LI><I>event-oriented</I>: there is a procedure associated with
+each type of event in the system: it performs the action required
+to handle that type of event and it is invoked every time such
+an event occurs. In an event-oriented approach, an operation path
+is obtained by taking a global view of everything that happens
+in the system; the manipulation of events is explicit.
+<LI><I>process-oriented</I>: an operation path is obtained by
+the interacting of a number of processes running in parallel.
+The management of events is implicit in the management of the
+processes. The simulation system provides primitives for placing
+processes at particular points on the event list, removing and
+re-scheduling them.
+</UL>
+
+<P>
+The process-oriented approach best fits with the object-oriented
+paradigm which we want to present to the programmer of <I>C++SIM</I>.
+As in SIMULA, simulation processes then become active objects
+which interact with each other through message passing and the
+simulation primitives. Refinements of these objects can then be
+obtained by inheriting from them and redefining the appropriate
+methods.
+<H1>Active C++ Objects </H1>
+
+<P>
+In a process-oriented simulator it is necessary to be able to
+convey the notion of activity to the processes involved in the
+simulation. <I>C++SIM</I> does this by using <I>active objects</I>.
+An active object is one which has an independent thread of control
+associated with it at creation time. This chapter will describe
+the classes necessary to create and use active objects in C++.
+<P>
+<I>Note</I>: these active objects can be used without the simulation
+component of <I>C++SIM</I>.
+<H2>Threads </H2>
+
+<P>
+<I>C++SIM</I> uses <I>threads</I> (<I>lightweight processes</I>)
+to create active objects. The class <TT>Thread</TT> is the base
+class from which all thread specific classes must be derived in
+order to ensure they provide at least the minimum functionality
+required by<I> C++SIM</I>. The following section will describe
+this class in detail. Section 3.2. describes additional functionality
+which must be provided by these derived classes, and which users
+of <I>C++SIM</I> must be aware of before writing applications
+involving active objects.
+<P>
+The <TT>Thread</TT> class maintains a list of every threaded object
+in the application; whenever a new threaded object is created
+it is automatically added to this list, and is removed when it
+is goes out of scope. In<I> C++SIM</I> these objects will typically
+be simulation processes, but for every simulation there will be
+at least two threaded objects which do not fall into this category:
+the simulation scheduler, and the main system thread. These will
+be described in detail in later sections.
+<H3>Thread Class Interface </H3>
+
+<P>
+The <TT>Thread</TT> class interface is shown below. As mentioned
+above, this represents the minimum functionality that is required
+by <I>C++SIM</I> from any threads package. To enforce this, a
+thread class is written for each specific thread library, and
+must be derived from <TT>Thread</TT>. This base class provides
+the definitions of those operations which must<I> at least</I>
+be provided by the deriving class: <I>pure virtual functions</I>
+are used to enforce this rule.
+<P>
+<CODE>class Thread<BR>
+<FONT SIZE=2 FACE="Courier New">{<BR>
+public:<BR>
+ virtual void Suspend () = 0;<BR>
+ virtual void Resume () = 0;<BR>
+ virtual void Body () = 0;<BR>
+ virtual long Current_Thread () const = 0;<BR>
+ virtual long Identity () const;<BR>
+ static Thread *Self ();<BR>
+ virtual ostream&amp; print (ostream&amp;) const;<BR>
+<BR>
+protected:<BR>
+ Thread ();<BR>
+ virtual ~Thread ();<BR>
+ long thread_key;<BR>
+};</FONT></CODE>
+<P>
+<CODE>extern ostream&amp; operator&lt;&lt; (ostream&amp; strm,
+const Thread&amp; t);</CODE>
+<P>
+Because <I>C++SIM</I> was designed to support a variety of thread
+implementations, it was a requirement that applications could
+be written in a thread-independent manner. This enables such applications
+to be moved from one configuration of <I>C++SIM</I> to another
+without changes to the code. Therefore, although <I>C++SIM</I>
+must know which thread implementation class (derived from <TT>Thread</TT>)
+is being used for a specific configuration, this information is
+hidden from the user by the <TT>Thread_Type </TT>macro. This macro
+is defined to point to the actual thread implementation when<I>
+C++SIM</I> is built. Portable applications which use threads should
+manipulate them only through this macro, with the exceptions described
+below.
+<P>
+The methods <TT>Suspend()</TT> and <TT>Resume()</TT> must be defined
+by the deriving class, and suspend and resume threads respectively.
+<P>
+Active objects are derived from the thread specific class (through
+the <TT>Thread_Type</TT> macro), and the thread is created when
+they are instantiated. <TT>Body()</TT> represents the code within
+which the thread executes, and <I>must</I> be defined by one of
+the deriving classes. The thread begins execution at the start
+of <TT>Body()</TT>, and is deleted if it ever returns from this
+method. However, because of restrictions imposed by certain threads
+packages, this should be prevented if code is intended to operate
+on different configurations of <I>C++SIM</I>.
+<P>
+All threads in the application are uniquely identified by a<TT>
+long </TT>key. <TT>Current_Thread() </TT>returns this key for
+the currently active thread. Because this is specific to a given
+thread package this must be defined by the thread class derived
+from <TT>Thread</TT>.
+<P>
+<TT>Identity()</TT> returns the key of the object it is invoked
+on. If this object is the currently active object then <TT>Identity()</TT>
+is equivalent to <TT>Current_Thread()</TT>.
+<P>
+In a general active object environment it may be necessary to
+obtain a reference to the currently active object/thread. However,
+some thread packages do not provide a means to obtain the currently
+active thread. Therefore, <TT>Thread</TT> provides this basic
+functionality through <TT>Self()</TT>. Because <TT>Self()</TT>
+is <I>static</I> it can be invoked without obtaining an instance
+of the class.
+<P>
+The <TT>print</TT> method and the overloaded <TT>operator&lt;&lt;</TT>
+make it possible to print information on each threaded object.
+<H2>Important Thread Specific Methods </H2>
+
+<P>
+Although Chapter 5 describes how to create new thread specific
+classes, it is necessary for users of <I>C++SIM</I> to have some
+knowledge of basic functionality which must be provided by them.
+This functionality (accessed through <TT>Thread_Type</TT> for
+portability), concerns initialising the threads packages, suspending
+and resuming the main thread, and exiting a threaded application.
+<P>
+To illustrate this, we shall consider the thread class <TT>XThread</TT>,
+shown below:
+<P>
+<CODE>class XThread : public Thread<BR>
+<FONT SIZE=2 FACE="Courier New">{<BR>
+public:<BR>
+ virtual void Suspend ();<BR>
+ virtual void Resume ();<BR>
+ virtual void Body () = 0;<BR>
+ virtual long Current_Thread () const;</FONT></CODE>
+<P>
+<CODE> static void Initialize ();<BR>
+<FONT SIZE=2 FACE="Courier New"> static void Exit (int = 0);<BR>
+ static void mainResume ();<BR>
+};</FONT></CODE>
+<P>
+Apart from the <TT>Thread</TT> methods which must be defined by
+<TT>XThread</TT>, the additional methods are:
+<P>
+<TT>Initialize()</TT>: this method, which is responsible for any
+initialisation code required by the thread package, <I>must</I>
+be invoked prior to the creation of the first application thread.
+This method is also responsible for adding the main application
+thread to the list maintained by <TT>Thread</TT>. This allows
+it to then be suspended and resumed as any active object (calling
+<TT>Thread::Self()-&gt;Suspend()</TT> while within the main thread).
+<P>
+<TT>Exit(int = 0)</TT>: some threads packages do not allow the
+use of system <TT>exit</TT> to terminate applications. This method
+provides a thread specific means to achieve the same functionality.
+The parameter is the value returned by the application when it
+terminates.
+<P>
+<TT>mainResume()</TT>: although the main thread can be suspended
+as shown above, unless the application code has retained a reference
+to its threaded object resuming it can only be performed through
+this method.
+<H2>Using Active Objects </H2>
+
+<H3>Example </H3>
+
+<H1>Basic Simulation Classes </H1>
+
+<P>
+This chapter describes the core elements of the <I>C++SIM</I>
+simulation system. It is not intended as a tutorial on C++[8][9],
+and basic knowledge of the language is assumed.
+<H2>The Simulation Scheduler </H2>
+
+<P>
+Chapter 2 described the event list and how simulation entities
+(processes) are executed according to their position on the event
+list (i.e., with increasing simulation time). In <I>C++SIM</I>,
+as in SIMULA, simulation processes are managed by a <I>scheduler</I>
+and are placed on a <I>scheduler queue </I>(the event list). Processes
+are executed in pseudo-parallel, i.e., only one process executes
+at any instance of real time, but many processes may execute concurrently
+at any instance of simulation time. The simulation clock is only
+advanced when all processes have been executed for the current
+instance of simulation time.
+<P>
+Inactive processes are placed on to the scheduler queue, and when
+the current active process yields control to the scheduler (either
+because it has finished or been placed back onto the scheduler
+queue), the scheduler removes the process at the head of the queue
+and re-activates it.<TT> When the scheduler queue is empty, i.e.,
+there are no further processes left to execute, the scheduler
+terminates the simulation.</TT>
+<P>
+<CENTER><IMG SRC="manual-1.0/fig3.gif"></CENTER>
+<P>
+<CENTER><B><FONT COLOR="#000000">Figure 1: Scheduler-Process Interaction</FONT></B></CENTER>
+<P>
+As Figure 1 shows, the scheduler co-ordinates the entire simulation
+run, effectively monitoring the active and passive processes to
+enable it to determine when, and which, process to activate next.
+A simulation application cannot affect the scheduler directly,
+but can do so only indirectly through modifications of the scheduler
+queue.
+<P>
+<I>Note</I>: the scheduler queue can be structured in a variety
+of ways, including a linear list or a tree. The implementation
+of the queue can depend upon the type of simulation being conducted.
+For example, a simulation which involves many (concurrent) processes
+would suffer from using a linear ordered queue which would typically
+have insertion and removal routines with overheads proportional
+to the number of entries in the queue. However, a linear list
+may work best for a low number of simulation processes. <I>C++SIM</I>
+comes with a suite of scheduler queue implementations which can
+be chosen when the system is built.
+<H3>Scheduler Class Interface </H3>
+
+<P>
+The scheduler is an instance of the <TT>Scheduler</TT> class.
+It is the responsibility of the application programmer to ensure
+that only a single instance of this class is created.
+<P>
+<CODE>class Scheduler : public Thread_Type<BR>
+<FONT SIZE=2 FACE="Courier New">{<BR>
+public:<BR>
+ Scheduler ();<BR>
+ ~Scheduler ();<BR>
+<BR>
+ void Body ();<BR>
+ double CurrentTime () const;<BR>
+ void reset () const;<BR>
+};</FONT></CODE>
+<P>
+The scheduler maintains the simulation clock, and the current
+value of this clock is obtained by invoking the <TT>CurrentTime()</TT>
+method.
+<P>
+To enable multiple simulation runs to occur within a single application,
+it is possible to reset the scheduler and simulation clock by
+calling the <TT>reset()</TT> method. This causes the scheduler
+to remove all processes currently registered on the scheduler
+queue and to invoke a class specific method on each of them which
+also resets their states (detailed in the next section). Once
+this is finished the simulation is ready for an additional run.
+<H2>Simulation Processes </H2>
+
+<P>
+As was described in the previous chapter, <I>C++SIM</I> supports
+the process-oriented approach to simulation, where each simulation
+entity can be considered a separate process. Therefore in <I>C++SIM</I>
+the entities within a simulation are represented by <I>process
+objects</I>. These are C++ objects which have an independent thread
+of control associated with them at creation time, allowing them
+to convey the notion of activity necessary for participating in
+the simulation.
+<P>
+In keeping with the object-oriented paradigm, and to make development
+of process objects simpler, classes inherit the process functionality
+from the appropriate base class (<TT>Process</TT>). This class
+defines all of the necessary operations for the simulation system
+to control the simulation entities within it, and for them to
+interact with it and each other.
+<P>
+<TT>At any point in simulation time, a process can be in one (and
+only one) of the following states:</TT>
+<UL>
+<LI><I>active</I>: the process has been removed from the head
+of the scheduler queue and its actions are being executed.
+<LI><I>suspended</I>: the process is on the scheduler queue, scheduled
+to become active at a specified simulation time.
+<LI><I>passive</I>: the process is not on the scheduler queue.
+Unless another process brings it back on to the queue it will
+not execute any further actions.
+<LI><I>terminated</I>: the process is not on the scheduler queue
+and has no further actions to execute. Once a process has been
+terminated it cannot be made to execute further in the same simulation
+run.
+</UL>
+
+<P>
+A process which is either active or suspended is said to be <I>scheduled</I>.
+<H3>Process Class Interface </H3>
+
+<P>
+The <TT>Process</TT> class definition is shown below. Before considering
+how to build an example class derived from <TT>Process</TT> we
+shall discuss the methods which it provides.
+<P>
+Because the constructors are protected, it is not possible to
+create an instance of the <TT>Process</TT> class, i.e., classes
+must be derived from this. Processes are threaded objects, and
+typically each thread package schedules execution of threads according
+to a priority. By default, all processes in <I>C++SIM</I> are
+created with the same priority, but this can be altered by the
+<TT>priority</TT> parameter. In addition, the size of the stack
+allocated for each thread can be modified by the <TT>stackSize</TT>
+parameter.
+<P>
+<CODE>class Process : public Thread_Type<BR>
+<FONT SIZE=2 FACE="Courier New">{<BR>
+public:<BR>
+ virtual ~Process ();<BR>
+<BR>
+ void Activate ();<BR>
+ void ActivateBefore (Process &amp;);<BR>
+ void ActivateAfter (Process &amp;);<BR>
+ void ActivateAt (double AtTime = CurrentTime(), Boolean prior
+= FALSE);<BR>
+ void ActivateDelay (double AtTime = CurrentTime(), Boolean prior
+= FALSE);<BR>
+<BR>
+ void ReActivate ();<BR>
+ void ReActivateBefore (Process &amp;);<BR>
+ void ReActivateAfter (Process &amp;);<BR>
+ void ReActivateAt (double AtTime = CurrentTime(), Boolean prior
+= FALSE);<BR>
+ void ReActivateDelay (double AtTime = CurrentTime(), Boolean
+prior = FALSE);<BR>
+<BR>
+ double evtime () const;<BR>
+ const Process* next_ev () const;<BR>
+ static const Process* current ();<BR>
+ static double CurrentTime ();<BR>
+ double Time () const;<BR>
+ void Cancel ();<BR>
+ virtual void terminate ();<BR>
+ <BR>
+ Boolean idle () const;<BR>
+ Boolean passivated () const;<BR>
+ Boolean terminated () const;<BR>
+<BR>
+ virtual void Body () = 0;<BR>
+ virtual void reset ();<BR>
+<BR>
+protected:<BR>
+ Process ();<BR>
+ Process (int priority);<BR>
+ Process (int priority, unsigned long stackSize);<BR>
+<BR>
+ void Hold (double t);<BR>
+ void Passivate ();<BR>
+};</FONT></CODE>
+<P>
+There are five ways to activate a currently <I>passive</I> process,
+which results in it being brought to the correct position in the
+scheduler queue corresponding to its associated simulation time.
+If this is the head of the queue then it will become the active
+process.
+<UL>
+<LI><TT>Activate()</TT>: this activates the process at the current
+simulation time.
+<LI><TT>ActivateBefore(Process&amp; proc)</TT>: this positions
+the process in the scheduler queue before <TT>proc</TT>, and gives
+it the same simulation time. If <TT>proc</TT> is not present then
+an error message is displayed.
+<LI><TT>ActivateAfter(Process&amp; proc)</TT>: this positions
+the process in the scheduler queue after <TT>proc</TT>, and gives
+it the same simulation time. If <TT>proc</TT> is not present then
+an error message is displayed.
+<LI><TT>ActivateAt(double AtTime, Boolean prior)</TT>: the process
+is inserted into the scheduler queue at the position corresponding
+to the simulation time specified by <TT>AtTime</TT>. The default
+for this time is the current simulation time. The <TT>prior</TT>
+parameter is used to determine whether this process should be
+inserted before or after any processes with the same simulation
+time which may already be present in the queue.
+<LI><TT>ActivateDelay(double AtTime, Boolean prior)</TT>: the
+process is activated after a specified delay (<TT>AtTime</TT>).
+The process is inserted into the queue with the new simulation
+time, and the <TT>prior</TT> parameter is used to determine its
+ordering with respect to other processes in the queue with the
+same time.
+</UL>
+
+<P>
+There are correspondingly five <TT>ReActivate</TT> methods, which
+work on either passive or scheduled processes. These will not
+be described in detail as they have similar signatures to their
+<TT>Activate</TT> counterparts and work in the same way.
+<P>
+<TT>Hold(double period) </TT>schedules the currently active process
+for re-activation after the simulated delay of <TT>period</TT>
+time. If this is invoked by the object (e.g., through a publicly
+available method) when it is not the current active process then
+it does nothing.
+<P>
+<TT>evtime()</TT> returns the time at which the process is scheduled
+for activation.
+<P>
+<TT>next_ev() </TT>returns a reference to the next process to
+be scheduled for execution. If the queue is empty then <TT>NULL</TT>
+is returned. Note that this is a constant pointer, and should
+not be modified by caller.
+<P>
+The <I>static</I> method <TT>current()</TT> returns a reference
+to the currently active process. Note that this is a constant
+pointer, and should not be modified by caller.
+<P>
+The current simulation time can be obtained by using either the
+<TT>CurrentTime()</TT> or <TT>Time()</TT> methods. The former
+method is <I>static</I> and as such can be invoked without an
+instance of the <TT>Process</TT> class.
+<P>
+<TT>Cancel()</TT> removes the process from the scheduler queue
+or suspends it if it is the currently active process. In either
+case, the process is set to the <I>passive</I> state. <TT>Passivate()</TT>
+functions similarly but only works on the currently active process,
+i.e., if it is invoked by the object (e.g., through a publicly
+available method) when it is not the current active process then
+it does nothing.
+<P>
+<TT>terminate()</TT> removes the process from the scheduler queue
+or it is suspended if it is currently active. The process is then
+set to the <I>terminated</I> state, and can take no further part
+in this simulation run.
+<P>
+<TT>idle()</TT> returns <TT>FALSE</TT> if the process is either
+active or scheduled to become active. Otherwise <TT>TRUE</TT>
+is returned.
+<P>
+<TT>passivated()</TT> and <TT>terminated()</TT> indicate whether
+the process is in the <I>passive</I> or <I>terminated</I> state,
+respectively.
+<P>
+Section 4.1.1. described how it is possible to reset a simulation
+to enable multiple simulation runs to occur within a single application.
+When the scheduler object's <TT>reset()</TT> method is invoked
+it removes all scheduled processes from the queue and calls their
+<TT>reset()</TT> methods, which can perform class specific actions
+to enable the object to be re-initialised for the subsequent simulation
+run. By default, this <I>virtual</I> method does nothing unless
+debugging is enabled in which case a suitable message is output
+to show that it has been called.
+<P>
+The independent thread of control associated with a <TT>Process</TT>
+object executes within the context of a procedure (method) in
+the same way that an operating system process uses <TT>main</TT>.
+This method is<TT> Body()</TT> which can only be defined by one
+of the classes which derives from <TT>Process</TT>. If this method
+ever returns then the thread is destroyed. However, because of
+restrictions imposed by certain thread packages, this should be
+prevented: the <TT>terminate()</TT> method <I>must</I> be used
+instead.
+<H3>Example </H3>
+
+<P>
+To illustrate how a simulation process could be implemented from
+the <TT>Process</TT> class we shall consider the example of a
+queue of customers arriving at a bank. For this example, this
+involves three classes:
+<UL>
+<LI><TT>Customer</TT>: instances of this class represent the customers
+in the queue.
+<LI><TT>Queue</TT>: the instance of this class (<TT>queue</TT>)
+is the queue into which customers are places.
+<LI><TT>Arrivals</TT>: this is the process which creates new customers
+for insertion in <TT>queue</TT>.
+</UL>
+
+<P>
+The implementations of the <TT>Customer</TT> and <TT>Queue</TT>
+classes are not important to this example. The implementation
+of the <TT>Arrivals</TT> class could be:
+<P>
+<CODE>class Arrivals : public Process<BR>
+<FONT SIZE=2 FACE="Courier New">{<BR>
+public:<BR>
+ Arrivals () {};<BR>
+ ~Arrivals () {};<BR>
+<BR>
+ void Body ();<BR>
+};<BR>
+<BR>
+void Arrivals::Body ()<BR>
+{<BR>
+ for (;;)<BR>
+ {<BR>
+  Customer* c = new Customer();<BR>
+  queue.insert(c);<BR>
+  Hold(20.0);<BR>
+ }<BR>
+}</FONT></CODE>
+<H2>Initialising the Thread System </H2>
+
+<P>
+Section 3.2. described how certain threads packages require initialisation
+code to be executed <I>prior</I> to the creation of the first
+application thread. This code must be provided by the <TT>Initialize()</TT>
+method of each thread class, but should be invoked using the <TT>Thread_Type</TT>
+macro.
+<HR>
+
+<P>
+<CODE>int main (int, char**)<BR>
+<FONT SIZE=2 FACE="Courier New">{<BR>
+ // do anything we want before using threads<BR>
+ Thread_Type::Initialize(); // we can now use active objects<BR>
+}</FONT></CODE>
+<HR>
+
+<H2>Starting, Ending and Controlling a Simulation </H2>
+
+<P>
+When a <TT>Process</TT> object is created in<I> C++SIM</I> it
+starts in the <I>passive</I> state, and must be activated before
+it can take part in the simulation. This is typically performed
+by the first process object to which control is transferred after
+the simulation is initially started. When writing <I>C++SIM</I>
+applications it is typical for the main thread to create a single
+<I>controller process</I> which is responsible for co-ordinating
+the entire simulation run. This creates and activates all of the
+simulation entities and the scheduler, and provides methods for
+suspending the main thread, thus allowing the controller object
+to execute, and exiting the application. An example controller
+interface is shown below, and the implementations for its methods
+will be described in the following sections:
+<HR>
+
+<P>
+<CODE>class Controller : public Process<BR>
+<FONT SIZE=2 FACE="Courier New">{<BR>
+public:<BR>
+ Controller () {};<BR>
+ ~Controller () {};<BR>
+<BR>
+ void Body ();<BR>
+ void Await ();<BR>
+ void Exit ();<BR>
+};</FONT></CODE>
+<HR>
+
+<P>
+Because <TT>Controller</TT> is a simulation process itself, it
+derives from <TT>Process</TT> and defines a <TT>Body()</TT> method,
+which will do the actual controlling of the simulation. It also
+provides the following methods:
+<UL>
+<LI><TT>Await()</TT>: this method is called within the main application
+thread and suspends it, effectively transferring control the <TT>Controller</TT>
+process.
+<LI><TT>Exit()</TT>: this method is called to exit the simulation.
+</UL>
+
+<H3>Suspending the Main Thread </H3>
+
+<P>
+When a threaded application is started it is important to realise
+that before any application threads are created, the operating
+system has already created one to run the application. Since a
+process object's thread executes within <TT>Body()</TT>, then
+the main system thread can be considered to execute within <TT>main</TT>.
+This thread, which, in a single-threaded application is the operating
+system process, must be suspended before any simulation threads
+can run. (Strictly speaking this is not necessary where threads
+are prioritised, but we are considering the generalisation).
+<P>
+The <TT>Await()</TT> method of <TT>Controller</TT> is responsible
+for suspending this thread:
+<HR>
+
+<P>
+<CODE>void Controller::Await ()<BR>
+<FONT SIZE=2 FACE="Courier New">{<BR>
+ Resume();<BR>
+ Thread::Self()-&gt;Suspend();<BR>
+}</FONT></CODE>
+<HR>
+
+<P>
+It must first resume the thread associated with the <TT>Controller</TT>
+instance (since <TT>Controller</TT> is a <TT>Process</TT> it starts
+in the passive state). This thread does not execute until the
+main thread is suspended; since <TT>Await()</TT> is called from
+within the main thread, <TT>Thread::Self()</TT> returns a reference
+to this thread, allowing <TT>Suspend()</TT> to be called on it.
+<P>
+The code for <TT>main</TT> would then become:
+<HR>
+
+<P>
+<CODE>int main (int, char**)<BR>
+<FONT SIZE=2 FACE="Courier New">{<BR>
+ // do anything we want before using threads<BR>
+ Thread_Type::Initialize(); // we can now use active objects<BR>
+ Controller c;<BR>
+ c.Await();<BR>
+}</FONT></CODE>
+<HR>
+
+<H3>Exiting the Application </H3>
+
+<P>
+Section 3.2. described how it is not possible to use the <TT>exit</TT>
+system call in some threads packages, and how each thread implementation
+class must therefore provide an <TT>Exit(int = 0)</TT> method.
+Although this can be called directly by any object in the simulation,
+the controller's method can hide any tidy-up code specific to
+the simulation.
+<HR>
+
+<P>
+<CODE>void Controller::Exit ()<BR>
+<FONT SIZE=2 FACE="Courier New">{<BR>
+ Suspend();<BR>
+ Thread_Type::Exit();<BR>
+}</FONT></CODE>
+<HR>
+
+<H3>Controlling the Simulation </H3>
+
+<P>
+The controller's body creates and activates the other simulation
+entities and the scheduler, and controls the overall simulation
+(e.g., resetting the system between consecutive runs).
+<HR>
+
+<P>
+<CODE>void Controller::Body ()<BR>
+<FONT SIZE=2 FACE="Courier New">{<BR>
+ sc = new Scheduler();<BR>
+// create and activate any other simulation entities<BR>
+ sc-&gt;Resume(); // we must create a scheduler for the simulation
+to run<BR>
+<BR>
+ // execute the simulation<BR>
+ // print results<BR>
+<BR>
+ sc-&gt;Suspend(); // suspend scheduler<BR>
+<BR>
+ // suspend simulation entities<BR>
+<BR>
+ Thread_Type::mainResume();<BR>
+}</FONT></CODE>
+<HR>
+
+<P>
+The final call to <TT>mainResume</TT> prevents <TT>Body()</TT>
+from exiting, which we must do to ensure the application is portable
+between thread implementations.
+<H2>Resetting a Simulation </H2>
+
+<P>
+Resetting a simulation involves resetting all of the objects involved
+in it which will be required for subsequent runs. The scheduler
+calls the <TT>reset</TT> method for each of the process objects
+on the queue, and this method should restore the object to an
+initialised state, possibly resetting all non-process objects.
+<P>
+There is a difference between resetting the state of a process
+object and resetting the thread associated with the object. The
+former is accomplished by the scheduler and the reset method,
+but the latter can only be accomplished by code executed within
+the object when the thread regains control, i.e., when the object
+is reactivated.<TT> Because a reset can potentially occur at any
+time, it is therefore necessary for a process to be able to determine
+whether it has been reset so it can take appropriate action, e.g.,
+returning the thread to the start of Body(). There are two macros
+available for this, both based upon the CSP notion of guarded
+commands: operations are performed and a reset condition can be
+checked before the object acts upon results returned.</TT>
+<P>
+<TT>When writing a method body which needs to be concerned with
+resets, a reset point should be chosen: this is the place to which
+the thread of control will be transferred should a reset be detected.
+This is marked with the RESET label.</TT>
+<P>
+<TT>If a reset occurs, the reset() method should set a flag to
+an appropriate state. Each of the macros can then check this flag
+and possibly transfer the thread of control back RESET.</TT>
+<UL>
+<LI><TT>MONITOR_RESET(x,y,z)</TT>: statement <TT>x</TT> is executed
+and upon completion statements <TT>y</TT> and <TT>z</TT> and compared.
+If they are equal then control is returned to <TT>RESET</TT>.
+<LI><TT>CHECK_RESET(y,z)</TT>: statements <TT>y</TT> and <TT>z</TT>
+are compared, and if they are equal control is returned to <TT>RESET</TT>.
+</UL>
+
+<H3>Example </H3>
+
+<P>
+If we take the <TT>Arrivals</TT> example above and add a reset
+method then the code could be:
+<HR>
+
+<P>
+<CODE>class Arrivals : public Process<BR>
+<FONT SIZE=2 FACE="Courier New">{<BR>
+public:<BR>
+ Arrivals () {};<BR>
+ ~Arrivals () {};<BR>
+<BR>
+ void Body ();<BR>
+ void reset ();<BR>
+<BR>
+private:<BR>
+ Boolean _reset;<BR>
+};<BR>
+<BR>
+void Arrivals::Body ()<BR>
+{<BR>
+      RESET: _reset = FALSE;<BR>
+  for (;;)<BR>
+  {<BR>
+   Customer* c = new Customer();<BR>
+   queue.insert(c);<BR>
+   MONITOR_RESET(Hold(20.0),_reset,TRUE);<BR>
+  }<BR>
+}<BR>
+<BR>
+void Arrivals::reset () { _reset = TRUE; }</FONT></CODE>
+<HR>
+
+<H1>Distribution Functions </H1>
+
+<P>
+Many of the aspects of the real world which a simulation attempts
+to model have properties which correspond to various distribution
+functions, e.g., inter-arrival rates of customers at a bank queue.
+Therefore, simulation studies require sources of random numbers.
+Ideally these sources should produce an endless stream of such
+numbers, but to do so either requires specialised hardware or
+the ability to store an infinite (large) table of such numbers
+generated in advance.
+<P>
+Without such aids, which are either impractical or not generally
+available, the alternative is to use numerical algorithms. No
+deterministic algorithm can produce a sequence of numbers that
+would have all of the properties of a truly random sequence [3].
+However, for all practical purposes it is only necessary that
+the numbers produced appear random, i.e., pass certain statistical
+tests for randomness. Although these generators produce pseudo-random
+numbers, we continue to call the random number generators.
+<P>
+The starting point for generating arbitrary distribution functions
+is to produce a standard uniform distribution. As we shall see,
+all other distributions can be produced based upon this. (Interested
+readers are referred to [6] for a more complete treatment of this
+topic). All of the distribution functions in <I>C++SIM</I> rely
+upon inheritance to specialise the behaviour obtained from the
+uniform distribution class.
+<H2>RandomStream </H2>
+
+<P>
+For historical reasons, the actual uniform distribution class
+is called <TT>RandomStream</TT>. This returns a series of random
+numbers uniformly distributed between 0 and 1. We experimented
+with several random number generators before settling on a shuffle
+of a multiplicative generator with a linear congruential generator,
+which provides a reasonably uniform stream of pseudo-random numbers.
+<HR>
+
+<P>
+<CODE>class RandomStream<BR>
+<FONT SIZE=2 FACE="Courier New">{<BR>
+public:<BR>
+ RandomStream (long MGSeed=772531L, long LCGSeed=1878892440L);
+<BR>
+<BR>
+ virtual double operator() ()=0;<BR>
+ double Error ();<BR>
+<BR>
+protected:<BR>
+ double Uniform ();<BR>
+};</FONT></CODE>
+<HR>
+
+<P>
+The multiplicative generator uses the following algorithm<TT>:</TT>
+<P>
+<CENTER><TT>Y[i+1] = Y[i] * 5^5 mod 2^26</TT></CENTER>
+<P>
+<TT>, where the period is 2^24, and the initial seed must be odd.</TT>
+<P>
+<TT>The Uniform() method uses the linear congruential generator
+(seed is LCGSeed) based on the algorithm in [4], and the results
+of this are shuffled with the multiplicative generator (see is
+MGSeed) as suggested by Maclaren and Marsaglia [3], to obtain
+a sufficiently uniform random distribution, which is then returned.</TT>
+<P>
+<TT>The Error() method returns a chi-square error measure on the
+uniform distribution function.</TT>
+<P>
+<TT>By overloading the operator(), and ensuring that it must be
+defined by derived classes, we obtain a uniform means of accessing
+random numbers.</TT>
+<P>
+<TT>The RandomStream class returns a large sequence of random
+numbers, whose period is 2^24. However, unless the seeds are modified
+when each random distribution class is created, the starting position
+in this sequence will always be the same, i.e., the same sequence
+of numbers will be obtained. To prevent this, each class derived
+from RandomStream has an additional (default) parameter for its
+constructor which indicates the offset in this sequence from which
+to begin sampling.</TT>
+<H2>UniformStream </H2>
+
+<P>
+The <TT>UniformStream</TT> class inherits from <TT>RandomStream</TT>
+and returns random numbers uniformly distributed over a range
+specified when the instance is created.
+<HR>
+
+<P>
+<CODE>class UniformStream : public RandomStream<BR>
+<FONT SIZE=2 FACE="Courier New">{<BR>
+public:<BR>
+ UniformStream (double lo, double hi, int StreamSelect=0);<BR>
+ virtual double operator() ();<BR>
+};</FONT></CODE>
+<HR>
+
+<P>
+The range covers the interval specified by <TT>lo</TT> and <TT>hi</TT>,
+and <TT>StreamSelect</TT> indicates the offset in the random number
+sequence.
+<H2>ExponentialStream </H2>
+
+<P>
+The <TT>ExponentialStream</TT> class returns an exponentially
+distributed stream of random numbers with mean value specified
+by <TT>Mean</TT>.
+<HR>
+
+<P>
+<CODE>class ExponentialStream : public RandomStream<BR>
+<FONT SIZE=2 FACE="Courier New">{<BR>
+public:<BR>
+ ExponentialStream (double Mean, int StreamSelect=0);<BR>
+ virtual double operator() ();<BR>
+};</FONT></CODE>
+<HR>
+
+<H2>ErlangStream </H2>
+
+<P>
+<TT>ErlangStream</TT> returns an erlang distribution with mean
+<TT>Mean</TT> and standard deviation <TT>StandardDeviation</TT>.
+<HR>
+
+<P>
+<CODE>class ErlangStream : public RandomStream<BR>
+<FONT SIZE=2 FACE="Courier New">{<BR>
+public:<BR>
+ ErlangStream (double Mean, double StandardDeviation, int StreamSelect=0);
+<BR>
+ virtual double operator() ();<BR>
+};</FONT></CODE>
+<HR>
+
+<H2>HyperExponentialStream </H2>
+
+<P>
+The <TT>HyperExponential</TT> class returns a hyper-exponential
+distribution of random numbers, with mean <TT>Mean</TT> and standard
+deviation <TT>StandardDeviation</TT>.
+<HR>
+
+<P>
+<CODE>class HyperExponentialStream : public RandomStream<BR>
+<FONT SIZE=2 FACE="Courier New">{<BR>
+public:<BR>
+ HyperExponentialStream (double Mean, double StandardDeviation,
+int StreamSelect=0);<BR>
+ virtual double operator() ();<BR>
+};</FONT></CODE>
+<HR>
+
+<H2>NormalStream </H2>
+
+<P>
+<TT>NormalStream</TT> returns a normal distribution of random
+numbers, with mean <TT>Mean</TT> and standard deviation <TT>StandardDeviation</TT>.
+<TT>operator()</TT> uses the polar method due to Box, Muller,
+and Marsaglia [3].
+<HR>
+
+<P>
+<CODE>class NormalStream : public RandomStream<BR>
+<FONT SIZE=2 FACE="Courier New">{<BR>
+public:<BR>
+ NormalStream (double Mean, double StandardDeviation, int StreamSelect=0);
+<BR>
+ virtual double operator() ();<BR>
+};</FONT></CODE>
+<HR>
+
+<H2>Draw </H2>
+
+<P>
+The <TT>Draw</TT> class is the exception to the inheritance rule,
+instead using <TT>RandomStream</TT> through delegation (for historical
+reasons). This returns <TT>TRUE</TT> with the probability <TT>prob</TT>,
+and <TT>FALSE</TT> otherwise.
+<HR>
+
+<P>
+<CODE>class Draw<BR>
+<FONT SIZE=2 FACE="Courier New">{<BR>
+public:<BR>
+ Draw (double prob, int StreamSelect=0);<BR>
+ virtual Boolean operator() ();<BR>
+};</FONT></CODE>
+<HR>
+
+<H2>Example </H2>
+
+<H1>Advanced Simulation Classes </H1>
+
+<P>
+Simulations formed by the interaction of objects derived from
+<TT>Process</TT> can be considered <I>causal</I> (synchronous)
+in nature: events occur at specific times and form a well defined
+order. However, it is sometimes necessary to simulate asynchronous
+real world events, e.g., processor interrupts. To do this requires
+finer-grained control of the scheduling of simulation processes
+than it provided by the scheduler; the scheduler simply activates
+according to simulation time, whereas asynchronous events may
+have different activation rules, e.g., activate when another process
+is terminated.
+<P>
+The <TT>Entity</TT> class and others to be described in the following
+sections gives this required level of control to the user, extending
+the types of simulation which are possible with <I>C++SIM</I>.
+Asynchronous simulation processes are derived from <TT>Entity</TT>,
+but the implementation enables these asynchronous process to execute
+in the same simulation as <TT>Process</TT> objects. However, because
+these processes are suspended and resumed outside of the control
+of the scheduler, it is possible for deadlock situations to occur.
+Therefore, some care must be taken when using these classes.
+<P>
+In addition to the active, suspended, passive and terminated states
+which a simulation process can be in, asynchronous objects can
+also be in the following states:
+<UL>
+<LI><I>waiting</I>: the process is suspended waiting for a specific
+event to occur (e.g., a process to be terminated). The waiting
+process is <I>not</I> placed on the scheduler queue.
+<LI><I>interrupted</I>: the process, which was in the waiting
+state, has been interrupted from this before the condition it
+was awaiting occurred.
+</UL>
+
+<P>
+The conditions on which a process can wait, and can thus be interrupted
+from, are:
+<UL>
+<LI><I>time</I>: a process can attempt to wait for a specified
+period of simulation time.
+<LI><I>process termination</I>: a process can wait for the termination
+of another <TT>Entity</TT> process before continuing execution.
+<LI><I>semaphore</I>: critical regions of a simulation can be
+protected by semaphores, where only a single <TT>Entity</TT> process
+can acquire the semaphore; other processes are suspended until
+the semaphore is released.
+<LI><I>user specific</I>: it is possible for other asynchronous
+conditions to occur which are not covered above.
+</UL>
+
+<H2>Asynchronous Entities </H2>
+
+<HR>
+
+<P>
+<CODE>class Entity : public Process<BR>
+<FONT SIZE=2 FACE="Courier New">{<BR>
+public:<BR>
+ virtual ~Entity ();<BR>
+<BR>
+ Boolean Interrupt (Entity&amp; toInterrupt, Boolean immediate
+= TRUE);<BR>
+ virtual void terminate ();<BR>
+ virtual void Body () = 0;<BR>
+<BR>
+protected:<BR>
+ Entity ();<BR>
+<BR>
+ Boolean Wait (double);<BR>
+ Boolean WaitFor (Entity&amp; controller, Boolean reAct = FALSE);
+<BR>
+ Boolean WaitForTrigger (TriggerQueue&amp; _queue);<BR>
+ void WaitForSemaphore (Semaphore&amp; sem);<BR>
+};</FONT></CODE>
+<HR>
+
+<P>
+Because <TT>Entity</TT> is derived from <TT>Process</TT>, all
+of the usual simulation methods are available, and can be used
+in conjunction with those provided by the derived class.
+<P>
+<TT>Interrupt(Entity&amp; toInterrupt, Boolean immediate = TRUE)</TT>
+interrupts the asynchronous process <TT>toInterrupt</TT>, which
+<I>must</I> not be <B>terminated</B> and <I>must</I> be in the
+<B>waiting</B> state. <TT>toInterrupt</TT> becomes the next active
+process (i.e., it is moved to the head of the scheduler queue).
+If immediate is <TT>TRUE</TT> (the default) then the current process
+is suspended immediately; it is scheduled for reactivation at
+the current simulation time. Otherwise, the current process can
+be suspended in an application specific way.
+<P>
+Because it is now possible for one process to wait for another
+to terminate the <TT>terminate()</TT> method must differ from
+that provided by <TT>Process</TT>. Before the terminating process
+ends it moves the waiting process to the head of the scheduler
+queue, and then calls <TT>Process::terminate()</TT>. Currently
+only a single process can wait on this termination condition,
+but this may change in future versions.
+<P>
+<TT>Wait(double t)</TT> is similar to <TT>Hold(double t)</TT>,
+with the exception that the process is moved into the <B>waiting</B>
+state as well as being placed on the scheduler queue. It is therefore
+possible to interrupt this process before the wait period has
+elapsed. <TT>TRUE</TT> is returned if the process was interrupted,
+otherwise <TT>FALSE</TT> is returned.
+<P>
+<TT>WaitFor(Entity&amp; controller, Boolean reAct = FALSE)</TT>
+suspends the current process until <TT>controller</TT> has terminated.
+The process is placed in the <B>waiting</B> state. If <TT>reAct</TT>
+is <TT>TRUE</TT> then <TT>controller</TT> is moved to the head
+of the scheduler queue to become the next activate process, otherwise
+the application will have to activate <TT>controller</TT>. If
+the waiting process is interrupted then the method returns <TT>TRUE</TT>,
+otherwise <TT>FALSE</TT>. The <TT>controller</TT> and the current
+process must be different, i.e., it is not possible for a process
+to wait for itself.
+<P>
+<I>Trigger queues </I>are lists maintained by the simulation system
+of process waiting for specific events to occur, which are outside
+the scope of those described above. These will be described in
+the next section. <TT>WaitForTrigger(TriggerQueue&amp; queue)</TT>
+places the current process on the trigger queue <TT>_queue</TT>,
+and passivates it. As with the previous methods, the return value
+indicates whether the process was interrupted, or triggered.
+<P>
+In addition to trigger queues, process can wait on semaphores,
+allowing the creation of monitor regions, for example. <TT>WaitForSemaphore(Semaphore&amp;
+sem)</TT> causes the current process to attempt to exclusively
+acquire the semaphore. If this is not possible then the process
+is suspended. Currently, a process which is waiting on a semaphore
+cannot be interrupted, and is not placed into the <B>waiting</B>
+state. As such, when this method returns the semaphore has been
+acquired.
+<H2>Trigger Queues </H2>
+
+<P>
+Processes waiting for the same application controlled event can
+be grouped together into a <TT>TriggerQueue</TT>, as described
+in the previous section. When this event occurs the application
+can use one of the two trigger methods to activate the queue members.
+This involves placing the process(es) onto the head of the scheduler
+queue.
+<HR>
+
+<P>
+<CODE>class TriggerQueue<BR>
+<FONT SIZE=2 FACE="Courier New">{<BR>
+public:<BR>
+ TriggerQueue ();<BR>
+ virtual ~TriggerQueue ();<BR>
+<BR>
+ Boolean triggerAll ();<BR>
+ Boolean triggerFirst (Boolean = TRUE);<BR>
+};</FONT></CODE>
+<HR>
+
+<UL>
+<LI><TT>triggerAll()</TT>: triggers all of the members on the
+queue.
+<LI><TT>triggerFirst(Boolean = TRUE)</TT>: triggers only the head
+of the queue. If the parameter is <TT>TRUE</TT> then the <TT>trigger()</TT>
+method of the <TT>Entity</TT> object is also invoked.
+</UL>
+
+<P>
+If the queue is not empty when it goes out of scope then all remaining
+queue members will be triggered, and placed back onto the scheduler
+queue.
+<H2>Semaphores </H2>
+
+<P>
+Application code can be protected from simulation processes through
+semaphores, which are instances of the <TT>Semaphore</TT> class.
+<HR>
+
+<P>
+<CODE>class Semaphore<BR>
+<FONT SIZE=2 FACE="Courier New">{<BR>
+public:<BR>
+ Semaphore ();<BR>
+ virtual ~Semaphore ();<BR>
+<BR>
+ virtual void Get (Entity* attempting);<BR>
+ virtual void Release ();<BR>
+ long NumberWaiting () const;<BR>
+};</FONT></CODE>
+<HR>
+
+<P>
+A semaphores is exclusively acquired by a simulation process,
+and can exist in one of two states:
+<UL>
+<LI><I>available</I>: the semaphore is available to be acquired.
+<LI><I>unavailable</I>: a process currently has the semaphore.
+If another process attempts to acquire the semaphore then it is
+automatically suspended until the semaphore is <B>available</B>.
+</UL>
+
+<P>
+To be able to manipulate semaphores, a process must be derived
+from the <TT>Entity</TT> class. To obtain the semaphore, the <TT>Get(Entity*
+attempting)</TT> method should be used, where <TT>attempting</TT>
+is the calling process. If the semaphore is <B>unavailable</B>
+then <TT>attempting</TT> is suspended.
+<P>
+When the semaphore is no longer required <TT>Release()</TT> should
+be called by the process which currently has it.
+<P>
+<TT>NumberWaiting()</TT> returns the number of processes currently
+suspended waiting for the semaphore.
+<P>
+If the semaphore goes out of scope with processes waiting for
+it then an error message is displayed. No further action is attempted
+on behalf of these waiting processes.
+<H2>Example </H2>
+
+<H1><FONT SIZE=5>List Manipulation Classes</FONT><FONT SIZE=6>
+</FONT></H1>
+
+<P>
+It is frequently necessary to group objects in to linked-list
+structures. <I>C++SIM</I> also provides entity and set manipulation
+facilities similar to those provided by the SIMSET classes of
+SIMULA.<TT> These classes present an abstract and uniform way
+to store and manipulate lists of objects. These objects do can
+be of arbitrary types: the list class can store instances of different
+types simultaneously in the same list.</TT>
+<P>
+<TT>These facilities are presented by three classes:</TT>
+<UL>
+<LI><TT>Link</TT>: this class provides the abstract type of storage
+object for a doubly linked list.
+<LI><TT>Head</TT>: this class maintains the double linked list
+of <TT>Link</TT> elements.
+<LI><TT>Linkage</TT>: both <TT>Link</TT> and <TT>Head</TT> derive
+from this class, which indicates the core functionality required
+from each class.
+</UL>
+
+<H2>Link Class </H2>
+
+<HR>
+
+<P>
+<CODE>class Link : public Linkage<BR>
+<FONT SIZE=2 FACE="Courier New">{<BR>
+public:<BR>
+ virtual ~Link ();<BR>
+<BR>
+ virtual Link* Suc () const;<BR>
+ virtual Link* Pred () const;<BR>
+<BR>
+ Link* Out ();<BR>
+ void InTo (Head* list);<BR>
+<BR>
+ void Precede (Link* L);<BR>
+ void Precede (Head* H);<BR>
+ void Follow (Link* L);<BR>
+ void Follow (Head* H);<BR>
+<BR>
+protected:<BR>
+ Link ();<BR>
+};</FONT></CODE>
+<HR>
+
+<P>
+Classes which are to be manipulated using these linked-list mechanisms
+must be derived from <TT>Link</TT>. The linked list class <TT>Head</TT>
+treats all elements on the list as type <TT>Link</TT>, rather
+than their real type. Through this it is possible to store classes
+of arbitrary type in the same list mechanism.
+<P>
+<TT>When applied to an object currently on a list, Suc() and Pred()
+return the next element (successor) and previous element (predecessor)
+respectively. They return NULL if the no such element exists.</TT>
+<P>
+<TT>If the object is currently on a linked list then Out() removes
+it.</TT>
+<P>
+<TT>InTo(Head* list) places this object as the last element in
+the linked list pointed to by list if the list is not NULL (i.e.,
+exists). Otherwise it attempts to remove the object from any list
+it may belong to. In keeping with the list manipulation facilities
+of SIMULA an object can only be present on one list at a time.</TT>
+<P>
+<TT>The Precede method is overloaded to take either a Link or
+Head object:</TT>
+<UL>
+<LI><TT>Link</TT>: if <I>L</I> is a member of a linked list then
+the current object is placed into the same list as <I>L</I> immediately
+preceding it, otherwise the result is the same as<TT> Out()</TT>.
+<LI><TT>Head</TT>: the result is the same as <TT>InTo(Head* H)</TT>.
+</UL>
+
+<P>
+<TT>Follow</TT> is similarly overloaded:
+<UL>
+<LI><TT>Link</TT>: if <I>L</I> is a member of a linked list then
+the current object is placed in the same list as <I>L</I> immediately
+after it, otherwise the result is the same as <TT>Out()</TT>.
+<LI><TT>Head</TT>: this places the object as the first element
+in <I>H</I>.
+</UL>
+
+<H2>Head Class </H2>
+
+<HR>
+
+<P>
+<CODE>class Head : public Linkage<BR>
+<FONT SIZE=2 FACE="Courier New">{<BR>
+public:<BR>
+ Head ();<BR>
+ virtual ~Head ();<BR>
+<BR>
+ Link* First () const;<BR>
+ Link* Last () const;<BR>
+<BR>
+ virtual Link* Suc () const;<BR>
+ virtual Link* Pred () const;<BR>
+<BR>
+ void AddFirst (Link* L);<BR>
+ void AddLast (Link* L);<BR>
+<BR>
+ long Cardinal () const;<BR>
+ Boolean Empty () const;<BR>
+ void Clear ();<BR>
+};</FONT></CODE>
+<HR>
+
+<P>
+Instances of this class represent the linked lists used to store
+objects of abstract type <TT>Link</TT>. Any objects still on the
+linked list when it goes out of scope are automatically deleted;
+therefore it is important to guarantee that such objects are created
+on the heap.
+<P>
+<TT>First() and Suc() return the first element on the list, NULL
+otherwise.</TT>
+<P>
+<TT>Last() and Pred() return the last element on the list, NULL
+otherwise.</TT>
+<P>
+<TT>AddFirst(Link* L) and AddLast(Link* L) add L as the first
+and last element to the list, respectively.</TT>
+<P>
+<TT>Cardinal() returns the number of Link objects in the list.</TT>
+<P>
+<TT>Empty() returns TRUE if the list is empty, and FALSE otherwise.</TT>
+<P>
+<TT>Clear() removes all of the Link objects from the list, deleting
+them as it does.</TT>
+<H2>Linkage Class </H2>
+
+<P>
+This class represents the minimum functionality which must be
+provided by both <TT>Link</TT> and <TT>Head</TT> classes.
+<HR>
+
+<P>
+<CODE>class Linkage<BR>
+<FONT SIZE=2 FACE="Courier New">{<BR>
+public:<BR>
+ virtual ~Linkage ();<BR>
+<BR>
+ virtual Link* Suc () const = 0;<BR>
+ virtual Link* Pred () const = 0;<BR>
+};</FONT></CODE>
+<HR>
+
+<H2>Example </H2>
+
+<H1>Statistical Classes </H1>
+
+<P>
+The purpose of a simulation typically involves the gathering of
+relevant statistical information, e.g., the average length of
+time spent in a queue. <I>C++SIM</I> provides a number of different
+classes for gathering such information.
+<H2>Mean </H2>
+
+<P>
+This is the basic class from which others are derived, gathering
+statistical information on the samples provided to it.
+<HR>
+
+<P>
+<CODE>class Mean<BR>
+<FONT SIZE=2 FACE="Courier New">{<BR>
+public:<BR>
+ Mean ();<BR>
+ virtual ~Mean ();<BR>
+<BR>
+ virtual void setValue (double);<BR>
+ virtual void operator+= (double);<BR>
+<BR>
+ unsigned int numberOfSamples () const;<BR>
+ double min () const;<BR>
+ double max () const;<BR>
+ double sum () const;<BR>
+ double mean () const;<BR>
+<BR>
+ virtual void reset ();<BR>
+};</FONT></CODE>
+<HR>
+
+<P>
+New values can be supplied to <TT>Mean</TT> using either the <TT>setValue(double)</TT>
+or <TT>operator+=(double)</TT> methods. The number of samples
+which have been give can be obtained from <TT>numberOfSamples()</TT>.
+<P>
+The maximum and minimum of the samples supplied can be obtained
+from the <TT>max()</TT> and <TT>min()</TT> methods, respectively.
+<P>
+<TT>sum()</TT> returns the summation of all of the samples:
+<P>
+<CENTER><IMG SRC="manual-1.0/fig4.gif"><BR>
+</CENTER>
+<P>
+<TT>mean()</TT> returns the mean value:
+<P>
+<CENTER><IMG SRC="manual-1.0/fig5.gif"><BR>
+</CENTER>
+<P>
+An instance of <TT>Mean</TT> can be reset between samples using
+the <TT>reset()</TT> method.
+<H2>Variance </H2>
+
+<P>
+This class is derived from Mean, and in addition to providing
+the above mentioned functionality also provides the following:
+<HR>
+
+<P>
+<CODE>class Variance : public Mean<BR>
+<FONT SIZE=2 FACE="Courier New">{<BR>
+public:<BR>
+ Variance ();<BR>
+ virtual ~Variance ();<BR>
+<BR>
+ virtual void setValue (double);<BR>
+ virtual void operator+= (double);<BR>
+<BR>
+ virtual void reset ();<BR>
+<BR>
+ double variance () const;<BR>
+ double stdDev () const;<BR>
+ double confidence (double);<BR>
+};</FONT></CODE>
+<HR>
+
+<P>
+<TT>variance()</TT> returns the variance of the samples:
+<P>
+<CENTER><IMG SRC="manual-1.0/fig6.gif"></CENTER>
+<P>
+<TT>stdDev()</TT> returns the standard deviation of the samples,
+which is the square root of the variance.
+<H2>TimeVariance </H2>
+
+<P>
+The <TT>TimeVariance</TT> class makes it possible to determine
+how long, in terms of simulation time, specific values were maintained.
+In effect, values are weighted according to the length of time
+that they were held, whereas with the <TT>Variance</TT> class
+only the specific values are taken into account.
+<HR>
+
+<P>
+<CODE>class TimeVariance : public Variance<BR>
+<FONT SIZE=2 FACE="Courier New">{<BR>
+public:<BR>
+ TimeVariance ();<BR>
+ ~TimeVariance ();<BR>
+<BR>
+ virtual void reset ();<BR>
+<BR>
+ virtual void setValue (double);<BR>
+ virtual void operator+= (double);<BR>
+<BR>
+ double timeAverage () const;<BR>
+};</FONT></CODE>
+<HR>
+
+<P>
+Whenever a value is supplied to an instance of the <TT>TimeVariance</TT>
+class the simulation time at which it occurred is also noted.
+If a value changes, or the <TT>timeAverage()</TT> method is invoked,
+then the time it has been maintained for is calculated and the
+statistical data is updated.
+<H2>Histograms </H2>
+
+<P>
+<TT>Mean</TT>, <TT>Variance</TT>, and <TT>TimeVariance</TT> provide
+a snapshot of values in the simulation. However, histograms can
+yield better information about how a range of values change over
+the course of a simulation run. This information can be viewed
+in a number of ways, but typically it is plotted in graphical
+form.
+<P>
+A histogram typically maintains a slot for each value, or range
+of values, given to it. These slots are termed <I>buckets</I>,
+and the way in which these buckets are maintained and manipulated
+gives rise to a variety of different histogram implementations.
+The following sections detail this variety of different histogram
+classes.
+<H3>PrecisionHistogram </H3>
+
+<P>
+The <TT>PrecisionHistogram</TT> class represents the core histogram
+class from which all others are derived. This class keeps an exact
+tally of all values given to it, i.e., a bucket is created for
+each value. Although buckets are only created when requires, over
+the course of a simulation this can still utilise a large amount
+of resources, and so other, less precise, histogram classes are
+provided.
+<HR>
+
+<P>
+<CODE>class PrecisionHistogram : public Variance<BR>
+<FONT SIZE=2 FACE="Courier New">{<BR>
+public:<BR>
+ PrecisionHistogram ();<BR>
+ virtual ~PrecisionHistogram ();<BR>
+<BR>
+ virtual void setValue (double);<BR>
+ virtual void operator+= (double);<BR>
+<BR>
+ virtual void reset ();<BR>
+<BR>
+ long numberOfBuckets () const;<BR>
+ virtual Boolean sizeByIndex (long index, double&amp; size);<BR>
+ virtual Boolean sizeByName (double name, double&amp; size);<BR>
+<BR>
+ virtual ostream&amp; print (ostream&amp;) const;<BR>
+};<BR>
+<BR>
+extern ostream&amp; operator&lt;&lt; (ostream&amp; strm, const
+PrecisionHistogram&amp; ph);</FONT></CODE>
+<HR>
+
+<P>
+As with the <TT>Variance</TT> class from which it is derived,
+and whose methods are obviously available, values can be supplied
+to the histogram through either the <TT>setValue(double)</TT>
+or <TT>operator+=(double)</TT> methods.
+<P>
+The number of buckets maintained by the histogram can be obtained
+from the <TT>numberOfBuckets()</TT> method. Each bucket is uniquely
+named by the values it contains, and can also be accessed by its
+index in the entire list of buckets.
+<P>
+There are therefore two ways of getting the number of entries
+in a bucket:
+<UL>
+<LI>by the index number of the bucket: <TT>sizeByIndex(long index,
+double&amp; size)</TT>.
+<LI>by the unique name of the bucket: <TT>sizeByName(double name,
+double&amp; size)</TT>.
+</UL>
+
+<P>
+If the bucket does not exist then each of these methods returns
+<TT>FALSE</TT>, otherwise <TT>TRUE</TT>.
+<P>
+It is possible to output the contents of the histogram using either
+the <TT>print(ostream&amp;)</TT> or overloaded <TT>operator&lt;&lt;</TT>
+methods.
+<H3>Histogram </H3>
+
+<P>
+The problem with the <TT>PrecisionHistogram</TT> class is that
+it can use up a lot of system resources, especially over the course
+of a long simulation. <TT>Histogram</TT> attempts to alleviate
+this by presenting a histogram which is less accurate, but consumes
+less resources. Instead of maintaining a bucket for each individual
+value, it keeps a fixed number of buckets. Initially each bucket
+will store separate values as in the <TT>PrecisionHistogram</TT>,
+but when the number of required buckets would exceed the specified
+maximum number it merges pairs of buckets, thus reducing their
+total. The policy used when merging buckets it set on a per instance
+basis when created. Current policies are:
+<UL>
+<LI><TT>ACCUMULATE</TT>: create a new bucket with the same name
+as the largest of the two buckets, and it has the sum of the two
+old bucket entries as its entry number.
+<LI><TT>MEAN</TT>: create a new bucket with the name as the mean
+of the two old buckets, and it has the sum of the two old bucket
+entries as its entry number.
+<LI><TT>MAX</TT>: create a new bucket with the name as the largest
+of the two buckets, and it has the same number of entries.
+<LI><TT>MIN</TT>: create a new bucket with the name as the smallest
+of the two old buckets, and it has the same number of entries.
+</UL>
+
+<HR>
+
+<P>
+<CODE>class Histogram : public PrecisionHistogram<BR>
+<FONT SIZE=2 FACE="Courier New">{<BR>
+public:<BR>
+ enum MergeChoice { ACCUMULATE, MEAN, MAX, MIN };<BR>
+<BR>
+ Histogram (long maxBuckets, MergeChoice = MEAN);<BR>
+ virtual ~Histogram ();<BR>
+<BR>
+ virtual void setValue (double);<BR>
+ virtual void operator+= (double);<BR>
+<BR>
+ virtual ostream&amp; print (ostream&amp;) const;<BR>
+};<BR>
+<BR>
+extern ostream&amp; operator&lt;&lt; (ostream&amp; strm, const
+Histogram&amp; h);</FONT></CODE>
+<HR>
+
+<P>
+When an instance of <TT>Histogram</TT> is created, the maximum
+number of allowed buckets must be specified. The merging algorithm
+can also be provided, with the default being the <TT>MEAN</TT>
+policy.
+<H3>SimpleHistogram </H3>
+
+<P>
+As with the <TT>Histogram</TT> class above, <TT>SimpleHistogram</TT>
+keeps the number of assigned buckets to a minimum. However, it
+does this by pre-creating the buckets when it is created, i.e.,
+the number of required buckets must be provided at the start.
+A width is the assigned for each bucket, and whenever a value
+if given to the histogram class it is placed into the bucket whose
+width it falls within.
+<HR>
+
+<P>
+<CODE>class SimpleHistogram : public PrecisionHistogram<BR>
+<FONT SIZE=2 FACE="Courier New">{<BR>
+public:<BR>
+ SimpleHistogram (double min, double max, long nbuckets);<BR>
+ SimpleHistogram (double min, double max, double w);<BR>
+ virtual ~SimpleHistogram ();<BR>
+<BR>
+ virtual void setValue (double);<BR>
+ virtual void operator+= (double);<BR>
+<BR>
+ virtual void reset ();<BR>
+<BR>
+ virtual Boolean sizeByName (double name, double&amp; size);<BR>
+ double Width () const;<BR>
+<BR>
+ virtual ostream&amp; print (ostream&amp;) const;<BR>
+};<BR>
+<BR>
+extern ostream&amp; operator&lt;&lt; (ostream&amp; strm, const
+SimpleHistogram&amp; s);</FONT></CODE>
+<HR>
+
+<P>
+When the class is instantiated, the range of values it will receive
+must be provided. Then, either the width of each bucket or the
+actual number of buckets can be given. If the width is provided,
+then the histogram automatically calculates the number of buckets,
+otherwise it calculates the width for each bucket by equally dividing
+the range between each bucket.
+<P>
+The values of a bucket can be obtained from the <TT>sizeByName(double
+name, double&amp; size)</TT> method.
+<P>
+The width of each bucket is provided by the <TT>Width()</TT> method.
+<H3>Quantile </H3>
+
+<P>
+The <TT>Quantile</TT> class provides a means of obtaining the
+p-quantile of a distribution of values, i.e., the value below
+which p-percent of the distribution lies.
+<HR>
+
+<P>
+<CODE>class Quantile : public PrecisionHistogram<BR>
+<FONT SIZE=2 FACE="Courier New">{<BR>
+public:<BR>
+ Quantile (double = 0.95);<BR>
+ virtual ~Quantile ();<BR>
+<BR>
+ double operator() () const;<BR>
+ double range () const;<BR>
+<BR>
+ virtual ostream&amp; print (ostream&amp;) const;<BR>
+};<BR>
+<BR>
+extern ostream&amp; operator&lt;&lt; (ostream&amp; strm, const
+Quantile&amp; q);</FONT></CODE>
+<HR>
+
+<P>
+The p-quantile probability range must be specified when the object
+is instantiated, and can be obtained via the <TT>range()</TT>
+method.
+<P>
+The actual quantile value is provided by the overloaded <TT>operator()</TT>.
+<H1>Development Classes </H1>
+
+<P>
+In addition to the classes described in the previous chapters,
+<I>C++SIM</I> also provides classes to help in the development
+and debugging of simulation applications. These classes enable
+debugging to be enabled at compile-time or run-time, and it is
+possible for the application programmer or the user to be selective
+about the type of debugging required at any time. There are also
+classes for the output of prioritised error messages.
+<H2>Debug </H2>
+
+<P>
+The debug classes below provide a means of selective run-time
+control over debugging output statements. When executing an application,
+the user specifies the type of debugging required, in terms of
+the modules, the visibility of the methods (e.g., private or protected),
+and the types of methods (e.g., constructor or destructor). This
+information is provided in the form of a global debugging control
+mask.
+<P>
+Therefore, associated with each debugging statement is a control
+mask, which the run-time system compares with the main control
+mask provided at the start of execution; if the mask is a match
+or subset of the main control mask then the debugging statement
+is output. However, all debugging statements should occur within
+<TT>#ifdef DEBUG</TT> and <TT>#endif</TT> statements. This enables
+debugging to be completely disabled at compile time, thus removing
+the overhead incurred even when output is not required at run-time.
+<P>
+Debug statements are controlled by the following three types of
+variable:
+<UL>
+<LI><TT>FacilityCode</TT>: this represents the context, or module,
+within which the debugging statements occur. If the required run-time
+output facility code does not match this then the statement is
+not output. As shown below, <I>C++SIM</I> pre-defines some facility
+codes for its own modules, but leaves room for user defined codes.
+<LI><TT>VisibilityLevel</TT>: this represents the visibility of
+the methods within which the statement occurs, e.g., public or
+protected.
+<LI><TT>DebugLevel</TT>: this represents the type of method within
+which the statement occurs, e.g., constructor or destructor.
+</UL>
+
+<HR>
+
+<P>
+<CODE>enum FacilityCode<BR>
+<FONT SIZE=2 FACE="Courier New">{<BR>
+ FAC_SCHEDULER = 0x0001,<BR>
+ FAC_PROCESS = 0x0002,<BR>
+ FAC_THREAD = 0x0004,<BR>
+ FAC_SIMSCRIPT = 0x0008,<BR>
+ FAC_SEMAPHORE = 0x0010,<BR>
+ FAC_ENTITY = 0x0020,<BR>
+ FAC_PROCESSLISTS = 0x0040,<BR>
+ FAC_GENERAL = 0x0080,<BR>
+ FAC_USER1 = 0x1000,<BR>
+ FAC_USER2 = 0x2000,<BR>
+ FAC_USER3 = 0x4000,<BR>
+ FAC_USER4 = 0x8000,<BR>
+ FAC_ALL = 0xffff<BR>
+};<BR>
+<BR>
+enum VisibilityLevel<BR>
+{<BR>
+ VIS_PRIVATE = 0x0001,<BR>
+ VIS_PROTECTED = 0x0002,<BR>
+ VIS_PUBLIC = 0x0004,<BR>
+ VIS_ALL = 0xffff<BR>
+};<BR>
+<BR>
+enum DebugLevel<BR>
+{<BR>
+ NO_DEBUGGING = 0,<BR>
+ CONSTRUCTORS = 0x0001,<BR>
+ DESTRUCTORS = 0x0002,<BR>
+ CONSTRUCT_AND_DESTRUCT = CONSTRUCTORS | DESTRUCTORS,<BR>
+ FUNCTIONS = 0x0010, OPERATORS = 0x0020,<BR>
+ FUNCS_AND_OPS = FUNCTIONS | OPERATORS,<BR>
+ ALL_NON_TRIVIAL = CONSTRUCT_AND_DESTRUCT | FUNCTIONS | OPERATORS,
+<BR>
+ TRIVIAL_FUNCS = 0x0100,<BR>
+ TRIVIAL_OPERATORS = 0x0200,<BR>
+ ALL_TRIVIAL = TRIVIAL_FUNCS | TRIVIAL_OPERATORS,<BR>
+ FULL_DEBUGGING = 0xffff<BR>
+};<BR>
+<BR>
+class DebugController : public StreamFilter<BR>
+{<BR>
+public:<BR>
+ DebugController ();<BR>
+ virtual ~DebugController ();<BR>
+<BR>
+ void set_all (DebugLevel, FacilityCode, VisibilityLevel);<BR>
+ void set_debuglevel (DebugLevel);<BR>
+ void set_facility (FacilityCode);<BR>
+ void set_visibility (VisibilityLevel);<BR>
+};<BR>
+<BR>
+ extern DebugController *_cppsim_debug;#define debug_stream ((_cppsim_debug
+!= 0)?(_cppsim_debug-&gt;stream()): (_cppsim_debug = new DebugController(),_cppsim_debug-&gt;stream()))</FONT></CODE>
+<HR>
+
+<P>
+The <TT>debug_stream</TT> macro is the main component in the debugging
+sub-system. It is used to control accessibility of debugging statements,
+and also to output them. To indicate the level etc. for each debugging
+statement the overloaded <TT>operator&lt;&lt;</TT> is used. That
+is, the facility code, level and visibility for the statement
+is inserted into the debug stream. For example:
+<P>
+<CENTER><TT>debug_stream &lt;&lt; CONSTRUCTOR &lt;&lt; VIS_PUBLIC
+&lt;&lt; FAC_PROCESS;</TT></CENTER>
+<P>
+The actual debugging statement can be inserted using the same
+operator, e.g.,:
+<P>
+<CENTER><TT>debug_stream &lt;&lt; &quot;Sample debugging statement.&quot;
+&lt;&lt; endl;</TT></CENTER>
+<P>
+It is preferable to flush the output also. Output will only be
+produced if the inserted code, level, etc. match the currently
+requested debugging level etc.
+<P>
+To set the desired debug tracing level, the <TT>_cppsim_debug</TT>
+variable must be set accordingly. This can be done with the individually
+provided methods <TT>set_debuglevel(DebugLevel)</TT>, <TT>set_facility(FacilityCode)</TT>,
+and <TT>set_visibility(VisibilityLevel)</TT>, or can be set all
+together using the <TT>set_all(DebugLevel, FacilityCode, VisibilityLevel)</TT>
+method. Since each level is represented by a bit in the variable,
+multiple levels are produced by OR-ing the fields together.
+<P>
+Using <TT>_cppsim_debug</TT> provides a static means of selecting
+the level of debugging required. Typically this would be initialised
+within <TT>main</TT>. However, a more dynamic mechanism is available
+through the shell environment variables: <TT>DEBUG_LEVEL</TT>,
+<TT>DEBUG_VIS</TT>, and <TT>DEBUG_FAC</TT>. By setting these accordingly
+prior to executing the application then different levels of debugging
+can be achieved without recompiling.
+<H2>Error </H2>
+
+<P>
+Although error messages can be output using either the previous
+debugging classes or <TT>cerr</TT>, the <TT>Error</TT> class to
+be presented below provides additional functionality which may
+prove useful when building applications.
+<HR>
+
+<P>
+<CODE>enum ErrorSeverity<BR>
+<FONT SIZE=2 FACE="Courier New">{<BR>
+ FATAL,<BR>
+ WARNING<BR>
+};<BR>
+<BR>
+extern ostream&amp; operator&lt;&lt; ( ostream&amp; strm, enum
+ErrorSeverity es );</FONT></CODE>
+<HR>
+
+<P>
+The <TT>operator&lt;&lt;</TT> has been overloaded to allow the
+addition of an error severity variable with each error message.
+This is the output with each message and can make identification
+of important error message easier.
+<H1>Worked Example </H1>
+
+<H1>Modifying C++SIM </H1>
+
+<H2>Adding Thread Classes </H2>
+
+<H1>References </H1>
+
+<P>
+[1] G. M. Birtwistle, O-J. Dahl, B. Myhrhaug, K. Nygaard, &quot;Simula
+Begin&quot;, Academic Press, 1973
+<P>
+[2] O-J. Dahl, B. Myhrhaug, K. Nygaard, &quot;SIMULA Common Base
+Language&quot;, Norwegian Computing Centre
+<P>
+[3] Knuth Vol2, &quot;Seminumerical Algorithms&quot;, Addison-Wesley,
+1969, p. 117.
+<P>
+[4] R. Sedgewick, &quot;Algorithms&quot;, Addison-Wesley, Reading
+MA, 1983, pp. 36-38.
+<P>
+[5] D. L. McCue and M. C. Little, &quot;Computing Replica Placement
+in Distributed Systems&quot;, Proceedings of the 2nd IEEE Workshop
+on the Management of Replicated Data, November 1992, pp. 58-61.
+<P>
+[6] I. Mitrani, &quot;Simulation Techniques for Discrete Event
+Systems&quot;, Cambridge University Press, Cambridge, 1982.
+<P>
+[7] M. C. Little and D. L. McCue, &quot;The Replica Management
+System: a Scheme for Flexible and Dynamic Replication&quot;, Proceedings
+of the 2nd International Workshop on Configurable Distributed
+Systems, March 1994, pp. 46-57.
+<P>
+[8] B. Stroustrup, &quot;The C++ Programming Language&quot;, Addison
+Wesley, 1986.
+<P>
+[9] S. B. Lippman, &quot;C++ Primer&quot;, Addison Wesley, 1989.
+<P>
+[10] G. D. Parrington et al, &quot;The Design and Implementation
+of Arjuna&quot;, Broadcast Project Technical Report, October 1994.
+<BR>
+
+</BODY>
+
+</HTML>

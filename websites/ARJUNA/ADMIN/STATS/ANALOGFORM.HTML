@@ -1,0 +1,202 @@
+<html><head>
+<title>Analog form interface</title>
+</head>
+
+<body>
+<h1><img src="images/analogo.gif" alt=""> Analog form interface for <a HREF="http://arjuna.ncl.ac.uk/">Arjuna Group Web Site</a></h1>
+<form action="/admin/stats/analform.cgi" method="GET">
+<hr><i>You can set any options you like below. But they should all be set to
+sensible default values, so you can ignore any of them too.</i>
+<hr>
+<h2>1. Report choices</h2>
+<i>See <a href="http://www.statslab.cam.ac.uk/~sret1/analog/">the analog
+home page</a> for the meanings of the various reports.</i>
+
+<p>
+<h3>Which reports do you want to see?</h3>
+<BR><INPUT TYPE=radio NAME=xq VALUE=1 checked> [On] <INPUT TYPE=radio NAME=xq VALUE=0> [Off] General statistics
+<BR><INPUT TYPE=radio NAME=mq VALUE=1 checked> [On] <INPUT TYPE=radio NAME=mq VALUE=0> [Off] Monthly report
+<BR><INPUT TYPE=radio NAME=Wq VALUE=1> [On] <INPUT TYPE=radio NAME=Wq VALUE=0 checked> [Off] Weekly report
+<BR><INPUT TYPE=radio NAME=dq VALUE=1 checked> [On] <INPUT TYPE=radio NAME=dq VALUE=0> [Off] Daily summary
+<BR><INPUT TYPE=radio NAME=Dq VALUE=1> [On] <INPUT TYPE=radio NAME=Dq VALUE=0 checked> [Off] Daily report
+<BR><INPUT TYPE=radio NAME=hq VALUE=1 checked> [On] <INPUT TYPE=radio NAME=hq VALUE=0> [Off] Hourly summary
+<BR><INPUT TYPE=radio NAME=Hq VALUE=1> [On] <INPUT TYPE=radio NAME=Hq VALUE=0 checked> [Off] Hourly report
+<BR><INPUT TYPE=radio NAME=oq VALUE=1 checked> [On] <INPUT TYPE=radio NAME=oq VALUE=0> [Off] Domain report
+<BR><INPUT TYPE=radio NAME=Sq VALUE=1> [On] <INPUT TYPE=radio NAME=Sq VALUE=0 checked> [Off] Host report
+<BR><INPUT TYPE=radio NAME=iq VALUE=1 checked> [On] <INPUT TYPE=radio NAME=iq VALUE=0> [Off] Directory report
+<BR><INPUT TYPE=radio NAME=tq VALUE=1> [On] <INPUT TYPE=radio NAME=tq VALUE=0 checked> [Off] File type report
+<BR><INPUT TYPE=radio NAME=rq VALUE=1 checked> [On] <INPUT TYPE=radio NAME=rq VALUE=0> [Off] Request report
+<BR><INPUT TYPE=radio NAME=fq VALUE=1> [On] <INPUT TYPE=radio NAME=fq VALUE=0 checked> [Off] Referrer report
+<BR><INPUT TYPE=radio NAME=bq VALUE=1> [On] <INPUT TYPE=radio NAME=bq VALUE=0 checked> [Off] Browser summary
+<BR><INPUT TYPE=radio NAME=Bq VALUE=1> [On] <INPUT TYPE=radio NAME=Bq VALUE=0 checked> [Off] Browser report
+<BR><INPUT TYPE=radio NAME=cq VALUE=1> [On] <INPUT TYPE=radio NAME=cq VALUE=0 checked> [Off] Status code report
+<BR><INPUT TYPE=radio NAME=eq VALUE=1> [On] <INPUT TYPE=radio NAME=eq VALUE=0 checked> [Off] Error report
+<p><i>You can now run the program: <input type=submit value="Produce statistics">
+<br>Or you can fill in the options below for individual reports.
+You can fill in the </i>(+)<i> or </i>(*)<i> in each section according to which sort method you select.
+You can use <input type=TEXT name="vo" maxlength=4 size=4 value="10M"> bytes to mean 10 Megabytes etc.</i>
+<hr>
+<h2>2. Detailed report options</h2>
+
+<h3>Domain report options</h3>
+
+Sort the Domain report 
+<select name=os size=1>
+<option value=2>alphabetically (*)
+<option value=1 selected>by volume of traffic (+)
+<option value=0>by number of requests (*)
+<option value=4>by requests for pages (*)
+</select>
+<br>(*) Include all domains with at least
+<input type=TEXT name="oa" maxlength=6 size=6> requests/page requests
+<b>or</b> the top <input type=TEXT name="ob" maxlength=3 size=3> domains.
+<br>(+) Include all domains with at least
+<input type=TEXT name="oc" maxlength=6 size=6> bytes
+transferred <b>or</b> the top <input type=TEXT name="od" maxlength=3 size=3> domains.
+
+<h3>Host report options</h3>
+
+Sort the Host report 
+<select name=Ss size=1>
+<option value=2 selected>alphabetically (*)
+<option value=1>by volume of traffic (+)
+<option value=0>by number of requests (*)
+<option value=4>by requests for pages (*)
+</select>
+<br>(*) Include all hosts with at least
+<input type=TEXT name="Sa" maxlength=6 size=6> requests/page requests
+<b>or</b> the top <input type=TEXT name="Sb" maxlength=3 size=3> hosts.
+<br>(+) Include all hosts with at least
+<input type=TEXT name="Sc" maxlength=6 size=6> bytes
+transferred <b>or</b> the top <input type=TEXT name="Sd" maxlength=3 size=3> hosts.
+
+<h3>Directory report options</h3>
+
+Sort the Directory report 
+<select name=is size=1>
+<option value=2>alphabetically (*)
+<option value=1 selected>by volume of traffic (+)
+<option value=0>by number of requests (*)
+<option value=4>by requests for pages (*)
+</select>
+<br>(*) Include all directories with at least
+<input type=TEXT name="ia" maxlength=6 size=6> requests/page requests
+<b>or</b> the top <input type=TEXT name="ib" maxlength=3 size=3> directories.
+<br>(+) Include all directories with at least
+<input type=TEXT name="ic" maxlength=6 size=6> bytes
+transferred <b>or</b> the top <input type=TEXT name="id" maxlength=3 size=3> directories.
+<br>Print directories to depth <input type=text name="ie" maxlength=1 size=1 value=1>
+
+<h3>File type report options</h3>
+
+Sort the File type report 
+<select name=ts size=1>
+<option value=2>alphabetically (*)
+<option value=1 selected>by volume of traffic (+)
+<option value=0>by number of requests (*)
+<option value=4>by requests for pages (*)
+</select>
+<br>(*) Include all extensions with at least
+<input type=TEXT name="ta" maxlength=6 size=6> requests/page requests
+<b>or</b> the top <input type=TEXT name="tb" maxlength=3 size=3> extensions.
+<br>(+) Include all extensions with at least
+<input type=TEXT name="tc" maxlength=6 size=6> bytes
+transferred <b>or</b> the top <input type=TEXT name="td" maxlength=3 size=3> extensions.
+
+<h3>Request report options</h3>
+
+Sort the Request report 
+<select name=rs size=1>
+<option value=2>alphabetically (*)
+<option value=1>by volume of traffic (+)
+<option value=0 selected>by number of requests (*)
+<option value=4>by requests for pages (*)
+</select>
+<br>(*) Include all requests with at least
+<input type=TEXT name="ra" maxlength=6 size=6> requests/page requests
+<b>or</b> the top <input type=TEXT name="rb" maxlength=3 size=3> requests.
+<br>(+) Include all requests with at least
+<input type=TEXT name="rc" maxlength=6 size=6> bytes
+transferred <b>or</b> the top <input type=TEXT name="rd" maxlength=3 size=3> requests.
+<br>Show
+<select name="rt" size=1>
+<option value="f" selected>all files
+<option value="p">pages only
+</select>
+; include links to
+<select name="rl" size=1>
+<option value="f">all files
+<option value="p" selected>pages only
+<option value="n">no files
+</select>
+
+<h3>Referrer report options</h3>
+
+Sort the Referrer report 
+<select name=fs size=1>
+<option value=2>alphabetically (*)
+<option value=1>by volume of traffic (+)
+<option value=0 selected>by number of requests (*)
+</select>
+<br>(*) Include all referring URLs with at least
+<input type=TEXT name="fa" maxlength=6 size=6> requests
+<b>or</b> the top <input type=TEXT name="fb" maxlength=3 size=3> referring URLs.
+<br>(+) Include all referring URLs with at least
+<input type=TEXT name="fc" maxlength=6 size=6> bytes
+transferred <b>or</b> the top <input type=TEXT name="fd" maxlength=3 size=3> referring URLs.
+
+<h3>Browser summary options</h3>
+
+Sort the Browser summary 
+<select name=bs size=1>
+<option value=2>alphabetically (*)
+<option value=1>by volume of traffic (+)
+<option value=0 selected>by number of requests (*)
+</select>
+<br>(*) Include all browsers with at least
+<input type=TEXT name="ba" maxlength=6 size=6> requests
+<b>or</b> the top <input type=TEXT name="bb" maxlength=3 size=3> browsers.
+<br>(+) Include all browsers with at least
+<input type=TEXT name="bc" maxlength=6 size=6> bytes
+transferred <b>or</b> the top <input type=TEXT name="bd" maxlength=3 size=3> browsers.
+
+<h3>Browser report options</h3>
+
+Sort the Browser report 
+<select name=Bs size=1>
+<option value=2>alphabetically (*)
+<option value=1>by volume of traffic (+)
+<option value=0 selected>by number of requests (*)
+</select>
+<br>(*) Include all browsers with at least
+<input type=TEXT name="Ba" maxlength=6 size=6> requests
+<b>or</b> the top <input type=TEXT name="Bb" maxlength=3 size=3> browsers.
+<br>(+) Include all browsers with at least
+<input type=TEXT name="Bc" maxlength=6 size=6> bytes
+transferred <b>or</b> the top <input type=TEXT name="Bd" maxlength=3 size=3> browsers.
+<hr>
+
+<h2>3. Analysing only part of the logfile</h2>
+<b>Only certain dates</b>
+<br>You can analyse only the requests from certain dates.
+Enter the range of dates below in the from <i>yymmdd</i>;
+e.g., 950701 for 1st July 1995 (or fill in just one box
+to limit the range of dates on just one side).<br>From <input type=TEXT name="fr" maxlength=10 size=6>
+to <input type=TEXT name="to" maxlength=10 size=6>
+
+<p><b>Only certain requested files</b>
+<br>Only look at the following requested files (list, separated by commas; can contain wild character *)
+<br><input type=TEXT name="fy" size=60>
+<br>Ignore the following files
+<br><input type=TEXT name="fi" size=60>
+<hr><h2>4. Layout</h2>
+<b>Your organisation's name</b> (for the title of the page)
+<input type=TEXT name="or" value="Arjuna Group Web Site" size=60>
+<p><b>Your organisation's home page</b> (leave blank for none)
+<br>URL: <input type=TEXT name="ho" value="http://arjuna.ncl.ac.uk/" size=60>
+<hr><input type=hidden name="TZ" value="">
+<input type=submit value="Produce statistics"> <input type=reset value="Reset form">
+</form>
+<P> <A HREF="http://www.webtechs.com/html-val-svc/">
+<IMG SRC="http://www.webtechs.com/html-val-svc/images/valid_html.gif" ALT="HTML 2.0 Conformant!"></A>
+</body></html>

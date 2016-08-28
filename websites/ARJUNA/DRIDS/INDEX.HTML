@@ -1,0 +1,51 @@
+<HTML>
+<HEAD>
+<TITLE>Disaster Recovery in Distributed Systems</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<H1 ALIGN=CENTER>Disaster Recovery in Distributed Systems</H1>
+<P ALIGN=CENTER><TABLE>
+<TR>
+<TD VALIGN=TOP><IMG SRC="../HP/logo.gif" ALT="HP" WIDTH=175 HEIGHT=38></TD>
+<TD VALIGN=TOP>The work is sponsored by:<BR>
+<B>Hewlett Packard Laboratories,</B><BR>
+Bristol, England.</TD>
+</TR>
+</TABLE></P>
+<H2>Summary</H2>
+<P>The topic of disaster recovery is a very wide ranging subject area.
+Although on the surface one requirement can be stated quite as simply
+as 'techniques for recovering the state of the system just before a
+disaster that led to the failure of the entire computer system',
+translating this requirement into computer programs that perform
+automatic disaster recovery is not straightforward.</P>
+<P>There is a large category of distributed applications that use
+(process, object) replication for availability. A large part of the
+effort involved in crafting these systems lies in maintaining the
+cardinality of the set of replicas. For example in primary-secondary
+replication, in the event that one component crashes, it is necessary
+to create a replacement on some operational node and hence maintain
+the cardinality of the set of processes to two. If the failed
+component is a secondary, then it is replaced. In the event of a
+primary failing the existing secondary is promoted to primary status
+and a new secondary created.</P>
+<P>In systems where components may fail and be recreated in other
+places, the internal composition of the set of a component group
+(referred to as a unit) may be seen to `walk' over a number of
+machines during normal system operation. Unit failure is a
+disaster. Disaster recovery requires that once sufficient components
+belonging to the unit have restarted, the unit should resume
+functioning without further delay. It is necessary that only the
+components belonging to the last unit configuration before the unit
+failure be part of the post-disaster unit configuration. Thus an
+algorithm is required which a component can execute to determine
+whether it belonged to the last unit configuration.</P>
+<P>The project has developed such an algorithm and is currently
+implementing it on a specific platform.</P>
+<P>The main contact for this work is 
+<A HREF="../group/David.Black/index.html">David Black</A>.</P>
+<HR>
+<A HREF="../index.html"><IMG SRC="../buttons/Home.gif" ALT="[HOME]" WIDTH=96 HEIGHT=24></A>
+<A HREF="../HP/index.html"><IMG SRC="../buttons/HP.gif" ALT="[HP]" WIDTH=96 HEIGHT=24></A>
+</BODY>
+</HTML>

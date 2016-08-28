@@ -1,0 +1,70 @@
+<HTML>
+<HEAD>
+<TITLE>OTS Compliant Arjuna</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<H1 ALIGN=CENTER>OTS Compliant Arjuna</H1>
+<H2>Introduction</H2>
+<P>Arjuna is an object-oriented programming system that
+dramatically simplifies the process of developing reliable distributed
+applications.  Arjuna allows programmers to focus on application
+functionality by providing a complete set of tools that takes care of
+well known problems encountered in programming distributed
+applications (such as differences between machine architectures, lack
+of centralised control and preserving consistency despite machine
+crashes).</P>
+<P>Distributed Arjuna applications operate using a traditional
+client-server model and can execute in a heterogeneous environment.
+Reliability is obtained through full support for distributed nested
+atomic transactions that operate on user-defined C++ objects.  Arjuna
+objects can be made persistent and replicated to ensure high
+availability.</P>
+<P>The system is entirely implemented in standard C++ and makes
+extensive use of the inheritance capabilities of the language to
+provide user-defined C++ objects with the properties of: persistence,
+recoverability, and concurrency control.  Other Arjuna system
+components implement atomic transactions, object replication
+mechanisms, and distribution and thread support.</P>
+<P>Arjuna is highly portable and currently runs on most Unix
+platforms. A port to Windows-NT is underway.</P>
+<P>Arjuna is the outcome of more than 10 years of research on
+reliable distributed computing at the University of Newcastle of Tyne
+and has been used both as a research tool and for building dependable
+applications.  For the last two years it has been used to support the
+online registration of all of the students at the University.  In this
+guise it maintains a highly available fully consistent triplicated 
+objectstore containing details of all students that could be accessed
+from anywhere on campus using PC and Macintosh front-ends.</P>
+<H2>Arjuna and OMG Standards</H2>
+<P>Future distributed computing applications are expected to be
+compliant with emerging standards from Object Management Group.  The
+main standard is CORBA (Common Object Request Broker
+Architecture). Two CORBA standards are of particular relevance: (i)
+distributed applications are expected to run on operating system
+independent 'middleware' software called Object Request Broker (ORB);
+and (ii) Object Transaction Service (OTS) standard is expected to be
+used for accessing and manipulating shared information (e.g., customer
+account in a database).</P>
+<P>Arjuna implements much of the CORBA OTS functionality. Some
+development work is necessary to make Arjuna OTS compliant and make it
+run over an ORB. We are currently working on making an OTS version of
+Arjuna. It is worth noting that Arjuna also implements other CORBA
+services such as Concurrency Control, Recovery, Externalisation, and
+Persistence that will be required by any OTS compliant
+implementation.</P>
+<P>Our approach is to make OTS/Arjuna capable of running on a wide
+variety of ORBs. A beta release of OTS/Arjuna (currently planned for
+Orbix, Chorus/Cool among others) is scheduled for December 1996.</P>
+<H2>Concluding Remarks</H2>
+<P>An OTS version of Arjuna will offer many advantages when compared
+to other such products. Because Arjuna's internal structure is
+object-oriented, it is relatively easy to customize Arjuna to suit
+specific application requirements.  For example, Arjuna can be easily
+customized to control transactions in a multi-vendor environment.
+Arjuna's advanced object-level replication mechanisms operate at any
+level of granularity and provide complete control over object
+availability. This facility - which is central to the provision of
+highly available services- is not yet available on any commercial
+products.</P>
+</BODY>
+</HTML>

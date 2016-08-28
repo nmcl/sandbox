@@ -1,0 +1,1100 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1 (Feb 5, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE> Fault-Tolerant Execution of Computationally and Storage Intensive Parallel Programs Over A Network Of Workstations: A Case Study </TITLE>
+<META NAME="description" CONTENT=" Fault-Tolerant Execution of Computationally and Storage Intensive Parallel Programs Over A Network Of Workstations: A Case Study ">
+<META NAME="keywords" CONTENT="doc">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="p057/stylesheet.css">
+</HEAD>
+<BODY LANG="EN">
+ <H1 ALIGN=CENTER>
+	Fault-Tolerant Execution
+	of Computationally and Storage Intensive Parallel Programs
+	Over A Network Of Workstations:
+	A Case Study
+</H1>
+<P ALIGN=CENTER><STRONG>
+	J.A.Smith  - S.K.Shrivastava
+<BR> 
+	Department of Computing Science,
+	The University of Newcastle upon Tyne, <BR> 
+	Newcastle upon Tyne,
+	NE1 7RU UK
+</STRONG></P><P>
+<P ALIGN=CENTER><STRONG>14 june 1995</STRONG></P><P>
+<P>
+<H3 CLASS=ABSTRACT>Abstract:</H3>
+<P CLASS=ABSTRACT>The paper considers the issues affecting the speedup attainable for
+computations that are demanding in both storage and computing
+requirements, e.g. several hundred megabytes of data and hours of
+computation time.  Specifically, the paper investigates the performance of
+matrix multiplication.  A fault-tolerant system
+for the <EM>bag of tasks</EM> computation structure using <EM>atomic actions</EM>
+(equivalent here to <EM>atomic transactions</EM>) to operate on
+persistent objects. 
+Experimental results are described.  Analysis, backed up by the
+experimental results, shows how best to structure such computations
+for obtaining reasonable speedups.
+</P><P>
+<H1><A NAME="SECTION00010000000000000000">1 Introduction</A></H1>
+<P>
+Where a network of workstations is employed for general purpose
+computing to ensure that each user has a good interactive response, it
+is observed that there are significant periods of inactivity,
+e.g. [<A HREF="p057.html#knMutk91">19</A>].  This gives rise to the desire to exploit the idle
+workstations in a general purpose network to perform
+computationally intensive work.  Indeed there are many reports of
+encouraging results obtained using large, and perhaps varying, numbers of
+workstations for problems executed in this way.
+<P>
+Within a similar context, the work described here focuses on large
+computations where the data manipulated and communicated is also very
+large, and scales with the problem, potentially exceeding bounds of
+primary storage, and so employing disk storage.  This paper addresses the
+question as to whether there is potential gain to be made from
+executing such computations in such an environment.  The example
+application considered here is matrix multiplication.  As well as
+being data intensive, this is one of the class of <EM>embarrassingly
+parallel</EM> applications which do not require synchronization between
+concurrent processes during the course of the computation.
+<P>
+A simple analysis, backed up by experimental results, shows what sort
+of speedup may be expected from the experimental configuration.  The
+network used consists of HP710 and HP730 workstations connected to a
+10&nbsp;Mbps ethernet and is used in this establishment for general purpose
+computing.
+<P>
+As the scale of a distributed computation is increased in either the
+number of participating nodes or its duration, the possibility of a
+failure occurring which might affect the execution of the computation
+must increase.  For example, the owner of a workstation which is
+participating in a computation may choose to reboot his machine.  If
+it is not possible to tolerate such an event, it is necessary to
+restart the entire computation.  Whether the computation continues
+after the fault or is restarted, application data structures on disk
+should be made consistent.
+<P>
+The second aspect of the work described here attempts to address such
+issues of fault tolerance through a fault-tolerant
+implementation of the well known <EM>bag
+of tasks</EM> structure, which is described in
+[<A HREF="p057.html#lindacar91">7</A>].  The fault tolerance is achieved through the use of <EM>
+atomic actions</EM> (equivalent here to <EM>atomic transactions</EM>) to
+operate on persistent objects, encapsulated in C++ classes.  An
+overview of the use of objects and actions in structuring reliable
+distributed systems is given in
+[<A HREF="p057.html#arjunashr87a">21</A>].
+<P>
+From the two threads of investigation in the paper it is finally possible to
+make some comments on the potential for performing a computation such
+as matrix multiplication in the way described.
+<P>
+For the purpose of the following discussion, a computation is
+described as <EM>in-core</EM> if
+all state is accommodated in physical memory for its duration.
+Likewise, a computation is referred to as
+<EM>out-of-core</EM> when, of the whole state residing on secondary
+storage, only a part is ever resident in physical memory at any time.
+The distinction is blurred in an environment which supports a virtual
+address space exceeding physical memory size since data may be
+declared larger than physical memory size and transparently paged in
+and out as it is accessed.  However, it is convenient to regard this
+configuration as out-of-core.
+<P>
+<H1><A NAME="SECTION00020000000000000000">2 Speedup Analysis</A></H1>
+<P>
+<A NAME="secspeedupanalysis">&#160;</A>
+<P>
+In absolute terms, the appropriate measure of speedup is that which
+relates the performance of the parallel computation running on <I>k</I>
+processors to that of the best possible sequential implementation.
+This is denoted 
+<P><A NAME="eqabsspeedup">&#160;</A> <IMG WIDTH=500 HEIGHT=15 ALIGN=BOTTOM ALT="equation24" SRC="p057/img2.gif"  > <P>
+where  <IMG WIDTH=13 HEIGHT=20 ALIGN=MIDDLE ALT="tex2html_wrap_inline417" SRC="p057/img3.gif"  >  is the elapsed time taken by the best sequential algorithm
+and  <IMG WIDTH=13 HEIGHT=20 ALIGN=MIDDLE ALT="tex2html_wrap_inline419" SRC="p057/img4.gif"  >  is the time taken by the parallel algorithm running on <I>k</I>
+processors.  This measure describes the speedup realised
+through parallelizing the computation.
+An alternative metric is the algorithmic speedup 
+<P><A NAME="eqalgspeedup">&#160;</A> <IMG WIDTH=500 HEIGHT=16 ALIGN=BOTTOM ALT="equation27" SRC="p057/img5.gif"  > <P>
+which
+relates the performance of the parallel implementation running with
+one processor to the same implementation running with <I>k</I> processors.
+For an ideally parallel application, when plotted against the number
+of processors, either measure
+should exhibit a linear relationship with unit gradient, though the
+latter has the value 1 for a single processor.
+For the purposes of this paper the speedup referred to by default
+is the algorithmic speedup  <IMG WIDTH=13 HEIGHT=22 ALIGN=MIDDLE ALT="tex2html_wrap_inline425" SRC="p057/img6.gif"  >  and the former referred to when
+necessary as the absolute speedup.
+<P>
+Where hierarchical memory storage is employed, it is found attractive
+to employ blocked techniques, [<A HREF="p057.html#matrixgol89">12</A>], to maximise locality and thereby
+gain greatest benefit from caching.  Such techniques decompose an
+operation on
+large matrices into a combination of operations on smaller
+submatrices, or blocks.  These considerations have led to the development
+of high performance matrix primitives such as the BLAS library.
+Also, 
+a block structuring appears to scale well, and so since the work here is
+concerned with operations on large matrices a block oriented operation
+seems appropriate.
+In block oriented matrix multiplication,
+each block in
+the
+product matrix is computed as the block dot product of appropriate row
+of blocks in the first and column of blocks in the second operand
+matrices.
+Each such block dot product may be computed in parallel.
+<P>
+The computation is modelled in two stages.  First it is assumed that
+all matrices reside in memory on one machine, then subsequently the
+model is refined such that all matrices reside on a disk
+connected to a single machine.
+In the model, the user starts a Master process, <I>M</I>,
+which creates a collection of slaves, <I>S1-Sn</I>, on separate
+workstations to perform the
+computation in parallel, see figure&nbsp;<A HREF="p057.html#figmodel">1</A>.  The master
+statically partitions the computation and informs each slave of its
+unique allocation of work.  The three matrix objects are located on
+one machine, initially assumed to reside in memory, but subsequently
+assumed to reside on disk.
+<P>
+<P><A NAME="38">&#160;</A><A NAME="figmodel">&#160;</A> <IMG WIDTH=376 HEIGHT=229 ALIGN=BOTTOM ALT="figure36" SRC="p057/img7.gif"  > <BR>
+<STRONG>Figure 1:</STRONG> A Model for Distribution of Parallel Matrix Multiplication<BR>
+<P>
+<P>
+It is assumed that all three matrices are square with  <IMG WIDTH=13 HEIGHT=12 ALIGN=BOTTOM ALT="tex2html_wrap_inline427" SRC="p057/img8.gif"  >  elements
+and are partitioned into  <IMG WIDTH=13 HEIGHT=25 ALIGN=MIDDLE ALT="tex2html_wrap_inline429" SRC="p057/img9.gif"  >  blocks, each containing  <IMG WIDTH=13 HEIGHT=25 ALIGN=MIDDLE ALT="tex2html_wrap_inline431" SRC="p057/img10.gif"  > 
+elements.  A block is accessed remotely with a cost  <IMG WIDTH=11 HEIGHT=18 ALIGN=MIDDLE ALT="tex2html_wrap_inline433" SRC="p057/img11.gif"  >  this
+being the memory to memory transfer time between two machines, and
+assumed equal for put and get operations.  It is assumed that
+communication is through a common medium, here the ethernet and that
+all such transfers are serialised so that the full bandwidth of the
+medium is exploited for the duration of the transfer.  This is because
+it is anticipated that the potentially large number of collisions
+resulting from uncoordinated access to the ethernet used in this
+experiment would be detrimental to performance.  Thus each block
+access operation implies sole access to the ethernet for its duration.
+The time to compute the product of two blocks is  <IMG WIDTH=10 HEIGHT=18 ALIGN=MIDDLE ALT="tex2html_wrap_inline435" SRC="p057/img12.gif"  > .  A single
+block of the output matrix is the dot product of entries in a block
+row of the first, and block column of the second, input matrices.
+Therefore, the time to compute a single block of the product of two
+square matrices of width <I>p</I> blocks is  <IMG WIDTH=93 HEIGHT=23 ALIGN=MIDDLE ALT="tex2html_wrap_inline439" SRC="p057/img13.gif"  > .
+Since there are  <IMG WIDTH=13 HEIGHT=25 ALIGN=MIDDLE ALT="tex2html_wrap_inline429" SRC="p057/img9.gif"  >  blocks in the output matrix to be computed, the
+time taken by a single slave to complete the computation when
+accessing objects remotely is
+<P><A NAME="eqincoresingleslave">&#160;</A> <IMG WIDTH=500 HEIGHT=17 ALIGN=BOTTOM ALT="equation45" SRC="p057/img14.gif"  > <P>
+<P>
+The other parameter of interest is the attainable speedup with
+addition of extra slave processes.  As suggested earlier, for an
+ideally parallel application, the speedup should be linear with unit
+gradient.  However, in this experiment, all communication is
+serialised and in addition the communication medium has a limited
+bandwidth.  In the presence of a solitary slave, the utilisation of
+this medium is given by the ratio:
+<P> <IMG WIDTH=329 HEIGHT=32 ALIGN=BOTTOM ALT="displaymath413" SRC="p057/img15.gif"  > <P>
+As the number of slaves is increased to <I>k</I>, this fraction increases
+by a factor <I>k</I>.  A limit occurs when the shared communications medium
+is fully utilized, such that
+<P><A NAME="eqgeneralspeedupmax">&#160;</A> <IMG WIDTH=500 HEIGHT=29 ALIGN=BOTTOM ALT="equation53" SRC="p057/img16.gif"  > <P>
+If more slaves are added beyond this point, then the total time taken
+in data transport throughout the computation cannot decrease.  In this
+very simplified model, speedup grows linearly up to the cut off point
+and then remains constant.
+In the example of matrix multiplication described above, the
+task communication time is  <IMG WIDTH=58 HEIGHT=23 ALIGN=MIDDLE ALT="tex2html_wrap_inline447" SRC="p057/img17.gif"  >  and the maximum speedup is:
+<P><A NAME="eqincorespeedupmax">&#160;</A> <IMG WIDTH=500 HEIGHT=32 ALIGN=BOTTOM ALT="equation58" SRC="p057/img18.gif"  > <P>
+<P>
+The estimates computed so far do not take into account the cost of
+disk access.  For the second stage of analysis, a single disk store is
+assumed attached to one of the machines which acts as a server.  The
+input and output matrices now reside on this disk.  When accessed
+through a file system such as that of UNIX, disk transfers are
+buffered and writes not necessarily completed before a synchronising
+primitive such as <EM>sync()</EM>.  Similarly input is via buffers which
+effectively act as a cache.  The filesystem cache is at the level of
+disk rather than application level blocks, but clearly reading from
+cache is likely to be cheaper than reading from disk.  In following
+discussions unqualified references to blocks always refer to
+application level blocks, i.e. submatrices.  Separate terms are
+introduced;  <IMG WIDTH=15 HEIGHT=18 ALIGN=MIDDLE ALT="tex2html_wrap_inline449" SRC="p057/img19.gif"  >  for reading a block from cache,  <IMG WIDTH=16 HEIGHT=18 ALIGN=MIDDLE ALT="tex2html_wrap_inline451" SRC="p057/img20.gif"  >  for
+reading a block from disk and  <IMG WIDTH=13 HEIGHT=18 ALIGN=MIDDLE ALT="tex2html_wrap_inline453" SRC="p057/img21.gif"  >  for writing a block to disk.
+Initially, it is assumed still that complete block accesses are
+serialised, such that the time to read a remote block is  <IMG WIDTH=44 HEIGHT=18 ALIGN=MIDDLE ALT="tex2html_wrap_inline455" SRC="p057/img22.gif"  >  from cache or  <IMG WIDTH=45 HEIGHT=18 ALIGN=MIDDLE ALT="tex2html_wrap_inline457" SRC="p057/img23.gif"  >  from disk and to write a remote
+block  <IMG WIDTH=42 HEIGHT=18 ALIGN=MIDDLE ALT="tex2html_wrap_inline459" SRC="p057/img24.gif"  > .  There are two limiting cases, the first where
+all required blocks may be accomodated in the cache such that the only
+disk access cost is to initialize the cache, and the second where no
+benefit is gained from the cache.
+<P>
+<UL><LI>
+If it is assumed that all blocks are accomodated in the cache, then
+only the initial read of a block is from disk.  For this to be the
+case, the overall size of the operand matrices must be small enough
+that both nay be accomodated in cache.  The total number of block
+reads is  <IMG WIDTH=19 HEIGHT=25 ALIGN=MIDDLE ALT="tex2html_wrap_inline461" SRC="p057/img25.gif"  >  and the number of unique blocks, and therefore the
+number of block reads which are from disk, is  <IMG WIDTH=19 HEIGHT=25 ALIGN=MIDDLE ALT="tex2html_wrap_inline463" SRC="p057/img26.gif"  > .  Then the single
+slave computation time is given by the following.
+<P><A NAME="eqoutcoremaxcachesingleslave">&#160;</A> <IMG WIDTH=500 HEIGHT=17 ALIGN=BOTTOM ALT="equation75" SRC="p057/img27.gif"  > <P>
+Similarly, the estimate for the maximum speedup is now
+<P><A NAME="eqoutcoremaxcachespeedup">&#160;</A> <IMG WIDTH=500 HEIGHT=32 ALIGN=BOTTOM ALT="equation84" SRC="p057/img28.gif"  > <P>
+In this case, as the matrix size is increased and <I>p</I> becomes large,
+the limiting speedup tends to:
+<P><A NAME="eqoutcoremaxcachelimit">&#160;</A> <IMG WIDTH=500 HEIGHT=32 ALIGN=BOTTOM ALT="equation93" SRC="p057/img29.gif"  > <P><LI>
+The other extreme is where all reads are from disk.  This is the case
+if the cache is not large enough to accomodate a single block.
+However, if even a single block is accomodated in cache then there is
+some chance that two slaves each request the same block, one after the
+other.  Assuming, all reads are from disk however, the single slave
+time is:
+<P><A NAME="eqoutcoremincachesingleslave">&#160;</A> <IMG WIDTH=500 HEIGHT=17 ALIGN=BOTTOM ALT="equation99" SRC="p057/img30.gif"  > <P>
+and the maximum speedup:
+<P><A NAME="eqoutcoremincachespeedup">&#160;</A> <IMG WIDTH=500 HEIGHT=32 ALIGN=BOTTOM ALT="equation107" SRC="p057/img31.gif"  > <P>
+with the limiting speedup being:
+<P><A NAME="eqoutcoremincachespeeduplimit">&#160;</A> <IMG WIDTH=500 HEIGHT=32 ALIGN=BOTTOM ALT="equation115" SRC="p057/img32.gif"  > <P></UL>
+<P>
+It is also possible to compute the expected time to perform the
+computation out-of-core on a single machine, simply by removing the
+communication cost from
+equation&nbsp;<A HREF="p057.html#eqoutcoremaxcachesingleslave">6</A> or
+<A HREF="p057.html#eqoutcoremincachesingleslave">9</A> respectively:
+<P><A NAME="eqoutcoremaxcachesequential">&#160;</A> <IMG WIDTH=500 HEIGHT=17 ALIGN=BOTTOM ALT="equation124" SRC="p057/img33.gif"  > <P>
+and
+<P><A NAME="eqoutcoremincachesequential">&#160;</A> <IMG WIDTH=500 HEIGHT=17 ALIGN=BOTTOM ALT="equation131" SRC="p057/img34.gif"  > <P>
+<P>
+In the parallel configuration, performance is limited by the least of
+disk and communication bandwidths.  While write operations must at
+least eventually be to remote disk, there is a possibility for
+allowing read operations to progress in parallel with write operations
+if the server machine has large memory allocation.  While caching
+inevitably occurs through file system buffer space, explicit block
+level caching is not considered further in this paper.
+<P>
+Before actual values can be derived for the estimates above, it is
+necessary to measure the various primitive operation times,  <IMG WIDTH=10 HEIGHT=18 ALIGN=MIDDLE ALT="tex2html_wrap_inline435" SRC="p057/img12.gif"  > ,
+ <IMG WIDTH=11 HEIGHT=18 ALIGN=MIDDLE ALT="tex2html_wrap_inline433" SRC="p057/img11.gif"  > , etc.  This is described, in the remaining parts of this
+section.
+<P>
+<H2><A NAME="SECTION00021000000000000000">2.1 Experimental Values</A></H2>
+<P>
+<A NAME="secspeedupexperimental">&#160;</A>
+<P>
+The machines to be employed in the computation are HP710 and HP730
+workstations with 32&nbsp;Mbytes and 64&nbsp;Mbytes of physical memory
+respectively and running HPUX&nbsp;9.01.  The block size is effectively
+bounded by memory availability.  To perform a block product it is
+necessary to hold a little over two blocks in memory.  In addition, to
+compute a block dot product, the sum must be held in memory.  Since
+the compute machines are all HP710 workstations with 32&nbsp;Mbytes of
+memory, it seems unlikely that a block size of more than 1000 square,
+i.e. 8&nbsp;Mbytes, may be employed.
+<P>
+<H3><A NAME="SECTION00021100000000000000">2.1.1 Computation Cost</A></H3>
+<P>
+<A NAME="secanalysisvaluescomputation">&#160;</A>
+<P>
+A matrix multiplication primitive is implemented as <I>
+operator*=()</I>, using the conventional dot product algorithm, for a C++
+template class, <B>Matrix</B>, instantiated for <I>double</I>.  The
+performance of this operation is shown in
+figure&nbsp;<A HREF="p057.html#figgraphincore">2</A>.
+<P><A NAME="149">&#160;</A><A NAME="figgraphincore">&#160;</A> <IMG WIDTH=489 HEIGHT=349 ALIGN=BOTTOM ALT="figure147" SRC="p057/img35.gif"  > <BR>
+<STRONG>Figure 2:</STRONG> 
+	In-core Matrix Multiplication.  Both axes are logarithmic.
+The 	values plotted in the graph are average of at least 10
+measurements.  <BR>
+<P>
+The duration of the entire computation is expected to be proportional
+to the cube of the matrix width.  For this selection of matrix sizes,
+this appears to be so, though performance is better for small
+matrices, where presumably processor level caching is of benefit.
+Since a 250 square matrix computation is completed in about 3.38s, it
+appears that the effective computation rate for larger matrices is
+about 4.6 million floating point multiply operations per second.  The
+implementation of this operation aims to minimize the memory
+requirements for large matrices.  While some care is taken over the
+implementation, it is not claimed that no further performance
+improvement may be gained, either through lower level blocking to
+exploit processor cache or faster algorithm.  Ultimately, it would
+seem preferable to employ a library primitive, such as from BLAS.
+<P>
+<H3><A NAME="SECTION00021200000000000000">2.1.2 Communication Cost</A></H3>
+<P>
+<A NAME="secanalysisvaluescommunication">&#160;</A>
+<P>
+Assuming that the ethernet bandwidth of 10&nbsp;Mbps may be used
+completely, a transfer rate of 1.25&nbsp;Mbytes per second is possible.  A
+part of this bandwidth is taken up with protocol headers however.  A
+simple experiment is performed to measure the practical transfer rate.
+The procedure is to make transfer by TCP, setting up a new connection
+for each transfer.  In general, such a procedure is likely to be
+expensive, but here where all transfers are sizeable the cost is
+acceptable.  Employing no buffer copying at either end, the maximum
+rate observed for transfers of 1&nbsp;Mbyte upwards from memory on source
+machine to memory on the destination machine is about 1&nbsp;Mbyte per
+second.  Both machines are HP710.  This is not inconsistent with a
+study of communication rates in a range of network parallel
+programming environments, [<A HREF="p057.html#lindadoug93">10</A>].
+<P>
+<H3><A NAME="SECTION00021300000000000000">2.1.3 Disk Access Cost</A></H3>
+<P>
+<A NAME="secanalysisvaluesdisk">&#160;</A>
+<P>
+The performance of various primitive disk operations is measured and
+the results presented in
+Figures&nbsp;<A HREF="p057.html#figgraphdiskwrite">3</A>-<A HREF="p057.html#figgraphdiskcacheread">5</A>.
+<P><A NAME="161">&#160;</A><A NAME="figgraphdiskwrite">&#160;</A> <IMG WIDTH=490 HEIGHT=349 ALIGN=BOTTOM ALT="figure159" SRC="p057/img36.gif"  > <BR>
+<STRONG>Figure 3:</STRONG> 
+	Performance of write new file operation.  The 	values plotted
+in the graph are average of at least 3 	measurements.  <BR>
+<P>
+<P><A NAME="166">&#160;</A><A NAME="figgraphdiskoverwriteread">&#160;</A> <IMG WIDTH=490 HEIGHT=349 ALIGN=BOTTOM ALT="figure164" SRC="p057/img37.gif"  > <BR>
+<STRONG>Figure 4:</STRONG> 
+	Performance of disk file read operation.  The 	values plotted
+in the graph are average of at least 3 	measurements.  <BR>
+<P>
+<P><A NAME="171">&#160;</A><A NAME="figgraphdiskcacheread">&#160;</A> <IMG WIDTH=490 HEIGHT=349 ALIGN=BOTTOM ALT="figure169" SRC="p057/img38.gif"  > <BR>
+<STRONG>Figure 5:</STRONG> 
+	Performance of cached file read operation.  The 	values
+plotted in the graph are average of at least 3 	measurements.  <BR>
+<P>
+Locally mounted disks are used for these and subsequent tests, to
+avoid any further cost associated with NFS paths.  The operations
+measured are; write new file data, read file from disk cache, read
+file from disk.  It is assumed that application level block access
+equates to these basic operations.  These operations are timed on the
+two alternative disk configurations used in subsequent experiments,
+i.e. 710 boot disk and a larger disk mounted locally on /tmp on the
+HP730 machines.
+<P>
+It is seen that reading a cached file is over 10 times cheaper than
+reading the same file from disk.  The cost of reads in a particular
+computation is dependent on the scale of the computation, i.e. the
+extent to which benefit is gained from caching.  This provides
+justification for considering the two extreme cases earlier, though
+clearly it would be desirable to maximise cache benefit.
+<P>
+The remaining basic operation, which entails overwriting existing file
+space with new data appears, through measurement, to have similar cost
+to the disk read, but is not considered further in this particular
+application which is creating a new matrix as the product of two
+existing matrices.  The reason for the significantly higher cost of
+writing new file space is presumably the need to find free blocks and
+update file structure data.
+<P>
+For a large range of file sizes these results appear roughly linear.
+For a first approximation it is possible to derive expressions in
+terms of  <IMG WIDTH=13 HEIGHT=12 ALIGN=MIDDLE ALT="tex2html_wrap_inline475" SRC="p057/img39.gif"  > , the block width in elements, for the disk access
+parameters,  <IMG WIDTH=13 HEIGHT=18 ALIGN=MIDDLE ALT="tex2html_wrap_inline453" SRC="p057/img21.gif"  > ,  <IMG WIDTH=16 HEIGHT=18 ALIGN=MIDDLE ALT="tex2html_wrap_inline451" SRC="p057/img20.gif"  > ,  <IMG WIDTH=15 HEIGHT=18 ALIGN=MIDDLE ALT="tex2html_wrap_inline449" SRC="p057/img19.gif"  >  by fitting lines to the most
+linear range of each set of measurements.  The range 100&nbsp;Kbytes to
+10&nbsp;Mbytes is employed in this work.  While for smaller block sizes,
+there is certainly some error, the smallest block size used in
+subsequent experiments is 125.
+<P>
+<H2><A NAME="SECTION00022000000000000000">2.2 Application Level Measurements</A></H2>
+<P>
+<A NAME="secapplicationmeasurements">&#160;</A>
+<P>
+A prototype of the computation is implemented based on the Arjuna tool
+kit, [<A HREF="p057.html#arjunapswl95">20</A>].  Arjuna is a programming system which
+supports construction of distributed applications which manipulate
+persistent objects (encapsulated in C++ classes) using atomic actions.
+Typically, these facilities are employed to implement a fault tolerant
+application, but this first implementation exploits only support for
+persistent objects.  The shared matrices <I>A</I>, <I>B</I> and <I>C</I>
+are each implemented as a collection of persistent objects.  Each such
+object encapsulates an instance of the class <B>Matrix</B> mentioned in
+section&nbsp;<A HREF="p057.html#secanalysisvaluescomputation">2.1.1</A>.  When not in use, the
+state of a persistent object is held on disk storage in an object
+store.  When an object is activated, its state is loaded into an
+object server automatically.  A single server is employed to serve all
+matrices, thereby implementing the desired arbitration of the
+ethernet.  Distribution in Arjuna is supported through an RPC, and the
+version employed here supports optional use of the TCP protocol with
+connection establishment on a per-call basis.  Some optimisation of
+this RPC mechanism has been performed to exploit homogeneity of
+machines.  In this implementation, the slaves are created within
+separate processes forked by the master at computation startup.
+<P>
+Available local disk space is limited to about 30&nbsp;Mbytes on the hp710
+machines.  Since doubles are 8&nbsp;bytes, a convenient size to choose for
+the matrices is 1000 square.  The total size of the data contained in
+the three matrices is then 24&nbsp;Mbytes and some space is required for
+object store overheads and the bag object.  Since the overall matrix
+size places an upper bound on the block size for a given number of
+workers, it would be preferable to employ larger matrices, but for
+even 1100 square matrices, the data space alone would be over
+29&nbsp;Mbytes.  For the somewhat small size of 1000 square, the in-core
+sequential time is measured at 221s on the HP710 machine.
+<P>
+In the graph shown in figure&nbsp;<A HREF="p057.html#figgraph1000dnq">6</A> measured times
+for the distributed computation run with two alternative block sizes
+are shown.
+<P><A NAME="187">&#160;</A><A NAME="figgraph1000dnq">&#160;</A> <IMG WIDTH=474 HEIGHT=341 ALIGN=BOTTOM ALT="figure185" SRC="p057/img40.gif"  > <BR>
+<STRONG>Figure 6:</STRONG> 
+	Parallel Multiplication of 1000 square 	Matrices with Block
+Sizes 125 and 250.  The values plotted are averaged over 5
+measurements.  <BR>
+<P>
+The experiment employs 1000 square matrices and block sizes, or
+granularities, of 125 and 250.  The two input matrices exist already
+on disk at the start of the computation, but the output matrix is
+created in the course of the computation.  Each slave is parameterized
+with the total number of slaves and a unique integer value between&nbsp;0
+and the number of slaves&nbsp;-&nbsp;1.  Then each slave computes a unique set
+of blocks of the output matrix, and in the absence of failure, the
+computation completes.  From equations of
+section&nbsp;<A HREF="p057.html#secanalysisvaluesdisk">2.1.3</A>, the expected values of single
+slave time and maximum speedup for both maximum and minimum disk cache
+benefit are computed and tabulated in
+table&nbsp;<A HREF="p057.html#tableresultscomparison1000">1</A> along with the measured
+values.
+<P><A NAME="465">&#160;</A><A NAME="tableresultscomparison1000">&#160;</A> <IMG WIDTH=459 HEIGHT=84 ALIGN=BOTTOM ALT="table192" SRC="p057/img42.gif"  > <BR>
+<STRONG>Table 1:</STRONG> Comparison Of Derived And Measured Results:  Single slave
+time, <I>T</I>1 in hours and maximum speedup  <IMG WIDTH=30 HEIGHT=22 ALIGN=MIDDLE ALT="tex2html_wrap_inline503" SRC="p057/img41.gif"  >  for
+multiplication of 1000 square matrices<BR>
+<P>
+For this size of matrix, it seems reasonable to expect some benefit
+from cache hits.
+<P>
+Figure&nbsp;<A HREF="p057.html#figgraph3000dnq">7</A> shows measurements of the
+fault-tolerant multiplication of two 3000 square matrices, using block
+sizes 750 and 250.  In this case, all shared objects are co-located on
+a single HP730 machine.
+<P><A NAME="252">&#160;</A><A NAME="figgraph3000dnq">&#160;</A> <IMG WIDTH=474 HEIGHT=346 ALIGN=BOTTOM ALT="figure250" SRC="p057/img43.gif"  > <BR>
+<STRONG>Figure 7:</STRONG> 
+	Parallel Multiplication of 3000 square 	Matrices with Block
+Size 750.  The 	shared objects reside on a single HP730 machine.  <BR>
+<P>
+As before, derived and measured values are compared in
+table&nbsp;<A HREF="p057.html#tableresultscomparison3000">2</A>.
+<P><A NAME="483">&#160;</A><A NAME="tableresultscomparison3000">&#160;</A> <IMG WIDTH=459 HEIGHT=84 ALIGN=BOTTOM ALT="table256" SRC="p057/img44.gif"  > <BR>
+<STRONG>Table 2:</STRONG> Comparison Of Derived And Measured Results:  Single slave
+time, <I>T</I>1 in hours and maximum speedup  <IMG WIDTH=30 HEIGHT=22 ALIGN=MIDDLE ALT="tex2html_wrap_inline503" SRC="p057/img41.gif"  >  for
+multiplication of 3000 square matrices<BR>
+<P>
+The measured single slave time is seen to be about 2.1&nbsp;hours and the
+maximum speedup estimated at about 3.9
+<P>
+The estimated in-core computation time is about 1.6&nbsp;hours on a HP710
+machine, suggesting an absolute speedup of about 3.0.  On a HP730
+machine the estimated in-core computation time is about 1.1&nbsp;hours,
+suggesting a speedup of 2.0.  However, neither machine has sufficient
+memory to perform the computation in-core.  Estimates of the expected
+duration of an out-of-core implementation of the computation on a
+HP730, with block size 750, may be computed for either maximum or
+minimum cache benefit being approximately 1.25 and 1.33&nbsp;hours
+respectively.  These are compared with a measured value of about
+1.4&nbsp;hours.  The most favourable speedup figure that may be claimed
+then is 2.6 over this latter value, though it is acknowledged that
+considerable resources have been exploited in the effort.
+Work proceeds to attempt to explain
+observed discrepancy between measured and derived results, hopefully
+identifying potential savings in the implementation.
+<P>
+<H1><A NAME="SECTION00030000000000000000">3 Fault Tolerant Matrix Multiplication</A></H1>
+<P>
+<H2><A NAME="SECTION00031000000000000000">3.1 General Approach</A></H2>
+<P>
+<A NAME="secftmatrixmultiplicationapproach">&#160;</A>
+<P>
+The model shown in figure&nbsp;<A HREF="p057.html#figmodel">1</A> is modified such that the
+master <I>M</I> places a description of each of the tasks making up the
+whole computation into a shared repository, called a bag.  At the
+start of the computation, the master notifies slaves of the location
+of the bag object as well as the computation data objects.  The slaves
+repeatedly withdraw a single task description at a time from the bag
+and complete that task before returning to the bag for another task.
+The work is thereby balanced between potentially heterogeneous machines.
+The simplest configuration locates the bag of tasks on the same
+machine as the three matrix objects.
+<P>
+A fairly common occurrence in a workstation cluster environment is the
+failure, i.e.&nbsp;crash, or reboot of a single machine, so it seems desirable
+to be able to tolerate such failures in a way other than restarting
+the whole computation.  It is assumed that
+any data in volatile
+storage is lost, but that held on disk storage remains unaffected.  There are
+then three areas of concern:
+<UL><LI>
+A machine hosting a slave may fail between the point at which the
+slave extracts a task from the bag and the point at which it completes
+writing the outputs.  In the event of such a failure, the task being
+performed is not completed, though partial results may have been written.<LI>
+The machine hosting the shared objects may fail.  Such a failure
+prohibits any further progress by any of the slaves and any results not
+saved to secondary storage are lost.<LI>
+The machine hosting the master, which initiates and subsequently waits
+for completion of the computation may fail.  If the required number of
+slaves have been initiated before the failure, then the result is
+simply that the user does not know of the outcome of the computation
+though the computation may progress towards completion.  However, if
+this is not the case, then there may be no further progress although
+system resources may remain in use.
+</UL>
+<P>
+There is thus a range of levels of fault tolerance which may be
+implemented in a bag of tasks application.
+As mentioned earlier, fault tolerance in this work is implemented
+through the use of atomic actions operating on persistent objects.
+In object member functions, the programmer places lock requests, i.e.
+read or write, to suit the semantics of the operation, and typically
+surrounds the code within the function by an atomic action begin and
+end, i.e.&nbsp;commit, or abort.  The infrastructure manages the required
+access from and/or to disk based state.  Such objects may be
+distributed on separate machines.  By enclosing calls to multiple such
+distributed objects with another atomic action, it is possible to
+ensure distributed consistency.  An atomic action which is begun
+within such a called function is said to <EM>nest</EM> within the
+surrounding action in the callee function.  If such a nested action is
+aborted,  then locks obtained within the action are released
+immediately.  If the nested action is committed, such locks are passed up
+to the <EM>parent action</EM> and so on and only actually released
+finally when the top level, i.e.&nbsp;outermost, action commits.
+It is only at this point that the effects of nested actions become visible.
+By contrast, if the top level action is aborted, then the effects of
+all nested actions which have been committed are recovered, i.e.
+undone.
+In the event of a callee machine failing part way through
+a nested action at a remote site, that action is assumed to be aborted.
+<P>
+<OL><LI>
+To tolerate failure of a slave, it is desirable for the task
+currently being performed by that slave at the time of the failure to
+reappear in the bag, while any work already done towards completion of
+that task by the failed slave is recovered.  The approach employed is
+therefore for the slave to begin an atomic action before accessing an
+item of work from the bag, and commit the action after writing the
+output generated by that work.<LI>
+If the
+shared objects are replicated on multiple machines, then
+the failure of such a machine may be tolerated.<LI>
+To tolerate failure of the master process, the favoured approach here
+is to define a computation object which contains a description of the
+computation and maintains its completion status.  This object may be
+queried at any time to determine the completion status of the
+computation, and may be replicated for availability.  Use of such a
+computation object also allows processes on arbitrary machines to join
+in an ongoing computation.
+</OL>
+<P>
+A possible distribution of objects in a fully fault-tolerant parallel
+implementation of matrix multiplication which employs a bag of tasks
+for load balancing is shown in
+figure&nbsp;<A HREF="p057.html#figfigftbag">8</A>.
+<P>
+<P><A NAME="328">&#160;</A><A NAME="figfigftbag">&#160;</A> <IMG WIDTH=404 HEIGHT=228 ALIGN=BOTTOM ALT="figure326" SRC="p057/img45.gif"  > <BR>
+<STRONG>Figure 8:</STRONG> Possible Distribution of Objects in Fault-Tolerant 
+	Bag of Tasks Parallel Matrix Multiplication.
+	Shared objects are shown replicated for availability.
+	Disks which are shown dotted are not used explicitly 
+	by the application<BR>
+<P>
+<P>
+In this experiment a block structured algorithm is employed, so a task
+entails computation of a block of the output matrix, which is the
+block dot product of a block row of the first input matrix and block
+column of the second input matrix.
+<P>
+<H2><A NAME="SECTION00032000000000000000">3.2 Implementation</A></H2>
+<P>
+The implementation of parallel matrix multiplication described in
+section&nbsp;<A HREF="p057.html#secspeedupexperimental">2.1</A> has been enhanced by the
+addition of a prototype recoverable queue, implemented as
+a composite persistent object containing separately lockable links and
+elements.  A task is executed by a slave within the scope of an atomic
+action and involves calling the <EM>dequeue()</EM> operation of the queue
+to obtain the next available task description, performing the
+corresponding calculation, then storing the results in the output
+matrix.
+<P>
+<H3><A NAME="SECTION00032100000000000000">3.2.1 Bag of Tasks</A></H3>
+<P>
+The requirements of a recoverable bag are similar to the specification
+of a semiqueue in [<A HREF="p057.html#weihl85">23</A>].  A convenient structure with which
+to implement the bag in Arjuna is a recoverable queue, similar to that
+described in [<A HREF="p057.html#queuebhm90">5</A>], which may be regarded as a possible
+implementation of a semiqueue.  Unlike a traditional queue which is
+strictly FIFO, a recoverable queue relaxes the ordering property to
+suit its use in a transactional environment.  If an element is
+dequeued within a transaction, then that element is write-locked
+immediately, but only actually dequeued at the time the transaction
+commits.  Similar use of
+recoverable queues with multiple servers in asynchronous transaction
+processing is described in
+[<A HREF="p057.html#tranreut93">13</A>], so only a brief description is given here through an example.
+<P>
+<P><A NAME="340">&#160;</A><A NAME="figsharedqueue">&#160;</A> <IMG WIDTH=487 HEIGHT=254 ALIGN=BOTTOM ALT="figure338" SRC="p057/img46.gif"  > <BR>
+<STRONG>Figure 9:</STRONG> Operation of a Recoverable Queue<BR>
+<P>
+In figure&nbsp;<A HREF="p057.html#figsharedqueue">9</A>(a), two processes, <I>s1</I> and <I>s2</I>,
+are shown having dequeued elements from this queue, <I>e1</I> and <I>e2</I>
+respectively.
+In the absence of failures, say <I>s1</I> completes processing <I>e1</I>
+before <I>s2</I> completes processing <I>e2</I>, then <I>s1</I> processes
+<I>e3</I>.
+However, figure&nbsp;<A HREF="p057.html#figsharedqueue">9</A>(b) shows <I>s1</I> having
+failed and its partially completed work aborted, such that <I>e1</I> is
+unlocked and so available for subsequent dequeue.
+Figure&nbsp;<A HREF="p057.html#figsharedqueue">9</A>(c) shows <I>s2</I> having completed
+processing of <I>e2</I>, now processing <I>e1</I>.
+<P>
+<H3><A NAME="SECTION00032200000000000000">3.2.2 Slave</A></H3>
+<P>
+After binding to a set of shared objects, the slave executes
+a loop which repeatedly dequeues a task from the queue, fetches the
+appropriate parts of the input matrix and computes and writes out the
+corresponding part of the result.  Each such iteration is contained
+within an atomic action.  This atomic action guarantees that the slave
+has free access to the corresponding block of the output matrix until
+commit or abort.
+Any failure of the slave leads to abort of the action, such that any uncommitted output, together with the
+corresponding <EM>dequeue()</EM> operation is recovered, leaving the
+unfinished task in the queue to be performed by another slave.
+<P>
+In database terms, the slave is coordinator for the atomic action, so
+that a failure of slave is failure of coordinator.  In a database
+application, the coordinator is required to ensure eventual outcome is
+consistent with notification to an operator and achieves this through
+a persistent record called an intentions list written during first
+phase of two phase commit protocol.  This record is used to ensure
+the action is completed consistently with operator wishes, or a
+failure notice given, in the event of crashes at either coordinator or
+participant sites.  However, complete knowledge of the action resides
+only at the coordinator site, so the action blocks during failure of
+its coordinator.  Such behaviour is not desirable here, where the
+intention is for an alternative slave to redo such a failed task.  The
+application described here is similar to the asynchronous
+transaction processing referred to earlier in that the coordinator is
+driven entirely by the contents of the queue entry.  In the former
+case, a response to an operator may be placed in a separate reponse
+queue, but in an application of the type described in this work this
+does not appear generally useful.  The correctness requirements are
+similar however, in that the work description must remain in the queue
+until corresponding work is completed.  Since each task entails
+computing from read only parameters a unique block of the ouput matrix
+and then writing it, idempotency is guarenteed.  Therefore correctness
+of queue operation in this application may be ensured by careful
+ordering of updates during commit processing.
+<P>
+Termination of the computation is detected by testing whether the
+queue is actually empty or not, as distinct from the condition where
+no element may be dequeued but the queue is not yet empty.
+<P>
+<H2><A NAME="SECTION00033000000000000000">3.3 Measurements</A></H2>
+<P>
+<A NAME="secresults">&#160;</A>
+<P>
+A rough measurement of the cost of employing this implementation of a recoverable queue
+may be obtained by performing fault tolerant and non fault tolerant 
+sequential computations and recording the difference in elapsed times.
+This is done for multiplication of 1000 square matrices on HP710 and the results shown in table&nbsp;<A HREF="p057.html#tableqoverhead">3</A>.
+<P><A NAME="390">&#160;</A><A NAME="tableqoverhead">&#160;</A> <IMG WIDTH=447 HEIGHT=145 ALIGN=BOTTOM ALT="table366" SRC="p057/img47.gif"  > <BR>
+<STRONG>Table 3:</STRONG> Cost of Employing Queue in Sequential Multiplication of 1000
+Square Matrices<BR>
+<P>
+In figure&nbsp;<A HREF="p057.html#figgraph1000dqnq">10</A> it is seen that the cost of fault
+tolerance remains fairly constant for varying number of slaves.
+<P><A NAME="397">&#160;</A><A NAME="figgraph1000dqnq">&#160;</A> <IMG WIDTH=474 HEIGHT=341 ALIGN=BOTTOM ALT="figure395" SRC="p057/img48.gif"  > <BR>
+<STRONG>Figure 10:</STRONG> 
+	Fault Tolerance Cost in Parallel Multiplication of 1000 square
+	Matrices with Block Sizes 125 and 250.
+<BR>
+<P>
+<P>
+The percentage overhead is relatively high in the above examples because the
+computation is of small scale.  The cost of using the queue is
+dependent on the number of tasks, rather than the matrix size.
+<UL><LI>
+There is a cost associated with
+creating the queue and initializing it with one entry to describe each
+piece of work.  This initialization entails enqueueing one entry per
+block of the output matrix, within a surrounding action, and
+committing that action.<LI>
+Secondly, there is the cost incurred by the slave of binding to the
+queue object and subsequently dequeuing an entry describing each piece
+of work.
+</UL><H1><A NAME="SECTION00040000000000000000">4 Related Work</A></H1>
+<P>
+<A NAME="relatedwork">&#160;</A>
+<P>
+There is growing interest in the use of workstations to perform
+parallel computations, as demonstrated by the increasing number of systems
+which support such programming, such as:
+Munin&nbsp;[<A HREF="p057.html#repmv763bis">8</A>], Linda&nbsp; [<A HREF="p057.html#lindacar91">7</A>],
+Mentat&nbsp;[<A HREF="p057.html#mentatgrim93">14</A>], PVM&nbsp;[<A HREF="p057.html#pvmSunderam90">22</A>].
+<P>
+Mechanisms to support fault tolerance may be transparent to the
+application programmer or explicit.  Checkpointing schemes such as the
+globally consistent mechanism of Orca, [<A HREF="p057.html#orcakaa92a">15</A>], and the
+optimistic scheme of Manetho, [<A HREF="p057.html#panrep932">11</A>] are examples of the
+former category.  While these systems require operating system level
+support, a scheme proposed for the widely used distributed parallel
+programming environment PVM, [<A HREF="p057.html#checkpointLeon93">16</A>] is portable.
+However, a global checkpointing scheme is unlikely to take advantage
+of the structure of a bag of tasks application, where there is an
+optimal point for checkpointing state, namely at task completion.  An
+alternative approach relying on primary backup process replication
+is implemented in Paralex, [<A HREF="p057.html#paralexbab90">2</A>].
+However, Paralex is suited to data flow type applications.
+<P>
+Pact, [<A HREF="p057.html#pactmaie93">17</A>], defines a set of extensions to a sequential
+programming language to enable implementation of fault-tolerant task
+based parallel programs.  The main program defines an execution graph
+where the nodes are atomic action functions where entry constitutes
+beginning the action, and exit constitutes ending the action.  In
+widely used terminology of atomic actions, all actions in Pact are top
+level actions.  The edges in the graph are user defined event
+dependencies, such that for instance one function is to be started on
+occurrence of the termination event of another function.  Actions share
+data defined in the main program, subdivided into <EM>dataunits</EM>,
+through an implementation of DSM, distributed shared memory.  Locks,
+according to single writer multiple reader policy, are acquired on <EM>
+dataunits</EM> as they are used within an action.  At the same time a
+required <EM>dataunit</EM> is migrated if necessary.  An action's
+termination event is not triggered until modified <EM>dataunits</EM> have
+been written to a log.  The runtime system, described in
+[<A HREF="p057.html#pactmaie94">18</A>], employs an Execution Manager to coordinate the
+overall program execution among a number of Supervisors, each
+responsible for management of a portion of the <EM>dataunits</EM> and a
+set of multithreaded server processes.  An action call may include a
+description of which <EM>dataunits</EM> are to be used for optimal
+Supervisor selection, and the supervisor allocates the call to a
+server process based on its accumulated resource usage information.
+Periodically, the Execution Manager forces global checkpoints which
+optimize restart recovery and allow truncation of log records.  The
+log is distributed and entries are timestamped to allow global
+ordering in the necessity for restart.  Recovery from failure of a
+single server node is possible through the logged information, though
+other failures appear to necessitate restart recovery, i.e.&nbsp;from the
+last global checkpoint.  While it is possible to express matrix
+multiplication in a bag of tasks style in Pact, Pact does not
+currently provide support for programming parallel computations which
+are distributed over a network.
+<P>
+The Distributed Resource Manager which has been implemented using ISIS,
+[<A HREF="p057.html#isisclar92">9</A>], does provide support for execution of large scale
+computations in parallel over a network of heterogeneous machines.  The
+resource manager, i.e.&nbsp;master, is replicated for availability and the
+causal group communications primitives of ISIS are employed to ensure
+consistent message ordering for exchanges between master and slaves,
+and master and user interface.  The system is presented as a fault
+tolerant distributed batch scheduling system.  While it may be
+possible to express a large scale matrix multiplication as repeated
+execution of a slave program with different parameters, each task is
+run as a separate executable, entailing a noticeable overhead in the
+associated <EM>fork()</EM>.  Furthermore, the system provides no explicit
+support for access to the large remote objects.
+<P>
+The bag of tasks structure is well suited to Linda, and an
+implementation of Linda for a network of workstations is available.
+FT-Linda, [<A HREF="p057.html#lindabak94">3</A>] implements additional primitives to
+support fault tolerance.  The extensions include atomic combinations
+of operations, the ability to define multiple tuple spaces, including
+stable tuple spaces (through replication) and atomic transfer of
+tuples between tuplespaces.  In FT-Linda, each such replica is updated
+independently, but a consistent multicast mechanism is used to ensure
+that identical update requests arrive at each replica in an identical
+order.  In the bag of tasks structure, shared data is located in
+replicated tuple space.  A slave atomically removes a task and
+replaces it by an <EM>in progress</EM> tuple, such that a monitor process
+can restore the appropriate work tuple in the event of a slave failing
+while processing a tuple.  As the slave processes a tuple, it writes
+results into a scratch tuple space and, on completion of the work,
+atomically replaces the <EM>in progress</EM> tuple by the contents of the
+scratch tuple space.  MOM, [<A HREF="p057.html#lindacan94">6</A>] partitions tuples into
+separate lists, including a <EM>busy</EM> list for work tuples which are
+being processed and a <EM>children</EM> list for tuples generated by a
+worker which has yet to call <EM>Done</EM>.  The busy list is then
+similar to the scratch tuple space of FT-Linda, and in both cases,
+there is an analogy to the use of nested atomic actions in the work
+reported in this paper.  Facilities for accessing very large objects
+are not supported however.  However, Plinda,
+[<A HREF="p057.html#lindaand91">1</A>], does propose access to persistent tuple spaces and
+extensions to Linda aimed at supporting efficient access to large data
+items.  Performance measurements however are not published, so that a
+comparative evaluation is not possible.
+<P>
+Experiments have been conducted in which the fault tolerance
+facilities provided by Argus were used to program a number of
+applications, [<A HREF="p057.html#orcabal92b">4</A>] Argus is a language and runtime
+system for programming reliable distributed applications and
+implements recovery units called <EM>guardians</EM>.  A guardian runs on
+a single node and contains data objects and <EM>handlers</EM> to operate
+on them, internally coordinating as necessary through <EM>mutex</EM>.
+Some of the data objects may be <EM>stable</EM> and are backed up to
+stable, e.g. secondary, storage, so as to be recovered after failure,
+while volatile objects are re-initialized.  Similarly to Arjuna, Argus
+implements a nested atomic action model to allow users to ensure
+distributed consistency.  For example, a simple implementation of
+parallel matrix multiplication is described where each slave is a
+guardian apportioned a part of the output matrix to compute by a master
+guardian.  Each slave checkpoints each computed row to stable storage
+and maintaining an integer value determining the next row to be
+computed.  This structure is chosen to optimize performance in a
+collection of homogeneous machines.  However, the strategy prevents
+other processes from taking over the work of a failed process and can
+thus degrade performance in the event of a failure occurring.  Another
+application considered is travelling salesman problem which is less
+regular than matrix multiplication.  Here again the approach suggested
+is to partition the work statically between slaves, with the master
+pre-computing the first couple of levels of the search tree.  Use of a
+resilient data type, as in [<A HREF="p057.html#weihl85">23</A>], is suggested as a possible
+way of making the master fault-tolerant, though issues of dynamic load
+balancing are not addressed.  The issues related to managing very
+large secondary storage based data sets have not been addressed
+explicitly and no performance results have been published, so that, as
+in the case of Plinda, a comparative evaluation is not possible.
+<P>
+<H1><A NAME="SECTION00050000000000000000">5 Concluding Remarks</A></H1>
+<P>
+<A NAME="concludingremarks">&#160;</A>
+<P>
+Interest in exploiting the parallel processing power of a network of
+workstations to perform large scale computations is growing.
+Typically workstations are allocated as single user machines, with
+storage resources sufficient only for a single user.  Obvious
+applications to consider first for execution in such a
+network environment are ones which make relatively modest demands for
+storage, or which can be partitioned into sufficiently small pieces.
+By contrast, the experiment described here is an attempt to perform a
+computation which manipulates large amounts of data
+This work has considered the computation of large scale matrix
+multiplication in a general purpose computing environment consisting
+of a network of commonly used workstations.
+<P>
+A prototype of the application has been implemented using the services
+of a class library for building fault tolerant distributed
+applications.  Optionally, a recoverable queue is employed to
+implement a fault tolerant bag of tasks structure.
+The examples considered have been limited by available disk space, but
+square matrices of width 3000 elements have been multiplied.
+In this case, the size of each matrix is 72&nbsp;Mbytes which exceeds
+available memory even on the more powerful HP730 workstation, of which
+there is a much smaller number at this establishment.  Even for this
+example then, the computation requires out-of-core techniques on these
+workstations.  
+Experiment with the prototype has yielded real though modest speedup.
+<P>
+For scalability, the computation is preferably block structured.
+The block size identifies a compromise with regard to
+performance of the computation.
+For a given matrix size, say <I>n</I>, the total amount of data
+accessed depends on the block size.  For a matrix partitioned into
+ <IMG WIDTH=13 HEIGHT=25 ALIGN=MIDDLE ALT="tex2html_wrap_inline429" SRC="p057/img9.gif"  >  blocks of size  <IMG WIDTH=13 HEIGHT=25 ALIGN=MIDDLE ALT="tex2html_wrap_inline431" SRC="p057/img10.gif"  > , the total data transferred is the
+product of the number of block transfers and the size of a block,
+i.e.
+ <IMG WIDTH=76 HEIGHT=25 ALIGN=MIDDLE ALT="tex2html_wrap_inline537" SRC="p057/img49.gif"  >  or  <IMG WIDTH=61 HEIGHT=25 ALIGN=MIDDLE ALT="tex2html_wrap_inline539" SRC="p057/img50.gif"  >  elements.
+Assuming the access cost itself increases linearly with the block
+size, then the overal time for a single remote slave to perform the
+computation decreases in inverse proportion to the block size.
+Similarly, the maximum speedup increases in proportion to the block size.
+The block size employed has been limited by available memory, but
+for the range of block sizes considered, the experimental results
+appear to confirm this result.
+<P>
+While the cost of reading a block from filesystem cache is certainly
+much lower then the cost of reading from disk, the cache can provide
+little benefit for large block size.  Blocks of the ouput matrix are
+computed by block row, so that a number of successive tasks, for the
+same block row of the output matrix, read the same block row of the
+first input matrix.  For the 3000 square matrix, a block row is
+18&nbsp;Mbytes for 750 square blocks and 6&nbsp;Mbytes for 250 square blocks.
+It seems more likely that the latter will be held in cache, so that on
+this basis it would be preferable to employ a smaller block size, but
+large enough to make maximum use of cache space.  However, as the
+overall matrix size is increased, the size of block of which a row may
+be held in cache will decrease.  For the example referred to above,
+the analysis suggests that the faster time for this computation should
+be obtained by using 750 square blocks rather than 250 square, even if
+all blocks are cached in the latter case, as shown in
+table&nbsp;<A HREF="p057.html#tableresultscomparison3000">2</A>.
+<P>
+The cost of provision for fault tolerance in failure free execution is
+found to reduce as the block size is increased.  Clearly, there is one
+entry added to the queue for each block of the output matrix at
+startup and one queue access for each block of the output matrix
+computed by a slave.
+This is confirmed through experiment.
+Clearly also though, the cost incurred though recovery following a
+failure increases as the block size increases.
+The normal execution time
+is increased by the cost of one block execution in the event of
+failure and immediate resumption.  Since there are  <IMG WIDTH=13 HEIGHT=25 ALIGN=MIDDLE ALT="tex2html_wrap_inline429" SRC="p057/img9.gif"  >  blocks, this
+overhead is  <IMG WIDTH=39 HEIGHT=25 ALIGN=MIDDLE ALT="tex2html_wrap_inline543" SRC="p057/img51.gif"  > %.
+If a slave in a parallel execution fails and does not resume, then the
+increase in overall execution time depends on the exact point of
+failure, but the same value as above may be regarded as a measure of the cost
+of recovery, separate to the issue of changing the number of slaves.
+<P>
+<H1><A NAME="SECTION00060000000000000000">Acknowledgements</A></H1>
+<P>
+The work reported here has been supported in part by grants from the
+UK Ministry of Defence, Engineering and Physical Sciences Research
+Council (Grant Number GR/H81078) and ESPRIT project BROADCAST (Basic
+Research Project Number 6360).  The support of all the Arjuna team is
+gratefully acknowledged, and in particular the assistance of M. Little, G.
+Parrington, and S. Wheater with implementation issues particularly
+relevant to this work.
+<P>
+<P><A NAME="SECTIONREF"><H2>References</H2></A><P>
+<DL COMPACT>
+<DT><A NAME="lindaand91"><STRONG>1</STRONG></A><DD>
+Brian&nbsp;G. Anderson and Dennis Shasha.
+Persistent Linda: Linda + transactions + query processing.
+In <EM>Workshop On Research Directions In High-Level Parallel
+  Programming Languages</EM>, pages 129-141, Mont Saint-Michel, France, June 1991.
+<P>
+<DT><A NAME="paralexbab90"><STRONG>2</STRONG></A><DD>
+Ozalp Babaoglu, Lorenzo Alvisi, Alessandro Amoroso, Renzo Davoli, and
+  Luigi&nbsp;Alberto Giachini.
+Paralex: An environment for parallel programming in distributed
+  systems.
+Technical Report UB-LCS-91-01, Univerity of Bologna, Laboratory for
+  Computer Science, April 1991.
+<P>
+<DT><A NAME="lindabak94"><STRONG>3</STRONG></A><DD>
+David&nbsp;Edward Bakken.
+<EM>Supporting Fault-Tolerant Parallel Programming in Linda</EM>.
+PhD thesis, Department of Computer Science, The University of
+  Arizona, Tucson, Arizona 85721, August 1994.
+Available as technical report TR94-23.
+<P>
+<DT><A NAME="orcabal92b"><STRONG>4</STRONG></A><DD>
+Henri&nbsp;E. Bal.
+Fault tolerant parallel programming in Argus.
+<EM>Concurrency: Practice and Experience</EM>, 4(1):37-55, February
+  1992.
+<P>
+<DT><A NAME="queuebhm90"><STRONG>5</STRONG></A><DD>
+Philip&nbsp;A. Bernstein, Meichun Hsu, and Bruce Mann.
+Implementing recoverable requests using queues.
+<EM>ACM SIGMOD</EM>, pages 112-122, 1990.
+<P>
+<DT><A NAME="lindacan94"><STRONG>6</STRONG></A><DD>
+Scott&nbsp;R. Cannon and David Dunn.
+Adding fault-tolerant transaction processing to Linda.
+<EM>Software-Practice And Experience</EM>, 24(5):449-466, May 1994.
+<P>
+<DT><A NAME="lindacar91"><STRONG>7</STRONG></A><DD>
+Nicholas Carriero and David Gelernter.
+<EM>How To Write Parallel Programs: A First Course</EM>.
+MIT Press, 1991.
+ISBN 0-262-03171-X.
+<P>
+<DT><A NAME="repmv763bis"><STRONG>8</STRONG></A><DD>
+John&nbsp;B. Carter, John&nbsp;K. Bennett, and Willy Zwaenepoel.
+Implementation and performance of Munin.
+In <EM>Proceedings of the 13th ACM Symposium on Operating Systems
+  Principles</EM>, Operating Systems Review, pages 152-164, Pacific Grove CA
+  (USA), October 1991.
+<P>
+<DT><A NAME="isisclar92"><STRONG>9</STRONG></A><DD>
+Timothy Clark and Kenneth&nbsp;P. Birman.
+Using the ISIS resource manager for distributed, fault-tolerant
+  computing.
+Technical Report 92-1289, Cornell University Computer Science
+  Department, June 1992.
+<P>
+<DT><A NAME="lindadoug93"><STRONG>10</STRONG></A><DD>
+Craig&nbsp;C. Douglas, Timothy&nbsp;G. Mattson, and Martin&nbsp;H. Schultz.
+Parallel programming systems for workstation clusters.
+Technical Report YALEU/DCS/TR-975, Yale University, Department Of
+  Computer Science, August 1993.
+<P>
+<DT><A NAME="panrep932"><STRONG>11</STRONG></A><DD>
+Elmootazbellah&nbsp;N. Elnozahy and Willy Zwaenepoel.
+Manetho: Transparent rollback-recovery with low overhead, limited
+  rollback and fast output.
+<EM>IEEE Transactions on Computers</EM>, May 1992.
+<P>
+<DT><A NAME="matrixgol89"><STRONG>12</STRONG></A><DD>
+Gene&nbsp;H. Golub and Charles F.&nbsp;Van Loan.
+<EM>Matrix Computations</EM>.
+John Hopkins University Press, second edition, 1989.
+ISBN 0-8018-3772-3.
+<P>
+<DT><A NAME="tranreut93"><STRONG>13</STRONG></A><DD>
+Jim Gray and Andreas Reuter.
+<EM>Transaction Processing: Concepts and Techniques</EM>.
+Morgan Kauffman, 1993.
+<P>
+<DT><A NAME="mentatgrim93"><STRONG>14</STRONG></A><DD>
+Andrew&nbsp;S Grimshaw.
+Easy to use parallel processing with Mentat.
+<EM>IEEE Computer</EM>, 26(5):39-51, May 1993.
+<P>
+<DT><A NAME="orcakaa92a"><STRONG>15</STRONG></A><DD>
+M.&nbsp;Frans Kaashoek, Raymond Michiels, Henri&nbsp;E. Bal, and Andrew&nbsp;S. Tanenbaum.
+Transparent fault-tolerance in parallel Orca programs.
+In <EM>Proceedings of the Symposium on Experiences with Distributed
+  and Multiprocessor Systems III</EM>, pages 297-312, Newport Beach, CA, March
+  1992.
+<P>
+<DT><A NAME="checkpointLeon93"><STRONG>16</STRONG></A><DD>
+Juan Leon, Allan&nbsp;L. Fisher, and Peter Steenkiste.
+Fail-safe PVM: A portable package for distributed programming with
+  transparent recovery.
+Technical Report CMU-CS-93-124, School of Computer Science, Carnegie
+  Mellon University, Pittsburgh, PA 15213, February 1993.
+<P>
+<DT><A NAME="pactmaie93"><STRONG>17</STRONG></A><DD>
+Joachim Maier.
+Pact - a fault tolerant parallel programming environment.
+In <EM>1st International Workshop on Software for Multiprocessors
+  and Supercomputers: Theory, Practice, Experience</EM>, St Petersburg, February
+  1993.
+<P>
+<DT><A NAME="pactmaie94"><STRONG>18</STRONG></A><DD>
+Joachim Maier.
+Fault-tolerant parallel programming with atomic actions.
+In <EM>4th Workshop on Fault-Tolerant Parallel and Distributed
+  Systems</EM>, College Station, Texas, June 1994. IEEE, Computer Society Press.
+<P>
+<DT><A NAME="knMutk91"><STRONG>19</STRONG></A><DD>
+M.W. Mutka and M.&nbsp;Livny.
+The available capacity of a privately owned workstation environment.
+<EM>Performance Evaluation</EM>, 12(4):269-284, July 1991.
+<P>
+<DT><A NAME="arjunapswl95"><STRONG>20</STRONG></A><DD>
+G.&nbsp;D. Parrington, S.&nbsp;K. Shrivastava, S.&nbsp;M. Wheater, and M.&nbsp;C. Little.
+The design and implementation of Arjuna.
+Technical report, University of Newcastle upon Tyne, Computing
+  Laboratory, 1995.
+<P>
+<DT><A NAME="arjunashr87a"><STRONG>21</STRONG></A><DD>
+Santosh&nbsp;K. Shrivastava, Graeme&nbsp;N. Dixon, and Graham&nbsp;D. Parrington.
+Objects and actions in reliable distributed systems.
+<EM>IEEE Software Engineering Journal</EM>, 2(5):160-168, September
+  1987.
+<P>
+<DT><A NAME="pvmSunderam90"><STRONG>22</STRONG></A><DD>
+V.S. Sunderam.
+PVM: A framework for parallel distributed computing.
+<EM>Concurrency: Practice and Experience</EM>, 2(4), Dec 1990.
+<P>
+<DT><A NAME="weihl85"><STRONG>23</STRONG></A><DD>
+William Weihl and Barbara Liskov.
+Implementation of resilient, atomic data types.
+<EM>ACM Transactions on Programming Languages and Systems</EM>,
+  7(2):244-269, April 1985.
+</DL>
+<P>
+<H1><A NAME="SECTION00080000000000000000">  About this document ... </A></H1>
+<P>
+ <STRONG>
+	Fault-Tolerant Execution
+	of Computationally and Storage Intensive Parallel Programs
+	Over A Network Of Workstations:
+	A Case Study
+</STRONG><P>
+This document was generated using the <A HREF="http://www-dsed.llnl.gov/files/programs/unix/latex2html/manual/"><STRONG>LaTeX</STRONG>2<tt>HTML</tt></A> translator Version 96.1 (Feb 5, 1996) Copyright &#169; 1993, 1994, 1995, 1996,  <A HREF="http://cbl.leeds.ac.uk/nikos/personal.html">Nikos Drakos</A>, Computer Based Learning Unit, University of Leeds. <P> The command line arguments were: <BR>
+<STRONG>latex2html</STRONG> <tt>-split 0 doc.tex</tt>. <P>The translation was initiated by jim.smith@ncl.ac.uk on Tue Apr 22 01:09:58 BST 1997<BR> <HR>
+<P><ADDRESS>
+<I>jim.smith@ncl.ac.uk <BR>
+Tue Apr 22 01:09:58 BST 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>
