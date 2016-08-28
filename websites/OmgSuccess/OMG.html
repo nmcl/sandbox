@@ -1,0 +1,471 @@
+<HTML>
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <META NAME="Generator" CONTENT="Microsoft Word 97">
+   <META NAME="Template" CONTENT="C:\Program Files\Microsoft Office\Templates\Technical\IEEE.dot">
+   <META NAME="GENERATOR" CONTENT="Mozilla/4.03 [en] (Win95; I) [Netscape]">
+   <META NAME="Author" CONTENT="Mark Little">
+   <TITLE>Using the OTS to support Web transactions</TITLE>
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000FF" VLINK="#551A8B" ALINK="#FF0000">
+
+<CENTER><B><FONT SIZE=+3>Providing end-to-end transactional Web applications
+using the Object Transaction Service</FONT></B></CENTER>
+
+<H2>
+<B>Introduction</B></H2>
+The Web frequently suffers from failures which can affect both the performance
+and consistency of applications running over it. For example, if a user
+purchases a cookie granting access to a newspaper site, it is important
+that the cookie is delivered and stored if the user’s account is debited;
+a failure could prevent either from occurring, and leave the system in
+an inconsistent state. For resources such as documents, failures may simply
+be annoying to users; for commercial services, they can result in loss
+of revenue and credibility.
+
+<P>Atomic transactions, with their "all-or-nothing" property, are a well-known
+technique for guaranteeing application consistency in the presence of failures.
+Although Web applications exist which offer transactional guarantees to
+users, these guarantees only extend to resources used at Web servers, or
+between servers; clients (browsers) are not included, despite their role
+being significant in applications such as mentioned previously. Providing
+<I>end-to-end transactional</I> <I>integrity</I> between the browser and
+the application (server) is therefore important, as it will allow work
+involving <I>both</I> the browser and the server to be atomic. However,
+current techniques based on cgi-scripts cannot provide end-to-end guarantees
+[<A HREF="#1">1</A>]. As illustrated in figure 1 the user selects a URL
+which references a cgi-script on a Web server (message 1), which then performs
+the transaction and returns a response to the browser (message 2) <I>after</I>
+the transaction has completed [<A HREF="#2">2</A>]. Returning the message
+during the transaction is incorrect since it may not be able to commit
+the changes.
+
+<P><IMG SRC="Image9.gif" HEIGHT=153 WIDTH=231>
+
+<P><I>Figure 1: transactions through cgi-scripts</I>
+
+<P>In a failure free environment, this mechanism works well. However, in
+the presence of failures it is possible for message 2 to be lost between
+the server and the browser, resulting in work at the server not being atomic
+with respect to any browser related work.
+
+<P>With the advent of Java it is possible to empower browsers so that they
+can fully participate within transactional applications. To be widely applicable
+any such transaction system must be standards compliant. The most widely
+accepted standard for distributed transactions is the Object Transaction
+Service (OTS) [<A HREF="#3">3</A>]. However, rather than require a browser
+to incorporate a full OTS implementation for all applications, we are interested
+in the case where it would be considered either undesirable or impractical,
+e.g., because of the overhead and security implications involved in incorporating
+the required CORBA services within a browser. In addition, we expect that
+the majority of an application’s resources, particularly in the area of
+electronic commerce, will continue to reside within protected domains.
+<H3>
+<B>End-to-end transactional guarantees</B></H3>
+Our aim was to allow the construction of transactional applications with
+end-to-end guarantees without requiring (substantial) support from the
+browser; the level of browser support will depend upon the application,
+but should be minimal, e.g., simply writing a cookie to the user’s disk.
+Figure 2 shows a lightweight transactional bank account: apart from necessary
+persistence mechanisms, the transaction and concurrency control services
+are all managed for the browser by the server; the cookie object still
+participates within any transactions involving the bank, and therefore
+the transaction manager guarantees that its state changes are transactional.
+
+<P><IMG SRC="Image10.gif" HEIGHT=259 WIDTH=311>
+
+<P><I>Figure 2: lightweight transactional browser</I>
+
+<P>In the following sections we shall describe how we have provided this
+lightweight transactional mechanism using the OTS.
+<H3>
+Browser resources</H3>
+The OTS specification allows transactional objects to delegate their ACID
+responsibilities to recoverable objects (those which support the <FONT FACE="Courier New">Resource</FONT>
+interface defined in the CosTransactions module); through this technique
+it is possible to encapsulate non-transactional resources within OTS <FONT FACE="Courier New">Resources</FONT>,
+such that they assume the responsibility of ensuring the object is transactional.
+Therefore, the solution we chose to the problem of providing lightweight
+end-to-end transactional guarantees is through the use of <FONT FACE="Courier New">Resource</FONT>
+implementations which "wrap" the non-transactional browser. These <FONT FACE="Courier New">Resources</FONT>
+are registered with, and driven by, the transaction manager at the server,
+and work with the browser-side application to make it transactional. This
+allows the browser portion of the application to be extremely simple and
+lightweight.
+
+<P>Although this browser <FONT FACE="Courier New">Resource</FONT> will
+typically be specific to the application for which it was created, the
+functional requirements all such <FONT FACE="Courier New">Resources</FONT>
+must fulfil will be the same:
+<UL>
+<LI>
+<I>prepare</I>: the <FONT FACE="Courier New">Resource</FONT> transmits
+to the browser application the identity of the transaction it has been
+registered with, which can be used to replay the transaction in the event
+of a failure. If the <FONT FACE="Courier New">Resource</FONT> passes any
+results back to the browser application (e.g., a cookie) it should not
+use them at this stage, since the transaction has not terminated. If the
+browser does not respond to this message, the server-side <FONT FACE="Courier New">Resource</FONT>
+may assume it has failed and cause the transaction to abort (by returning
+<FONT FACE="Courier New">VoteRollback</FONT> from prepare.) If the transaction
+aborts, <I>all</I> of the other work performed within its scope will be
+undone.</LI>
+
+<LI>
+<I>commit</I>: the application is guaranteed that all of the work performed
+within the transaction will be made durable, despite failures. Crash recovery
+mechanisms can be relied upon to complete partial transactions arising
+due to failures. Therefore, the <FONT FACE="Courier New">Resource</FONT>
+can make any "state changes" permanent, e.g., by instructing the browser
+to store the cookie, or display/decrypt the purchased document. If the
+<FONT FACE="Courier New">Resource</FONT> does not reply to the commit request
+then the transaction manager will assume it has crashed and crash recovery
+will complete the transaction.</LI>
+
+<LI>
+<I>rollback</I>: the <FONT FACE="Courier New">Resource</FONT> transmits
+the reason for the rollback to the browser, e.g., insufficient funds within
+the user’s account.</LI>
+</UL>
+This technique provides a lightweight means for Web applications to gain
+end-to-end transactional integrity. The transaction coordinator, and the
+majority of the transaction infrastructure, reside within the server, while
+the browser application remains relatively simple, needing only to be able
+to make any "changes" permanent in the case of a commit, or to undo them
+if the action aborts.
+<H2>
+<B>Overview of an OTS implementation</B></H2>
+We have designed and implemented <I>OTSArjuna</I>, a C++ transaction toolkit
+which complies with the OTS specification (including supporting subtransactions),
+and which provides programmers with the ability to implement Web applications
+with end-to-end transactional guarantees [<A HREF="#4">4</A>]. This OTS
+implementation is extremely portable, and runs on over 7 different ORBs.
+However, in the on-line example to be described later we have used Orbix
+2.2MT from <A HREF="http://www.iona.com">Iona</A>.
+
+<P>Rather than require programmers to make use of the low-level OTS, concurrency
+control and persistence APIs, OTSArjuna provides a high-level API for building
+transactional applications and frameworks [<A HREF="#5">5</A>]. This API
+automates the activities concerned with participating within an OTS transaction,
+such as creating and registering appropriate <FONT FACE="Courier New">Resource</FONT>
+implementations, propagating locks etc. The architecture of the system
+is shown in figure 3.
+
+<P><IMG SRC="Image11.gif" BORDER=0 HEIGHT=215 WIDTH=324>
+
+<P><I>Figure 3: OTSArjuna structure</I>
+
+<P>The OTSArjuna model for building transactional applications exploits
+object-oriented techniques to present programmers with a toolkit of classes
+from which application classes can inherit to obtain desired properties,
+such as persistence and concurrency control. Each class is concerned with
+a single functionality, and these classes form a hierarchy, part of which
+is shown in figure 4. By inheriting from <FONT FACE="Courier New">LockManager</FONT>,
+user classes are automatically transactional, with <FONT FACE="Courier New">LockManager</FONT>
+and <FONT FACE="Courier New">StateManager</FONT> being responsible for
+guaranteeing the ACID properties (isolation and durability respecitvely).
+Apart from specifying the scopes of transactions, and setting appropriate
+locks within objects, the application programmer does not have any other
+responsibilities: the system guarantees that appropriate <FONT FACE="Courier New">Resource</FONT>
+objects are registered with transactions, and that in the event of failures
+crash recovery mechanisms are invoked automatically.
+
+<P><IMG SRC="Image12.gif" HEIGHT=165 WIDTH=308>
+
+<P><I>Figure 4: OTSArjuna class hierarchy</I>
+<H2>
+<B>Bank cashpoint example</B></H2>
+To illustrate the technique of incorporating browsers into transactions,
+we have implemented a bank account example, which is available on-line
+(<A HREF="http://arjuna.ncl.ac.uk/">http://arjuna.ncl.ac.uk/</A>). Consider
+the case of an on-line bank which allows users to inspect, remove, and
+insert money from their accounts; the bank runs on an ORB which resides
+on a Web server. When money is removed it is converted into <I>digital
+cash tokens</I> which are stored and manipulated by the browser, and contain
+the token’s current "cash" balance; we shall assume that these tokens can
+be presented to other Web-commerce applications as payment for services.
+Insertion of money to an account is simply the reverse, whereby a token
+is consumed, and the user’s account is credited by the amount left within
+the token. The bank requires to make the delivery of the cash token to
+the user’s browser <I>and</I> the debiting of the user’s account atomic.
+Failures must not result in inconsistencies at the browser or the bank.
+
+<P><IMG SRC="Image13.gif" HEIGHT=345 WIDTH=604>
+
+<P><I>Figure 5: Bank applet.</I>
+
+<P>Figure 5 shows the browser portion of the application, consisting of
+a Java applet which displays a graphical representation of the bank; user
+accounts are accessed via a PIN. To guarantee consistency in the presence
+of failures, each operation is performed within the scope of a transaction;
+the transaction manager runs at the bank’s Web server. Although the operation
+to inspect an account is transactional, it only reads the state of the
+account and therefore there is no actual requirement for end-to-end transactional
+integrity: if a failure occurs, the user can simply re-issue the request.
+However, both withdrawing and inserting money require stronger transactional
+guarantees: each operation must atomically modify the account <I>and</I>
+either deposit or consume a digital cash token to/from the browser.
+
+<P>During the prepare phase of each transaction the applet will display
+the unique transaction identifier for the operation. During the commit
+phase, the bank server will return the digital cash token to the browser
+and the applet can then use this to animate (e.g., money appears to be
+dispensed). In a real system the token would need to be stored by the browser.
+If the transaction aborts, an error message will be displayed giving the
+reason, e.g., insufficient funds.
+<H3>
+<FONT SIZE=+2>Server application classes</FONT></H3>
+To enable the bank to service multiple clients concurrently, each account
+is a separate transactional object, responsible for its own persistence
+and concurrency control. Therefore, concurrent modifications to different
+bank accounts will not interfere. Using OTSArjuna, each bank account is
+an instance of the <FONT FACE="Courier New">Account</FONT> class, which
+is derived from <FONT FACE="Courier New">LockManager</FONT>:
+<PRE><FONT FACE="Courier New">enum Outcome { DONE, NOTDONE, INSUFFICIENT_FUNDS, ACCOUNT_ERROR, LOCKED };</FONT></PRE>
+
+<PRE><FONT FACE="Courier New">class Account : public LockManager</FONT>&nbsp;
+<FONT FACE="Courier New">{</FONT>&nbsp;
+<FONT FACE="Courier New">public:</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; Account ();</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; virtual ~Account ();</FONT></PRE>
+
+<PRE><FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; void insert (int amount);</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; void withdraw (int amount);</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; void inspect (int&amp; amount);</FONT></PRE>
+
+<PRE><FONT FACE="Courier New">private:</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; int amount;</FONT>&nbsp;
+<FONT FACE="Courier New">};</FONT></PRE>
+We shall first show the implementation of the <FONT FACE="Courier New">withdraw</FONT>
+method without browser participation. We will then describe the necessary
+browser <FONT FACE="Courier New">Resource</FONT> for end-to-end transactional
+guarantees, and return to the <FONT FACE="Courier New">withdraw</FONT>
+operation to show how it requires modification in order to incorporate
+this <FONT FACE="Courier New">Resource</FONT>. The <FONT FACE="Courier New">withdraw</FONT>
+method first starts a new transaction and then attempts to obtain a lock
+on the account object (by calling the <FONT FACE="Courier New,Courier">setlock</FONT>
+method of the <FONT FACE="Courier New,Courier">LockManager</FONT> class).
+Because the <FONT FACE="Courier New">withdraw</FONT> operation will modify
+the state of the account, it tries to obtain an exclusive (write) lock.
+If the operation is performed successfully (e.g., there is sufficient funds
+in the account), the transaction is committed, otherwise it is rolled back.
+(Note: for simplicity the code fragments shown do not perform all necessary
+error checking.)
+<PRE><FONT FACE="Courier New">void Account::withdraw (int money)</FONT>&nbsp;
+<FONT FACE="Courier New">{</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; Outcome result = NOTDONE;</FONT></PRE>
+
+<PRE><FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; OTS::get_current().begin();</FONT></PRE>
+
+<PRE><FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; if (setlock(new Lock(WRITE)) == GRANTED)</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; {</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /*</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * Check whether the user has sufficient</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * money to withdraw.</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; */</FONT>&nbsp;
+
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (amount >= money)</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; amount = amount - money;</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; result = DONE;</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; else</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; result = INSUFFICIENT_FUNDS;</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; }</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; else</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; result = LOCKED;</FONT>&nbsp;
+
+&nbsp;&nbsp;&nbsp; i<FONT FACE="Courier New">f (result == DONE)</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; OTS::get_current().commit(TRUE);</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; else</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; OTS::get_current().rollback();</FONT>&nbsp;
+<FONT FACE="Courier New">}</FONT></PRE>
+In order to involve the browser such that it can receive the cookie when
+the user’s account is finally debited, we need to create an instance of
+a specific <FONT FACE="Courier New">Resource</FONT> which will encapsulate
+the browser for the duration of the transaction. The signature of the <FONT FACE="Courier New">BrowserResource
+</FONT>is shown below.
+<PRE><FONT FACE="Courier New">class BrowserResource : public CosTransactions::ResourceBOAImpl</FONT>&nbsp;
+<FONT FACE="Courier New">{</FONT>&nbsp;
+<FONT FACE="Courier New">public:</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; BrowserResource (CosTransactions::otid_t tran, int outcome, CashToken&amp; amount);</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; virtual ~BrowserResource ();</FONT></PRE>
+
+<PRE><FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; CosTransactions::Vote prepare ();</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; void rollback ();</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; void commit ();</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; void forget ();</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; void commit_one_phase ();</FONT></PRE>
+
+<PRE><FONT FACE="Courier New">private:</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; Boolean saveState ();</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; Boolean restoreState ();</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; void removeState ();</FONT></PRE>
+
+<PRE><FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; int opOutcome;</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; CashToken cashAmount;
+&nbsp;&nbsp;&nbsp; CosTransactions::otid_t tid;</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; Browser applet; // our handle on the browser side of the application.</FONT>&nbsp;
+<FONT FACE="Courier New">};</FONT></PRE>
+When created, each <FONT FACE="Courier New">BrowserResource</FONT> is given
+the identity of the transaction it has been registered with, so that it
+can transmit it to the browser during the prepare phase; this can be used
+in the event of a failure. The <FONT FACE="Courier New">Resource</FONT>
+also receives the outcome of the operation and the cash token to send back
+to the browser. The browser applet is represented to the resource by an
+instance of the <FONT FACE="Courier New">Browser</FONT> class; this is
+simply a traditional client proxy for a corresponding object within the
+browser.
+
+<P>To make the browser transactional, the <FONT FACE="Courier New">BrowserResource</FONT>
+must keep a durable record of its progress; this may then be used by crash
+recovery in the event of a failure. For example, consider the implementation
+of the <FONT FACE="Courier New">prepare</FONT> method:
+<PRE><FONT FACE="Courier New">CosTransactions::Vote BrowserResource::prepare ()</FONT>&nbsp;
+<FONT FACE="Courier New">{</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; if (!saveState())</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return CosTransactions::VoteRollback;</FONT></PRE>
+
+<PRE><FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; // invoke operation on browser</FONT></PRE>
+
+<PRE><FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; if (applet->prepare(tid))</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return CosTransactions::VoteCommit;</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; else</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; {</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Failure - discard Resource’s state</FONT>&nbsp;
+
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; removeState();</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return CosTransactions::VoteRollback;</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; }</FONT>&nbsp;
+<FONT FACE="Courier New">}</FONT></PRE>
+Before the <FONT FACE="Courier New">BrowserResource</FONT> sends the transaction’s
+identity it calls <FONT FACE="Courier New">saveState</FONT> which will
+permanent sufficient information to allow its role in the transaction to
+be replayed in the event of a failure. If <FONT FACE="Courier New">saveState</FONT>
+fails, the transaction must abort. If the subsequent invocation on the
+browser proxy fails, the resource assumes that the browser has failed,
+removes any state it previously saved, and forces the transaction to rollback.
+If no errors occur during <FONT FACE="Courier New">prepare</FONT>, the
+resource informs the transaction coordinator that it is ready to commit.
+During the commit phase, the <FONT FACE="Courier New">Resource</FONT> sends
+the token to the browser and awaits an acknowledgement. If no acknowledgement
+is received, the <FONT FACE="Courier New">Resource</FONT> relies upon crash
+recovery mechanisms to complete its work.
+<PRE><FONT FACE="Courier New">void BrowserResource::commit ()</FONT>&nbsp;
+<FONT FACE="Courier New">{</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; // browser acknowledged receipt</FONT>&nbsp;
+
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; if (applet->commit(cashAmount))</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; {</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; removeState();
+&nbsp;&nbsp;&nbsp; }</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; else</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; {</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Some failure has occurred (browser, network).</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Crash recovery will have to deal with this.</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; }</FONT>&nbsp;
+<FONT FACE="Courier New">}</FONT></PRE>
+In the event of a rollback the resource will send an error message to the
+browser indicating the reason for the failure.
+<PRE><FONT FACE="Courier New">void BrowserResource::rollback ()</FONT>&nbsp;
+<FONT FACE="Courier New">{</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; removeState();</FONT>&nbsp;
+
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; /*</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp; * Send reason for failure. If this fails, the</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp; * browser will try again later, and be told</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp; * the transaction rolled back.</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp; */</FONT>&nbsp;
+
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; applet->rollback(reason);</FONT>&nbsp;
+<FONT FACE="Courier New">}</FONT></PRE>
+If a failure occurs during the transaction, the user can re-issue the request
+by supplying the transaction identifier. The crash recovery mechanisms
+at the server will determine the transaction outcome and complete the work.
+If no record of the transaction can be found it can be assumed that the
+transaction aborted.
+
+<P>Having considered the implementation of the <FONT FACE="Courier New">BrowserResource</FONT>,
+we can return to the <FONT FACE="Courier New">withdraw</FONT> operation.
+We wish to incorporate the browser within the transaction <I>before</I>
+it terminates, such that the browser will be informed of the outcome regardless
+of whether the transaction subsequently commits or rolls back. Therefore,
+after performing withdrawal we obtain a reference to the current transaction’s
+<FONT FACE="Courier New">Coordinator</FONT>, and register a new instance
+of the <FONT FACE="Courier New">BrowserResource</FONT> with it. The transaction
+then either commits or aborts, depending upon whether the withdrawal was
+successful, and drives the <FONT FACE="Courier New">BrowserResource</FONT>
+to either deliver a token or an error message, respectively. If a failure
+occurs, the user’s account will not be debited <I>and</I> neither will
+the browser obtain a cash token.
+<PRE><FONT FACE="Courier New">void Account::withdraw (int money)</FONT>&nbsp;
+<FONT FACE="Courier New">{</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; Outcome result = NOTDONE;</FONT></PRE>
+
+<PRE><FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; OTS::get_current().begin();</FONT></PRE>
+
+<PRE><FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; if (setlock(new Lock(WRITE), 0) == GRANTED)</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; {</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (amount >= money)</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; amount = amount - money;</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; result = DONE;</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; else</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; result = INSUFFICIENT_FUNDS;</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; }</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; else</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; result = LOCKED;</FONT></PRE>
+
+<PRE><I><FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; /*</FONT></I>&nbsp;
+<I><FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp; * Now involve the browser within the transaction.</FONT></I>&nbsp;
+<I><FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp; */</FONT></I></PRE>
+
+<PRE><I><FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; Control_ptr cont =</FONT></I> <I><FONT FACE="Courier New">OTS::get_current().get_control();</FONT></I>&nbsp;
+<I><FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; Coordinator_ptr coord = cont->get_coordinator();</FONT></I>&nbsp;
+<I><FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; BrowserResource res =</FONT></I> <I><FONT FACE="Courier New">new BrowserResource(OTS::get_current(),</FONT></I> <I><FONT FACE="Courier New">result, money);</FONT></I></PRE>
+
+<PRE><I><FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; coord->register_resource(res);</FONT></I>&nbsp;
+
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; if (result == DONE)</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; {</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // automatically aborts if it cannot commit</FONT>&nbsp;
+
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; OTS::get_current().commit(TRUE);</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; }</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; else</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; {</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // undo all work performed</FONT>&nbsp;
+
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; OTS::get_current().rollback();</FONT>&nbsp;
+<FONT FACE="Courier New">&nbsp;&nbsp;&nbsp; }</FONT>&nbsp;
+<FONT FACE="Courier New">}</FONT></PRE>
+As can be seen by comparing the new <FONT FACE="Courier New">withdraw</FONT>
+with the old, the changes (shown in italics) to an application necessary
+to incorporate a non-transactional browser into its operations are minimal.
+Therefore, this technique also offers possibilities for integrating Web
+browsers within existing legacy applications. Changes to the other operations
+to make them transactional with respect to the browser are similar.
+<H2>
+Acknowledgements</H2>
+The work reported here has been supported in part by a grant from UK Engineering
+and Physical Sciences Research Council (grant no. GR/L 73708).
+<H2>
+References</H2>
+[<A NAME="1"></A>1] T. Sanfilippo and D. Weisman, "<A HREF="http://www.osf.org/RI/PubProjPgs/tp.htm">Applications
+of the Secure Web Technology in Transaction Processing Systems</A>", The
+Open Group Research Institute, November 1996.
+<BR>[<A NAME="2"></A>2] "<A HREF="http://www.transarc.com">Transarc DE-Light
+Web Client Technical Description</A>", Transarc Corporation, February 1996.
+<BR>[<A NAME="3"></A>3] "<A HREF="http://www.omg.org">CORBAservices: Common
+Object Services Specification</A>", OMG Document Number 95-3-31, March
+1995.
+<BR>[<A NAME="4"></A>4] M. C. Little and S. K. Shrivastava, "<A HREF="http://arjuna/group/papers/p073.pdf">Java
+Transactions for the Internet</A>", Proceedings of the 4<SUP>th</SUP> Usenix
+Conference on Object-Oriented Technologies and Systems, Santa Fe, New Mexico,
+April 1998.
+<BR>[<A NAME="5"></A>5] M. C. Little and S. K. Shrivastava, "<A HREF="http://arjuna/group/papers/p063.ps">Distributed
+Transactions in Java</A>", Proceedings of the 7<SUP>th</SUP> International
+Workshop on High Performance Transaction Systems, September 1997, pp. 151-155.
+</BODY>
+</HTML>
