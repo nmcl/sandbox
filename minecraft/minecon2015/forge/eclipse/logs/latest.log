@@ -1,0 +1,39 @@
+[06:06:13] [Client thread/INFO]: Setting user: Player704
+[06:06:15] [Client thread/INFO]: LWJGL Version: 2.9.2
+[06:06:18] [Client thread/INFO]: Reloading ResourceManager: Default, FMLFileResourcePack:Forge Mod Loader, FMLFileResourcePack:Minecraft Forge, FMLFileResourcePack:Example Mod, FMLFileResourcePack:MyMods
+[06:06:18] [Sound Library Loader/INFO]: Starting up SoundSystem...
+[06:06:18] [Thread-7/INFO]: Initializing LWJGL OpenAL
+[06:06:18] [Thread-7/INFO]: (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+[06:06:18] [Thread-7/INFO]: OpenAL initialized.
+[06:06:19] [Sound Library Loader/INFO]: Sound engine started
+[06:06:20] [Client thread/INFO]: Created: 512x512 textures-atlas
+[06:06:20] [Client thread/INFO]: Reloading ResourceManager: Default, FMLFileResourcePack:Forge Mod Loader, FMLFileResourcePack:Minecraft Forge, FMLFileResourcePack:Example Mod, FMLFileResourcePack:MyMods
+[06:06:20] [Client thread/INFO]: SoundSystem shutting down...
+[06:06:21] [Client thread/WARN]: Author: Paul Lamb, www.paulscode.com
+[06:06:21] [Sound Library Loader/INFO]: Starting up SoundSystem...
+[06:06:21] [Thread-9/INFO]: Initializing LWJGL OpenAL
+[06:06:21] [Thread-9/INFO]: (The LWJGL binding of OpenAL.  For more information, see http://www.lwjgl.org)
+[06:06:21] [Thread-9/INFO]: OpenAL initialized.
+[06:06:21] [Sound Library Loader/INFO]: Sound engine started
+[06:06:22] [Client thread/INFO]: Created: 512x512 textures-atlas
+[06:06:26] [Server thread/INFO]: Starting integrated minecraft server version 1.8
+[06:06:26] [Server thread/INFO]: Generating keypair
+[06:06:26] [Server thread/INFO]: Preparing start region for level 0
+[06:06:27] [Server thread/INFO]: Changing view distance to 12, from 10
+[06:06:27] [Server thread/INFO]: Player704[local:E:0697c027] logged in with entity id 545 at (105.12092159427051, 4.0, -169.61893222478454)
+[06:06:27] [Server thread/INFO]: Player704 joined the game
+[06:06:32] [Server thread/INFO]: Player704 has just earned the achievement [Taking Inventory]
+[06:06:32] [Client thread/INFO]: [CHAT] Player704 has just earned the achievement [Taking Inventory]
+[06:07:18] [Server thread/INFO]: Saving and pausing game...
+[06:07:18] [Server thread/INFO]: Saving chunks for level 'flatworld'/Overworld
+[06:07:18] [Server thread/INFO]: Saving chunks for level 'flatworld'/Nether
+[06:07:18] [Server thread/INFO]: Saving chunks for level 'flatworld'/The End
+[06:07:19] [Server thread/INFO]: Stopping server
+[06:07:19] [Server thread/INFO]: Saving players
+[06:07:19] [Server thread/INFO]: Saving worlds
+[06:07:19] [Server thread/INFO]: Saving chunks for level 'flatworld'/Overworld
+[06:07:19] [Server thread/INFO]: Saving chunks for level 'flatworld'/Nether
+[06:07:19] [Server thread/INFO]: Saving chunks for level 'flatworld'/The End
+[06:07:21] [Client thread/INFO]: Stopping!
+[06:07:21] [Client thread/INFO]: SoundSystem shutting down...
+[06:07:21] [Client thread/WARN]: Author: Paul Lamb, www.paulscode.com
