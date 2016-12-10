@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="net.minecraft.entity.passive.EntitySquid"/>
+<fullyQualifiedTypeName name="java.lang.IllegalThreadStateException"/>
+<fullyQualifiedTypeName name="net.minecraft.util.EnumChatFormatting"/>
+<fullyQualifiedTypeName name="net.minecraftforge.fml.common.FMLCommonHandler"/>
+<fullyQualifiedTypeName name="net.minecraft.enchantment.Enchantment"/>
+<fullyQualifiedTypeName name="net.minecraft.util.ResourceLocation"/>
+</qualifiedTypeNameHistroy>
