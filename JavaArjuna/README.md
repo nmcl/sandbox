@@ -1,1 +1,1 @@
-This is not JavaArjuna, but looks like partial install?
+This is not JavaArjuna, but looks like a partial install?
