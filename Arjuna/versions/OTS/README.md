@@ -1,1 +1,1 @@
-No source as was ever released publicly as far as I can remember.
+No source as was never released publicly as far as I can remember.
