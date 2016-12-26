@@ -1,0 +1,35 @@
+COMMENT 
+COMMENT Copyright (C) 2000,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 2000/02/25 14:06:11 nmcl Exp $
+COMMENT
+
+SOURCES = OTS_ClientInterpositionInterceptor.java \
+	  OTS_ServerInterpositionInterceptor.java \
+	  OTS_InterpositionBindInterceptor.java \
+	  OTS_InterpositionInterceptorManager.java \
+	  OTS_InterpositionPOALifeCycleInterceptor.java \
+	  Init.java
+
+OBJECTS = OTS_InterpositionInterceptorManager.class \
+	  OTS_ClientInterpositionInterceptor.class \
+	  OTS_ServerInterpositionInterceptor.class \
+	  OTS_InterpositionBindInterceptor.class \
+	  OTS_InterpositionPOALifeCycleInterceptor.class \
+	  Init.class
+
+Target($(OBJECTS))
+
+BuildJavaByteCode(OTS_ClientInterpositionInterceptor,NullParam)
+BuildJavaByteCode(OTS_ServerInterpositionInterceptor,NullParam)
+BuildJavaByteCode(OTS_InterpositionBindInterceptor,NullParam)
+BuildJavaByteCode(OTS_InterpositionInterceptorManager,NullParam)
+BuildJavaByteCode(OTS_InterpositionPOALifeCycleInterceptor,NullParam)
+BuildJavaByteCode(Init,NullParam)
+
+Clean(*.class)

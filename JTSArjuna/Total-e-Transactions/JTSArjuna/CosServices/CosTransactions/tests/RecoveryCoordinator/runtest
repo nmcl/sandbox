@@ -1,0 +1,8 @@
+#!/bin/sh
+
+if test "'x$JTSARJUNA_HOME'" = "'x'"
+then
+    echo Environment variable JTSARJUNA_HOME is not set.
+else
+    java -DOBJECTSTORE_DIR=$JTSARJUNA_HOME/ObjectStore RCTest $@
+fi

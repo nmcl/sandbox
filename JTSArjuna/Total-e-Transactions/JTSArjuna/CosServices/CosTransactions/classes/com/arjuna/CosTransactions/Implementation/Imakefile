@@ -1,0 +1,22 @@
+COMMENT 
+COMMENT Copyright (C) 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.2.1 2000/07/24 11:25:36 nmcl Exp $
+COMMENT
+
+SubDirectory(AbstractRecord)
+
+SOURCES = Implementations.java
+
+OBJECTS = Implementations.class
+
+Target($(OBJECTS))
+
+BuildJavaByteCode(Implementations,NullParam)
+
+Clean(*.class)

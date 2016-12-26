@@ -1,0 +1,68 @@
+//
+// Copyright (C) 2000,
+//
+// Arjuna Solutions, Ltd.,
+// Newcastle upon Tyne,
+// Tyne and Wear,
+// UK.
+//
+// $Id: BeforeCrashServiceImpl01.javatmpl,v 1.1.2.2 2002/07/04 10:41:29 delsworthy Exp $
+//
+
+#include <Common/OrbPortability.h>
+
+import org.omg.CORBA.*;
+import com.arjuna.OrbCommon.*;
+import org.omg.CosTransactions.*;
+import com.arjuna.CosTransactions.OTS;
+import Recovery.*;
+
+public class BeforeCrashServiceImpl01 implements TIE_CLASS_(BeforeCrashService)
+{
+    public BeforeCrashServiceImpl01(int serviceNumber, int objectNumber)
+    {
+        _serviceNumber = serviceNumber;
+        _objectNumber  = objectNumber;
+    }
+
+    public void setup_oper(Control ctrl, ResourceBehavior[] resource_behaviors)
+    {
+        ResourceImpl01[]      resourceImpl        = new ResourceImpl01[resource_behaviors.length];
+        Resource[]            resource            = new Resource[resource_behaviors.length];
+        RecoveryCoordinator[] recoveryCoordinator = new RecoveryCoordinator[resource_behaviors.length];
+
+        for (int index = 0; index < resource_behaviors.length; index++)
+        {
+            try
+            {
+                resourceImpl[index] = new ResourceImpl01(_serviceNumber, _objectNumber, index, resource_behaviors[index]);
+                TIE_INSTANCE_(Resource) servant = new TIE_INSTANCE_(Resource)(resourceImpl[index]);
+                
+                READY_IMPL_(servant);
+                resource[index] = CORBA_REF_(servant, Resource);
+
+                recoveryCoordinator[index] = ctrl.get_coordinator().register_resource(resource[index]);
+
+                ServerIORStore.storeIOR("RecoveryCoordinator_" + _serviceNumber + "_" + _objectNumber + "_" + index, 
+                                        ORBInterface.orb().object_to_string(recoveryCoordinator[index]));
+            }
+            catch (Exception exception)
+            {
+                System.err.println("BeforeCrashServiceImpl01.setup_oper: " + exception);
+                exception.printStackTrace(System.err);
+                _isCorrect = false;
+            }
+        }
+    }
+
+    public boolean is_correct()
+    {
+        System.err.println("BeforeCrashServiceImpl01.is_correct: " + _isCorrect);
+
+        return _isCorrect;
+    }
+
+    private int      _serviceNumber;
+    private int      _objectNumber;
+    private boolean  _isCorrect    = true;
+}

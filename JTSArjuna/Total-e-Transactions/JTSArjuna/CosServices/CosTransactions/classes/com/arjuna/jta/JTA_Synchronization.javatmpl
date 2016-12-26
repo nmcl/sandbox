@@ -1,0 +1,130 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.  
+ *
+ * $Id: JTA_Synchronization.javatmpl,v 1.3.2.1.14.3.8.2.4.1.96.1 2001/12/11 13:35:49 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+#include <CosTransactions/CosTranNames.h>
+
+package com.arjuna.jta;
+
+import com.arjuna.ArjunaCommon.Common.*;
+import com.arjuna.OrbCommon.ORBInterface;
+import com.arjuna.OrbCommon.OAInterface;
+import org.omg.CosTransactions.*;
+import javax.transaction.*;
+
+import org.omg.CORBA.SystemException;
+import org.omg.CORBA.UNKNOWN;
+
+/**
+ * Whenever a synchronization is registered, an instance of this class
+ * is used to wrap it.
+ *
+ * @author Mark Little (mark@arjuna.com)
+ * @version $Id: JTA_Synchronization.javatmpl,v 1.3.2.1.14.3.8.2.4.1.96.1 2001/12/11 13:35:49 nmcl Exp $
+ * @since JTS 1.2.4.
+ */
+
+public class JTA_Synchronization extends SCOPED_SKEL_(org.omg.CosTransactions,Synchronization)
+{
+    
+public JTA_Synchronization (javax.transaction.Synchronization ptr)
+    {
+	_theSynch = ptr;
+	_theReference = null;
+    }
+
+public void finalize ()
+    {
+	_theSynch = null;
+
+	try
+	{
+	    super.finalize();
+	}
+	catch (Throwable e)
+	{
+	}
+    }
+
+public final org.omg.CosTransactions.Synchronization getSynchronization ()
+    {
+	if (_theReference == null)
+	{
+	    READY_IMPL_(this);
+	    
+	    _theReference = CORBA_REF_(this,org.omg.CosTransactions.Synchronization);
+	}
+	
+	return _theReference;
+    }
+ 
+public void before_completion () throws org.omg.CORBA.SystemException
+    {
+	if (DebugController.enabled())
+	{
+	    DebugController.controller().println(DebugLevel.FUNCTIONS, VisibilityLevel.VIS_PUBLIC,
+						 FacilityCode.FAC_JTA, "JTA_Synchronization.before_completion");
+	}
+
+	if (_theSynch != null)
+	{
+	    try
+	    {
+		_theSynch.beforeCompletion();
+	    }
+	    catch (Exception e)
+	    {
+		throw new UNKNOWN();
+	    }
+	}
+	else
+	    throw new UNKNOWN();
+    }
+
+#if defined(CORBA_2_1) || defined(CORBA_2_2) || defined(CORBA_2_3) || defined(CORBA_2_4)
+public void after_completion (org.omg.CosTransactions.Status status) throws org.omg.CORBA.SystemException
+#else
+public void after_completion (int status) throws org.omg.CORBA.SystemException
+#endif
+    {
+	if (DebugController.enabled())
+	{
+	    DebugController.controller().println(DebugLevel.FUNCTIONS, VisibilityLevel.VIS_PUBLIC,
+						 FacilityCode.FAC_JTA, "JTA_Synchronization.after_completion");
+	}
+
+	if (_theSynch != null)
+	{
+	    int s = JTA_Utility.convertStatus(status);
+
+	    try
+	    {
+		_theSynch.afterCompletion(s);
+
+		if (_theReference != null)
+		    DESTROY_IMPL_(this);
+	    }
+	    catch (Exception e)
+	    {
+		if (_theReference != null)
+		    DESTROY_IMPL_(this);
+
+		throw new UNKNOWN(); // should not cause any affect!
+	    }
+	}
+	else
+	    throw new UNKNOWN(); // should not cause any affect!
+    }
+
+private javax.transaction.Synchronization       _theSynch;
+private org.omg.CosTransactions.Synchronization _theReference;
+
+};

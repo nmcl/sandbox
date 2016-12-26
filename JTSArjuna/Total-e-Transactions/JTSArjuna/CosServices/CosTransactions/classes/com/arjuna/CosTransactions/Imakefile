@@ -1,0 +1,156 @@
+COMMENT 
+COMMENT Copyright (C) 1998, 1999, 2000, 2001,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.4.6.2.26.1.2.1.2.1.118.1 2002/11/20 16:34:35 nmcl Exp $
+COMMENT
+
+AddToIdlFlags(-I$(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+SOURCES = CosTransactionsNames.java \
+	  OTS_ControlWrapper.java \
+	  OTS_ContextManager.java \
+	  OTS_Exceptions.java \
+	  OTS_AbstractRecord.java \
+	  OTS_Helper.java \
+	  OTS_Utility.java \
+	  OTS_ResourceRecord.java \
+	  OTS_Control.java \
+	  OTS_Transaction.java \
+	  OTS_Factory.java \
+	  OTS_Current.java \
+	  OTS.java \
+	  OTS_ExplicitInterposition.java \
+	  OTS_Synchronization.java \
+	  OTS_ActionHierarchy.java \
+	  OTS_ActionHierarchyIterator.java \
+	  OTS_TransactionReaper.java \
+	  OTS_Environment.java \
+	  OTS_Defaults.java \
+	  OTS_Thread.java \
+	  OTS_RecoveryCreator.java \
+	  Configuration.java \
+	  OTS_Error.java \
+	  OTS_ContextPropagationManager.java \
+	  Info.java \
+	  Interposition/Arjuna/OTS_ServerResource.java \
+	  Interposition/Arjuna/OTS_Interposition.java \
+	  Interposition/Arjuna/OTS_ServerTopLevelAction.java \
+	  Interposition/Arjuna/OTS_ServerNestedAction.java \
+	  Interposition/Strict/OTS_StrictInterposition.java \
+	  Interposition/Strict/OTS_ServerStrictTopLevelAction.java \
+	  Interposition/Strict/OTS_ServerStrictNestedAction.java \
+	  Interposition/OSI/OTS_OSIInterposition.java \
+	  Interposition/OSI/OTS_ServerOSITopLevelAction.java \
+	  Interposition/OSI/OTS_ServerOSINestedAction.java \
+	  Interposition/Restricted/OTS_RestrictedInterposition.java \
+	  Interposition/OTS_ServerControl.java \
+	  Interposition/OTS_ServerTransaction.java \
+	  Interposition/OTS_ServerSynchronization.java
+
+OBJECTS = CosTransactionsNames.class \
+	  OTS_ControlWrapper.class \
+	  OTS_ContextManager.class \
+	  OTS_Environment.class \
+	  OTS_Exceptions.class \
+	  OTS_Defaults.class \
+	  OTS_Synchronization.class \
+	  OTS_Control.class \
+	  OTS_AbstractRecord.class \
+	  OTS_ResourceRecord.class \
+	  OTS_Transaction.class \
+	  OTS_Current.class \
+	  OTS_Factory.class \
+	  OTS_Helper.class \
+	  OTS_Utility.class \
+	  OTS.class \
+	  OTS_ExplicitInterposition.class \
+	  OTS_ActionHierarchy.class \
+	  OTS_ActionHierarchyIterator.class \
+	  OTS_TransactionReaper.class \
+	  OTS_Thread.class \
+	  OTS_RecoveryCreator.class \
+	  OTS_Error.class \
+	  Configuration.class \
+	  Info.class \
+	  OTS_ContextPropagationManager.class \
+	  OTS_RecoveredTransaction.class
+
+PreprocessJavaCode(Info,NullParam)
+PreprocessJavaCode(Configuration,NullParam)
+PreprocessJavaCode(OTS_Helper,NullParam)
+PreprocessJavaCode(OTS_Utility,NullParam)
+PreprocessJavaCode(OTS_AbstractRecord,NullParam)
+PreprocessJavaCode(OTS_ResourceRecord,NullParam)
+PreprocessJavaCode(OTS_ControlWrapper,NullParam)
+PreprocessJavaCode(OTS_Control,NullParam)
+PreprocessJavaCode(OTS_Transaction,NullParam)
+PreprocessJavaCode(OTS_Factory,NullParam)
+PreprocessJavaCode(OTS_Current,NullParam)
+PreprocessJavaCode(OTS,NullParam)
+PreprocessJavaCode(OTS_ExplicitInterposition,NullParam)
+PreprocessJavaCode(OTS_ContextManager,NullParam)
+PreprocessJavaCode(OTS_ContextPropagationManager,NullParam)
+PreprocessJavaCodeDir(Interposition/Arjuna,OTS_ServerResource,NullParam)
+PreprocessJavaCodeDir(Interposition/Arjuna,OTS_Interposition,NullParam)
+PreprocessJavaCodeDir(Interposition/Arjuna,OTS_ServerTopLevelAction,NullParam)
+PreprocessJavaCodeDir(Interposition/Arjuna,OTS_ServerNestedAction,NullParam)
+PreprocessJavaCodeDir(Interposition/Strict,OTS_StrictInterposition,NullParam)
+PreprocessJavaCodeDir(Interposition/Strict,OTS_ServerStrictTopLevelAction,NullParam)
+PreprocessJavaCodeDir(Interposition/Strict,OTS_ServerStrictNestedAction,NullParam)
+PreprocessJavaCodeDir(Interposition/Restricted,OTS_RestrictedInterposition,NullParam)
+PreprocessJavaCodeDir(Interposition/OSI,OTS_OSIInterposition,NullParam)
+PreprocessJavaCodeDir(Interposition/OSI,OTS_ServerOSITopLevelAction,NullParam)
+PreprocessJavaCodeDir(Interposition/OSI,OTS_ServerOSINestedAction,NullParam)
+PreprocessJavaCodeDir(Interposition,OTS_ServerControl,NullParam)
+PreprocessJavaCodeDir(Interposition,OTS_ServerSynchronization,NullParam)
+PreprocessJavaCodeDir(Interposition,OTS_ServerTransaction,NullParam)
+
+Target($(SOURCES))
+Target($(OBJECTS))
+
+BuildJavaByteCode(CosTransactionsNames,NullParam)
+BuildJavaByteCode(OTS_ControlWrapper,NullParam)
+BuildJavaByteCode(OTS_ContextManager,NullParam)
+BuildJavaByteCode(Configuration,NullParam)
+BuildJavaByteCode(Info,NullParam)
+BuildJavaByteCode(OTS,NullParam)
+BuildJavaByteCode(OTS_Exceptions,NullParam)
+BuildJavaByteCode(OTS_Factory,NullParam)
+BuildJavaByteCode(OTS_Control,NullParam)
+BuildJavaByteCode(OTS_Current,NullParam)
+BuildJavaByteCode(OTS_ExplicitInterposition,NullParam)
+BuildJavaByteCode(OTS_ResourceRecord,NullParam)
+BuildJavaByteCode(OTS_AbstractRecord,NullParam)
+BuildJavaByteCode(OTS_Transaction,NullParam)
+BuildJavaByteCode(OTS_Synchronization,NullParam)
+BuildJavaByteCode(OTS_Helper,NullParam)
+BuildJavaByteCode(OTS_Utility,NullParam)
+BuildJavaByteCode(OTS_ActionHierarchy,NullParam)
+BuildJavaByteCode(OTS_ActionHierarchyIterator,NullParam)
+BuildJavaByteCode(OTS_TransactionReaper,NullParam)
+BuildJavaByteCode(OTS_Environment,NullParam)
+BuildJavaByteCode(OTS_Defaults,NullParam)
+BuildJavaByteCode(OTS_Thread,NullParam)
+BuildJavaByteCode(OTS_RecoveryCreator,NullParam)
+BuildJavaByteCode(OTS_Error,NullParam)
+BuildJavaByteCode(OTS_ContextPropagationManager,NullParam)
+BuildJavaByteCode(OTS_RecoveredTransaction,NullParam)
+
+SubDirectory(ArjunaOTS)
+SubDirectory(Interposition)
+#ifdef HAVE_INTERCEPTOR
+SubDirectory(Interceptors)
+#else
+#ifdef HAVE_FILTER
+SubDirectory(Filters)
+#endif
+#endif
+SubDirectory(tx)
+SubDirectory(Implementation)
+
+Clean(*.class)

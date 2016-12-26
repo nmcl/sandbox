@@ -1,0 +1,141 @@
+# 
+# Copyright (C) 1999-2001 by HP Bluestone Software, Inc. All rights Reserved.
+#
+# HP Arjuna Labs,
+# Newcastle upon Tyne,
+# Tyne and Wear,
+# UK.
+#
+# $Id: RecoveryManager.properties_default,v 1.1.2.4.2.3.2.1.48.1.56.1 2002/07/24 09:57:51 msaheb Exp $
+#
+
+#  This is the special properties file for the RecoveryManager
+#  it's settings add to and override those in the regular
+#  TransactionService<version>.properties
+
+# -----------------------------------------------------------------------------
+#  overrides of debug tracing properties normally set in 
+#  TransactionService<version>.properties
+#  RcvMgr uses debug tracing with facility code FAC_RECOVERY_NORMAL for its
+#  normal messages
+#  Consequently some of the debug properties need to be changed from their
+#  defaults
+
+#  Set DEBUG_ENABLED=YES to show normal output. RcvMgr will produce no messages
+#  apart from errors if DEBUG_ENABLED=NO
+DEBUG_ENABLED=YES
+
+# (default is 0x0, RecoveryManager needs to set non-zero to make the normal
+# messages visible)
+DEBUG_LEVEL=0xFFFF
+
+# VIS_LEVEL default of 0x04 is usable
+# VIS_LEVEL=0x0004
+
+# (RcvMgr forces FAC_RECOVERY_NORMAL (0x40000) on ) 0x800 is FAC_CRASH_RECOVERY 
+#  Default would produce a LOT of messages
+FAC_LEVEL=0x00
+
+#------------------------------------------------------------------------------
+#	properties used only by the RecoveryManager
+
+# ------------ Periodic recovery settings -------------------------------------
+#  Time values in this section are in seconds
+
+#  Interval in seconds between initiating the periodic recovery modules.
+#    (Default is 120 seconds)
+# PERIODIC_RECOVERY_PERIOD=120
+
+#  Interval in seconds between first and second pass of periodic recovery.
+#   (Default is 10 seconds)
+# RECOVERY_BACKOFF_PERIOD=10
+
+# Periodic recovery modules to use.
+#     will be invoked in sort-order of names
+
+RecoveryExtension1=com.arjuna.CosRecovery.Transactions.TopLevelTransactionRecoveryModule
+RecoveryExtension2=com.arjuna.CosRecovery.Transactions.ServerTransactionRecoveryModule
+RecoveryExtension3=com.arjuna.JDBC.Recovery.JDBCRecoveryModule
+RecoveryExtension4=com.arjuna.JDBC2.Recovery.JDBC2RecoveryModule
+RecoveryExtension5=com.arjuna.CosRecovery.TransactionalObjects.TORecoveryModule
+
+# ------------ XArecovery classes ----------------------------------
+
+# property names beginning XAConnectionRecover are implementations of the 
+# com.arjuna.JDBC2.Recovery.XAConnectionRecovery interface, providing access to
+# a XADataSource. The implementation classname is terminated by the first 
+# semicolon (if any). Everything after the first semicolon will be passed to
+# the initialise method of the new instance immediately after its construction.
+#
+# The class com.arjuna.JDBC2.Recovery.BasicXARecovery supports
+# recovery for datasources using the dynamic recovery mechanism. The parameter
+# passed to initialise (i.e., after the first ;) consists of the number of
+# connections to recover, and the name of the properties
+# file to source to obtain information such as the dynamic class name,
+# the database username, the password and the database url. Since these will
+# appear in plain text it is not recommended that this be used in a real
+# system - it is meant only as an example to illustrate the type of work such
+# a class will have to do to ensure recovery occurs. It is also sufficient
+# for empay using oracle.
+#
+# XAConnectionRecoveryEmpay=com.arjuna.JDBC2.Recovery.BasicXARecovery;2;EmpayJDBCSetup
+
+# ------------ Recovery behaviour settings -------------------------
+
+# initiate rollback to resources that send replay_completion
+#   default=yes, no = rely on response to replay_completion
+# OTS_ISSUE_RECOVERY_ROLLBACK=YES
+
+# How many times will a transaction, known to be committed, attempt to
+# send commits to registered resources, before it is assumed the resource has
+# committed and disappeared. (If the resource has not committed, it will send
+# replay_completion, and the transaction will be reactivated.
+#  (note: interval between attempts will be
+#	 PERIODIC_RECOVERY_PERIOD + RECOVERY_BACKOFF_PERIOD + <processing time>
+#        <processing time> will include connection timeouts while trying to 
+#	 contact inaccessible resources or superiors for ALL recovering items.
+# COMMITTED_TRANSACTION_RETRY_LIMIT=3
+
+
+# ------------- Expired entry removal ------------------------------
+
+# Expiry scanners to use (order of invocation is random) 
+#  Names must begin with "ExpiryScanner"
+
+ExpiryScannerContact=com.arjuna.CosRecovery.Contact.ExpiredContactScanner
+ExpiryScannerToplevelTran=com.arjuna.CosRecovery.Transactions.ExpiredToplevelScanner
+ExpiryScannerServerTran=com.arjuna.CosRecovery.Transactions.ExpiredServerScanner
+
+# Interval, in hours, between running the expiry scanners.
+# This can be quite long. The absolute value determines the interval - if the
+# value is negative, the scan will NOT be run until after one interval has
+# elapsed. If positive the first scan will be immediately after startup. Zero
+# will prevent any scanning.
+# Default  = 12 = run immediately, then every 12 hours
+# EXPIRY_SCAN_INTERVAL=12
+
+
+# Age, in hours, for removal of factory-contact entries. This should be longer
+# than any ts-using process will remain running
+#  Zero = Never removed. Default 12
+# FACTORY_CONTACT_EXPIRY_TIME=12 
+#
+
+# Age, in hours, for removing transaction entries that have been "assumed
+# complete".
+# These have committed, but after COMMITTED_TRANSACTION_RETRY_LIMIT attempts,
+# no  further attempts have been made to send commit to subordinate resources.
+# Age is measured since this assumption (unless a resource has since requested 
+# replay_completion, which will reset the clock).
+# This should be longer than any network outage.
+#  Zero = never removed. Default is 240
+# ASSUMED_COMPLETE_EXPIRY_TIME=240
+
+
+# When using ORBIX, it appears that an invocation to an object that does not longer
+# returns a CORBA exception TRANSIENT rather than OBJECT_NOT_EXIST. 
+# In order to consider a TRANSIENT exception as OBJECT_NOT_EXIST exception and to avoid
+# making a wrong assumption, ASSUMED_OBJECT_NOT_EXIST defines the number of attempts 
+# an interposed coordinator can make to contact the RecoveryCoordinator to decide that
+# it died and the transaction should be rolled back. The default number of attempts is 10.
+#ASSUMED_OBJECT_NOT_EXIST=10

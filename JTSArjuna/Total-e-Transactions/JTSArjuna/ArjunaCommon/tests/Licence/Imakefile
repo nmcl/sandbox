@@ -1,0 +1,23 @@
+COMMENT 
+COMMENT Copyright (C) 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.2.1 2000/08/29 09:00:38 nmcl Exp $
+COMMENT
+
+SOURCES = LicenceTest.java
+
+OBJECTS = LicenceTest.class
+
+#ifdef BUILDTESTS
+Target($(OBJECTS))
+#endif
+
+BuildJavaByteCode(LicenceTest,NullParam)
+
+Clean(*.class *.prof out)
+

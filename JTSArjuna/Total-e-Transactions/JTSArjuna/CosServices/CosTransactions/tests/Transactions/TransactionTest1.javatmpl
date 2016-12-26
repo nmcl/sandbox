@@ -1,0 +1,180 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: TransactionTest1.javatmpl,v 1.1.6.1.24.1 2000/11/08 14:26:01 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+import CosTransactionsTests.*;
+import TestModule.*;
+import com.arjuna.OrbCommon.*;
+import com.arjuna.ArjunaCommon.Common.*;
+import com.arjuna.CosTransactions.OTS;
+import com.arjuna.CosTransactions.OTS_Current;
+import org.omg.CosTransactions.*;
+
+import org.omg.CosTransactions.Unavailable;
+import org.omg.CosTransactions.SubtransactionsUnavailable;
+import org.omg.CosTransactions.NotPrepared;
+import org.omg.CosTransactions.HeuristicRollback;
+import org.omg.CosTransactions.HeuristicCommit;
+import org.omg.CosTransactions.HeuristicMixed;
+import org.omg.CosTransactions.HeuristicHazard;
+
+#include <CosTransactions/CosTranExceptions.h>
+
+public class TransactionTest1
+{
+    
+public static void main (String[] args)
+    {
+	try
+	{
+	    ORBInterface.initORB(args, null);
+	    OAInterface.initOA();
+	}
+	catch (Exception e)
+	{
+	    ErrorStream.fatal().println("Initialisation failed: "+e);
+	}
+	
+	TransactionFactory theFactory = OTS.get_factory();
+	Control topLevelControl = null;
+	Control nestedControl = null;
+	Terminator terminator = null;
+
+	/*
+	 * First with current.
+	 */
+
+	try
+	{
+	    OTS_Current current = OTS.current();
+
+	    current.begin();
+
+	    topLevelControl = current.get_control();
+
+	    current.begin();
+
+	    nestedControl = current.get_control();
+
+	    /*
+	     * Try to commit top-level action without terminating nested
+	     * action.
+	     */
+    
+	    terminator = topLevelControl.get_terminator();
+
+	    System.out.println("\nAttempting to terminate out of sequence 'current'. Should fail!");
+
+	    try
+	    {
+		terminator.commit(true);
+	    }
+	    catch (TransactionRolledBack e)
+	    {
+		System.err.println("Commit failed! "+e);
+	    }
+
+	    System.out.println("\nNow attempting to terminate 'current' hierarchy. Should fail!");
+
+	    /*
+	     * This should fail since Arjuna will already have aborted the top-level
+	     * action and all of its children.
+	     */
+
+	    try
+	    {
+		current.commit(true);
+	    }
+	    catch (InvalidTransaction e1)
+	    {
+		System.err.println("Nested commit failed! "+e1);
+	    }
+	    catch (Exception e2)
+	    {
+		System.err.println("Nested commit threw unexpected exception: "+e2);
+		System.exit(0);
+	    }
+
+	    try
+	    {
+		current.commit(true);
+	    }
+	    catch (TransactionRolledBack e1)
+	    {
+		System.err.println("Top-level commit failed! "+e1);
+	    }
+	    catch (InvalidTransaction e2)
+	    {
+		System.err.println("Top-level commit failed! "+e2);
+	    }
+	    catch (Exception e3)
+	    {
+		System.err.println("Top-level commit threw unexpected exception: "+e3);
+		System.exit(0);
+	    }
+	    
+	    /*
+	     * Now with the factory.
+	     */
+
+	    System.out.println("\nNow creating new top-level action.");
+    
+	    topLevelControl = theFactory.create(0);
+	    nestedControl = topLevelControl.get_coordinator().create_subtransaction();
+
+	    terminator = topLevelControl.get_terminator();
+
+	    System.out.println("\nAttempting to terminate out of sequence 'factory' action. Should fail!");
+    
+	    try
+	    {
+		terminator.commit(true);
+	    }
+    	    catch (TransactionRolledBack e1)
+	    {
+		System.err.println("Commit failed! "+e1);
+	    }
+    	    catch (InvalidTransaction e2)
+	    {
+		System.err.println("Commit failed! "+e2);
+	    }	    
+
+	    terminator = nestedControl.get_terminator();
+
+	    System.out.println("\nNow attempting to terminate 'factory' nested action. Should fail!");
+
+	    try
+	    {
+		terminator.commit(true);
+	    }
+    	    catch (TransactionRolledBack e1)
+	    {
+		System.err.println("Commit failed! "+e1);
+	    }
+	    catch (InvalidTransaction e2)
+	    {
+		System.err.println("Commit failed! "+e2);
+	    }
+
+	    System.out.println("Test completed successfully.");
+	}
+	catch (Exception e)
+	{
+	    System.err.println("Test failed - received unexpected exception "+e);
+	    System.exit(1);
+	}
+
+	OAInterface.shutdownOA();
+	ORBInterface.shutdownORB();
+    }
+ 
+};

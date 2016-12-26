@@ -1,0 +1,247 @@
+/*
+ * Copyright (C) 1998, 1999, 2000, 2001,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.  
+ *
+ * $Id: OTS_Helper.javatmpl,v 1.4.26.1.2.1.6.2 2001/02/14 12:10:29 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package com.arjuna.CosTransactions;
+
+import com.arjuna.OrbCommon.ORBExceptions;
+import com.arjuna.ArjunaCommon.Common.Uid;
+import com.arjuna.ArjunaCore.Atomic.BasicAction;
+import com.arjuna.CosTransactions.Interposition.OTS_ServerControl;
+import org.omg.CosTransactions.*;
+import com.arjuna.ArjunaOTS.*;
+import java.io.PrintStream;
+import org.omg.CORBA.CompletionStatus;
+
+import org.omg.CosTransactions.Unavailable;
+import org.omg.CORBA.BAD_PARAM;
+import org.omg.CORBA.NO_MEMORY;
+import org.omg.CORBA.SystemException;
+
+/*
+ * Default visibility.
+ */
+
+class OTS_Helper
+{
+
+    /**
+     * Given a Control_ptr determine if this is a reference to a local
+     * action, and if so return the raw BasicAction pointer.
+     */
+    
+public static final BasicAction localAction (Control control)
+    {
+	if (control == null)
+	    return null;
+
+	if (control instanceof OTS_Control)
+	{
+	    try
+	    {
+		OTS_Control c = (OTS_Control) control;
+		
+		return (BasicAction) c.getImplHandle();
+	    }
+	    catch (Exception e)
+	    {
+	    }
+	}
+
+	/*
+	 * Can we not use is_local within visibroker?
+	 */
+	
+	try
+	{
+	    UidCoordinator coord = OTS_Helper.getUidCoordinator(control);
+
+	    if (coord != null)
+	    {
+		Uid u = OTS_Helper.getUid(coord);
+		
+		coord = null;
+
+		if (BasicAction.allActions != null)
+		    return (BasicAction) BasicAction.allActions.get(u);
+	    }
+	    else
+		throw new BAD_PARAM();
+	}
+	catch (Exception e)
+	{
+	    /*
+	     * Can't be an Arjuna action, so ignore.
+	     */
+	}
+
+	return null;
+    }
+
+public static final OTS_Control localControl (Control control)
+    {
+	if (control == null)
+	    return null;
+
+	if (control instanceof OTS_Control)
+	    return (OTS_Control) control;
+
+	try
+	{
+	    UidCoordinator uidCoord = OTS_Helper.getUidCoordinator(control);
+
+	    if (uidCoord != null)
+	    {
+		Uid u = OTS_Helper.getUid(uidCoord);
+		OTS_Control toReturn = null;
+
+		uidCoord = null;
+
+		/*
+ 		 * allControls only contains local controls.
+ 		 */
+
+		if (OTS_Control.allControls != null)
+		{
+		    synchronized (OTS_Control.allControls)
+			{
+			    toReturn = (OTS_Control) OTS_Control.allControls.get(u);
+			}
+		}
+		
+		if (toReturn == null)
+		{
+		    if (OTS_ServerControl.allServerControls != null)
+		    {
+			synchronized (OTS_ServerControl.allServerControls)
+			    {
+				toReturn = (OTS_Control) OTS_ServerControl.allServerControls.get(u);				
+			    }
+		    }
+		}
+
+		u = null;
+
+		return toReturn;
+	    }
+	    else
+		throw new BAD_PARAM(ORBExceptions.BAD_OBJECT_REF, CompletionStatus.COMPLETED_NO);
+	}
+	catch (Exception e)
+	{
+	    /*
+	     * Can't be an Arjuna action, so ignore.
+	     */
+	}
+
+	return null;
+    }
+
+public static final UidCoordinator getUidCoordinator (Control control)
+    {
+	if (control == null)
+	    return null;
+    
+	UidCoordinator toReturn = null;
+    
+	try
+	{
+	    Coordinator coord = control.get_coordinator();
+
+	    if (coord != null)
+	    {
+		toReturn = getUidCoordinator(coord);
+
+		coord = null;
+	    }
+	    else
+		throw new BAD_PARAM(ORBExceptions.BAD_OBJECT_REF, CompletionStatus.COMPLETED_NO);
+	}
+	catch (Exception e)
+	{
+	    /*
+	     * Can't be an Arjuna action, so ignore.
+	     */
+
+	    toReturn = null;
+	}
+    
+	return toReturn;
+    }
+
+public static final UidCoordinator getUidCoordinator (Coordinator coord)
+    {
+	if (coord == null)
+	    return null;
+    
+	UidCoordinator toReturn = null;
+
+	try
+	{
+	    toReturn = SCOPED_NARROW_(com.arjuna.ArjunaOTS,UidCoordinator,coord);
+
+	    if (toReturn == null)
+		throw new BAD_PARAM(ORBExceptions.BAD_OBJECT_REF, CompletionStatus.COMPLETED_NO);
+	}
+	catch (Exception e)
+	{
+	    /*
+	     * Can't be an Arjuna action, so ignore.
+	     */
+
+	    toReturn = null;
+	}
+
+	return toReturn;
+    }
+
+public static final boolean isUidCoordinator (Coordinator ref)
+    {
+	UidCoordinator ptr = getUidCoordinator(ref);
+
+	return ((ptr == null) ? false : true);
+    }
+    
+public static final Uid getUid (UidCoordinator coord)
+    {
+	if (coord == null)
+	    return Uid.nullUid();
+
+	String theUid = null;
+	Uid uid = null;
+
+	/*
+	 * Try twice, and if this still fails then
+	 * throw NO_MEMORY.
+	 */
+
+	for (int i = 0; i < 1; i++)
+	{
+	    try
+	    {
+		theUid = coord.uid();
+		uid = new Uid(theUid);
+
+		theUid = null;
+
+		return uid;
+	    }
+	    catch (OutOfMemoryError e)
+	    {
+		System.gc();
+	    }
+	}
+
+	throw new NO_MEMORY(0, CompletionStatus.COMPLETED_NO);
+    }
+
+};

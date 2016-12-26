@@ -1,0 +1,178 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: JTA_Utility.javatmpl,v 1.1.4.1.4.1.6.1.2.1.6.1.8.1.6.1.90.1 2001/12/11 13:35:49 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package com.arjuna.jta;
+
+import org.omg.CosTransactions.*;
+import javax.transaction.*;
+import javax.transaction.xa.*;
+
+/**
+ * Some useful utility routines.
+ */
+
+public class JTA_Utility
+{
+
+    /**
+     * Print a human-readable version of the XAException.
+     */
+
+public static String printXAErrorCode (XAException e)
+    {
+	if (e == null)
+	    return "Null exception!";
+	else
+	{
+	    switch (e.errorCode)
+	    {
+	    case XAException.XA_RBROLLBACK:
+		return "XAException.XA_RBROLLBACK";
+	    case XAException.XA_RBCOMMFAIL:
+		return "XAException.XA_RBCOMMFAIL";
+	    case XAException.XA_RBDEADLOCK:
+		return "XAException.XA_RBDEADLOCK";
+	    case XAException.XA_RBINTEGRITY:
+		return "XAException.XA_RBINTEGRITY";
+	    case XAException.XA_RBOTHER:
+		return "XAException.XA_RBOTHER";
+	    case XAException.XA_RBPROTO:
+		return "XAException.XA_RBPROTO";
+	    case XAException.XA_RBTIMEOUT:
+		return "XAException.XA_RBTIMEOUT";
+	    case XAException.XA_RBTRANSIENT:
+		return "XAException.XA_RBTRANSIENT";
+	    case XAException.XA_NOMIGRATE:
+		return "XAException.XA_NOMIGRATE";
+	    case XAException.XA_HEURHAZ:
+		return "XAException.XA_HEURHAZ";
+	    case XAException.XA_HEURCOM:
+		return "XAException.XA_HEURCOM";
+	    case XAException.XA_HEURRB:
+		return "XAException.XA_HEURRB";
+	    case XAException.XA_HEURMIX:
+		return "XAException.XA_HEURMIX";
+	    case XAException.XA_RDONLY:
+		return "XAException.XA_RDONLY";
+	    case XAException.XAER_RMERR:
+		return "XAException.XAER_RMERR";
+	    case XAException.XAER_NOTA:
+		return "XAException.XAER_NOTA";
+	    case XAException.XAER_INVAL:
+		return "XAException.XAER_INVAL";
+	    case XAException.XAER_PROTO:
+		return "XAException.XAER_PROTO";
+	    case XAException.XAER_RMFAIL:
+		return "XAException.XAER_RMFAIL";
+	    case XAException.XAER_DUPID:
+		return "XAException.XAER_DUPID";
+	    case XAException.XAER_OUTSIDE:
+		return "XAException.XAER_OUTSIDE";
+	    default:
+		return "Unknown error code: "+e.errorCode;
+	    }
+	}
+    }
+    
+#if defined(CORBA_2_1) || defined(CORBA_2_2) || defined(CORBA_2_3) || defined(CORBA_2_4)
+public static int convertStatus (org.omg.CosTransactions.Status status)
+#else
+public static int convertStatus (int status)
+#endif
+    {
+	switch (ENUM_VALUE_(status))
+	{
+	case ENUM_CONST_(org.omg.CosTransactions.Status,StatusActive):
+	    return javax.transaction.Status.STATUS_ACTIVE;
+	case ENUM_CONST_(org.omg.CosTransactions.Status,StatusCommitted):
+	    return javax.transaction.Status.STATUS_COMMITTED;
+#if defined(DRAFT3) || defined(DRAFT4)
+	case ENUM_CONST_(org.omg.CosTransactions.Status,StatusPreparing):
+	    return javax.transaction.Status.STATUS_PREPARING;
+	case ENUM_CONST_(org.omg.CosTransactions.Status,StatusCommitting):
+	    return javax.transaction.Status.STATUS_COMMITTING;
+	case ENUM_CONST_(org.omg.CosTransactions.Status,StatusRollingBack):
+	    return javax.transaction.Status.STATUS_ROLLING_BACK;
+#endif
+	case ENUM_CONST_(org.omg.CosTransactions.Status,StatusMarkedRollback):
+	    return javax.transaction.Status.STATUS_MARKED_ROLLBACK;
+	case ENUM_CONST_(org.omg.CosTransactions.Status,StatusNoTransaction):
+	    return javax.transaction.Status.STATUS_NO_TRANSACTION;
+	case ENUM_CONST_(org.omg.CosTransactions.Status,StatusPrepared):
+	    return javax.transaction.Status.STATUS_PREPARED;
+	case ENUM_CONST_(org.omg.CosTransactions.Status,StatusRolledBack):
+	    return javax.transaction.Status.STATUS_ROLLEDBACK;
+	case ENUM_CONST_(org.omg.CosTransactions.Status,StatusUnknown):
+	    return javax.transaction.Status.STATUS_UNKNOWN;
+	default:
+	    return javax.transaction.Status.STATUS_UNKNOWN;
+	}
+    }
+
+public static boolean sameXID (Xid x1, Xid x2)
+    {
+	if (x1 == x2)
+	    return true;
+	else
+	{
+	    if (x1.getFormatId() == x2.getFormatId())
+	    {
+		byte[] gtrid1 = x1.getGlobalTransactionId();
+		byte[] gtrid2 = x2.getGlobalTransactionId();
+		
+		if (gtrid1.length == gtrid2.length)
+		{
+		    for (int i = 0; i < gtrid1.length; i++)
+		    {
+			if (gtrid1[i] != gtrid2[i])
+			    return false;
+		    }
+		}
+		else
+		    return false;
+
+		byte[] bqual1 = x1.getBranchQualifier();
+		byte[] bqual2 = x2.getBranchQualifier();
+
+		if (bqual1.length == bqual2.length)
+		{
+		    for (int i = 0; i < bqual1.length; i++)
+		    {
+			if (bqual1[i] != bqual2[i])
+			    return false;
+		    }
+		}
+		else
+		    return false;
+
+		return true;
+	    }
+	    else
+		return false;
+	}
+    }
+
+/**
+ * get a string representing anyones Xid 
+ * similar too, but not the same as OTS_Transaction/xa/XID.toString()
+ */
+public static String xidToString(Xid xid)
+{
+    String globalTranId = new String(xid.getGlobalTransactionId());  // could be garbage!
+    String branchQualifier = new String(xid.getBranchQualifier());   // and this
+	
+    return new String("< "+xid.getFormatId()+", "+globalTranId+", "+branchQualifier+" >");
+
+}
+
+};

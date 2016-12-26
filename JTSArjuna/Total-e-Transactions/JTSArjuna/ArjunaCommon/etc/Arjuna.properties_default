@@ -1,0 +1,156 @@
+# 
+# Copyright (C) 1999-2001 by HP Bluestone Software, Inc. All rights Reserved.
+#
+# HP Arjuna Labs,
+# Newcastle upon Tyne,
+# Tyne and Wear,
+# UK.
+#
+# $Id: Arjuna.properties_default,v 1.1.2.1.6.3.6.6.8.1.2.1.2.3.4.7.2.1.28.1.8.2 2001/08/09 16:15:31 delsworthy Exp $
+#
+
+#
+# These options are described in the ArjunaJTS manual.
+# Defaults are provided here for convenience only.
+#
+# Please read through this file prior to using the system, and consider
+# updating the specified entries.
+#
+
+# Licence string.
+# JAVA_ARJUNA_LICENCE=01234567-89abcdef-01234567-89abcdef-aabbccdd
+
+# (default is java.home)
+# PROPERTIES_FILE=
+
+# (default is NO)
+# DEBUG_ENABLED=NO
+
+# (default is 0x0)
+# DEBUG_LEVEL=0x0
+
+# (default is 0x0004)
+# VIS_LEVEL=0x0004
+
+# (default is 0xffff)
+# FAC_LEVEL=0xffff
+
+# (The java.io.Writer stream that any debugging information should be output
+# to. Default is System.out)
+# DEBUG_STREAM=
+
+# (The java.io.Writer stream that any error information should be output
+# to. Default is System.err)
+# ERROR_STREAM=
+
+# (default is NO)
+# ASYNC_COMMIT=NO
+
+# (default is NO)
+# ASYNC_PREPARE=NO
+
+# (default is YES)
+# COMMIT_ONE_PHASE=YES
+
+# (default is defaultStore)
+# LOCALOSROOT=defaultStore
+
+# (default is LockStore of installation - must be writeable!)
+# LOCKSTORE_DIR=
+
+# (default is BasicLockStore)
+# LOCKSTORE_TYPE=BasicLockStore
+
+# (default is ObjectStore of installation - must be writeable!)
+# OBJECTSTORE_DIR=
+
+# (default is ON)
+# OBJECTSTORE_SYNC=ON
+
+# (default is ShadowStore)
+# OBJECTSTORE_TYPE=ShadowNoFileLock
+
+# (default is )
+# HASHED_DIRECTORIES=255
+
+# (default is ON)
+# TRANSACTION_SYNC=ON
+
+# (default is etc directory of installation - must be writeable!)
+# INITIAL_REFERENCES_ROOT=
+
+# (default is CosServices.cfg)
+# INITIAL_REFERENCES_FILE=CosServices.cfg
+
+# When reading and writing IORs, they can be read/written in this directory.
+# (default is current working directory)
+# FILE_DIR=
+
+# (default resolution service for the Transaction Manager Server: ORB specific)
+# RESOLVE_SERVICE=
+
+# OrbixWeb servers run for a finite period of time when not being used. This
+# specifies how long.
+# SERVER_TIMEOUT=
+
+# Transaction Reaper Timeout (default is 120000 microseconds)
+# OTS_TX_REAPER_TIMEOUT=120000
+
+# Transaction Reaper Mode, can be: NORMAL or DYNAMIC (default is NORMAL)
+# OTS_TX_REAPER_MODE=DYNAMIC
+
+# (default is NO)
+# OTS_TRANSACTION_MANAGER=NO
+
+# (default is NO)
+# OTS_NEED_TRAN_CONTEXT=NO
+
+# (default is NO)
+# OTS_ALWAYS_PROPAGATE_CONTEXT=NO
+
+# (default is NO)
+# OTS_CHECKED_TRANSACTIONS=NO
+
+# (default is YES)
+# OTS_SUPPORT_SUBTRANSACTIONS=YES
+
+# (default is YES)
+# OTS_SUPPORT_ROLLBACK_SYNC=YES
+
+# (default is NO)
+# OTS_SUPPORT_INTERPOSED_SYNCHRONIZATION=NO
+
+# Timeout in seconds to use for top-level transaction if 0 specified.
+# (default is no timeout)
+# OTS_DEFAULT_TIMEOUT=
+
+# Make the inventory aware of the JDBC Object Store implementation.
+# STATIC_INVENTORY_IMPLE_STORE=com.arjuna.JDBC2.Implementation.Implementations
+
+# Propagate the context?
+# (default is INTERPOSITION)
+# OTS_CONTEXT_PROP_MODE=INTERPOSITION
+
+#
+# This class handles context propagation issues, and should
+# never be commented out.
+#
+
+ORBPreInit1=com.arjuna.CosTransactions.OTS_ContextPropagationManager
+
+#
+# This class enables crash recovery and need never be commented out
+#
+
+ORBPreInitRecovery=com.arjuna.CosRecovery.RecoveryEnablement
+
+#
+# ORB: OrbixWeb-3.1/3.2
+#
+# OrbixWeb.setDiagnostics=0
+
+# this is the distinguishing part of the name of the recovery manager service
+# A different string must be used for each ObjectStore
+#      Default is the hostname and does not need changing if only one 
+#      ObjectStore is used on this machine
+# RecoveryManagerTag=<uniquestring> 

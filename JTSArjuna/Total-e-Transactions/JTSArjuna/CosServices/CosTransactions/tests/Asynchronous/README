@@ -1,0 +1,14 @@
+This test illustrates the use  of threads to  complete the prepare and
+commit protocol for a transaction.
+
+expected_output1: no threading optimisations.
+
+expected_output2: ASYNC_PREPARE enabled.
+
+expected_output3: ASYNC_COMMIT enabled as well.
+
+expected_output4: with an error during prepare. (-errorp option and ASYNC_PREPARE)
+
+expected_output5: with an error during commit. (-errorc option and ASYNC_PREPARE only)
+
+

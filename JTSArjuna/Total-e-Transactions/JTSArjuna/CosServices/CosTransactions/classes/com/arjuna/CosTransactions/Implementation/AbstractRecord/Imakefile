@@ -1,0 +1,23 @@
+COMMENT 
+COMMENT Copyright (C) 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.2.1 2000/07/24 11:25:37 nmcl Exp $
+COMMENT
+
+SOURCES = OTS_ResourceRecordSetup.java \
+	  OTS_AbstractRecordSetup.java
+	  
+OBJECTS = OTS_ResourceRecordSetup.class \
+	  OTS_AbstractRecordSetup.class
+
+Target($(OBJECTS))
+
+BuildJavaByteCode(OTS_ResourceRecordSetup,NullParam)
+BuildJavaByteCode(OTS_AbstractRecordSetup,NullParam)
+
+Clean(*.class)

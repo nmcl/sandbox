@@ -1,0 +1,15 @@
+COMMENT 
+COMMENT Copyright (C) 1998, 1999, 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.6.4.1.40.1 2001/04/06 15:30:59 jcoleman Exp $
+COMMENT
+
+InstallFile(/config,JDBC_Version.def)
+InstallFileAs(/config,JDBC_Module_install.def,JDBC_Module.def)
+
+Purge(JDBC.answers JDBC.cf Local.def JDBC_Module.def JDBC_Module_install.def JDBC_Version.def Info.h)

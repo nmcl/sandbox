@@ -1,0 +1,383 @@
+/*
+ * Copyright (C) 1998, 1999, 2000, 2001,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.  
+ *
+ * $Id: OTS_Utility.javatmpl,v 1.2.8.1.20.1.2.2.2.1.2.1.34.1.4.1.42.1 2001/12/11 13:35:16 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package com.arjuna.CosTransactions;
+
+import com.arjuna.ArjunaCommon.Common.Uid;
+import com.arjuna.ArjunaCore.Atomic.BasicAction;
+import com.arjuna.CosTransactions.tx.XID;
+import com.arjuna.CosTransactions.ArjunaOTS.Arjuna;
+import org.omg.CosTransactions.*;
+import com.arjuna.ArjunaOTS.*;
+import java.io.PrintWriter;
+
+import org.omg.CosTransactions.Unavailable;
+import org.omg.CORBA.SystemException;
+import java.lang.IllegalStateException;
+import org.omg.CORBA.BAD_PARAM;
+
+/**
+ * Some useful utility functions for the OTS. Use with care!
+ *
+ * @author Mark Little (mark@arjuna.com)
+ * @version $Id: OTS_Utility.javatmpl,v 1.2.8.1.20.1.2.2.2.1.2.1.34.1.4.1.42.1 2001/12/11 13:35:16 nmcl Exp $
+ * @since JTS 1.0.
+ */
+
+public class OTS_Utility
+{
+ 
+public static PrintWriter printHierarchy (PrintWriter strm, PropagationContext ctx)
+    {
+	int depth = ((ctx.parents != null) ? ctx.parents.length : 0);
+
+	strm.print("PropagationContext:");
+    
+	for (int i = depth -1; i >= 0; i--)
+	{
+	    if (ctx.parents[i] != null)
+		strm.print("\n"+OTS_Utility.otidToUid(ctx.parents[i].otid));
+	}
+
+	strm.print("\n"+OTS_Utility.otidToUid(ctx.currentTransaction.otid));
+
+	return strm;
+    }
+
+    /*
+     * Deprecated As of 2.1.2 use the other form of printHierarchy.
+     *
+     * @deprecated As of 2.1.2 use the other form of printHierarchy.
+     */
+
+public static void printHierarchy (PropagationContext ctx, PrintWriter strm)
+    {
+	printHierarchy(strm, ctx);
+    }
+    
+    /*
+     * Deprecated As of 2.1.2 use stringStatus.
+     *
+     * @deprecated As of 2.1.2 use stringStatus.
+     */
+
+#if defined(CORBA_2_1) || defined(CORBA_2_2) || defined(CORBA_2_3) || defined(CORBA_2_4)
+public static String printStatus (org.omg.CosTransactions.Status res)
+#else
+public static String printStatus (int res)
+#endif
+    {
+	return stringStatus(res);
+    }
+
+    /*
+     * Deprecated As of 2.1.2 use stringVote.
+     *
+     * @deprecated As of 2.1.2 use stringVote.
+     */
+
+#if defined(CORBA_2_1) || defined(CORBA_2_2) || defined(CORBA_2_3) || defined(CORBA_2_4)
+public static String printVote (org.omg.CosTransactions.Vote v)
+#else
+public static String printVote (int v)
+#endif
+    {
+	return stringVote(v);
+    }
+
+#if defined(CORBA_2_1) || defined(CORBA_2_2) || defined(CORBA_2_3) || defined(CORBA_2_4)
+public static PrintWriter printVote (PrintWriter strm, org.omg.CosTransactions.Vote v)
+#else
+public static PrintWriter printVote (PrintWriter strm, int v)
+#endif
+    {
+	strm.print(stringVote(v));
+	
+	return strm;
+    }
+
+    /**
+     * @since JTS 2.1.2.
+     */
+
+#if defined(CORBA_2_1) || defined(CORBA_2_2) || defined(CORBA_2_3) || defined(CORBA_2_4)
+public static String stringVote (org.omg.CosTransactions.Vote v)
+#else
+public static String stringVote (int v)
+#endif
+    {
+	switch (ENUM_VALUE_(v))
+	{
+	case ENUM_CONST_(Vote,VoteCommit):
+	    return "CosTransactions::VoteCommit";
+	case ENUM_CONST_(Vote,VoteRollback):
+	    return "CosTransactions::VoteRollback";
+	case ENUM_CONST_(Vote,VoteReadOnly):
+	    return "CosTransactions::VoteReadOnly";
+	default:
+	    return "Unknown";
+	}
+    }
+
+#if defined(CORBA_2_1) || defined(CORBA_2_2) || defined(CORBA_2_3) || defined(CORBA_2_4)
+public static PrintWriter printStatus (PrintWriter strm, org.omg.CosTransactions.Status res)
+#else
+public static PrintWriter printStatus (PrintWriter strm, int res)
+#endif
+    {
+	strm.print(stringStatus(res));
+	
+	return strm;
+    }
+
+    /**
+     * @since JTS 2.1.2.
+     */
+
+#if defined(CORBA_2_1) || defined(CORBA_2_2) || defined(CORBA_2_3) || defined(CORBA_2_4)
+public static String stringStatus (org.omg.CosTransactions.Status res)
+#else
+public static String stringStatus (int res)
+#endif    
+    {
+	switch (ENUM_VALUE_(res))
+	{
+	case ENUM_CONST_(Status,StatusActive):
+	    return "CosTransactions::StatusActive";
+	case ENUM_CONST_(Status,StatusMarkedRollback):
+	    return "CosTransactions::StatusMarkedRollback";
+	case ENUM_CONST_(Status,StatusPrepared):
+	    return "CosTransactions::StatusPrepared";
+	case ENUM_CONST_(Status,StatusCommitted):
+	    return "CosTransactions::StatusCommitted";
+	case ENUM_CONST_(Status,StatusRolledBack):
+	    return "CosTransactions::StatusRolledBack";
+	case ENUM_CONST_(Status,StatusUnknown):
+	    return "CosTransactions::StatusUnknown";
+#if defined(DRAFT3) || defined(DRAFT4) || defined(DRAFT5)
+	case ENUM_CONST_(Status,StatusPreparing):
+	    return "CosTransactions::StatusPreparing";
+	case ENUM_CONST_(Status,StatusCommitting):
+	    return "CosTransactions::StatusCommitting";
+	case ENUM_CONST_(Status,StatusRollingBack):
+	    return "CosTransactions::StatusRollingBack";
+#endif	    
+	case ENUM_CONST_(Status,StatusNoTransaction):
+	    return "CosTransactions::StatusNoTransaction";
+	default:
+	    return "Unknown";
+	}
+    }
+
+    /*
+     * Any need for the inverse operation?
+     * Could easily do it for Arjuna transactions only.
+     */
+
+public static com.arjuna.CosTransactions.tx.XID getXid (Uid uid, boolean branch) throws IllegalStateException
+    {
+	if (uid == null)
+	    throw new IllegalStateException();
+	
+	String s = uid.stringForm();
+	int uidLen = s.length();
+		
+	if (uidLen > XID.MAXGTRIDSIZE)  // Uid is too long!!!!
+	    throw new IllegalStateException();
+	else
+	{
+	    try
+	    {
+		XID xid = new XID();
+		byte[] b = s.getBytes();
+		    
+		xid.formatID = OTS_Transaction.interpositionType();
+		xid.gtrid_length = uidLen;
+
+		/*
+		 * Which way round do we fill in the structure?
+		 */
+
+		System.arraycopy (b, 0, xid.data, 0, uidLen);
+		    
+		if (branch)
+		{
+		    Uid branchUid = new Uid();
+		    String bs = branchUid.stringForm();
+		    int bsLen = bs.length();
+
+		    b = bs.getBytes();
+
+		    if (bsLen > XID.MAXBQUALSIZE) // Uid is too long!!!!
+			throw new IllegalStateException();
+		    else
+		    {
+			xid.bqual_length = bsLen;
+		    
+			System.arraycopy (b, 0, xid.data, xid.gtrid_length, bsLen);
+		    }
+		
+		    bs = null;
+		    branchUid = null;
+		}
+		else
+		{
+		    /*
+		     * Note: for some dbs we seem to be able to get
+		     * away with setting the size field to the size
+		     * of the actual branch. However, for Oracle,
+		     * it appears as though it must always be 64.
+		     * (At least for zero branches.)
+		     */
+
+		    xid.data[xid.gtrid_length] = (byte) 0;
+		    xid.bqual_length = 64;
+		}
+		    
+		b = null;
+		s = null;
+
+		return xid;
+	    }
+	    catch (Exception e)
+	    {
+		throw new IllegalStateException();
+	    }
+	}
+    }
+    
+public static com.arjuna.CosTransactions.tx.XID getXid (Control cont, boolean branch) throws IllegalStateException
+    {
+	if (cont == null)
+	    throw new IllegalStateException();
+
+	if (cont instanceof OTS_Control)
+	{
+	    try
+	    {
+		UidCoordinator arjcoord = OTS_Helper.getUidCoordinator(cont);
+		Uid u = OTS_Helper.getUid(arjcoord);
+
+		return OTS_Utility.getXid(u, branch);
+	    }
+	    catch (Exception e)
+	    {
+		throw new IllegalStateException();
+	    }
+	}
+	else
+	    throw new IllegalStateException();
+    }
+
+public static Uid getUid (XID xid)
+    {
+	if ((xid.formatID == -1) || (xid.gtrid_length <= 0)) // means null XID
+	    return Uid.nullUid();
+	else
+	{
+	    byte[] buff = new byte[xid.gtrid_length+1];
+
+	    buff[xid.gtrid_length] = (byte) '\0';
+
+	    for (int i = 0; i < xid.gtrid_length; i++)
+	    {
+		buff[i] = xid.data[i];
+	    }
+
+	    Uid tx = new Uid(new String(buff), true);
+
+	    buff = null;
+
+	    return tx;
+	}
+    }
+
+    /**
+     * If this control refers to an Arjuna transaction then return its native
+     * Uid representation. Otherwise return Uid.nullUid().
+     */
+
+public static final Uid getUid (Control cont)
+    {
+	try
+	{
+	    UidCoordinator coord = OTS_Helper.getUidCoordinator(cont);
+
+	    if (coord == null)
+		throw new BAD_PARAM();
+	    else
+		return OTS_Helper.getUid(coord);
+	}
+	catch (BAD_PARAM ex)
+	{
+	    return Uid.nullUid();
+	}
+    }
+
+    /**
+     * @since JTS 2.2.
+     */
+
+public static final org.omg.CosTransactions.otid_t uidToOtid (Uid theUid)
+    {
+	return ((theUid != null) ? uidToOtid(theUid.stringForm()) : null);
+    }
+    
+public static final org.omg.CosTransactions.otid_t uidToOtid (String theUid)
+    {
+	if (theUid == null)
+	    return null;
+	
+	otid_t otid = new otid_t();
+	byte[] b = theUid.getBytes();
+
+	otid.tid = new byte[b.length+1];
+	otid.bequal_length = b.length+1;
+
+	for (int i = 0; i < b.length; i++)
+	    otid.tid[i] = b[i];
+
+	otid.tid[b.length] = (byte) '\0';
+
+	b = null;
+	
+	return otid;
+    }
+
+    /*
+     * If we cannot deal with the otid then we could simply generate
+     * a new Uid. We would need to keep the original otid in case
+     * the transaction either retransmits it or the application asks
+     * for it (e.g., via the PropagationContext).
+     */
+    
+public static final Uid otidToUid (org.omg.CosTransactions.otid_t otid)
+    {
+	if (otid.bequal_length > 0)
+	{
+	    byte[] theUid = new byte[otid.bequal_length-1];  // don't need null terminating character
+
+	    for (int i = 0; i < otid.bequal_length -1; i++)
+		theUid[i] = otid.tid[i];
+
+	    Uid u = new Uid(new String(theUid), true);  // errors in string give NIL_UID
+
+	    theUid = null;
+
+	    return u;
+	}
+	else
+	    return Uid.nullUid();
+    }
+
+}

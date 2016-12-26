@@ -1,0 +1,39 @@
+COMMENT 
+COMMENT Copyright (C) 1999, 2000, 2001,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2.34.1.4.2.54.1 2001/11/14 16:15:52 rbegg Exp $
+COMMENT
+
+AddToIdlFlags(-I$(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+#ifdef INSTALLTESTS
+CreateInstallDirectory(/tests,/tests/TransactionServer)
+#endif
+
+SOURCES = TMClient.javatmpl
+
+PROCESSED_SOURCES = TMClient.java
+
+TESTOBJECTS = TMClient.class
+
+Target($(PROCESSED_SOURCES))
+Target($(TESTOBJECTS))
+
+#ifdef INSTALLTESTS
+InstallFile(/tests/TransactionServer,Imakefile)
+InstallFile(/tests/TransactionServer,$(TESTOBJECTS))
+InstallFile(/tests/TransactionServer,$(SOURCES))
+InstallFile(/tests/TransactionServer,README)
+InstallFiles(/tests/TransactionServer,runtest,runtest.*)
+#endif
+
+PreprocessJavaCode(TMClient,NullParam)
+
+BuildJavaByteCode(TMClient,NullParam)
+
+Clean(*.class)

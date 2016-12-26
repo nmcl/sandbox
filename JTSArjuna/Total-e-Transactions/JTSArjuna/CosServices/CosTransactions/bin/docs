@@ -1,0 +1,2 @@
+javadoc org.omg.CosTransactions com.arjuna.ArjunaOTS com.arjuna.JavaGandiva com.arjuna.JavaGandiva.Base com.arjuna.JavaGandiva.Common com.arjuna.JavaGandiva.Interface com.arjuna.JavaGandiva.Template com.arjuna.JavaGandiva.Thread com.arjuna.JavaArjunaLite com.arjuna.JavaArjunaLite.Atomic com.arjuna.JavaArjunaLite.Common com.arjuna.JavaArjunaLite.Interface com.arjuna.JavaArjunaLite.Thread com.arjuna.OrbCommon com.arjuna.JavaCosTransactions com.arjuna.JavaCosTransactions.ArjunaOTS com.arjuna.JavaCosTransactions.tx com.arjuna.jta com.arjuna.JDBC
+

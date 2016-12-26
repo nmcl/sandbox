@@ -1,0 +1,100 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: DistributedHammer1.javatmpl,v 1.1.28.1 2000/11/08 14:25:55 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+import CosTransactionsTests.*;
+import TestModule.*;
+import com.arjuna.OrbCommon.*;
+import com.arjuna.CosTransactions.*;
+import com.arjuna.ArjunaCommon.Common.ErrorStream;
+import java.util.Random;
+
+import CosTransactionsTests.TestException;
+
+public class DistributedHammer1
+{
+
+public static void main (String[] args)
+    {
+	try
+	{
+	    ORBInterface.initORB(args, null);
+	    OAInterface.initOA();
+	}
+	catch (Exception e)
+	{
+	    ErrorStream.fatal().println("Initialisation failed: "+e);
+	}
+	
+	String server1 = "/tmp/hammer1.ref";
+	String server2 = "/tmp/hammer2.ref";
+
+	if (System.getProperty("os.name").startsWith("Windows"))
+	{
+	    server1 = "C:\\temp\\hammer1.ref";
+	    server2 = "C:\\temp\\hammer2.ref";
+	}
+
+	for (int i = 0; i < args.length; i++)
+	{
+	    if (args[i].compareTo("-reffile1") == 0)
+		server1 = args[i+1];
+	    if (args[i].compareTo("-reffile2") == 0)
+		server2 = args[i+1];
+	    if (args[i].compareTo("-help") == 0)
+	    {
+		System.out.println("Usage: DistributedHammer1 [-reffile1 <file>] [-reffile2 <file>] [-help]");
+		System.exit(0);
+	    }
+	}
+	
+	try
+	{
+#ifndef USE_BIND
+	    DistributedHammerWorker1.hammerObject_1 = HELPER_CLASS_(Hammer).narrow(ORBObject.fileToObject(server1));
+	    DistributedHammerWorker1.hammerObject_2 = HELPER_CLASS_(Hammer).narrow(ORBObject.fileToObject(server2));
+#else
+#ifdef ORBIXWEB
+	    DistributedHammerWorker1.hammerObject_1 = SCOPED_CORBA_BIND_(TestModule,Hammer,":Hammer1");
+	    DistributedHammerWorker1.hammerObject_2 = SCOPED_CORBA_BIND_(TestModule,Hammer,":Hammer2");
+#else
+	    DistributedHammerWorker1.hammerObject_1 = SCOPED_CORBA_BIND_(TestModule,Hammer,"Hammer1");
+	    DistributedHammerWorker1.hammerObject_2 = SCOPED_CORBA_BIND_(TestModule,Hammer,"Hammer2");
+#endif
+#endif
+	    if (! DistributedHammerWorker1.hammerObject_1.set(10, null))
+		System.out.println("m set1 : failed");
+	    if (! DistributedHammerWorker1.hammerObject_2.set(101, null))
+		System.out.println("m set2 : failed");
+
+	    DistributedHammerWorker1.get12('m', 0);
+	    DistributedHammerWorker1.get21('m', 0);
+	}
+	catch (Exception e)
+	{
+	    System.err.println("DistributedHammer1: "+e);
+	    System.exit(0);
+	}
+    
+	for (int i = 0; i < 100; i++)
+	    DistributedHammerWorker1.randomOperation('1', 0);
+	
+	DistributedHammerWorker1.get12('m', 0);
+	DistributedHammerWorker1.get21('m', 0);
+
+	OAInterface.shutdownOA();
+	ORBInterface.shutdownORB();
+
+	System.exit(0);  // needed for ORBacus?!
+    }
+
+};

@@ -1,0 +1,71 @@
+COMMENT 
+COMMENT Copyright (C) 1998, 1999, 2000, 2001,
+COMMENT
+COMMENT HP Arjuna Labs,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.2.3.4.2.4.4.8.1.4.2.4.5.2.1.28.1 2001/06/15 12:08:51 nmcl Exp $
+COMMENT
+
+SubDirectory(Admin)
+
+SOURCES = Info.java \
+          RecoveryManagerImple.java \
+          RecoveryManager.java \
+          RecoveryManagerPinger.java \
+          RecoveryConfiguration.java \
+          RecoveryEnvironment.java \
+          PeriodicRecovery.java \
+          RecoveryClassLoader.java \
+          RecoveryModule.java \
+          RecoveryEnablement.java \
+          RecManAdmin.java
+
+OBJECTS = Info.class \
+          RecoveryManagerImple.class \
+          RecoveryManager.class \
+          RecoveryManagerPinger.class \
+          RecoveryEnvironment.class \
+          RecoveryConfiguration.class \
+          PeriodicRecovery.class \
+          RecoveryClassLoader.class \
+          RecoveryModule.class \
+          RecoveryEnablement.class \
+          ExpiredEntryMonitor.class \
+          ExpiryScanner.class \
+          RecManAdmin.class
+
+
+Target($(SOURCES))
+
+SubDirectory(Contact)
+SubDirectory(Transactions)
+SubDirectory(RecoveryCoordinators)
+SubDirectory(TransactionalObjects)
+
+Target($(OBJECTS))
+
+PreprocessJavaCode(Info,NullParam)
+PreprocessJavaCode(RecoveryManagerImple,NullParam)
+PreprocessJavaCode(RecoveryManagerPinger,NullParam)
+PreprocessJavaCode(RecoveryConfiguration,NullParam)
+PreprocessJavaCode(RecoveryEnablement,NullParam)
+PreprocessJavaCode(RecManAdmin,NullParam)
+
+BuildJavaByteCode(Info,NullParam)
+BuildJavaByteCode(RecoveryManagerImple,NullParam)
+BuildJavaByteCode(RecoveryManager,NullParam)
+BuildJavaByteCode(RecoveryManagerPinger,NullParam)
+BuildJavaByteCode(RecoveryEnvironment,NullParam)
+BuildJavaByteCode(RecoveryConfiguration,NullParam)
+BuildJavaByteCode(PeriodicRecovery,NullParam)
+BuildJavaByteCode(RecoveryClassLoader,NullParam)
+BuildJavaByteCode(RecoveryModule,NullParam)
+BuildJavaByteCode(RecoveryEnablement,NullParam)
+BuildJavaByteCode(ExpiredEntryMonitor,NullParam)
+BuildJavaByteCode(ExpiryScanner,NullParam)
+BuildJavaByteCode(RecManAdmin,NullParam)
+
+Clean(*.class)

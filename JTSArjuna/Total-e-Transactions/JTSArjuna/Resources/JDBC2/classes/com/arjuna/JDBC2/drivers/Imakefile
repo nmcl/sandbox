@@ -1,0 +1,59 @@
+COMMENT 
+COMMENT Copyright (C) 2000, 2001,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2.14.2.8.2.6.1.54.1 2001/08/01 14:19:01 jcoleman Exp $
+COMMENT
+
+SOURCES = cloudscape_3_0.java \
+	  cloudscape_3_5.java \
+	  cloudscape_3_6.java \
+	  oracle_8_1_6.java \
+	  sequelink_5_0.java \
+	  sequelink_5_1.java \
+	  jndi.java
+
+Target(jndi.class)
+
+#ifdef BUILD_CLOUDSCAPE_3_0
+Target(cloudscape_3_0.class)
+#endif
+
+#ifdef BUILD_CLOUDSCAPE_3_5
+Target(cloudscape_3_5.class)
+#endif
+
+#ifdef BUILD_CLOUDSCAPE_3_6
+Target(cloudscape_3_6.class)
+#endif
+
+#ifdef BUILD_ORACLE_8_1_6
+Target(oracle_8_1_6.class)
+#endif
+
+#ifdef BUILD_SEQUELINK_5_0
+Target(sequelink_5_0.class)
+#endif
+
+#ifdef BUILD_SEQUELINK_5_1
+Target(sequelink_5_1.class)
+#endif
+
+SubDirectory(modifiers)
+SubDirectory(brandings)
+
+PreprocessJavaCode(jndi,NullParam)
+
+BuildJavaByteCode(cloudscape_3_0,NullParam)
+BuildJavaByteCode(cloudscape_3_5,NullParam)
+BuildJavaByteCode(cloudscape_3_6,NullParam)
+BuildJavaByteCode(oracle_8_1_6,NullParam)
+BuildJavaByteCode(sequelink_5_0,NullParam)
+BuildJavaByteCode(sequelink_5_1,NullParam)
+BuildJavaByteCode(jndi,NullParam)
+
+Clean(*.class)

@@ -1,0 +1,23 @@
+COMMENT 
+COMMENT Copyright (C) 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.2.1.22.1 2000/11/02 12:58:48 nmcl Exp $
+COMMENT
+
+SOURCES = JDBCRecoveryModule.java \
+	  JDBCRecoveryResource.java
+
+OBJECTS = JDBCRecoveryResource.class \
+	  JDBCRecoveryModule.class
+
+Target($(OBJECTS))
+
+BuildJavaByteCode(JDBCRecoveryModule,NullParam)
+BuildJavaByteCode(JDBCRecoveryResource,NullParam)
+
+Clean(*.class)

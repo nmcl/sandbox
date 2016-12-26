@@ -1,0 +1,307 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.  
+ *
+ * $Id: StackImple.javatmpl,v 1.2.4.1.28.1.4.1 2000/12/13 16:42:45 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package CosTransactionsTests;
+
+import com.arjuna.CosTransactions.OTS;
+import com.arjuna.CosTransactions.OTS_Current;
+import com.arjuna.CosTransactions.OTS_ExplicitInterposition;
+import com.arjuna.ArjunaCommon.Common.*;
+import com.arjuna.ArjunaCore.Atomic.*;
+import com.arjuna.CosTransactions.ArjunaOTS.*;
+import TestModule.*;
+import org.omg.CORBA.IntHolder;
+import org.omg.CosTransactions.*;
+
+import CosTransactionsTests.TestException;
+import org.omg.CosTransactions.SubtransactionsUnavailable;
+import java.io.IOException;
+import org.omg.CORBA.SystemException;
+
+public class StackImple extends LockManager implements SCOPED_TIE_CLASS_(TestModule,stack)
+{
+
+public StackImple ()
+    {
+	super (ObjectType.ANDPERSISTENT);
+
+	top = 0;
+
+	for (int i = 0; i < ARRAY_SIZE; i++)
+	    array[i] = 0;
+
+	AtomicTransaction A = new AtomicTransaction();
+
+	try
+	{
+	    A.begin();
+
+	    if (setlock(new Lock(LockMode.WRITE), 0) == LockResult.GRANTED)
+		A.commit(false);
+	    else
+		A.rollback();
+	}
+	catch (Exception e1)
+	{
+	    System.err.println(e1);
+
+	    try
+	    {
+		A.rollback();
+	    }
+	    catch (Exception e2)
+	    {
+		System.err.println(e2);
+	    }
+
+	    System.exit(1);
+	}
+    }
+
+public StackImple (Uid uid)
+    {
+	super(uid);
+	
+	top = 0;
+
+	for (int i = 0; i < ARRAY_SIZE; i++)
+	    array[i] = 0;
+
+	AtomicTransaction A = new AtomicTransaction();
+
+	try
+	{
+	    A.begin();
+
+	    if (setlock(new Lock(LockMode.WRITE), 0) == LockResult.GRANTED)
+		A.commit(false);
+	    else
+		A.rollback();
+	}
+	catch (Exception e1)
+	{
+	    System.err.println(e1);
+
+	    try
+	    {
+		A.rollback();
+	    }
+	    catch (Exception e2)
+	    {
+		System.err.println(e2);
+	    }
+
+	    System.exit(1);
+	}	
+    }
+
+public void finalize () throws Throwable
+    {
+	super.terminate();
+	super.finalize();
+    }
+
+public int push (int val) throws SystemException
+    {
+	AtomicTransaction A = new AtomicTransaction();
+	int res = 0;
+
+	try
+	{
+	    A.begin();
+
+	    if (setlock(new Lock(LockMode.WRITE), 0) == LockResult.GRANTED)
+	    {
+		if (top < ARRAY_SIZE)
+		{
+		    array[top] = val;
+		    top++;
+		}
+		else
+		    res = -1;
+
+		if (res == 0)
+		{
+		    A.commit(false);
+		}
+		else
+		    A.rollback();
+	    }
+	    else
+		A.rollback();
+	}
+	catch (Exception e1)
+	{
+	    try
+	    {
+		A.rollback();
+	    }
+	    catch (Exception e2)
+	    {
+		System.err.println(e2);
+	    }
+
+	    res = -1;
+	}
+
+	return res;
+    }
+
+public int pop (IntHolder val) throws SystemException
+    {
+	AtomicTransaction A = new AtomicTransaction();
+	int res = 0;
+
+	try
+	{
+	    A.begin();
+
+	    if (setlock(new Lock(LockMode.WRITE), 0) == LockResult.GRANTED)
+	    {
+		if (top > 0)
+		{
+		    top--;
+		    val.value = array[top];
+		}
+		else
+		    res = -1;
+
+		if (res == 0)
+		{
+		    A.commit(false);
+		}
+		else
+		    A.rollback();
+	    }
+	    else
+	    {
+		A.rollback();
+	    }
+	}
+	catch (Exception e1)
+	{
+	    try
+	    {
+		A.rollback();
+	    }
+	    catch (Exception e2)
+	    {
+		System.err.println(e2);
+	    }
+
+	    res = -1;
+	}
+	
+	return res;
+    }
+
+public void printStack () throws SystemException
+    {
+	AtomicTransaction A = new AtomicTransaction();
+
+	try
+	{
+	    A.begin();
+    
+	    if (setlock(new Lock(LockMode.WRITE), 0) == LockResult.GRANTED)
+	    {
+		if (top > 0)
+		{
+		    System.out.println("\nContents of stack:");
+	
+		    for (int i = 0; i < top; i++)
+			System.out.println("\t"+array[i]);
+		}
+		else
+		    System.out.println("\nStack is empty.");
+
+		A.commit(false);
+	    }
+	    else
+	    {
+		System.out.println("printStack: could not set WRITE lock.");
+	
+		A.rollback();
+	    }
+	}
+	catch (Exception e1)
+	{
+	    try
+	    {
+		A.rollback();
+	    }
+	    catch (Exception e2)
+	    {
+		System.err.println(e2);
+	    }
+	}
+    }
+
+public boolean save_state (OutputObjectState objectState, int ot)
+    {
+	if (!super.save_state(objectState, ot))
+	    return false;
+	
+	try
+	{
+	    objectState.packInt(top);
+
+	    for (int i = 0; i < top; i++)
+	    {
+		objectState.packInt(array[i]);
+	    }
+
+	    return true;
+	}
+	catch (IOException e)
+	{
+	    return false;
+	}
+    }
+
+public boolean restore_state (InputObjectState objectState, int ot)
+    {
+	if (!super.restore_state(objectState, ot))
+	    return false;
+
+	try
+	{
+	    top = objectState.unpackInt();
+
+	    for (int j = 0; j < ARRAY_SIZE; j++)
+		array[j] = 0;
+    
+	    for (int i = 0; i < top; i++)
+	    {
+		array[i] = objectState.unpackInt();
+	    }
+
+	    return true;
+	}
+	catch (IOException e)
+	{
+	    return false;
+	}
+    }
+
+public String type ()
+    {
+	return "/StateManager/LockManager/StackImple";
+    }
+
+public static final int ARRAY_SIZE = 10;
+
+private int[] array = new int[ARRAY_SIZE];
+private int top;
+
+};

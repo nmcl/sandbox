@@ -1,0 +1,34 @@
+COMMENT 
+COMMENT Copyright (C) 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2.6.1.6.2.2.3.2.1.2.3.22.1.2.1 2000/11/21 12:05:10 nmcl Exp $
+COMMENT
+
+SOURCES = report.java
+
+OBJECTS = report.class
+
+Target($(OBJECTS) cosmkmf cosmkmf_install)
+
+BuildJavaByteCode(report,NullParam)
+
+InstallProgram(/bin,report.class)
+InstallProgram(/bin,ots_setup.bat)
+InstallProgramAs(/bin,cosmkmf_install,cosmkmf)
+
+cosmkmf_install : cosmkmf.tmpl
+	@echo Creating $@
+	CommandPrefix(sed) -e "s;CONFIGDIRECTORY;-I\$$\JTSARJUNA_HOME/config;" -e "s;MAKEPROGRAM;"$(MAKE)";" -e "s;IMAKEFLAGS;-DJTSARJUNA_INSTALL -DTOPDIR_DEFAULT=\$$\JTSARJUNA_HOME;" < cosmkmf.tmpl > cosmkmf_install
+	CommandPrefix(chmod) ug+rx cosmkmf_install
+
+cosmkmf : cosmkmf.tmpl
+	@echo Creating $@
+	CommandPrefix(sed) -e "s;CONFIGDIRECTORY;-I"$(TOPDIR)"/config -I"$(JAVACOSTRANSACTIONSTOPDIR)"/config -I"$(JAVAORBPORTABILITYTOPDIR)"/config -I"$(JAVAARJUNALITETOPDIR)"/config -I"$(JAVAGANDIVATOPDIR)"/config -I"$(JAVAHARNESSTOPDIR)"/config -I"$(JDBCTOPDIR)"/config -I"$(JDBC2TOPDIR)"/config -I"$(RECOVERYTOPDIR)"/config -I"$(BUILDSYSTEMTOPDIR)"/config;" -e "s;MAKEPROGRAM;"$(MAKE)";" -e "s;IMAKEFLAGS;-DTOPDIR_DEFAULT="$(TOPDIR)";" < cosmkmf.tmpl > cosmkmf
+	CommandPrefix(chmod) ug+rx cosmkmf
+
+Clean(*.class *.prof out cosmkmf cosmkmf_install)

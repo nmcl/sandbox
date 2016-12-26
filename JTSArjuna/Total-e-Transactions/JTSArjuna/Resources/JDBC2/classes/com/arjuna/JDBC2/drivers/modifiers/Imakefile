@@ -1,0 +1,44 @@
+COMMENT 
+COMMENT Copyright (C) 2000, 2001,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.76.1.18.3.32.1 2002/06/10 15:53:39 nmcl Exp $
+COMMENT
+
+SOURCES = ora.java \
+	  sequelink.java \
+	  cloudscape.java \
+	  extensions.java \
+	  jndi.java \
+	  list.java
+
+Target($(SOURCES))
+
+#ifdef BUILD_ORACLE_8_1_6
+Target(ora.class)
+#endif
+
+#ifdef BUILD_SEQUELINK_5_1
+Target(sequelink.class)
+#endif
+
+#ifdef BUILD_CLOUDSCAPE_3_6
+Target(cloudscape.class)
+#endif
+
+Target(list.class extensions.class jndi.class)
+
+PreprocessJavaCode(list,NullParam)
+
+BuildJavaByteCode(ora,NullParam)
+BuildJavaByteCode(list,NullParam)
+BuildJavaByteCode(sequelink,NullParam)
+BuildJavaByteCode(cloudscape,NullParam)
+BuildJavaByteCode(extensions,NullParam)
+BuildJavaByteCode(jndi,NullParam)
+
+Clean(*.class)

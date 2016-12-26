@@ -1,0 +1,28 @@
+COMMENT 
+COMMENT Copyright (C) 2001,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.2.1.4.1.4.1 2001/06/28 14:16:04 nmcl Exp $
+COMMENT
+
+#ifdef INSTALLJAR
+UnpackJavaLibrary($(JAVAHARNESSSRCDIR)/classes/JavaHarness,com)
+UnpackJavaLibrary($(ARJUNACOMMONSRCDIR)/classes/ArjunaCommon,com)
+UnpackJavaLibrary($(ARJUNACORESRCDIR)/classes/ArjunaCore,com)
+UnpackJavaLibrary($(JTSSRCDIR)/classes/JTSArjuna,com)
+UnpackJavaLibrary($(ORBCOMMONSRCDIR)/classes/OrbCommon,com)
+UnpackJavaLibrary($(JDBCSRCDIR)/classes/JDBCArjuna,com)
+UnpackJavaLibrary($(JDBC2SRCDIR)/classes/JDBC2Arjuna,com)
+UnpackJavaLibrary($(RECOVERYSRCDIR)/classes/CosRecovery,com)
+UnpackJavaLibrary($(JTSARJUNASRCDIR)/classes/JTSArjunaInfo,com)
+
+Target(TeT.jar)
+
+CreateJavaLibrary(TeT,com)
+
+InstallJavaLibrary(/lib,TeT)
+#endif

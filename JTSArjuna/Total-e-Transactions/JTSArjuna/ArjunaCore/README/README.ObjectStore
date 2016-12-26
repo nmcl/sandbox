@@ -1,0 +1,9 @@
+JTSArjuna requires a  minimum object store to save/load  the states of
+transaction  logs and AIT  created objects.  The default  location for
+this  is the  root  of  the JTSArjuna  installation  (the system  will
+automatically  create  an   ObjectStore  subdirectory).   For  further
+details, see the Administator's Guide.
+
+If you want to override the location of the object store, then use the
+OBJECTSTORE_DIR property  variable, either on the command  line, or in
+the properties file.

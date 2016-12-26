@@ -1,0 +1,32 @@
+COMMENT 
+COMMENT Copyright (C) 2000, 2001,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.2.1.2.1.20.2.6.1.2.1 2001/02/22 11:07:37 nmcl Exp $
+COMMENT
+
+SOURCES = JDBC2RecoveryModule.java \
+	  JDBC2RecoveryResource.java \
+	  XAConnectionRecovery.java \
+	  BasicXARecovery.java \
+	  JDBC2RecoveryConnection.java
+
+OBJECTS = JDBC2RecoveryResource.class \
+	  JDBC2RecoveryModule.class \
+	  XAConnectionRecovery.class \
+	  BasicXARecovery.class \
+	  JDBC2RecoveryConnection.class
+
+Target($(OBJECTS))
+
+BuildJavaByteCode(JDBC2RecoveryModule,NullParam)
+BuildJavaByteCode(JDBC2RecoveryResource,NullParam)
+BuildJavaByteCode(XAConnectionRecovery,NullParam)
+BuildJavaByteCode(BasicXARecovery,NullParam)
+BuildJavaByteCode(JDBC2RecoveryConnection,NullParam)
+
+Clean(*.class)

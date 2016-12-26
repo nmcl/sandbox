@@ -1,0 +1,113 @@
+/*
+ * Copyright (C) 1998, 1999, 2000, 2001,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.  
+ *
+ * $Id: Info.javatmpl,v 1.3.2.1.2.1.10.1.18.1.2.2.4.3 2001/01/11 14:15:33 nmcl Exp $
+ */
+
+#include <Info.h>
+
+package com.arjuna.JTSArjuna;
+
+import com.arjuna.JavaHarness.ModuleInfo;
+import java.util.Hashtable;
+
+/**
+ * Module specific implementation of the information object.
+ *
+ * @author Mark Little (mark@arjuna.com)
+ * @version $Id: Info.javatmpl,v 1.3.2.1.2.1.10.1.18.1.2.2.4.3 2001/01/11 14:15:33 nmcl Exp $
+ * @since JTS 2.0.
+ * @see com.arjuna.JavaHarness.ModuleInfo
+ */
+
+public class Info extends ModuleInfo
+{
+
+public Info ()
+    {
+	this("");
+    }
+    
+public Info (String s)
+    {
+	_preString = s;
+
+	_attributes = new Hashtable();
+	
+	_attributes.put(_keys[0], PRODUCT_NAME);
+	_attributes.put(_keys[1], VERSION);
+	_attributes.put(_keys[2], MAJOR);
+	_attributes.put(_keys[3], MINOR);
+	_attributes.put(_keys[4], CANDIDATE_RELEASE);
+	_attributes.put(_keys[5], RELEASE);
+	_attributes.put(_keys[6], MODULE);
+	_attributes.put(_keys[7], SOURCEID);
+	_attributes.put(_keys[8], BUILDINFO);
+	_attributes.put(_keys[9], DATE);
+	_attributes.put(_keys[10], NOTES);
+	_attributes.put(_keys[11], BUILDNUMBER);
+	
+	_constituents = new ModuleInfo[Info._numberOfModules];
+	
+	_constituents[0] = new com.arjuna.JavaHarness.Info("\t");
+	_constituents[1] = new com.arjuna.ArjunaCommon.Info("\t");
+	_constituents[2] = new com.arjuna.ArjunaCore.Info("\t");
+	_constituents[3] = new com.arjuna.OrbCommon.Info("\t");
+	_constituents[4] = new com.arjuna.CosTransactions.Info("\t");
+	_constituents[5] = new com.arjuna.JDBC.Info("\t");
+	_constituents[6] = new com.arjuna.JDBC2.Info("\t");
+	_constituents[7] = new com.arjuna.CosRecovery.Info("\t");
+    }
+
+public ModuleInfo[] constituents ()
+    {
+	return _constituents;
+    }
+
+public String[] keys ()
+    {
+	return _keys;
+    }
+
+public String toString ()
+    {
+	String val = null;
+	
+	for (int i = 0; i < _keys.length; i++)
+	{
+	    String attr = _preString+_keys[i]+": "+(String) _attributes.get(_keys[i]);
+
+	    if (val == null)
+		val = attr;
+	    else
+		val = val+"\n"+attr;
+	}
+
+	val = val+"\n\nCONSTITUENT MODULE INFORMATION:";
+
+	String myInfo;
+	
+	for (int i = 0; i < Info._numberOfModules; i++)
+	{
+	    val = val + "\n\n" + _constituents[i].toString();
+	}
+
+	return val;
+    }
+
+private ModuleInfo[] _constituents;
+
+    /*
+     * Do not re-order!
+     */
+
+private String[] _keys = { "PRODUCT", "VERSION", "MAJOR VERSION", "MINOR VERSION", "CANDIDATE RELEASE", "RELEASE", "MODULE", "SOURCE IDENTIFIER", "BUILD INFORMATION", "DATE", "NOTES", "BUILD NUMBER" };
+        
+private static final int _numberOfModules = 8;
+    
+}

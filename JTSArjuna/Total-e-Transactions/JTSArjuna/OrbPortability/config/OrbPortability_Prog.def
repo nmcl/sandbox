@@ -1,0 +1,22 @@
+/*
+ * Copyright (C) 1999-2001 by HP Bluestone Software, Inc. All rights Reserved.
+ *
+ * HP Arjuna Labs,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: OrbPortability_Prog.def,v 1.1.2.1.10.1.6.1.16.1.60.1 2001/08/09 16:15:41 delsworthy Exp $
+ */
+
+/*
+ *  OrbPortability_Prog.def
+ */
+
+#ifndef IDL2JAVA
+#  define IDL2JAVA $ORB_ROOT/bin/idltojava
+#endif
+
+#ifndef IDL2IR
+#  define IDL2IR $ORB_ROOT/bin/idltoir
+#endif

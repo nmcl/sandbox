@@ -1,0 +1,49 @@
+COMMENT 
+COMMENT Copyright (C) 1998, 1999, 2000, 2001,
+COMMENT
+COMMENT Hewlett-Packard Company,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2.34.2.4.1.20.1.4.1 2001/06/28 14:09:10 nmcl Exp $
+COMMENT
+
+Target(CosTransactions.idl)
+Target(ArjunaOTS.idl)
+
+AddToIdlIncludeFlags($(JAVACOSTRANSACTIONSTOPDIR)/include)
+AddToIRIncludeFlags($(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+RetrieveIDLFile(CosTransactions,$(JAVACOSTRANSACTIONSTOPDIR)/include/idl/CosTransactions)
+RetrieveIDLFile(ArjunaOTS,$(JAVACOSTRANSACTIONSTOPDIR)/include/idl/ArjunaOTS)
+
+#ifndef SUPPORT_IDL_PREFIX
+LocalPackageRename(CosTransactions,org.omg,OTS_IDL)
+LocalPackageRename(ArjunaOTS,com.arjuna,ARJ_IDL)
+
+CorbaJavaStubsPackage(CosTransactions,org.omg,NullParam)
+CorbaJavaStubsPackage(ArjunaOTS,com.arjuna,$(OTS_IDL))
+#else
+CorbaJavaStubsPrefix(CosTransactions,NullParam)
+CorbaJavaStubsPrefix(ArjunaOTS,NullParam)
+#endif
+
+CopyIDL(CosTransactions,org/omg/CosTransactions)
+CopyIDL(ArjunaOTS,com/arjuna/ArjunaOTS)
+
+SubDirectory(org)
+SubDirectory(com)
+
+Target(JTSArjuna.jar)
+Target(JTS.jar)
+
+CreateJavaLibrary(JTSArjuna,com)
+CreateJavaLibrary(JTS,org)
+
+#ifdef INSTALLJAR
+InstallJavaLibrary(/lib,JTSArjuna)
+#endif
+InstallJavaLibrary(/lib,JTS)
+
+Clean(*.class CosTransactions.* ArjunaOTS.*)

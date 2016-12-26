@@ -1,0 +1,24 @@
+COMMENT 
+COMMENT Copyright (C) 1999, 2000, 2001,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2.34.1.64.2 2001/11/16 09:20:29 jcoleman Exp $
+COMMENT
+
+BuildIDLCode(TestModule)
+
+#ifdef INSTALLTESTS
+CreateInstallDirectory(/tests,/tests/classes/TestModule)
+
+InstallFile(/tests/classes/TestModule,Imakefile)
+InstallFile(/tests/classes/TestModule,TestModule.idl)
+
+InstallFiles(/tests/classes/TestModule,Hammer.java,*.java)
+InstallFiles(/tests/classes/TestModule,Hammer.class,*.class)
+#endif
+
+Clean(TestModule.idl)

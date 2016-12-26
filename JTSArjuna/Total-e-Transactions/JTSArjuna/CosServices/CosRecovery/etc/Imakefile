@@ -1,0 +1,14 @@
+COMMENT 
+COMMENT Copyright (C) 2001,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.2.1 2001/01/19 20:44:30 pfurniss Exp $
+COMMENT
+
+CreateInstallDirectory(NullParam,/etc)
+
+InstallFileAs(/etc,RecoveryManager.properties_default,$(RECOVERY_PROPERTIES_FILE))

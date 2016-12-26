@@ -1,0 +1,68 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: tranobject_i.javatmpl,v 1.1.28.1 2000/11/08 14:26:04 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package CosTransactionsTests;
+
+import com.arjuna.OrbCommon.ORBInterface;
+import com.arjuna.OrbCommon.OAInterface;
+import com.arjuna.CosTransactions.OTS_Factory;
+import org.omg.CosTransactions.*;
+
+import org.omg.CosTransactions.Unavailable;
+import org.omg.CORBA.SystemException;
+
+public class tranobject_i extends SCOPED_SKEL_(org.omg.CosTransactions,Resource)
+{
+    
+public tranobject_i ()
+    {
+	READY_IMPL_(this);
+
+	ref = CORBA_REF_(this,Resource);
+    }
+
+public Resource getReference ()
+    {
+	return ref;
+    }
+ 
+public org.omg.CosTransactions.Vote prepare () throws SystemException
+    {
+	System.out.println("TRANOBJECT : PREPARE");
+    
+	return Vote.VoteCommit;
+    }
+
+public void rollback () throws SystemException, HeuristicCommit, HeuristicMixed, HeuristicHazard
+    {
+	System.out.println("TRANOBJECT : ROLLBACK");
+    }
+
+public void commit () throws SystemException, NotPrepared, HeuristicRollback, HeuristicMixed, HeuristicHazard
+    {
+	System.out.println("TRANOBJECT : COMMIT");
+    }
+
+public void forget () throws SystemException
+    {
+	System.out.println("TRANOBJECT : FORGET");
+    }
+
+public void commit_one_phase () throws SystemException, HeuristicHazard
+    {
+	System.out.println("TRANOBJECT : COMMIT_ONE_PHASE");
+    }
+
+private Resource ref;
+
+}

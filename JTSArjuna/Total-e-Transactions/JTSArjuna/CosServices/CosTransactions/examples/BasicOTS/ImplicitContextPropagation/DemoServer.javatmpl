@@ -1,0 +1,46 @@
+/*
+ * Copyright (C) 1999-2001 by HP Bluestone Software, Inc. All rights Reserved.
+ *
+ * HP Arjuna Labs,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: DemoServer.javatmpl,v 1.1.2.2.50.1 2001/08/09 16:15:35 delsworthy Exp $
+ */
+
+#include "Common/OrbPortability.h"
+
+import java.io.*;
+import com.arjuna.OrbCommon.*;
+
+public class DemoServer
+{
+	public static void main (String[] args)
+	{
+		try
+		{
+			ORBInterface.initORB(args, null);
+			OAInterface.initOA();
+
+			DemoImplementation obj = new DemoImplementation();
+			
+			READY_IMPL_(obj);
+			Demo.DemoInterface objRef = CORBA_REF_(obj,Demo.DemoInterface);
+
+			String         ref  = ORBInterface.orb().object_to_string(objRef);
+			BufferedWriter file = new BufferedWriter(new FileWriter("DemoObjReference.tmp"));
+			file.write(ref);
+			file.close();
+
+			System.out.println("Object reference written to file");
+
+			ORBInterface.run();
+		}
+		catch (Exception e)
+		{
+			System.err.println(e);
+		}
+	}
+			
+}

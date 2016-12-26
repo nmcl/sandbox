@@ -1,0 +1,80 @@
+COMMENT 
+COMMENT Copyright (C) 1998, 1999, 2000, 2001,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2.34.1.4.1.54.1 2001/11/14 16:15:52 rbegg Exp $
+COMMENT
+
+AddToIdlFlags(-I$(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+#ifdef INSTALLTESTS
+CreateInstallDirectory(/tests,/tests/Servers)
+#endif
+
+SOURCES = GridServer.javatmpl \
+	  SetGetServer.javatmpl \
+	  TranGridServer.javatmpl \
+	  ImplGridServer.javatmpl \
+	  HammerServer.javatmpl \
+	  ExplicitStackServer.javatmpl \
+	  StackServer.javatmpl
+
+PROCESSED_SOURCES = GridServer.java \
+	  	    SetGetServer.java \
+	  	    TranGridServer.java \
+	  	    ImplGridServer.java \
+	  	    HammerServer.java \
+	  	    ExplicitStackServer.java \
+	  	    StackServer.java
+
+TESTOBJECTS = GridServer.class \
+	      SetGetServer.class \
+	      HammerServer.class \
+	      ExplicitStackServer.class
+
+FILTEROBJECTS = TranGridServer.class \
+	        ImplGridServer.class \
+	        StackServer.class
+
+Target($(PROCESSED_SOURCES))
+Target($(TESTOBJECTS))
+
+#ifdef INSTALLTESTS
+InstallFile(/tests/Servers,Imakefile)
+InstallFiles(/tests/Servers,GridServer.class,$(TESTOBJECTS))
+InstallFiles(/tests/Servers,GridServer.javatmpl,$(SOURCES))
+InstallFile(/tests/Servers,README)
+InstallFiles(/tests/Servers,runserver,runserver.*)
+InstallFiles(/tests/Servers,cxserver.cygwin,cxserver.*)
+InstallFiles(/tests/Servers,interserver.cygwin,interserver.*)
+#endif
+
+#if defined(HAVE_FILTER) || defined(HAVE_INTERCEPTOR)
+Target($(FILTEROBJECTS))
+
+#ifdef INSTALLTESTS
+InstallFiles(/tests/Servers,TranGridServer.class,$(FILTEROBJECTS))
+#endif
+#endif
+
+PreprocessJavaCode(GridServer,NullParam)
+PreprocessJavaCode(SetGetServer,NullParam)
+PreprocessJavaCode(TranGridServer,NullParam)
+PreprocessJavaCode(ImplGridServer,NullParam)
+PreprocessJavaCode(HammerServer,NullParam)
+PreprocessJavaCode(ExplicitStackServer,NullParam)
+PreprocessJavaCode(StackServer,NullParam)
+
+BuildJavaByteCode(GridServer,NullParam)
+BuildJavaByteCode(SetGetServer,NullParam)
+BuildJavaByteCode(TranGridServer,NullParam)
+BuildJavaByteCode(ImplGridServer,NullParam)
+BuildJavaByteCode(HammerServer,NullParam)
+BuildJavaByteCode(ExplicitStackServer,NullParam)
+BuildJavaByteCode(StackServer,NullParam)
+
+Clean(*.class)

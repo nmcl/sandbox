@@ -1,0 +1,128 @@
+The  following examples  were  really designed  as internal  tests and
+consequently they're   not very user-friendly,  however they  might be
+useful in confirming that your release works as expected and in giving
+you some idea of how JTSArjuna operates.
+
+Note,   the scripts runtest, cxtest,  and  intertest typically take no
+parameters, and run  the test  within  the directory they are  located
+within. However, if  multiple  tests are  present, then  these scripts
+will take at least a single parameter,  which is the  name of the test
+to run.
+
+Before running the examples:
+
+1) make   sure   the  two  JAR   files   CosTransactionsTests.jar  and 
+TestModule.jar from the 'classes' directory are in your CLASSPATH,
+
+Run the examples in the order listed below :
+
+In each case,  if a server is  required (according to the text below),
+execute  the  'servers/runserver' script (unless  specified otherwise)
+then run the 'runtest' script. (Note  that under Windows these scripts
+are  suffixed with '.bat'). 'runserver' takes   the server name as its
+only   parameter. 
+
+Local/LocalTest: Tests basic functionality  on local transactions  and
+resources.
+
+Timeout/TerminationTest:  Tests    that transactions   are   correctly
+terminated when they timeout.
+
+Nested/NestedTester:   This test  illustrates   the difference between
+registering a Resource and a SubtransactionAwareResource with a nested
+transaction.  The Resource will   only be called during the  top-level
+transaction commit/abort, whereas the SubtransactionAwareResource will
+be   informed when   the   nested transaction    terminates.    If the
+SubtranscationAwareResource was registered  using    register_resource
+(the default  in this example) it  will be propagated to the top-level
+transaction; otherwise it will not. Use the -subtran option to see the
+differences.
+
+Current/CurrentTest:  Simple test for  current pseudo-object.  SERVER:
+GridServer.
+
+Heuristics/HeuristicTest:  Tests whether  we  can cope  with heuristic
+decisions.
+
+Synchronizations/SynchTest: Tests synchronization implementations.
+
+Transactions/TransactionTest1: Tries to  terminate transactions out of
+order.
+
+Transactions/TransactionTest2:      Shows how       Current      and a
+TransactionFactory can be combined in   the same application, and  the
+transactions are unrelated.
+
+Hammer/AtomicObject1,2&3: The sum of the two integers should always be
+111.
+
+RecoveryCoordinator: tests whether recovery works.
+
+ArjunaNesting/ArjunaNestingTest:  This example  demonstrates   the difference
+between an  ArjunaSubtranAwareResource  and the standard  OTS version.
+An ArjunaSubtranAwareResource always  participates within  a two-phase
+commit protocol  for nested transactions.   Propagation occurs  in the
+same way, however, i.e.,   if registered using  register_subtran_aware
+then  the resource  is   not  propagated   to  the  parent;   if using
+register_resource  then   it  will  be  propagated.  For   each nested
+transaction, it will take part in the two-phase protocol.
+
+Explicit/ExplicitInterClient:  Illustrates    explicit  interposition.
+SERVER: SetGetServer.
+
+Implicit/ImplicitClient: This is a  basic example of implicit  context
+propagation.  Again, remember that in  general our objects should  not
+inherit  from  Resource.   SERVER:  ImplGridServer.  [Use 'cxtest' and
+'cxserver' scripts in place of 'runtest' and 'runserver'. 
+
+Interposition/InterpositionClient:    Demonstrates implicit    context
+propagation   and  interposition.     SERVER:    TranGridServer.  [Use
+'intertest'  and 'interserver'  scripts   in place  of 'runtest'   and
+'runserver'.
+
+Distributed_hammer/DistributedHammer1,2&3: The sum of the two integers
+should always be 111.  SERVER:  HammerServer.  Start two servers using
+'1' or '2' as the second parameter to 'runserver'. 
+
+Arjuna/ExplicitArjunaClient:  A  basic demonstration using  the Arjuna
+API and explicit interposition. SERVER ExplicitStackServer.
+
+Arjuna/ImplicitArjunaClient: A  basic  demonstration using the  Arjuna
+API and  explicit interposition.  SERVER  StackServer.  [Use intertest
+and interserver   scripts in place   of 'runtest' and  'runserver'. 
+
+Asynchronous/AsyncTest: This test illustrates the use  of   threads to
+complete the prepare and commit protocol for a transaction.
+
+Basic/GridClient: This  test  illustrates  the  use  of a Resource  to 
+control the operations on an atomic object.  SERVER: GridServer.  This
+test also requires the use of an out of process transaction manager.
+
+Checked/CheckedTransactions: This tests checked transactions and shows
+how to override the CheckedAction implementation.  This test  requires
+the OTS_CHECKED_TRANSACTIONS property to be set to  YES,  or  run  the
+test script with the -check option.
+
+JTA/JTATest: This tests the use of XA resources within a  transaction.
+
+JTAHammer/JTAHammer: This tests the use of XA  resources by  executing
+multiple transactions one after another.
+
+Performance/Performance1,2,3: Performs   several  empty   transactions
+and provides information for performance testing.
+
+TransactionServers/TMClient:  This   tests   the  use  of  a  separate 
+transaction  manager  server  with  AIT.   Server:  HammerServer  with
+'-server 1' option,  also  requires  the  use  of  the  out of process 
+transaction manager.
+
+Building the Examples
+
+To  build  the  examples  the  tests/classes  directory  should  be in
+your classpath (e.g. $JTSARJUNA_HOME/tests/classes).  To  perform  the
+build execute the following:
+
+	cosmkmf
+	make Makefiles
+	make
+	

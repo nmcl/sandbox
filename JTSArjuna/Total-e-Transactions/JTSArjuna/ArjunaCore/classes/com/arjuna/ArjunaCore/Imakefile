@@ -1,0 +1,37 @@
+COMMENT 
+COMMENT Copyright (C) 1998, 1999, 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.4.2.2.1 2000/10/20 16:17:48 nmcl Exp $
+COMMENT
+
+SOURCES = ArjunaCoreNames.java \
+	  Implementation/ObjectStore/ShadowingStore.java \
+	  Info.java \
+	  Common/Configuration.java
+
+OBJECTS = ArjunaCoreNames.class \
+	  Info.class
+
+Target($(SOURCES))
+
+PreprocessJavaCode(Info,NullParam)
+PreprocessJavaCodeDir(Implementation/ObjectStore,ShadowingStore,NullParam)
+PreprocessJavaCodeDir(Common,Configuration,NullParam)
+
+SubDirectory(Common)
+SubDirectory(Thread)
+SubDirectory(Interface)
+SubDirectory(Atomic)
+SubDirectory(Implementation)
+
+Target($(OBJECTS))
+
+BuildJavaByteCode(ArjunaCoreNames,NullParam)
+BuildJavaByteCode(Info,NullParam)
+
+Clean(*.class)

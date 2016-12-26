@@ -1,0 +1,26 @@
+/*
+ * Copyright (C) 2001,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: TeT_Rule.def,v 1.1.2.1 2001/05/21 13:49:34 jcoleman Exp $
+ */
+
+/*
+ *  TeT_Rule.def
+ */
+
+#ifndef UnpackJavaLibrary
+#define UnpackJavaLibrary(jarname,dir)			@@\
+all.local:: dir						@@\
+dir:: JAR_FILE(jarname)					@@\
+	@echo Unpacking JAR_FILE(jarname)		@@\
+	CommandPrefix($(JAR)) -xf JAR_FILE(jarname)	@@\
+	CommandPrefix($(RM)) -rf META-INF		@@\
+							@@\
+clean.local::						@@\
+	CommandPrefix($(RM)) -rf dir
+#endif

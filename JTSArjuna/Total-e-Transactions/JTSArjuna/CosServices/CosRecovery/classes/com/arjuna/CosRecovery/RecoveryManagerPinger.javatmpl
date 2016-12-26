@@ -1,0 +1,110 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: RecoveryManagerPinger.javatmpl,v 1.1.2.2.2.1.28.1.2.1 2001/06/26 09:34:08 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package com.arjuna.CosRecovery;
+
+import com.arjuna.ArjunaCommon.Common.ErrorStream;
+import com.arjuna.CosRecovery.Admin.*;
+import com.arjuna.OrbCommon.*;
+import com.arjuna.CosTransactions.*;
+import org.omg.CosTransactions.*;
+
+import org.omg.CosTransactions.Unavailable;
+import org.omg.CORBA.SystemException;
+import org.omg.CORBA.UserException;
+
+#include <CosTransactions/CosTranExceptions.h>
+/**
+ * Calls "Admin::RecoveryManagerAdmin::ping()" on the RecoveryManager
+ * at intervals
+ */
+public class RecoveryManagerPinger
+{
+    public static void main (String[] args)
+    {
+	try
+	{
+	    ORBInterface.initORB(args, null);
+	    OAInterface.initOA();
+	}
+	catch (Exception e)
+	{
+	    ErrorStream.fatal().println("ORB/OA initialisation failed: "+e);
+	    
+	    System.exit(0);
+	}
+    
+	RecoveryManagerAdmin recManagerAdmin = null;
+
+	for (int i = 0; i < args.length; i++)
+	{
+	    if (args[i].compareTo("-help") == 0)
+	    {
+		System.out.println("Usage: RecoveryManagerPinger [-help]");
+		System.exit(0);
+	    }
+	}
+
+	// this must be aligned with what happens in RecoveryManager
+	
+	String recoveryManagerAdminName = RecoveryEnablement.getRecoveryAdminName();
+
+	try
+	{
+	    org.omg.CORBA.Object obj = ORBServices.getService(recoveryManagerAdminName,
+							      null);
+	    
+	    recManagerAdmin = HELPER_CLASS_(com.arjuna.CosRecovery.Admin.RecoveryManagerAdmin).narrow(obj);
+	}
+	catch (Exception sysEx)
+	{
+	    System.err.println("Failed to bind to RecoveryManagerAdmin: "+sysEx);
+	    System.exit(1);
+	}
+
+	for (int i=0 ; i<_numberOfPings ; i++)
+	{
+	    try
+	    {
+		System.out.println("Ping result = " + recManagerAdmin.ping());
+	    }
+	    catch (SystemException se)
+	    {
+		System.out.println("Ping failed");
+		break;
+	    }
+
+	    try
+	    {
+		Thread.sleep(_pingPeriod);
+	    }
+	    catch (InterruptedException e)
+	    {
+	    }
+	}
+
+	OAInterface.shutdownOA();
+	ORBInterface.shutdownORB();
+	
+	System.exit(0);
+    }
+
+    private static int _pingPeriod = 10000;
+    private static int _numberOfPings = 1000;
+
+    /** not used */
+    private RecoveryManagerPinger()
+    {
+    }
+};
+

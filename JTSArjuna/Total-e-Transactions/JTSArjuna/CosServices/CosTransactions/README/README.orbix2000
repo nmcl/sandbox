@@ -1,0 +1,7 @@
+The CosTransactions.idl file which comes  with Orbix 2000 1.1.1 is not
+currently up-to-date with  the OTS 1.2 specification, and  is also not
+compatible with the OTS  1.1 specification. Therefore, is it necessary
+to use the CosTransactions.idl  which comes with JTSArjuna, and ensure
+that all JTSArjuna jar files appear in your CLASSPATH before the Orbix
+2000 jar files.
+

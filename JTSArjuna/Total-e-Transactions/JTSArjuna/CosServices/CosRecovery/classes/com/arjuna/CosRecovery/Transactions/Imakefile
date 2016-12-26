@@ -1,0 +1,72 @@
+COMMENT 
+COMMENT Copyright (C) 1998, 1999, 2000, 2001,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.2.1.2.1.4.1 2001/03/21 12:59:18 nmcl Exp $
+COMMENT
+
+SOURCES = RecoveryStatus.java \
+          RecoveredTransaction.java \
+          RecoveredServerTransaction.java \
+          TransactionCache.java \
+          CachedRecoveredTransaction.java \
+          RecoveredTransactionReplayer.java \
+          TransactionRecoveryModule.java \
+          TopLevelTransactionRecoveryModule.java \
+          ServerTransactionRecoveryModule.java \
+          RecoveringTransaction.java \
+          AssumedCompleteTransaction.java \
+          AssumedCompleteServerTransaction.java
+
+
+OBJECTS = RecoveryStatus.class \
+          RecoveredTransaction.class \
+          RecoveredServerTransaction.class \
+          TransactionCache.class \
+          TransactionCacheItem.class \
+          CachedRecoveredTransaction.class \
+          RecoveredTransactionReplayer.class \
+          TransactionRecoveryModule.class \
+          TopLevelTransactionRecoveryModule.class \
+          ServerTransactionRecoveryModule.class \
+          RecoveringTransaction.class \
+          AssumedCompleteTransaction.class \
+          AssumedCompleteServerTransaction.class \
+          ExpiredAssumedCompleteScanner.class \
+          ExpiredToplevelScanner.class \
+          ExpiredServerScanner.class
+
+
+Target($(SOURCES))
+
+Target($(OBJECTS))
+
+PreprocessJavaCode(RecoveredTransaction,NullParam)
+PreprocessJavaCode(RecoveredServerTransaction,NullParam)
+PreprocessJavaCode(CachedRecoveredTransaction,NullParam)
+PreprocessJavaCode(TransactionCache,NullParam)
+PreprocessJavaCode(RecoveringTransaction,NullParam)
+PreprocessJavaCode(AssumedCompleteServerTransaction,NullParam)
+
+BuildJavaByteCode(RecoveryStatus,NullParam)
+BuildJavaByteCode(RecoveredTransaction,NullParam)
+BuildJavaByteCode(RecoveredServerTransaction,NullParam)
+BuildJavaByteCode(TransactionCache,NullParam)
+BuildJavaByteCode(TransactionCacheItem,NullParam)
+BuildJavaByteCode(CachedRecoveredTransaction,NullParam)
+BuildJavaByteCode(RecoveredTransactionReplayer,NullParam)
+BuildJavaByteCode(TransactionRecoveryModule,NullParam)
+BuildJavaByteCode(TopLevelTransactionRecoveryModule,NullParam)
+BuildJavaByteCode(ServerTransactionRecoveryModule,NullParam)
+BuildJavaByteCode(RecoveringTransaction,NullParam)
+BuildJavaByteCode(AssumedCompleteTransaction,NullParam)
+BuildJavaByteCode(AssumedCompleteServerTransaction,NullParam)
+BuildJavaByteCode(ExpiredAssumedCompleteScanner,NullParam)
+BuildJavaByteCode(ExpiredToplevelScanner,NullParam)
+BuildJavaByteCode(ExpiredServerScanner,NullParam)
+
+Clean(*.class)

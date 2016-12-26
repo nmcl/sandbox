@@ -1,0 +1,28 @@
+COMMENT 
+COMMENT Copyright (C) 1998, 1999, 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2.30.2 2000/11/02 19:18:36 nmcl Exp $
+COMMENT
+
+AddToIdlFlags(-I$(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+SOURCES = tx.java \
+	  XID.java
+
+OBJECTS = tx.class \
+	  XID.class
+
+Target($(OBJECTS))
+Target($(SOURCES))
+
+PreprocessJavaCode(tx,NullParam)
+
+BuildJavaByteCode(tx,NullParam)
+BuildJavaByteCode(XID,NullParam)
+
+Clean(*.class)

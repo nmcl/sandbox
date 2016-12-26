@@ -1,0 +1,22 @@
+# 
+# test_setup.cygwin
+#
+# Cygwin script for setting up the environment to run the tests
+#
+# $Id: test_setup.cygwin,v 1.1.2.4 2001/11/14 16:15:50 rbegg Exp $
+
+if test "x$JTSARJUNA_HOME" = "x"
+then
+
+	echo Please ensure the environment variable JTSARJUNA_HOME is set appropriately
+
+else
+
+  	echo Adding test JAR files to the CLASSPATH
+  	export CLASSPATH=$CLASSPATH";$JTSARJUNA_HOME/tests/classes/CosTransactionsTests.jar"
+  	export CLASSPATH=$CLASSPATH";$JTSARJUNA_HOME/tests/classes/TestModule.jar"
+
+    	echo Ensure that the JDK and ORB are in the PATH and CLASSPATH.
+    
+fi
+  

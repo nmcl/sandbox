@@ -1,0 +1,20 @@
+COMMENT 
+COMMENT Copyright (C) 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 2000/03/27 14:20:29 nmcl Exp $
+COMMENT
+
+SOURCES = report.java
+
+OBJECTS = report.class
+
+Target($(OBJECTS))
+
+BuildJavaByteCode(report,NullParam)
+
+Clean(*.class *.prof out)

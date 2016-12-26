@@ -1,0 +1,66 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: JTA_UserTransaction.javatmpl,v 1.1.14.2.16.2.4.1 2000/12/21 11:21:23 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+#include <CosTransactions/CosTranNames.h>
+
+package com.arjuna.jta;
+
+import org.omg.CosTransactions.*;
+import com.arjuna.CosTransactions.*;
+import javax.transaction.*;
+import com.arjuna.ArjunaCommon.Common.*;
+
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.SystemException;
+import java.lang.SecurityException;
+import java.lang.IllegalStateException;
+import org.omg.CosTransactions.SubtransactionsUnavailable;
+import org.omg.CosTransactions.NoTransaction;
+import org.omg.CosTransactions.HeuristicMixed;
+import org.omg.CosTransactions.HeuristicHazard;
+import org.omg.CosTransactions.InvalidControl;
+import org.omg.CORBA.NO_PERMISSION;
+
+#include <CosTransactions/CosTranExceptions.h>
+#include <CosTransactions/OTS_Exceptions.h>
+
+/**
+ * An implementation of javax.transaction.UserTransaction.
+ *
+ * @author Mark Little (mark@arjuna.com)
+ * @version $Id: JTA_UserTransaction.javatmpl,v 1.1.14.2.16.2.4.1 2000/12/21 11:21:23 nmcl Exp $
+ * @since JTS 1.2.4.
+ */
+
+public class JTA_UserTransaction extends JTA_BaseTransaction implements javax.transaction.UserTransaction
+{
+    
+public static synchronized javax.transaction.UserTransaction transactionManager ()
+    {
+	if (JTA_UserTransaction._theUserTransaction == null)
+	    JTA_UserTransaction._theUserTransaction = new JTA_UserTransaction();
+
+	return JTA_UserTransaction._theUserTransaction;
+    }
+    
+protected JTA_UserTransaction ()
+    {
+	super();
+    }
+
+private static JTA_UserTransaction _theUserTransaction = null;
+    
+}

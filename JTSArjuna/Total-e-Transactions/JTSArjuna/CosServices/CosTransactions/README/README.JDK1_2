@@ -1,0 +1,36 @@
+This is JTSArjuna for Sun's JDK1.2 mini-ORB. Here  is a brief overview
+of  things to watch out for  when using JTSArjuna   on JDK1.2. See the
+manuals for further details.
+
+(i) Sun's mini-ORB does not support filters/interceptors. As a result,
+it is not possible to  do implicit transaction context propagation and
+interposition. Therefore,  the  following examples will  not build/run
+correctly, but are still  provided to given an  indication of what the
+code would look like:
+
+	Clients:
+
+	Arjuna/ImplicitArjunaClient
+	Implicit
+	Interposition
+	Transactions/RecursiveClient
+
+	Servers:
+
+	Servers/StackServer
+	Servers/TranGridServer
+	Servers/ImplGridServer
+
+(ii)  The name of  the properties  file where  properties such  as the
+location of the persistent object store, and the licencing information
+can  is  TransactionService_2_1.properties.   By default  this  should
+reside in  the /etc directory of  the installation.  It's  name can be
+overridden  at runtime  by  using the  PROPERTIES_FILE  option on  the
+command line. For example:
+
+	java -DPROPERTIES_FILE=foo.props
+
+(iii)  If using the startup  scripts (e.g., OTS,  OTS.bat, etc.) check
+that any properties specified meet your requirements.
+
+(iv) Remember to specify the JTSARJUNA_HOME environment variable.

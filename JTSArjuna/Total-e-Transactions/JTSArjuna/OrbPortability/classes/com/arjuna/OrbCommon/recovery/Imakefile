@@ -1,0 +1,26 @@
+COMMENT 
+COMMENT Copyright (C) 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.2.1 2000/12/04 12:12:56 nmcl Exp $
+COMMENT
+
+SOURCES = IORRecovery.java \
+	  DefaultIORRecovery.java \
+	  RebindFactory.java
+
+OBJECTS = IORRecovery.class \
+	  DefaultIORRecovery.class \
+	  RebindFactory.class
+
+Target($(OBJECTS))
+
+BuildJavaByteCode(IORRecovery,NullParam)
+BuildJavaByteCode(DefaultIORRecovery,NullParam)
+BuildJavaByteCode(RebindFactory,NullParam)
+
+Clean(*.class)

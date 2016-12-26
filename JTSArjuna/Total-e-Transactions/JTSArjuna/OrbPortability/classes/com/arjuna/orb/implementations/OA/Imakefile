@@ -1,0 +1,28 @@
+COMMENT 
+COMMENT Copyright (C) 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.2.2 2000/11/14 11:55:13 nmcl Exp $
+COMMENT
+
+SOURCES = $(ORB_NAME)_$(ORB_VERSION).java
+
+OBJECTS = $(ORB_NAME)_$(ORB_VERSION).class
+
+Target($(OBJECTS))
+
+#ifdef HAVE_POA
+Target(POABase.class)
+#else
+Target(BOABase.class)
+#endif
+
+BuildJavaByteCode($(ORB_NAME)_$(ORB_VERSION),NullParam)
+BuildJavaByteCode(POABase,NullParam)
+BuildJavaByteCode(BOABase,NullParam)
+
+Clean(*.class)

@@ -1,0 +1,88 @@
+/*
+ * Copyright (C) 1999-2001 by HP Bluestone Software, Inc. All rights Reserved.
+ *
+ * HP Arjuna Labs,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: DemoImplementation.javatmpl,v 1.1.2.2.50.1.14.1.8.1 2001/12/12 11:30:56 nmcl Exp $
+ */
+
+#include "Common/OrbPortability.h"
+
+import Demo.*;
+import org.omg.CosTransactions.*;
+import com.arjuna.CosTransactions.*;
+import com.arjuna.OrbCommon.*;
+
+public class DemoImplementation extends SCOPED_SKEL_(Demo, DemoInterface)
+{
+	public void work() throws DemoException, DemoNoTransContextException
+	{
+		try
+		{
+			Control control  = OTS.get_current().get_control();
+
+			// Check whether transactional context was passed from
+			// client
+			if (control == null)
+			{
+				throw new DemoNoTransContextException();
+			}
+			
+			_doActualWork();
+		}
+		catch (DemoNoTransContextException d)
+		{
+			throw d;
+		}
+		catch (DemoException d)
+		{
+			throw d;
+		}
+		catch (Exception e)
+		{
+			throw new DemoException();
+		}
+	}
+	
+	public void workWithExplicitTransContext(Control control) throws DemoException
+	{
+		try
+		{
+			OTS.get_current().resume(control);
+			_doActualWork();
+		}
+		catch (Exception e)
+		{
+			throw new DemoException();
+		}
+	}		
+	
+	private void _doActualWork() throws DemoException
+	{
+		try
+		{
+			OTS.get_current().begin();
+		
+			System.out.println(OTS.get_current().get_status().toString());
+		
+			Control      control     = OTS.get_current().get_control();
+			Coordinator  coordinator = control.get_coordinator();
+			DemoResource resource    = new DemoResource();
+
+			READY_IMPL_(resource);
+			Resource res = CORBA_REF_(resource,Resource);
+			
+			coordinator.register_resource(res);
+				
+			OTS.get_current().commit(true);
+		}
+		catch (Exception e)
+		{
+			throw new DemoException();
+		}
+	
+	}
+}

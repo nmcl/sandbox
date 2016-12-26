@@ -1,0 +1,10 @@
+#!/bin/sh
+
+if test "'x$JTSARJUNA_HOME'" = "'x'"
+then
+    echo Environment variable JTSARJUNA_HOME is not set.
+else
+    putit -j Hammer1 " -DOBJECTSTORE_DIR=$JTSARJUNA_HOME/ObjectStore HammerServer" -jdk2 -classpath $CLASSPATH -- -server 1
+    putit -j Hammer2 " -DOBJECTSTORE_DIR=$JTSARJUNA_HOME/ObjectStore HammerServer" -jdk2 -classpath $CLASSPATH -- -server 2
+fi
+

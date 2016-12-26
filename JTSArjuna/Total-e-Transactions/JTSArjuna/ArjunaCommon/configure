@@ -1,0 +1,855 @@
+#!/bin/sh
+
+#
+# Copyright (C) 1999-2001 by HP Bluestone Software, Inc. All rights Reserved.
+# 
+# HP Arjuna Labs,
+# Newcastle upon Tyne,
+# Tyne and Wear,
+# UK.
+# 
+# $Id: configure,v 1.7.4.5.4.1.6.1.6.3.10.1.10.3.8.2.6.1.14.1.2.1.2.2.4.2.40.1 2001/12/11 13:31:16 nmcl Exp $
+#
+
+BUILDRELEASE="NO"
+VERIFY="NO"
+CONFIGFILE=""
+ALLMODULES=NO
+INST=YES
+DO_CONFIG=NO
+DO_UNCONF=NO
+
+ARGS=$*
+
+BADPARAM=NO
+while test $# -gt 0
+do
+	case $1 in
+	-v)     VERIFY=YES
+		DO_CONFIG=YES
+		;;
+	-r)	BUILDRELEASE=YES
+		DO_CONFIG=YES
+		;;
+	-u)	DO_UNCONF=YES
+		;;
+	-all)	ALLMODULES=YES
+		DO_CONFIG=YES
+		;;
+	-noinst)	INST=NO
+		DO_CONFIG=YES
+		;;
+	-*)	echo Unknown option $1 >&2
+		BADPARAM=YES
+		;;
+	*)	
+		if test "$CONFIGFILE" = ""
+		then
+			CONFIGFILE=$1
+			DO_CONFIG=YES
+		else
+			echo Unknown option $1 >&2
+			BADPARAM=YES
+		fi
+		;;
+	esac
+	shift
+done
+
+if test "$DO_CONFIG" = "YES" -a "$DO_UNCONF" = "YES"
+then
+	BADPARAM=YES
+fi
+if test "$BADPARAM" = "YES"
+then
+	echo $0": illegal usage" >&2
+	echo "usage: "$0" [-v] [file] [-d]" >&2
+	echo "       "$0" [-u]" >&2
+	exit 1
+fi
+
+THISMODULE=ArjunaCommon
+GANDIVA_VERSION=4.3.0
+PRE_BUILDINFO='Arjuna Solutions Ltd. '
+SAVED_CONFIG=config/"$THISMODULE".cf
+SAVED_ANSWERS=config/"$THISMODULE".answers
+
+# Unconfigure (remove files created during 'normal' configure)
+if test "$DO_UNCONF" = "YES"
+then
+	rm -f Makefile MakefileBoot \
+	    "$SAVED_CONFIG" "$SAVED_ANSWERS" \
+	    config/Local.def config/"$THISMODULE"_Module.def \
+	    config/"$THISMODULE"_Module_install.def \
+	    config/"$THISMODULE"_Version.def config/Info.h
+	    exit 0
+fi
+
+if test "'$BUILD_RELEASE'" = "'YES'"
+then
+    BUILDRELEASE="YES"
+fi
+
+if test "$CONFIGFILE" != ""
+then
+	if test -f $CONFIGFILE
+	then
+		if test "`head -11 $CONFIGFILE | tail -1`" != "# "$THISMODULE" configure file"
+		then
+			echo $0": configuration file \""$CONFIGFILE"\" is invalid/corrupt" >&2
+			exit 1
+		fi
+		if test "`head -12 $CONFIGFILE | tail -1`" != "# Version "$GANDIVA_VERSION
+		then
+			echo $0": configuration file \""$CONFIGFILE"\" is not version $GANDIVA_VERSION" >&2
+			exit 1
+		fi
+	else
+		echo $0": configuration file \""$CONFIGFILE"\" does not exist" >&2
+		exit 1
+	fi
+fi
+
+ECHO_TEST=`echo "Test \c"`
+if test "$ECHO_TEST" = "Test "
+then
+	PRE_ECHO=""
+	POST_ECHO="\c"
+else
+	PRE_ECHO="-n"
+	POST_ECHO=""
+fi
+
+echo "+------------------------------+"
+echo "|  "$THISMODULE" version "$GANDIVA_VERSION"  |"
+echo "+------------------------------+"
+
+TOPDIR=`pwd`
+
+if test "$CONFIGFILE" = ""
+then
+	echo "Hostname: "`hostname` > "$SAVED_ANSWERS"
+	echo "Uname   : "`uname -rs` >> "$SAVED_ANSWERS"
+	echo "Date    : "`date` >> "$SAVED_ANSWERS"
+	echo "" >> "$SAVED_ANSWERS"
+	echo "command line arguments : $ARGS" >> "$SAVED_ANSWERS"
+	echo "" >> "$SAVED_ANSWERS"
+
+	if test "'x$ARJUNA_INSTALLATION_DIRECTORY'" != "'x'"
+	then
+		INSTALLTOPDIR=$ARJUNA_INSTALLATION_DIRECTORY
+	else
+		case ${OS:-`(uname -s) 2> /dev/null`} in
+		CYGWIN*|Windows*)	INSTALLTOPDIR=C:/PROGRA~1/hpmw/TransactionService/"$THISMODULE"$GANDIVA_VERSION
+		;;
+		*)	INSTALLTOPDIR=/usr/local/hpmw/TransactionService/"$THISMODULE"$GANDIVA_VERSION
+		;;
+		esac
+	fi
+
+	if test "$ALLMODULES" != "YES"
+	then
+		echo
+		echo $PRE_ECHO "Root of directory of "$THISMODULE" installation ["$INSTALLTOPDIR"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+		read INPUT
+		if test "'x$INPUT'" != "'x'"
+		then
+			echo "$INPUT" >> "$SAVED_ANSWERS"
+			INSTALLTOPDIR=$INPUT
+		else
+			echo "(DEFAULT) $INSTALLTOPDIR" >> "$SAVED_ANSWERS"
+		fi
+	fi
+	
+	if test "'x$BUILDRELEASE'" != "'xNO'"
+	then
+	    BUILDSYSTEMTOPDIR=$INSTALLTOPDIR
+	else
+	    BUILDSYSTEMTOPDIR=`dirname $TOPDIR`/ModuleBuildSystem
+	fi
+
+	if test "'x$BUILDRELEASE'" != "'xNO'"
+	then
+	    JAVAHARNESSTOPDIR=$INSTALLTOPDIR
+	else
+	    JAVAHARNESSTOPDIR=`dirname $TOPDIR`/JavaHarness
+	fi
+
+	if test "$ALLMODULES" != "YES"
+	then
+		echo
+		echo $PRE_ECHO "Root of directory of JavaHarness ["$JAVAHARNESSTOPDIR"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+		read INPUT
+		if test "'x$INPUT'" != "'x'"
+		then
+			echo "$INPUT" >> "$SAVED_ANSWERS"
+			JAVAHARNESSTOPDIR=$INPUT
+		else
+			echo "(DEFAULT) $JAVAHARNESSTOPDIR" >> "$SAVED_ANSWERS"
+		fi
+	
+		echo
+		echo $PRE_ECHO "Root of directory of ModuleBuildSystem ["$BUILDSYSTEMTOPDIR"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+		read INPUT
+		if test "'x$INPUT'" != "'x'"
+		then
+			echo "$INPUT" >> "$SAVED_ANSWERS"
+			BUILDSYSTEMTOPDIR=$INPUT
+		else
+			echo "(DEFAULT) $BUILDSYSTEMTOPDIR" >> "$SAVED_ANSWERS"
+		fi
+	fi
+	if test -x $BUILDSYSTEMTOPDIR/config/Sys
+	then
+		SYS=`$BUILDSYSTEMTOPDIR/config/Sys`
+	else
+		echo "Error: "$BUILDSYSTEMTOPDIR/config/Sys": was not found or would not run." >&2
+		exit 1
+	fi
+
+	if test -x $BUILDSYSTEMTOPDIR/config/Sys_Version
+	then
+		SYS_VERSION=`$BUILDSYSTEMTOPDIR/config/Sys_Version`
+	else
+		echo "Error: "$BUILDSYSTEMTOPDIR/config/Sys_Version": was not found or would not run." >&2
+		exit 1
+	fi
+
+	PROPERTIES=$INSTALLTOPDIR/etc
+	echo
+	echo $PRE_ECHO "Location of properties file ["$PROPERTIES"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		echo "$INPUT" >> "$SAVED_ANSWERS"
+		PROPERTIES=$INPUT
+	else
+		echo "(DEFAULT) $PROPERTIES" >> "$SAVED_ANSWERS"
+	fi
+	
+	GANDIVA_PROPERTIES_VERSION="2_2"
+	echo
+	echo $PRE_ECHO "Version of properties file ["$GANDIVA_PROPERTIES_VERSION"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		echo "$INPUT" >> "$SAVED_ANSWERS"
+		GANDIVA_PROPERTIES_VERSION="`echo $INPUT | sed 's;\.;_;g'`"
+	else
+		echo "(DEFAULT) $GANDIVA_PROPERTIES_VERSION" >> "$SAVED_ANSWERS"
+	fi
+
+	case $SYS in
+	Windows) BUILDSYSTEMTOPDIR="`cygpath -w $BUILDSYSTEMTOPDIR | sed 's;\\\;/;g'`"
+		 JAVAHARNESSTOPDIR="`cygpath -w $JAVAHARNESSTOPDIR | sed 's;\\\;/;g'`"
+		 INSTALLTOPDIR="`cygpath -w $INSTALLTOPDIR | sed 's;\\\;/;g'`"
+		 TOPDIR="`cygpath -w $TOPDIR | sed 's;\\\;/;g'`"
+		 ;;
+	esac
+
+	LOCAL_MAKEFLAGS=""
+	LOCAL_IMAKEFLAGS="-DVerboseMake=No -DBUILDDAEMONS -DINSTALLDAEMONS -DTopDir=\$(JAVAGANDIVATOPDIR) -DInstallTopDir="$INSTALLTOPDIR
+	LOCAL_MAKEDEPENDFLAGS=""
+
+#
+# Rename the property file to TransactionService.properties for now. In
+# 2.2 we will have one property file per module, so we will have to rename
+# anyway.
+#
+
+	LOCAL_CPPFLAGS="-I\$(JAVAGANDIVATOPDIR)/config -I\$(JAVAGANDIVATOPDIR)/lib -DPROPERTIES_DIR=\\\"$PROPERTIES\\\" -DPROPERTIES_FILE=\\\"TransactionService_$GANDIVA_PROPERTIES_VERSION.properties\\\""
+	LOCAL_CPPINCLUDES=""
+	LOCAL_CPLUSPLUSFLAGS=""
+	LOCAL_LDFLAGS=""
+	LOCAL_LDLIBRARIES=""
+	LOCAL_LDLIBDEPENDS=""
+
+#	if test "'x$BUILDRELEASE'" = "'xYES'"
+#	then
+#		TEST_DEFAULT=y
+#	else
+		TEST_DEFAULT=n
+#	fi
+	echo
+	echo $PRE_ECHO "Build test programs (y/n) [$TEST_DEFAULT] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'$TEST_DEFAULT'" = "'y'" -a "'x$INPUT'" = "'x'" || test "'x$INPUT'" = "'xy'" -o "'x$INPUT'" = "'xY'"
+	then	
+		echo "Y" >> "$SAVED_ANSWERS"
+		INPUT=""
+		echo $PRE_ECHO "Install test programs (y/n) [y] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+		read INPUT
+
+		if test "'x$INPUT'" = "'xn'" -o "'x$INPUT'" = "'xN'"
+		then	
+			echo "N" >> "$SAVED_ANSWERS"
+			LOCAL_IMAKEFLAGS="-DBUILDTESTS -UINSTALLTESTS "$LOCAL_IMAKEFLAGS
+		else
+			echo "Y" >> "$SAVED_ANSWERS"
+			LOCAL_IMAKEFLAGS="-DBUILDTESTS -DINSTALLTESTS "$LOCAL_IMAKEFLAGS
+		fi
+	else
+		echo "N" >> "$SAVED_ANSWERS"
+		LOCAL_IMAKEFLAGS="-UBUILDTESTS -UINSTALLTESTS "$LOCAL_IMAKEFLAGS
+	fi
+
+	echo
+	INPUT=""
+	echo $PRE_ECHO "Build utility programs (y/n) [y] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+
+	if test "'x$INPUT'" != "'xn'" -a "'x$INPUT'" != "'xN'"
+	then	
+		echo "Y" >> "$SAVED_ANSWERS"
+		INPUT=""
+		echo $PRE_ECHO "Install utility programs (y/n) [y] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+		read INPUT
+
+		if test "'x$INPUT'" != "'xn'" -a "'x$INPUT'" != "'xN'"
+		then	
+			echo "Y" >> "$SAVED_ANSWERS"
+			LOCAL_IMAKEFLAGS="-DBUILDUTILITIES -DINSTALLUTILITIES "$LOCAL_IMAKEFLAGS
+		else
+			echo "N" >> "$SAVED_ANSWERS"
+			LOCAL_IMAKEFLAGS="-DBUILDUTILITIES -UINSTALLUTILITIES "$LOCAL_IMAKEFLAGS
+		fi
+	else
+		echo "N" >> "$SAVED_ANSWERS"
+		LOCAL_IMAKEFLAGS="-UBUILDUTILITIES -UINSTALLUTILITIES "$LOCAL_IMAKEFLAGS
+	fi
+
+	# Defaults
+	SOURCEID="unknown"
+	BUILDINFO="unknown"
+	NOTES="none"
+
+	echo
+	echo $PRE_ECHO "Do you want to specify the module information (y/n) [n] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" = "'xy'" -o "'x$INPUT'" = "'xY'"
+	then
+	    echo "Y" >> "$SAVED_ANSWERS"
+	    echo
+	    INPUT=""
+	    echo $PRE_ECHO "What is the source identifier? ["$SOURCEID"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	    read INPUT
+
+	    if test "'x$INPUT'" != "'x'"
+	    then
+		if test "'x$INPUT'" != "'xNONE'" -o "'x$INPUT'" != "'xnone'"
+		then
+		    echo "$INPUT" >> "$SAVED_ANSWERS"
+		    SOURCEID=$INPUT
+		else
+		    echo "NONE" >> "$SAVED_ANSWERS"
+		    SOURCEID=""
+		fi
+	    else
+		echo "(DEFAULT) $SOURCEID" >> "$SAVED_ANSWERS"
+	    fi
+
+	    echo
+	    echo $PRE_ECHO "What is your name? ["$BUILDINFO"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	    read INPUT
+
+	    if test "'x$INPUT'" != "'x'"
+	    then
+		if test "'x$INPUT'" != "'xNONE'" -o "'x$INPUT'" != "'xnone'"
+		then
+		    echo "$INPUT" >> "$SAVED_ANSWERS"
+		    BUILDINFO=$INPUT
+		else
+		    echo "NONE" >> "$SAVED_ANSWERS"
+		    BUILDINFO=""
+		fi
+	    else
+		echo "(DEFAULT) $BUILDINFO" >> "$SAVED_ANSWERS"
+	    fi
+
+	    echo
+	    echo $PRE_ECHO "Any other information? ["$NOTES"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	    read INPUT
+
+	    if test "'x$INPUT'" != "'x'"
+	    then
+		if test "'x$INPUT'" != "'xNONE'" -o "'x$INPUT'" != "'xnone'"
+		then
+		    echo "$INPUT" >> "$SAVED_ANSWERS"
+		    NOTES=$INPUT
+		else
+		    echo "NONE" >> "$SAVED_ANSWERS"
+		    NOTES=""
+		fi
+	    else
+		echo "(DEFAULT) $NOTES" >> "$SAVED_ANSWERS"
+	    fi
+	else
+	    echo "N" >> "$SAVED_ANSWERS"
+	fi
+
+	MODULE_MAKEFLAGS=""
+	MODULE_IMAKEFLAGS="-I\$(JAVAGANDIVATOPDIR)/config"
+	MODULE_MAKEDEPENDFLAGS=""
+	MODULE_CPPINCLUDES="-I\$(JAVAGANDIVATOPDIR)/include"
+	MODULE_CPLUSPLUSFLAGS=""
+	MODULE_LDFLAGS=""
+	MODULE_LDLIBRARIES=""
+	MODULE_LDLIBDEPENDS=""
+
+	if test "$INST" = "YES"
+	then
+		LOCAL_IMAKEFLAGS="-DINSTALLJAR "$LOCAL_IMAKEFLAGS
+	fi
+else
+	. $CONFIGFILE
+	BUILDINFO=`echo $BUILDINFO | sed -e "s;$PRE_BUILDINFO\[;;" -e "s;]$;;"`
+	if test "'x$BUILDRELEASE'" = "'xYES'"
+	then
+		INSTALLTOPDIR=$XINSTALLTOPDIR
+		JAVAHARNESSTOPDIR=$XJAVAHARNESSTOPDIR
+		BUILDSYSTEMTOPDIR=$XBUILDSYSTEMTOPDIR
+	fi
+	case ${OS:-`(uname -s) 2> /dev/null`} in 
+        	CYGWIN*|Windows*)
+			TOPDIR="`cygpath -w $TOPDIR | sed 's;\\\;/;g'`"
+		;;
+	esac
+fi
+
+sed -e "s;INCLUDES;-Iconfig  -I$JAVAHARNESSTOPDIR/config -I$BUILDSYSTEMTOPDIR/config;" < MakefileBoot.tmpl > MakefileBoot
+
+BUILDINFO="$PRE_BUILDINFO [$BUILDINFO]"
+
+if test "$VERIFY" = "YES"
+then
+	echo
+	echo $PRE_ECHO "Local make flags ["$LOCAL_MAKEFLAGS"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		echo "$INPUT" >> "$SAVED_ANSWERS"
+		LOCAL_MAKEFLAGS=$INPUT
+	else
+		echo "(DEFAULT) $LOCAL_MAKEFLAGS" >> "$SAVED_ANSWERS"
+	fi
+
+	echo $PRE_ECHO "Local imake flags ["$LOCAL_IMAKEFLAGS"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		echo "$INPUT" >> "$SAVED_ANSWERS"
+		LOCAL_IMAKEFLAGS=$INPUT
+	else
+		echo "(DEFAULT) $LOCAL_IMAKEFLAGS" >> "$SAVED_ANSWERS"
+	fi
+
+	echo $PRE_ECHO "Local makedepend flags ["$LOCAL_MAKEDEPENDFLAGS"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		echo "$INPUT" >> "$SAVED_ANSWERS"
+		LOCAL_MAKEDEPENDFLAGS=$INPUT
+	else
+		echo "(DEFAULT) $LOCAL_MAKEDEPENDFLAGS" >> "$SAVED_ANSWERS"
+	fi
+
+	echo $PRE_ECHO "Local c pre-processor flags ["$LOCAL_CPPFLAGS"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		echo "$INPUT" >> "$SAVED_ANSWERS"
+		LOCAL_CPPFLAGS=$INPUT
+	else
+		echo "(DEFAULT) $LOCAL_CPPFLAGS" >> "$SAVED_ANSWERS"
+	fi
+
+	echo $PRE_ECHO "Local c pre-processor includes ["$LOCAL_CPPINCLUDES"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		echo "$INPUT" >> "$SAVED_ANSWERS"
+		LOCAL_CPPINCLUDES=$INPUT
+	else
+		echo "(DEFAULT) $LOCAL_CPPINCLUDES" >> "$SAVED_ANSWERS"
+	fi
+
+	echo $PRE_ECHO "Local c++ flags ["$LOCAL_CPLUSPLUSFLAGS"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		echo "$INPUT" >> "$SAVED_ANSWERS"
+		LOCAL_CPLUSPLUSFLAGS=$INPUT
+	else
+		echo "(DEFAULT) $LOCAL_CPLUSPLUSFLAGS" >> "$SAVED_ANSWERS"
+	fi
+
+	echo $PRE_ECHO "Local ld flags ["$LOCAL_LDFLAGS"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		echo "$INPUT" >> "$SAVED_ANSWERS"
+		LOCAL_LDFLAGS=$INPUT
+	else
+		echo "(DEFAULT) $LOCAL_LDFLAGS" >> "$SAVED_ANSWERS"
+	fi
+
+	echo $PRE_ECHO "Local ld libraries ["$LOCAL_LDLIBRARIES"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		echo "$INPUT" >> "$SAVED_ANSWERS"
+		LOCAL_LDLIBRARIES=$INPUT
+	else
+		echo "(DEFAULT) $LOCAL_LDLIBRARIES" >> "$SAVED_ANSWERS"
+	fi
+
+	echo $PRE_ECHO "Local ld lib depends ["$LOCAL_LDLIBDEPENDS"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		echo "$INPUT" >> "$SAVED_ANSWERS"
+		LOCAL_LDLIBDEPENDS=$INPUT
+	else
+		echo "(DEFAULT) $LOCAL_LDLIBDEPENDS" >> "$SAVED_ANSWERS"
+	fi
+
+	echo
+	echo $PRE_ECHO "Module make flags ["$MODULE_MAKEFLAGS"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		echo "$INPUT" >> "$SAVED_ANSWERS"
+		MODULE_MAKEFLAGS=$INPUT
+	else
+		echo "(DEFAULT) $MODULE_MAKEFLAGS" >> "$SAVED_ANSWERS"
+	fi
+
+	echo $PRE_ECHO "Module imake flags ["$MODULE_IMAKEFLAGS"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		echo "$INPUT" >> "$SAVED_ANSWERS"
+		MODULE_IMAKEFLAGS=$INPUT
+	else
+		echo "(DEFAULT) $MODULE_IMAKEFLAGS" >> "$SAVED_ANSWERS"
+	fi
+
+	echo $PRE_ECHO "Module makedepend flags ["$MODULE_MAKEDEPENDFLAGS"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		echo "$INPUT" >> "$SAVED_ANSWERS"
+		MODULE_MAKEDEPENDFLAGS=$INPUT
+	else
+		echo "(DEFAULT) $MODULE_MAKEDEPENDFLAGS" >> "$SAVED_ANSWERS"
+	fi
+
+	echo $PRE_ECHO "Module c pre-processor flags ["$MODULE_CPPFLAGS"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		echo "$INPUT" >> "$SAVED_ANSWERS"
+		MODULE_CPPFLAGS=$INPUT
+	else
+		echo "(DEFAULT) $MODULE_CPPFLAGS" >> "$SAVED_ANSWERS"
+	fi
+
+	echo $PRE_ECHO "Module c pre-processor includes ["$MODULE_CPPINCLUDES"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		echo "$INPUT" >> "$SAVED_ANSWERS"
+		MODULE_CPPINCLUDES=$INPUT
+	else
+		echo "(DEFAULT) $MODULE_CPPINCLUDES" >> "$SAVED_ANSWERS"
+	fi
+
+	echo $PRE_ECHO "Module c++ flags ["$MODULE_CPLUSPLUSFLAGS"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		echo "$INPUT" >> "$SAVED_ANSWERS"
+		MODULE_CPLUSPLUSFLAGS=$INPUT
+	else
+		echo "(DEFAULT) $MODULE_CPLUSPLUSFLAGS" >> "$SAVED_ANSWERS"
+	fi
+
+	echo $PRE_ECHO "Module ld flags ["$MODULE_LDFLAGS"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		echo "$INPUT" >> "$SAVED_ANSWERS"
+		MODULE_LDFLAGS=$INPUT
+	else
+		echo "(DEFAULT) $MODULE_LDFLAGS" >> "$SAVED_ANSWERS"
+	fi
+
+	echo $PRE_ECHO "Module ld libraries ["$MODULE_LDLIBRARIES"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		echo "$INPUT" >> "$SAVED_ANSWERS"
+		MODULE_LDLIBRARIES=$INPUT
+	else
+		echo "(DEFAULT) $MODULE_LDLIBRARIES" >> "$SAVED_ANSWERS"
+	fi
+
+	echo $PRE_ECHO "Module ld lib depends ["$MODULE_LDLIBDEPENDS"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		echo "$INPUT" >> "$SAVED_ANSWERS"
+		MODULE_LDLIBDEPENDS=$INPUT
+	else
+		echo "(DEFAULT) $MODULE_LDLIBDEPENDS" >> "$SAVED_ANSWERS"
+	fi
+fi
+
+(
+echo "#!/bin/sh"
+echo "#"
+echo "# Copyright (C) 1999-2001 by HP Bluestone Software, Inc. All rights Reserved."
+echo "# "
+echo "# HP Arjuna Labs,"
+echo "# Newcastle upon Tyne,"
+echo "# Tyne and Wear,"
+echo "# UK."
+echo "#"
+echo ""
+echo "# "$THISMODULE" configure file"
+echo "# Version "$GANDIVA_VERSION
+echo ""
+if test "'x$BUILDRELEASE'" = "'xYES'"
+then
+    echo "BUILDRELEASE=YES"
+    echo "XINSTALLTOPDIR="$INSTALLTOPDIR
+    echo "XJAVAHARNESSTOPDIR="$JAVAHARNESSTOPDIR
+    echo "XBUILDSYSTEMTOPDIR="$BUILDSYSTEMTOPDIR
+    echo ""
+    echo "INSTALLTOPDIR=\$\$JTSARJUNA_HOME"
+    echo "JAVAHARNESSTOPDIR=\$\$JTSARJUNA_HOME"
+    echo "BUILDSYSTEMTOPDIR=\$\$JTSARJUNA_HOME"
+else
+    echo "INSTALLTOPDIR="$INSTALLTOPDIR
+    echo "JAVAHARNESSTOPDIR="$JAVAHARNESSTOPDIR
+    echo "BUILDSYSTEMTOPDIR="$BUILDSYSTEMTOPDIR
+fi
+echo "LOCAL_MAKEFLAGS='"$LOCAL_MAKEFLAGS"'"
+echo "LOCAL_IMAKEFLAGS='"$LOCAL_IMAKEFLAGS"'"
+echo "LOCAL_MAKEDEPENDFLAGS='"$LOCAL_MAKEDEPENDFLAGS"'"
+echo "LOCAL_CPPFLAGS='"$LOCAL_CPPFLAGS"'"
+echo "LOCAL_CPPINCLUDES='"$LOCAL_CPPINCLUDES"'"
+echo "LOCAL_CPLUSPLUSFLAGS='"$LOCAL_CPLUSPLUSFLAGS"'"
+echo "LOCAL_LDFLAGS='"$LOCAL_LDFLAGS"'"
+echo "LOCAL_LDLIBRARIES='"$LOCAL_LDLIBRARIES"'"
+echo "LOCAL_LDLIBDEPENDS='"$LOCAL_LDLIBDEPENDS"'"
+echo ""
+echo "MODULE_MAKEFLAGS='"$MODULE_MAKEFLAGS"'"
+echo "MODULE_IMAKEFLAGS='"$MODULE_IMAKEFLAGS"'"
+echo "MODULE_MAKEDEPENDFLAGS='"$MODULE_MAKEDEPENDFLAGS"'"
+echo "MODULE_CPPFLAGS='"$MODULE_CPPFLAGS"'"
+echo "MODULE_CPPINCLUDES='"$MODULE_CPPINCLUDES"'"
+echo "MODULE_CPLUSPLUSFLAGS='"$MODULE_CPLUSPLUSFLAGS"'"
+echo "MODULE_LDFLAGS='"$MODULE_LDFLAGS"'"
+echo "MODULE_LDLIBRARIES='"$MODULE_LDLIBRARIES"'"
+echo "MODULE_LDLIBDEPENDS='"$MODULE_LDLIBDEPENDS"'"
+echo "GANDIVA_PROPERTIES_VERSION='"$GANDIVA_PROPERTIES_VERSION"'"
+echo
+echo "SOURCEID='"$SOURCEID"'"
+echo "BUILDINFO='"$BUILDINFO"'"
+echo "NOTES='"$NOTES"'"
+) > config/"$THISMODULE".cf
+chmod a+rx config/"$THISMODULE".cf
+
+(
+echo "/*"
+echo " * Copyright (C) 1999-2001 by HP Bluestone Software, Inc. All rights Reserved."
+echo " * "
+echo " * HP Arjuna Labs,"
+echo " * Newcastle upon Tyne,"
+echo " * Tyne and Wear,"
+echo " * UK."
+echo " */"
+echo
+echo "/*"
+echo " *  Local.def"
+echo " */"
+echo
+if test "'x$LOCAL_MAKEFLAGS'" != "'x'"
+then
+	echo "AddToMakeFlags("$LOCAL_MAKEFLAGS")"
+fi
+if test "'x$LOCAL_IMAKEFLAGS'" != "'x'"
+then
+	echo "AddToIMakeFlags("$LOCAL_IMAKEFLAGS")"
+fi
+if test "'x$LOCAL_MAKEDEPENDFLAGS'" != "'x'"
+then
+	echo "AddToMakeDependFlags("$LOCAL_MAKEDEPENDFLAGS")"
+fi
+if test "'x$LOCAL_CPPFLAGS'" != "'x'"
+then
+	echo "AddToCPPFlags("$LOCAL_CPPFLAGS")"
+fi
+if test "'x$LOCAL_CPPINCLUDES'" != "'x'"
+then
+	echo "AddToCPPIncludes("$LOCAL_CPPINCLUDES")"
+fi
+if test "'x$LOCAL_CPLUSPLUSFLAGS'" != "'x'"
+then
+	echo "AddToCPLUSPLUSFlags("$LOCAL_CPLUSPLUSFLAGS")"
+fi
+if test "'x$LOCAL_LDFLAGS'" != "'x'"
+then
+	echo "AddToLdFlags("$LOCAL_LDFLAGS")"
+fi
+if test "'x$LOCAL_LDLIBRARIES'" != "'x'"
+then
+	echo "AddToLdLibraries("$LOCAL_LDLIBRARIES")"
+fi
+if test "'x$LOCAL_LDLIBDEPENDS'" != "'x'"
+then
+	echo "AddToLdLibDepends("$LOCAL_LDLIBDEPENDS")"
+fi
+echo
+echo "#include \""$TOPDIR"/config/"$THISMODULE"_Module.def\""
+echo "#include \""$JAVAHARNESSTOPDIR"/config/JavaHarness_Module.def\""
+echo "#include \""$BUILDSYSTEMTOPDIR"/config/Module.def\""
+) > config/Local.def
+chmod a+r config/Local.def
+
+(
+echo "/*"
+echo " * Copyright (C) 1999-2001 by HP Bluestone Software, Inc. All rights Reserved."
+echo " * "
+echo " * HP Arjuna Labs,"
+echo " * Newcastle upon Tyne,"
+echo " * Tyne and Wear,"
+echo " * UK."
+echo " */"
+echo
+echo "/*"
+echo " *  "$THISMODULE"_Module.def (source)"
+echo " */"
+echo
+echo "JAVAGANDIVATOPDIR="$TOPDIR
+echo
+echo "PROPERTIES_FILE=TransactionService_$GANDIVA_PROPERTIES_VERSION.properties"
+echo
+if test "'x$MODULE_MAKEFLAGS'" != "'x'"
+then
+	echo "AddToMakeFlags("$MODULE_MAKEFLAGS")"
+fi
+if test "'x$MODULE_IMAKEFLAGS'" != "'x'"
+then
+	echo "AddToIMakeFlags("$MODULE_IMAKEFLAGS")"
+fi
+if test "'x$MODULE_MAKEDEPENDFLAGS'" != "'x'"
+then
+	echo "AddToMakeDependFlags("$MODULE_MAKEDEPENDFLAGS")"
+fi
+if test "'x$MODULE_CPPFLAGS'" != "'x'"
+then
+	echo "AddToCPPFlags("$MODULE_CPPFLAGS")"
+fi
+if test "'x$MODULE_CPPINCLUDES'" != "'x'"
+then
+	echo "AddToCPPIncludes("$MODULE_CPPINCLUDES")"
+fi
+if test "'x$MODULE_CPLUSPLUSFLAGS'" != "'x'"
+then
+	echo "AddToCPLUSPLUSFlags("$MODULE_CPLUSPLUSFLAGS")"
+fi
+if test "'x$MODULE_LDFLAGS'" != "'x'"
+then
+	echo "AddToLdFlags("$MODULE_LDFLAGS")"
+fi
+if test "'x$MODULE_LDLIBRARIES'" != "'x'"
+then
+	echo "AddToLdLibraries("$MODULE_LDLIBRARIES")"
+fi
+if test "'x$MODULE_LDLIBDEPENDS'" != "'x'"
+then
+	echo "AddToLdLibDepends("$MODULE_LDLIBDEPENDS")"
+fi
+echo
+echo "AddToCPPFlags(-DGANDIVA_VERSION=\\\"$GANDIVA_VERSION\\\")"
+) > config/"$THISMODULE"_Module.def
+chmod a+r config/"$THISMODULE"_Module.def
+
+(
+echo "/*"
+echo " * Copyright (C) 1999-2001 by HP Bluestone Software, Inc. All rights Reserved."
+echo " * "
+echo " * HP Arjuna Labs,"
+echo " * Newcastle upon Tyne,"
+echo " * Tyne and Wear,"
+echo " * UK."
+echo " */"
+echo
+echo "/*"
+echo " *  "$THISMODULE"_Module.def (install)"
+echo " */"
+echo
+if test "'x$BUILDRELEASE'" = "'xYES'"
+then
+    echo "JAVAGANDIVATOPDIR=\$\$JTSARJUNA_HOME"
+else
+    echo "JAVAGANDIVATOPDIR="$INSTALLTOPDIR
+fi
+echo
+if test "'x$MODULE_MAKEFLAGS'" != "'x'"
+then
+	echo "AddToMakeFlags("$MODULE_MAKEFLAGS")"
+fi
+if test "'x$MODULE_IMAKEFLAGS'" != "'x'"
+then
+	echo "AddToIMakeFlags("$MODULE_IMAKEFLAGS")"
+fi
+if test "'x$MODULE_MAKEDEPENDFLAGS'" != "'x'"
+then
+	echo "AddToMakeDependFlags("$MODULE_MAKEDEPENDFLAGS")"
+fi
+if test "'x$MODULE_CPPFLAGS'" != "'x'"
+then
+	echo "AddToCPPFlags("$MODULE_CPPFLAGS")"
+fi
+if test "'x$MODULE_CPPINCLUDES'" != "'x'"
+then
+	echo "AddToCPPIncludes("$MODULE_CPPINCLUDES")"
+fi
+if test "'x$MODULE_CPLUSPLUSFLAGS'" != "'x'"
+then
+	echo "AddToCPLUSPLUSFlags("$MODULE_CPLUSPLUSFLAGS")"
+fi
+if test "'x$MODULE_LDFLAGS'" != "'x'"
+then
+	echo "AddToLdFlags("$MODULE_LDFLAGS")"
+fi
+if test "'x$MODULE_LDLIBRARIES'" != "'x'"
+then
+	echo "AddToLdLibraries("$MODULE_LDLIBRARIES")"
+fi
+if test "'x$MODULE_LDLIBDEPENDS'" != "'x'"
+then
+	echo "AddToLdLibDepends("$MODULE_LDLIBDEPENDS")"
+fi
+echo
+echo "AddToCPPFlags(-DGANDIVA_VERSION=\\\"$GANDIVA_VERSION\\\")"
+) > config/"$THISMODULE"_Module_install.def
+chmod a+r config/"$THISMODULE"_Module_install.def
+
+(
+echo ""$THISMODULE" version $GANDIVA_VERSION"
+) > config/"$THISMODULE"_Version.def
+
+(
+echo "#define MODULE \""$THISMODULE"\""
+echo "#define SOURCEID \""$SOURCEID"\""
+echo "#define BUILDINFO \""$BUILDINFO"\""
+echo "#define VERSION \""$GANDIVA_VERSION"\""
+echo "#define DATE \""`date`"\""
+echo "#define NOTES \""$NOTES"\""
+) > config/Info.h
+
+exit 0

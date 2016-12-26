@@ -1,0 +1,148 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: TimeoutClient.javatmpl,v 1.1.28.1 2000/11/08 14:26:01 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+import CosTransactionsTests.*;
+import TestModule.*;
+import com.arjuna.OrbCommon.*;
+import com.arjuna.CosTransactions.OTS_Factory;
+import com.arjuna.CosTransactions.OTS_Current;
+import com.arjuna.CosTransactions.OTS_Utility;
+import com.arjuna.CosTransactions.OTS;
+import org.omg.CosTransactions.*;
+
+#include <CosTransactions/CosTranExceptions.h>
+
+public class TimeoutClient
+{
+    
+public static void main (String[] args)
+    {
+	try
+	{
+	    ORBInterface.initORB(args, null);
+	    OAInterface.initOA();
+	    
+	    OTS_Current current = OTS.current();
+	    Control theControl = null;
+	    String objectReference = "/tmp/object.ref";
+	    String serverName = "SetGet";
+
+	    if (System.getProperty("os.name").startsWith("Windows"))
+		objectReference = "C:\\temp\\object.ref";
+	    
+	    for (int i = 0; i < args.length; i++)
+	    {
+		if (args[i].compareTo("-reffile") == 0)
+		    objectReference = args[i+1];
+		if (args[i].compareTo("-help") == 0)
+		{
+		    System.out.println("Usage: TimeoutClient [-reffile <file>] [-help]");
+		    System.exit(0);
+		}
+	    }
+
+	    SetGet SetGetVar = null;
+
+	    System.out.println("Setting transaction timeout to 2 seconds.");
+	
+	    current.set_timeout(2);
+	
+	    current.begin();
+	    current.begin();
+    
+	    try
+	    {
+#ifdef USE_BIND
+#ifdef ORBIXWEB
+		serverName = ":"+serverName;
+#endif	    
+		SetGetVar = CORBA_BIND_(SetGet, serverName);
+#else
+		SetGetVar = HELPER_CLASS_(SetGet).narrow(ORBObject.fileToObject(objectReference));
+#endif		
+	    }
+	    catch (Exception e)
+	    {
+		System.err.println("Bind to object failed: "+e);
+		System.exit(0);
+	    }
+
+	    try
+	    {
+		theControl = current.get_control();
+	
+		SetGetVar.set((short) 2, theControl);
+
+		theControl = null;
+
+		System.out.println("Set value.");
+	    }
+	    catch (Exception e)
+	    {
+		System.err.println("Call to set or get failed: "+e);
+		System.exit(0);
+	    }
+
+	    try
+	    {
+		System.out.println("Now sleeping for 5 seconds.");
+	
+		Thread.sleep(5000);
+	    }
+	    catch (Exception e)
+	    {
+	    }
+
+	    System.out.println("\ncommitting nested action.");
+
+	    try
+	    {
+		current.commit(true);
+	    }
+	    catch (TransactionRolledBack e1)
+	    {
+		System.out.println("Caught TransactionRolledBack");
+	    }
+
+	    System.out.println("\ncommitting top-level action");
+
+	    try
+	    {
+		current.commit(true);
+	    }
+	    catch (TransactionRolledBack e2)
+	    {
+		System.out.println("Caught TransactionRolledBack");
+	    }
+	    catch (InvalidTransaction e3)
+	    {
+		System.out.println("Caught InvalidTransaction");
+	    }
+	    catch (Exception e)
+	    {
+		System.out.println("Caught other exception: "+e);
+	    }
+	}
+	catch (Exception e)
+	{
+	}
+
+	System.out.println("\nTest completed successfully.");
+	
+	OAInterface.shutdownOA();
+	ORBInterface.shutdownORB();
+
+	System.exit(0);
+    }
+ 
+};
