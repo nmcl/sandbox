@@ -1,0 +1,19 @@
+If you do not use the ORBInterface methods for starting the ORB and
+BOA then you *must* do the following:
+
+(i) set the  ConcModelThreaded on the ORB (see  the ORBacus manual for
+this).
+
+(ii) set the  ConcModelThreadPerRequest  on the  BOA (see the  ORBacus
+manual for this).
+
+(iii)  call init_servers  in  the client (see  the  ORBacus manual for
+this).
+
+(iv) pass a reference  to the ORB and   BOA to ORBInterface using  the
+setOrb and setBoa methods, respectively.
+
+In addition to using the ORBInterface methods  initORB and initBOA you
+must also  use  shutdownBOA and  shutdownORB  (in that   order) before
+terminating   your application. This  is to  allow   the OTS to do any
+tidying up that is necessary.

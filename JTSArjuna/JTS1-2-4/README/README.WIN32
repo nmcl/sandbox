@@ -1,0 +1,23 @@
+Windows95/98/NT README
+======================
+
+Setup
+-----
+
+To make easier the setup of JTSArjuna on Windows95/98/NT, when using the 
+"MS-DOS Prompt", a script has been provided. This setup script is located in 
+the "bin" directory and is called "JTSArjuna_setup.bat". The script requires 
+that the environment variable "JTSARJUNA_HOME" is set to the path to the root 
+directory of the JTSArjuna installation.
+
+For example, if JTSArjuna is in the directory "\JTSArjuna", the following 
+command needs to be issued, before running "ots_setup.bat":
+
+    set JTSARJUNA_HOME=\JTSArjuna
+
+Examples
+--------
+
+To make easier the setup of the JTSArjuna examples on Windows95/98/NT, when 
+using the "MS-DOS Prompt", a script has been provided. This setup script is
+located in the "examples" directory and is called "Examples_setup.bat".

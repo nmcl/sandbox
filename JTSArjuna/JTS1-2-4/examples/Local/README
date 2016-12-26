@@ -1,0 +1,3 @@
+Note: No servers are required, and no transaction manager is needed.
+
+expected_output: from LocalTest

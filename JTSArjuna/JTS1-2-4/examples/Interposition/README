@@ -1,0 +1,5 @@
+NOTE: this example will only be built when using ORBacus or VisiBroker
+since we cannot support implicit transaction propagation/interposition
+in other Orbs.
+
+Server: TranGridServer

@@ -1,0 +1,24 @@
+/*
+ * Copyright (C) 1996, 1997, 1998,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ */
+
+/*
+ *  Module.def (install)
+ */
+
+JAVAORBPORTABILITYTOPDIR=/usr/local/JTSArjuna
+
+#include "/home/nmcl/JTSArjuna/JavaOrbPortability/config/o_orbacus.cf"
+#include "/usr/local/JTSArjuna/config/JavaOrbPortability.tmpl"
+
+
+AddToIMakeFlags(-DORB_ROOT_DEFAULT=/usr/local/ORBacus -DSUPPORT_IDL_PREFIX -DIDL2JAVA=jidl -DIDL2IR=irfeed -I$(JAVAORBPORTABILITYTOPDIR)/config)
+AddToCPPFlags(-DCOSSERVICES_ROOT=\"$(INSTALLTOPDIR)/etc/\" -DCONFIG_FILE=\"CosServices.cfg\" -DORBACUS -DHAVE_BOA -DJAVAIDL)
+AddToCPPIncludes(-I$(JAVAORBPORTABILITYTOPDIR)/include)
+AddToIdlFlags(--auto-package --tie )
