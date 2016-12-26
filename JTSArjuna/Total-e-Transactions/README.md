@@ -1,0 +1,1 @@
+https://www.jboss.org/dms/jbosstm/resources/whitepapers/WPTotal-e-Transactions.pdf
