@@ -1,0 +1,32 @@
+COMMENT
+COMMENT Copyright (C) 1994, 1995, 1996, 1997, 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 1998/06/01 14:31:22 nmcl Exp $
+COMMENT
+
+SOURCES = Solaris_Sem.cc \
+	  Solaris_SpecificData.cc \
+	  Solaris_Thread.cc \
+	  Solaris_ThreadPool.cc \
+	  Solaris_Condition.cc
+
+OBJECTS = Solaris_Sem.o \
+	  Solaris_SpecificData.o \
+	  Solaris_Thread.o \
+	  Solaris_ThreadPool.o \
+	  Solaris_Condition.o
+
+Target($(OBJECTS))
+
+BuildObject(Solaris_Sem,NullParam,NullParam)
+BuildObject(Solaris_SpecificData,NullParam,NullParam)
+BuildObject(Solaris_Thread,NullParam,NullParam)
+BuildObject(Solaris_ThreadPool,NullParam,NullParam)
+BuildObject(Solaris_Condition,NullParam,NullParam)
+
+AddDependences($(SOURCES),NullParam)
