@@ -1,0 +1,131 @@
+/*
+ * Copyright (C) 1996, 1997, 1998,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: Mailer.javatmpl,v 1.2 1998/07/06 10:49:52 nmcl Exp $
+ */
+
+package com.arjuna.JavaCosRecovery.CrashMan;
+
+import com.arjuna.JavaGandiva.Common.Uid;
+#if !defined(JDK_1_0_2) && !defined(JDK_1_0) && !defined(JDK_0_1)
+import java.io.PrintWriter;
+import java.util.Calendar;
+#endif
+import java.util.Date;
+import java.io.PrintStream;
+import java.io.FileOutputStream;
+import java.io.File;
+
+import java.lang.InterruptedException;
+import java.io.IOException;
+
+public class Mailer
+{
+    
+public Mailer (PrintStream strm)
+    {
+	msgUid = new Uid();
+	outStrm = strm;
+	fileName = "/tmp/"+msgUid+".msg";
+	mailProg = new String(System.getProperty("MAILER", null));
+	recipient = new String(System.getProperty("ADMIN_EMAIL", null));
+	subject = "Arjuna Crash Recovery Message";
+
+	try
+	{
+#if defined(JDK_1_0_2) || defined(JDK_1_0) || defined(JDK_0_1)
+	    pstream = new PrintStream(new FileOutputStream(fileName));
+#else
+	    pstream = new PrintWriter(new FileOutputStream(fileName));
+#endif	    
+
+	    // Append initial text to file
+
+#if defined(JDK_1_0_2) || defined(JDK_1_0) || defined(JDK_0_1)	    
+	    Date d = new Date();
+
+	    pstream.println("This message was automatically generated at "+d.toGMTString());
+#else
+	    pstream.println("This message was automatically generated at "+Calendar.getInstance().getTime());
+#endif	    
+	}
+	catch (IOException e)
+	{
+	    pstream = null;
+
+	    outStrm.println("Cannot assign PrintStream.");
+	}
+    }
+
+public void println (String s)
+    {
+	if (pstream != null)
+	    pstream.println(s);
+	else
+	    outStrm.println("No PrintStream assigned.");
+    }
+    
+public void sendMessage ()
+    {
+	boolean result = true;
+	
+	if (mailProg == null)
+	{
+	    outStrm.println("No mail program specified.");
+	    result = false;
+	}
+	else
+	{
+	    if (recipient == null)
+	    {
+		outStrm.println("No recipient specified.");
+		result = false;
+	    }
+	}
+
+	if (result)
+	{
+	    String mailCommand = mailProg+" -s \""+subject+"\" "+recipient+" < "+fileName;
+
+	    try
+	    {
+		Process mailProcess = Runtime.getRuntime().exec(mailCommand);
+
+		mailProcess.waitFor();
+	    }
+	    catch (IOException e)
+	    {
+		result = false;
+	    }
+	    catch (InterruptedException e)
+	    {
+		result = false;
+	    }
+	}
+
+	if (!result)
+	    outStrm.println("Mailer: *WARNING* Attempt to send message failed");
+
+	File f = new File(fileName);
+
+	f.delete();  // tidy up
+    }
+
+private PrintStream outStrm;
+private String fileName;
+private String mailProg;
+private String recipient;
+private String subject;
+#if defined(JDK_1_0_2) || defined(JDK_1_0) || defined(JDK_0_1)    
+private PrintStream pstream;
+#else
+private PrintWriter pstream;
+#endif    
+private Uid msgUid;
+
+}

@@ -1,0 +1,23 @@
+COMMENT 
+COMMENT Copyright (C) 1995, 1996
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1998/03/12 16:22:32 nmcl Exp $
+COMMENT
+
+SOURCES = AAStatus.java \
+	  ActionCondition.java
+
+OBJECTS = ActionCondition.class \
+	  AAStatus.class
+
+Target($(OBJECTS))
+
+BuildJavaByteCode(AAStatus,NullParam)
+BuildJavaByteCode(ActionCondition,NullParam)
+
+Clean(*.class)
