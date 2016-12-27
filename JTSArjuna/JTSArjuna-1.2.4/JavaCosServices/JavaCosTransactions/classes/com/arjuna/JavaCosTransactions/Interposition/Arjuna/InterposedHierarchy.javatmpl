@@ -1,0 +1,104 @@
+/*
+ * Copyright (C) 1996, 1997, 1998, 1999,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: InterposedHierarchy.javatmpl,v 1.4.2.1 1999/02/05 09:57:38 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package com.arjuna.JavaCosTransactions.Interposition.Arjuna;
+
+import org.omg.CosTransactions.*;
+import com.arjuna.JavaGandiva.Common.Uid;
+import com.arjuna.JavaGandiva.Template.UidListElement;
+import com.arjuna.JavaCosTransactions.*;
+import com.arjuna.OrbCommon.*;
+import java.io.PrintStream;
+
+import NAMESPACE_(CORBA).SystemException;
+
+public class InterposedHierarchy implements UidListElement
+{
+    
+public InterposedHierarchy (OTS_ServerTopLevelAction action)
+    {
+	_action = action;
+    }
+
+public void finalize ()
+    {
+	if (_action != null)
+	{
+	    DESTROY_IMPL_(_action);
+	    _action = null;
+	}
+    }
+
+public final OTS_ServerTopLevelAction action ()
+    {
+	return _action;
+    }
+
+public final Uid get_uid ()
+    {
+	return ((_action != null) ? _action.get_uid() : Uid.nullUid());
+    }
+
+public final OTS_ServerControl deepestControl ()
+    {
+	if (_action == null)
+	    return null;
+
+	if (_action.child() == null)
+	    return (OTS_ServerControl) _action.control();
+	else
+	{
+	    OTS_ServerControl control = null;
+	    OTS_ServerNestedAction childPtr = _action.child();
+
+	    while (childPtr != null)
+	    {
+		if (childPtr.child() == null)
+		    control = (OTS_ServerControl) childPtr.control();
+
+		childPtr = childPtr.child();
+	    }
+
+	    return control;
+	}
+    }
+    
+public final void print (PrintStream strm)
+    {
+	strm.println("InterposedHierarchy:");
+
+	if (_action != null)
+	{
+	    strm.print(_action.get_uid());
+
+	    OTS_ServerNestedAction childPtr = _action.child();
+
+	    while (childPtr != null)
+	    {
+		strm.print("\n"+childPtr.get_uid());
+
+		childPtr = childPtr.child();
+	    }
+	}
+	else
+	    strm.print("EMPTY");
+    }
+
+    /*
+     * We require some unique identify for threads. A Java thread can
+     * have a name, but it is not guaranteed to be unique.
+     */
+    
+private OTS_ServerTopLevelAction _action;
+
+};

@@ -1,0 +1,52 @@
+/*
+ * Copyright (C) 1997, 1998,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: OTS_ServerStrictTopLevelAction.javatmpl,v 1.2 1998/07/06 13:29:18 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package com.arjuna.JavaCosTransactions.Interposition.Strict;
+
+import com.arjuna.JavaGandiva.Template.*;
+import com.arjuna.JavaGandiva.Common.Uid;
+import com.arjuna.JavaCosTransactions.*;
+import com.arjuna.JavaCosTransactions.Interposition.Arjuna.*;
+import org.omg.CosTransactions.*;
+import com.arjuna.ArjunaOTS.*;
+
+import NAMESPACE_(CORBA).SystemException;
+
+public class OTS_ServerStrictTopLevelAction extends OTS_ServerTopLevelAction
+{
+
+    /*
+     * Does not register with a parent in the client.
+     */
+    
+public OTS_ServerStrictTopLevelAction (OTS_ServerControl control)
+    {
+	super();
+	
+	_theControl = control;
+
+	// don't register this resource as it only has meaning locally.
+    }
+
+    /*
+     * The base class is responsible for registering with
+     * the parent transaction.
+     */
+    
+public OTS_ServerStrictTopLevelAction (Coordinator coordinator, Terminator terminator,
+				       OTS_ServerControl control)
+    {
+	super(coordinator, terminator, control);
+    }
+ 
+};

@@ -1,0 +1,111 @@
+COMMENT 
+COMMENT Copyright (C) 1996, 1997, 1998, 1999,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.7.2.1 1999/01/28 19:04:02 nmcl Exp $
+COMMENT
+
+AddToIdlFlags(-DDRAFT3 -I$(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+SOURCES = JavaCosTransactionsNames.java \
+	  OTS_AbstractRecord.java \
+	  OTS_Utility.java \
+	  OTS_ResourceRecord.java \
+	  OTS_Control.java \
+	  OTS_Transaction.java \
+	  OTS_Factory.java \
+	  OTS_FactoryList.java \
+	  OTS_FactoryCreator.java \
+	  OTS_Current.java \
+	  OTS.java \
+	  OTS_ExplicitInterposition.java \
+	  OTS_ServerTransaction.java \
+	  OTS_Synchronization.java \
+	  OTS_ActionHierarchy.java \
+	  OTS_ServerControl.java \
+	  OTS_TransactionReaper.java \
+	  OTS_Environment.java \
+	  OTS_Defaults.java \
+	  OTS_Thread.java \
+	  Interposition/Arjuna/OTS_Interposition.java \
+	  Interposition/Arjuna/InterposedHierarchy.java \
+	  Interposition/Arjuna/OTS_ServerTopLevelAction.java \
+	  Interposition/Arjuna/OTS_ServerNestedAction.java \
+	  Interposition/Strict/OTS_StrictInterposition.java \
+	  Interposition/Strict/OTS_ServerStrictTopLevelAction.java \
+	  Interposition/Strict/OTS_ServerStrictNestedAction.java
+
+OBJECTS = JavaCosTransactionsNames.class \
+	  OTS_Environment.class \
+	  OTS_Defaults.class \
+	  OTS_Synchronization.class \
+	  OTS_Control.class \
+	  OTS_AbstractRecord.class \
+	  OTS_ResourceRecord.class \
+	  OTS_Transaction.class \
+	  OTS_ServerTransaction.class \
+	  OTS_Current.class \
+	  OTS_Factory.class \
+	  OTS_FactoryList.class \
+	  OTS_FactoryCreator.class \
+	  OTS_Utility.class \
+	  OTS.class \
+	  OTS_ExplicitInterposition.class \
+	  OTS_ActionHierarchy.class \
+	  OTS_ServerControl.class \
+	  OTS_TransactionReaper.class \
+	  OTS_Thread.class
+
+PreprocessJavaCode(OTS_Defaults,NullParam)
+PreprocessJavaCode(OTS_Utility,NullParam)
+PreprocessJavaCode(OTS_AbstractRecord,NullParam)
+PreprocessJavaCode(OTS_ResourceRecord,NullParam)
+PreprocessJavaCode(OTS_Control,NullParam)
+PreprocessJavaCode(OTS_ServerControl,NullParam)
+PreprocessJavaCode(OTS_Transaction,NullParam)
+PreprocessJavaCode(OTS_Factory,NullParam)
+PreprocessJavaCode(OTS_Current,NullParam)
+PreprocessJavaCode(OTS,NullParam)
+PreprocessJavaCode(OTS_ExplicitInterposition,NullParam)
+PreprocessJavaCodeDir(Interposition/Arjuna,OTS_Interposition,NullParam)
+PreprocessJavaCodeDir(Interposition/Arjuna,InterposedHierarchy,NullParam)
+PreprocessJavaCodeDir(Interposition/Arjuna,OTS_ServerTopLevelAction,NullParam)
+PreprocessJavaCodeDir(Interposition/Arjuna,OTS_ServerNestedAction,NullParam)
+PreprocessJavaCodeDir(Interposition/Strict,OTS_StrictInterposition,NullParam)
+PreprocessJavaCodeDir(Interposition/Strict,OTS_ServerStrictTopLevelAction,NullParam)
+PreprocessJavaCodeDir(Interposition/Strict,OTS_ServerStrictNestedAction,NullParam)
+
+Target($(SOURCES))
+Target($(OBJECTS))
+
+BuildJavaByteCode(JavaCosTransactionsNames,NullParam)
+BuildJavaByteCode(OTS,NullParam)
+BuildJavaByteCode(OTS_Factory,NullParam)
+BuildJavaByteCode(OTS_FactoryList,NullParam)
+BuildJavaByteCode(OTS_FactoryCreator,NullParam)
+BuildJavaByteCode(OTS_Control,NullParam)
+BuildJavaByteCode(OTS_Current,NullParam)
+BuildJavaByteCode(OTS_ExplicitInterposition,NullParam)
+BuildJavaByteCode(OTS_ResourceRecord,NullParam)
+BuildJavaByteCode(OTS_AbstractRecord,NullParam)
+BuildJavaByteCode(OTS_Transaction,NullParam)
+BuildJavaByteCode(OTS_ServerTransaction,NullParam)
+BuildJavaByteCode(OTS_Synchronization,NullParam)
+BuildJavaByteCode(OTS_Utility,NullParam)
+BuildJavaByteCode(OTS_ActionHierarchy,NullParam)
+BuildJavaByteCode(OTS_ServerControl,NullParam)
+BuildJavaByteCode(OTS_TransactionReaper,NullParam)
+BuildJavaByteCode(OTS_Environment,NullParam)
+BuildJavaByteCode(OTS_Defaults,NullParam)
+BuildJavaByteCode(OTS_Thread,NullParam)
+
+SubDirectory(ArjunaOTS)
+SubDirectory(Interposition)
+SubDirectory(Filters)
+SubDirectory(tx)
+
+Clean(*.class)

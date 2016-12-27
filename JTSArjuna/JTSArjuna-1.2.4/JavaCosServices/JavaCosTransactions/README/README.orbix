@@ -1,0 +1,14 @@
+When using implicit context propagation and/or interposition, you must
+supply the correct filter on the command-line:
+
+	com.arjuna.JavaCosTransactions.Filters.Context.orbix for implicit propagation
+	only.
+
+	com.arjuna.JavaCosTransactions.Filters.Interposition.orbix for implicit and
+	interposition.
+
+It is important that *both* client and server use the same filter. For example:
+
+    java -DORBPostInit1=com.arjuna.JavaCosTransactions.Filters.Interposition.orbix.Init myclient
+
+    java -DORBPostInit1=com.arjuna.JavaCosTransactions.Filters.Interposition.orbix.Init myserver

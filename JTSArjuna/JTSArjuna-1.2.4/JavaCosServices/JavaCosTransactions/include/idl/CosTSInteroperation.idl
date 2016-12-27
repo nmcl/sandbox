@@ -1,0 +1,52 @@
+/*
+ * Copyright (C) 1996, 1997, 1998,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: CosTSInteroperation.idl,v 1.2 1998/11/12 09:00:24 nmcl Exp $
+ */
+
+#ifndef COSTSINTEROPERATION_IDL_
+#define COSTSINTEROPERATION_IDL_
+
+#pragma prefix "omg.org"
+
+//
+// If DRAFT3 is defined then this module is empty - it moved to CosTransactions
+//
+
+#ifndef DRAFT3
+
+#include <idl/CosTransactions.idl>
+
+module CosTSInteroperation
+{
+    struct otid_t
+    {
+	long formatID;
+	long bequal_length;
+	sequence <octet> tid;
+    };
+
+    struct TransIdentity
+    {
+	CosTransactions::Coordinator coordinator;
+	CosTransactions::Terminator terminator;
+	otid_t otid;
+    };
+
+    struct PropagationContext
+    {
+	unsigned long timeout;
+	TransIdentity current;
+	sequence <TransIdentity> parents;
+	any implementation_specific_data;
+    };
+};
+
+#endif
+#endif
+

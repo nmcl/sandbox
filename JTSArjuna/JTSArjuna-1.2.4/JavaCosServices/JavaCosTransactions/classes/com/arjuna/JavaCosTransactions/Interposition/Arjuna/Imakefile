@@ -1,0 +1,40 @@
+COMMENT 
+COMMENT Copyright (C) 1996, 1997, 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 1998/06/23 14:06:30 nmcl Exp $
+COMMENT
+
+AddToIdlFlags(-DDRAFT3 -I$(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+SOURCES = OTS_Interposition.java \
+	  OTS_ServerNestedAction.java \
+	  OTS_ServerTopLevelAction.java \
+	  InterposedHierarchy.java \
+	  OTS_InterpositionCreator.java
+
+OBJECTS = OTS_Interposition.class \
+	  OTS_ServerNestedAction.class \
+	  OTS_ServerTopLevelAction.class \
+	  InterposedHierarchy.class \
+	  OTS_InterpositionCreator.class
+
+PreprocessJavaCode(OTS_Interposition,NullParam)
+PreprocessJavaCode(OTS_ServerNestedAction,NullParam)
+PreprocessJavaCode(OTS_ServerTopLevelAction,NullParam)
+PreprocessJavaCode(InterposedHierarchy,NullParam)
+
+Target($(SOURCES))
+Target($(OBJECTS))
+
+BuildJavaByteCode(OTS_Interposition,NullParam)
+BuildJavaByteCode(OTS_ServerNestedAction,NullParam)
+BuildJavaByteCode(OTS_ServerTopLevelAction,NullParam)
+BuildJavaByteCode(InterposedHierarchy,NullParam)
+BuildJavaByteCode(OTS_InterpositionCreator,NullParam)
+
+Clean(*.class)
