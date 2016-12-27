@@ -1,0 +1,26 @@
+COMMENT 
+COMMENT Copyright (C) 1995, 1996, 1997,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1997/06/30 09:05:36 nmcl Exp $
+COMMENT
+
+SOURCES = ObjectStoreIterator.java \
+	  ObjectStoreException.java \
+	  LockStoreException.java
+
+OBJECTS = ObjectStoreIterator.class \
+	  ObjectStoreException.class \
+	  LockStoreException.class
+
+Target($(OBJECTS))
+
+BuildJavaByteCode(ObjectStoreIterator,NullParam)
+BuildJavaByteCode(LockStoreException,NullParam)
+BuildJavaByteCode(ObjectStoreException,NullParam)
+
+Clean(*.class)
