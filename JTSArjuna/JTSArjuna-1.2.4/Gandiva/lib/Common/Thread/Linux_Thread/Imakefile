@@ -1,0 +1,32 @@
+COMMENT
+COMMENT Copyright (C) 1994, 1995, 1996, 1997,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 1998/06/01 13:48:13 nmcl Exp $
+COMMENT
+
+SOURCES = Linux_Sem.cc \
+	  Linux_SpecificData.cc \
+	  Linux_Thread.cc \
+	  Linux_ThreadPool.cc \
+	  Linux_Condition.cc
+
+OBJECTS = Linux_Sem.o \
+	  Linux_SpecificData.o \
+	  Linux_Thread.o \
+	  Linux_ThreadPool.o \
+	  Linux_Condition.o
+
+Target($(OBJECTS))
+
+BuildObject(Linux_Sem,NullParam,NullParam)
+BuildObject(Linux_SpecificData,NullParam,NullParam)
+BuildObject(Linux_Thread,NullParam,NullParam)
+BuildObject(Linux_ThreadPool,NullParam,NullParam)
+BuildObject(Linux_Condition,NullParam,NullParam)
+
+AddDependences($(SOURCES),NullParam)

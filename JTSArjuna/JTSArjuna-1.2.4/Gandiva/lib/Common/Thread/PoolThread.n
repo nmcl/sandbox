@@ -1,0 +1,41 @@
+/*
+ * Copyright (C) 1996, 1997, 1998,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: PoolThread.n,v 1.1 1998/01/19 12:54:25 nmcl Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(POOLTHREAD_CC_)
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF Boolean PoolThread::passivated () const
+{
+    return _passivated;
+}
+
+INLINEF void PoolThread::doWork ()
+{
+    _result = _threadBody(_arg);
+}
+
+INLINEF Boolean PoolThread::getDestroyed () const
+{
+    return _destroyed;
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif
