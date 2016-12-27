@@ -1,0 +1,8 @@
+#!/bin/sh
+
+if test "'x$JTSARJUNA_HOME'" = "'x'"
+then
+    echo Environment variable JTSARJUNA_HOME is not set.
+else
+    putit -j TransactionService " -DOBJECTSTORE_DIR=$JTSARJUNA_HOME/ObjectStore  -DORBPostInit1=com.arjuna.orb.OrbixSetup OTS_Server " -jdk2 -classpath $CLASSPATH
+fi

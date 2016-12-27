@@ -1,0 +1,395 @@
+/*
+ * Copyright (C) 1997, 1998,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: AtomicTransaction.javatmpl,v 1.6 1998/11/12 09:01:58 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+#include <CosTransactions/CosTranNames.h>
+
+package com.arjuna.JavaCosTransactions.ArjunaOTS;
+
+import com.arjuna.JavaCosTransactions.OTS;
+import com.arjuna.JavaCosTransactions.OTS_Current;
+import org.omg.CosTransactions.*;
+
+import org.omg.CosTransactions.NoTransaction;
+import org.omg.CosTransactions.Unavailable;
+import org.omg.CosTransactions.InvalidControl;
+import org.omg.CosTransactions.HeuristicMixed;
+import org.omg.CosTransactions.HeuristicHazard;
+
+#include <CosTransactions/CosTranExceptions.h>
+
+import NAMESPACE_(CORBA).SystemException;
+import NAMESPACE_(CORBA).UNKNOWN;
+
+public class AtomicTransaction
+{
+
+public static final int TOP_LEVEL = 0;
+public static final int NESTED = 1;
+
+public AtomicTransaction ()
+    {
+	_theAction = null;
+    }
+
+public void finalize ()
+    {
+	if (_theAction != null)
+	{
+	    System.err.println("WARNING: AtomicTransaction - Running atomic action going out of scope. Will abort.");
+	    
+	    String name = null;
+
+	    try
+	    {
+		name = get_transaction_name();
+	    }
+	    catch (SystemException ex)
+	    {
+		System.err.println("Cannot determine transaction name!");
+	    }
+
+	    try
+	    {
+		rollback();  // tidies up for us.
+	    }
+	    catch (NoTransaction e)
+	    {
+		System.err.println("Could not abort transaction "+name);
+	    }
+	    catch (Exception e)
+	    {
+		System.err.println("Could not abort transaction "+name);
+	    }
+	}
+    }
+
+public synchronized String get_transaction_name () throws SystemException
+    {
+	String name = null;
+
+	if (_theAction != null)
+	{
+	    try
+	    {
+		Coordinator c = _theAction.get_coordinator();
+
+		if (c != null)
+		    name = c.get_transaction_name();
+
+		c = null;
+	    }
+	    catch (Unavailable e)
+	    {
+		System.err.println("WARNING - AtomicTransaction::get_transaction_name - transaction Unavailable.");
+	    }
+	}
+
+	return name;
+    }
+    
+public synchronized void begin () throws SystemException, SubtransactionsUnavailable, InvalidTransaction
+    {
+	// already begun?
+
+	if (_theAction != null)
+	{
+	    throw new InvalidTransaction();
+	}
+
+	OTS_Current current = OTS.current();
+
+	current.begin();
+
+	_theAction = current.get_control();
+    }
+    
+    /*
+     * Check that the current transaction is us.
+     * If not, rollback this transaction and leave current alone.
+     */
+    
+#ifdef ORB_OTS_SUPPORT
+public synchronized void commit (boolean report_heuristics) throws SystemException, NoTransaction, HeuristicMixed, HeuristicHazard, WrongTransaction // Sun have this as a UserException!!
+#else
+public synchronized void commit (boolean report_heuristics) throws SystemException, NoTransaction, HeuristicMixed, HeuristicHazard, TransactionRolledBack, WrongTransaction
+#endif
+    {
+	if (_theAction == null)
+	{
+	    throw new NoTransaction();
+	}
+
+	if (!validTransaction())
+	{
+	    throw new WrongTransaction();
+	}
+	
+	/*
+	 * OK to use current since we have just guaranteed that the
+	 * transaction is the same as current. Use current rather than
+	 * saved control since it will do thread tracking for us.
+	 */
+
+	OTS_Current current = OTS.current();
+	
+	/*
+	 * Release our handle first, since current is about
+	 * to destroy the action control.
+	 */
+	
+	_theAction = null;
+
+	current.commit(report_heuristics);
+    }
+
+    /*
+     * Check that the current transaction is us.
+     * If not, rollback this transaction and leave current alone.
+     */
+
+#ifdef ORB_OTS_SUPPORT    
+public synchronized void rollback () throws SystemException, NoTransaction, WrongTransaction // UserException!!
+#else
+public synchronized void rollback () throws SystemException, NoTransaction, WrongTransaction
+#endif
+    {
+	if (_theAction == null)
+	{
+	    throw new NoTransaction();
+	}
+
+	if (!validTransaction())
+	{
+	    throw new WrongTransaction();
+	}
+	
+	/*
+	 * OK to use current since we have just guaranteed that the
+	 * transaction is the same as current. Use current rather than
+	 * saved control since it will do thread tracking for us.
+	 */
+
+	OTS_Current current = OTS.current();
+
+	_theAction = null;
+
+	current.rollback();
+    }
+
+public synchronized RecoveryCoordinator registerResource (Resource r) throws SystemException, Inactive
+    {
+	RecoveryCoordinator rc = null;
+
+	if (_theAction == null)
+	{
+	    throw new Inactive();
+	}
+	else
+	{
+	    Coordinator coord = null;
+
+	    try
+	    {
+		coord = _theAction.get_coordinator();
+	    }
+	    catch (Unavailable e)
+	    {
+		coord = null;
+	    }
+
+	    if (coord != null)
+	    {
+		rc = coord.register_resource(r);
+
+		coord = null;
+	    }
+	    else
+		throw new UNKNOWN();  // what else to raise?
+	}
+
+	return rc;
+    }
+
+public synchronized void registerSubtranAware (SubtransactionAwareResource r) throws SystemException, Inactive, NotSubtransaction
+    {
+	if (_theAction == null)
+	{
+	    throw new Inactive();
+	}
+	else
+	{
+	    Coordinator coord = null;
+
+	    try
+	    {
+		coord = _theAction.get_coordinator();
+	    }
+	    catch (Unavailable e)
+	    {
+		coord = null;
+	    }
+
+	    if (coord != null)
+	    {
+		if (coord.is_top_level_transaction())
+		{
+		    coord.register_subtran_aware(r);
+		    coord = null;
+		}
+		else
+		{
+		    coord = null;
+
+		    throw new NotSubtransaction();
+		}
+	    }
+	    else
+		throw new UNKNOWN(); // what else to raise?	    
+	}
+    }
+    
+    /*
+     * Should probably remove ability to get control as this allows
+     * a user to commit/abort outside the control of the AtomicTransaction.
+     */
+  
+public synchronized Control control () throws SystemException, NoTransaction
+    {
+	if (_theAction == null)
+	{
+	    throw new NoTransaction();
+	}
+	else
+	    return _theAction;
+    }
+
+#if defined(CORBA_2_2) || defined(CORBA_2_1)
+public synchronized org.omg.CosTransactions.Status get_status () throws SystemException
+#else
+public synchronized int get_status () throws SystemException
+#endif
+    {
+#if defined(CORBA_2_2) || defined(CORBA_2_1)
+	org.omg.CosTransactions.Status stat = Status.StatusNoTransaction;
+#else
+	int stat = Status.StatusNoTransaction;
+#endif	
+
+	if (_theAction != null)
+	{
+	    try
+	    {
+		Coordinator c = _theAction.get_coordinator();
+
+		if (c != null)
+		{
+		    stat = c.get_status();
+		    c = null;
+		}
+	    }
+	    catch (Unavailable e)
+	    {
+	    }
+	}
+
+	return stat;
+    }
+
+    /* Allow action commit to be supressed */
+    
+public synchronized void rollbackOnly () throws SystemException, NoTransaction
+    {
+	if (_theAction != null)
+	{
+	    Coordinator c = null;
+
+	    try
+	    {
+		c = _theAction.get_coordinator();
+		
+		c.rollback_only();
+		
+		c = null;
+	    }
+	    catch (Inactive e)
+	    {
+		c = null;
+		    
+		throw new NoTransaction();
+	    }
+	    catch (Unavailable e)
+	    {
+		throw new NoTransaction();
+	    }
+	}
+	else
+	    throw new NoTransaction();
+    }
+    
+    /*
+     * If this transaction current?
+     * Assume we have checked that we are actually
+     * a transaction!
+     *
+     * If not valid then abort this transaction here. Leave
+     * current alone.
+     */
+
+protected final boolean validTransaction ()
+    {
+	Coordinator coord = null;
+	Control currControl = null;
+	Coordinator currCoord = null;
+	boolean valid = false;
+	OTS_Current current = OTS.current();
+    
+	try
+	{
+	    coord = _theAction.get_coordinator();
+	    currControl = current.get_control();
+
+	    if (currControl != null)
+	    {
+		currCoord = currControl.get_coordinator();
+		valid = coord.is_same_transaction(currCoord);
+	    }
+	
+	    if (!valid)
+	    {
+		String transactionName = this.get_transaction_name();
+		Terminator term = _theAction.get_terminator();
+
+		System.err.println("WARNING:AtomicTransaction - terminated out of sequence. Aborting "+transactionName);
+
+		if (term != null)
+		    term.rollback();
+		else
+		    System.err.println("WARNING:AtomicTransaction - cannot abort "+transactionName);
+
+		transactionName = null;
+		term = null;
+	    }
+	}
+	catch (Exception e)
+	{
+	}
+
+	coord = null;
+	currControl = null;
+	currCoord = null;
+
+	return valid;
+    }
+
+protected Control _theAction;
+
+};

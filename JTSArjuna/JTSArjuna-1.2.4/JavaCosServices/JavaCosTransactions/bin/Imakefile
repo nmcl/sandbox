@@ -1,0 +1,36 @@
+COMMENT 
+COMMENT Copyright (C) 1996, 1997, 1998, 1999,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.9.4.1.2.1 1999/09/16 10:28:33 nmcl Exp $
+COMMENT
+
+AddToIdlFlags(-DDRAFT5 -I$(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+SOURCES = OTS_Server.java
+
+OBJECTS = OTS_Server.class
+
+Target($(SOURCES))
+
+#ifdef BUILDUTILITIES
+Target($(OBJECTS))
+#endif
+
+BuildJavaByteCode(OTS_Server,NullParam)
+
+PreprocessJavaCode(OTS_Server,NullParam)
+
+#ifdef INSTALLUTILITIES
+InstallFile(/bin,OTS)
+InstallFile(/bin,ots_setup.bat)
+InstallFile(/bin,Ots.bat)
+InstallFile(/bin,OTS.orbix)
+InstallProgram(/bin,OTS_Server.class)
+#endif
+
+Clean(*.class)

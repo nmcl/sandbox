@@ -1,0 +1,46 @@
+COMMENT 
+COMMENT Copyright (C) 1996, 1997, 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1999/09/10 14:54:06 nmcl Exp $
+COMMENT
+
+SOURCES = OTS_ClientContextFilter.java \
+	  OTS_ClientContextFilterFactory.java \
+	  OTS_ServerContextFilter.java \
+	  OTS_ServerContextFilterFactory.java \
+	  OTS_ClientContextBindFilter.java \
+	  OTS_ContextFilterManager.java \
+	  Init.java
+
+OBJECTS = OTS_ContextFilterManager.class \
+	  OTS_ClientContextFilter.class \
+	  OTS_ClientContextFilterFactory.class \
+	  OTS_ServerContextFilter.class \
+	  OTS_ServerContextFilterFactory.class \
+	  OTS_ClientContextBindFilter.class \
+	  Init.class
+
+PreprocessJavaCode(OTS_ClientContextFilter,NullParam)
+PreprocessJavaCode(OTS_ServerContextFilter,NullParam)
+PreprocessJavaCode(OTS_ClientContextBindFilter,NullParam)
+PreprocessJavaCode(Init,NullParam)
+
+#ifdef HAVE_FILTER
+Target($(SOURCES))
+Target($(OBJECTS))
+#endif
+
+BuildJavaByteCode(OTS_ClientContextFilter,NullParam)
+BuildJavaByteCode(OTS_ClientContextFilterFactory,NullParam)
+BuildJavaByteCode(OTS_ServerContextFilter,NullParam)
+BuildJavaByteCode(OTS_ServerContextFilterFactory,NullParam)
+BuildJavaByteCode(OTS_ClientContextBindFilter,NullParam)
+BuildJavaByteCode(OTS_ContextFilterManager,NullParam)
+BuildJavaByteCode(Init,NullParam)
+
+Clean(*.class)
