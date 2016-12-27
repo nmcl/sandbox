@@ -1,0 +1,50 @@
+This is  version 1.2.4 of JTSArjuna  (internal  build 2.9.0) for Sun's
+JDK1.2  mini-ORB. Here is  a list of changes  which  have not yet been
+incorporated into the manual, and restrictions imposed by JDK 1.2:
+
+(i) Sun's mini-ORB does not support filters/interceptors. As a result,
+it is not possible to  do implicit transaction context propagation and
+interposition. Therefore,  the  following examples will  not build/run
+correctly, but are still  provided to given an  indication of what the
+code would look like:
+
+	Clients:
+
+	Arjuna/ImplicitArjunaClient
+	Implicit
+	Interposition
+	Transactions/RecursiveClient
+
+	Servers:
+
+	Servers/StackServer
+	Servers/TranGridServer
+	Servers/ImplGridServer
+
+(ii) The  name of  the properties file  where properties  such as  the
+location of the persistent object store, and the licencing information
+can be written has been changed to Arjuna.properties.  By default this
+should reside in the /etc directory of the installation. However, it's
+location can be overridden at runtime by using the PROPERTIES_FILE
+option on the command line. For example:
+
+	java -DPROPERTIES_FILE=C:\\temp\\foo.props
+
+(iii)  If using the startup  scripts (e.g., OTS,  OTS.bat, etc.) check
+that any properties specified meet your requirements.
+
+(iv) Remember to specify the JTSARJUNA_HOME environment variable.
+
+Note: if  you   write idl    which requires  CosTransactions.idl    or
+ArjunaOTS.idl then you will need to do one of the following, depending
+upon your ORB:
+
+VisiBroker: use the -idl2package option for the idl compiler.
+	    -idl2package "::CosTransactions" org.omg.CosTransactions
+	    -idl2package "::ArjunaOTS" com.arjuna.ArjunaOTS
+
+In addition to using the ORBInterface methods  initORB and initBOA you
+must also  use  shutdownBOA and  shutdownORB  (in that   order) before
+terminating   your application. This  is to  allow   the OTS to do any
+tidying up that is necessary.
+

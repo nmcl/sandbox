@@ -1,0 +1,11 @@
+Do not set OTS_TRANSACTION_MANAGER for the servers.
+
+Server: ExplicitStackServer for ExplicitArjunaClient (OrbixWeb registered
+	server name ExplicitStack).
+	StackServer for ImplicitArjunaClient (OrbixWeb registered server
+	name Stack).
+
+expected_output1: from ExplicitArjunaClient
+
+expected_output2: from ImplicitArjunaClient
+

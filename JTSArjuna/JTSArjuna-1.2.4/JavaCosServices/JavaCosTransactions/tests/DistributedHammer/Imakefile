@@ -1,0 +1,33 @@
+COMMENT 
+COMMENT Copyright (C) 1995, 1996, 1997, 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.3 1999/05/14 10:18:13 nmcl Exp $
+COMMENT
+
+AddToIdlFlags(-DDRAFT3 -I$(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+SOURCES = DistributedHammer1.java \
+	  DistributedHammer2.java \
+	  DistributedHammer3.java
+
+TESTOBJECTS = DistributedHammer1.class \
+	      DistributedHammer2.class \
+	      DistributedHammer3.class
+
+Target($(SOURCES))
+Target($(TESTOBJECTS))
+
+PreprocessJavaCode(DistributedHammer1,NullParam)
+PreprocessJavaCode(DistributedHammer2,NullParam)
+PreprocessJavaCode(DistributedHammer3,NullParam)
+
+BuildJavaByteCode(DistributedHammer1,NullParam)
+BuildJavaByteCode(DistributedHammer2,NullParam)
+BuildJavaByteCode(DistributedHammer3,NullParam)
+
+Clean(*.class)
