@@ -1,0 +1,341 @@
+/*
+ * Copyright (C) 1997, 1998, 1999,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: OTS_Utility.javatmpl,v 1.8.2.2 1999/02/16 14:56:14 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package com.arjuna.JavaCosTransactions;
+
+import com.arjuna.JavaGandiva.Common.Uid;
+import com.arjuna.JavaArjunaLite.Atomic.BasicAction;
+import com.arjuna.JavaCosTransactions.tx.XID;
+import com.arjuna.JavaCosTransactions.ArjunaOTS.Arjuna;
+import org.omg.CosTransactions.*;
+import com.arjuna.ArjunaOTS.*;
+import java.io.PrintStream;
+import NAMESPACE_(CORBA).CompletionStatus;
+
+import org.omg.CosTransactions.Unavailable;
+import NAMESPACE_(CORBA).BAD_PARAM;
+import NAMESPACE_(CORBA).NO_MEMORY;
+import NAMESPACE_(CORBA).SystemException;
+import java.lang.IllegalStateException;
+
+public class OTS_Utility
+{
+
+    /*
+     * Given a Control_ptr determine if this is a reference to a local
+     * action, and if so return the raw BasicAction pointer.
+     */
+    
+public static BasicAction localAction (Control control)
+    {
+	if (control == null)
+	    return null;
+
+	/*
+	 * Can we not use is_local within visibroker?
+	 */
+	
+	try
+	{
+	    UidCoordinator coord = OTS_Utility.getUidCoordinator(control);
+
+	    if (coord != null)
+	    {
+		Uid u = OTS_Utility.getUid(coord);
+		
+		coord = null;
+
+		if (BasicAction.allActions != null)
+		    return (BasicAction) BasicAction.allActions.lookFor(u);
+	    }
+	    else
+		throw new BAD_PARAM();
+	}
+	catch (Exception e)
+	{
+	    /*
+	     * Can't be an Arjuna action, so ignore.
+	     */
+	}
+
+	return null;
+    }
+
+public static OTS_Control localControl (Control control)
+    {
+	if (control == null)
+	    return null;
+    
+	try
+	{
+	    UidCoordinator uidCoord = OTS_Utility.getUidCoordinator(control);
+
+	    if (uidCoord != null)
+	    {
+		Uid u = OTS_Utility.getUid(uidCoord);
+		OTS_Control toReturn = null;
+
+		uidCoord = null;
+
+		if (OTS_Control.allControls != null)
+		    toReturn = (OTS_Control) OTS_Control.allControls.lookFor(u);
+
+		u = null;
+
+		return toReturn;
+	    }
+	    else
+		throw new BAD_PARAM();
+	}
+	catch (Exception e)
+	{
+	    /*
+	     * Can't be an Arjuna action, so ignore.
+	     */
+	}
+
+	return null;
+    }
+
+public static org.omg.CosTransactions.otid_t uidToOtid (String theUid)
+    {
+	if (theUid == null)
+	    return null;
+	
+	otid_t otid = new otid_t();
+	byte[] b = theUid.getBytes();
+
+	otid.tid = new byte[b.length+1];
+	otid.bequal_length = b.length+1;
+
+	for (int i = 0; i < b.length; i++)
+	    otid.tid[i] = b[i];
+
+	otid.tid[b.length] = (byte) '\0';
+
+	b = null;
+	
+	return otid;
+    }
+
+    /*
+     * If we cannot deal with the otid then we could simply generate
+     * a new Uid. We would need to keep the original otid in case
+     * the transaction either retransmits it or the application asks
+     * for it (e.g., via the PropagationContext).
+     */
+    
+public static Uid otidToUid (org.omg.CosTransactions.otid_t otid)
+    {
+	if (otid.bequal_length > 0)
+	{
+	    byte[] theUid = new byte[otid.bequal_length-1];  // don't need null terminating character
+
+	    for (int i = 0; i < otid.bequal_length -1; i++)
+		theUid[i] = otid.tid[i];
+
+	    Uid u = new Uid(new String(theUid));  // errors in string give NIL_UID
+
+	    theUid = null;
+
+	    return u;
+	}
+	else
+	    return Uid.nullUid();
+    }
+
+public static UidCoordinator getUidCoordinator (Control control)
+    {
+	if (control == null)
+	    return null;
+    
+	UidCoordinator toReturn = null;
+    
+	try
+	{
+	    Coordinator coord = control.get_coordinator();
+
+	    if (coord != null)
+	    {
+		toReturn = getUidCoordinator(coord);
+
+		coord = null;
+	    }
+	    else
+		throw new BAD_PARAM();
+	}
+	catch (Exception e)
+	{
+	    /*
+	     * Can't be an Arjuna action, so ignore.
+	     */
+
+	    toReturn = null;
+	}
+    
+	return toReturn;
+    }
+
+public static UidCoordinator getUidCoordinator (Coordinator coord)
+    {
+	if (coord == null)
+	    return null;
+    
+	UidCoordinator toReturn = null;
+
+	try
+	{
+	    toReturn = SCOPED_NARROW_(com.arjuna.ArjunaOTS,UidCoordinator,coord);
+
+	    if (toReturn == null)
+		throw new BAD_PARAM();
+	}
+	catch (Exception e)
+	{
+	    /*
+	     * Can't be an Arjuna action, so ignore.
+	     */
+
+	    toReturn = null;
+	}
+
+	return toReturn;
+    }
+
+public static Uid getUid (UidCoordinator coord)
+    {
+	if (coord == null)
+	    return Uid.nullUid();
+
+	String theUid = null;
+	Uid uid = null;
+
+	/*
+	 * Try twice, and if this still fails then
+	 * throw NO_MEMORY.
+	 */
+
+	for (int i = 0; i < 1; i++)
+	{
+	    try
+	    {
+		theUid = coord.uid();
+		uid = new Uid(theUid);
+
+		theUid = null;
+
+		return uid;
+	    }
+	    catch (OutOfMemoryError e)
+	    {
+		System.gc();
+	    }
+	}
+
+	throw new NO_MEMORY(0, CompletionStatus.COMPLETED_NO);
+    }
+ 
+public static void printHierarchy (PropagationContext ctx, PrintStream strm)
+    {
+	int depth = ((ctx.parents != null) ? ctx.parents.length : 0);
+
+	strm.print("PropagationContext:");
+    
+	for (int i = depth -1; i >= 0; i--)
+	{
+	    if (ctx.parents[i] != null)
+		strm.print("\n"+OTS_Utility.otidToUid(ctx.parents[i].otid));
+	}
+
+	strm.print("\n"+OTS_Utility.otidToUid(ctx.currentTransaction.otid));
+    }
+
+    /*
+     * Any need for the inverse operation?
+     * Could easily do it for Arjuna transactions only.
+     */
+    
+public static com.arjuna.JavaCosTransactions.tx.XID getXid (Control cont, boolean branch) throws IllegalStateException
+    {
+	if (cont == null)
+	    throw new IllegalStateException();
+
+	if (cont instanceof OTS_Control)
+	{
+	    try
+	    {
+		UidCoordinator arjcoord = getUidCoordinator(cont);
+		Uid u = getUid(arjcoord);
+		String s = u.stringForm();
+		int uidLen = s.length();
+		
+		if (uidLen > XID.MAXGTRIDSIZE)  // Uid is too long!!!!
+		    throw new IllegalStateException();
+		else
+		{
+		    XID xid = new XID();
+		    byte[] b = s.getBytes();
+		    
+		    xid.formatID = Arjuna.XID();
+		    xid.gtrid_length = uidLen;
+
+		    /*
+		     * Which way round do we fill in the structure?
+		     */
+
+		    for (int i = 0; i < uidLen; i++)
+		    {
+			xid.data[i] = b[i];
+		    }
+
+		    if (branch)
+		    {
+			Uid branchUid = new Uid();
+			String bs = branchUid.stringForm();
+			int bsLen = bs.length();
+
+			b = bs.getBytes();
+
+			if (bsLen > XID.MAXBQUALSIZE) // Uid is too long!!!!
+			    throw new IllegalStateException();
+			else
+			{
+			    xid.bqual_length = bsLen;
+
+			    for (int i = 0; i < bsLen; i++)
+				xid.data[xid.gtrid_length+i] = b[i];
+			}
+
+			bs = null;
+			branchUid = null;
+		    }
+		    else
+			xid.bqual_length = 0;
+		    
+		    b = null;
+		    s = null;
+		    u = null;
+
+		    return xid;
+		}
+	    }
+	    catch (Exception e)
+	    {
+		throw new IllegalStateException();
+	    }
+	}
+	else
+	    throw new IllegalStateException();
+    }
+    
+};

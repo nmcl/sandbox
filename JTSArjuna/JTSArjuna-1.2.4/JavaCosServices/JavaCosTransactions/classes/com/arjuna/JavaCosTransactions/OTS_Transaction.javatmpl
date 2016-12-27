@@ -1,0 +1,1441 @@
+/*
+ * Copyright (C) 1996, 1997, 1998, 1999,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: OTS_Transaction.javatmpl,v 1.19.2.1 1999/04/16 13:47:36 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+#include <CosTransactions/CosTranNames.h>
+
+package com.arjuna.JavaCosTransactions;
+
+import com.arjuna.OrbCommon.ORBInterface;
+import com.arjuna.OrbCommon.ORBPropertyManager;
+import com.arjuna.JavaArjunaLite.Atomic.BasicAction;
+import com.arjuna.JavaArjunaLite.Atomic.ActionStatus;
+import com.arjuna.JavaArjunaLite.Atomic.AbstractRecord;
+import com.arjuna.JavaGandiva.Common.Uid;
+import com.arjuna.JavaGandiva.Template.*;
+import com.arjuna.JavaCosTransactions.ArjunaOTS.Arjuna;
+import org.omg.CosTransactions.*;
+import com.arjuna.ArjunaOTS.*;
+import NAMESPACE_(CORBA).CompletionStatus;
+
+import NAMESPACE_(CORBA).SystemException;
+import NAMESPACE_(CORBA).BAD_PARAM;
+import NAMESPACE_(CORBA).UNKNOWN;
+import NAMESPACE_(CORBA).BAD_OPERATION;
+
+#include <CosTransactions/CosTranExceptions.h>
+#include <CosTransactions/OTS_Exceptions.h>
+
+/*
+ * OTS implementation class.
+ *
+ * Implements both the Coordinator & Terminator interfaces of OTS
+ * as a single class.
+ *
+ * Note, because Java does not support multiple inheritance we
+ * must make use of the tie facility (uuuggghhhh!!!!)
+ */
+
+public class OTS_Transaction extends com.arjuna.JavaArjunaLite.Atomic.BasicAction implements SCOPED_TIE_CLASS_(com.arjuna.ArjunaOTS,ArjunaTransaction)
+{
+
+public OTS_Transaction (Control myParent)
+    {
+	this(myParent, null);
+    }
+    
+public OTS_Transaction (Control myParent, OTS_Transaction parent)
+    {
+	super();
+
+	parentTransaction = parent;
+	hashCode = 0;
+	topLevelHashCode = 0;
+	controlHandle = null;	
+	parentHandle = myParent;
+	currentStatus = org.omg.CosTransactions.Status.StatusUnknown;
+	_synchs = null;
+
+#ifdef FULLY_CHECKED_TRANSACTIONS
+	transactionCreator = null;
+#endif	
+
+	rootAction = null;
+	_synchs = null;
+
+	super.Begin(parent);
+
+	/*
+	 * Add uid of this action to parent.
+	 */
+
+	if (parent != null)
+	    parent.addChildAction(this);
+
+	currentStatus = determineStatus(this);
+	rootAction = this;
+	
+	while ((rootAction.parent()) != null)
+	    rootAction = rootAction.parent();
+
+	/*
+	 * Do this once to avoid overhead.
+	 */
+    
+	hashCode = get_uid().hashCode();
+	topLevelHashCode = rootAction.get_uid().hashCode();
+
+#ifdef FULLY_CHECKED_TRANSACTIONS
+	/*
+	 * Fully checked transactions only allow the thread which began the transaction
+	 * to terminate it. We get the id of the beginning thread here.
+	 *
+	 * The spec. says nothing about crash recovery, so we better assume it can always
+	 * complete a transaction!
+	 *
+	 * If the creating thread dies before terminating the transaction then we have a
+	 * problem. Requires change to Thread class to abort outstanding transactions in
+	 * this case.
+	 *
+	 * Also, transaction timeouts cause abortion of the transaction by a *different*
+	 * thread! This must work even in the presence of checked transactions!
+	 */
+
+	transactionCreator = Thread.currentThread();
+#endif	
+    }
+
+public OTS_Transaction (Uid actUid, Control myParent)
+    {
+	this(actUid, myParent, null);
+    }
+    
+public OTS_Transaction (Uid actUid, Control myParent, OTS_Transaction parent)
+    {
+	super(actUid);
+
+	parentTransaction = parent;
+	hashCode = 0;
+	topLevelHashCode = 0;
+	controlHandle = null;
+	parentHandle = myParent;
+	currentStatus = org.omg.CosTransactions.Status.StatusUnknown;
+
+#ifdef FULLY_CHECKED_TRANSACTIONS
+	transactionCreator = null;
+#endif
+	rootAction = null;
+	_synchs = null;
+
+	super.Begin(parent);
+
+	/*
+	 * Add uid of this action to parent.
+	 */
+
+	if (parent != null)
+	    parent.addChildAction(this);
+    
+	currentStatus = determineStatus(this);
+	rootAction = this;
+	
+	while ((rootAction.parent()) != null)
+	    rootAction = rootAction.parent();
+	
+	/*
+	 * Do this once to avoid overhead.
+	 */
+    
+	hashCode = actUid.hashCode();
+	topLevelHashCode = rootAction.get_uid().hashCode();
+
+#ifdef FULLY_CHECKED_TRANSACTIONS
+	/*
+	 * Fully checked transactions only allow the thread which began the transaction
+	 * to terminate it. We get the id of the beginning thread here.
+	 */
+
+	transactionCreator = Thread.currentThread();
+#endif
+    }
+
+    /*
+     * Memory management is much better in Java, so we don't have the
+     * problem of the Control referencing the transaction and vice versa.
+     */
+
+public void finalize ()
+    {
+	super.finalize();
+	
+	if (_synchs != null)
+	{
+	    // should not happen if the transaction has terminated
+	    
+	    System.err.println("OTS_Transaction.finalize() - none zero synchronization list!");
+
+	    // "delete" list anyway, but don't do anything with list elements
+	    
+	    _synchs = null;
+	}
+
+	parentHandle = null;
+	controlHandle = null;
+    }
+
+public final synchronized Control getControlHandle ()
+    {
+	return controlHandle;
+    }
+
+public final synchronized void setControlHandle (Control handle)
+    {
+	controlHandle = handle;
+    }
+    
+#ifdef ORB_OTS_SUPPORT
+public synchronized void commit (boolean report_heuristics) throws SystemException, HeuristicMixed, HeuristicHazard    
+#else
+public synchronized void commit (boolean report_heuristics) throws SystemException, HeuristicMixed, HeuristicHazard, TransactionRolledBack
+#endif
+    {
+#ifdef FULLY_CHECKED_TRANSACTIONS
+	if (!checkAccess())
+	{
+	    throw new NO_PERMISSION(0, CompletionStatus.COMPLETED_NO);
+	}
+#endif
+	int outcome = super.status();
+
+	if ((outcome == ActionStatus.RUNNING) || (outcome == ActionStatus.ABORT_ONLY)) // have we already been committed?
+	{
+	    try
+	    {
+		beforeCompletion();
+	    }
+	    catch (Exception e)
+	    {
+		/*
+		 * Don't do anything, since we will have marked the
+		 * transaction as rollback only.
+		 */
+	    }
+	    
+	    /*
+	     * Remove the uid of this action from the parent.
+	     */
+
+	    if (parentHandle != null)
+	    {
+		parentTransaction.removeChildAction(this);
+	    }
+
+	    outcome = super.End(report_heuristics);
+
+	    org.omg.CosTransactions.Status myStatus = org.omg.CosTransactions.Status.StatusUnknown;
+		
+	    /*
+	     * Just in case some error happens here!
+	     */
+
+	    try
+	    {
+		myStatus = get_status();
+	    }
+	    catch (Exception e)
+	    {
+		/*
+		 * Just in case ...
+		 */
+		
+		myStatus = Status.StatusUnknown;
+	    }
+
+	    try
+	    {
+		afterCompletion(myStatus);
+	    }
+	    catch (Exception e)
+	    {
+	    }
+
+	    _synchs = null;
+
+	    currentStatus = determineStatus(this);
+	}
+	else
+	{
+	    /*
+	     * Differentiate between us committing the transaction
+	     * and some other thread doing it.
+	     */
+
+#ifdef ORB_OTS_SUPPORT
+	    throw new InvalidTransaction(0, CompletionStatus.COMPLETED_NO);
+#else
+	    throw new BAD_OPERATION(INVALID_ACTION, CompletionStatus.COMPLETED_NO);
+#endif	    
+	}
+
+	switch (outcome)
+	{
+	case ActionStatus.COMMITTED:
+	case ActionStatus.H_COMMIT:
+	    return;
+	case ActionStatus.ABORTED:
+	case ActionStatus.H_ROLLBACK:
+#ifdef ORB_OTS_SUPPORT	    
+	    throw new TransactionRolledBack(0, CompletionStatus.COMPLETED_NO);
+#else
+	    throw new TransactionRolledBack();
+#endif	    
+	case ActionStatus.H_MIXED:
+	    throw new HeuristicMixed();
+	case ActionStatus.H_HAZARD:
+	default:
+	    throw new HeuristicHazard();
+	}
+    }
+
+public synchronized void rollback () throws SystemException
+    {
+#ifdef FULLY_CHECKED_TRANSACTIONS
+	if (!checkAccess())
+	{
+	    throw new NO_PERMISSION(0, CompletionStatus.COMPLETED_NO);
+	}
+#endif
+	int status = super.status();
+	
+	if ((status == ActionStatus.RUNNING) ||
+	    (status == ActionStatus.ABORT_ONLY)) // already aborted?
+	{
+	    if (OTS_Transaction._syncOn)
+	    {
+		try
+		{
+		    beforeCompletion();
+		}
+		catch (Exception e)
+		{
+		    /*
+		     * Don't do anything - we're about to rollback anyway!
+		     */
+		}
+	    }
+	    else
+	    {
+		/*
+		 * If we have any synchronizations delete them now. Can only be
+		 * a top-level action.
+		 */
+
+		_synchs = null;
+	    }
+
+	    /*
+	     * Remove uid of this action from parent even if remote.
+	     */
+
+	    if (parentHandle != null)
+	    {
+		parentTransaction.removeChildAction(this);
+	    }
+
+	    super.Abort();
+
+	    currentStatus = determineStatus(this);
+
+	    if (OTS_Transaction._syncOn)
+	    {
+		try
+		{
+		    afterCompletion(currentStatus);
+		}
+		catch (Exception e)
+		{
+		}
+	    }
+	}
+	else
+	{
+	    /*
+	     * Differentiate between us committing the transaction
+	     * and some other thread doing it.
+	     */
+
+#ifdef ORB_OTS_SUPPORT
+	    throw new InvalidTransaction(0, CompletionStatus.COMPLETED_NO);
+#else
+	    throw new BAD_OPERATION(INVALID_ACTION, CompletionStatus.COMPLETED_NO);
+#endif	    
+	}
+    }
+
+public synchronized org.omg.CosTransactions.Status get_status () throws SystemException
+    {
+	currentStatus = determineStatus(this);
+	
+	return currentStatus;
+    }
+
+public org.omg.CosTransactions.Status get_parent_status () throws SystemException
+    {
+	if (parentTransaction != null)
+	    return parentTransaction.get_status();
+	else
+	    return get_status();
+    }
+
+public org.omg.CosTransactions.Status get_top_level_status () throws SystemException
+    {
+	if (rootAction != null)
+	    return determineStatus(rootAction);
+	else
+	    return get_status();
+    }
+
+public boolean is_same_transaction (Coordinator tc) throws SystemException
+    {
+	if (tc == null)
+	    return false;
+	
+	/*
+	 * Cut down the amount of work we need to do. Hash values
+	 * for the same transaction must be the same!
+	 */
+
+	if (tc.hash_transaction() != hash_transaction())
+	    return false;
+
+	boolean result = false;
+    
+	try
+	{
+	    UidCoordinator ptr = SCOPED_NARROW_(com.arjuna.ArjunaOTS,UidCoordinator,tc);
+
+	    if (ptr != null)
+	    {
+		/*
+		 * Must be an Arjuna coordinator.
+		 */
+
+		String myUid = uid();
+		String compareUid = ptr.uid();
+
+		if (myUid.compareTo(compareUid) == 0)
+		    result = true;
+
+		myUid = null;
+		compareUid = null;
+
+		ptr = null;
+	    }
+	    else
+		throw new BAD_PARAM();
+	}
+	catch (SystemException e)
+	{
+	    /*
+	     * Narrow failed, so can't be an Arjuna Uid. Therefore, the
+	     * answer must be false.
+	     */
+	}
+	
+	return result;
+    }
+
+public boolean is_related_transaction (Coordinator tc) throws SystemException
+    {
+	if (tc == null)
+	    return false;
+	
+	boolean result = false;
+    
+	try
+	{
+	    UidCoordinator ptr = SCOPED_NARROW_(com.arjuna.ArjunaOTS,UidCoordinator,tc);
+
+	    if (ptr != null)
+	    {
+		/*
+		 * Must be an Arjuna coordinator.
+		 */
+
+		/*
+		 * If they have the same parent, then they
+		 * must be related.
+		 */
+		
+		String myTLUid = topLevelUid();
+		String compareTLUid = ptr.topLevelUid();
+
+		if (myTLUid.compareTo(compareTLUid) == 0)
+		    result = true;
+
+		myTLUid = null;
+		compareTLUid = null;
+
+		ptr = null;
+	    }
+	    else
+		throw new BAD_PARAM();
+	}
+	catch (SystemException e)
+	{
+	    /*
+	     * Narrow failed, so can't be an Arjuna Uid. Therefore, the
+	     * answer must be false.
+	     */
+	}
+    
+	return result;
+    }
+
+/*
+ * Is this transaction an ancestor of tc?
+ */
+ 
+public boolean is_ancestor_transaction (Coordinator tc) throws SystemException
+    {
+	if (tc == null)
+	    return false;
+
+	if (is_same_transaction(tc))
+	    return true;
+	else
+	{
+	    /*
+	     * Are we related?
+	     */
+	    
+	    if (is_related_transaction(tc))
+	    {
+		if (is_descendant_transaction(tc))
+		    return false;
+		else
+		    return true;
+	    }
+	    else
+		return false;
+	}
+    }
+
+/*
+ * Is this transaction a descendant of tc?
+ */
+ 
+public boolean is_descendant_transaction (Coordinator tc) throws SystemException
+    {
+	if (tc == null)
+	    return false;
+
+	try
+	{
+	    UidCoordinator ptr = SCOPED_NARROW_(com.arjuna.ArjunaOTS,UidCoordinator,tc);
+
+	    if (ptr != null)
+	    {
+		/*
+		 * Must be an Arjuna coordinator.
+		 */
+
+		Uid lookingFor = new Uid(ptr.uid());
+		BasicAction lookingAt = this;
+
+		while (lookingAt != null)
+		{
+		    if (lookingAt.get_uid().equals(lookingFor))
+			return true;
+		    else
+			lookingAt = lookingAt.parent();
+		}
+
+		ptr = null;
+	    }
+	    else
+		throw new BAD_PARAM();
+	}
+	catch (SystemException e)
+	{
+	    /*
+	     * Narrow failed, so can't be an Arjuna Uid. Therefore, the
+	     * answer must be false.
+	     */
+	}
+
+	return false;
+    }
+
+public boolean is_top_level_transaction () throws SystemException
+    {
+	return (this == rootAction);
+    }
+
+public int hash_transaction () throws SystemException
+    {
+	return hashCode;
+    }
+
+public int hash_top_level_tran () throws SystemException
+    {
+	return topLevelHashCode;
+    }
+
+    /*
+     * Resources are only registered with the current transaction, whereas subtransaction
+     * aware resources are registered with their parents when the current transaction ends.
+     */
+
+public RecoveryCoordinator register_resource (Resource r) throws SystemException, Inactive
+    {
+	if (r == null)
+	    throw new BAD_PARAM(0, CompletionStatus.COMPLETED_NO);
+
+	if (get_status() != Status.StatusActive)
+	{
+	    if (currentStatus == Status.StatusMarkedRollback)
+	    {
+#ifdef ORB_OTS_SUPPORT
+		throw new TransactionRolledBack(0, CompletionStatus.COMPLETED_NO);
+#else
+		throw new BAD_OPERATION(ATOMICACTION_ROLLBACK, CompletionStatus.COMPLETED_NO);
+#endif
+	    }
+	    else
+		throw new Inactive();
+	}
+
+	AbstractRecord corbaRec = null;
+	BasicAction registerIn = this;
+
+	try
+	{
+	    SubtransactionAwareResource staResource = SCOPED_NARROW_(org.omg.CosTransactions,SubtransactionAwareResource,r);
+
+	    /*
+	     * Some Orbs (e.g., Orbix) throw BAD_PARAM is the object in X.narrow is not
+	     * of type X, whereas others (e.g., OrbPlus) simply return NULL!
+	     */
+
+	    if (staResource != null)
+	    {
+		/*
+		 * If here the narrow was ok so we have a subtran aware
+		 * resource.
+		 */
+
+		Coordinator coord = null;
+		
+		if (parentHandle != null)
+		{
+		    /*
+		     * If we are a SubTranResource then we get registered with
+		     * the current transaction and its parents upon completion.
+		     * The first parameter to the record indicates whether we
+		     * should be propagated (registered) with the parent
+		     * transaction.
+		     */
+
+		    coord = parentHandle.get_coordinator();
+		}
+
+		corbaRec = createOTSRecord(true, r, coord);
+		
+		coord = null;
+		staResource = null;
+	    }
+	    else
+		throw new BAD_PARAM();
+	}
+	catch (BAD_PARAM ex)
+	{
+	    /* narrow failed must be a plain resource */
+	    
+	    /*
+	     * Register with current transaction, but we only receive
+	     * invocations at top-level.
+	     */
+
+	    corbaRec = createOTSRecord(true, r, null);
+	}
+	catch (Unavailable e1)
+	{
+	    System.err.println("OTS_Transaction.register_resource: catch (Unavailable)");
+
+	    throw new Inactive();
+	}
+	catch (Exception e2)
+	{
+	    System.err.println("OTS_Transaction.register_resource: catch (...) : "+e2);
+
+	    throw new UNKNOWN(0, CompletionStatus.COMPLETED_NO);
+	}
+	
+	if (registerIn.add(corbaRec) != BasicAction.ADDED)
+	{
+	    corbaRec = null;
+#ifdef ORB_OTS_SUPPORT
+	    throw new InvalidTransaction(0, CompletionStatus.COMPLETED_NO);
+#else
+	    throw new UNKNOWN(ADD_FAILED, CompletionStatus.COMPLETED_NO);
+#endif	    
+	}
+    
+	return null;
+    }
+
+    /*
+     * Do not propagate the resource to the parent.
+     */
+
+public void register_subtran_aware (SubtransactionAwareResource r) throws SystemException, Inactive, NotSubtransaction
+    {
+	if (r == null)
+	    throw new BAD_PARAM(0, CompletionStatus.COMPLETED_NO);
+
+	if (get_status() != Status.StatusActive)
+	{
+	    if (currentStatus == Status.StatusMarkedRollback)
+	    {
+#ifdef ORB_OTS_SUPPORT		
+		throw new TransactionRolledBack(0, CompletionStatus.COMPLETED_NO);
+#else
+		throw new BAD_OPERATION(ATOMICACTION_ROLLBACK, CompletionStatus.COMPLETED_NO);
+#endif
+	    }
+	    else
+		throw new Inactive();
+	}	
+	
+	if (this == rootAction)
+	{
+#ifdef DEBUG	    
+	    System.err.println("OTS_Transaction.register_subtran_aware : not a subtransaction!");
+#endif
+	    throw new NotSubtransaction();
+	}
+	else
+	{
+	    Coordinator coord = null;
+	    AbstractRecord corbaRec = null;
+	    
+	    try
+	    {
+		coord = parentHandle.get_coordinator();
+		corbaRec = createOTSRecord(false, r, coord);
+	    }
+	    catch (Unavailable ex)
+	    {
+		throw new UNKNOWN(0, CompletionStatus.COMPLETED_NO);  // what else to raise?
+	    }
+
+	    coord = null;
+	
+	    /*
+	     * Throw some exception here?
+	     */
+	
+	    if (add(corbaRec) != BasicAction.ADDED)
+	    {
+#ifdef DEBUG		
+		System.err.println("OTS_Transaction.register_subtran_aware : could not add nested transaction.");
+#endif
+
+		corbaRec = null;
+		throw new Inactive();  // what else to raise??
+	    }
+	}
+    }
+
+public void rollback_only () throws SystemException, Inactive
+    {
+	if (get_status() == Status.StatusActive)
+	{
+	    if (!preventCommit())
+	    {
+#ifdef ORB_OTS_SUPPORT
+		throw new InvalidTransaction(0, CompletionStatus.COMPLETED_NO);
+#else
+		throw new UNKNOWN(INACTIVE_TRANSACTION, CompletionStatus.COMPLETED_NO);
+#endif
+	    }
+	}
+	else
+	    throw new Inactive();	
+    }
+
+    /*
+     * To be used for debugging purposes only.
+     */
+
+public String get_transaction_name () throws SystemException
+    {
+	return get_uid().stringForm();
+    }
+
+public Control create_subtransaction () throws SystemException, SubtransactionsUnavailable, Inactive
+    {
+	if (get_status() != Status.StatusActive)
+	    throw new Inactive();
+	else
+	    return OTS_Factory.create_subtransaction(getControlHandle(), this);
+    }
+
+#ifdef DRAFT3
+ 
+    /*
+     * The spec states that a synchronization is registered with a single
+     * top-level action only. However, if this is a nested transaction there
+     * is no appropriate exception to raise. So, we raise
+     * SynchronizationUnavailable. We could simply get our parent and register
+     * the synchronization with it, but this may not be what the user expects.
+     * If it is, then the user can get the parent and do it directly!
+     */
+
+public synchronized void register_synchronization (Synchronization sync) throws SystemException, Inactive, SynchronizationUnavailable
+    {
+	if (sync == null)
+	    throw new BAD_PARAM(0, CompletionStatus.COMPLETED_NO);
+	
+	if (!is_top_level_transaction())  // are we a top-level transaction?
+	    throw new SynchronizationUnavailable();
+	else
+	{
+	    if (get_status() == Status.StatusActive)  // is transaction still running?
+	    {
+		if (_synchs == null)
+		    _synchs = new HashUidList(10);
+
+		OTS_Synchronization otsSync = new OTS_Synchronization(sync);
+	    
+		if (!_synchs.add(otsSync))
+		{
+		    otsSync = null;
+		    throw new UNKNOWN(0, CompletionStatus.COMPLETED_NO);  // what else to raise?
+		}
+	    }
+	    else
+	    {
+		if (currentStatus == Status.StatusMarkedRollback)
+		{
+#ifdef ORB_OTS_SUPPORT		    
+		    throw new TransactionRolledBack(0, CompletionStatus.COMPLETED_NO);
+#else
+		    throw new BAD_OPERATION(ATOMICACTION_ROLLBACK, CompletionStatus.COMPLETED_NO);
+#endif
+		}
+		else
+		    throw new Inactive();
+	    }
+	}
+    }
+
+#endif 
+
+#ifdef DRAFT3
+public synchronized PropagationContext get_txcontext () throws SystemException, Inactive
+    {
+	/*
+	 * Throw an exception if we are not active.
+	 */
+    
+	if (get_status() != Status.StatusActive)
+	{
+	    throw new Inactive();
+	}
+	else
+	{
+	    try
+	    {
+		return propagationContext();
+	    }
+	    catch (Unavailable e1)
+	    {
+		throw new Inactive();
+	    }
+	    catch (Exception e2)
+	    {
+		throw new UNKNOWN();
+	    }
+	}
+    }
+
+#endif
+
+#ifdef DRAFT4
+ 
+public synchronized PropagationContext get_txcontext () throws SystemException, Unavailable
+    {
+	/*
+	 * Throw an exception if we are not active.
+	 */
+    
+	if (get_status() != Status.StatusActive)
+	{
+	    throw new Unavailable(0, CompletionStatus.COMPLETED_NO);
+	}
+	else
+	{
+	    try
+	    {
+		return propagationContext();
+	    }
+	    catch (Inactive e1)
+	    {
+		throw new Unavailable(0, CompletionStatus.COMPLETED_NO);
+	    }
+	    catch (Exception e2)
+	    {
+		throw new UNKNOWN();
+	    }
+	}
+    }
+ 
+#endif
+
+    /*
+     * Some Arjuna specific methods.
+     */
+
+    /*
+     * We use these to determine relationships between transactions. Using the hash
+     * function is not sufficient, since a hash value is not guaranteed to be unique.
+     */
+  
+public String uid () throws SystemException
+    {
+	return get_uid().stringForm();
+    }
+
+public String topLevelUid () throws SystemException
+    {
+	if (rootAction != null)
+	    return rootAction.get_uid().stringForm();
+	else
+	    return null;
+    }
+
+public String type ()
+    {
+	return "/StateManager/BasicAction/OTS_Transaction";
+    }
+
+    /*
+     * Called by transaction reaper to force rollback. We do not check
+     * the id of the calling thread here, as it will definitely not be
+     * the thread which created this transaction. With checked transactions
+     * this is normally not allowed, so we need some way to circumvent this.
+     */
+
+public final synchronized void forceRollback () throws SystemException
+    {
+	if (super.status() == ActionStatus.RUNNING)  // already aborted?
+	{
+	    /*
+	     * If we have any synchronizations delete them now. Can only be
+	     * a top-level action.
+	     */
+    
+	    if (_synchs != null)
+	    {
+		_synchs = null;
+	    }
+
+	    /*
+	     * Remove uid of this action from parent even if remote.
+	     */
+	
+	    if (parentTransaction != null)
+		parentTransaction.removeChildAction(this);
+
+	    rollback();
+
+	    currentStatus = determineStatus(this);
+	}
+    }
+
+public final int interpositionType ()
+    {
+	return _ipType;
+    }
+ 
+protected void beforeCompletion () throws SystemException
+    {
+	boolean problem = false;
+	
+	/*
+	 * If we have a synchronization list then we must be top-level.
+	 */
+
+	if (_synchs != null)
+	{
+	    HashUidListIterator iterator = new HashUidListIterator(_synchs);
+	    OTS_Synchronization value = (OTS_Synchronization) iterator.iterate();
+
+	    try
+	    {
+		while (value != null)
+		{
+		    Synchronization c = value.contents();
+
+		    c.before_completion();
+		    
+		    value = (OTS_Synchronization) iterator.iterate();
+		}
+	    }
+	    catch (SystemException e)
+	    {
+		System.err.println("WARNING: OTS_Transaction.beforeCompletion - caught exception.");
+
+		if (!problem)
+		{
+		    problem = true;
+		    
+		    /*
+		     * Mark as rollback_only, so when we try to commit it
+		     * will fail.
+		     */
+
+		    try
+		    {
+			rollback_only();
+		    }
+		    catch (Inactive ex)
+		    {
+			/*
+			 * This should not happen. If it does, continue with commit to
+			 * tidy-up.
+			 */
+		
+			System.err.println("WARNING: OTS_Transaction.beforeCompletion - attempted rollback_only failed!");
+		    }
+		}
+	    }
+	}
+
+	if (problem)
+	    throw new UNKNOWN(SYNCHRONIZATION_EXCEPTION, CompletionStatus.COMPLETED_NO);
+    }
+
+protected void afterCompletion (org.omg.CosTransactions.Status myStatus) throws SystemException
+    {
+	if (myStatus == Status.StatusActive)
+	{
+	    System.err.println("WARNING: OTS_Transaction.afterCompletion called on still running transaction!");
+	    return;
+	}
+
+	boolean problem = true;
+	
+	if (_synchs != null)
+	{
+	    HashUidListIterator iterator = new HashUidListIterator(_synchs);
+	    OTS_Synchronization value = (OTS_Synchronization) iterator.iterate();
+		
+	    /*
+	     * Regardless of failures, we must tell all synchronizations
+	     * what happened.
+	     */
+	
+	    while (value != null)
+	    {
+		Synchronization c = value.contents();
+		    
+		try
+		{
+		    c.after_completion(myStatus);
+		}
+		catch (SystemException e)
+		{
+		    System.err.println("WARNING: OTS_Transaction.afterCompletion - caught exception "+e);
+
+		    problem = true;
+		}
+
+		value = (OTS_Synchronization) iterator.iterate();
+	    }
+	}
+
+	if (problem)
+	    throw new UNKNOWN(SYNCHRONIZATION_EXCEPTION, CompletionStatus.COMPLETED_NO);
+    }
+ 
+private final org.omg.CosTransactions.Status determineStatus (BasicAction whichAction)
+    {
+	org.omg.CosTransactions.Status theStatus = org.omg.CosTransactions.Status.StatusUnknown;
+    
+	if (whichAction != null)
+	{
+	    switch (whichAction.status())
+	    {
+	    case ActionStatus.INVALID:  // probably locked, so try again later
+		theStatus = Status.StatusUnknown;
+		break;
+	    case ActionStatus.RUNNING:
+		theStatus = Status.StatusActive;
+		break;
+	    case ActionStatus.PREPARED:
+		theStatus = Status.StatusPrepared;
+		break;
+	    case ActionStatus.COMMITTED:
+	    case ActionStatus.H_COMMIT:
+	    case ActionStatus.H_MIXED:
+	    case ActionStatus.H_HAZARD:
+		theStatus = Status.StatusCommitted;
+		break;
+	    case ActionStatus.ABORTED:
+	    case ActionStatus.H_ROLLBACK:
+		theStatus = Status.StatusRolledBack;
+		break;
+	    case ActionStatus.ABORT_ONLY:
+		theStatus = Status.StatusMarkedRollback;
+		break;
+#ifdef DRAFT3		
+	    case ActionStatus.PREPARING:
+		theStatus = Status.StatusPreparing;
+		break;
+	    case ActionStatus.COMMITTING:
+		theStatus = Status.StatusCommitting;
+		break;
+	    case ActionStatus.ABORTING:
+		theStatus = Status.StatusRollingBack;
+		break;
+#endif
+	    default:
+		theStatus = Status.StatusUnknown;
+	    }
+	}
+	else
+	    theStatus = Status.StatusNoTransaction;
+
+	return theStatus;
+    }
+
+private final AbstractRecord createOTSRecord (boolean propagate, Resource resource, Coordinator coord)
+    {
+	/*
+	 * If the resource is an ArjunaOTS.OTSAbstractRecord or an
+	 * ArjunaOTS.ArjunaSubtranAwareResource then we can do better
+	 * record manipulation, and proper nested actions.
+	 *
+	 * Based on the type of resource we create the right abstract record to handle
+	 * it, rather than a single abstract record which switches protocols internally.
+	 */
+
+	ArjunaSubtranAwareResource absRec = null;
+	AbstractRecord corbaRec = null;
+
+	if (resource != null)
+	{
+	    try
+	    {
+		absRec = SCOPED_NARROW_(com.arjuna.ArjunaOTS,ArjunaSubtranAwareResource,resource);
+
+		if (absRec == null)
+		    throw new BAD_PARAM();
+	    }
+	    catch (Exception e)
+	    {
+		// can't be an ArjunaOTS.ArjunaSubtranAwareResource
+
+		absRec = null;
+	    }
+	}
+
+	if (absRec == null)
+	    corbaRec = new OTS_ResourceRecord(propagate, resource, coord, this);
+	else
+	{
+	    corbaRec = new OTS_AbstractRecord(propagate, absRec, coord, this);
+	    
+	    absRec = null;
+	}
+
+	return corbaRec;
+    }
+ 
+#ifdef FULLY_CHECKED_TRANSACTIONS
+
+/*
+ * Is the calling thread the one which began this transaction?
+ */
+
+private final boolean checkAccess ()
+    {
+	if (Thread.currentThread == transactionCreator)
+	    return true;
+	else
+	    return false;
+    }
+
+#endif
+
+    /*
+     * The caller should delete the context.
+     *
+     * The propagation context is specified on a per client thread basis.
+     * Therefore, at the server side we must maintain a hierarchy for each
+     * thread. However, the server cannot simply tear down this hierarchy
+     * whenever it receives a completely new one from the same thread, since
+     * the OTS lets a thread suspend/resume contexts at will. Potential for
+     * memory leaks in C++ version, but not Java!!
+     *
+     * Currently we assume that the hierarchy will be Arjuna transactions so
+     * we can get the parents of transactions. If it is not then we could
+     * simply just call get_txcontext on the control!
+     */
+
+private final synchronized PropagationContext propagationContext () throws SystemException, Unavailable, Inactive
+    {
+	String theUid = null;
+	Control currentControl = getControlHandle();
+	PropagationContext context = new PropagationContext();
+	UidCoordinator uidCoord = null;
+	int sequenceThreshold = 5;
+	int sequenceIncrement = 5;
+
+	context.parents = null;
+	
+	context.currentTransaction = new TransIdentity();
+	context.implementation_specific_data = ORBInterface.orb().create_any(); // uughh!!
+
+	/*
+	 * Set up current information. We must leave the timeout
+	 * for now, since it only applies to the top-level transaction.
+	 */
+
+	context.currentTransaction.coord = controlHandle.get_coordinator();
+	context.timeout = 0; // will reset later!
+	
+	/*
+	 * We never send the terminator in the propagation context.
+	 * This prevents anyone other than the creator from terminating
+	 * a transaction.
+	 *
+	 * Could easily make this configurable.
+	 */
+
+	context.currentTransaction.term = null;
+
+	/*
+	 * We send the Uid hierarchy as the otid_t part of
+	 * the TransIdentity.
+	 */
+
+	try
+	{
+	    uidCoord = OTS_Utility.getUidCoordinator(context.currentTransaction.coord);
+
+	    if (uidCoord == null)
+		throw new BAD_PARAM();
+	}
+	catch (BAD_PARAM e)
+	{
+	    return null;
+	}
+	catch (Exception e)
+	{
+	    return null;
+	}
+
+	// the sequence should do the memory management for us.
+	
+	theUid = uidCoord.uid();
+
+	context.currentTransaction.otid = OTS_Utility.uidToOtid(theUid);
+	context.currentTransaction.otid.formatID = Arjuna.XID();
+	
+	theUid = null;
+	uidCoord = null;
+
+	int index = 0;
+    
+	while (currentControl != null)
+	{
+	    try
+	    {
+		ActionControl control = SCOPED_NARROW_(com.arjuna.ArjunaOTS,ActionControl,currentControl);
+
+		if (control != null)
+		{
+		    /*
+		     * Must be an Arjuna control.
+		     */
+
+		    currentControl = control.getParentControl();
+
+		    if (currentControl != null)
+		    {
+			if (index == 0) // first time
+			{
+			    context.parents = new TransIdentity[sequenceThreshold];  // initial length to avoid realloc
+
+			    for (int ii = 0; ii < sequenceThreshold; ii++)
+				context.parents[ii] = null;
+			}
+
+			context.parents[index] = new TransIdentity();
+			context.parents[index].coord = currentControl.get_coordinator();
+			context.parents[index].term = null;
+
+			context.parents[index].otid = new otid_t();
+			context.parents[index].otid.formatID = Arjuna.XID();
+
+			/*
+			 * Don't bother checking whether narrow works because we can't cope
+			 * with mixed transaction types anyway! If we got here then the root
+			 * transaction must be an Arjuna transaction, so the nested transactions
+			 * *must* also be Arjuna transactions!
+			 */
+
+			uidCoord = OTS_Utility.getUidCoordinator(context.parents[index].coord);
+
+			theUid = uidCoord.uid();
+			context.parents[index].otid = OTS_Utility.uidToOtid(theUid);
+
+			theUid = null;
+			uidCoord = null;
+		    
+			index++;
+
+			if (index >= sequenceThreshold)
+			{
+			    sequenceThreshold = index + sequenceIncrement;
+			    context.parents = resizeHierarchy(context.parents, index + sequenceIncrement);
+			}
+		    }
+		    else
+		    {
+			/*
+			 * Found the top-level transaction, so we can now
+			 * setup the timeout value. All transactions will non-zero
+			 * timeouts will have been registered with the transaction reaper.
+			 */
+
+			if (OTS_TransactionReaper.transactionReaper() != null)
+			    context.timeout = OTS_TransactionReaper.transactionReaper().getTimeout(control);
+			else
+			    context.timeout = 0;
+		    }
+
+		    control = null;
+		}
+		else
+		    throw new BAD_PARAM();
+	    }
+	    catch (SystemException e)
+	    {
+		/*
+		 * Not an Arjuna control!! Should not happen!!
+		 */
+
+		currentControl = null;
+	    }
+	    catch (Exception e)
+	    {
+		currentControl = null;
+	    }
+	}
+
+	try
+	{
+	    context.parents = resizeHierarchy(context.parents, index);
+	}
+	catch (Exception e)
+	{
+	    System.err.println("WARNING OTS_Transaction.resizeHierarchy - caught exception: "+e);
+
+	    context = null;
+	}
+
+	return context;
+    }
+
+    /*
+     * Watch out - we can resize down as well as up!
+     */
+    
+private final TransIdentity[] resizeHierarchy (TransIdentity[] current, int size)
+    {
+	if ((current == null) || (size == 0))
+	    return new TransIdentity[0];
+
+	TransIdentity[] toReturn = new TransIdentity[size];
+	
+	int currentSize = current.length;
+	int copySize = ((size < currentSize) ? size : currentSize);
+
+	for (int i = 0; i < copySize; i++)
+	{
+	    toReturn[i] = current[i];
+	    current[i] = null;
+	}
+
+	if (copySize < size)
+	{
+	    for (int j = copySize; j < size; j++)
+		toReturn[j] = null;
+	}
+
+	return toReturn;
+    }
+
+protected OTS_Transaction parentTransaction;  // rather than rely on BasicAction.parent()
+ 
+private int hashCode;
+private int topLevelHashCode;
+private Control controlHandle;
+private Control parentHandle;
+private org.omg.CosTransactions.Status currentStatus;
+#ifdef FULLY_CHECKED_TRANSACTIONS
+private Thread transactionCreator;
+#endif
+ 
+private BasicAction rootAction;
+private HashUidList _synchs;
+
+static int _ipType = Arjuna.XID();
+static boolean _subtran = true;
+static boolean _syncOn = false;
+    
+static
+    {
+	String interpositionType = ORBPropertyManager.getProperty(OTS_Environment.OTS_INTERPOSITION);
+
+	if (interpositionType != null)
+	{
+	    int ipType = Arjuna.nameToXID(interpositionType);
+
+	    if (ipType != -1)
+		OTS_Transaction._ipType = ipType;
+	    else
+		System.err.println("WARNING: OTS_Transaction.init - unknown interposition type "+interpositionType);
+	}
+
+	String supportSubtran = ORBPropertyManager.getProperty(OTS_Environment.OTS_SUPPORT_SUBTRANSACTIONS);
+
+	if (supportSubtran != null)
+	{
+	    if (supportSubtran.compareTo("NO") == 0)
+		_subtran = false;
+	}
+
+	String syncOn = ORBPropertyManager.getProperty(OTS_Environment.OTS_SUPPORT_ROLLBACK_SYNC);
+
+	if (syncOn != null)
+	{
+	    if (syncOn.compareTo("YES") == 0)
+		_syncOn = true;
+	}
+    }
+ 
+};

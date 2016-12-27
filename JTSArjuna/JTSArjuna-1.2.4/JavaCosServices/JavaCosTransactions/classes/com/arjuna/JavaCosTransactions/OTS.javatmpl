@@ -1,0 +1,330 @@
+/*
+ * Copyright (C) 1996, 1997, 1998,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: OTS.javatmpl,v 1.12.6.3.2.1 1999/09/15 15:33:14 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package com.arjuna.JavaCosTransactions;
+
+import com.arjuna.OrbCommon.*;
+import org.omg.CosTransactions.*;
+import com.arjuna.ArjunaOTS.*;
+import java.io.PrintStream;
+#ifndef JAR_PACKAGE_PROBLEM
+import NAMESPACE_(CosNaming).*;
+#endif
+
+import NAMESPACE_(CORBA).SystemException;
+import NAMESPACE_(CORBA).BAD_PARAM;
+import NAMESPACE_(CORBA).UserException;
+import NAMESPACE_(CosNaming).NamingContextPackage.InvalidName;
+import java.io.IOException;
+
+public class OTS
+{
+
+public static synchronized OTS_Current current ()
+    {
+	if (OTS._current == null)
+	{
+	    try
+	    {
+		OTS._current = new OTS_Current();
+	    }
+	    catch (Exception e)
+	    {
+		OTS._current = null;
+		
+		System.err.println("OTS.current "+e);
+	    }
+	}
+	
+	return OTS._current;
+    }
+
+public static synchronized Current get_current ()
+    {
+	if (OTS._current == null)
+	{
+	    try
+	    {
+		OTS._current = new OTS_Current();
+	    }
+	    catch (Exception e)
+	    {
+		OTS._current = null;
+
+		System.err.println("OTS.get_current "+e);		
+	    }		
+	}
+	
+	return OTS._current;
+    }
+
+public static synchronized TransactionFactory factory ()
+    {
+	if (_theFactory == null)
+	{
+	    int resolver = ORBServices.CONFIGURATION_FILE;
+
+	    if (!_requireTransactionManager)
+	    {
+		/*
+		 * Only check once, when the factory is first created.
+		 */
+		
+		String transactionManager = System.getProperty(OTS_Environment.OTS_TRANSACTION_MANAGER, "NO");
+
+		if (transactionManager.compareTo("YES") == 0)
+		{
+		    _requireTransactionManager = true;
+
+			String resolveMechanism = System.getProperty("RESOLVE_SERVICE", "CONFIGURATION_FILE");
+
+			if (resolveMechanism.compareTo("NAME_SERVICE") == 0)
+				resolver = ORBServices.NAME_SERVICE;
+			else
+			{
+			    if (resolveMechanism.compareTo("BIND_CONNECT") == 0)
+				resolver = ORBServices.BIND_CONNECT;
+			}
+		}
+	    }
+	    
+	    if (_requireTransactionManager)
+	    {
+		try
+		{
+		    if (resolver != ORBServices.BIND_CONNECT)
+		    {
+			String[] params = new String[1];
+
+			params[0] = ORBServices.otsKind;
+		    
+			NAMESPACE_(CORBA).Object obj = ORBServices.getService(ORBServices.transactionService,
+									      params, resolver);
+
+			params = null;
+			_theFactory = SCOPED_NARROW_(org.omg.CosTransactions,TransactionFactory,obj);
+		    }
+		    else
+		    {
+#ifdef HAVE_BIND
+#ifndef ORBIXWEB
+			_theFactory = SCOPED_CORBA_BIND_(org.omg.CosTransactions,TransactionFactory,ORBServices.transactionService);
+#else
+			_theFactory = SCOPED_CORBA_BIND_(org.omg.CosTransactions,TransactionFactory,":"+ORBServices.transactionService);
+#endif
+#else
+			System.err.println("Error - bind not supported for resolving TransactionService.");
+			System.exit(0);
+#endif
+		    }
+		    
+		    if (_theFactory == null)
+			throw new BAD_PARAM();
+		}
+		catch (InvalidName e1)
+		{
+		    System.err.println("Resolution of OTS server failed - invalid name: "+e1);
+		    
+		    return null;
+		}
+		catch (IOException e2)
+		{
+		    System.err.println("Resolution of OTS server failed - IOException: "+e2);
+		    
+		    return null;
+		}
+		catch (UserException e4)
+		{
+		    System.err.println("Resolution of OTS server failed - UserException: "+e4);
+		    
+		    return null;
+		}
+		catch (SystemException e3)
+		{
+		    System.err.println("Resolution of OTS server failed - SystemException: "+e3);
+		    
+		    return null;
+		}
+	    }
+	    else
+	    {
+		/* force to be local */
+
+		_theFactory = new OTS_Factory();
+	    }
+	}
+
+	return _theFactory;
+    }
+
+public static synchronized void destroyControl (Control control) throws ActiveTransaction, ActiveThreads, BadControl, Destroyed, SystemException
+    {
+	if (control == null)
+	    throw new BadControl();
+
+	boolean destroyed = false;
+	OTS_Control lCont = OTS_Utility.localControl(control);
+	
+	/*
+	 * Watch out for conflicts with multiple threads deleting
+	 * the same control!
+	 */
+
+	if (lCont != null)
+	{
+	    /*
+	     * If local, then delete it here, rather than
+	     * calling the destroy method.
+	     *
+	     * Possible problem if a local factory is being accessed
+	     * remotely?
+	     */
+
+	    lCont.destroy();
+	    
+	    lCont = null;
+	    control = null;
+	}
+	else
+	{
+	    /*
+	     * Remote transaction, so memory management is different!
+	     */
+	
+	    ActionControl action = null;
+	    
+	    try
+	    {
+		action = SCOPED_NARROW_(com.arjuna.ArjunaOTS,ActionControl,control);
+
+		if (action == null)
+		    throw new BAD_PARAM();
+	    }
+	    catch (Exception e)
+	    {
+		action = null;
+	    }
+
+	    if (action != null)
+	    {
+		/*
+		 * Is an Arjuna control, so we can call destroy on it?
+		 */
+
+		action.destroy();
+
+		action = null;
+		control = null;
+	    }
+	    else
+	    {
+		/*
+		 * Just call release on the control.
+		 *
+		 * We could throw a BadControl exception, but
+		 * what would that do for the programmer?
+		 */
+
+		control = null;
+	    }
+	}
+    }
+	    
+public static synchronized boolean transactionManager (boolean val)
+    {
+	if (_theFactory == null)
+	{
+	    _requireTransactionManager = val;
+	    return true;
+	}
+	else
+	    return false;
+    }
+
+public static synchronized boolean transactionManager ()
+    {
+	return _requireTransactionManager;
+    }
+
+#if defined(CORBA_2_2) || defined(CORBA_2_1)
+public static void printVote (PrintStream out, org.omg.CosTransactions.Vote v)
+#else
+public static void printVote (PrintStream out, int v)
+#endif
+    {
+	switch (ENUM_VALUE_(v))
+	{
+	case ENUM_CONST_(Vote,VoteCommit):
+	    out.print("CosTransactions::VoteCommit");
+	    break;
+	case ENUM_CONST_(Vote,VoteRollback):
+	    out.print("CosTransactions::VoteRollback");
+	    break;
+	case ENUM_CONST_(Vote,VoteReadOnly):
+	    out.print("CosTransactions::VoteReadOnly");
+	    break;
+	}
+    }
+	    
+#if defined(CORBA_2_2) || defined(CORBA_2_1)
+public static void printStatus (PrintStream out, org.omg.CosTransactions.Status res)
+#else
+public static void printStatus (PrintStream out, int res)
+#endif    
+    {
+	switch (ENUM_VALUE_(res))
+	{
+	case ENUM_CONST_(Status,StatusActive):
+	    out.print("CosTransactions::StatusActive");
+	    break;
+	case ENUM_CONST_(Status,StatusMarkedRollback):
+	    out.print("CosTransactions::StatusMarkedRollback");
+	    break;
+	case ENUM_CONST_(Status,StatusPrepared):
+	    out.print("CosTransactions::StatusPrepared");
+	    break;
+	case ENUM_CONST_(Status,StatusCommitted):
+	    out.print("CosTransactions::StatusCommitted");
+	    break;
+	case ENUM_CONST_(Status,StatusRolledBack):
+	    out.print("CosTransactions::StatusRolledBack");
+	    break;
+	case ENUM_CONST_(Status,StatusUnknown):
+	    out.print("CosTransactions::StatusUnknown");
+	    break;
+#if defined(DRAFT3) || defined(DRAFT4)
+	case ENUM_CONST_(Status,StatusPreparing):
+	    out.print("CosTransactions::StatusPreparing");
+	    break;
+	case ENUM_CONST_(Status,StatusCommitting):
+	    out.print("CosTransactions::StatusCommitting");
+	    break;
+	case ENUM_CONST_(Status,StatusRollingBack):
+	    out.print("CosTransactions::StatusRollingBack");
+	    break;
+#endif	    
+	case ENUM_CONST_(Status,StatusNoTransaction):
+	    out.print("CosTransactions::StatusNoTransaction");
+	    break;
+	}
+    }
+
+private OTS ()
+    {
+    }
+    
+private static OTS_Current _current = null;
+private static TransactionFactory _theFactory = null;
+private static boolean _requireTransactionManager = false;
+
+};

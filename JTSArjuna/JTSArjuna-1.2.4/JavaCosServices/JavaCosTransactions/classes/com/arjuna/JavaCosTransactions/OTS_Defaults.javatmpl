@@ -1,0 +1,25 @@
+/*
+ * Copyright (C) 1997, 1998,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: OTS_Defaults.javatmpl,v 1.1 1998/08/13 14:34:12 nmcl Exp $
+ */
+
+package com.arjuna.JavaCosTransactions;
+
+public class OTS_Defaults
+{
+
+public static final boolean needTransactionContext = false;
+
+#ifdef HAVE_OBJECT_WRAPPERS
+public static final boolean alwaysPropagateContext = true;
+#else
+public static final boolean alwaysPropagateContext = false;
+#endif
+    
+};

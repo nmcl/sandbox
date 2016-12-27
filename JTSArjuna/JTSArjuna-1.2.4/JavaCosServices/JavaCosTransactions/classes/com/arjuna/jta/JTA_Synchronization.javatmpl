@@ -1,0 +1,77 @@
+/*
+ * Copyright (C) 1999,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: JTA_Synchronization.javatmpl,v 1.1.2.1 1999/02/16 14:56:25 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+#include <CosTransactions/CosTranNames.h>
+
+package com.arjuna.jta;
+
+import org.omg.CosTransactions.*;
+import javax.transaction.*;
+
+import NAMESPACE_(CORBA).SystemException;
+import NAMESPACE_(CORBA).UNKNOWN;
+
+public class JTA_Synchronization extends SCOPED_BOA_(org.omg.CosTransactions,Synchronization)
+{
+    
+public JTA_Synchronization (javax.transaction.Synchronization ptr)
+    {
+    }
+
+public void finalize ()
+    {
+	_theSynch = null;
+    }
+    
+public void before_completion () throws NAMESPACE_(CORBA).SystemException
+    {
+	if (_theSynch != null)
+	{
+	    try
+	    {
+		_theSynch.beforeCompletion();
+	    }
+	    catch (Exception e)
+	    {
+		throw new UNKNOWN();
+	    }
+	}
+	else
+	    throw new UNKNOWN();
+    }
+
+#if defined(CORBA_2_2) || defined(CORBA_2_1)
+public void after_completion (org.omg.CosTransactions.Status status) throws NAMESPACE_(CORBA).SystemException
+#else
+public void after_completion (int status) throws NAMESPACE_(CORBA).SystemException
+#endif
+    {
+	if (_theSynch != null)
+	{
+	    int s = JTA_Utility.convertStatus(status);
+
+	    try
+	    {
+		_theSynch.afterCompletion(s);
+	    }
+	    catch (Exception e)
+	    {
+		throw new UNKNOWN(); // should not cause any affect!
+	    }
+	}
+	else
+	    throw new UNKNOWN(); // should not cause any affect!
+    }
+
+private javax.transaction.Synchronization _theSynch;
+
+};

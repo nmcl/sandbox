@@ -1,0 +1,28 @@
+COMMENT 
+COMMENT Copyright (C) 1996, 1997, 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.2.1 1999/02/16 14:56:16 nmcl Exp $
+COMMENT
+
+AddToIdlFlags(-DDRAFT3 -I$(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+SOURCES = tx.java \
+	  XID.java
+
+OBJECTS = tx.class \
+	  XID.class
+
+Target($(SOURCES))
+Target($(OBJECTS))
+
+PreprocessJavaCode(tx,NullParam)
+
+BuildJavaByteCode(tx,NullParam)
+BuildJavaByteCode(XID,NullParam)
+
+Clean(*.class)

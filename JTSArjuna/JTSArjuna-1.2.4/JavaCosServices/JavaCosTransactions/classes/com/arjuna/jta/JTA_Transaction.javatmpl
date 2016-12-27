@@ -1,0 +1,428 @@
+/*
+ * Copyright (C) 1999,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: JTA_Transaction.javatmpl,v 1.3 1999/05/14 10:15:25 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+#include <CosTransactions/CosTranNames.h>
+
+package com.arjuna.jta;
+
+import org.omg.CosTransactions.*;
+import com.arjuna.OrbCommon.*;
+import com.arjuna.JavaCosTransactions.*;
+import javax.transaction.*;
+import javax.transaction.xa.*;
+import java.util.Hashtable;
+
+import javax.transaction.NotSupportedException;
+import javax.transaction.TransactionRolledbackException;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.SystemException;
+import java.lang.SecurityException;
+import java.lang.IllegalStateException;
+import org.omg.CosTransactions.SubtransactionsUnavailable;
+import org.omg.CosTransactions.NoTransaction;
+import org.omg.CosTransactions.HeuristicMixed;
+import org.omg.CosTransactions.HeuristicHazard;
+import org.omg.CosTransactions.InvalidControl;
+import NAMESPACE_(CORBA).NO_PERMISSION;
+
+#include <CosTransactions/CosTranExceptions.h>
+#include <CosTransactions/OTS_Exceptions.h>
+
+class JTA_Transaction implements javax.transaction.Transaction
+{
+
+public JTA_Transaction (org.omg.CosTransactions.Control control)
+    {
+	_theControl = control;
+	_resources = new Hashtable();
+	_resourceFactories = new Hashtable();	
+    }
+
+public boolean equals (Object obj)
+    {
+	if (obj instanceof JTA_Transaction)
+	{
+	    /*
+	     * If we can't get either coordinator to compare,
+	     * then assume transactions are different.
+	     */
+
+	    try
+	    {
+		JTA_Transaction tx = (JTA_Transaction) obj;
+		Coordinator objCoord = tx.getControl().get_coordinator();
+		Coordinator coord = _theControl.get_coordinator();
+		
+		if ((coord != null) && (objCoord != null))
+		{
+		    return objCoord.is_same_transaction(coord);
+		}
+		else
+		    return false;
+	    }
+	    catch (Exception e)
+	    {
+	    }
+	}
+	
+	return false;
+    }
+
+    /*
+     * Return -1 if we fail.
+     */
+
+public int hashCode ()
+    {
+	try
+	{
+	    Coordinator coord = _theControl.get_coordinator();
+	    
+	    return coord.hash_transaction();
+	}
+	catch (Exception e)
+	{
+	    return -1;
+	}
+    }
+    
+public org.omg.CosTransactions.Control getControl ()
+    {
+	return _theControl;
+    }
+
+    /*
+     * The JTA specification is vague on whether the calling thread
+     * can have any transaction associated with it. It does say that
+     * it need not have the same transaction as this one. We could
+     * call suspend prior to making these calls, but for now we do
+     * nothing, and simply treat it like a Control.
+     */
+    
+    /*
+     * We will never throw a HeuristicRollbackException because if we
+     * get a HeuristicRollback from a resource, and can successfully
+     * rollback the other resources, this is then the same as having
+     * simply been forced to rollback the transaction during phase 1.
+     * The OTS interfaces do not allow a differentiation.
+     */
+    
+public void commit () throws javax.transaction.TransactionRolledbackException,
+	                     javax.transaction.HeuristicMixedException,
+	                     javax.transaction.HeuristicRollbackException, java.lang.SecurityException,
+                             java.lang.IllegalStateException, javax.transaction.SystemException
+    {
+	if (_theControl != null)
+	{
+	    try
+	    {
+		Terminator term = _theControl.get_terminator();
+
+		if (term == null)
+		    throw new IllegalStateException();
+		
+		term.commit(true);
+
+		term = null;
+	    }
+	    catch (org.omg.CosTransactions.Unavailable e1)
+	    {
+		throw new IllegalStateException();
+	    }
+	    catch (org.omg.CosTransactions.HeuristicMixed e2)
+	    {
+		throw new javax.transaction.HeuristicMixedException("JTA_HeuristicType.HEURISTIC_MIXED");
+	    }
+	    catch (org.omg.CosTransactions.HeuristicHazard e3)
+	    {
+		throw new javax.transaction.HeuristicMixedException("JTA_HeuristicType.HEURISTIC_HAZARD");
+	    }
+	    catch (TransactionRolledBack e4)
+	    {
+		throw new TransactionRolledbackException();
+	    }
+	    catch (NAMESPACE_(CORBA).NO_PERMISSION e5)
+	    {
+		throw new SecurityException();
+	    }
+	    catch (NAMESPACE_(CORBA).SystemException e7)
+	    {
+		throw new javax.transaction.SystemException();
+	    }
+	}
+	else
+	    throw new IllegalStateException();
+    }
+
+public void rollback () throws java.lang.IllegalStateException, java.lang.SecurityException, javax.transaction.SystemException
+    {
+	if (_theControl != null)
+	{
+	    try
+	    {
+		Terminator term = _theControl.get_terminator();
+
+		if (term == null)
+		    throw new IllegalStateException();
+		
+		term.rollback();
+
+		term = null;
+	    }	
+	    catch (org.omg.CosTransactions.Unavailable e1)
+	    {
+		throw new IllegalStateException();
+	    }
+	    catch (NAMESPACE_(CORBA).NO_PERMISSION e2)
+	    {
+		throw new SecurityException();
+	    }
+	    catch (NAMESPACE_(CORBA).SystemException e3)
+	    {
+		throw new javax.transaction.SystemException();
+	    }
+	}
+	else
+	    throw new IllegalStateException();
+    }
+
+public void setRollbackOnly () throws java.lang.IllegalStateException, javax.transaction.SystemException
+    {
+	if (_theControl != null)
+	{
+	    try
+	    {
+		Coordinator coord = _theControl.get_coordinator();
+
+		if (coord == null)
+		    throw new IllegalStateException();
+
+		coord.rollback_only();
+	    }
+	    catch (org.omg.CosTransactions.Inactive e1)
+	    {
+		throw new IllegalStateException();
+	    }
+	    catch (org.omg.CosTransactions.Unavailable e2)
+	    {
+		throw new IllegalStateException();
+	    }
+	    catch (NAMESPACE_(CORBA).SystemException e3)
+	    {
+		throw new javax.transaction.SystemException();
+	    }
+	}
+	else
+	    throw new IllegalStateException();
+    }
+
+public int getStatus () throws javax.transaction.SystemException
+    {
+	int status = javax.transaction.Status.STATUS_NO_TRANSACTION;
+	
+	if (_theControl != null)
+	{
+	    try
+	    {
+		Coordinator coord = _theControl.get_coordinator();
+
+		if (coord != null)
+		    status = JTA_Utility.convertStatus(coord.get_status());
+	    }
+	    catch (org.omg.CosTransactions.Unavailable e1)
+	    {
+	    }
+	    catch (NAMESPACE_(CORBA).SystemException e2)
+	    {
+		throw new javax.transaction.SystemException();
+	    }
+	}
+
+	return status;
+    }
+
+public void registerSynchronization (javax.transaction.Synchronization sync) throws javax.transaction.TransactionRolledbackException, java.lang.IllegalStateException, javax.transaction.SystemException
+    {
+	if (sync == null)
+	    throw new javax.transaction.SystemException("JTA_Transaction.registerSynchronization - null parameter!");
+
+	if (_theControl != null)
+	{
+	    try
+	    {
+		Coordinator coord = _theControl.get_coordinator();
+
+		if (coord != null)
+		    coord.register_synchronization(new JTA_Synchronization(sync));
+		else
+		    throw new IllegalStateException();
+	    }
+	    catch (org.omg.CosTransactions.Unavailable e1)
+	    {
+		throw new IllegalStateException();
+	    }
+	    catch (TransactionRolledBack e2)
+	    {
+		throw new javax.transaction.TransactionRolledbackException();
+	    }
+	    catch (org.omg.CosTransactions.Inactive e3)
+	    {
+		throw new IllegalStateException();
+	    }
+	    catch (org.omg.CosTransactions.SynchronizationUnavailable e4)
+	    {
+		throw new IllegalStateException();  // shouldn't happen!
+	    }
+	    catch (InvalidTransaction e5)
+	    {
+		throw new IllegalStateException();
+	    }
+	    catch (NAMESPACE_(CORBA).SystemException e6)
+	    {
+		throw new javax.transaction.SystemException();
+	    }
+	}
+	else
+	    throw new IllegalStateException();
+    }
+
+public boolean enlistResource (XAResource xaRes, java.lang.Object resourceFactory) throws TransactionRolledbackException, IllegalStateException, javax.transaction.SystemException
+    {
+	if (xaRes == null)
+	    throw new javax.transaction.SystemException("JTA_Transaction.enlistResource - resource is null!");
+
+	int status = getStatus();
+
+	switch (status)
+	{
+	case javax.transaction.Status.STATUS_MARKED_ROLLBACK:
+	    throw new TransactionRolledbackException();
+	case javax.transaction.Status.STATUS_ACTIVE:
+	    break;
+	default:
+	    throw new IllegalStateException();
+	}
+
+	try
+	{
+	    /*
+	     * For each transaction we maintain a list of resources
+	     * registered with it. Each element on this list also
+	     * contains a list of threads which have registered this
+	     * resource, and what their XID was for that registration.
+	     */
+
+	    JTA_XID xid = null;
+
+	    /*
+	     * If resource factory is null, ignore.
+	     */
+	    
+	    if ((resourceFactory != null) && (_resourceFactories.get(resourceFactory) == null))
+	    {
+		/*
+		 * New resource, so create xid with zero branch.
+		 */
+		
+		xid = new JTA_XID(OTS.current().get_control());
+		
+		_resourceFactories.put(resourceFactory, resourceFactory);
+	    }
+	    else
+	    {
+		if (_resources.get(xaRes) == null)
+		    xid = new JTA_XID(OTS.current().get_control(), true);
+		else
+		    return false;  // already registered resource with this transaction!
+	    }
+
+	    _resources.put(xaRes, xid);
+	    
+	    xaRes.start(xid, XAResource.TMNOFLAG);
+
+	    /*
+	     * Control and Coordinator should be set, or we would not
+	     * have gotten this far!
+	     */
+	    
+	    Coordinator coord = _theControl.get_coordinator();
+	    JTA_ResourceRecord res = new JTA_ResourceRecord(xaRes, xid);
+	    Resource theResource = new SCOPED_TIE_INSTANCE_(org.omg.CosTransactions,Resource)(res);
+	    
+	    READY_IMPL_(theResource);
+	    
+	    coord.register_resource(theResource);
+	    
+	    coord = null;
+	    theResource = null;
+	    res = null;
+	    
+	    return true;
+	}
+	catch (Exception e)
+	{
+	    e.printStackTrace();
+	    
+	    return false;
+	}
+    }
+
+    /*
+     * Do we have to unregister resources? Assume not as it would not
+     * make much sense otherwise!
+     */
+    
+public boolean delistResource (XAResource xaRes, int flag) throws IllegalStateException, javax.transaction.SystemException
+    {
+	if (xaRes == null)
+	    throw new javax.transaction.SystemException("JTA_Transaction.delistResource - resource is null!");
+	
+	int status = getStatus();
+
+	switch (status)
+	{
+	case javax.transaction.Status.STATUS_ACTIVE:
+	    break;
+	default:
+	    throw new IllegalStateException();
+	}
+
+	try
+	{
+	    JTA_XID xid = (JTA_XID) _resources.get(xaRes);
+	    
+	    if (xid == null)
+		return false;
+	    else
+	    {
+		xaRes.end(xid, flag);
+
+		xid = null;
+
+		return true;
+	    }
+	}
+	catch (Exception e)
+	{
+	    System.err.println(e);
+	    
+	    return false;
+	}
+    }
+	
+private org.omg.CosTransactions.Control _theControl;
+private Hashtable _resources;
+private Hashtable _resourceFactories;
+ 
+};

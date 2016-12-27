@@ -1,0 +1,565 @@
+/*
+ * Copyright (C) 1996, 1997, 1998,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: OTS_ResourceRecord.javatmpl,v 1.6 1998/08/13 14:34:14 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+/*
+ * 
+ * OTS Resource Record Class Implementation
+ *
+ */
+
+package com.arjuna.JavaCosTransactions;
+
+import com.arjuna.OrbCommon.ORBInterface;
+import org.omg.CosTransactions.*;
+import com.arjuna.JavaArjunaLite.Atomic.*;
+import com.arjuna.JavaGandiva.Common.*;
+import java.io.PrintStream;
+
+import com.arjuna.JavaGandiva.Common.UidException;
+import NAMESPACE_(CORBA).SystemException;
+import NAMESPACE_(CORBA).BAD_PARAM;
+
+#ifndef ORB_OTS_SUPPORT
+import org.omg.CosTransactions.TransactionRolledBack;
+#endif
+
+import org.omg.CosTransactions.NotPrepared;
+import org.omg.CosTransactions.HeuristicCommit;
+import org.omg.CosTransactions.HeuristicMixed;
+import org.omg.CosTransactions.HeuristicHazard;
+import org.omg.CosTransactions.HeuristicRollback;
+import java.io.IOException;
+
+/*
+ * Will eventually need to have a setup object for crash recovery purposes.
+ */
+
+/*
+ * Arjuna abstract record to handle CORBA (SubtransactionAware)Resource
+ * interface.
+ *
+ * The OTS handling of Resources is bizarre (by Arjuna standards) and confusing
+ * Our current understanding is :
+ *
+ * Resources registered using 'register_resource' ONLY take
+ * part in top-level events
+ *
+ * SubtransactionAwareResources registered using 'register_subtran_aware' ONLY
+ * take part in commit/abort of the action in which they are registered - i.e.
+ * they DO NOT propagate automatically - the registering object must do the
+ * propagation itself using the parent arg in the 'commit_subtransaction'
+ * operation.
+ *
+ * If a SubtransactionAwareResource is registered with 'register_resource' then
+ * it will be propagated to the parent when the action commit. Otherwise it is
+ * only registered with the current transaction.
+ *
+ * Subtransactions do not have a 'prepare' phase which can thus lead to
+ * inconsistency. If they underwent the full 2-phase protocol (as they do in
+ * Arjuna), then all nested participants will have to repond successfully
+ * to prepare before they can be told to commit. The way the OTS mandates the
+ * protocol, we could tell some to commit before being told by another resource
+ * that it cannot commit! We then have to go through the resources and tell
+ * them to abort! May cause heuristic decisions!
+ *
+ * The only problem is if a resource which does not propagate causes a nested
+ * action to fail.
+ *
+ * SubtransactionAwareResources registered using 'register_resource' do appear
+ * to propagate.
+ *
+ * UGH! Braindead!
+ *
+ */
+
+public class OTS_ResourceRecord extends com.arjuna.JavaArjunaLite.Atomic.AbstractRecord
+{
+    
+    /*
+     * Constructor
+     *
+     * propagate tells us whether to propagate the resource at nested commit or
+     * not.
+     * theResource is the proxy that allows us to call out to the object.
+     * myParent is the proxy for the parent coordinator needed in
+     * commit_subtransaction.
+     */
+
+public OTS_ResourceRecord (boolean propagate, Resource theResource,
+			   Coordinator myParent, OTS_Transaction current)
+    {
+	super(new Uid(), null, ObjectType.ANDPERSISTENT);
+
+	_parentCoordHandle = myParent;
+	_resourceHandle = theResource;
+	_propagateRecord = propagate;
+	_committed = false;
+    }
+
+public void finalize ()
+    {
+	_resourceHandle = null;
+	_parentCoordHandle = null;
+    }
+
+public boolean propagateOnCommit ()
+    {
+	return _propagateRecord;
+    }
+
+public int typeIs ()
+    {
+	return RecordType.USER_DEF_FIRST0;
+    }
+    
+public ClassName className ()
+    {
+	return JavaCosTransactionsNames.AbstractRecord_OTS_ResourceRecord();
+    }
+    
+public Object value ()
+    {
+	return _resourceHandle;
+    }
+
+public void setValue (Object o)
+    {
+	System.err.println("OTS_ResourceRecord::set_value() called illegally.");
+    }
+
+    /*
+     * General nesting rules:
+     *
+     * Only SubtransactionAware resources get registered with nested actions. 
+     * The OTS_ResourceRecord creator is assumed to ensure that plain Resources
+     * are only registered with the appropriate top level action.
+     *
+     * That said the _propagateRecord flag ensures that resources registered via
+     * register_subtran only take part in the action they where registered in
+     * after which they are dropped
+     */
+
+public int nestedAbort ()
+    {
+	/*
+	 * We shouldn't need to check committed since aborted nested actions will
+	 * drop these resources.
+	 */
+
+	SubtransactionAwareResource staResource = null;
+	int o = PrepareOutcome.FINISH_ERROR;
+	
+	try
+	{
+	    /*
+	     * Must be an staResource to get here.
+	     */
+	    
+	    staResource = SCOPED_NARROW_(org.omg.CosTransactions,SubtransactionAwareResource,_resourceHandle);
+
+	    if (staResource == null)
+		throw new BAD_PARAM();
+	}
+	catch (Exception exEnv)
+	{
+	    // not a sub tran resource, so ignore;
+
+	    o = PrepareOutcome.FINISH_OK;
+	}
+
+	if (staResource != null)
+	{
+	    try
+	    {
+		staResource.rollback_subtransaction();
+		o = PrepareOutcome.FINISH_OK;
+	    }
+	    catch (Exception e)
+	    {
+		o = PrepareOutcome.FINISH_ERROR;
+	    }
+	
+	    staResource = null;
+	}
+
+	/*
+	 * Now release the parent as it is about to be destroyed
+	 * anyway.
+	 */
+
+	_parentCoordHandle = null;
+
+	return o;
+    }
+
+    /*
+     * If this resource handles nesting this was done in prepare
+     * or it should be ignored. In either case returning FINISH_OK
+     * suffices.
+     */
+
+public int nestedCommit ()
+    {
+	return PrepareOutcome.FINISH_OK;
+    }
+
+    /*
+     * OTS does not use nested prepare at all !
+     * However, to make nested commit/abort clean we do commit_subtransaction here
+     * Note that we only get a prepare from Arjuna if the action is to be committed
+     * so this is safe in Arjuna terms.
+     */
+
+public int nestedPrepare ()
+    {
+	int o = PrepareOutcome.PREP_NOTOK;
+	
+	try
+	{
+	    if (_committed)
+		return PrepareOutcome.PREP_OK;
+	    else
+		_committed = true;
+	    
+	    SubtransactionAwareResource staResource = SCOPED_NARROW_(org.omg.CosTransactions,SubtransactionAwareResource,_resourceHandle);
+
+	    if (staResource != null)
+	    {
+		staResource.commit_subtransaction(_parentCoordHandle);
+
+		o = PrepareOutcome.PREP_OK;
+		
+		staResource = null;
+	    }
+	    else
+		throw new BAD_PARAM();
+	}
+	catch (Exception e)
+	{
+	    /*
+	     * Not subtran aware resource, so return PREP_OK.
+	     * Resource will get invocations at top-level only.
+	     */
+	    
+	    o = PrepareOutcome.PREP_OK;
+	}
+
+	/*
+	 * Now release the parent as it is about to be destroyed
+	 * anyway.
+	 */
+
+	_parentCoordHandle = null;
+	
+	return o;
+    }
+
+public int topLevelAbort ()
+    {
+	try
+	{
+	    if (_resourceHandle != null)
+	    {
+		_resourceHandle.rollback();
+	    }
+	    else
+		return PrepareOutcome.FINISH_ERROR;
+	}
+	catch (HeuristicCommit exEnv)
+	{
+	    return PrepareOutcome.HEURISTIC_COMMIT;
+	}
+	catch (HeuristicMixed ex1)
+	{
+	    return PrepareOutcome.HEURISTIC_MIXED;
+	}
+	catch (HeuristicHazard ex2)
+	{
+	    return PrepareOutcome.HEURISTIC_HAZARD;
+	}
+	catch (SystemException ex3)
+	{
+	    return PrepareOutcome.FINISH_ERROR;
+	}
+    
+	return PrepareOutcome.FINISH_OK;
+    }
+
+public int topLevelCommit ()
+    {
+	try
+	{
+	    if (_resourceHandle != null)
+	    {
+		_resourceHandle.commit();
+	    }
+	    else
+		return PrepareOutcome.FINISH_ERROR;
+	}
+	catch (NotPrepared ex1)
+	{
+	    return PrepareOutcome.NOT_PREPARED;
+	}
+	catch (HeuristicRollback ex2)
+	{
+	    return PrepareOutcome.HEURISTIC_ROLLBACK;
+	}
+	catch (HeuristicMixed ex3)
+	{
+	    return PrepareOutcome.HEURISTIC_MIXED;
+	}
+	catch (HeuristicHazard ex4)
+	{
+	    return PrepareOutcome.HEURISTIC_HAZARD;
+	}
+	catch (SystemException ex5)
+	{
+	    return PrepareOutcome.FINISH_ERROR;
+	}
+
+	return PrepareOutcome.FINISH_OK;
+    }
+
+public int topLevelPrepare ()
+    {
+	try
+	{
+	    if (_resourceHandle != null)
+	    {
+		switch (ENUM_VALUE_(_resourceHandle.prepare()))
+		{
+		case ENUM_CONST_(Vote,VoteCommit):
+		    return PrepareOutcome.PREP_OK;
+		case ENUM_CONST_(Vote,VoteRollback):
+		    return PrepareOutcome.PREP_NOTOK;
+		case ENUM_CONST_(Vote,VoteReadOnly):
+		    return PrepareOutcome.READONLY;
+		}
+	    }
+	    else
+		return PrepareOutcome.PREP_NOTOK;
+	}
+	catch (HeuristicMixed ex)
+	{
+	    return PrepareOutcome.HEURISTIC_MIXED;
+	}
+	catch (HeuristicHazard ex)
+	{
+	    return PrepareOutcome.HEURISTIC_HAZARD;
+	}
+	catch (Exception e)
+	{
+	    return PrepareOutcome.PREP_NOTOK;
+	}
+
+	return PrepareOutcome.PREP_NOTOK;
+    }
+
+public void forgetHeuristic ()
+    {
+	try
+	{
+	    if (_resourceHandle != null)
+		_resourceHandle.forget();
+	    else
+		System.err.println("OTS_ResourceRecord::forgetHeuristic called without a resource!");
+	}
+	catch (SystemException e)
+	{
+	    System.err.println("WARNING:OTS_ResourceRecord::forgetHeuristic caught exception");
+	}
+    }
+
+public AbstractRecord create ()
+    {
+	return new OTS_ResourceRecord();
+    }
+
+public void remove (AbstractRecord toDelete)
+    {
+	toDelete = null;
+    }
+    
+public void print (PrintStream strm)
+    {
+	super.print(strm);
+
+	strm.println("OTS_Resource Record");
+	strm.println(_resourceHandle+"\t"+_parentCoordHandle+"\t"+_propagateRecord);
+    }
+
+    /*
+     * restore_state and save_state for OTS_ResourceRecords doesn't generally
+     * apply due to object pointers. However, we need to save something so we
+     * can recover failed transactions. So, rather than insist that all Resources
+     * derive from a class which we can guarantee will give us some unique id, we
+     * simply rely on string_to_object and object_to_string to be meaningful.
+     */
+
+public boolean restore_state (InputObjectState os, int t)
+    {
+	int isString = 0;
+	boolean result = true;
+
+	try
+	{
+	    isString = os.unpackInt();
+
+	    /*
+	     * Do we need to restore the parent coordinator handle?
+	     */
+
+	    _parentCoordHandle = null;
+	    
+	    if (isString == 1)
+	    {
+		String objRef = os.unpackString();
+		
+		try
+		{
+		    NAMESPACE_(CORBA).ORB theOrb = ORBInterface.orb();
+		    NAMESPACE_(CORBA).Object optr = theOrb.string_to_object(objRef);
+
+		    theOrb = null;
+		    
+		    _resourceHandle = SCOPED_NARROW_(org.omg.CosTransactions,Resource,optr);
+
+		    if (_resourceHandle == null)
+			throw new BAD_PARAM();
+		    else
+			optr = null;
+		}
+		catch (SystemException e)
+		{
+		    /*
+		     * Something went wrong. Either we are not
+		     * a resource (which shouldn't happen given the
+		     * type of AbstractRecord), or their was a problem
+		     * recreating the record (maybe the machine/server was
+		     * unavailable.) Try again later.
+		     */
+
+		    result = false;
+		}
+
+		objRef = null;
+	    }
+	}
+	catch (IOException e)
+	{
+	    result = false;
+	}
+
+	return result;
+    }
+
+public boolean save_state (OutputObjectState os, int o)
+    {
+	boolean result = true;
+
+	try
+	{	
+	    /*
+	     * Do we need to save the parent coordinator handle?
+	     */
+
+	    if (_resourceHandle == null)
+		os.packInt(-1);
+	    else
+	    {
+		os.packInt(1);
+
+		NAMESPACE_(CORBA).ORB theOrb = ORBInterface.orb();
+		String stringRef = theOrb.object_to_string(_resourceHandle);
+
+		theOrb = null;
+	    
+		if (stringRef != null)
+		{
+		    os.packString(stringRef);
+		    stringRef = null;
+		}
+		else
+		    result = false;
+	    }
+	}
+	catch (IOException e)
+	{
+	    result = false;
+	}
+	catch (SystemException e)
+	{
+	    result = false;
+	}
+	
+	return result;
+    }
+
+public String type ()
+    {
+	return "/StateManager/AbstractRecord/OTS_ResourceRecord";
+    }
+
+public boolean doSave ()
+    {
+	return true;
+    }
+
+public void merge (AbstractRecord a)
+    {
+    }
+
+public void alter (AbstractRecord a)
+    {
+    }
+
+public boolean shouldAdd (AbstractRecord a)
+    {
+	return false;
+    }
+
+public boolean shouldAlter (AbstractRecord a)
+    {
+	return false;
+    }
+
+public boolean shouldMerge (AbstractRecord a)
+    {
+	return false;
+    }
+
+public boolean shouldReplace (AbstractRecord a)
+    {
+	return false;
+    }
+
+    /*
+     * Protected constructor used by crash recovery.
+     */
+
+protected OTS_ResourceRecord ()
+    {
+	super();
+
+	_parentCoordHandle = null;
+	_resourceHandle = null;
+	_propagateRecord = false;
+	_committed = false;
+    }
+    
+private Coordinator _parentCoordHandle;
+private Resource _resourceHandle;
+private boolean _propagateRecord;
+private boolean _committed;
+
+};
