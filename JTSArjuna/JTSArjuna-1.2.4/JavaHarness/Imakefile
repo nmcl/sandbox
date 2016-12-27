@@ -1,0 +1,14 @@
+COMMENT 
+COMMENT Copyright (C) 1996, 1997,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 1997/04/22 12:28:12 nsmw Exp $
+COMMENT
+
+SubDirectory(config)
+
+Purge(MakefileBoot)
