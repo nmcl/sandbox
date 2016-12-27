@@ -1,0 +1,54 @@
+COMMENT 
+COMMENT Copyright (C) 1995, 1996, 1997, 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.3 1999/05/14 10:18:23 nmcl Exp $
+COMMENT
+
+AddToIdlFlags(-DDRAFT3 -I$(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+SOURCES = GridServer.java \
+	  SetGetServer.java \
+	  TranGridServer.java \
+	  ImplGridServer.java \
+	  HammerServer.java \
+	  ExplicitStackServer.java \
+	  StackServer.java
+
+TESTOBJECTS = GridServer.class \
+	      SetGetServer.class \
+	      HammerServer.class \
+	      ExplicitStackServer.class
+
+FILTEROBJECTS = TranGridServer.class \
+	        ImplGridServer.class \
+	        StackServer.class
+
+Target($(SOURCES))
+Target($(TESTOBJECTS))
+
+#ifdef HAVE_FILTER
+Target($(FILTEROBJECTS))
+#endif
+
+PreprocessJavaCode(GridServer,NullParam)
+PreprocessJavaCode(SetGetServer,NullParam)
+PreprocessJavaCode(TranGridServer,NullParam)
+PreprocessJavaCode(ImplGridServer,NullParam)
+PreprocessJavaCode(HammerServer,NullParam)
+PreprocessJavaCode(ExplicitStackServer,NullParam)
+PreprocessJavaCode(StackServer,NullParam)
+
+BuildJavaByteCode(GridServer,NullParam)
+BuildJavaByteCode(SetGetServer,NullParam)
+BuildJavaByteCode(TranGridServer,NullParam)
+BuildJavaByteCode(ImplGridServer,NullParam)
+BuildJavaByteCode(HammerServer,NullParam)
+BuildJavaByteCode(ExplicitStackServer,NullParam)
+BuildJavaByteCode(StackServer,NullParam)
+
+Clean(*.class)

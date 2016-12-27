@@ -1,0 +1,10 @@
+DEMOSYNC : BEFORE_COMPLETION
+Synchronization throwing exception.
+WARNING: OTS_Transaction.beforeCompletion - caught exception.
+BasicAction.End() - prepare phase of action-id -7f0f69d1:80cb355:37398779:0 failed. Action aborting.
+TRANOBJECT : ROLLBACK
+DEMOSYNC : AFTER_COMPLETION ( CosTransactions::StatusRolledBack )
+WARNING: OTS_Transaction.afterCompletion - caught exception org.omg.CORBA.UNKNOWN: 
+Transaction rolledback
+Final action status: CosTransactions::StatusRolledBack
+Test completed successfully.
