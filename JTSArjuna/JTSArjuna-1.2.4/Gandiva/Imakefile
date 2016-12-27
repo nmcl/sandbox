@@ -1,0 +1,19 @@
+COMMENT 
+COMMENT Copyright (C) 1994, 1995, 1996, 1997,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.3 1997/01/02 10:26:18 nsmw Exp $
+COMMENT
+
+SubDirectory(config)
+SubDirectory(include)
+SubDirectory(lib)
+SubDirectory(bin)
+SubDirectory(man)
+SubDirectory(htdocs)
+
+CleanDirectory(Templates.DB)

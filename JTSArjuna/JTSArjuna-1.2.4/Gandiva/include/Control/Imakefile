@@ -1,0 +1,14 @@
+COMMENT 
+COMMENT Copyright (C) 1994, 1995, 1996,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.3 1996/06/04 12:03:37 nmcl Exp $
+COMMENT
+
+CreateInstallDirectory(/include,/include/Control)
+
+InstallFile(/include/Control,ThreadControl.h)

@@ -1,0 +1,21 @@
+COMMENT 
+COMMENT Copyright (C) 1994, 1995, 1996,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 1996/01/02 13:12:20 nsmw Exp $
+COMMENT
+
+SubDirectory(os)
+SubDirectory(Base)
+SubDirectory(Common)
+SubDirectory(Control)
+SubDirectory(Core)
+SubDirectory(Interface)
+SubDirectory(Implementation)
+SubDirectory(Template)
+
+InstallFile(/include,Gandiva.h)
