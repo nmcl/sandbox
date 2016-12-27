@@ -1,0 +1,32 @@
+COMMENT 
+COMMENT Copyright (C) 1999,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.4 1999/05/14 10:18:19 nmcl Exp $
+COMMENT
+
+AddToIdlFlags(-DDRAFT3 -I$(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+SOURCES = XACreator.java \
+	  DummyXA.java \
+	  DummyCreator.java \
+	  JTATest.java
+
+TESTOBJECTS = XACreator.class \
+	      DummyXA.class \
+	      DummyCreator.class \
+	      JTATest.class
+
+Target($(SOURCES))
+Target($(TESTOBJECTS))
+
+BuildJavaByteCode(XACreator,NullParam)
+BuildJavaByteCode(DummyXA,NullParam)
+BuildJavaByteCode(DummyCreator,NullParam)
+BuildJavaByteCode(JTATest,NullParam)
+
+Clean(*.class)
