@@ -1,0 +1,22 @@
+COMMENT 
+COMMENT Copyright (C) 1995, 1996, 1997, 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.3 1998/07/25 17:03:04 nmcl Exp $
+COMMENT
+
+SOURCES = InventoryElement.java
+
+OBJECTS = InventoryElement.class
+
+Target($(SOURCES))
+Target($(OBJECTS))
+
+BuildJavaByteCode(InventoryElement,NullParam)
+
+Clean(*.class)
+
