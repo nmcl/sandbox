@@ -1,0 +1,55 @@
+.\"
+.\" Copyright (C) 1994, 1995, 1996,
+.\"
+.\" Department of Computing Science,
+.\" University of Newcastle upon Tyne,
+.\" Newcastle upon Tyne,
+.\" UK.
+.\"
+.\" $Id: Resource.3,v 1.2 1996/01/02 13:25:43 nsmw Exp $
+.\"
+.TH Resource 3 "21 March 94" "Gandiva" "C++ class"
+.SH NAME
+\fBResource\fR \- reference counting and castup base class.
+.SH SYNOPSIS
+.B "#ifndef CORE_RESOURCE_H_"
+.br
+.B "#   include <Core/Resource.h>"
+.br
+.B "#endif"
+.SH DESCRIPTION
+This class supports reference counting of objects and safe casting up from base 
+class objects to derived class objects, in the present of virtual base classes. 
+.SS PUBLIC OPERATIONS
+.TP
+.B "virtual void *castup(const ClassName &className)"
+Redefined by the derived classes as a part of the castup support. If 
+\fIclassName\fR corresponds to the most derived class's name the objects 
+\fIthis\fR pointer should be returned, else the operation is called 
+recursively on all classes which the most derived class is derived from.
+If no class has the corresponding class name, NULL should be returned.
+.SS STATIC PUBLIC OPERATIONS
+.TP
+.B "void ref(Resource *resource)"
+Increase the \fIreference count\fR on the object \fIresource\fR.
+.TP
+.B "Boolean unref(Resource *resource)"
+Decrease the \fIreference count\fR on the object \fIresource\fR. If the object 
+is located on heap and if the resulting \fIreference count\fR is zero, the 
+object is deleted.
+.SS PROTECTED OPERATIONS
+.TP
+.B "Resource()"
+Creates and initialises a \fBResource\fR object with \fIreferance count\fR set 
+to zero.
+.TP
+.B "virtual ~Resource()"
+Will produce a warning message if called on the heap located object those 
+\fIreference count\fR is not zero.
+.SH BUG
+In the presents of multi-threading a race condition can occur which results 
+in resource objects incorrectly determining whether they are on the stack or 
+the heap.
+.SH SEE ALSO
+.BR Boolean(3),
+.BR ClassName(3).

@@ -1,0 +1,77 @@
+.\"
+.\" Copyright (C) 1994, 1995, 1996,
+.\"
+.\" Department of Computing Science,
+.\" University of Newcastle upon Tyne,
+.\" Newcastle upon Tyne,
+.\" UK.
+.\"
+.\" $Id: MutexSetup.3,v 1.2 1996/01/02 13:25:42 nsmw Exp $
+.\"
+.TH MutexSetup 3 "23 July 1995" "Gandiva" "C++ class"
+.SH NAME
+MutexSetup \- mutex creation control class
+.SH SYNOPSIS
+.B "#ifndef COMMON_MUTEXSETUP_H_"
+.br
+.B "#   include <Common/MutexSetup.h>"
+.br
+.B "#endif"
+.sp
+.BI "class MutexSetup"
+.br
+.BI "{"
+.br
+.BI "public:"
+.br
+.BI "    MutexSetup ();"
+.br
+.BI "    ~MutexSetup ();"
+.sp
+.BI "    Boolean processBased;"
+.br
+.BI "    Boolean initialOwner;"
+.br
+.BI "    Boolean reentrant;"
+.br
+.BI "    key_t key;"
+.br
+.BI "};"
+
+.SH DESCRIPTION
+Instances of this class control the way in which mutex variables
+(instances of classes derived from the \fBMutex\fR
+class), behave when created. An instance is passed to the \fIcreate\fR
+method of the \fBMutex\fR class, which examines the field and determines
+how to create the mutex variable.
+
+The fields are:
+
+.B
+processBased
+	: this determines whether a mutex variable created in
+one process is available for use in another process. Two processes
+should not attempt to create the same mutex variable. The default is
+\fIFALSE\fR. Currently this option is not supported.
+
+.B
+initialOwner
+	: this determines whether the mutex is created owned
+by the creator. The default is \fIFALSE\fR. Currently this option is
+not supported.
+
+.B
+reentrant
+	: this determines whether mutexes are re-entrant, i.e.,
+whether when a thread has obtained a mutex it will block if
+it again tries to obtain it. Currently all mutexes are re-entrant,
+so users can acquire them as often as required without blocking. For
+each mutex "lock" request, there should be a corresponding
+"unlock" request. Currently this option is not supported.
+
+.B
+key
+	: this is used to identify inter-process-based mutexes.
+
+.SH SEE ALSO
+Mutex(3)

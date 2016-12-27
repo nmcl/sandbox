@@ -1,0 +1,96 @@
+.\"
+.\" Copyright (C) 1994, 1995, 1996,
+.\"
+.\" Department of Computing Science,
+.\" University of Newcastle upon Tyne,
+.\" Newcastle upon Tyne,
+.\" UK.
+.\"
+.\" $Id: Semaphore.3,v 1.3 1997/01/27 12:49:03 nsmw Exp $
+.\"
+.TH Semaphore 3 "23 July 1995" "Gandiva" "C++ class"
+.SH NAME
+Semaphore \- semaphore base class
+.SH SYNOPSIS
+.B "#ifndef BASE_SEMAPHORE_H_"
+.br
+.B "#   include <Base/Semaphore.h>"
+.br
+.B "#endif"
+.sp
+.BI "class Semaphore : public Resource"
+.br
+.BI "{"
+.br
+.BI "public:"
+.br
+.BI "    enum SemaphoreStatus { DONE, ERROR, WOULD_BLOCK };"
+.sp
+.BI "    virtual SemaphoreStatus wait    () = 0;"
+.br
+.BI "    virtual SemaphoreStatus signal  () = 0;"
+.br
+.BI "    virtual SemaphoreStatus trywait () = 0;"
+.sp
+.BI "    static Semaphore* create (unsigned int numb,"
+.br
+.BI "                              SemaphoreSetup* = 0);"
+.sp
+.BI "protected:"
+.br
+.BI "    Semaphore ();"
+.br
+.BI "    virtual ~Semaphore ();"
+.br
+.BI "};"
+
+.SH DESCRIPTION
+This is the base class from which all implementations of semaphores
+should be derived. To isolate the application programmer
+from a given implementation, all semaphores should be manipulated as
+instances of this class.
+
+Semaphores are typically used to control access to a limited amount of
+resources, e.g., producer and consumer problems: a semaphore is initialized
+with a count equal to the amount of resource available, and this count
+is decremented whenever a user acquires one of the resources. When this
+count reaches zero, all attempts by subsequent users to access a resource
+cause the user to be blocked until one of the resources has been released.
+
+All semaphore variables are reference counted, by virtue of them
+being derived from the \fBResource\fR base class.
+
+The \fIcreate\fR method creates a \fBSemaphore\fR variable, with initial
+count of \fBnumb\fR. The optional \fISemaphoreSetup\fR parameter can be used
+to control various aspects of the semaphore creation, e.g., whether it is
+created already owned by the invoker of \fIcreate\fR.
+
+\fIwait\fR attempts to decrement the semaphore count for the caller.
+If the count is already zero then the user will be blocked until it is
+incremented. When the caller has decremented the count \fIDONE\fR is
+returned, otherwise it returns \fIERROR\fR indicating some error occurred.
+
+\fIsignal\fR attempts to increment the semaphore counter, which must have
+previously been decremented by the caller. It returns \fIDONE\fR upon
+success, and \fIERROR\fR if an error occurs.
+
+\fItrywait\fR can be used to attempt to decrement the semaphore count,
+but it will not block the caller if the counter is already zero (as is
+the case with the \fIwait\fR method). If the counter is already zero
+then \fIWOULD_BLOCK\fR is returned. \fIDONE\fR is returned if the semaphore
+is decremented successfully, otherwise \fIERROR\fR indicating an erro
+occurred.
+
+.SH NOTES
+If the semaphore goes out of scope with threads still waiting
+for it then they will be woken up, and \fIERROR\fR
+will be returned from the method which was invoked causing
+them to become suspended.
+
+By default all semaphore variables are re-entrant, i.e., a
+thread which has acquired a semaphore can call \fIwait\fR
+or \fItrywait\fR multiple times without being blocked. For each call of
+\fIwait\fR or \fItrywait\fR there should be a corresponding call to
+\fIsignal\fR to release the semaphore.
+.SH SEE ALSO
+Mutex(3), Resource(3), SemaphoreSetup(3)
