@@ -1,0 +1,26 @@
+COMMENT
+COMMENT Copyright (C) 1994, 1995, 1996,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.7 1998/01/12 13:05:21 nmcl Exp $
+COMMENT
+
+SOURCES = Action.cc \
+	  ThreadCleanup.cc \
+	  ThreadDataImple.cc
+
+OBJECTS = Action.o \
+	  ThreadCleanup.o \
+	  ThreadDataImple.o
+
+Target($(OBJECTS))
+
+BuildObject(Action,NullParam,NullParam)
+BuildObject(ThreadCleanup,NullParam,NullParam)
+BuildObject(ThreadDataImple,NullParam,NullParam)
+
+AddDependences($(SOURCES),NullParam)
