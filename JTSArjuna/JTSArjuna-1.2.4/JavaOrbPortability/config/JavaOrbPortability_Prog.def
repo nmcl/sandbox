@@ -1,0 +1,22 @@
+/*
+ * Copyright (C) 1996, 1997, 1998,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: JavaOrbPortability_Prog.def,v 1.2 1998/06/26 10:26:28 nmcl Exp $
+ */
+
+/*
+ *  JavaOrbPortability_Prog.def
+ */
+
+#ifndef IDL2JAVA
+#  define IDL2JAVA $(ORB_ROOT)/bin/idltojava
+#endif
+
+#ifndef IDL2IR
+#  define IDL2IR $(ORB_ROOT)/bin/idltoir
+#endif
