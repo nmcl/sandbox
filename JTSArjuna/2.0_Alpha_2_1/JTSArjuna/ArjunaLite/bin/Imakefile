@@ -1,0 +1,56 @@
+COMMENT 
+COMMENT Copyright (C) 1998, 1999, 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.3.4.1 2000/05/02 08:41:12 nmcl Exp $
+COMMENT
+
+SOURCES = ActionMonitor.java \
+	  ObjectStoreMonitor.java \
+	  OTM.java \
+	  licence.java \
+	  licencemanager.java \
+	  report.java
+
+#ifdef HAVE_SWING
+SWING_OBJECTS = OTM.class
+#endif
+
+UTIL_OBJECTS = ActionMonitor.class \
+	       ObjectStoreMonitor.class \
+	       report.class
+
+OBJECTS = licence.class \
+	  licencemanager.class
+
+Target($(OBJECTS))
+#ifdef BUILDUTILITIES
+Target($(UTIL_OBJECTS))
+#endif
+#ifdef HAVE_SWING
+Target($(SWING_OBJECTS))
+#endif
+
+BuildJavaByteCode(ActionMonitor,NullParam)
+BuildJavaByteCode(ObjectStoreMonitor,NullParam)
+BuildJavaByteCode(OTM,NullParam)
+BuildJavaByteCode(licence,NullParam)
+BuildJavaByteCode(licencemanager,NullParam)
+BuildJavaByteCode(report,NullParam)
+
+#ifdef INSTALLUTILITIES
+InstallProgram(/bin,ActionMonitor.class)
+InstallProgram(/bin,ObjectStoreMonitor.class)
+
+#ifdef HAVE_SWING
+InstallProgram(/bin,OTM.class)
+#endif
+
+#endif
+
+Clean(*.class *.prof out)
+
