@@ -1,0 +1,16 @@
+COMMENT 
+COMMENT Copyright (C) 1995, 1996, 1997, 1998, 1999,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.3 1999/08/25 11:04:33 nmcl Exp $
+COMMENT
+
+InstallFile(/config,JDBC.cf)
+InstallFile(/config,Version.def)
+InstallFileAs(/config,Module_install.def,Module.def)
+
+Purge(JDBC.cf Local.def Module.def Module_install.def Version.def)

@@ -1,0 +1,532 @@
+/*
+ * Copyright (C) 1998, 1999,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: JDBCResource.javatmpl,v 1.4 1999/06/22 15:12:36 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package com.arjuna.JDBC;
+
+import com.arjuna.OrbCommon.*;
+import com.arjuna.JavaArjunaLite.Atomic.*;
+import com.arjuna.JavaCosTransactions.OTS;
+import com.arjuna.JavaCosTransactions.OTS_Current;
+import com.arjuna.JavaCosTransactions.ArjunaOTS.TopLevelTransaction;
+import com.arjuna.JavaGandiva.Common.*;
+import org.omg.CosTransactions.*;
+import java.sql.*;
+import java.io.*;
+import java.util.Properties;
+
+import org.omg.CosTransactions.Unavailable;
+import org.omg.CosTransactions.NotPrepared;
+import org.omg.CosTransactions.HeuristicRollback;
+import org.omg.CosTransactions.HeuristicCommit;
+import org.omg.CosTransactions.HeuristicMixed;
+import org.omg.CosTransactions.HeuristicHazard;
+import org.omg.CosTransactions.SubtransactionsUnavailable;
+import org.omg.CosTransactions.NoTransaction;
+import NAMESPACE_(CORBA).SystemException;
+import java.sql.SQLException;
+
+#include <CosTransactions/CosTranExceptions.h>
+
+/**
+ * JDBC does not use a two-phase commit protocol, and does not allow
+ * nested transactions. So, we do not require an implementation of
+ * SubtransactionAwareResource, and we could potentially have to raise
+ * heuristics.
+ */
+
+/*
+ * We need to know the various XOpen JDBC error codes which are inserted
+ * within a SQLException. Then we can determine the reason for the
+ * exception, and base better actions on that.
+ */
+
+/*
+ * dataDefinitionCausesTransactionCommit and friends. (meta data class).
+ */
+
+public class JDBCResource extends StateManager implements SCOPED_TIE_CLASS_(org.omg.CosTransactions,Resource)
+{
+
+public JDBCResource (OTS_JDBCConnection connection, int type, boolean readOnly,
+		     String url, Properties info)
+    {
+	this(connection, type, readOnly, url, info, ObjectType.RECOVERABLE);
+    }
+ 
+public JDBCResource (OTS_JDBCConnection connection, int type, boolean readOnly,
+		     String url, Properties info, int ot)
+    {
+	super(ot);
+
+	_theTransaction = null;
+	_otsConn = connection;
+	_prepared = false;
+	_heuristic = JDBCResource.NONE;
+	_type = type;
+	_url = url;
+	_info = info;
+	_theConnection = connection.getConnection();
+	_readOnly = readOnly;
+	
+	try
+	{
+	    createState();
+	}
+	catch (JDBCException e1)
+	{
+	    _otsConn.removeResource();
+	}
+    }
+
+public JDBCResource (Uid id) throws SQLException, JDBCException
+    {
+	super(id);
+
+	_theTransaction = null;
+	_otsConn = null;
+	_prepared = true;     // must be true for recovery to be here
+	_heuristic = JDBCResource.NONE;
+	_type = JDBCType.ONE_POINT_ZERO;
+	_theConnection = null;
+	
+	if (!super.activate())
+	    throw new JDBCException("JDBCResource - could not load recovery state.");
+	else
+	{
+	    _otsConn = new OTS_JDBCConnection(_url, _info);
+	    _theConnection = _otsConn.getConnection();
+	}
+    }
+
+public void finalize ()
+    {
+	terminate();
+	
+	if (_theConnection != null)
+	{
+	    /*
+	     * If the transaction is set, then we have potentially been
+	     * used.
+	     */
+	    
+	    if (_theTransaction != null)
+	    {
+		/*
+		 * Should have been committed/rolledback by now, so the
+		 * reference should be null!
+		 */
+
+		System.err.println("JDBCResource - non-null connection attribute at destruction!");
+
+		org.omg.CosTransactions.Status status;
+	    
+		try
+		{
+		    status = _theTransaction.get_status();
+		}
+		catch (Exception e)
+		{
+		    status = org.omg.CosTransactions.Status.StatusUnknown;
+		}
+
+		/*
+		 * Is transaction still running?
+		 */
+		
+		if ((status == org.omg.CosTransactions.Status.StatusActive) ||
+		    (status == org.omg.CosTransactions.Status.StatusPreparing))
+		{
+		    /*
+		     * Rollback transaction.
+		     */
+
+		    try
+		    {
+			_theTransaction.rollback_only();
+		    }
+		    catch (Exception e)
+		    {
+			System.err.println("WARNING - JDBCResource attempt to rollback transaction failed: "+e);
+		    }
+		}
+		else
+		{
+		    /*
+		     * Something strange happened (is happening).
+		     *
+		     * We are going out of scope either:
+		     *
+		     * (i)  after the transaction terminated, in which case why weren't
+		     *      we called during commit/rollback?
+		     * (ii) while the transaction is terminating, in which case why doesn't
+		     *      it have a reference to us to keep us alive?
+		     *
+		     * Either way, there's not a lot we can do about it!
+		     */
+		}
+
+		_theTransaction = null;
+	    }
+
+	    _otsConn.removeResource();
+	}
+    }
+
+/*
+ * Since JDBC 1.0 does not support 2-phase commit, we always
+ * return VoteCommit for prepare, and hope we can when commit
+ * it called!
+ */
+
+#if defined(CORBA_2_2) || defined(CORBA_2_1)
+public org.omg.CosTransactions.Vote prepare () throws SystemException
+#else
+public int prepare () throws SystemException
+#endif    
+    {
+#ifdef DEBUG
+	System.out.println("JDBCResource : PREPARE");
+#endif
+
+	_prepared = true;
+
+	if ((_theConnection == null) || _readOnly)
+	{
+	    destroyState();
+
+	    return Vote.VoteReadOnly;
+	}
+	else
+	{
+	    if (_theTransaction == null)
+	    {
+		System.err.println("WARNING - JDBCResource.prepare: no transaction specified.");
+
+		destroyState();
+		
+		return Vote.VoteRollback;
+	    }
+	    else
+	    {
+		if (_type == JDBCType.ONE_POINT_ZERO)
+		    return Vote.VoteCommit;
+		else
+		    return Vote.VoteCommit;
+	    }
+	}
+    }
+
+/*
+ * Must remove prepare decision, if any.
+ *
+ * We record the heuristic decision all the time, although technically
+ * we need only do this if rollback is called after prepare has been
+ * invoked.
+ */
+
+public void rollback () throws SystemException, HeuristicCommit, HeuristicMixed, HeuristicHazard
+    {
+#ifdef DEBUG	
+	System.out.println("JDBCResource : ROLLBACK");
+#endif
+
+	if (!_readOnly)
+	{
+	    switch (_heuristic)
+	    {
+	    case JDBCResource.HAZARD:
+		throw new HeuristicHazard();
+	    default:
+		break;
+	    }
+	    
+	    if (_theConnection != null)
+	    {
+		if (_theTransaction == null)
+		    System.err.println("WARNING - JDBCResource.rollback: no transaction specified.");
+
+		try
+		{
+		    _theConnection.rollback();
+
+		    _otsConn.removeResource();
+		    
+		    destroyState();
+		}
+		catch (SQLException e)
+		{
+		    /*
+		     * Can't say what happened.
+		     */
+
+		    _otsConn.removeResource();
+		    
+		    updateState(JDBCResource.HAZARD);
+		    
+		    throw new HeuristicHazard();
+		}
+	    }
+	}
+    }
+
+/*
+ * Must remove prepare decision, if any, and record any
+ * heuristic decision we may make.
+ */
+
+public void commit () throws SystemException, NotPrepared, HeuristicRollback, HeuristicMixed, HeuristicHazard
+    {
+#ifdef DEBUG	
+	System.out.println("JDBCResource : COMMIT");
+#endif
+
+	if (!_prepared)
+	    throw new NotPrepared();
+
+	if (!_readOnly)
+	{
+	    switch (_heuristic)
+	    {
+	    case JDBCResource.ROLLBACK:
+		throw new HeuristicRollback();
+	    case JDBCResource.HAZARD:
+		throw new HeuristicHazard();
+	    case JDBCResource.NONE:
+		break;
+	    }
+	    
+	    if (_theConnection != null)
+	    {
+		if (_theTransaction == null)
+		    System.err.println("WARNING - JDBCResource.commit: no transaction specified.");
+
+		try
+		{
+		    _theConnection.commit();
+
+		    _otsConn.removeResource();
+		    
+		    destroyState();
+		}
+		catch (SQLException e1)
+		{
+		    System.err.println(e1);
+
+		    /*
+		     * Try to rollback then.
+		     */
+
+		    try
+		    {
+			_theConnection.rollback();
+
+			_otsConn.removeResource();
+			
+			updateState(JDBCResource.ROLLBACK);
+			
+			throw new HeuristicRollback();
+		    }
+		    catch (SQLException e2)
+		    {
+			updateState(JDBCResource.HAZARD);
+		    }
+
+		    /*
+		     * Can't say what happened.
+		     */
+		    
+		    throw new HeuristicHazard();
+		}
+	    }
+	}
+    }
+
+/*
+ * We need to remember what type of heuristic (if any) we
+ * threw.
+ */
+
+public void forget () throws SystemException
+    {
+#ifdef DEBUG
+	System.out.println("JDBCResource : FORGET");
+#endif
+	
+	destroyState();
+    }
+
+public void commit_one_phase () throws HeuristicHazard, SystemException
+    {
+#ifdef DEBUG
+	System.out.println("JDBCResource : COMMIT_ONE_PHASE");
+#endif
+
+	if (!_readOnly)
+	{
+	    switch (_heuristic)
+	    {
+	    case JDBCResource.HAZARD:
+		throw new HeuristicHazard();
+	    default:
+		break;
+	    }
+
+	    if (_theConnection != null)
+	    {
+		if (_theTransaction == null)
+		    System.err.println("WARNING - JDBCResource.commit_one_phase: no transaction specified.");
+
+		try
+		{
+		    _theConnection.commit();
+
+		    _otsConn.removeResource();
+		    
+		    destroyState();
+		}
+		catch (SQLException e)
+		{
+		    updateState(JDBCResource.HAZARD);
+		    
+		    throw new HeuristicHazard();
+		}
+	    }
+	}
+    }
+
+public void setTransaction (Coordinator tran) throws InvalidTransaction
+    {
+	/*
+	 * Only allow to be set once.
+	 */
+	
+	if (_theTransaction == null)
+	    _theTransaction = tran;
+	else
+	    throw new InvalidTransaction();
+    }
+
+public Coordinator getTransaction () throws Unavailable
+    {
+	if (_theTransaction == null)
+	    throw new Unavailable();
+	else
+	    return _theTransaction;
+    }
+
+public boolean save_state (OutputObjectState os, int ot)
+    {
+	boolean res = false;
+
+	try
+	{
+	    os.packInt(_heuristic);
+	    os.packInt(_type);
+
+	    os.packBoolean(_readOnly);
+	    
+	    os.packString(_url);
+
+	    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+
+	    _info.store(stream, get_uid().toString());
+
+	    os.packBytes(stream.toByteArray());
+	    
+	    res = true;
+	}
+	catch (Exception e)
+	{
+	    res = false;
+	}
+	
+	return res;
+    }
+
+public boolean restore_state (InputObjectState os, int ot)
+    {
+	boolean res = false;
+
+	try
+	{
+	    _heuristic = os.unpackInt();
+	    _type = os.unpackInt();
+
+	    _readOnly = os.unpackBoolean();
+	    
+	    _url = os.unpackString();
+
+	    ByteArrayInputStream stream = new ByteArrayInputStream(os.unpackBytes());
+
+	    _info = new Properties();
+	    _info.load(stream);
+
+	    res = true;
+	}
+	catch (Exception e)
+	{
+	    res = false;
+	}
+
+	return res;
+    }
+
+public String type ()
+    {
+	return new String("/StateManager/JDBCResource");
+    }
+
+private void createState () throws JDBCException
+    {
+	super.activate();
+	
+	super.modified();
+
+	if (!super.deactivate())
+	    throw new JDBCException("JDBCResource - could not create state.");
+    }
+
+private void updateState (int h)
+    {
+	super.activate();
+	
+	_heuristic = h;
+
+	super.modified();
+
+	if (!super.deactivate())
+	    System.err.println("JDBCResource - could not update state.");
+    }
+
+private void destroyState ()
+    {
+	super.destroy();
+    }
+
+private static final int NONE = 0;
+private static final int ROLLBACK = 1;
+private static final int HAZARD = 2;
+
+private Coordinator _theTransaction;
+private OTS_JDBCConnection _otsConn;
+private boolean _prepared;
+private int _heuristic;
+private int _type;
+private String _url;
+private Properties _info;
+private Connection _theConnection;
+private boolean _readOnly;
+ 
+};
+
+
