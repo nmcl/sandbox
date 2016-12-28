@@ -1,0 +1,74 @@
+/*
+ * Copyright (C) 1998,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: listservices.javatmpl,v 1.3 1998/07/06 13:31:45 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+import com.arjuna.OrbCommon.*;
+#ifndef JAR_PACKAGE_PROBLEM
+import NAMESPACE_(CORBA).*;
+import NAMESPACE_(CosNaming).*;
+import NAMESPACE_(CosNaming.NamingContextPackage).*;
+#else
+import NAMESPACE_(CosNaming).NamingContextHelper;
+import NAMESPACE_(CosNaming).NameComponent;
+import NAMESPACE_(CosNaming).NamingContext;
+#endif
+
+import NAMESPACE_(CORBA).SystemException;
+import NAMESPACE_(CosNaming).NamingContextPackage.InvalidName;
+
+public class listservices
+{
+    
+public static void main (String[] args)
+    {
+	ORBInterface.initORB(args, null);
+
+	String[] services = ORBInterface.orb().list_initial_services();
+
+	if (services == null)
+	{
+	    System.out.println("There are no initial services.");
+	}
+	else
+	{
+	    System.out.println("Initial services are:\n");
+	    
+	    for (int i = 0; i < services.length; i++)
+	    {
+		System.out.println(services[i]);
+	    }
+	}
+
+	try
+	{
+	    NAMESPACE_(CORBA).Object objRef = ORBInterface.orb().resolve_initial_references(ORBServices.nameService);
+	    NamingContext ncRef = HELPER_CLASS_(NamingContext).narrow(objRef);
+	    
+	    // bind the Object Reference in Naming
+		    
+	    NameComponent nc = new NameComponent(ORBServices.transactionService, "");
+	    NameComponent path[] = {nc};
+
+	    NAMESPACE_(CORBA).Object o = ncRef.resolve(path);
+
+	    if (o != null)
+		System.out.println("resolved transaction manager.");
+	    else
+		System.out.println("failed to resolve transaction manager.");
+	}
+	catch (Exception e)
+	{
+	    System.err.println(e);
+	}
+    }
+
+};
