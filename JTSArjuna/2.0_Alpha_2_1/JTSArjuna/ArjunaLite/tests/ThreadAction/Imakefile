@@ -1,0 +1,21 @@
+COMMENT 
+COMMENT Copyright (C) 1996, 1997, 1998,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 2000/03/16 16:17:12 nmcl Exp $
+COMMENT
+
+SOURCES = ThreadActionTest.java
+
+OBJECTS = ThreadActionTest.class
+
+Target($(OBJECTS))
+
+BuildJavaByteCode(ThreadActionTest,NullParam)
+
+Clean(*.class *.prof out)
+
