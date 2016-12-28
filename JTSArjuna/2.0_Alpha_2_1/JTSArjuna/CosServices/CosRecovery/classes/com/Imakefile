@@ -1,0 +1,12 @@
+COMMENT 
+COMMENT Copyright (C) 1995, 1996, 1997, 1998,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.2.1 2000/07/27 16:12:04 ndbi Exp $
+COMMENT
+
+SubDirectory(arjuna)
