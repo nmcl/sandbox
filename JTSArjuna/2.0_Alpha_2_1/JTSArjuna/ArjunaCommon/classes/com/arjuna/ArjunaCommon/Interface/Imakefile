@@ -1,0 +1,23 @@
+COMMENT 
+COMMENT Copyright (C) 1995, 1996, 1997, 1998,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 2000/03/16 16:17:08 nmcl Exp $
+COMMENT
+
+SOURCES = NameService.java \
+	  Inventory.java
+
+OBJECTS = NameService.class \
+	  Inventory.class
+
+Target($(OBJECTS))
+
+BuildJavaByteCode(NameService,NullParam)
+BuildJavaByteCode(Inventory,NullParam)
+
+Clean(*.class)
