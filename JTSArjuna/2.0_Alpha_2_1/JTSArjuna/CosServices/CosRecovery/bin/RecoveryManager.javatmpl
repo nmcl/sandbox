@@ -1,0 +1,65 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: RecoveryManager.javatmpl,v 1.1.2.1 2000/07/27 16:12:03 ndbi Exp $
+ */
+
+
+import java.util.Hashtable;
+import java.util.Properties;
+import java.util.Enumeration;
+
+import org.omg.CosTransactions.*;
+
+#ifdef VISIBROKER
+import com.arjuna.CosRecovery.Creators.vbroker.Visi3RecoveryCreator;
+import com.arjuna.CosRecovery.Activators.vbroker.Visi3RCActivator;
+#endif
+
+import com.arjuna.ArjunaCommon.Common.*;
+import com.arjuna.CosTransactions.*;
+import com.arjuna.OrbCommon.*;
+import com.arjuna.CosRecovery.*;
+
+public class RecoveryManager
+{
+    public static void main (String[] args)
+    {
+	for (int i = 0; i < args.length; i++)
+	{
+	    if (args[i].compareTo("-help") == 0)
+	    {
+		System.out.println("Usage: RecoveryManager [-help] [-version]");
+		System.exit(0);
+	    }
+	    if (args[i].compareTo("-version") == 0)
+	    {
+		System.out.println("CosServices version "+com.arjuna.CosTransactions.Configuration.version());
+		System.exit(0);
+	    }
+	}
+
+	ORBInterface.initORB(args, null);
+	ORBInterface.initOA();
+
+	Implementations.initialise();
+
+	PeriodicRecovery periodicRecovery = new PeriodicRecovery();
+
+#ifdef VISIBROKER	
+	ORBInterface.boa().impl_is_ready(Visi3RecoveryCreator.getRecCoordServiceName(),
+					 new Visi3RCActivator());
+#endif
+
+	ORBInterface.shutdownOA();
+	ORBInterface.shutdownORB();
+    }
+};
+
+
+

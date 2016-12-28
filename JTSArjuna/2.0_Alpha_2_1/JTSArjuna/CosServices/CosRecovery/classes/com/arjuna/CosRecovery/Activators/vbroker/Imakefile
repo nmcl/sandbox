@@ -1,0 +1,20 @@
+COMMENT
+COMMENT Copyright (C) 1999, 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.  
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.2.1 2000/07/27 16:12:13 ndbi Exp $
+COMMENT
+
+SOURCES = Visi3RCActivator.java
+
+OBJECTS = Visi3RCActivator.class
+
+Target($(OBJECTS))
+
+BuildJavaByteCode(Visi3RCActivator,NullParam)
+
+Clean(*.class)
