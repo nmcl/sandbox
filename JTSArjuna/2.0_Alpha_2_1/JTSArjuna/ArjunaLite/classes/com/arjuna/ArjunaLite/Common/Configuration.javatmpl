@@ -1,0 +1,57 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.  
+ *
+ * $Id: Configuration.javatmpl,v 1.1 2000/02/25 14:03:58 nmcl Exp $
+ */
+
+package com.arjuna.ArjunaLite.Common;
+
+public class Configuration
+{
+
+public static synchronized final String objectStoreRoot ()
+    {
+	return _objectStore;
+    }
+
+public static synchronized final void setObjectStoreRoot (String s)
+    {
+	_objectStore = s;
+    }
+
+public static synchronized final String lockStoreRoot ()
+    {
+	return _lockStore;
+    }
+
+public static synchronized final void setLockStoreRoot (String s)
+    {
+	_lockStore = s;
+    }
+
+public static synchronized final boolean useAlternativeOrdering ()
+    {
+	return _useAltOrder;
+    }
+
+public static synchronized final void setAlternativeOrdering (boolean b)
+    {
+	_useAltOrder = b;
+    }
+    
+public static final String version ()
+    {
+	return ARJUNA_VERSION;
+    }
+
+private static String _objectStore = DEFAULT_OS_ROOT;
+private static String _lockStore = DEFAULT_LS_ROOT;
+private static boolean _useAltOrder = false;
+    
+}
+
