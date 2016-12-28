@@ -1,0 +1,54 @@
+COMMENT 
+COMMENT Copyright (C) 1996, 1997, 1998, 1999, 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.2.3 2000/07/30 20:26:55 ndbi Exp $
+COMMENT
+
+SOURCES = Info.java \
+          Implementations.java \
+          OTS_ResourceRecordSetup.java \
+          RecoveredTransaction.java \
+          RecoveredTransactionReplayer.java \
+          PeriodicRecovery.java \
+          RecoveryClassLoader.java \
+          RecoveryModule.java \
+          TopLevelTransactionRecoveryModule.java \
+          InterposedTransactionRecoveryModule.java
+
+OBJECTS = Info.class \
+          Implementations.class \
+          OTS_ResourceRecordSetup.class \
+          RecoveredTransaction.class \
+          RecoveredTransactionReplayer.class \
+          PeriodicRecovery.class \
+          RecoveryClassLoader.class \
+          RecoveryModule.class \
+          TopLevelTransactionRecoveryModule.class \
+          InterposedTransactionRecoveryModule.class
+
+Target($(SOURCES))
+Target($(OBJECTS))
+
+PreprocessJavaCode(Info,NullParam)
+
+BuildJavaByteCode(Info,NullParam)
+BuildJavaByteCode(Implementations,NullParam)
+BuildJavaByteCode(OTS_ResourceRecordSetup,NullParam)
+BuildJavaByteCode(RecoveredTransaction,NullParam)
+BuildJavaByteCode(RecoveredTransactionReplayer,NullParam)
+BuildJavaByteCode(PeriodicRecovery,NullParam)
+BuildJavaByteCode(RecoveryClassLoader,NullParam)
+BuildJavaByteCode(RecoveryModule,NullParam)
+BuildJavaByteCode(TopLevelTransactionRecoveryModule,NullParam)
+BuildJavaByteCode(InterposedTransactionRecoveryModule,NullParam)
+
+SubDirectory(Coordinators)
+SubDirectory(Creators)
+SubDirectory(Activators)
+
+Clean(*.class)

@@ -1,0 +1,23 @@
+COMMENT
+COMMENT Copyright (C) 1999, 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.  
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.2.1 2000/07/27 16:12:17 ndbi Exp $
+COMMENT
+
+SOURCES = Init.java \
+          Visi3RecoveryCreator.java
+
+OBJECTS = Init.class \
+          Visi3RecoveryCreator.class
+
+Target($(OBJECTS))
+
+BuildJavaByteCode(Init,NullParam)
+BuildJavaByteCode(Visi3RecoveryCreator,NullParam)
+
+Clean(*.class)

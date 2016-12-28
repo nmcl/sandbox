@@ -1,0 +1,334 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: Visi3RecoveryCoordinator.javatmpl,v 1.1.2.2 2000/07/30 20:26:56 ndbi Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package com.arjuna.CosRecovery.Coordinators.vbroker;
+
+import com.arjuna.ArjunaCommon.Common.*;
+import com.arjuna.OrbCommon.*;
+import com.arjuna.CosRecovery.*;
+import org.omg.CosTransactions.*;
+
+import NAMESPACE_(CORBA).SystemException;
+import NAMESPACE_(CORBA).SystemException;
+import NAMESPACE_(CORBA).BAD_PARAM;
+import NAMESPACE_(CORBA).UNKNOWN;
+
+import com.arjuna.CosRecovery.Creators.vbroker.*;
+
+/**
+ * Implementation of RecoveryCoordinator for Visibroker 3.x.
+ * These objects are expected to be created on demand in the
+ * RecoveryManager using the Visibroker activator.
+ */
+
+public class Visi3RecoveryCoordinator extends SCOPED_SKEL_(org.omg.CosTransactions,RecoveryCoordinator)
+{
+    public Visi3RecoveryCoordinator (Uid RCUid, Uid actionUid, Resource resource, Control control)
+    {
+	_RCUid = RCUid;
+	_actionUid = actionUid;
+	_stringifiedResource = null;
+	_resource = resource;
+	_stringifiedControl = null;
+	_control = control;
+    }
+
+    public Visi3RecoveryCoordinator (String encodedRCData)
+    {
+	char delim = Visi3RecoveryCreator.getRecCoordServiceObjKeyDelimiter();
+
+	if (encodedRCData != null)
+	{
+	    boolean ok = true;
+	    int index1 = encodedRCData.indexOf(delim);
+	    int index2 = 0;
+	    
+	    String stringifiedRCUid = null;
+	    String stringifiedTranUid = null;
+	    
+	    if (index1 != -1)
+		stringifiedRCUid = encodedRCData.substring(0, index1);
+	    else
+		ok = false;
+	    
+	    if (ok)
+	    {
+		index2 = encodedRCData.indexOf(delim, index1 +1);
+		
+		if (index2 != -1)
+		{
+		    stringifiedTranUid = encodedRCData.substring(index1 +1, index2);
+		    index1 = index2;
+		}
+		else
+		    ok = false;
+	    }
+	    
+	    if (ok)
+	    {
+		index2 = encodedRCData.indexOf(delim, index1 +1);
+		
+		if (index2 != -1)
+		{
+		    _stringifiedResource = encodedRCData.substring(index1 +1, index2);
+		    index1 = index2;
+		}
+		else
+		    ok = false;
+	    }
+	    
+	    if (ok)
+	    {
+		_stringifiedControl = encodedRCData.substring(index1 +1);
+	    }
+	    
+	    // Get Uids from strings
+	    _RCUid = new Uid (stringifiedRCUid);
+	    _actionUid = new Uid (stringifiedTranUid);
+	}
+	else
+	{
+	    _RCUid = null;
+	    _actionUid = null;
+	    _stringifiedResource = null;
+	    _resource = null;
+	    _stringifiedControl = null;
+	    _control = null;
+	}
+    }
+
+    public Visi3RecoveryCoordinator ()
+    {
+	_RCUid = null;
+	_actionUid = null;
+	_stringifiedResource = null;
+	_resource = null;
+	_stringifiedControl = null;
+	_control = null;
+    }
+    
+    public void finalize () throws Throwable
+    {
+	super.finalize();
+
+	_RCUid = null;
+	_actionUid = null;
+	_stringifiedResource = null;
+	_resource = null;
+	_stringifiedControl = null;
+	_control = null;
+    }
+
+    /**
+     * IDL method
+     */
+    public Status replay_completion ( Resource res ) throws SystemException, NotPrepared {
+
+	if (DebugController.enabled()) 
+	{
+	    System.out.print("com.arjuna.CosRecovery.Coordinators.vbroker.Visi3RecoveryCoordinator");
+	    if (res != null)
+	    {
+		System.out.print(".replay_completion(");
+		
+		if (isNewResource(res))
+		    System.out.println("new resource)");
+		else
+		    System.out.println("original resource)");
+	    }
+	    else
+		System.out.println(".replay_completion(null)");
+	}
+
+	Status currentStatus = Status.StatusUnknown;
+
+	// First check to see if the transaction is active by
+	// 'pinging' it.  If alive, return the status reported by the
+	// transaction.  If not alive then try and recover the
+	// transaction from the intentions list.
+    
+	boolean transactionActive = false;
+
+	try
+	{
+	    currentStatus = control().get_coordinator().get_status();
+	    transactionActive = true;
+	}
+	catch (Exception e)
+	{
+	    // TODO - check the exceptions more precisely, we're
+	    // looking for INV_OBJREF (or OBJECT_NOT_EXIST)
+	    transactionActive = false;
+	}
+
+	if (!transactionActive)
+	{
+	    /*
+	     * The RecoveredTransactionReplayer is a threaded object
+	     * so we can get the status and return it while the
+	     * replayer does the phase 2 commit is a new thread.  
+	     */
+	    RecoveredTransactionReplayer replayer = new RecoveredTransactionReplayer(_actionUid);
+	    currentStatus = replayer.getStatus();
+
+	    /*
+	     * If we've been given a new resource then add it to the
+	     * intentions list. This will cause the old resource that
+	     * corresponded to this RecoveryCoordinator to be replaced
+	     * by the given one. This is achieved by the
+	     * AbstractRecord list processing.
+	     */
+
+	    if (isNewResource(res)) {
+		replayer.swapResource(_RCUid, res); 
+	    }
+	    
+	    replayer.replayPhase2Commit();
+	}
+	
+	/* 
+	 * If the transaction is Active then throw the NotPrepared
+	 * exception.  
+	 */
+	if (currentStatus == Status.StatusActive)
+	    throw new NotPrepared();
+
+	return currentStatus;
+    }
+
+    private boolean isNewResource (Resource res)
+    {
+	/* 
+	 *  Compare the stringified resource references. It is
+	 *  possible for 2 different stringied references to actually
+	 *  point to the same object so we may falsely declare the
+	 *  resource to be new. This doesn't matter.  
+	 */
+
+	boolean isNew = true;
+	
+	String stringifiedNewRes = ORBInterface.orb().object_to_string(res);
+	String stringifiedOrigRes = null;
+
+	/* 
+	 * If we have a cached stringified version then use that for
+	 * the comparison. Failing that use object_to_string.  
+	 */
+
+	if (_stringifiedResource != null)
+	    stringifiedOrigRes = _stringifiedResource;
+	else
+	    stringifiedOrigRes = ORBInterface.orb().object_to_string(_resource);
+
+	if ( (stringifiedOrigRes != null) && (stringifiedNewRes != null) )
+	    if ( stringifiedOrigRes.equals(stringifiedNewRes) )
+		isNew = false;
+
+	return isNew;
+    }
+
+    private Control control()
+    {
+	if ( (_control == null) && (_stringifiedControl != null) )
+	{
+	    try
+	    {
+		NAMESPACE_(CORBA).ORB theOrb = ORBInterface.orb();
+		
+		if (theOrb == null)
+		    throw new UNKNOWN();
+
+		if (DebugController.enabled())
+		    System.out.println("Visi3RecoveryCoordinator: About to string_to_object on "+_stringifiedControl);
+
+		NAMESPACE_(CORBA).Object optr = theOrb.string_to_object(_stringifiedControl);
+
+		if (DebugController.enabled())
+		    System.out.println("Visi3RecoveryCoordinator: Successfully stringed to object, next try to narrow");
+		
+		theOrb = null;
+		
+		_control = SCOPED_NARROW_(org.omg.CosTransactions,Control,optr);
+
+		if (DebugController.enabled())
+		    System.out.println("Visi3RecoveryCoordinator: Successfully narrowed");
+		
+		if (_control == null)
+		    throw new BAD_PARAM();
+		else
+		{
+		    optr = null;
+		}
+	    }
+	    catch (SystemException e)
+	    {
+		// Failed to narrow to a Control
+		if (DebugController.enabled())
+		    System.out.println("Visi3RecoveryCoordinator: Failed to narrow to Control");
+	    }
+	}
+	return _control;
+
+    }
+    
+    private Resource resource()
+    {
+	if ( (_resource == null) && (_stringifiedResource != null) )
+	{
+	    try
+	    {
+		NAMESPACE_(CORBA).ORB theOrb = ORBInterface.orb();
+		
+		if (theOrb == null)
+		    throw new UNKNOWN();
+
+		if (DebugController.enabled())
+		    System.out.println("Visi3RecoveryCoordinator: About to string_to_object on "+_stringifiedResource);
+
+		NAMESPACE_(CORBA).Object optr = theOrb.string_to_object(_stringifiedResource);
+
+		if (DebugController.enabled())
+		    System.out.println("Visi3RecoveryCoordinator: Successfully stringed to object, next try to narrow");
+		
+		theOrb = null;
+		
+		_resource = SCOPED_NARROW_(org.omg.CosTransactions,Resource,optr);
+
+		if (DebugController.enabled())
+		    System.out.println("Visi3RecoveryCoordinator: Successfully narrowed");
+		
+		if (_resource == null)
+		    throw new BAD_PARAM();
+		else
+		{
+		    optr = null;
+		}
+	    }
+	    catch (SystemException e)
+	    {
+		// Failed to narrow to a Resource
+		if (DebugController.enabled())
+		    System.out.println("Visi3RecoveryCoordinator: Failed to narrow to Resource");
+	    }
+	}
+	return _resource;
+    }
+
+    private Uid      _RCUid;
+    private Uid      _actionUid;
+    private String   _stringifiedResource;
+    private Resource _resource;
+    private String   _stringifiedControl;
+    private Control  _control;
+};
+
