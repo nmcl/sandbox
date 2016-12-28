@@ -1,0 +1,38 @@
+/*
+ * Copyright (C) 1996, 1997,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: JavaHarness_Prog.def,v 1.4 1998/01/28 12:05:35 nmcl Exp $
+ */
+
+/*
+ *  JavaHarness_Prog.def
+ */
+
+#ifndef JavaProg
+#   define JavaProg java
+#endif
+
+#ifndef JavaCProg
+#   define JavaCProg javac
+#endif
+
+#ifndef JavaDocProg
+#   define JavaDocProg javadoc
+#endif
+
+#ifndef JarProg
+#   define JarProg jar
+#endif
+
+#ifndef RMICProg
+#   define RMICProg rmic
+#endif
+
+#ifndef CPP_PROGRAM
+#  define CPP_PROGRAM "/lib/cpp"
+#endif
