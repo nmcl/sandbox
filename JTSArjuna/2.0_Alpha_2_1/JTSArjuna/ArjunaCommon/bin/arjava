@@ -1,0 +1,12 @@
+#!/bin/sh
+
+if test "'x$JTSARJUNA_HOME'" = "'x'"
+then
+	echo "You must set the JTSARJUNA_HOME environment variable"
+	exit
+fi
+
+CLASSPATH=$JTSARJUNA_HOME/lib/JavaHarness.jar:$JTSARJUNA_HOME/lib/ArjunaCommon.jar:$JTSARJUNA_HOME/lib/ArjunaLite.jar:$JTSARJUNA_HOME/lib/OrbCommon.jar:$JTSARJUNA_HOME/lib/JTS.jar:$JTSARJUNA_HOME/lib/JTSArjuna.jar:$JTSARJUNA_HOME/lib/JDBCArjuna.jar:$JTSARJUNA_HOME/lib/JDBC2Arjuna.jar:$JTSARJUNA_HOME/lib/JTSArjunaInfo.jar:${CLASSPATH}
+export CLASSPATH
+
+java -DPROPERTIES_FILE=$JTSARJUNA_HOME/etc/Arjuna.properties $@

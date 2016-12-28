@@ -1,0 +1,42 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: Configuration.javatmpl,v 1.1 2000/02/25 14:02:32 nmcl Exp $
+ */
+
+/*
+ * When we have an installation utility (e.g., InstallShield) we can have
+ * that compile the property file location in a separate file which this
+ * class then uses. So we ship a small source file in the distribution which
+ * then gets built on a per-installation basis. Could do that for other
+ * things too.
+ */
+
+package com.arjuna.ArjunaCommon.Common;
+
+public class Configuration
+{
+
+public static synchronized final String propertiesFile ()
+    {
+	return _propFile;
+    }
+
+public static synchronized final void setPropertiesFile (String file)
+    {
+	_propFile = file;
+    }
+
+public static final String version ()
+    {
+	return GANDIVA_VERSION;
+    }
+
+private static String _propFile = PROPERTIES_FILE;
+	
+}

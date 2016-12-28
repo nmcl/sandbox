@@ -1,0 +1,42 @@
+COMMENT 
+COMMENT Copyright (C) 1998, 1999, 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.4.4.1.4.1 2000/07/18 13:29:58 nmcl Exp $
+COMMENT
+
+SOURCES = licence.java \
+	  licencemanager.java \
+	  ApplyLicence.java \
+	  licencebreak.java \
+	  report.java
+
+UTIL_OBJECTS = ApplyLicence.class \
+	       report.class
+
+OBJECTS = licence.class \
+	  licencemanager.class \
+	  licencebreak.class
+
+Target($(OBJECTS))
+#ifdef BUILDUTILTIES
+Target($(UTIL_OBJECTS))
+#endif
+
+BuildJavaByteCode(licence,NullParam)
+BuildJavaByteCode(licencemanager,NullParam)
+BuildJavaByteCode(ApplyLicence,NullParam)
+BuildJavaByteCode(licencebreak,NullParam)
+BuildJavaByteCode(report,NullParam)
+
+#ifdef INSTALLUTILITIES
+InstallProgram(/bin,ApplyLicence.class)
+InstallProgram(/bin,arjava)
+InstallProgram(/bin,arjava.bat)
+#endif
+
+Clean(*.class *.prof out)
