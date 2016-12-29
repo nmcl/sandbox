@@ -1,0 +1,43 @@
+COMMENT 
+COMMENT Copyright (C) 1996, 1997, 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 2000/02/25 14:05:45 nmcl Exp $
+COMMENT
+
+SOURCES = OTS_ClientDebugFilter.java \
+	  OTS_ClientDebugFilterFactory.java \
+	  OTS_ServerDebugFilter.java \
+	  OTS_ServerDebugFilterFactory.java \
+	  OTS_ClientDebugBindFilter.java \
+	  Init.java
+
+OBJECTS = OTS_ClientDebugFilter.class \
+	  OTS_ClientDebugFilterFactory.class \
+	  OTS_ServerDebugFilter.class \
+	  OTS_ServerDebugFilterFactory.class \
+	  OTS_ClientDebugBindFilter.class \
+	  Init.class
+
+PreprocessJavaCode(OTS_ClientDebugFilter,NullParam)
+PreprocessJavaCode(OTS_ServerDebugFilter,NullParam)
+PreprocessJavaCode(OTS_ClientDebugBindFilter,NullParam)
+PreprocessJavaCode(Init,NullParam)
+
+#ifdef HAVE_FILTER
+Target($(SOURCES))
+Target($(OBJECTS))
+#endif
+
+BuildJavaByteCode(OTS_ClientDebugFilter,NullParam)
+BuildJavaByteCode(OTS_ClientDebugFilterFactory,NullParam)
+BuildJavaByteCode(OTS_ServerDebugFilter,NullParam)
+BuildJavaByteCode(OTS_ServerDebugFilterFactory,NullParam)
+BuildJavaByteCode(OTS_ClientDebugBindFilter,NullParam)
+BuildJavaByteCode(Init,NullParam)
+
+Clean(*.class)
