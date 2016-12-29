@@ -1,0 +1,179 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.  
+ *
+ * $Id: OTS_ServerControl.javatmpl,v 1.12.6.2 2000/06/23 09:05:54 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package com.arjuna.CosTransactions.Interposition;
+
+import com.arjuna.OrbCommon.*;
+import com.arjuna.CosTransactions.OTS_Control;
+import com.arjuna.CosTransactions.OTS_Transaction;
+import com.arjuna.ArjunaOTS.*;
+import com.arjuna.ArjunaCommon.Common.Uid;
+import com.arjuna.ArjunaCommon.Template.*;
+import org.omg.CosTransactions.*;
+import java.util.*;
+
+import NAMESPACE_(CORBA).SystemException;
+import NAMESPACE_(CORBA).BAD_PARAM;
+
+/*
+ * As with OTS_Control, the transaction is maintained until the
+ * control object is deleted.
+ *
+ * This class maintains a handle on the current server-side transaction,
+ * and also references to the original transaction it is "mirroring". This
+ * allows us to have a single place to hold both sets of information which
+ * is accessible to interposed resources, synchronizations, and transactions.
+ */
+
+public class OTS_ServerControl extends OTS_Control
+{
+
+public OTS_ServerControl ( Uid actUid, Control parentCon, OTS_Transaction parentTran,
+			   Coordinator realCoord, Terminator realTerm )
+    {
+	super();
+
+	_realCoordinator = realCoord;
+	_realTerminator = realTerm;
+
+	_parentControl = parentCon;
+
+	/*
+	 * allControls only contains local controls.
+	 */
+
+	OTS_Control cont = ((OTS_Control.allControls != null) ? (OTS_Control) OTS_Control.allControls.get(actUid) : null);
+
+	/*
+	 * Temporary fix until I have time to rewrite the architecture to
+	 * prevent registering interposed hierarchies (and hence creating
+	 * proxy transactions/controls) for local hierarchies!
+	 */
+
+	if (cont != null)
+	{
+	    _isWrapper = true;
+	    _transactionHandle = cont.getImplHandle();
+
+	    Coordinator coord = null;
+	    Terminator term = null;
+	    
+	    try
+	    {
+		coord = cont.get_coordinator();
+		term = cont.get_terminator();
+	    }
+	    catch (Exception e)
+	    {
+		e.printStackTrace();
+
+		try
+		{
+		    if (coord != null)
+			coord.rollback_only();
+		}
+		catch (Exception ex)
+		{
+		}
+	    }
+	    
+	    super.duplicateTransactionHandle(coord, term);
+	}
+	else
+	{
+	    _transactionHandle = new OTS_ServerTransaction(actUid, _parentControl, parentTran);
+	    _isWrapper = false;
+
+	    super.createTransactionHandle();
+	}
+
+	_theUid = _transactionHandle.get_uid();
+	
+	addControl();
+    }
+
+public void finalize () throws Throwable
+    {
+	_realCoordinator = null;
+	_realTerminator = null;
+
+	super.finalize();
+    }
+
+public final boolean isWrapper ()
+    {
+	return _isWrapper;
+    }
+
+public Coordinator originalCoordinator ()
+    {
+	return _realCoordinator;
+    }
+
+public Terminator originalTerminator ()
+    {
+	return _realTerminator;
+    }
+    
+public synchronized void destroy () throws ActiveTransaction, ActiveThreads, BadControl, Destroyed, SystemException
+    {
+	/*
+	 * We are about to delete ourself (!) so make sure we don't
+	 * using anything on the stack after this point. This includes
+	 * returning variables.
+	 */
+
+	try
+	{
+	    if (_isWrapper)
+		_transactionHandle = null;
+
+	    super.destroy();
+	}
+	catch (BAD_PARAM e)
+	{
+	    // already destroyed
+	}
+	catch (Exception e)
+	{
+	    System.err.println("WARNING: OTS_ServerControl could not destroy object: "+e);
+	}
+    }
+
+protected boolean addControl ()
+    {
+	synchronized (OTS_ServerControl.allServerControls)
+        {
+	    OTS_ServerControl.allServerControls.put(get_uid(), this);
+	}
+	
+	return true;
+    }
+
+protected boolean removeControl ()
+    {
+	synchronized (OTS_ServerControl.allServerControls)
+        {
+	    OTS_ServerControl.allServerControls.remove(get_uid());
+	}
+
+	return true;
+    }
+
+public static Hashtable allServerControls = new Hashtable();
+    
+private Coordinator _realCoordinator;
+private Terminator  _realTerminator;
+private boolean     _isWrapper;
+    
+};

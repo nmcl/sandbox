@@ -1,0 +1,486 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.  
+ *
+ * $Id: OTS_ServerTopLevelAction.javatmpl,v 1.6.2.1.4.1 2000/06/23 09:05:55 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package com.arjuna.CosTransactions.Interposition.Arjuna;
+
+import com.arjuna.OrbCommon.*;
+import com.arjuna.ArjunaCommon.Common.Uid;
+import com.arjuna.ArjunaLite.Atomic.PrepareOutcome;
+import com.arjuna.ArjunaLite.Atomic.ActionStatus;
+import com.arjuna.ArjunaLite.Thread.ThreadActionData;
+import com.arjuna.CosTransactions.*;
+import com.arjuna.CosTransactions.Interposition.OTS_ServerControl;
+import com.arjuna.CosTransactions.Interposition.OTS_ServerTransaction;
+import org.omg.CosTransactions.*;
+import NAMESPACE_(CORBA).CompletionStatus;
+
+import NAMESPACE_(CORBA).SystemException;
+import NAMESPACE_(CORBA).UNKNOWN;
+
+#include <CosTransactions/CosTranExceptions.h>
+
+/*
+ * This looks like an atomic action, but is not actually derived from
+ * BasicAction or OTS_Transaction. This is because of the way in which the
+ * OTS creates and manipulates transactions.
+ *
+ * As with OTS_Transaction, we only create actions here, and do not associated
+ * these contexts with any thread. We do the association later.
+ *
+ * If we were to do the creation via a suitably modified current interface
+ * then the thread association would be done for us automatically, and we
+ * would not have to call resume at all.
+ *
+ * This is a top-level action proxy.
+ */
+
+public class OTS_ServerTopLevelAction extends OTS_ServerResource implements SCOPED_TIE_CLASS_(org.omg.CosTransactions,Resource)
+{
+
+public OTS_ServerTopLevelAction (OTS_ServerControl control)
+    {
+	super(control);
+
+	_theResource = null;
+	_resourceRef = null;
+	
+	if (_theControl != null)
+	{
+	    _theResource = new SCOPED_TIE_INSTANCE_(org.omg.CosTransactions,Resource)(this);
+	    
+	    READY_IMPL_(_theResource);
+
+	    _resourceRef = CORBA_REF_(_theResource,org.omg.CosTransactions.Resource);
+	    
+	    /*
+	     * Would like to be able to attach a thread filter
+	     * to this object if process-filters aren't supported.
+	     * However, currently this won't work as we can't have
+	     * two different filter types working at the same
+	     * time.
+	     *
+	     *		ATTACH_THREAD_FILTER_(_theResource);
+	     */
+	    
+	    Coordinator realCoordinator = _theControl.originalCoordinator();
+
+	    if (!(_valid = registerResource(realCoordinator)))
+	    {
+		System.err.println("OTS_ServerTopLevelAction - could not register interposed hierarchy!");
+	    
+		/*
+		 * Failed to register. Valid is set, and the interposition controller
+		 * will now deal with this.
+		 */
+	    }
+
+	    realCoordinator = null;
+	}
+    }
+ 
+/*
+ * Assume only one thread can delete an object!
+ */
+ 
+public void finalize ()
+    {
+	_theResource = null;
+	_resourceRef = null;
+	_recoveryCoord = null;
+
+	super.tidyup();
+	super.finalize();
+    }
+
+/*
+ * Will only be called by the remote top-level transaction.
+ */
+
+#if defined(CORBA_2_3) || defined(CORBA_2_2) || defined(CORBA_2_1)
+public org.omg.CosTransactions.Vote prepare () throws HeuristicMixed, HeuristicHazard, SystemException
+#else
+public int prepare () throws HeuristicMixed, HeuristicHazard, SystemException
+#endif
+    {
+	if (_theControl == null)
+	{
+#ifdef ORB_OTS_SUPPORT	    
+	    throw new InvalidTransaction(OTS_Exceptions.SERVERAA_NO_CONTROL, CompletionStatus.COMPLETED_NO);
+#else
+	    throw new UNKNOWN(OTS_Exceptions.SERVERAA_NO_CONTROL, CompletionStatus.COMPLETED_NO);
+#endif
+	}
+
+	if (_theControl.isWrapper())
+	{
+	    destroyResource();  // won't necessarily get another invocation!
+	    return Vote.VoteReadOnly;
+	}
+
+	OTS_ServerTransaction theTransaction = (OTS_ServerTransaction) _theControl.getImplHandle();
+	
+	ThreadActionData.pushAction(theTransaction); // unnecessary if context goes with all calls.
+
+	int result = PrepareOutcome.PREP_NOTOK;
+
+	/*
+	 * Transaction may have locally timed out and been rolled back.
+	 */
+
+	int s = theTransaction.status();
+
+	if ((s == ActionStatus.RUNNING) || (s == ActionStatus.ABORT_ONLY))
+	    result = theTransaction.doPrepare();
+	else
+	{
+	    switch (s)
+	    {
+	    case ActionStatus.COMMITTING:
+	    case ActionStatus.COMMITTED:
+	    case ActionStatus.H_COMMIT:
+		result = PrepareOutcome.PREP_OK;
+		break;
+	    case ActionStatus.H_MIXED:
+		result = PrepareOutcome.HEURISTIC_MIXED;
+		break;
+	    case ActionStatus.H_HAZARD:
+		result = PrepareOutcome.HEURISTIC_HAZARD;
+		break;
+	    }
+	}
+    
+	ThreadActionData.popAction();
+	
+	switch (result)
+	{
+	case PrepareOutcome.PREP_OK:
+	    return Vote.VoteCommit;
+	case PrepareOutcome.PREP_NOTOK:
+	    return Vote.VoteRollback;
+	case PrepareOutcome.PREP_READONLY:
+	    destroyResource();  // won't necessarily get another invocation!
+	    
+	    // what is we subsequently rollback?
+	    
+	    return Vote.VoteReadOnly;
+	case PrepareOutcome.HEURISTIC_MIXED:
+	    throw new HeuristicMixed();
+	case PrepareOutcome.HEURISTIC_HAZARD:
+	default:
+	    throw new HeuristicHazard();
+	}
+    }
+
+public void rollback () throws HeuristicCommit, HeuristicMixed, HeuristicHazard, SystemException
+    {
+	if (_theControl == null)
+	{
+#ifdef ORB_OTS_SUPPORT	    
+	    throw new InvalidTransaction(OTS_Exceptions.SERVERAA_NO_CONTROL, CompletionStatus.COMPLETED_NO);
+#else
+	    throw new UNKNOWN(OTS_Exceptions.SERVERAA_NO_CONTROL, CompletionStatus.COMPLETED_NO);
+#endif
+	}
+
+	if (_theControl.isWrapper())
+	{
+	    destroyResource();
+	    return;
+	}
+	
+	OTS_ServerTransaction theTransaction = (OTS_ServerTransaction) _theControl.getImplHandle();
+	
+	ThreadActionData.pushAction(theTransaction);
+	
+	int actionStatus = theTransaction.status();
+    
+	if (actionStatus == ActionStatus.PREPARED)
+	{
+	    /*
+	     * This will also call any after_completions on
+	     * registered synchronizations.
+	     */
+	    
+	    actionStatus = theTransaction.doPhase2Abort();
+	}
+	else
+	{
+	    theTransaction.rollback();  // must rollback
+	    actionStatus = ActionStatus.ABORTED;
+	}
+
+	ThreadActionData.popAction();
+	
+	switch (actionStatus)
+	{
+	case ActionStatus.ABORTED:
+	case ActionStatus.H_ROLLBACK:
+	    destroyResource();
+	    break;
+	case ActionStatus.COMMITTED:
+	case ActionStatus.H_COMMIT:
+	    throw new HeuristicCommit();
+	case ActionStatus.H_MIXED:
+	    throw new HeuristicMixed();
+	case ActionStatus.H_HAZARD:
+	    throw new HeuristicHazard();
+	default:
+	    destroyResource();
+	    break;
+	}
+    }
+
+public void commit () throws NotPrepared, HeuristicRollback, HeuristicMixed, HeuristicHazard, SystemException
+    {
+	if (_theControl == null)
+	{
+#ifdef ORB_OTS_SUPPORT	    
+	    throw new InvalidTransaction(OTS_Exceptions.SERVERAA_NO_CONTROL, CompletionStatus.COMPLETED_NO);
+#else	    
+	    throw new UNKNOWN(OTS_Exceptions.SERVERAA_NO_CONTROL, CompletionStatus.COMPLETED_NO);
+#endif
+	}
+	
+	if (_theControl.isWrapper())
+	{
+	    destroyResource();
+	    return;
+	}
+
+	OTS_ServerTransaction theTransaction = (OTS_ServerTransaction) _theControl.getImplHandle();
+	
+	ThreadActionData.pushAction(theTransaction);
+	
+	int actionStatus = theTransaction.status();
+	boolean notPrepared = false;
+
+	if (actionStatus == ActionStatus.PREPARED)
+	{
+	    /*
+	     * This will also call any after_completions on
+	     * registered synchronizations.
+	     */
+	    
+	    actionStatus = theTransaction.doPhase2Commit(false);
+	}
+	else
+	{
+	    notPrepared = true;
+	}
+
+	ThreadActionData.popAction();
+
+	if (notPrepared)
+	    throw new NotPrepared();
+	
+	switch (actionStatus)
+	{
+	case ActionStatus.COMMITTED:
+	case ActionStatus.H_COMMIT:
+	    destroyResource();
+	    break;
+	case ActionStatus.ABORTED:
+	case ActionStatus.H_ROLLBACK:
+	    throw new HeuristicRollback();
+	case ActionStatus.H_MIXED:
+	    throw new HeuristicMixed();
+	case ActionStatus.H_HAZARD:
+	    throw new HeuristicHazard();
+	default:
+	    destroyResource();
+	    break;
+	}
+    }
+
+public void forget () throws SystemException
+    {
+	/*
+	 * We can't raise exceptions, so there should be nothing to forget!
+	 */
+
+	destroyResource();
+    }
+
+
+#if defined(DRAFT1) || defined(DRAFT2)
+#ifdef ORB_OTS_SUPPORT
+public void commit_one_phase () throws HeuristicRollback, HeuristicMixed, HeuristicHazard, SystemException
+#else
+public void commit_one_phase () throws HeuristicRollback, HeuristicMixed, HeuristicHazard, TransactionRolledBack, SystemException
+#endif
+#else
+#ifdef ORB_OTS_SUPPORT    
+public void commit_one_phase () throws HeuristicHazard, SystemException
+#else
+public void commit_one_phase () throws HeuristicHazard, TransactionRolledBack, SystemException
+#endif
+#endif
+    {
+	if (_theControl == null)
+	{
+#ifdef ORB_OTS_SUPPORT
+	    throw new InvalidTransaction(OTS_Exceptions.SERVERAA_NO_CONTROL, CompletionStatus.COMPLETED_NO);
+#else
+	    throw new UNKNOWN(OTS_Exceptions.SERVERAA_NO_CONTROL, CompletionStatus.COMPLETED_NO);
+#endif	
+	}
+
+	if (_theControl.isWrapper())
+	{
+	    destroyResource();
+	    return;
+	}
+
+	OTS_ServerTransaction theTransaction = (OTS_ServerTransaction) _theControl.getImplHandle();
+
+	if (theTransaction == null)
+	{
+	    System.err.println("WARNING - OTS_ServerTopLevelAction.commit_one_phase - no transaction!");
+
+#ifdef ORB_OTS_SUPPORT	
+	    throw new InvalidTransaction(OTS_Exceptions.NO_TRANSACTION, CompletionStatus.COMPLETED_NO);
+#else
+	    throw new BAD_OPERATION(OTS_Exceptions.NO_TRANSACTION, CompletionStatus.COMPLETED_NO);
+#endif
+	}
+	
+	ThreadActionData.pushAction(theTransaction);
+
+	try
+	{
+	    /*
+	     * This will commit and do any before/after_completion calls
+	     * on registered synchronizations.
+	     */
+
+	    theTransaction.doCommit(true);
+	}
+	catch (HeuristicHazard e1)
+	{
+	    /*
+	     * Is a heuristic, then don't remove the
+	     * transaction information.
+	     */
+
+	    ThreadActionData.popAction();
+
+	    throw e1;
+	}
+#if defined(DRAFT1) || defined(DRAFT2)
+	catch (HeuristicMixed e2)
+	{
+	    ThreadActionData.popAction();
+
+	    throw e2;
+	}
+	catch (HeuristicRollback e3)
+	{
+	    ThreadActionData.popAction();
+
+	    throw e3;
+	}	    
+#endif
+	catch (TransactionRolledBack e4)
+	{
+	    ThreadActionData.popAction();
+
+	    destroyResource();
+
+	    throw e4;
+	}
+	catch (InvalidTransaction e5)
+	{
+	    ThreadActionData.popAction();
+
+	    destroyResource();
+
+	    throw e5;
+	}
+	catch (SystemException e6)
+	{
+	    ThreadActionData.popAction();
+
+	    destroyResource();
+
+	    throw e6;
+	}	
+
+	ThreadActionData.popAction();
+
+	destroyResource();
+    }
+
+protected OTS_ServerTopLevelAction ()
+    {
+	_theResource = null;
+	_resourceRef = null;
+	_recoveryCoord = null;
+    }
+
+protected final synchronized void destroyResource ()
+    {
+	if (!_destroyed)
+	{
+	    if (OTS_Interposition.destroy(get_uid()))
+	    {
+		_destroyed = true;
+
+		_recoveryCoord = null;
+
+		DESTROY_IMPL_(_theResource);
+		_theResource = null;
+	    }
+	}
+    }
+ 
+protected boolean registerResource (Coordinator theCoordinator)
+    {
+	boolean result = false;
+
+	if (theCoordinator != null)
+	{
+	    try
+	    {
+		_recoveryCoord = theCoordinator.register_resource(_resourceRef);
+		result = true;
+	    }
+	    catch (Inactive e)
+	    {
+		System.err.println("WARNING - OTS_ServerTopLevelAction.registerResource - Inactive exception");
+	    }
+	    catch (TransactionRolledBack ex1)
+	    {
+		System.err.println("WARNING - OTS_ServerTopLevelAction.registerProxyAction - caught TransactionRolledBack");
+	    }
+	    catch (InvalidTransaction ex2)
+	    {
+		System.err.println("WARNING - OTS_ServerTopLevelAction::registerProxyAction - caught InvalidTransaction");
+	    }
+	    catch (SystemException e)
+	    {
+		System.err.println("WARNING - OTS_ServerTopLevelAction.registerResource - caught unexpected exception: "+e);
+	    }
+	}
+	else
+	    System.err.println("WARNING - OTS_ServerTopLevelAction.registerProxyAction - no coordinator to use!");
+    
+	return result;
+    }
+
+protected SCOPED_TIE_INSTANCE_(org.omg.CosTransactions,Resource) _theResource;
+protected Resource _resourceRef;
+protected RecoveryCoordinator _recoveryCoord;
+
+};
+
+

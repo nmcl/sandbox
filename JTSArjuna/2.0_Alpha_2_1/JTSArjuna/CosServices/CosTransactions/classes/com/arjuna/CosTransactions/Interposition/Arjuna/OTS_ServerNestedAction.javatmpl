@@ -1,0 +1,336 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.  
+ *
+ * $Id: OTS_ServerNestedAction.javatmpl,v 1.4.6.1 2000/06/23 09:05:54 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+#include <CosTransactions/CosTranNames.h>
+
+package com.arjuna.CosTransactions.Interposition.Arjuna;
+
+import com.arjuna.OrbCommon.*;
+import com.arjuna.ArjunaLite.Thread.ThreadActionData;
+import com.arjuna.ArjunaCommon.Common.Uid;
+import com.arjuna.CosTransactions.*;
+import com.arjuna.CosTransactions.Interposition.OTS_ServerControl;
+import com.arjuna.CosTransactions.Interposition.OTS_ServerTransaction;
+import org.omg.CosTransactions.*;
+import NAMESPACE_(CORBA).CompletionStatus;
+
+import org.omg.CosTransactions.HeuristicHazard;
+import org.omg.CosTransactions.HeuristicMixed;
+import NAMESPACE_(CORBA).SystemException;
+import NAMESPACE_(CORBA).BAD_OPERATION;
+import NAMESPACE_(CORBA).UNKNOWN;
+
+#include <CosTransactions/CosTranExceptions.h>
+
+/*
+ * This looks like an atomic action, but is not actually derived from BasicAction
+ * or OTS_Transaction. This is because of the way in which the OTS creates and
+ * manipulates transactions.
+ *
+ * This is a nested action proxy.
+ */
+
+public class OTS_ServerNestedAction extends OTS_ServerResource implements SCOPED_TIE_CLASS_(org.omg.CosTransactions,SubtransactionAwareResource)
+{
+    
+    /*
+     * Create local transactions with same ids as remote.
+     */
+
+public OTS_ServerNestedAction (OTS_ServerControl myControl)
+    {
+	super(myControl);
+
+	_theResource = null;
+	_resourceRef = null;
+	
+	if (_theControl != null)
+	{
+	    _theResource = new SCOPED_TIE_INSTANCE_(org.omg.CosTransactions,SubtransactionAwareResource)(this);
+	    
+	    READY_IMPL_(_theResource);
+
+	    _resourceRef = CORBA_REF_(_theResource,org.omg.CosTransactions.SubtransactionAwareResource);
+	    
+	    /*
+	     * Would like to be able to attach a thread filter
+	     * to this object if process-filters aren't supported.
+	     * However, currently this won't work as we can't have
+	     * two different filter types working at the same
+	     * time.
+	     *
+	     *		ATTACH_THREAD_FILTER_(_theResource);
+	     */
+	    
+	    Coordinator realCoordinator = _theControl.originalCoordinator();
+
+	    if (!(_valid = registerSubTran(realCoordinator)))
+	    {
+		System.err.println("WARNING - OTS_ServerNestedAction - could not register interposed hierarchy!");
+
+		/*
+		 * Failed to register. Valid is set, and the interposition controller
+		 * will now deal with this.
+		 */
+
+		realCoordinator = null;
+	    }
+	}
+    }
+
+public void finalize ()
+    {
+	_theResource = null;
+	_resourceRef = null;
+
+	super.finalize();
+    }
+ 
+public void commit_subtransaction (Coordinator parent) throws SystemException
+    {
+	if (_theControl == null)
+	{
+	    System.err.println("WARNING - OTS_ServerNestedAction::commit_subtransaction - attempt to commit with null control!");
+
+#ifdef ORB_OTS_SUPPORT	    
+	    throw new InvalidTransaction(OTS_Exceptions.SERVERAA_NO_CONTROL, CompletionStatus.COMPLETED_NO);
+#else
+	    throw new UNKNOWN(OTS_Exceptions.SERVERAA_NO_CONTROL, CompletionStatus.COMPLETED_NO);
+#endif	    
+	}
+
+	if (_theControl.isWrapper())
+	{
+	    destroyResource();
+	    return;
+	}
+		
+	OTS_ServerTransaction theTransaction = (OTS_ServerTransaction) _theControl.getImplHandle();
+	
+	ThreadActionData.pushAction(theTransaction);
+    
+	/*
+	 * Do nothing about propagation since we should already be
+	 * registered with the parent, i.e., ignore the parent
+	 * parameter.
+	 */
+
+	/*
+	 * We should not get exceptions here.
+	 */
+	
+	try
+	{
+	    theTransaction.commit(false);
+	}
+	catch (TransactionRolledBack e1)
+	{
+#ifdef DEBUG
+	    System.err.println("WARNING - OTS_ServerNestedAction.commit_subtransaction: caught TransactionRolledBack");
+#endif
+	    ThreadActionData.popAction();
+	    destroyResource();
+
+	    throw e1;
+	}
+	catch (InvalidTransaction e5)
+	{
+#ifdef DEBUG
+	    System.err.println("WARNING - OTS_ServerNestedAction.commit_subtransaction: caught InvalidTransaction");
+#endif
+	    ThreadActionData.popAction();
+	    destroyResource();
+
+	    throw e5;
+	}
+	catch (HeuristicMixed e2)
+	{
+	    System.err.println("WARNING - OTS_ServerNestedAction.commit_subtransaction: caught HeuristicMixed");
+
+	    ThreadActionData.popAction();
+	    destroyResource();
+	    
+	    /*
+	     * Can't rethrow heuristic exceptions for subtransactions!
+	     */
+	    
+	    throw new BAD_OPERATION(OTS_Exceptions.HEURISTIC_COMMIT, CompletionStatus.COMPLETED_MAYBE);
+	}
+	catch (HeuristicHazard e3)
+	{
+	    System.err.println("WARNING - OTS_ServerNestedAction.commit_subtransaction: caught HeuristicHazard");
+
+	    ThreadActionData.popAction();
+	    destroyResource();
+
+	    throw new BAD_OPERATION(OTS_Exceptions.HEURISTIC_COMMIT, CompletionStatus.COMPLETED_MAYBE);
+	}
+	catch (SystemException e4)
+	{
+	    System.err.println("WARNING - OTS_ServerNestedAction.commit_subtransaction: caught unknown system exception! "+e4);
+
+	    ThreadActionData.popAction();
+	    destroyResource();
+
+	    throw e4;
+	}
+
+	ThreadActionData.popAction();
+	destroyResource();
+    }
+
+public void rollback_subtransaction () throws SystemException
+    {
+	if (_theControl == null)
+	{
+	    System.err.println("WARNING - OTS_ServerNestedAction::rollback_subtransaction - attempt to commit with null control!");
+
+#ifdef ORB_OTS_SUPPORT	    
+	    throw new InvalidTransaction(OTS_Exceptions.SERVERAA_NO_CONTROL, CompletionStatus.COMPLETED_NO);
+#else
+	    throw new UNKNOWN(OTS_Exceptions.SERVERAA_NO_CONTROL, CompletionStatus.COMPLETED_NO);
+#endif	    
+	}
+
+	if (_theControl.isWrapper())
+	{
+	    destroyResource();
+	    return;
+	}
+
+	OTS_ServerTransaction theTransaction = (OTS_ServerTransaction) _theControl.getImplHandle();
+	
+	ThreadActionData.pushAction(theTransaction);
+
+	try
+	{
+	    theTransaction.rollback();
+	}
+	catch (SystemException e)
+	{
+	    ThreadActionData.popAction();
+	    destroyResource();
+
+	    throw e;
+	}
+
+	ThreadActionData.popAction();
+	destroyResource();
+    }
+
+    /*
+     * These methods should never be called.
+     */
+
+#if defined(CORBA_2_3) || defined(CORBA_2_2) || defined(CORBA_2_1)
+public org.omg.CosTransactions.Vote prepare () throws SystemException, HeuristicMixed, HeuristicHazard
+#else
+public int prepare () throws SystemException, HeuristicMixed, HeuristicHazard
+#endif    
+    {
+	throw new BAD_OPERATION(OTS_Exceptions.SERVERAA_PREPARE, CompletionStatus.COMPLETED_NO);
+    }
+
+public void rollback () throws SystemException, HeuristicCommit, HeuristicMixed, HeuristicHazard
+    {
+    }
+    
+public void commit () throws SystemException, NotPrepared, HeuristicRollback, HeuristicMixed, HeuristicHazard
+    {
+    }
+
+public void forget () throws SystemException
+    {
+    }
+
+#if defined(DRAFT1) || defined(DRAFT2)
+#ifdef ORB_OTS_SUPPORT
+public void commit_one_phase () throws HeuristicRollback, HeuristicMixed, HeuristicHazard, SystemException
+#else
+public void commit_one_phase () throws HeuristicRollback, HeuristicMixed, HeuristicHazard, TransactionRolledBack, SystemException
+#endif    
+#else
+#ifdef ORB_OTS_SUPPORT    
+public void commit_one_phase () throws HeuristicHazard, SystemException
+#else
+public void commit_one_phase () throws HeuristicHazard, TransactionRolledBack, SystemException
+#endif
+#endif
+    {
+    }
+
+public SubtransactionAwareResource theResource ()
+    {
+	return _resourceRef;
+    }
+ 
+protected OTS_ServerNestedAction ()
+    {
+	_theResource = null;
+	_resourceRef = null;
+    }
+
+protected final synchronized void destroyResource ()
+    {
+	if (!_destroyed)
+	{
+	    _destroyed = true;
+	    
+	    if (_parent != null)
+	    {
+		/*
+		 * Now try to garbage collect this resource. Since it was registered
+		 * as a subtranaware resource it won't get called again.
+		 */
+	    
+		if (_parent.removeChild(this))
+		{
+		    DESTROY_IMPL_(_theResource);
+		}
+		else
+		    System.err.println("WARNING - could not remove child "+get_uid()+" from "+_parent.get_uid());
+	    }
+	}
+    }
+
+protected boolean registerSubTran (Coordinator theCoordinator)
+    {
+	if (theCoordinator == null)
+	    return false;
+	
+	boolean result = false;
+
+	try
+	{
+	    theCoordinator.register_subtran_aware(_resourceRef);
+	    result = true;
+	}
+	catch (Inactive e)
+	{
+	    System.err.println("OTS_ServerNestedAction::registerSubTran - Inactive exception");
+	}
+	catch (NotSubtransaction e)
+	{
+	    System.err.println("OTS_ServerNestedAction::registerSubTran - NotSubtransaction exception");
+	}
+	catch (SystemException e)
+	{
+	    System.err.println("OTS_ServerNestedAction::registerSubTran - caught unexpected exception: "+e);
+	}
+	
+	return result;
+    }
+
+protected SCOPED_TIE_INSTANCE_(org.omg.CosTransactions,SubtransactionAwareResource) _theResource;
+protected SubtransactionAwareResource _resourceRef;
+ 
+};

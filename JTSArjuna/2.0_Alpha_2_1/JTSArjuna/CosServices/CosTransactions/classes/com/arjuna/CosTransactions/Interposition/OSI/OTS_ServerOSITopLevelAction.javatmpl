@@ -1,0 +1,102 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.  
+ *
+ * $Id: OTS_ServerOSITopLevelAction.javatmpl,v 1.1 2000/02/25 14:06:27 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package com.arjuna.CosTransactions.Interposition.OSI;
+
+import com.arjuna.CosTransactions.Interposition.Strict.*;
+import com.arjuna.CosTransactions.Interposition.*;
+import org.omg.CosTransactions.*;
+
+import NAMESPACE_(CORBA).SystemException;
+
+public class OTS_ServerOSITopLevelAction extends OTS_ServerStrictTopLevelAction
+{
+    
+    /*
+     * The OTS_ServerTopLevelAction is responsible for registering
+     * this resource with its parent.
+     */
+
+public OTS_ServerOSITopLevelAction (OTS_ServerControl control,
+				    boolean doRegister)
+    {
+	super(control, doRegister);
+    }
+
+/*
+ * Will only be called by the remote top-level transaction.
+ */
+
+#if defined(CORBA_2_1) || defined(CORBA_2_2) || defined(CORBA_2_3)
+public org.omg.CosTransactions.Vote prepare () throws HeuristicMixed, HeuristicHazard, SystemException
+#else
+public int prepare () throws HeuristicMixed, HeuristicHazard, SystemException
+#endif
+    {
+	/*
+	 * First remove entry for this transaction otid
+	 * from map. Have to do it here as we are going
+	 * to be deleted by the base class!
+	 */
+    
+	OTIDMap.remove(get_uid());
+
+	return super.prepare();
+    }
+
+public void rollback () throws SystemException, HeuristicCommit, HeuristicMixed, HeuristicHazard
+    {
+	OTIDMap.remove(get_uid());
+    
+	super.rollback();
+    }
+
+public void commit () throws SystemException, NotPrepared, HeuristicRollback, HeuristicMixed, HeuristicHazard
+    {
+	OTIDMap.remove(get_uid());
+    
+	super.commit();
+    }
+
+public void forget () throws SystemException
+    {
+	OTIDMap.remove(get_uid());
+
+	super.forget();
+    }
+
+/*
+ * Just because commit_one_phase is called by the coordinator does not
+ * mean that we can use it - we may have many locally registered resources.
+ */
+
+#if defined(DRAFT1) || defined(DRAFT2)
+#ifdef ORB_OTS_SUPPORT
+public void commit_one_phase () throws HeuristicRollback, HeuristicMixed, HeuristicHazard, SystemException
+#else
+public void commit_one_phase () throws HeuristicRollback, HeuristicMixed, HeuristicHazard, TransactionRolledBack, SystemException
+#endif
+#else
+#ifdef ORB_OTS_SUPPORT    
+public void commit_one_phase () throws HeuristicHazard, SystemException
+#else
+public void commit_one_phase () throws HeuristicHazard, TransactionRolledBack, SystemException
+#endif
+#endif
+    {
+	OTIDMap.remove(get_uid());
+
+	super.commit_one_phase();
+    }
+ 
+};

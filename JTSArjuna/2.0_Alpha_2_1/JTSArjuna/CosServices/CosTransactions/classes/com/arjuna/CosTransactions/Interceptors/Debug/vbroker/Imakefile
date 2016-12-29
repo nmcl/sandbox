@@ -1,0 +1,32 @@
+COMMENT 
+COMMENT Copyright (C) 2000,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 2000/02/25 14:06:06 nmcl Exp $
+COMMENT
+
+SOURCES = OTS_ClientDebugInterceptor.java \
+	  OTS_ServerDebugInterceptor.java \
+	  OTS_DebugBindInterceptor.java \
+	  OTS_DebugPOALifeCycleInterceptor.java \
+	  Init.java
+
+OBJECTS = OTS_ClientDebugInterceptor.class \
+	  OTS_ServerDebugInterceptor.class \
+	  OTS_DebugBindInterceptor.class \
+	  OTS_DebugPOALifeCycleInterceptor.class \
+	  Init.class
+
+Target($(OBJECTS))
+
+BuildJavaByteCode(OTS_ClientDebugInterceptor,NullParam)
+BuildJavaByteCode(OTS_ServerDebugInterceptor,NullParam)
+BuildJavaByteCode(OTS_DebugBindInterceptor,NullParam)
+BuildJavaByteCode(OTS_DebugPOALifeCycleInterceptor,NullParam)
+BuildJavaByteCode(Init,NullParam)
+
+Clean(*.class)
