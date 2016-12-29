@@ -1,0 +1,175 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.  
+ *
+ * $Id: TopLevelTransaction.javatmpl,v 1.2 2000/03/07 09:55:15 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+#include <CosTransactions/CosTranNames.h>
+
+package com.arjuna.CosTransactions.ArjunaOTS;
+
+import com.arjuna.CosTransactions.OTS;
+import com.arjuna.CosTransactions.OTS_Current;
+import org.omg.CosTransactions.*;
+
+import org.omg.CosTransactions.NoTransaction;
+import org.omg.CosTransactions.Unavailable;
+import org.omg.CosTransactions.InvalidControl;
+import org.omg.CosTransactions.HeuristicMixed;
+import org.omg.CosTransactions.HeuristicHazard;
+
+#include <CosTransactions/CosTranExceptions.h>
+
+import NAMESPACE_(CORBA).SystemException;
+import NAMESPACE_(CORBA).UNKNOWN;
+
+public class TopLevelTransaction extends AtomicTransaction
+{
+
+public TopLevelTransaction ()
+    {
+	_originalTransaction = null;
+    }
+
+public void finalize ()
+    {
+	if (_originalTransaction != null)
+	{
+	    String name = null;
+	    Coordinator coord = null;
+	
+	    try
+	    {
+		coord = _originalTransaction.get_coordinator();
+
+		if (coord != null)
+		{
+		    name = coord.get_transaction_name();
+		}
+	    }
+	    catch (Exception e)
+	    {
+	    }
+
+	    coord = null;
+
+	    System.err.println("WARNING:Toplevel transaction going out of scope with nested transaction "+
+			       ((name != null) ? name : "UNKNOWN")+" still set.");
+
+	    name = null;
+	    _originalTransaction = null;
+	}
+
+	super.finalize();
+    }
+
+    /*
+     * If nested top-level transaction, save current context for resumption
+     * later.
+     */
+
+public synchronized void begin () throws SystemException, SubtransactionsUnavailable, InvalidTransaction
+    {
+	// already begun?
+
+	if (_originalTransaction != null)
+	{
+	    throw new InvalidTransaction();
+	}
+
+	OTS_Current current = OTS.current();
+
+	_originalTransaction = current.suspend();
+
+	super.begin();
+    }
+
+#ifdef ORB_OTS_SUPPORT    
+public synchronized void commit (boolean report_heuristics) throws SystemException, NoTransaction, HeuristicMixed, HeuristicHazard, WrongTransaction // UserException!!
+#else
+public synchronized void commit (boolean report_heuristics) throws SystemException, NoTransaction, HeuristicMixed, HeuristicHazard, TransactionRolledBack, WrongTransaction    
+#endif 
+    {
+	if (validTransaction())
+	{
+	    try
+	    {
+		super.commit(report_heuristics);		
+	    }
+	    catch (WrongTransaction e1)
+	    {
+		resumeTransaction();
+
+		throw e1;
+	    }
+	    catch (SystemException e2)
+	    {
+		resumeTransaction();
+
+		throw e2;
+	    }
+
+	    resumeTransaction();
+	}
+	else
+	    throw new WrongTransaction();
+    }
+
+#ifdef ORB_OTS_SUPPORT    
+public synchronized void rollback () throws SystemException, NoTransaction, WrongTransaction // UserException!!
+#else
+public synchronized void rollback () throws SystemException, NoTransaction, WrongTransaction
+#endif 
+    {
+	if (validTransaction())
+	{
+	    try
+	    {
+		super.rollback();
+	    }
+	    catch (WrongTransaction e1)
+	    {
+		resumeTransaction();
+
+		throw e1;
+	    }
+	    catch (SystemException e2)
+	    {
+		resumeTransaction();
+
+		throw e2;
+	    }
+
+	    resumeTransaction();
+	}
+	else
+	    throw new WrongTransaction();
+    }
+
+private final void resumeTransaction ()
+    {
+	try
+	{
+	    if (_originalTransaction != null)
+	    {
+		OTS_Current current = OTS.current();
+
+		current.resume(_originalTransaction);
+
+		_originalTransaction = null;
+	    }
+	}
+	catch (Exception e)
+	{
+	}
+    }
+
+private Control _originalTransaction;
+ 
+};
