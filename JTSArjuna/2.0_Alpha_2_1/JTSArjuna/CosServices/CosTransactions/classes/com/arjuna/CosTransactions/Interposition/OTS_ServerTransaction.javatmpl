@@ -1,0 +1,429 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.  
+ *
+ * $Id: OTS_ServerTransaction.javatmpl,v 1.7 2000/04/10 18:02:32 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package com.arjuna.CosTransactions.Interposition;
+
+import com.arjuna.CosTransactions.OTS_Transaction;
+import com.arjuna.CosTransactions.OTS_Exceptions;
+import com.arjuna.CosTransactions.OTS_Environment;
+import com.arjuna.ArjunaCommon.Common.Uid;
+import com.arjuna.ArjunaCommon.Common.PropertyManager;
+import com.arjuna.ArjunaLite.Atomic.*;
+import org.omg.CosTransactions.*;
+import NAMESPACE_(CORBA).CompletionStatus;
+
+import NAMESPACE_(CORBA).SystemException;
+import NAMESPACE_(CORBA).BAD_OPERATION;
+
+#include <CosTransactions/CosTranExceptions.h>
+
+/*
+ * This looks like an OTS_Transaction, but is only create for
+ * interposition purposes. The classes OTS_ServerTopLevelAction
+ * and OTS_ServerNestedAction use instances of this class
+ * to drive the server-side protocol.
+ */
+
+public class OTS_ServerTransaction extends OTS_Transaction
+{
+
+public OTS_ServerTransaction (Uid actUid, Control myParent)
+    {
+	this(actUid, myParent, null);
+    }
+    
+public OTS_ServerTransaction (Uid actUid, Control myParent, OTS_Transaction parentImpl)
+    {
+	super(actUid, myParent, parentImpl);
+
+	_savingUid = new Uid();
+	_sync = null;
+	_beforeCompleted = false;
+    }
+
+public void finalize ()
+    {
+	_savingUid = null;
+
+	if (_sync != null)
+	{
+	    _sync.destroy();
+	    _sync = null;
+	}
+
+	super.finalize();
+    }
+
+public String type ()
+    {
+	return "/StateManager/BasicAction/OTS_Transaction/OTS_ServerTransaction";    
+    }
+
+public Uid getSavingUid ()
+    {
+	return _savingUid;
+    }
+    
+public final int doPrepare ()
+    {
+	if (!_beforeCompleted && (_sync != null))
+	{
+	    /*
+	     * Synchronizations should have been called by now if we have them!
+	     */
+
+	    System.err.println("WARNING - OTS_ServerTransaction.doPrepare - synchronizations not called!");
+
+	    /*
+	     * Prevent commit!
+	     */
+
+	    super.preventCommit();
+	}
+
+	/*
+	 * If we do not have an interposed synchronization then before_completions
+	 * will not have been called yet. So, do it now.
+	 */
+    
+	if (!_interposedSynch)
+	{
+	    try
+	    {
+		doBeforeCompletion();
+	    }
+	    catch (Exception e)
+	    {
+		/*
+		 * Transaction will have been put into a state
+		 * which forces it to rollback, so do nothing here.
+		 */
+	    }
+	}
+    
+	int res = super.prepare(true);
+
+	if (res == PrepareOutcome.PREP_READONLY)
+	{
+	    /*
+	     * Read-only, so coordinator will not talk
+	     * to us again, so do commit now.
+	     */
+
+	    doPhase2Commit(true);
+	    super.destroyAction();
+	}
+
+	return res;
+    }
+    
+public final int doPhase2Commit (boolean readOnly)
+    {
+	if (!readOnly)
+	    super.phase2Commit(true);
+
+	/*
+	 * Now do after completion stuff.
+	 */
+
+	try
+	{
+	    doAfterCompletion(get_status());
+	}
+	catch (Exception e)
+	{
+	}
+    
+	if (parentTransaction != null)
+	    parentTransaction.removeChildAction(this);
+
+	super.destroyAction();
+
+	if (BasicAction.allActions != null)
+ 	    BasicAction.allActions.remove(get_uid());
+
+	return returnStatus();
+    }
+
+public final int doPhase2Abort ()
+    {
+	super.phase2Abort(true);
+
+	/*
+	 * Now do after completion stuff.
+	 */
+
+	try
+	{
+	    doAfterCompletion(get_status());
+	}
+	catch (Exception e)
+	{
+	}
+	
+	if (parentTransaction != null)
+	    parentTransaction.removeChildAction(this);
+
+	super.destroyAction();
+
+	if (BasicAction.allActions != null)
+ 	    BasicAction.allActions.remove(get_uid());
+
+	return returnStatus();
+    }
+
+#if defined(DRAFT1) || defined(DRAFT2)
+#ifdef ORB_OTS_SUPPORT
+public synchronized void doCommit (boolean report_heuristics) throws HeuristicRollback, HeuristicMixed, HeuristicHazard, SystemException
+#else
+public synchronized void doCommit (boolean report_heuristics) throws HeuristicRollback, HeuristicMixed, HeuristicHazard, TransactionRolledBack, SystemException
+#endif
+#else
+#ifdef ORB_OTS_SUPPORT    
+public synchronized void doCommit (boolean report_heuristics) throws HeuristicHazard, SystemException
+#else
+public synchronized void doCommit (boolean report_heuristics) throws HeuristicHazard, TransactionRolledBack, SystemException
+#endif
+#endif
+    {
+	int outcome = super.status();
+
+	if ((outcome == ActionStatus.RUNNING) || (outcome == ActionStatus.ABORT_ONLY)) // have we already been committed?
+	{
+	    if (!_interposedSynch)
+	    {
+		try
+		{
+		    doBeforeCompletion();
+		}
+		catch (Exception e)
+		{
+		    /*
+		     * Transaction will have been put into a state
+		     * which forces it to rollback, so do nothing here.
+		     */
+		}
+	    }
+	    
+	    outcome = super.End(report_heuristics);
+	}
+	else
+	{
+	    /*
+	     * Differentiate between us committing the transaction
+	     * and some other thread doing it.
+	     */
+
+#ifdef ORB_OTS_SUPPORT
+	    throw new InvalidTransaction(OTS_Exceptions.INVALID_ACTION, CompletionStatus.COMPLETED_NO);
+#else
+	    throw new BAD_OPERATION(OTS_Exceptions.INVALID_ACTION, CompletionStatus.COMPLETED_NO);
+#endif
+	}
+
+	/*
+	 * Now do after completion stuff.
+	 */
+
+	try
+	{
+	    doAfterCompletion(get_status());
+	}
+	catch (Exception e)
+	{
+	}
+
+	super.destroyAction();
+
+	switch (outcome)
+	{
+	case ActionStatus.COMMITTED:
+	case ActionStatus.H_COMMIT:
+	case ActionStatus.COMMITTING:  // in case asynchronous commit!
+	    return;
+	case ActionStatus.ABORTED:
+	case ActionStatus.H_ROLLBACK:
+#if defined(DRAFT1) || defined(DRAFT2)
+	    throw new HeuristicRollback();
+#else	    
+#ifdef ORB_OTS_SUPPORT	    
+	    throw new TransactionRolledBack(OTS_Exceptions.FAILED_TO_COMMIT, CompletionStatus.COMPLETED_NO);
+#else
+	    throw new TransactionRolledBack();
+#endif
+#endif
+#if defined(DRAFT1) || defined(DRAFT2)
+	case ActionStatus.H_MIXED:
+	    throw new HeuristicMixed();
+#endif	    
+	case ActionStatus.H_HAZARD:
+	default:
+	    throw new HeuristicHazard();
+	}	
+    }
+    
+/*
+ * Registering a synchronization with interposition is a bit complicated! Synchronizations
+ * must be called prior to prepare; if no interposed-synchronization is used then either
+ * synchronizations would be registered locally (and then ignored by the commit protocol) or
+ * they would need to be registered remotely, which would mean a cross-address space call for
+ * each synchronization!
+ * 
+ * So, we have interposed-synchronization - the specification does not talk about such things, but
+ * we have them anyway! The first time a synchronization is registered locally, we register a
+ * proxy back with the real coordinator. When that transaction commits, it will call this proxy,
+ * which will then drive the locally registered synchronizations (actually it calls appropriate
+ * on the transaction to do this.)
+ *
+ * However, one-phase commit complicates matters even more since we call commit on the
+ * interposed coordinator, which runs through the commit and then the after_completion
+ * code before returning to the real coordinator's commit call. Rather than separate commit and
+ * synchronization code completely from the transaction (in which case we could just call the
+ * commit portion here) we let after_completion get called before returning the commit response,
+ * and simply ignore the real coordinator's subsequent call to after_completion.
+ */
+    
+#if !defined(DRAFT1) && !defined(DRAFT2)
+    
+public synchronized void register_synchronization (Synchronization theSync) throws Inactive, SynchronizationUnavailable, SystemException
+    {
+	if (!is_top_level_transaction())  // are we a top-level transaction?
+	{
+	    throw new SynchronizationUnavailable();
+	}
+	else
+	{
+	    /*
+	     * If we support interposed synchronizations then add one now,
+	     * otherwise just add all synchronizations locally.
+	     */
+	
+	    if (_interposedSynch)
+	    {
+		if (_sync == null)
+		{
+		    _sync = new OTS_ServerSynchronization(this);
+		
+		    Coordinator realCoord = null;
+
+		    /*
+		     * First register interposed-synchronization.
+		     */
+		
+		    try
+		    {
+			OTS_ServerControl control = (OTS_ServerControl) super.controlHandle;
+
+			if (controlHandle != null)
+			{
+			    realCoord = control.originalCoordinator();
+
+			    if (realCoord != null)
+			    {
+				realCoord.register_synchronization(_sync.getSynchronization());
+			    }
+			    else
+				throw new BAD_OPERATION(OTS_Exceptions.NO_TRANSACTION, CompletionStatus.COMPLETED_NO);
+			}
+			else
+			    throw new BAD_OPERATION(OTS_Exceptions.NO_TRANSACTION, CompletionStatus.COMPLETED_NO);
+		    }
+		    catch (Inactive e1)
+		    {
+			realCoord = null;
+
+			throw e1;
+		    }
+		    catch (SynchronizationUnavailable e2)
+		    {
+			realCoord = null;
+
+			throw e2;
+		    }
+		    catch (SystemException e3)
+		    {
+			realCoord = null;
+
+			throw e3;
+		    }
+		    
+		    realCoord = null;
+		}
+	    }
+
+	    /*
+	     * Now register the synchronization locally.
+	     */
+
+	    super.register_synchronization(theSync);
+	}
+    }
+    
+#endif
+    
+    /*
+     * These methods are here to make protected methods in OTS_Transaction
+     * available to OTS_ServerSynchronization.
+     */
+
+public synchronized void doBeforeCompletion () throws SystemException
+    {
+	_beforeCompleted = true;
+
+	super.beforeCompletion();
+    }
+
+public synchronized void doAfterCompletion (org.omg.CosTransactions.Status s) throws SystemException
+    {
+	super.afterCompletion(s);
+    }
+
+private final int returnStatus ()
+    {
+	int heuristic = super.getHeuristicDecision();
+	
+	switch (heuristic)
+	{
+	case PrepareOutcome.PREP_OK:
+	case PrepareOutcome.FINISH_OK:
+	    return super.status();
+	case PrepareOutcome.HEURISTIC_ROLLBACK:
+	    return ActionStatus.H_ROLLBACK;
+	case PrepareOutcome.HEURISTIC_COMMIT:
+	    return ActionStatus.H_COMMIT;
+	case PrepareOutcome.HEURISTIC_MIXED:
+	    return ActionStatus.H_MIXED;
+	case PrepareOutcome.HEURISTIC_HAZARD:
+	default:
+	    return ActionStatus.H_HAZARD;
+	}
+    }
+
+private Uid _savingUid;
+private OTS_ServerSynchronization _sync;
+private boolean _beforeCompleted;
+
+private static boolean _interposedSynch = false;
+
+    static
+    {
+	String inter = PropertyManager.getProperty(OTS_Environment.OTS_SUPPORT_INTERPOSED_SYNCHRONIZATION);
+
+	if (inter != null)
+	{
+	    if (inter.compareTo("YES") == 0)
+		_interposedSynch = true;
+	}	
+    }
+    
+};

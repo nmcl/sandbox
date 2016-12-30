@@ -1,0 +1,27 @@
+COMMENT 
+COMMENT Copyright (C) 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.2.1 2000/05/31 13:53:10 nmcl Exp $
+COMMENT
+
+SOURCES = InterpositionRecoveryDriver.java \
+	  OTS_InterpositionRecoveryFactory.java \
+	  InterpositionRecovery.java
+
+OBJECTS = InterpositionRecoveryDriver.class \
+	  OTS_InterpositionRecoveryFactory.class \
+	  InterpositionRecovery.class
+
+Target($(SOURCES))
+Target($(OBJECTS))
+
+BuildJavaByteCode(InterpositionRecoveryDriver,NullParam)
+BuildJavaByteCode(OTS_InterpositionRecoveryFactory,NullParam)
+BuildJavaByteCode(InterpositionRecovery,NullParam)
+
+Clean(*.class)
