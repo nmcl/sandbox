@@ -1,0 +1,767 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: JTA_ResourceRecord.javatmpl,v 1.4.2.1.4.1 2000/07/28 14:45:19 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+#include <CosTransactions/CosTranNames.h>
+
+package com.arjuna.jta;
+
+import com.arjuna.ArjunaCommon.Common.*;
+import com.arjuna.ArjunaLite.Atomic.*;
+import com.arjuna.ArjunaLite.Interface.*;
+import com.arjuna.CosTransactions.tx.*;
+import com.arjuna.OrbCommon.ORBInterface;
+import org.omg.CosTransactions.*;
+import javax.transaction.*;
+import javax.transaction.xa.*;
+import java.io.*;
+
+import org.omg.CosTransactions.NotPrepared;
+import org.omg.CosTransactions.HeuristicCommit;
+import org.omg.CosTransactions.HeuristicMixed;
+import org.omg.CosTransactions.HeuristicHazard;
+import org.omg.CosTransactions.HeuristicRollback;
+import java.io.IOException;
+import NAMESPACE_(CORBA).UNKNOWN;
+
+#include <CosTransactions/CosTranExceptions.h>
+#include <CosTransactions/OTS_Exceptions.h>
+
+public class JTA_ResourceRecord extends SCOPED_SKEL_(org.omg.CosTransactions,Resource)
+{
+
+public static final int XACONNECTION = 0;
+    
+    /*
+     * The params represent specific parameters we need to recreate the
+     * connection to the database in the event of a failure. If they're
+     * not set then recovery is out of our control.
+     *
+     * Could also use it to pass other information, such as the readonly
+     * flag.
+     */
+
+public JTA_ResourceRecord (XAResource res, Xid xid, Object[] params)
+    {
+	READY_IMPL_(this);
+
+	_theResource = res;
+	_recoveryObject = null;
+	_tranID = xid;	
+
+	_valid = true;
+
+	if (params != null)
+	{
+	    if (params.length >= XACONNECTION)
+	    {
+		if (params[XACONNECTION] instanceof JTA_XAConnectionRecovery)
+		{
+		    _recoveryObject = (JTA_XAConnectionRecovery) params[XACONNECTION];
+
+		    /*
+		     * Register the fact that we are a valid XAResource so that
+		     * the connection knows it is being used within a transaction.
+		     * Only do this for those resources that are actually driven
+		     * through commit/rollback.
+		     */
+
+		    try
+		    {
+			if (_recoveryObject != null)
+			    _recoveryObject.addConnection();
+		    }
+		    catch (Exception e)
+		    {
+			_valid = false;
+		    }
+		}
+	    }
+	}
+
+	_prepared = false;
+	_heuristic = JTA_ResourceRecord.NONE;
+	_objStore = null;
+	_theUid = new Uid();
+	_theReference = CORBA_REF_(this,org.omg.CosTransactions.Resource);
+    }
+
+public JTA_ResourceRecord (Uid u, boolean commit)
+    {
+	READY_IMPL_(this);
+
+	_theResource = null;
+	_recoveryObject = null;
+	_tranID = null;
+	_prepared = true;
+	_heuristic = JTA_ResourceRecord.NONE;
+	_theUid = u;
+	_objStore = null;
+	_valid = loadState();
+	_theReference = CORBA_REF_(this,org.omg.CosTransactions.Resource);
+
+	if (_valid)
+	{
+	    if (recover(commit))
+		destroyState();
+	}
+    } 
+
+public final org.omg.CosTransactions.Resource getResource ()
+    {
+	return _theReference;
+    }
+ 
+#ifdef DRAFT2	
+#if defined(CORBA_2_1) || defined(CORBA_2_2) || defined(CORBA_2_3)
+public org.omg.CosTransactions.Vote prepare () throws NAMESPACE_(CORBA).SystemException
+#else
+public int prepare () throws NAMESPACE_(CORBA).SystemException
+#endif
+#else
+#if defined(CORBA_2_1) || defined(CORBA_2_2) || defined(CORBA_2_3)
+public org.omg.CosTransactions.Vote prepare () throws HeuristicMixed, HeuristicHazard, NAMESPACE_(CORBA).SystemException
+#else
+public int prepare () throws HeuristicMixed, HeuristicHazard, NAMESPACE_(CORBA).SystemException
+#endif
+#endif
+    {
+	if (!_valid || (_theResource == null))
+	{
+	    removeConnection();
+	    
+	    return Vote.VoteReadOnly;
+	}
+
+	if (_tranID == null)
+	{
+	    System.err.println("JTA_ResourceRecord.prepare - null transaction!");
+	    
+	    removeConnection();
+	    
+	    return Vote.VoteRollback;
+	}
+
+	_prepared = true;
+	
+	try
+	{
+	    if (createState())
+	    {
+		_theResource.end(_tranID, XAResource.TMSUCCESS);
+		
+		if (_theResource.prepare(_tranID) == XAResource.XA_RDONLY)
+		{
+		    destroyState();
+		
+		    return Vote.VoteReadOnly;
+		}
+		else
+		    return Vote.VoteCommit;
+	    }
+	    else
+		return Vote.VoteRollback;
+	}
+	catch (XAException e1)
+	{
+	    e1.printStackTrace();
+	    
+	    /*
+	     * XA_RB*, XAER_RMERR, XAER_RMFAIL,
+	     * XAER_NOTA, XAER_INVAL, or XAER_PROTO.
+	     */
+
+	    removeConnection();
+	    
+	    return Vote.VoteRollback;
+	}
+	catch (Exception e2)
+	{
+	    /*
+	     * XA_RB*, XAER_RMERR, XAER_RMFAIL,
+	     * XAER_NOTA, XAER_INVAL, or XAER_PROTO.
+	     */
+
+	    removeConnection();
+	    
+	    return Vote.VoteRollback;
+	}
+    }
+
+public void rollback () throws NAMESPACE_(CORBA).SystemException, HeuristicCommit, HeuristicMixed, HeuristicHazard
+    {
+	if (!_valid)
+	    return;
+	
+	if (_tranID == null)
+	{
+	    System.err.println("JTA_ResourceRecord.rollback - null transaction!");
+	}
+	else
+	{
+	    if (_theResource != null)
+	    {
+		switch (_heuristic)
+		{
+		case JTA_ResourceRecord.HAZARD:
+		    throw new org.omg.CosTransactions.HeuristicHazard();
+		case JTA_ResourceRecord.MIXED:
+		    throw new org.omg.CosTransactions.HeuristicMixed();
+		default:
+		    break;
+		}
+		
+		try
+		{
+		    if (!_prepared)
+		    {
+			_theResource.end(_tranID, XAResource.TMSUCCESS);
+		    }
+		    
+		    _theResource.rollback(_tranID);
+
+		    if (_prepared)
+			destroyState();  // race condition
+		    else
+			removeConnection();
+		}
+		catch (XAException e1)
+		{
+		    switch (e1.errorCode)
+		    {
+		    case XAException.XAER_RMERR:
+		    case XAException.XA_HEURHAZ:
+			updateState(JTA_ResourceRecord.HAZARD);
+			
+			throw new org.omg.CosTransactions.HeuristicHazard();
+		    case XAException.XA_HEURCOM:
+			updateState(JTA_ResourceRecord.COMMIT);
+			
+			throw new org.omg.CosTransactions.HeuristicCommit();
+		    case XAException.XA_HEURMIX:
+			updateState(JTA_ResourceRecord.MIXED);
+			
+			throw new org.omg.CosTransactions.HeuristicMixed();
+		    case XAException.XA_HEURRB:
+		    case XAException.XA_RBROLLBACK:
+			destroyState();
+			break;
+		    default:
+			destroyState();
+			
+			throw new UNKNOWN();
+		    }
+		}
+		catch (Exception e2)
+		{
+		    e2.printStackTrace();
+		    
+		    removeConnection();
+
+		    throw new UNKNOWN();
+		}
+	    }
+	}
+    }
+
+public void commit () throws NAMESPACE_(CORBA).SystemException, NotPrepared, HeuristicRollback, HeuristicMixed, HeuristicHazard
+    {
+	if (!_prepared)
+	    throw new NotPrepared();
+	
+	if (_tranID == null)
+	{
+	    System.err.println("JTA_ResourceRecord.commit - null transaction!");
+	}
+	else
+	{
+	    if (_theResource != null)
+	    {
+		switch (_heuristic)
+		{
+		case JTA_ResourceRecord.HAZARD:
+		    throw new org.omg.CosTransactions.HeuristicHazard();
+		case JTA_ResourceRecord.MIXED:
+		    throw new org.omg.CosTransactions.HeuristicMixed();
+		case JTA_ResourceRecord.ROLLBACK:
+		    throw new org.omg.CosTransactions.HeuristicRollback();
+		default:
+		    break;
+		}
+		
+		try
+		{
+		    _theResource.commit(_tranID, false);
+
+		    destroyState();
+		}
+		catch (XAException e1)
+		{
+		    e1.printStackTrace();
+		    
+		    /*
+		     * XA_HEURHAZ, XA_HEURCOM, XA_HEURRB,
+		     * XA_HEURMIX, XAER_RMERR, XAER_RMFAIL,
+		     * XAER_NOTA, XAER_INVAL, or XAER_PROTO.
+		     */
+
+		    switch (e1.errorCode)
+		    {
+		    case XAException.XAER_RMERR:
+		    case XAException.XA_HEURHAZ:
+			updateState(JTA_ResourceRecord.HAZARD);
+			
+			throw new org.omg.CosTransactions.HeuristicHazard();
+		    case XAException.XA_HEURCOM:
+			destroyState();
+			break;
+		    case XAException.XA_HEURRB:
+			updateState(JTA_ResourceRecord.ROLLBACK);
+			
+			throw new org.omg.CosTransactions.HeuristicRollback();
+		    case XAException.XA_HEURMIX:
+			updateState(JTA_ResourceRecord.MIXED);
+			
+			throw new org.omg.CosTransactions.HeuristicMixed();
+		    case XAException.XAER_NOTA:
+		    case XAException.XAER_INVAL:
+		    case XAException.XAER_PROTO:
+		    case XAException.XAER_RMFAIL:  // resource manager failed, did it rollback?
+			removeConnection();
+
+			throw new UNKNOWN();
+		    default:
+			destroyState();
+
+			throw new UNKNOWN();
+		    }
+		}
+		catch (Exception e2)
+		{
+		    removeConnection();
+
+		    throw new UNKNOWN();
+		}
+	    }
+	}
+    }
+
+public void commit_one_phase () throws HeuristicHazard, NAMESPACE_(CORBA).SystemException
+    {
+	if (_tranID == null)
+	{
+	    System.err.println("JTA_ResourceRecord.commit - null transaction!");
+	}
+	else
+	{
+	    if (_theResource != null)
+	    {
+		switch (_heuristic)
+		{
+		case JTA_ResourceRecord.HAZARD:
+		    throw new org.omg.CosTransactions.HeuristicHazard();
+		default:
+		    break;
+		}
+		
+		try
+		{
+		    if (createState())
+		    {
+			_theResource.end(_tranID, XAResource.TMSUCCESS);
+			_theResource.commit(_tranID, true);
+
+			destroyState();
+		    }
+		    else
+		    {
+			_theResource.rollback(_tranID);
+			removeConnection();
+		    }
+		}
+		catch (XAException e1)
+		{
+		    e1.printStackTrace();
+		    
+		    /*
+		     * XA_HEURHAZ, XA_HEURCOM, XA_HEURRB,
+		     * XA_HEURMIX, XAER_RMERR, XAER_RMFAIL,
+		     * XAER_NOTA, XAER_INVAL, or XAER_PROTO.
+		     * XA_RB*
+		     */
+
+		    if ((e1.errorCode > XAException.XA_RBBASE) &&
+			(e1.errorCode < XAException.XA_RBEND))
+		    {
+			destroyState();
+			
+			throw new TransactionRolledBack();
+		    }
+		    
+		    switch (e1.errorCode)
+		    {
+		    case XAException.XAER_RMERR:
+		    case XAException.XA_HEURHAZ:
+		    case XAException.XA_HEURMIX:
+			updateState(JTA_ResourceRecord.HAZARD);
+			
+			throw new org.omg.CosTransactions.HeuristicHazard();
+		    case XAException.XA_HEURCOM:
+			destroyState();
+			break;
+		    case XAException.XA_HEURRB:
+			destroyState();
+			
+			throw new TransactionRolledBack();
+		    case XAException.XAER_NOTA:
+		    case XAException.XAER_INVAL:
+		    case XAException.XAER_PROTO:
+		    case XAException.XAER_RMFAIL:  // resource manager failed, did it rollback?
+			removeConnection();
+
+			throw new UNKNOWN();
+		    default:
+			removeConnection();
+
+			throw new UNKNOWN();
+		    }
+		}
+		catch (Exception e2)
+		{
+		    removeConnection();
+
+		    throw new UNKNOWN();
+		}
+	    }
+	}
+    }
+ 
+public void forget () throws NAMESPACE_(CORBA).SystemException
+    {
+	if ((_theResource != null) && (_tranID != null))
+	{
+	    try
+	    {
+		_theResource.forget(_tranID);
+	    }
+	    catch (Exception e)
+	    {
+	    }
+	}
+		
+	destroyState();
+    }
+
+public boolean saveState (OutputObjectState os)
+    {
+	boolean res = false;
+
+	try
+	{
+	    os.packInt(_heuristic);
+
+	    /*
+	     * Since we don't know what type of Xid we are
+	     * using, leave it up to JTA_XID to pack.
+	     */
+
+	    JTA_XID.pack(os, _tranID);
+
+	    /*
+	     * If no recovery object set then rely upon object
+	     * serialisation!
+	     */
+
+	    if (_recoveryObject == null)
+	    {
+		os.packInt(JTA_XAConnectionRecovery.OBJECT_RECOVERY);
+		
+		ByteArrayOutputStream s = new ByteArrayOutputStream();
+		ObjectOutputStream o = new ObjectOutputStream(s);
+
+		o.writeObject(_theResource);
+		o.close();
+
+		os.packBytes(s.toByteArray());
+	    }
+	    else
+	    {
+		os.packInt(JTA_XAConnectionRecovery.AUTO_RECOVERY);
+		os.packString(_recoveryObject.getClass().getName());
+		
+		_recoveryObject.packInto(os);
+	    }
+
+	    res = true;
+	}
+	catch (Exception e)
+	{
+	    e.printStackTrace();
+	    
+	    res = false;
+	}
+
+	return res;
+    }
+
+public boolean restoreState (InputObjectState os)
+    {
+	boolean res = false;
+
+	try
+	{
+	    _heuristic = os.unpackInt();
+
+	    _tranID = JTA_XID.unpack(os);
+
+	    if (os.unpackInt() == JTA_XAConnectionRecovery.OBJECT_RECOVERY)
+	    {
+		byte[] b = os.unpackBytes();
+	    
+		ByteArrayInputStream s = new ByteArrayInputStream(b);
+		ObjectInputStream o = new ObjectInputStream(s);
+	    
+		_theResource = (XAResource) o.readObject();
+		o.close();
+	    }
+	    else
+	    {
+		String creatorName = os.unpackString();
+		Class c = Class.forName(creatorName);
+
+		_recoveryObject = (JTA_XAConnectionRecovery) c.newInstance();
+		
+		_recoveryObject.unpackFrom(os);
+		_theResource = _recoveryObject.getResource();
+	    }
+
+	    res = true;
+	}
+	catch (Exception e)
+	{
+	    e.printStackTrace();
+	    
+	    res = false;
+	}
+
+	return res;
+    }
+
+public String type ()
+    {
+	return "/StateManager/JTA_ResourceRecord";
+    }
+
+private final void setObjectStore ()
+    {
+	if (_objStore == null)
+	    _objStore = new ObjectStore(null, "");  // interface gets default
+    }
+ 
+private final boolean createState ()
+    {
+	setObjectStore();
+	
+	if ((_theResource != null) && (_tranID != null) && (_objStore != null))
+	{
+	    OutputObjectState os = new OutputObjectState();
+	    
+	    if (saveState(os))
+	    {
+		try
+		{
+		    _valid = _objStore.write_uncommitted(_theUid, type(), os);
+		}
+		catch (Exception e)
+		{
+		    _valid = false;
+		}
+	    }
+	    else
+		_valid = false;
+	}
+	else
+	    _valid = false;
+
+	return _valid;
+    }
+ 
+private final boolean updateState (int h)
+    {
+	if (_prepared)  // only need do if we have prepared
+	{
+	    OutputObjectState os = new OutputObjectState();
+
+	    _heuristic = h;
+	    
+	    if (saveState(os))
+	    {
+		try
+		{
+		    _valid = _objStore.write_uncommitted(_theUid, type(), os);
+		}
+		catch (Exception e)
+		{
+		    _valid = false;
+		}
+	    }
+	    else
+	    {
+		System.err.println("JTA_ResourceRecord - could not update state.");
+
+		_valid = false;
+	    }
+	}
+
+	return _valid;
+    }
+
+private final boolean loadState ()
+    {
+	setObjectStore();
+
+	InputObjectState os = null;
+	
+	try
+	{
+	    os = _objStore.read_uncommitted(_theUid, type());
+	}
+	catch (Exception e)
+	{
+	    os = null;
+	}
+	
+	if (os != null)
+	{
+	    _valid = restoreState(os);
+	    
+	    os = null;
+	}
+	else
+	    _valid = false;
+
+	return _valid;
+    }
+ 
+private final boolean destroyState ()
+    {
+	if (_prepared && _valid)
+	{
+	    try
+	    {
+		_objStore.remove_uncommitted(_theUid, type());
+	    }
+	    catch (Exception e)
+	    {
+		_valid = false;
+	    }
+	}
+	
+	if (_recoveryObject != null)
+	    removeConnection();
+
+	return _valid;
+    }
+
+private final void removeConnection ()
+    {
+	/*
+	 * Should only be called once. Remove the connection so that
+	 * user can reuse the driver as though it were fresh (e.g., can
+	 * do read only optimisation).
+	 */
+
+	if (_recoveryObject != null)
+	{
+	    try
+	    {
+		_recoveryObject.removeConnection();
+		_recoveryObject = null;
+	    }
+	    catch (Exception e)
+	    {
+	    }
+	}
+    }
+
+private final boolean recover (boolean commit)
+    {
+	boolean result = false;
+	
+	if ((_theResource != null) && (_tranID != null))
+	{
+	    try
+	    {
+		Xid[] trans = _theResource.recover(XAResource.TMSTARTRSCAN);
+
+		/*
+		 * Find our transaction and then resolve it.
+		 */
+		
+		if (trans != null)
+		{
+		    for (int i = 0; i < trans.length; i++)
+		    {
+			if (JTA_Utility.sameXID(trans[i], _tranID))
+			{
+			    /*
+			     * Do some crash recovery thing!
+			     */
+
+			    try
+			    {
+				if (commit)
+				    commit();
+				else
+				    rollback();
+
+				result = true;
+			    }
+			    catch (Exception e1)
+			    {
+				System.err.println("JTA_ResourceRecord.recover: "+e1);
+			    }
+			}
+		    }
+
+		    // not found!
+		    
+		    System.err.println("JTA_ResourceRecord.recover - could not find transaction id!");
+		}
+
+		_theResource.recover(XAResource.TMENDRSCAN);
+	    }
+	    catch (Exception e2)
+	    {
+		System.err.println("JTA_ResourceRecord.recover: "+e2);
+	    }
+	}
+
+	return result;
+    }
+ 
+private static final int NONE = 0;
+private static final int ROLLBACK = 1;
+private static final int HAZARD = 2;
+private static final int MIXED = 3;
+private static final int COMMIT = 4;  
+ 
+private XAResource _theResource;
+private JTA_XAConnectionRecovery _recoveryObject;
+private Xid _tranID;
+private boolean _prepared;
+private boolean _valid;
+private int _heuristic;
+private ObjectStore _objStore;
+private Uid _theUid;
+private org.omg.CosTransactions.Resource _theReference;
+ 
+};

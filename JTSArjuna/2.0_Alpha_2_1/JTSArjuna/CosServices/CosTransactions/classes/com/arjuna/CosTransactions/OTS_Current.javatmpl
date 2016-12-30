@@ -1,0 +1,936 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.  
+ *
+ * $Id: OTS_Current.javatmpl,v 1.7.2.1.4.2 2000/05/22 14:17:47 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+#include <CosTransactions/CosTranNames.h>
+
+package com.arjuna.CosTransactions;
+
+import com.arjuna.OrbCommon.*;
+import org.omg.CosTransactions.*;
+import com.arjuna.CosTransactions.ArjunaOTS.*;
+import com.arjuna.ArjunaOTS.*;
+import com.arjuna.ArjunaCommon.Template.*;
+import com.arjuna.ArjunaLite.Atomic.BasicAction;
+import com.arjuna.ArjunaLite.Thread.ThreadActionData;
+import com.arjuna.ArjunaLite.Atomic.CheckedAction;
+import java.io.PrintStream;
+import java.util.*;
+import java.lang.Object;
+import NAMESPACE_(CORBA).CompletionStatus;
+
+import org.omg.CosTransactions.SubtransactionsUnavailable;
+import org.omg.CosTransactions.NoTransaction;
+import org.omg.CosTransactions.HeuristicMixed;
+import org.omg.CosTransactions.HeuristicHazard;
+import org.omg.CosTransactions.InvalidControl;
+import NAMESPACE_(CORBA).SystemException;
+import NAMESPACE_(CORBA).UserException;
+import NAMESPACE_(CORBA).UNKNOWN;
+import NAMESPACE_(CORBA).BAD_PARAM;
+import NAMESPACE_(CORBA).BAD_OPERATION;
+import java.lang.OutOfMemoryError;
+import java.util.EmptyStackException;
+
+#include <CosTransactions/CosTranExceptions.h>
+
+/**
+ * In a multi-threaded environment where threads can terminate
+ * transactions they may not have started, then it is possible for
+ * a thread to call commit/rollback/rollback_only on a transaction
+ * which has already been (or is in the process of being) terminated.
+ * We assume that the subsequent thread is still associated with the
+ * transaction so that it can determine its status, rather than simply
+ * disassociate it when it tries to terminate and return NoTransaction, so
+ * we would return InvalidTransaction. This allows us to distinguish
+ * between the situation where there really is no transaction associated
+ * with the thread.
+ */
+
+public class OTS_Current extends SCOPED_SKEL_(org.omg.CosTransactions,Current)
+{
+
+public static final int TX_BEGUN = 0;
+public static final int TX_COMMITTED = 1;
+public static final int TX_ABORTED = 2;
+public static final int TX_SUSPENDED = 3;
+public static final int TX_RESUMED = 4;
+
+public OTS_Current ()
+    {	
+	READY_IMPL_(this);  // don't need to make separately thread aware (not remote!)
+    }
+
+public void begin () throws SubtransactionsUnavailable, SystemException
+    {
+	OTS_ControlWrapper currentAction = OTS_Current.current();
+
+	if (currentAction == null)  // no current, so create top-level action
+	{
+	    if (OTS.localFactory())
+		currentAction = new OTS_ControlWrapper((OTS_Control) OTS.factory().createLocal(get_timeout()));
+	    else
+		currentAction = new OTS_ControlWrapper((Control) OTS.get_factory().create(get_timeout()));
+	}
+	else
+	{
+	    /*
+	     * If the current transaction has terminated (by another thread)
+	     * then we could simply start a new top-level transaction. However,
+	     * the application may be assuming that the transaction returned by
+	     * begin is a subtransaction. So, we throw InvalidTransaction.
+	     */
+	    
+	    try
+	    {
+		currentAction = currentAction.create_subtransaction();
+	    }
+	    catch (Unavailable ex)
+	    {
+#ifdef ORB_OTS_SUPPORT
+		throw new InvalidTransaction(OTS_Exceptions.UNAVAILABLE_COORDINATOR, CompletionStatus.COMPLETED_NO);
+#else
+		throw new UNKNOWN(OTS_Exceptions.UNAVAILABLE_COORDINATOR, CompletionStatus.COMPLETED_NO);
+#endif		
+	    }
+	    catch (Inactive e)
+	    {
+#ifdef ORB_OTS_SUPPORT		
+		throw new InvalidTransaction(OTS_Exceptions.INACTIVE_TRANSACTION, CompletionStatus.COMPLETED_NO);
+#else
+		throw new UNKNOWN(OTS_Exceptions.INACTIVE_TRANSACTION, CompletionStatus.COMPLETED_NO);
+#endif
+	    }
+	    catch (SystemException sysEx)
+	    {
+#ifdef ORB_OTS_SUPPORT		
+		throw new InvalidTransaction(OTS_Exceptions.INACTIVE_TRANSACTION, CompletionStatus.COMPLETED_NO);
+#else
+		throw new UNKNOWN(OTS_Exceptions.INACTIVE_TRANSACTION, CompletionStatus.COMPLETED_NO);
+#endif		
+	    }
+	}
+
+	pushAction(currentAction);
+
+	if (currentAction.getControl() != null)
+	    ThreadAssociationControl.updateAssociation(currentAction.getControl(), TX_BEGUN);
+	else
+	    ThreadAssociationControl.updateAssociation(currentAction.getImple(), TX_BEGUN);
+
+	currentAction = null;
+    }
+
+/*
+ * It's not possible to commit/abort out of order using the current interface.
+ */
+
+/*
+ * Do we delete the control if the transaction gives an heuristic result?
+ * Currently we do.
+ *
+ * If another thread has already terminated the transaction then:
+ * (i) if it committed, we do nothing - could throw TransactionRequired
+ *     of InvalidTransaction, or NoTransaction. Probably not NoTransaction,
+ *     since it would be better to distinguish between the situation where
+ *     the transaction has already been terminated and there really is no
+ *     transaction for this thread.
+ * (ii) if it rolledback, we throw TransactionRolledBack.
+ *
+ */
+ 
+#ifndef ORB_OTS_SUPPORT 
+public void commit (boolean report_heuristics) throws NoTransaction, HeuristicMixed, HeuristicHazard, TransactionRolledBack, SystemException
+#else
+public void commit (boolean report_heuristics) throws NoTransaction, HeuristicMixed, HeuristicHazard, SystemException
+#endif    
+    {
+	OTS_ControlWrapper currentAction = OTS_Current.current();
+
+	if (currentAction != null)
+	{
+	    if (currentAction.getControl() != null)
+		ThreadAssociationControl.updateAssociation(currentAction.getControl(), TX_COMMITTED);
+	    else
+		ThreadAssociationControl.updateAssociation(currentAction.getImple(), TX_COMMITTED);
+
+	    /*
+	     * Note: we only destroy the control if we do
+	     * not get an exception. This lets the user see what
+	     * happened, and relies upon them to later destroy the
+	     * control.
+	     */
+	    
+	    try
+	    {
+		currentAction.commit(report_heuristics);
+		
+		popAction();
+	    }
+	    catch (TransactionRolledBack e1)
+	    {
+		/*
+		 * Is ok to destroy transaction. Different for
+		 * heuristics.
+		 */
+		    
+		popAction();
+
+		throw e1;
+	    }
+	    catch (HeuristicMixed e2)
+	    {
+		popAction();
+
+		throw e2;
+	    }
+	    catch (HeuristicHazard e3)
+	    {
+		popAction();
+		    
+		throw e3;
+	    }
+	    catch (SystemException e4)
+	    {
+		popAction();
+
+		throw e4;
+	    }
+	    catch (Unavailable e5)
+	    {
+		/*
+		 * If terminated by some other thread then the
+		 * reference we have will no longer be valid.
+		 */
+		
+		popAction();
+		    
+		throw new InvalidTransaction();
+	    }
+	}
+	else
+	{
+	    ThreadAssociationControl.updateAssociation((Control) null, TX_COMMITTED);
+	    
+	    throw new NoTransaction();
+	}
+    }
+ 
+/*
+ *
+ * If another thread has already terminated the transaction then:
+ * (i) if it rolled back, we do nothing - could throw TransactionRequired
+ *     of InvalidTransaction, or NoTransaction. Probably not NoTransaction,
+ *     since it would be better to distinguish between the situation where
+ *     the transaction has already been terminated and there really is no
+ *     transaction for this thread.
+ * (ii) if it committed, we throw InvalidTransaction.
+ */
+ 
+public void rollback () throws NoTransaction, SystemException
+    {
+	OTS_ControlWrapper currentAction = OTS_Current.current();
+	
+	if (currentAction != null)
+	{
+	    if (currentAction.getControl() != null)
+		ThreadAssociationControl.updateAssociation(currentAction.getControl(), TX_ABORTED);
+	    else
+		ThreadAssociationControl.updateAssociation(currentAction.getImple(), TX_ABORTED);
+
+	    try
+	    {
+		currentAction.rollback();
+		    
+		popAction();
+	    }
+#ifdef ORB_OTS_SUPPORT		
+	    catch (InvalidTransaction e1)
+	    {
+		/*
+		 * If transaction has already terminated, then throw
+		 * InvalidTransaction. Differentiates between this stat
+		 * and not actually having a transaction associated
+		 * with the thread.
+		 */
+		   
+		popAction();
+		    
+		throw e1;
+	    }
+#endif		
+	    catch (SystemException e2)
+	    {
+		popAction();
+		    
+		throw e2;
+	    }
+	    catch (Unavailable e)
+	    {
+		/*
+		 * If no terminator then not allowed!
+		 */
+		
+		popAction();
+
+		throw new InvalidTransaction();
+	    }
+	}
+	else
+	{
+	    ThreadAssociationControl.updateAssociation((Control) null, TX_ABORTED);
+
+	    throw new NoTransaction();
+	}
+    }
+ 
+/*
+ * If the transaction has already terminated (or is being terminated)
+ * then throw InvalidTransaction.
+ */
+ 
+public void rollback_only () throws NoTransaction, SystemException
+    {
+	OTS_ControlWrapper currentAction = OTS_Current.current();
+
+	if (currentAction != null)
+	{
+	    try
+	    {
+		currentAction.rollback_only();
+	    }
+	    catch (org.omg.CosTransactions.Inactive exc)
+	    {
+#ifdef ORB_OTS_SUPPORT
+		throw new InvalidTransaction(OTS_Exceptions.INACTIVE_TRANSACTION, CompletionStatus.COMPLETED_NO);
+#else
+		throw new BAD_OPERATION(OTS_Exceptions.INACTIVE_TRANSACTION, CompletionStatus.COMPLETED_NO);
+#endif		    
+	    }
+	    catch (SystemException e)
+	    {
+		throw e;
+	    }
+	    catch (Unavailable ex)
+	    {
+		throw new NoTransaction();
+	    }
+	}
+	else
+	    throw new NoTransaction();
+    }
+
+public org.omg.CosTransactions.Status get_status () throws SystemException
+    {
+	OTS_ControlWrapper currentAction = OTS_Current.current();
+
+	if (currentAction != null)
+	    return currentAction.get_status();
+	else
+	    return org.omg.CosTransactions.Status.StatusNoTransaction;
+    }
+
+public String get_transaction_name () throws SystemException
+    {
+	OTS_ControlWrapper currentAction = OTS_Current.current();
+
+	if (currentAction != null)
+	    return currentAction.get_transaction_name();
+	else
+	    return null;
+    }
+
+public synchronized void set_timeout (int seconds) throws SystemException
+    {
+	/*
+	 * Only bother if the value is anything other than the default.
+	 */
+
+	if (seconds > 0)
+	{
+	    if (otsTransactionTimeout == null)
+		otsTransactionTimeout = new Hashtable();
+	    
+	    otsTransactionTimeout.put(Thread.currentThread(), new Integer(seconds));
+	}
+	else
+	{
+	    if (seconds < 0)
+		throw new BAD_PARAM(OTS_Exceptions.INVALID_TIMEOUT, CompletionStatus.COMPLETED_NO);
+	}
+    }
+
+/*
+ * JTSArjuna specific methods.
+ */
+
+public final synchronized int get_timeout () throws SystemException
+    {
+	Integer value = ((otsTransactionTimeout != null) ? (Integer) otsTransactionTimeout.get(Thread.currentThread()) : null);
+
+	if (value != null)
+	{
+	    return value.intValue();
+	}
+	else
+	{
+	    return 0;  // if not set then assume 0. What else can we do?
+	}
+    }
+
+public final synchronized void setCheckedAction (CheckedAction ca) throws SystemException
+    {
+	if (otsCheckedAction == null)
+	    otsCheckedAction = new Hashtable();
+
+	otsCheckedAction.put(Thread.currentThread(), ca);
+    }
+
+public final synchronized CheckedAction getCheckedAction () throws SystemException
+    {
+	if (otsCheckedAction != null)
+	    return (CheckedAction) otsCheckedAction.get(Thread.currentThread());
+	else
+	    return null;
+    }
+ 
+public Control get_control () throws SystemException
+    {
+	OTS_ControlWrapper theControl = OTS_Current.current();
+	
+	if (theControl == null)
+	    return null;
+	
+	/*
+	 * Always return a Control with a null terminator? Forces users to go
+	 * through current, and attempts to stop explicit propagation, which
+	 * prevents fully checked transactions. By default we don't do that
+	 * because explicit transaction propagation is the only means of
+	 * propagation we can guarantee between Orbs.
+	 */
+
+#ifndef NULL_TERMINATOR
+	/*
+	 * If it's a locally created control then we may not have
+	 * registered it with the ORB yet, so do so now.
+	 */
+
+	if (theControl.getImple() != null)
+	    return theControl.getImple().getControl();
+	else
+	    return theControl.getControl();
+#else	
+	Coordinator coord = null;
+
+	try
+	{
+	    coord = theControl.get_coordinator();
+	}
+	catch (Unavailable e)
+	{
+	    coord = null;
+
+	    throw new UNKNOWN(OTS_Exceptions.UNAVAILABLE_COORDINATOR, CompletionStatus.COMPLETED_NO);
+	}
+	catch (SystemException sysEx)
+	{
+	    coord = null;
+
+	    throw sysEx;
+	}
+
+	Control proxyControl = OTS_Factory.createPropagatedControl(coord);
+
+	coord = null;
+	theControl = null;
+
+	return proxyControl;
+#endif
+    }
+ 
+/*
+ * Problem: there is a general problem with the Orb and memory management. If this
+ * method, say, is invoked remotely then we must duplicate the reference before
+ * returning it since the Orb will call release on the return value once it has
+ * been sent to the caller. However, in the local case, if we call duplicate then
+ * there is nothing to call release and we get memory leaks!
+ *
+ * Also assume that BasicAction's notion of current is the same as Current's,
+ * if the action is local.
+ *
+ * The spec. states that after suspend we should have a null transaction context,
+ * but is hazy as to what to do if we are nested. We shall assume that the control
+ * returned is for the current transaction and that we suspend the entire transaction
+ * hierarchy. Given the returned control, we can always regenerate the hierarchy
+ * later if required by resume.
+ */
+
+public Control suspend () throws SystemException
+    {
+	OTS_ControlWrapper actPtr = popAction();
+
+	if (actPtr == null)
+	{
+	    ThreadAssociationControl.updateAssociation((Control) null, TX_SUSPENDED);
+
+	    return null;
+	}
+	else
+	{
+	    if (actPtr.getControl() != null)
+		ThreadAssociationControl.updateAssociation(actPtr.getControl(), TX_SUSPENDED);
+	    else
+		ThreadAssociationControl.updateAssociation(actPtr.getImple(), TX_SUSPENDED);
+
+	    /*
+	     * Purge the remaining controls from the thread context.
+	     * If the controls are remote and proxies then we delete them
+	     * here, since we must recreate them next time we want to
+	     * use them anyway.
+	     */
+
+	    purgeActions();
+
+	    if (actPtr.isLocal())
+		return actPtr.getImple().getControl();
+	    else
+		return actPtr.getControl();
+	}
+    }
+ 
+/*
+ * To support checked transactions we can only resume if the action is local
+ * or we received it implicitly.
+ *
+ * If the control refers to a nested transaction then we must recreate the
+ * entire hierarchy, i.e., the effect of a suspend/resume on the same control
+ * should be the same as never calling suspend in the first place.
+ *
+ * If the control is for a local transaction then it is simple to recreate the
+ * hierarchy. Otherwise we rely upon the PropagationContext to recreate it.
+ *
+ * If this control is a "proxy" then create a new proxy instance, so we
+ * can delete proxies whenever suspend is called.
+ *
+ * Should check if "new" transaction is not actually the current
+ * one anyway. If so, just return. The spec. doesn't mention what
+ * to do in this case, so for now we go to the overhead of
+ * the work regardless.
+ */
+
+public void resume (Control which) throws InvalidControl, SystemException
+    {
+	/*
+	 * We must now "forget" any current transaction information.
+	 * This is because when we end this transaction we must be
+	 * associated with no transaction.
+	 */
+
+	purgeActions();
+
+	ThreadAssociationControl.updateAssociation(which, TX_RESUMED);
+
+	if (which == null)  // if null then return
+	    return;
+
+	/*
+	 * Must duplicate because it is an 'in' parameter which we
+	 * want to keep.
+	 */
+
+	Control cont = which;
+	boolean invalidControl = false;
+
+	/*
+	 * Now recreate the hierarchy (if any) of this transaction,
+	 * pushing each control onto the stack. The method pushAction
+	 * will push BasicActions onto the thread stack if necessary, so
+	 * we don't need to worry about it here.
+	 */
+
+	try
+	{
+	    Coordinator coord = cont.get_coordinator();
+
+	    if (!coord.is_top_level_transaction())
+	    {
+		/*
+		 * Is the Control an ActionControl? If so then it
+		 * has methods to allow us to get the parent directly.
+		 * Otherwise, rely on the PropagationContext.
+		 */
+	    
+		ActionControl actControl = null;
+	
+		try
+		{
+		    actControl = SCOPED_NARROW_(com.arjuna.ArjunaOTS,ActionControl,cont);
+
+		    if (actControl == null)
+			throw new BAD_PARAM();
+		}
+		catch (Exception e)
+		{
+		    /*
+		     * Not an ActionControl.
+		     */
+
+		    actControl = null;
+		}
+
+		if (actControl != null)
+		{
+		    invalidControl = addActionControlHierarchy(actControl);
+		}
+		else
+		{
+		    invalidControl = addRemoteHierarchy(cont);
+		}
+	    }
+
+	    coord = null;
+	}
+	catch (SystemException sysEx)
+	{
+	    throw sysEx;
+	}
+	catch (UserException usrEx)
+	{
+	    throw new InvalidControl();
+	}
+    
+	/*
+	 * Now put the new transaction on the top of the list.
+	 */
+
+	if (!invalidControl)
+	    pushAction(new OTS_ControlWrapper((Control) cont));
+	else
+	{
+	    cont = null;
+
+	    throw new InvalidControl();
+	}	
+    }
+
+protected final static OTS_ControlWrapper current ()
+    {
+	Object arg = otsCurrent.get(Thread.currentThread());
+
+	if (arg != null)
+	{
+	    try
+	    {
+		Stack hier = (Stack) arg;
+		OTS_ControlWrapper wrapper = (OTS_ControlWrapper) hier.peek();
+	    
+		return wrapper;
+	    }
+	    catch (EmptyStackException e)
+	    {
+	    }
+	}
+
+	return null;
+    }
+ 
+/*
+ * We could maintain a list of suspended action hierarchies and resume
+ * the right one (and the right place!) given the control. However, this
+ * can lead to memory leaks, since we never know when to remove this
+ * hierarchy information. So, for now we simply rely on the propagation
+ * context.
+ */
+
+private final boolean addRemoteHierarchy (Control cont)
+    {
+	/*
+	 * Here until we can make this work with recreate.
+	 */
+
+#ifdef FIXED
+	pushAction(new OTS_ControlWrapper((Control) cont));
+
+	return true;
+#else
+	boolean isError = false;
+    
+	try
+	{
+	    Coordinator coord = cont.get_coordinator();
+	    PropagationContext ctx = coord.get_txcontext();
+
+	    if (ctx != null)
+	    {
+		/*
+		 * Depth must be non-zero or we wouldn't be here!
+		 */
+	    
+		int depth = ctx.parents.length;
+
+		for (int i = depth -1; i >= 0; i--)
+		{
+		    /*
+		     * No memory leak as we delete either when suspend
+		     * is called, or the transaction is terminated.
+		     *
+		     * Do this in a two step approach because when using RCP the
+		     * convertor operator from _mgmt to _ptr doesn't go off.
+		     */
+
+		    Coordinator tmpCoord = ctx.parents[i].coord;
+		    Terminator tmpTerm = ctx.parents[i].term;
+
+		    Control theControl = OTS_Factory.createProxy(tmpCoord, tmpTerm);
+		
+		    pushAction(new OTS_ControlWrapper((OTS_Control) theControl));  // takes care of thread/BasicAction for us.
+		}
+
+		ctx = null;
+	    }
+	    else
+	    {
+		/*
+		 * If we can't get a propagation context then we cannot
+		 * create the hierarchy!
+		 */
+	    
+		isError = true;
+	    }
+
+	    coord = null;
+	}
+	catch (Exception e)
+	{
+	    isError = true;
+	}
+
+	return isError;
+#endif	
+    }
+
+/*
+ * All OTSArjuna controls have a method for getting their parent.
+ */
+
+private final boolean addActionControlHierarchy (ActionControl cont)
+    {
+	boolean isError = false;
+    
+	try
+	{
+	    ActionControl actControl = cont;
+	    Control parentControl = actControl.getParentControl();
+	    Stack hier = new Stack();
+
+	    while (parentControl != null)
+	    {
+		hier.push(new OTS_ControlWrapper((Control) parentControl));
+
+		actControl = null;
+
+		actControl = SCOPED_NARROW_(com.arjuna.ArjunaOTS,ActionControl,parentControl);		
+		/*
+		 * Currently assume that entire hierarchy will contain only one
+		 * type of action, i.e., Arjuna actions or someone elses!
+		 */
+
+		if (actControl != null)
+		    parentControl = actControl.getParentControl();
+		else
+		    parentControl = null;
+	    }
+
+	    actControl = null;
+
+	    try
+	    {
+		OTS_ControlWrapper wrapper = (OTS_ControlWrapper) hier.pop();
+	    
+		while (wrapper != null)
+		{
+		    pushAction(wrapper);
+		
+		    wrapper = null;
+		
+		    wrapper = (OTS_ControlWrapper) hier.pop();
+		}
+	    }
+	    catch (EmptyStackException e)
+	    {
+	    }
+	}
+	catch (Exception e)
+	{
+	    System.err.println("WARNING:OTS_Current::addActionControlHierarchy caught exception: "+e);
+	    
+	    isError = true;
+	}
+
+	return isError;
+    }
+ 
+/*
+ * If we have a hierarchy of remote actions (controls) then they will not be
+ * registered with BasicAction.
+ * Also, they will either all be remote references to controls, or all but
+ * the current action will be proxy/wrapper controls, i.e., controls which
+ * contain references to the remote coordinator/terminator.
+ */
+
+private synchronized final void purgeActions ()
+    {
+	/*
+	 * Don't do anything with these actions, i.e., do
+	 * not commit/abort them. Just because this thread is
+	 * finished with them does not mean other threads
+	 * are!
+	 */
+	
+	OTS_ControlWrapper ptr = popAction();
+
+	while (ptr != null)
+	{
+	    ptr = null;
+
+	    ptr = popAction();
+	    
+	} while (ptr != null);
+    }
+
+private synchronized final void pushAction (OTS_ControlWrapper action)
+    {
+	Thread ct = Thread.currentThread();
+	Stack sl = (Stack) otsCurrent.get(ct);
+	boolean isNew = false;
+	
+	if (sl == null)
+	{
+	    isNew = true;
+	    sl = new Stack();
+	}
+
+	// Check here that action is local and not a proxy.
+
+	/*
+	 * If it's a local transaction then save the transaction
+	 * pointer. We'll need it when we pop the transaction
+	 * later.
+	 */
+
+	if (action != null)
+	    action.determineLocality();
+
+	sl.push(action);
+
+	if (isNew)
+	    otsCurrent.put(ct, sl);
+	
+	if (action.isLocal())
+	{
+	    /*
+	     * Add thread to action list!
+	     */
+
+	    /*
+	     * Given a Control_ptr we can maintain a mapping to the
+	     * actual action.
+	     *
+	     * Do we want this to work for remote actions? Yes, because
+	     * we want all actions to know about active threads, even
+	     * those that are remote. (But we don't do it yet!)
+	     *
+	     * Call action to increment number of threads. This is all we
+	     * need to do for remote actions. If local, we need to make this
+	     * action the current action.
+	     */
+
+	    ThreadActionData.pushAction(action.getImple().getImplHandle());
+	}
+    }
+
+private synchronized final OTS_ControlWrapper popAction ()
+    {
+	OTS_ControlWrapper action = null;
+	Thread ct = Thread.currentThread();
+	Object arg = otsCurrent.get(ct);
+
+	if (arg != null)
+	{
+	    Stack sl = (Stack) arg;
+
+	    try
+	    {
+		/*
+		 * When we pushed the action we did the check for whether
+		 * it was local to save time now.
+		 */
+
+		action = (OTS_ControlWrapper) sl.pop();
+	    }
+	    catch (EmptyStackException e)
+	    {
+	    }
+	
+	    /*
+	     * If size now zero we can delete from thread
+	     * specific data.
+	     */
+	
+	    if (sl.size() == 0)
+	    {
+		sl = null;
+		otsCurrent.remove(ct);
+	    }
+	}
+	
+	/*
+	 * Now update action in thread's notion of current if
+	 * this action is local.
+	 */
+    
+	// Check that action is local and not a proxy.
+
+	if (action != null)
+	{
+	    /*
+	     * Now update action in thread's notion of current if
+	     * this action is local.
+	     */
+    
+	    // Check that action is local and not a proxy.
+
+	    if (action.isLocal())
+	    {
+		/*
+		 * If transaction is terminated by another thread
+		 * then our thread-action information may have already
+		 * been removed from the action.
+		 */
+
+		try
+		{
+		    ThreadActionData.popAction();
+		}
+		catch (EmptyStackException e)
+		{
+		}
+	    }
+	}
+	
+	return action;
+    }
+
+private static Hashtable otsCurrent = new Hashtable();
+private static Hashtable otsTransactionTimeout = null;  // thread specific
+private static Hashtable otsCheckedAction = null;
+
+};

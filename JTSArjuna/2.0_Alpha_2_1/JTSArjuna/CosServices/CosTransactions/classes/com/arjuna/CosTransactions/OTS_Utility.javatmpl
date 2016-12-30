@@ -1,0 +1,217 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.  
+ *
+ * $Id: OTS_Utility.javatmpl,v 1.2 2000/04/06 11:00:29 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package com.arjuna.CosTransactions;
+
+import com.arjuna.ArjunaCommon.Common.Uid;
+import com.arjuna.ArjunaLite.Atomic.BasicAction;
+import com.arjuna.CosTransactions.tx.XID;
+import com.arjuna.CosTransactions.ArjunaOTS.Arjuna;
+import org.omg.CosTransactions.*;
+import com.arjuna.ArjunaOTS.*;
+import java.io.PrintStream;
+
+import org.omg.CosTransactions.Unavailable;
+import NAMESPACE_(CORBA).SystemException;
+import java.lang.IllegalStateException;
+
+public class OTS_Utility
+{
+ 
+public static void printHierarchy (PropagationContext ctx, PrintStream strm)
+    {
+	int depth = ((ctx.parents != null) ? ctx.parents.length : 0);
+
+	strm.print("PropagationContext:");
+    
+	for (int i = depth -1; i >= 0; i--)
+	{
+	    if (ctx.parents[i] != null)
+		strm.print("\n"+OTS_Helper.otidToUid(ctx.parents[i].otid));
+	}
+
+	strm.print("\n"+OTS_Helper.otidToUid(ctx.currentTransaction.otid));
+    }
+
+#if defined(CORBA_2_3) || defined(CORBA_2_2) || defined(CORBA_2_1)
+public static void printVote (PrintStream out, org.omg.CosTransactions.Vote v)
+#else
+public static void printVote (PrintStream out, int v)
+#endif
+    {
+	switch (ENUM_VALUE_(v))
+	{
+	case ENUM_CONST_(Vote,VoteCommit):
+	    out.print("CosTransactions::VoteCommit");
+	    break;
+	case ENUM_CONST_(Vote,VoteRollback):
+	    out.print("CosTransactions::VoteRollback");
+	    break;
+	case ENUM_CONST_(Vote,VoteReadOnly):
+	    out.print("CosTransactions::VoteReadOnly");
+	    break;
+	}
+    }
+
+#if defined(CORBA_2_3) || defined(CORBA_2_2) || defined(CORBA_2_1)
+public static void printStatus (PrintStream out, org.omg.CosTransactions.Status res)
+#else
+public static void printStatus (PrintStream out, int res)
+#endif    
+    {
+	switch (ENUM_VALUE_(res))
+	{
+	case ENUM_CONST_(Status,StatusActive):
+	    out.print("CosTransactions::StatusActive");
+	    break;
+	case ENUM_CONST_(Status,StatusMarkedRollback):
+	    out.print("CosTransactions::StatusMarkedRollback");
+	    break;
+	case ENUM_CONST_(Status,StatusPrepared):
+	    out.print("CosTransactions::StatusPrepared");
+	    break;
+	case ENUM_CONST_(Status,StatusCommitted):
+	    out.print("CosTransactions::StatusCommitted");
+	    break;
+	case ENUM_CONST_(Status,StatusRolledBack):
+	    out.print("CosTransactions::StatusRolledBack");
+	    break;
+	case ENUM_CONST_(Status,StatusUnknown):
+	    out.print("CosTransactions::StatusUnknown");
+	    break;
+#if defined(DRAFT3) || defined(DRAFT4) || defined(DRAFT5)
+	case ENUM_CONST_(Status,StatusPreparing):
+	    out.print("CosTransactions::StatusPreparing");
+	    break;
+	case ENUM_CONST_(Status,StatusCommitting):
+	    out.print("CosTransactions::StatusCommitting");
+	    break;
+	case ENUM_CONST_(Status,StatusRollingBack):
+	    out.print("CosTransactions::StatusRollingBack");
+	    break;
+#endif	    
+	case ENUM_CONST_(Status,StatusNoTransaction):
+	    out.print("CosTransactions::StatusNoTransaction");
+	    break;
+	}
+    }
+    
+    /*
+     * Any need for the inverse operation?
+     * Could easily do it for Arjuna transactions only.
+     */
+    
+public static com.arjuna.CosTransactions.tx.XID getXid (Control cont, boolean branch) throws IllegalStateException
+    {
+	if (cont == null)
+	    throw new IllegalStateException();
+
+	if (cont instanceof OTS_Control)
+	{
+	    try
+	    {
+		UidCoordinator arjcoord = OTS_Helper.getUidCoordinator(cont);
+		Uid u = OTS_Helper.getUid(arjcoord);
+		String s = u.stringForm();
+		int uidLen = s.length();
+		
+		if (uidLen > XID.MAXGTRIDSIZE)  // Uid is too long!!!!
+		    throw new IllegalStateException();
+		else
+		{
+		    XID xid = new XID();
+		    byte[] b = s.getBytes();
+		    
+		    xid.formatID = OTS_Transaction.interpositionType();
+		    xid.gtrid_length = uidLen;
+
+		    /*
+		     * Which way round do we fill in the structure?
+		     */
+
+		    System.arraycopy (b, 0, xid.data, 0, uidLen);
+		    
+		    if (branch)
+		    {
+			Uid branchUid = new Uid();
+			String bs = branchUid.stringForm();
+			int bsLen = bs.length();
+
+			b = bs.getBytes();
+
+			if (bsLen > XID.MAXBQUALSIZE) // Uid is too long!!!!
+			    throw new IllegalStateException();
+			else
+			{
+			    xid.bqual_length = bsLen;
+
+			    System.arraycopy (b, 0, xid.data, xid.gtrid_length, bsLen);
+			}
+
+			bs = null;
+			branchUid = null;
+		    }
+		    else
+		    {
+			/*
+			 * Note: for some dbs we seem to be able to get
+			 * away with setting the size field to the size
+			 * of the actual branch. However, for Oracle,
+			 * it appears as though it must always be 64.
+			 * (At least for zero branches.)
+			 */
+
+			xid.data[xid.gtrid_length] = (byte) 0;
+			xid.bqual_length = 64;
+		    }
+		    
+		    b = null;
+		    s = null;
+		    u = null;
+
+		    return xid;
+		}
+	    }
+	    catch (Exception e)
+	    {
+		throw new IllegalStateException();
+	    }
+	}
+	else
+	    throw new IllegalStateException();
+    }
+
+public static Uid getUid (XID xid)
+    {
+	if ((xid.formatID == -1) || (xid.gtrid_length <= 0)) // means null XID
+	    return Uid.nullUid();
+	else
+	{
+	    byte[] buff = new byte[xid.gtrid_length+1];
+
+	    buff[xid.gtrid_length] = (byte) '\0';
+
+	    for (int i = 0; i < xid.gtrid_length; i++)
+	    {
+		buff[i] = xid.data[i];
+	    }
+
+	    Uid tx = new Uid(new String(buff), true);
+
+	    buff = null;
+
+	    return tx;
+	}
+    }
+    
+};

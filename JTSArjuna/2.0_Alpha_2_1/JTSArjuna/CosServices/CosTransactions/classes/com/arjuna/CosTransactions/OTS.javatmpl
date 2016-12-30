@@ -1,0 +1,408 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.  
+ *
+ * $Id: OTS.javatmpl,v 1.2.2.1.4.2 2000/07/24 11:25:35 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package com.arjuna.CosTransactions;
+
+import com.arjuna.OrbCommon.*;
+import com.arjuna.ArjunaCommon.Common.PropertyManager;
+import org.omg.CosTransactions.*;
+import com.arjuna.ArjunaOTS.*;
+import java.io.PrintStream;
+#ifdef JBROKER
+import com.objectEra.jbroker.api.bootstrap.*;
+#endif
+
+import NAMESPACE_(CORBA).SystemException;
+import NAMESPACE_(CORBA).BAD_PARAM;
+import NAMESPACE_(CORBA).UserException;
+import NAMESPACE_(CORBA.ORBPackage).InvalidName;
+import java.io.IOException;
+
+class StartupOTS
+{
+
+public StartupOTS ()
+    {
+	if (OTS._theFactory == null)
+	{
+	    /*
+	     * Only check once, when the factory is first created.
+	     */
+		
+	    String transactionManager = PropertyManager.getProperty(OTS_Environment.OTS_TRANSACTION_MANAGER, "NO");
+	    int resolver = ORBServices.CONFIGURATION_FILE;
+
+	    if (transactionManager.compareTo("YES") == 0)
+	    {
+		OTS._requireTransactionManager = true;
+
+		String resolveMechanism = PropertyManager.getProperty(ORBEnvironment.RESOLVE_SERVICE, "CONFIGURATION_FILE");
+
+		if (resolveMechanism.compareTo("NAME_SERVICE") == 0)
+		    resolver = ORBServices.NAME_SERVICE;
+		else
+		{
+		    if (resolveMechanism.compareTo("BIND_CONNECT") == 0)
+			resolver = ORBServices.BIND_CONNECT;
+		}
+	    }
+		
+	    if (OTS._requireTransactionManager)
+	    {
+		try
+		{
+		    if (resolver != ORBServices.BIND_CONNECT)
+		    {
+#ifdef JBROKER
+			if (resolver == ORBServices.RESOLVE_INITIAL_REFERENCES)
+			{
+			    InitialReferencesService insService = (InitialReferencesService) ORBInterface.orb().resolve_initial_references("InitialReferencesServices");
+			    String ior = PropertyManager.getProperty(ORBServices.transactionService);
+			    NAMESPACE_(CORBA).Object objRef = ORBInterface.orb().string_to_object(ior);
+
+			    insService.bind(ORBServices.transactionService, objRef, false);
+			}
+#endif
+
+			String[] params = new String[1];
+
+			params[0] = ORBServices.otsKind;
+		    
+			NAMESPACE_(CORBA).Object obj = ORBServices.getService(ORBServices.transactionService,
+									      params, resolver);
+
+			params = null;
+		    
+			OTS._theFactoryRef = SCOPED_NARROW_(org.omg.CosTransactions,TransactionFactory,obj);
+		    }
+		    else
+		    {
+#ifdef HAVE_BIND
+#ifndef ORBIXWEB
+			OTS._theFactoryRef = SCOPED_CORBA_BIND_(org.omg.CosTransactions,TransactionFactory,ORBServices.transactionService);
+#else
+			OTS._theFactoryRef = SCOPED_CORBA_BIND_(org.omg.CosTransactions,TransactionFactory,":"+ORBServices.transactionService);
+#endif
+#else
+			System.err.println("Error - bind not supported for resolving TransactionService.");
+			System.exit(0);
+#endif
+		    }
+		    
+		    if (OTS._theFactoryRef == null)
+			throw new BAD_PARAM();
+		}
+		catch (InvalidName e1)
+		{
+		    System.err.println("Resolution of OTS server failed - invalid name: "+e1);
+		    System.exit(0);
+		}
+		catch (BAD_PARAM e1)
+		{
+		    System.err.println("Resolution of OTS server failed - invalid name: "+e1);
+		    System.exit(0);
+		}
+		catch (IOException e2)
+		{
+		    System.err.println("Resolution of OTS server failed - IOException: "+e2);
+		    System.exit(0);
+		}
+		catch (SystemException e3)
+		{
+		    System.err.println("Resolution of OTS server failed - SystemException: "+e3);
+		    System.exit(0);
+		}
+		catch (UserException e4)
+		{
+		    System.err.println("Resolution of OTS server failed - UserException: "+e4);
+		    System.exit(0);
+		}
+	    }
+	    else
+	    {
+		/* force to be local */
+
+		OTS._theFactory = new OTS_Factory();
+	    }
+	}
+
+	if (OTS._current == null)
+	{
+	    try
+	    {
+		OTS._current = new OTS_Current();
+		OTS._currentRef = CORBA_REF_(OTS._current,org.omg.CosTransactions.Current);
+	    }
+	    catch (Exception e)
+	    {
+		OTS._current = null;
+		
+		System.err.println("OTS.current: "+e);
+		System.exit(0);
+	    }
+	}
+
+#ifdef JBROKER
+	try
+	{
+	    InitialReferencesService insService = (InitialReferencesService) ORBInterface.orb().resolve_initial_references("InitialReferencesService");
+	    insService.bind("TransactionCurrent", OTS._currentRef, true);
+	}
+	catch (Exception e)
+	{
+	    e.printStackTrace();
+	    System.exit(0);
+	}
+#endif
+    }
+ 
+};
+
+class ShutdownOTS extends OAPreShutdown
+{
+
+public ShutdownOTS ()
+    {
+	super("ShutdownOTS");
+    }
+
+public void work ()
+    {
+	OTS.purge();
+    }
+ 
+};
+
+public class OTS
+{
+
+public static OTS_Current current ()
+    {
+	return OTS._current;
+    }
+
+public static org.omg.CosTransactions.Current get_current ()
+    {
+	return OTS._currentRef;
+    }
+
+public static OTS_Factory factory ()
+    {
+	return _theFactory;
+    }
+
+public static TransactionFactory get_factory ()
+    {
+	if (_theFactoryRef == null)
+	    _theFactoryRef = _theFactory.getReference();
+	
+	return _theFactoryRef;
+    }
+
+public static boolean localFactory ()
+    {
+	return !OTS._requireTransactionManager;
+    }
+    
+public static void destroyControl (OTS_Control control) throws ActiveTransaction, ActiveThreads, BadControl, Destroyed, SystemException
+    {
+	if (control == null)
+	    throw new BadControl();
+
+	/*
+	 * Just in case control is a top-level transaction, and has
+	 * been registered with the reaper, we need to get it removed.
+	 *
+	 * Don't bother if the reaper has not been created.
+	 */
+    
+	if (OTS_TransactionReaper.transactionReaper() != null)
+	{
+	    Coordinator coord;
+	
+	    try
+	    {
+		coord = control.get_coordinator();
+	    }
+	    catch (Exception e)
+	    {
+		coord = null;  // nothing else we can do!
+	    }
+
+	    if (coord != null)
+	    {
+		try
+		{
+		    if (coord.is_top_level_transaction())
+		    {
+			/*
+			 * Transaction is local, but was registered as
+			 * a Control. If this is a performance hit then
+			 * add explicit add/removes for local instances.
+			 */
+
+			OTS_TransactionReaper.transactionReaper().remove((OTS_Control) control);
+		    }
+		}
+		catch (Exception e)
+		{
+		}
+
+		coord = null;
+	    }
+	}
+	
+	/*
+	 * Watch out for conflicts with multiple threads deleting
+	 * the same control!
+	 */
+
+	/*
+	 * If local, then delete it here, rather than
+	 * calling the destroy method.
+	 *
+	 * Possible problem if a local factory is being accessed
+	 * remotely?
+	 */
+
+	control.destroy();
+	    
+	control = null;
+    }
+	
+public static synchronized void destroyControl (Control control) throws ActiveTransaction, ActiveThreads, BadControl, Destroyed, SystemException
+    {
+	if (control == null)
+	    throw new BadControl();
+	
+	OTS_Control lCont = OTS_Helper.localControl(control);
+
+	if (lCont != null)
+	    destroyControl(lCont);
+	else
+	{
+	    /*
+	     * Just in case control is a top-level transaction, and has
+	     * been registered with the reaper, we need to get it removed.
+	     *
+	     * Don't bother if the reaper has not been created.
+	     */
+    
+	    if (OTS_TransactionReaper.transactionReaper() != null)
+	    {
+		Coordinator coord;
+	
+		try
+		{
+		    coord = control.get_coordinator();
+		}
+		catch (Exception e)
+		{
+		    coord = null;  // nothing else we can do!
+		}
+
+		if (coord != null)
+		{
+		    try
+		    {
+			if (coord.is_top_level_transaction())
+			    OTS_TransactionReaper.transactionReaper().remove(control);
+		    }
+		    catch (Exception e)
+		    {
+		    }
+
+		    coord = null;
+		}
+	    }
+    
+	    /*
+	     * Watch out for conflicts with multiple threads deleting
+	     * the same control!
+	     */
+
+	    /*
+	     * Remote transaction, so memory management is different!
+	     */
+	
+	    ActionControl action = null;
+	    
+	    try
+	    {
+		action = SCOPED_NARROW_(com.arjuna.ArjunaOTS,ActionControl,control);
+
+		if (action == null)
+		    throw new BAD_PARAM();
+	    }
+	    catch (Exception e)
+	    {
+		action = null;
+	    }
+
+	    if (action != null)
+	    {
+		/*
+		 * Is an Arjuna control, so we can call destroy on it?
+		 */
+
+		action.destroy();
+		
+		action = null;
+		control = null;
+	    }
+	    else
+	    {
+		/*
+		 * Just call release on the control.
+		 *
+		 * We could throw a BadControl exception, but
+		 * what would that do for the programmer?
+		 */
+
+		control = null;
+	    }
+	}
+    }
+
+protected static void purge ()
+    {
+	if (OTS._current != null)
+	{
+	    DESTROY_IMPL_(OTS._current);
+	    OTS._current = null;
+	}
+	
+	if (OTS._theFactory != null)
+	{
+	    DESTROY_IMPL_(OTS._theFactory);
+	    OTS._theFactory = null;
+	}
+    }
+
+static boolean                         _requireTransactionManager = false;
+static OTS_Factory                     _theFactory = null;
+static TransactionFactory              _theFactoryRef = null;
+static OTS_Current                     _current = null;
+static org.omg.CosTransactions.Current _currentRef = null;
+    
+    static
+    {
+	StartupOTS startup = new StartupOTS();
+	
+	ORBInterface.addPreOAShutdown(new ShutdownOTS());
+
+	if (!com.arjuna.CosTransactions.Implementation.Implementations.added())
+	    com.arjuna.CosTransactions.Implementation.Implementations.initialise();
+    }
+
+};

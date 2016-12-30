@@ -1,0 +1,124 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: OTS_ServerStrictNestedAction.javatmpl,v 1.1 2000/02/25 14:06:31 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package com.arjuna.CosTransactions.Interposition.Strict;
+
+import com.arjuna.ArjunaCommon.Template.*;
+import com.arjuna.ArjunaCommon.Common.Uid;
+import com.arjuna.CosTransactions.*;
+import com.arjuna.CosTransactions.Interposition.OTS_ServerControl;
+import com.arjuna.CosTransactions.Interposition.Arjuna.*;
+import com.arjuna.OrbCommon.*;
+import org.omg.CosTransactions.*;
+import com.arjuna.ArjunaOTS.*;
+import NAMESPACE_(CORBA).CompletionStatus;
+
+import NAMESPACE_(CORBA).SystemException;
+import NAMESPACE_(CORBA).UNKNOWN;
+
+public class OTS_ServerStrictNestedAction extends OTS_ServerNestedAction
+{
+
+    /*
+     * Create local transactions with same ids as remote.
+     * The base class is responsible for registering us with the
+     * parent transaction.
+     */
+
+public OTS_ServerStrictNestedAction (OTS_ServerControl control, boolean doRegister)
+    {
+	super(control);
+
+	_registered = false;
+	_theResource = null;
+
+	if (_theControl != null)
+	{
+	    _theResource = new SCOPED_TIE_INSTANCE_(org.omg.CosTransactions,SubtransactionAwareResource)(this);
+	    
+	    READY_IMPL_(_theResource);
+	    
+	    /*
+	     * Would like to be able to attach a thread filter
+	     * to this object if process-filters aren't supported.
+	     * However, currently this won't work as we can't have
+	     * two different filter types working at the same
+	     * time.
+	     *
+	     *		ATTACH_THREAD_FILTER_(_theResource);
+	     */
+	    
+	    if (doRegister)
+		interposeResource();
+	}
+    }
+
+public boolean interposeResource ()
+    {
+	if (!_registered)
+	{
+	    _registered = true;
+
+	    if ((_theResource != null) && (_theControl != null))
+	    {
+		Coordinator realCoordinator = _theControl.originalCoordinator();
+
+		if (!(_valid = registerSubTran(realCoordinator)))
+		{
+		    System.err.println("WARNING - OTS_ServerStrictNestedAction - could not register interposed hierarchy!");
+		    
+		    /*
+		     * Failed to register. Valid is set, and the interposition controller
+		     * will now deal with this.
+		     */
+		}
+
+		realCoordinator = null;
+	    }
+	    else
+		_valid = false;
+	}
+
+	return _valid;
+    }
+
+    /*
+     * Since we may be called multiple times if we are nested and are propagated
+     * to our parents, we remember the initial response and return it subsequently.
+     */
+
+public void commit_subtransaction (Coordinator parent) throws SystemException
+    {
+	try
+	{
+	    super.commit_subtransaction(parent);
+
+	    /*
+	     * Now register a resource with our parent if required.
+	     */
+
+	    if (super._parent != null)
+		super._parent.interposeResource();
+	}
+	catch (SystemException e)
+	{
+	    if (super._parent != null)
+		super._parent.interposeResource();
+
+	    throw e;
+	}
+    }
+
+private boolean _registered;
+ 
+};

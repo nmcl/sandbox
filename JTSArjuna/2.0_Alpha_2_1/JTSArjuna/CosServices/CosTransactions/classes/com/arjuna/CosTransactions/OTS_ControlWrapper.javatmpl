@@ -1,0 +1,321 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.  
+ *
+ * $Id: OTS_ControlWrapper.javatmpl,v 1.1.2.1 2000/05/22 10:23:51 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+#include <CosTransactions/CosTranNames.h>
+
+package com.arjuna.CosTransactions;
+
+import com.arjuna.ArjunaLite.Atomic.BasicAction;
+import org.omg.CosTransactions.*;
+import NAMESPACE_(CORBA).CompletionStatus;
+
+import org.omg.CosTransactions.SubtransactionsUnavailable;
+import org.omg.CosTransactions.NoTransaction;
+import org.omg.CosTransactions.HeuristicMixed;
+import org.omg.CosTransactions.HeuristicHazard;
+import org.omg.CosTransactions.InvalidControl;
+import NAMESPACE_(CORBA).SystemException;
+import NAMESPACE_(CORBA).UserException;
+import NAMESPACE_(CORBA).UNKNOWN;
+import NAMESPACE_(CORBA).BAD_PARAM;
+import NAMESPACE_(CORBA).BAD_OPERATION;
+
+#include <CosTransactions/CosTranExceptions.h>
+
+/*
+ * This class attempts to mask the local/remote control issue.
+ * We try to use local controls directly as much as possible and
+ * not register them with the ORB until the last minute. This
+ * improves performance *significantly*. At present we only do this
+ * for top-level transactions, but extending for nested transactions
+ * is straightforward.
+ */
+
+public class OTS_ControlWrapper
+{
+
+public OTS_ControlWrapper (Control c)
+    {
+	this(c, null);
+    }
+
+public OTS_ControlWrapper (OTS_Control impl)
+    {
+	control = null;
+	controlImpl = impl;
+	checkedLocality = true;
+    }
+
+public OTS_ControlWrapper (Control c, OTS_Control impl)
+    {
+	control = c;
+	controlImpl = impl;
+
+	if (impl == null)
+	    checkedLocality = false;
+	else
+	    checkedLocality = true;
+    }
+
+public final OTS_ControlWrapper create_subtransaction () throws Unavailable, Inactive, SubtransactionsUnavailable, SystemException
+    {
+	Coordinator coord;
+
+	try
+	{
+	    coord = ((control != null) ? control.get_coordinator() : controlImpl.get_coordinator());
+	}
+	catch (SystemException e)
+	{
+	    coord = null;
+	}
+
+	if (coord != null)
+	{
+	    return new OTS_ControlWrapper(coord.create_subtransaction());
+	}
+	else
+	{
+#ifdef ORB_OTS_SUPPORT		    
+	    throw new InvalidTransaction(OTS_Exceptions.UNAVAILABLE_COORDINATOR, CompletionStatus.COMPLETED_NO);
+#else
+	    throw new UNKNOWN(OTS_Exceptions.UNAVAILABLE_COORDINATOR, CompletionStatus.COMPLETED_NO);
+#endif
+	}
+    }
+
+#ifndef ORB_OTS_SUPPORT
+public final void commit (boolean report_heuristics) throws Unavailable, TransactionRolledBack, HeuristicMixed, HeuristicHazard, SystemException
+#else
+public final void commit (boolean report_heuristics) throws Unavailable, HeuristicMixed, HeuristicHazard, SystemException
+#endif
+    {
+	if (controlImpl != null)
+	    controlImpl.getImplHandle().commit(report_heuristics);
+	else
+	{
+	    Terminator t;
+	    
+	    try
+	    {
+		t = control.get_terminator();
+	    }
+	    catch (SystemException e)
+	    {
+		throw new Unavailable();
+	    }
+
+	    if (t != null)
+		t.commit(report_heuristics);
+	    else
+		throw new Unavailable();
+	}
+    }
+
+public final void rollback () throws Unavailable, NoTransaction, SystemException
+    {
+	if (controlImpl != null)
+	    controlImpl.getImplHandle().rollback();
+	else
+	{
+	    Terminator t;
+	    
+	    try
+	    {
+		t = control.get_terminator();
+	    }
+	    catch (SystemException e)
+	    {
+		throw new Unavailable();
+	    }
+
+	    if (t != null)
+		t.rollback();
+	    else
+		throw new Unavailable();
+	}
+    }
+
+public final void rollback_only () throws Unavailable, NoTransaction, Inactive, SystemException
+    {
+	if (controlImpl != null)
+	    controlImpl.getImplHandle().rollback_only();
+	else
+	{
+	    Coordinator c;
+	    
+	    try
+	    {
+		c = control.get_coordinator();
+	    }
+	    catch (SystemException e)
+	    {
+		throw new Unavailable();
+	    }
+
+	    if (c != null)
+		c.rollback_only();
+	    else
+		throw new Unavailable();	    	    
+	}
+    }
+
+public final org.omg.CosTransactions.Status get_status () throws SystemException
+    {
+	if (controlImpl != null)
+	    return controlImpl.getImplHandle().get_status();
+	else
+	{
+	    Coordinator c;
+
+	    try
+	    {
+		c = control.get_coordinator();
+	    }
+	    catch (Unavailable e)
+	    {
+		c = null;
+	    }
+
+	    if (c != null)
+	    {
+		try
+		{
+		    return c.get_status();
+		}
+		catch (Exception e)
+		{
+		    return org.omg.CosTransactions.Status.StatusUnknown;
+		}
+	    }
+	    else
+		return org.omg.CosTransactions.Status.StatusNoTransaction;
+	}
+    }
+
+public final String get_transaction_name () throws SystemException	
+    {
+	if (controlImpl != null)
+	    return controlImpl.getImplHandle().get_transaction_name();
+	else
+	{
+	    try
+	    {
+		return control.get_coordinator().get_transaction_name();
+	    }
+	    catch (Unavailable e1)
+	    {
+		return null;
+	    }
+	    catch (SystemException e2)
+	    {
+		throw e2;
+	    }
+	}
+    }
+
+public final Coordinator get_coordinator () throws SystemException, org.omg.CosTransactions.Unavailable
+    {
+	if (controlImpl != null)
+	    return controlImpl.get_coordinator();
+	else
+	    return control.get_coordinator();
+    }
+    
+public final Terminator get_terminator () throws SystemException, org.omg.CosTransactions.Unavailable
+    {
+	if (controlImpl != null)
+	    return controlImpl.get_terminator();
+	else
+	    return control.get_terminator();
+    }
+
+public final boolean equals (Object e)
+    {
+	if (e instanceof OTS_ControlWrapper)
+	{
+	    OTS_ControlWrapper c = (OTS_ControlWrapper) e;
+	    
+	    if (c.isLocal())
+		return (c.getImple().get_uid().equals(controlImpl.get_uid()));
+	    else
+	    {
+		Coordinator coord;
+		
+		try
+		{
+		    coord = control.get_coordinator();
+		}
+		catch (Exception e1)
+		{
+		    return false;
+		}
+		
+		Coordinator myCoord;
+		    
+		try
+		{
+		    myCoord = get_coordinator();
+		}
+		catch (Exception e2)
+		{
+		    return false;
+		}
+
+		try
+		{
+		    return coord.is_same_transaction(myCoord);
+		}
+		catch (Exception e3)
+		{
+		}		
+	    }
+	}
+	
+	return false;
+    }
+	
+public final Control getControl ()
+    {
+	return control;
+    }
+    
+public final OTS_Control getImple ()
+    {
+	return controlImpl;
+    }
+    
+public final boolean isLocal ()
+    {
+	return ((controlImpl == null) ? false : true);
+    }
+
+    /*
+     * Determine whether or not we are a local control.
+     * Only do this once since locality is not likely to
+     * change!
+     */
+
+public final void determineLocality ()
+    {
+	if (!checkedLocality)
+	{
+	    controlImpl = OTS_Helper.localControl(control);
+	    checkedLocality = true;
+	}
+    }
+    
+private Control     control;
+private OTS_Control controlImpl;
+private boolean     checkedLocality;
+ 
+};
