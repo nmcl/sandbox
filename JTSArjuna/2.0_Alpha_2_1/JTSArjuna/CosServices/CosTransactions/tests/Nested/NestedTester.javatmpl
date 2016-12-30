@@ -1,0 +1,109 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: NestedTester.javatmpl,v 1.1 2000/02/25 14:08:07 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+import CosTransactionsTests.*;
+import TestModule.*;
+import com.arjuna.OrbCommon.ORBInterface;
+import com.arjuna.CosTransactions.OTS;
+import com.arjuna.CosTransactions.OTS_Current;
+import org.omg.CosTransactions.*;
+
+import org.omg.CosTransactions.Unavailable;
+import org.omg.CosTransactions.SubtransactionsUnavailable;
+import org.omg.CosTransactions.NotPrepared;
+import org.omg.CosTransactions.HeuristicRollback;
+import org.omg.CosTransactions.HeuristicCommit;
+import org.omg.CosTransactions.HeuristicMixed;
+import org.omg.CosTransactions.HeuristicHazard;
+import NAMESPACE_(CORBA).SystemException;
+import NAMESPACE_(CORBA).UserException;
+
+public class NestedTester
+{
+    
+public static void main (String[] args)
+    {
+	boolean registerSubtran = false;
+	boolean doAbort = false;
+
+	for (int i = 0; i < args.length; i++)
+	{
+	    if (args[i].compareTo("-help") == 0)
+	    {
+		System.out.println("Usage: NestedTester [-subtran] [-abort] [-help]");
+		System.exit(0);
+	    }
+	    if (args[i].compareTo("-subtran") == 0)
+		registerSubtran = true;
+	    if (args[i].compareTo("-abort") == 0)
+		doAbort = true;
+	}
+
+	DemoResource r = null;
+	DemoSubTranResource sr = null;
+	
+	try
+	{
+	    ORBInterface.initORB(args, null);
+	    ORBInterface.initOA();
+
+	    OTS_Current current = OTS.current();
+	    
+	    r = new DemoResource();
+	    sr = new DemoSubTranResource();
+
+	    current.begin();
+	    current.begin();
+	    current.begin();
+
+	    sr.registerResource(registerSubtran);
+	    r.registerResource();
+
+	    System.out.println("committing first nested transaction");
+	    current.commit(true);
+
+	    System.out.println("committing second nested transaction");
+	    current.commit(true);
+
+	    if (!doAbort)
+	    {
+		System.out.println("committing top-level transaction");
+		current.commit(true);
+	    }
+	    else
+	    {
+		System.out.println("aborting top-level transaction");
+		current.rollback();
+	    }
+
+	    System.out.println("Test completed successfully.");
+	}
+	catch (UserException e)
+	{
+	    System.err.println("Caught UserException: "+e);
+	    e.printStackTrace();
+	}
+	catch (SystemException e)
+	{
+	    System.err.println("Caught SystemException: "+e);
+	    e.printStackTrace();
+	}
+
+	DESTROY_IMPL_(r);
+	DESTROY_IMPL_(sr);
+
+	ORBInterface.shutdownOA();
+	ORBInterface.shutdownORB();
+    }
+    
+};

@@ -1,0 +1,29 @@
+COMMENT 
+COMMENT Copyright (C) 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 2000/04/10 17:08:32 nmcl Exp $
+COMMENT
+
+AddToIdlFlags(-I$(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+SOURCES = Performance1.java \
+	  Performance2.java \
+	  Performance3.java
+
+TESTOBJECTS = Performance1.class \
+	      Performance2.class \
+	      Performance3.class
+
+Target($(SOURCES))
+Target($(TESTOBJECTS))
+
+BuildJavaByteCode(Performance1,NullParam)
+BuildJavaByteCode(Performance2,NullParam)
+BuildJavaByteCode(Performance3,NullParam)
+
+Clean(*.class)

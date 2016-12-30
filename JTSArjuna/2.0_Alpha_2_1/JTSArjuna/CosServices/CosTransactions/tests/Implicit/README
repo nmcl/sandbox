@@ -1,0 +1,9 @@
+This   is a basic   example  of implicit  context propagation.  Again,
+remember that in general our objects should not inherit from Resource.
+
+NOTE: this example will only be built when using ORBacus or VisiBroker
+since we cannot support implicit propagation in other Orbs.
+
+Server: ImplGridServer
+
+If using OrbixWeb then the registered server name should be ImplGrid.
