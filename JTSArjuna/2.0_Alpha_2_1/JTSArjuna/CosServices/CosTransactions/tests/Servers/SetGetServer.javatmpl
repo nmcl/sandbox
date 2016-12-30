@@ -1,0 +1,79 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: SetGetServer.javatmpl,v 1.1 2000/02/25 14:08:14 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+import CosTransactionsTests.*;
+import TestModule.*;
+import com.arjuna.OrbCommon.*;
+
+public class SetGetServer
+{
+
+public static void main (String[] args)
+    {
+	ORBInterface.initORB(args, null);
+	ORBInterface.initOA();
+    
+	String serverName = "SetGet";
+	String refFile = "/tmp/object.ref";
+
+	if (System.getProperty("os.name").startsWith("Windows"))
+	{
+	    refFile = "C:\\temp\\object.ref";
+	}
+	
+	for (int i = 0; i < args.length; i++)
+	{
+	    if (args[i].compareTo("-marker") == 0)
+#ifdef HAVE_MARKER_NAME		
+		serverName = args[i+1];
+#else
+	    {
+		System.err.println("Error - server name not supported by ORB.");
+		System.exit(0);
+	    }
+#endif	    
+	    if (args[i].compareTo("-reffile") == 0)
+		refFile = args[i+1];
+	    if (args[i].compareTo("-help") == 0)
+	    {
+		System.out.println("Usage: SetGetServer [-server <name>] [-reffile <file>] [-help]");
+		System.exit(0);
+	    }
+	}
+
+	setget_i impl = new setget_i();
+
+	try
+	{
+	    ORBObject.objectToFile(impl.getReference(), refFile);
+	    
+	    System.out.println("**SetGet server started**");
+
+#ifndef ORBIXWEB	    
+	    ORBInterface.run();
+#else
+	    ORBInterface.run(serverName);
+#endif
+	}
+	catch (Exception e)
+	{
+	    System.err.println("SetGetServer caught exception: "+e);
+	    System.exit(1);
+	}
+
+	DESTROY_IMPL_(impl);
+    
+	System.out.println("**Object server exiting**");
+    }
+    
+};

@@ -1,0 +1,54 @@
+COMMENT 
+COMMENT Copyright (C) 1996, 1997, 1998, 1999, 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 2000/03/16 16:17:16 nmcl Exp $
+COMMENT
+
+AddToIdlFlags(-I$(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+SOURCES = GridServer.java \
+	  SetGetServer.java \
+	  TranGridServer.java \
+	  ImplGridServer.java \
+	  HammerServer.java \
+	  ExplicitStackServer.java \
+	  StackServer.java
+
+TESTOBJECTS = GridServer.class \
+	      SetGetServer.class \
+	      HammerServer.class \
+	      ExplicitStackServer.class
+
+FILTEROBJECTS = TranGridServer.class \
+	        ImplGridServer.class \
+	        StackServer.class
+
+Target($(SOURCES))
+Target($(TESTOBJECTS))
+
+#if defined(HAVE_FILTER) || defined(HAVE_INTERCEPTOR)
+Target($(FILTEROBJECTS))
+#endif
+
+PreprocessJavaCode(GridServer,NullParam)
+PreprocessJavaCode(SetGetServer,NullParam)
+PreprocessJavaCode(TranGridServer,NullParam)
+PreprocessJavaCode(ImplGridServer,NullParam)
+PreprocessJavaCode(HammerServer,NullParam)
+PreprocessJavaCode(ExplicitStackServer,NullParam)
+PreprocessJavaCode(StackServer,NullParam)
+
+BuildJavaByteCode(GridServer,NullParam)
+BuildJavaByteCode(SetGetServer,NullParam)
+BuildJavaByteCode(TranGridServer,NullParam)
+BuildJavaByteCode(ImplGridServer,NullParam)
+BuildJavaByteCode(HammerServer,NullParam)
+BuildJavaByteCode(ExplicitStackServer,NullParam)
+BuildJavaByteCode(StackServer,NullParam)
+
+Clean(*.class)

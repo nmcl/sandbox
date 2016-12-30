@@ -1,0 +1,21 @@
+These tests  check that transactions   which have timeouts  associated
+with them when they are created are  rolled back if the timeout period
+elapses. They also  check that the default  timeout (the meaning of  0
+for the transaction timeout) is configurable.
+
+When   running TerminationTest,   set  OTS_TX_REAPER_TIMEOUT  property
+variable to 1000000.
+
+When  running DefaultTimeout,   set  the  OTS_DEFAULT_TIMEOUT property
+variable to 2, and do not unset OTS_TX_REAPER_TIMEOUT.
+
+When   running   TimeoutClient,  set    OTS_TX_REAPER_TIMEOUT property
+variable         to     1000000        at      the      server    only
+(-DOTS_TX_REAPER_TIMEOUT=1000000  on      the   command    line).  Run
+SetGetServer first.
+
+expected_output1: TerminationTest
+
+expected_output2: DefaultTimeout
+
+expected_output3: from TimeoutClient

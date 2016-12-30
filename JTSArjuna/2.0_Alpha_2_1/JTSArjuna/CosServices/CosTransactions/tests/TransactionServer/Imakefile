@@ -1,0 +1,25 @@
+COMMENT 
+COMMENT Copyright (C) 1999,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 2000/03/16 16:17:16 nmcl Exp $
+COMMENT
+
+AddToIdlFlags(-DDRAFT3 -I$(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+SOURCES = TMClient.java
+
+TESTOBJECTS = TMClient.class
+
+Target($(SOURCES))
+Target($(TESTOBJECTS))
+
+PreprocessJavaCode(TMClient,NullParam)
+
+BuildJavaByteCode(TMClient,NullParam)
+
+Clean(*.class)

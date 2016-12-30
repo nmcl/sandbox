@@ -1,0 +1,72 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: StackServer.javatmpl,v 1.1 2000/02/25 14:08:14 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+import CosTransactionsTests.*;
+import TestModule.*;
+import com.arjuna.OrbCommon.*;
+
+public class StackServer
+{
+    
+public static void main (String[] args)
+    {
+	ORBInterface.initORB(args, null);
+	ORBInterface.initOA();
+    
+	String refFile = "/tmp/stack.ref";
+	String serverName = "Stack";
+
+	if (System.getProperty("os.name").startsWith("Windows"))
+	{
+	    refFile = "C:\\temp\\stack.ref";
+	}
+	
+	for (int i = 0; i < args.length; i++)
+	{
+	    if (args[i].compareTo("-reffile") == 0)
+		refFile = args[i+1];
+	    if (args[i].compareTo("-help") == 0)
+	    {
+		System.out.println("Usage: ExplicitStackServer [-reffile <file>] [-help]");
+		System.exit(0);
+	    }
+	}
+
+	SCOPED_TIE_INSTANCE_(TestModule,stack) theStack = new SCOPED_TIE_INSTANCE_(TestModule,stack)(new StackImple());
+
+	READY_IMPL_(theStack);
+
+	try
+	{
+	    ORBObject.objectToFile(CORBA_REF_(theStack,stack), refFile);
+    
+	    System.out.println("**StackServer started**");
+
+#ifndef ORBIXWEB	    
+	    ORBInterface.run();
+#else
+	    ORBInterface.run(serverName);
+#endif
+	}
+	catch (Exception e)
+	{
+	    System.err.println("StackServer caught exception: "+e);
+	    System.exit(1);
+	}
+
+	DESTROY_IMPL_(theStack);
+	
+	System.out.println("**StackServer exiting**");
+    }
+
+};

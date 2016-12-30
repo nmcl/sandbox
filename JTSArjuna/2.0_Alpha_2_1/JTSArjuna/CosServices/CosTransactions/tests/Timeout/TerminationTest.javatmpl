@@ -1,0 +1,199 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: TerminationTest.javatmpl,v 1.1 2000/02/25 14:08:29 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+import CosTransactionsTests.*;
+import TestModule.*;
+import com.arjuna.OrbCommon.ORBInterface;
+import com.arjuna.CosTransactions.OTS_Factory;
+import com.arjuna.CosTransactions.OTS_Current;
+import com.arjuna.CosTransactions.OTS_Utility;
+import com.arjuna.CosTransactions.OTS;
+import org.omg.CosTransactions.*;
+
+import org.omg.CosTransactions.Unavailable;
+import NAMESPACE_(CORBA).SystemException;
+import NAMESPACE_(CORBA).UserException;
+
+public class TerminationTest
+{
+    
+public static void main (String[] args)
+    {
+	boolean commit = true;
+
+	for (int i = 0; i < args.length; i++)
+	{
+	    if (args[i].compareTo("-commit") == 0)
+		commit = true;
+	    if (args[i].compareTo("-rollback") == 0)
+		commit = false;
+	    if (args[i].compareTo("-help") == 0)
+	    {
+		System.out.println("Usage: TerminationTest [-commit] [-rollback] [-help]");
+		System.exit(0);
+	    }
+	}
+
+	Control myControl = null;
+	
+	try
+	{
+	    ORBInterface.initORB(args, null);
+	    ORBInterface.initOA();
+
+	    OTS_Factory theOTS = new OTS_Factory();
+
+	    System.out.println("Creating transaction with 2 second timeout.");
+	    
+	    myControl = theOTS.create(2);
+
+	    if (myControl == null)
+	    {
+		System.err.println("Could not create transaction!");
+		System.exit(-1);
+	    }
+
+	    Terminator handle = myControl.get_terminator();
+	    
+	    try
+	    {
+		System.out.println("Sleeping for 5 seconds.");
+		
+		Thread.sleep(5000);
+	    }
+	    catch (Exception e)
+	    {
+	    }
+	    
+	    if (handle != null)
+	    {
+		System.out.print("Attempting to ");
+
+		if (commit)
+		    System.out.println("commit transaction. Should fail!");
+		else
+		    System.out.println("rollback transaction. Should fail!.");
+
+		if (commit)
+		    handle.commit(true);
+		else
+		    handle.rollback();
+
+		if (commit)
+		    System.out.println("Test did not completed successfully.");
+
+		System.out.println("\nNow attempting to destroy transaction. Should fail!");
+		    
+		OTS.destroyControl(myControl);
+	    }
+	    else
+		System.err.println("No transaction terminator!");
+	}
+	catch (UserException e)
+	{
+	    System.err.println("Caught UserException: "+e);
+	}
+	catch (SystemException e)
+	{
+	    System.err.println("Caught SystemException: "+e);
+
+	    try
+	    {
+		Coordinator coord = myControl.get_coordinator();
+		Status s = coord.get_status();
+		
+		System.err.print("Transaction status: ");
+		OTS_Utility.printStatus(System.err, s);
+
+		System.err.println();
+
+		coord = null;
+	    }
+	    catch (Exception ex)
+	    {
+	    }
+	}
+
+	try
+	{
+	    OTS_Current current = OTS.current();
+
+	    current.set_timeout(2);
+	
+	    System.out.println("\nNow creating current transaction with 2 second timeout.");
+
+	    current.begin();
+
+	    myControl = current.get_control();
+	    
+	    try
+	    {
+		System.out.println("Sleeping for 5 seconds.");
+		
+		Thread.sleep(5000);
+	    }
+	    catch (Exception e)
+	    {
+	    }
+	    
+	    System.out.print("Attempting to ");
+
+	    if (commit)
+		System.out.println("commit transaction. Should fail!");
+	    else
+		System.out.println("rollback transaction. Should fail!.");
+
+	    if (commit)
+		current.commit(true);
+	    else
+		current.rollback();
+
+	    if (commit)
+		System.out.println("Test did not completed successfully.");
+	}
+	catch (UserException e)
+	{
+	    System.err.println("Caught UserException: "+e);
+	    System.out.println("Test did not completed successfully.");
+	}
+	catch (SystemException e)
+	{
+	    System.err.println("Caught SystemException: "+e);
+
+	    try
+	    {
+		Coordinator coord = myControl.get_coordinator();
+		Status s = coord.get_status();
+		
+		System.err.print("Transaction status: ");
+		OTS_Utility.printStatus(System.err, s);
+
+		System.err.println();
+
+		myControl = null;
+		coord = null;
+	    }
+	    catch (Exception ex)
+	    {
+	    }
+
+	    System.out.println("Test completed successfully.");
+	}
+
+	ORBInterface.shutdownOA();
+	ORBInterface.shutdownORB();
+
+	System.exit(0);
+    }
+
+};

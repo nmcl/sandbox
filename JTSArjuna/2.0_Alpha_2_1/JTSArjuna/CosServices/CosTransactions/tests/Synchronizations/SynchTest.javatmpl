@@ -1,0 +1,101 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: SynchTest.javatmpl,v 1.1 2000/02/25 14:08:25 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+import CosTransactionsTests.*;
+import TestModule.*;
+import com.arjuna.OrbCommon.ORBInterface;
+import com.arjuna.CosTransactions.OTS;
+import com.arjuna.CosTransactions.OTS_Factory;
+import com.arjuna.CosTransactions.OTS_Current;
+import com.arjuna.CosTransactions.OTS_Utility;
+import org.omg.CosTransactions.*;
+
+import org.omg.CosTransactions.Unavailable;
+import NAMESPACE_(CORBA).SystemException;
+import NAMESPACE_(CORBA).UserException;
+
+#include <CosTransactions/CosTranExceptions.h>
+
+public class SynchTest
+{
+    
+public static void main (String[] args)
+    {
+#if defined(CORBA_2_3) || defined(CORBA_2_2) || defined(CORBA_2_1)
+	org.omg.CosTransactions.Status status = Status.StatusUnknown;
+#else
+	int status = Status.StatusUnknown;
+#endif	
+
+	tranobject_i localObject = null;
+	demosync sync = null;
+	
+	try
+	{
+	    ORBInterface.initORB(args, null);
+	    ORBInterface.initOA();
+
+	    Control myControl = null;
+	    OTS_Current current = OTS.current();
+	    Coordinator coord = null;
+
+	    sync = new demosync();
+	    localObject = new tranobject_i();
+	    
+	    current.begin();
+
+	    myControl = current.get_control();
+
+	    coord = myControl.get_coordinator();
+
+	    coord.register_resource(localObject.getReference());
+	    coord.register_synchronization(sync.getReference());
+
+	    try
+	    {
+		current.commit(true);
+	    }
+	    catch (TransactionRolledBack e1)
+	    {
+		System.out.println("Transaction rolledback");
+	    }
+
+	    status = coord.get_status();
+	}
+	catch (UserException e1)
+	{
+	    System.out.println("Caught UserException: "+e1);
+	    e1.printStackTrace();
+
+	    System.exit(0);
+	}	
+	catch (SystemException e2)
+	{
+	    System.out.println("Caught SystemException:" +e2);
+	    e2.printStackTrace();
+	    
+	    System.exit(0);
+	}
+	    
+	System.out.print("Final action status: ");
+	OTS_Utility.printStatus(System.out, status);
+	System.out.println("\nTest completed successfully.");
+
+	DESTROY_IMPL_(sync);
+	DESTROY_IMPL_(localObject);
+
+	ORBInterface.shutdownOA();
+	ORBInterface.shutdownORB();
+    }
+
+};

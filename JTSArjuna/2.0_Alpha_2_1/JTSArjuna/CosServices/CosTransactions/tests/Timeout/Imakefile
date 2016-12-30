@@ -1,0 +1,32 @@
+COMMENT 
+COMMENT Copyright (C) 1996, 1997, 1998, 1999,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 2000/03/16 16:17:16 nmcl Exp $
+COMMENT
+
+AddToIdlFlags(-I$(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+SOURCES = TerminationTest.java \
+	  DefaultTimeout.java \
+	  TimeoutClient.java
+
+TESTOBJECTS = TerminationTest.class \
+	      DefaultTimeout.class \
+	      TimeoutClient.class
+
+Target($(SOURCES))
+Target($(TESTOBJECTS))
+
+PreprocessJavaCode(TerminationTest,NullParam)
+PreprocessJavaCode(TimeoutClient,NullParam)
+
+BuildJavaByteCode(TerminationTest,NullParam)
+BuildJavaByteCode(DefaultTimeout,NullParam)
+BuildJavaByteCode(TimeoutClient,NullParam)
+
+Clean(*.class)
