@@ -1,0 +1,207 @@
+/*
+ * Copyright (C) 1996, 1997, 1998, 1999,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: ArjunaOTS.tmpl,v 1.3 2000/04/19 10:30:16 nmcl Exp $
+ */
+
+#ifndef ARJUNAOTS_IDL_
+#define ARJUNAOTS_IDL_
+
+#ifndef NO_PRAGMA_SUPPORT
+#pragma prefix "arjuna.com"
+#endif
+
+#ifndef RCPORB
+INCLUDE_DIRECTIVE <idl/CosTransactions.idl>
+#else
+INCLUDE_DIRECTIVE "CosTransactions.idl"  // uugghh!!
+#endif
+
+#ifdef HAVE_JAVAPACKAGE
+#pragma javaPackage "com.arjuna"
+#endif
+
+#ifdef ORBIX_IR_MODULE_BUG
+
+/*
+ * These interfaces are here because of a bug in Orbix which
+ * does not allow us to narrow to any interface which is
+ * within a module!
+ */
+
+// Some useful exceptions
+
+exception ActiveTransaction {};
+exception BadControl {};
+exception Destroyed {};
+exception ActiveThreads {};
+exception InterpositionFailed {};
+
+interface UidCoordinator : CosTransactions::Coordinator
+{
+    readonly attribute string uid;
+    readonly attribute string topLevelUid;
+};
+
+interface ActionControl : CosTransactions::Control
+{
+    CosTransactions::Control getParentControl () raises(CosTransactions::Unavailable, CosTransactions::NotSubtransaction);
+
+    void destroy () raises (ActiveTransaction, ActiveThreads, BadControl, Destroyed);
+};
+
+interface ArjunaSubtranAwareResource : SubtransactionAwareResource
+{
+    CosTransactions::Vote prepare_subtransaction ();
+};
+
+interface OTSAbstractRecord : ArjunaSubtranAwareResource
+{
+    readonly attribute long typeId;
+    readonly attribute string uid;
+
+    boolean propagateOnAbort ();
+    boolean propagateOnCommit ();
+
+    boolean saveRecord ();
+
+    void merge (in OTSAbstractRecord record);
+    void alter (in OTSAbstractRecord record);
+
+    boolean shouldAdd (in OTSAbstractRecord record);
+    boolean shouldAlter (in OTSAbstractRecord record);
+    boolean shouldMerge (in OTSAbstractRecord record);
+    boolean shouldReplace (in OTSAbstractRecord record);
+};
+
+#endif
+
+#ifdef DAISJ2
+module com
+{
+module arjuna
+{
+#endif
+
+module ArjunaOTS
+{
+#ifndef DAISJ2
+    typedef sequence<CosTransactions::otid_t> txIds;
+#else
+    typedef sequence<org::omg::CosTransactions::otid_t> txIds;
+#endif
+    
+#ifndef ORBIX_IR_MODULE_BUG
+    // Some useful exceptions
+
+    exception ActiveTransaction {};
+    exception BadControl {};
+    exception Destroyed {};
+    exception ActiveThreads {};
+    exception InterpositionFailed {};
+#endif
+
+#ifndef DAISJ2    
+    interface UidCoordinator : CosTransactions::Coordinator
+#else
+    interface UidCoordinator : org::omg::CosTransactions::Coordinator
+#endif
+    {
+	readonly attribute string uid;
+	readonly attribute string topLevelUid;
+    };
+
+#ifndef DAISJ2
+    interface ActionControl : CosTransactions::Control
+    {
+        CosTransactions::Control getParentControl () raises(CosTransactions::Unavailable, CosTransactions::NotSubtransaction);
+
+        void destroy () raises (ActiveTransaction, ActiveThreads, BadControl, Destroyed);
+    };
+
+    interface ArjunaSubtranAwareResource : CosTransactions::SubtransactionAwareResource
+    {
+	CosTransactions::Vote prepare_subtransaction ();
+    };
+
+    interface ArjunaFactory : CosTransactions::TransactionFactory
+    {
+	txIds activeTransactions () raises(CosTransactions::Inactive, CosTransactions::NoTransaction);
+	txIds terminatedTransactions () raises(CosTransactions::Inactive, CosTransactions::NoTransaction);
+    };
+
+    interface ArjunaTransaction : UidCoordinator, CosTransactions::Terminator
+    {
+    };
+#else
+    interface ActionControl : org::omg::CosTransactions::Control
+    {
+	org::omg::CosTransactions::Control getParentControl () raises(org::omg::CosTransactions::Unavailable, org::omg::CosTransactions::NotSubtransaction);
+
+        void destroy () raises (ActiveTransaction, ActiveThreads, BadControl, Destroyed);
+    };
+
+    interface ArjunaSubtranAwareResource : org::omg::CosTransactions::SubtransactionAwareResource
+    {
+	org::omg::CosTransactions::Vote prepare_subtransaction ();
+    };
+
+    interface ArjunaFactory : org::omg::CosTransactions::TransactionFactory
+    {
+	txIds activeTransactions () raises(org::omg::CosTransactions::Inactive, org::omg::CosTransactions::NoTransaction);
+	txIds terminatedTransactions () raises(org::omg::CosTransactions::Inactive, org::omg::CosTransactions::NoTransaction);
+    };
+
+    interface ArjunaTransaction : UidCoordinator, org::omg::CosTransactions::Terminator
+    {
+    };
+#endif
+
+    interface Current : CosTransactions::Current
+    {
+	long get_timeout ();
+    };
+
+#ifndef ORBIX_IR_MODULE_BUG    
+    interface OTSAbstractRecord : ArjunaSubtranAwareResource
+    {
+	readonly attribute long typeId;
+	readonly attribute string uid;
+
+	boolean propagateOnAbort ();
+	boolean propagateOnCommit ();
+
+	boolean saveRecord ();
+    
+	void merge (in OTSAbstractRecord record);
+	void alter (in OTSAbstractRecord record);
+
+	boolean shouldAdd (in OTSAbstractRecord record);
+	boolean shouldAlter (in OTSAbstractRecord record);
+	boolean shouldMerge (in OTSAbstractRecord record);
+	boolean shouldReplace (in OTSAbstractRecord record);
+    };
+#endif    
+    
+};
+
+#ifdef DAISJ2
+};
+};
+#endif
+
+#ifdef ORBIX_IR_MODULE_BUG
+interface ArjunaFactory : CosTransactions::TransactionFactory
+{
+    ArjunaOTS::txIds activeTransactions () raises(CosTransactions::Inactive, CosTransactions::NoTransaction);
+    ArjunaOTS::txIds terminatedTransactions () raises(CosTransactions::Inactive, CosTransactions::NoTransaction);
+};
+#endif
+
+#endif
+
