@@ -1,0 +1,31 @@
+COMMENT 
+COMMENT Copyright (C) 1996, 1997, 1998, 1999, 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 2000/03/16 16:17:16 nmcl Exp $
+COMMENT
+
+AddToIdlIncludeFlags($(JAVACOSTRANSACTIONSTOPDIR)/include)
+AddToIRIncludeFlags($(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+Target(TestModule.idl)
+
+ProcessIDL(TestModule,NullParam)
+CopyIDL(TestModule,TestModule)
+
+#ifndef SUPPORT_IDL_PREFIX
+GlobalPackageRename(CosTransactions,org.omg)
+#else
+AddPrefixFlags(omg.org,org.omg)
+#endif
+
+CorbaJavaStubs(TestModule,NullParam)
+
+SubDirectory(TestModule)
+SubDirectory(CosTransactionsTests)
+
+Clean(TestModule.idl)

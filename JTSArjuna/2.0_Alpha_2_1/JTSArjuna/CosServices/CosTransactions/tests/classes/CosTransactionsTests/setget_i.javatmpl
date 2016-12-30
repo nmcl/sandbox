@@ -1,0 +1,183 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.  
+ *
+ * $Id: setget_i.javatmpl,v 1.1 2000/02/25 14:08:58 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package CosTransactionsTests;
+
+import com.arjuna.CosTransactions.OTS;
+import com.arjuna.CosTransactions.OTS_Current;
+import com.arjuna.CosTransactions.OTS_ExplicitInterposition;
+import com.arjuna.OrbCommon.ORBInterface;
+import TestModule.*;
+import org.omg.CosTransactions.*;
+
+import org.omg.CosTransactions.HeuristicCommit;
+import org.omg.CosTransactions.HeuristicMixed;
+import org.omg.CosTransactions.HeuristicHazard;
+import org.omg.CosTransactions.NotPrepared;
+import org.omg.CosTransactions.HeuristicRollback;
+import NAMESPACE_(CORBA).SystemException;
+import NAMESPACE_(CORBA).UserException;
+import NAMESPACE_(CORBA).UNKNOWN;
+import com.arjuna.ArjunaOTS.InterpositionFailed;
+
+public class setget_i extends SCOPED_SKEL_(TestModule,SetGet)
+{
+
+public setget_i ()
+    {
+	READY_IMPL_(this);
+	
+	value = 0;
+	ref = CORBA_REF_(this,SetGet);
+    }
+
+public setget_i (String name)
+    {
+#ifdef HAVE_MARKER_NAME
+	super(name);
+#endif
+
+	READY_NAMED_IMPL_(this,name.getBytes());
+
+	value = 0;
+	ref = CORBA_REF_(this,SetGet);
+    }
+
+public SetGet getReference ()
+    {
+	return ref;
+    }
+
+public void set (short n, Control control) throws SystemException
+    {
+	System.out.println("setget_i.set "+n);
+
+	try
+	{
+	    if (control != null)
+	    {
+		OTS_ExplicitInterposition manager = new OTS_ExplicitInterposition();
+		
+		manager.registerTransaction(control);
+
+		System.out.println("setget_i.set - managed to set up interposition hierarchy");
+    
+		OTS_Current current = OTS.current();
+		Control cont = current.get_control();
+
+		if (cont == null)
+		    System.err.println("setget_i.set error - current returned no control!");
+		else
+		{
+		    System.out.println("setget_i.set - current returned a control!");
+
+		    cont = null;
+		}
+		
+		System.out.println("setget_i.set - beginning nested action");
+
+		current.begin();
+
+		cont = current.get_control();
+
+		if (cont != null)
+		{
+		    Coordinator coord = cont.get_coordinator();
+
+		    System.out.println("setget_i.set - registering self");
+		
+		    coord.register_resource(ref);
+
+		    coord = null;
+		    cont = null;
+		}
+		else
+		    System.err.println("setget_i.set - current did not return control after begin!");
+	    
+		value = n;
+	    
+		System.out.println("setget_i.set - committing nested action");
+	
+		current.commit(true);
+
+		manager.unregisterTransaction();
+
+		manager = null;
+	    }
+	    else
+		System.err.println("setget_i::set error - no control!");
+	}
+	catch (InterpositionFailed ex)
+	{
+	    System.err.println("setget_i.set - error in setting up hierarchy");
+
+	    throw new UNKNOWN();
+	}
+	catch (Exception e)
+	{
+	    System.err.println("setget_i::set - caught exception: "+e);
+	}
+
+	System.out.println("setget_i.set - finished");
+    }
+
+public short get (Control p) throws SystemException
+    {
+	return value;
+    }
+
+public void commit_subtransaction (Coordinator parent) throws SystemException
+    {
+	System.out.println("SETGET_I : COMMIT_SUBTRANSACTION");
+    }
+
+public void rollback_subtransaction () throws SystemException
+    {
+	System.out.println("SETGET_I : ROLLBACK_SUBTRANSACTION");
+    }
+
+#if defined(CORBA_2_3) || defined(CORBA_2_2) || defined(CORBA_2_1)
+public org.omg.CosTransactions.Vote prepare () throws SystemException
+#else
+public int prepare () throws SystemException
+#endif 
+    {
+	System.out.println("SETGET_I : PREPARE");
+    
+	return Vote.VoteCommit;
+    }
+
+public void rollback () throws SystemException, HeuristicCommit, HeuristicMixed, HeuristicHazard
+    {
+	System.out.println("SETGET_I : ROLLBACK");
+    }
+
+public void commit () throws SystemException, NotPrepared, HeuristicRollback, HeuristicMixed, HeuristicHazard
+    {
+	System.out.println("SETGET_I : COMMIT");
+    }
+
+public void forget () throws SystemException
+    {
+	System.out.println("SETGET_I : FORGET");
+    }
+
+public void commit_one_phase () throws SystemException, HeuristicHazard
+    {
+	System.out.println("SETGET_I : COMMIT_ONE_PHASE");
+    }
+
+private short value;
+private SetGet ref;
+ 
+};

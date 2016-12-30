@@ -1,0 +1,80 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.  
+ *
+ * $Id: AtomicResource.javatmpl,v 1.1 2000/02/25 14:08:44 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package CosTransactionsTests;
+
+import com.arjuna.OrbCommon.ORBInterface;
+import com.arjuna.CosTransactions.OTS_Factory;
+import org.omg.CosTransactions.*;
+
+import org.omg.CosTransactions.Unavailable;
+import NAMESPACE_(CORBA).SystemException;
+
+public class AtomicResource extends SCOPED_SKEL_(org.omg.CosTransactions,Resource)
+{
+
+public AtomicResource (boolean doCommit)
+    {
+	READY_IMPL_(this);
+	
+	shouldCommit = doCommit;
+	ref = CORBA_REF_(this,Resource);
+    }
+
+public Resource getReference ()
+    {
+	return ref;
+    }
+ 
+public org.omg.CosTransactions.Vote prepare () throws SystemException, HeuristicMixed, HeuristicHazard 
+    {
+	System.out.println("ATOMIC : PREPARE");
+
+	if (shouldCommit)
+	{
+	    System.out.println("\tATOMIC : VoteCommit");
+
+	    return Vote.VoteCommit;
+	}
+	else
+	{
+	    System.out.println("\tATOMIC : VoteRollback");
+	    
+	    return Vote.VoteRollback;
+	}
+    }
+
+public void rollback () throws SystemException, HeuristicCommit, HeuristicMixed, HeuristicHazard
+    {
+	System.out.println("ATOMIC : ROLLBACK");
+    }
+
+public void commit () throws SystemException, NotPrepared, HeuristicRollback, HeuristicMixed, HeuristicHazard
+    {
+	System.out.println("ATOMIC : COMMIT");
+    }
+
+public void forget () throws SystemException
+    {
+	System.out.println("ATOMIC : FORGET");
+    }
+
+public void commit_one_phase () throws SystemException, HeuristicHazard
+    {
+	System.out.println("ATOMIC : COMMIT_ONE_PHASE");
+    }
+
+private boolean shouldCommit;
+private Resource ref;
+ 
+};

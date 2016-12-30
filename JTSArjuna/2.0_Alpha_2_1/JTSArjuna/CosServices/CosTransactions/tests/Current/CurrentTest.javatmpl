@@ -1,0 +1,162 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: CurrentTest.javatmpl,v 1.1 2000/02/25 14:07:29 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+import CosTransactionsTests.*;
+import TestModule.*;
+import com.arjuna.OrbCommon.*;
+import com.arjuna.CosTransactions.*;
+import org.omg.CosTransactions.*;
+
+import org.omg.CosTransactions.Unavailable;
+import NAMESPACE_(CORBA).SystemException;
+import NAMESPACE_(CORBA).UserException;
+
+#include <CosTransactions/CosTranExceptions.h>
+
+public class CurrentTest
+{
+    
+public static void main (String[] args)
+    {
+	ORBInterface.initORB(args, null);
+	ORBInterface.initOA();
+    
+	OTS_Current current = OTS.current();
+	Control myControl = null;
+	String gridReference = "/tmp/grid.ref";
+	String serverName = "Grid";
+	grid gridVar = null;  // pointer the grid object that will be used.
+	int h = -1, w = -1, v = -1;
+
+	if (System.getProperty("os.name").startsWith("Windows"))
+	{
+	    gridReference = "C:\\temp\\grid.ref";
+	}
+	
+	for (int i = 0; i < args.length; i++)
+	{
+	    if (args[i].compareTo("-help") == 0)
+	    {
+		System.out.println("Usage: CurrentTest [-reffile <file>] [-help]");
+		System.exit(0);
+	    }
+	    if (args[i].compareTo("-reffile") == 0)
+		gridReference = args[i+1];
+	}
+
+	System.out.println("Beginning transaction.");
+	
+	try
+	{
+	    current.begin();
+	    
+	    myControl = current.get_control();
+
+	    if (myControl == null)
+	    {
+		System.err.println("Error - control is null!");
+		System.exit(-1);
+	    }
+	}
+	catch (Exception sysEx)
+	{
+	    System.err.println("Unexpected exception in begin: "+sysEx);
+	    System.exit(1);
+	}
+  
+	try
+	{
+#ifdef USE_BIND
+#ifdef ORBIXWEB
+	    serverName = ":"+serverName;
+#endif	    
+	    gridVar = CORBA_BIND_(grid, serverName);
+#else
+	    gridVar = HELPER_CLASS_(grid).narrow(ORBObject.fileToObject(gridReference));
+#endif
+	}
+	catch (Exception sysEx)
+	{
+	    System.err.println("failed to bind to grid: "+sysEx);
+	    System.exit(1);
+	}
+
+	try
+	{
+	    h = gridVar.height();
+	    w = gridVar.width();
+	}
+	catch (Exception sysEx)
+	{
+	    System.err.println("grid height/width failed: "+sysEx);
+	    System.exit(1);
+	}
+
+	System.out.println("height is "+h);
+	System.out.println("width  is "+w);
+
+	try
+	{
+	    gridVar.set(2, 4, 123, myControl);
+	    v = gridVar.get(2, 4, myControl);
+	}
+	catch (Exception sysEx)
+	{
+	    System.err.println("grid set/get failed: "+sysEx);
+	    System.exit(1);
+	}
+
+	// no problem setting and getting the elememt:
+	System.out.println("grid[2,4] is "+v);
+
+	// sanity check: make sure we got the value 123 back:
+	if (v != 123)
+	{
+	    // oops - we didn't:
+	    System.err.println("something went seriously wrong");
+
+	    try
+	    {
+		current.rollback();
+	    }
+	    catch (Exception e)
+	    {
+		System.err.println("rollback error: "+e);
+	    }
+	
+	    System.exit(1);
+	}
+	else
+	{
+	    System.out.println("Committing transaction.");
+	    
+	    try
+	    {
+		current.commit(true);
+	    }
+	    catch (Exception e)
+	    {
+		System.err.println("commit error: "+e);
+		System.exit(0);
+	    }
+
+	    ORBInterface.shutdownOA();
+	    ORBInterface.shutdownORB();
+
+	    System.out.println("Test completed successfully.");
+	    System.exit(0);
+	}
+    }
+ 
+};
+

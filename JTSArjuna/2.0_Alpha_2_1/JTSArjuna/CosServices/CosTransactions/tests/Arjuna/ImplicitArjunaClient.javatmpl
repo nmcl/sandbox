@@ -1,0 +1,136 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: ImplicitArjunaClient.javatmpl,v 1.1 2000/02/25 14:07:10 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+import CosTransactionsTests.*;
+import TestModule.*;
+import com.arjuna.OrbCommon.*;
+import com.arjuna.CosTransactions.*;
+import org.omg.CosTransactions.*;
+import NAMESPACE_(CORBA).IntHolder;
+
+public class ImplicitArjunaClient
+{
+
+public static void main (String[] args)
+    {
+	ORBInterface.initORB(args, null);
+	ORBInterface.initOA();
+
+	String refFile = "/tmp/stack.ref";
+	String serverName = "Stack";
+	OTS_Current current = OTS.current();
+
+	if (System.getProperty("os.name").startsWith("Windows"))
+	{
+	    refFile = "C:\\temp\\stack.ref";
+	}
+	
+	for (int i = 0; i < args.length; i++)
+	{
+	    if (args[i].compareTo("-reffile") == 0)
+		refFile = args[i+1];
+	    if (args[i].compareTo("-help") == 0)
+	    {
+		System.out.println("Usage: ImplicitArjunaClient [-reffile <file>] [-help]");
+		System.exit(0);
+	    }
+	}
+	
+	stack stackVar = null;   // pointer the grid object that will be used.
+
+	try
+	{
+	    current.begin();
+
+	    try
+	    {
+#ifdef USE_BIND
+#ifdef ORBIXWEB
+		serverName = ":"+serverName;
+#endif	    
+		stackVar = SCOPED_CORBA_BIND_(TestModule,stack,serverName);
+#else		
+		stackVar = HELPER_CLASS_(stack).narrow(ORBObject.fileToObject(refFile));
+#endif
+	    }
+	    catch (Exception e)
+	    {
+		System.err.println("Bind to object failed: "+e);
+		System.exit(1);
+	    }
+
+	    System.out.println("pushing 1 onto stack");
+	
+	    stackVar.push(1);
+
+	    System.out.println("pushing 2 onto stack");
+
+	    stackVar.push(2);
+	}
+	catch (Exception e)
+	{
+	    System.err.println("call to push failed");
+	    System.exit(1);
+	}
+
+	try
+	{
+	    current.commit(false);
+
+	    current.begin();
+
+	    IntHolder val = new IntHolder(-1);
+
+	    if (stackVar.pop(val) == 0)
+	    {
+		System.out.println("popped top of stack "+val.value);
+
+		current.begin();
+	
+		stackVar.push(3);
+
+		System.out.println("pushed 3 onto stack. Aborting nested action.");
+	
+		current.rollback();
+
+		stackVar.pop(val);
+
+		System.out.println("popped top of stack is "+val.value);
+
+		current.commit(false);
+
+		if (val.value == 1)
+		    System.out.println("\nThis is correct.");
+		else
+		    System.out.println("\nThis is incorrect.");
+	    }
+	    else
+	    {
+		System.err.println("Error getting stack value.");
+	
+		current.rollback();
+	    }
+	}
+	catch (Exception e)
+	{
+	    System.err.println(e);
+	    System.exit(1);
+	}
+
+	ORBInterface.shutdownOA();
+	ORBInterface.shutdownORB();
+
+	System.exit(0);
+    }
+
+};
