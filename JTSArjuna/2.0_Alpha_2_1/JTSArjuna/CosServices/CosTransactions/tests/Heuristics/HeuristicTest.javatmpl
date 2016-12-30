@@ -1,0 +1,140 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: HeuristicTest.javatmpl,v 1.1 2000/02/25 14:07:43 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+#include <CosTransactions/CosTranNames.h>
+
+import CosTransactionsTests.*;
+import TestModule.*;
+import com.arjuna.OrbCommon.ORBInterface;
+import com.arjuna.CosTransactions.*;
+import org.omg.CosTransactions.*;
+
+import org.omg.CosTransactions.Unavailable;
+import NAMESPACE_(CORBA).SystemException;
+
+#include <CosTransactions/CosTranExceptions.h>
+
+public class HeuristicTest
+{
+
+public static void main (String[] args)
+    {
+	boolean shouldCommit = true;
+	boolean heuristicPrepare = false;
+
+	for (int i = 0; i < args.length; i++)
+	{
+	    if (args[i].compareTo("-abort") == 0)
+		shouldCommit = false;
+	    if (args[i].compareTo("-prepare") == 0)
+		heuristicPrepare = true;
+	    if (args[i].compareTo("-help") == 0)
+	    {
+		System.out.println("Usage: HeuristicTest [-abort] [-prepare]");
+		System.exit(0);
+	    }
+	}
+
+	Coordinator coord = null;
+	
+	try
+	{
+	    ORBInterface.initORB(args, null);
+	    ORBInterface.initOA();
+
+	    OTS_Current current = OTS.current();
+	    heuristic hImpl = new heuristic(heuristicPrepare);
+	    Resource heuristicObject = hImpl.getReference();
+	    AtomicResource aImpl = new AtomicResource(shouldCommit);
+	    Resource atomicObject = aImpl.getReference();
+
+	    System.out.println("beginning top-level transaction.");
+	    
+	    current.begin();
+
+	    Control myControl = current.get_control();
+
+	    if (myControl == null)
+	    {
+		System.err.println("Error - myControl is nil");
+		System.exit(0);
+	    }
+	    
+	    System.out.println("getting coordinator");
+	    
+	    coord = myControl.get_coordinator();
+
+	    myControl = null;
+	    
+	    System.out.println("registering resources.");
+
+	    try
+	    {
+		coord.register_resource(heuristicObject);
+		coord.register_resource(atomicObject);
+	    }
+	    catch (Exception ex)
+	    {
+		System.out.println("Failed to register resources: "+ex);
+		ex.printStackTrace();
+		
+		System.exit(0);
+	    }
+
+	    System.out.println("committing top-level transaction.");
+	    
+	    current.commit(true);
+	}
+	catch (TransactionRolledBack e1)
+	{
+	    System.out.println("\nTransaction RolledBack exception");
+	}
+	catch (HeuristicMixed e2)
+	{
+	    System.out.println("\nTransaction HeuristicMixed exception");
+	}
+	catch (HeuristicHazard e3)
+	{
+	    System.out.println("\nTransaction HeuristicHazard exception");
+	}	
+	catch (Exception e4)
+	{
+	    System.out.println("Caught unexpected exception: "+e4);
+	}
+
+	System.out.println("Trying to determing final transaction outcome.");
+	
+	try
+	{
+	    if (coord != null)
+	    {
+		System.out.print("\nFinal action status: ");
+		OTS_Utility.printStatus(System.out, coord.get_status());
+		System.out.println();
+		
+		coord = null;
+
+		System.out.println("Test completed successfully.");
+	    }
+	    else
+		System.out.println("\nCould not determine action status.");
+	}
+	catch (Exception e5)
+	{
+	    System.out.println("Caught unexpected exception:" +e5);
+	}
+
+	ORBInterface.shutdownOA();
+	ORBInterface.shutdownORB();
+    }
+
+};

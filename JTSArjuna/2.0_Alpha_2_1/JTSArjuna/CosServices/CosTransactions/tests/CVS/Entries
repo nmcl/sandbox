@@ -1,0 +1,25 @@
+/Imakefile/1.3/Mon Apr 10 17:08:32 2000//TJTSArjuna_2_0_0_Alpha_2_1
+/README/1.1/Fri Feb 25 14:07:07 2000//TJTSArjuna_2_0_0_Alpha_2_1
+/test_setup.bat/1.1/Fri Feb 25 14:07:08 2000//TJTSArjuna_2_0_0_Alpha_2_1
+D/Arjuna////
+D/ArjunaNesting////
+D/Asynchronous////
+D/Basic////
+D/Checked////
+D/Current////
+D/DistributedHammer////
+D/ExplicitInterposition////
+D/Hammer////
+D/Heuristics////
+D/Implicit////
+D/Interposition////
+D/JTA////
+D/Local////
+D/Nested////
+D/Performance////
+D/Servers////
+D/Synchronizations////
+D/Timeout////
+D/TransactionServer////
+D/Transactions////
+D/classes////
