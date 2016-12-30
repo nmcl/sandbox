@@ -1,0 +1,22 @@
+This is JTSArjuna for ORbacus 3.x.  Here is a brief overview of things
+to watch out for  when using JTSArjuna.  See  the manuals  for further
+details.
+
+If  you write idl  which requires CosTransactions.idl or ArjunaOTS.idl
+then remember to use the --package or --auto-package options.
+
+This version does not support implicit context propagation, so the
+following examples will not build or run:
+
+Clients:
+
+Arjuna/ImplicitArjunaClient
+Implicit
+Interposition
+Transactions/RecursiveClient
+
+Servers:
+
+Servers/StackServer
+Servers/TranGridServer
+Servers/ImplGridServer

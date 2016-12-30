@@ -1,0 +1,27 @@
+JTSArjuna does not require a separate transaction manager server
+in order to run. By default, transaction managers are co-located with
+the process which creates the transaction. (See Chapters 1 and 3 of
+the Using the OTS manual for more details).
+
+However, if a separate transaction manager server is required then
+do the following (see the Administrators Guide for more details):
+
+(i) if using OrbixWeb then use the script OTS.orbix and go to (iv).
+
+(ii) in order for clients to locate the transaction manager, it writes
+its IOR (object reference) to a file (CosServices.cfg) which is usually
+located in the etc directory of the JTSArjuna installation. Clients from
+different machines who wish to share the same transaction manager should
+have access to this file. To override the default location, set the
+INITIAL_REFERENCES_ROOT property to the directory location for the file,
+and/or the INITIAL_REFERENCES_FILE to the actual name of the file, in
+the Arjuna.properties file or on the command line.
+
+(iii) start the transaction manager. The scripts OTS, OTS.cygwin, and
+Ots.bat may be used for Unix, CygWin, and Windows respectively. You
+may need to modify these scripts if you override the default object
+reference file described above, or the location of the Arjuna.properties
+file.
+
+(iv) for clients, set the OTS_TRANSACTION_MANAGER property variable to
+YES, and ensure they have the same object reference file.
