@@ -1,0 +1,22 @@
+/*
+ * Copyright (C) 1999,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ */
+
+/*
+ *  Local.def
+ */
+
+AddToIMakeFlags(-DBUILDUTILITIES -DINSTALLUTILITIES -UBUILDTESTS -UINSTALLTESTS -DVerboseMake=No -DBUILDDAEMONS -DINSTALLDAEMONS -DTopDir=/home/nmcl/JTSArjuna/2.0_Alpha_2_1/JTSArjuna/Resources/JDBC -DInstallTopDir=/home/nmcl/Install)
+AddToCPPFlags(-I$(JDBCTOPDIR)/config)
+
+#include "/home/nmcl/JTSArjuna/2.0_Alpha_2_1/JTSArjuna/Resources/JDBC/config/JDBC_Module.def"
+#include "/home/nmcl/JTSArjuna/2.0_Alpha_2_1/JTSArjuna/JavaHarness/config/JavaHarness_Module.def"
+#include "/home/nmcl/JTSArjuna/2.0_Alpha_2_1/JTSArjuna/OrbPortability/config/OrbPortability_Module.def"
+#include "/home/nmcl/JTSArjuna/2.0_Alpha_2_1/JTSArjuna/CosServices/CosTransactions/config/CosTransactions_Module.def"
+#include "/home/nmcl/JTSArjuna/2.0_Alpha_2_1/JTSArjuna/ModuleBuildSystem/config/Module.def"

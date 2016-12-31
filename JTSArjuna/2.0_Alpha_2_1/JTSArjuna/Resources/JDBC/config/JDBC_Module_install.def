@@ -1,0 +1,20 @@
+/*
+ * Copyright (C) 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ */
+
+/*
+ *  JDBC_Module.def (install)
+ */
+
+JDBCTOPDIR=/home/nmcl/Install
+
+AddToIMakeFlags(-I$(JDBCTOPDIR)/config)
+AddToCPPIncludes(-I$(JDBCTOPDIR)/include)
+
+AddToCPPFlags(-DJDBC_VERSION=\"4.0.0\")

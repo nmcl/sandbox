@@ -1,0 +1,41 @@
+#!/bin/sh
+#
+# Copyright (C) 1999,
+#
+# Arjuna Solutions Limited,
+# Newcastle upon Tyne,
+# Tyne and Wear,
+# UK.
+#
+
+# JDBC configure file
+
+INSTALLTOPDIR=/home/nmcl/Install
+JAVAHARNESSTOPDIR=/home/nmcl/JTSArjuna/2.0_Alpha_2_1/JTSArjuna/JavaHarness
+JAVAORBPORTABILITYTOPDIR=/home/nmcl/JTSArjuna/2.0_Alpha_2_1/JTSArjuna/OrbPortability
+JAVACOSTRANSACTIONSTOPDIR=/home/nmcl/JTSArjuna/2.0_Alpha_2_1/JTSArjuna/CosServices/CosTransactions
+BUILDSYSTEMTOPDIR=/home/nmcl/JTSArjuna/2.0_Alpha_2_1/JTSArjuna/ModuleBuildSystem
+
+LOCAL_MAKEFLAGS=''
+LOCAL_IMAKEFLAGS='-DBUILDUTILITIES -DINSTALLUTILITIES -UBUILDTESTS -UINSTALLTESTS -DVerboseMake=No -DBUILDDAEMONS -DINSTALLDAEMONS -DTopDir=/home/nmcl/JTSArjuna/2.0_Alpha_2_1/JTSArjuna/Resources/JDBC -DInstallTopDir=/home/nmcl/Install'
+LOCAL_MAKEDEPENDFLAGS=''
+LOCAL_CPPFLAGS='-I$(JDBCTOPDIR)/config'
+LOCAL_CPPINCLUDES=''
+LOCAL_CPLUSPLUSFLAGS=''
+LOCAL_LDFLAGS=''
+LOCAL_LDLIBRARIES=''
+LOCAL_LDLIBDEPENDS=''
+
+MODULE_MAKEFLAGS=''
+MODULE_IMAKEFLAGS='-I$(JDBCTOPDIR)/config'
+MODULE_MAKEDEPENDFLAGS=''
+MODULE_CPPFLAGS=''
+MODULE_CPPINCLUDES='-I$(JDBCTOPDIR)/include'
+MODULE_CPLUSPLUSFLAGS=''
+MODULE_LDFLAGS=''
+MODULE_LDLIBRARIES=''
+MODULE_LDLIBDEPENDS=''
+
+SOURCEID='unknown'
+BUILDINFO='Arjuna Solutions Ltd. [unknown]'
+NOTES='none'
