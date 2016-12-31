@@ -1,0 +1,801 @@
+#!/bin/sh
+
+#
+# Copyright (C) 1998, 1999, 2000,
+# 
+# Arjuna Solutions Limited,
+# Tyne and Wear,
+# Tyne and Wear,
+# UK.
+# 
+# $Id: configure,v 1.3.2.1 2000/05/18 14:19:56 nmcl Exp $
+#
+
+INSIGHT="insight"
+PURIFY="purify"
+
+if test "$#" = "0"
+then
+	VERIFY="NO"
+	CONFIGFILE=""
+elif test "$#" = "1"
+then
+	if test "$1" = "-v"
+	then
+		VERIFY="YES"
+		CONFIGFILE=""
+	else
+		VERIFY="NO"
+		CONFIGFILE="$1"
+	fi
+	if test "$1" = "-d"
+	then
+		PURIFYON="YES"
+		CONFIGFILE=""
+	else
+		PURIFYON="NO"
+		CONFIGFILE=""
+	fi
+elif test "$#" = "3"
+then
+	if test "$1" != "-v"
+	then
+		echo $0": illegal usage"
+		echo "usage: "$0" [-v] [file] [-d]"
+		exit 1
+	else
+		VERIFY="YES"
+		CONFIGFILE="$2"
+	fi
+	if test "$3" = "-d"
+	then
+		PURIFYON="YES"
+	else
+		echo $0": illegal usage"
+		echo "usage: "$0" [-v] [file] [-d]"
+		exit 1
+	fi
+else
+	echo $0": illegal usage"
+	echo "usage: "$0" [-v] [file] [-d]"
+	exit 1
+fi
+
+if test "$CONFIGFILE" != ""
+then
+	if test -f $CONFIGFILE
+	then
+		if test "`head -11 $CONFIGFILE | tail -1`" != "# ModuleBuildSystem configure file"
+		then
+			echo $0": configuration file \""$CONFIGFILE"\" is invalid/corrupt"
+			exit 1
+		fi
+	else
+		echo $0": configuration file \""$CONFIGFILE"\" does not exist"
+		exit 1
+	fi
+fi
+
+echo "+---------------------------------+"
+echo "| ModuleBuildSystem version 1.0.1 |"
+echo "+---------------------------------+"
+
+ECHO_TEST=`echo "Test \c"`
+if test "$ECHO_TEST" = "Test "
+then
+	PRE_ECHO=""
+	POST_ECHO="\c"
+else
+	PRE_ECHO="-n"
+	POST_ECHO=""
+fi
+
+if test "$CONFIGFILE" = ""
+then
+	SYS=`(uname -s) 2> /dev/null`
+	if test -n "$SYS" 
+	then
+		SYS_VERSION=`uname -r`
+	else
+		SYS="Other"
+		SYS_VERSION="0.0"
+	fi
+
+	INSTALLTOPDIR=/usr/local/ModuleBuildSystem
+
+	case $SYS in
+	SunOS)
+		case $SYS_VERSION in
+		5.6|5.6.*)
+			SYS_MAKEFLAGS=""
+			SYS_IMAKEFLAGS="-DSys_Name=Solaris2 -DSYSV -DSOLARIS2"
+			SYS_MAKEDEPENDFLAGS=""
+			SYS_CPPFLAGS="-DSYSV -DSOLARIS2 -DHAS_SYSINFO -DHAS_FDATASYNC -DHAS_BSD_GETTIMEOFDAY -DHAS_INT_USLEEP -DHAVE_SELECT"
+			SYS_CPPINCLUDES=""
+			SYS_CPLUSPLUSFLAGS=""
+			SYS_LDFLAGS=""
+			SYS_LDLIBRARIES="-lsocket -lnsl"
+			SYS_LDLIBDEPENDS=""
+			CPLUSPLUS_PROGRAM="CC"
+			;;
+		5.5|5.5.*)
+			SYS_MAKEFLAGS=""
+			SYS_IMAKEFLAGS="-DSys_Name=Solaris2 -DSYSV -DSOLARIS2"
+			SYS_MAKEDEPENDFLAGS=""
+			SYS_CPPFLAGS="-DSYSV -DSOLARIS2 -DHAS_SYSINFO -DHAS_FDATASYNC -DHAS_BSD_GETTIMEOFDAY -DHAS_INT_USLEEP -DHAVE_SELECT"
+			SYS_CPPINCLUDES=""
+			SYS_CPLUSPLUSFLAGS=""
+			SYS_LDFLAGS=""
+			SYS_LDLIBRARIES="-lsocket -lnsl"
+			SYS_LDLIBDEPENDS=""
+			CPLUSPLUS_PROGRAM="CC"
+			;;
+		5.*)	SYS_MAKEFLAGS=""
+			SYS_IMAKEFLAGS="-DSys_Name=Solaris2 -DSYSV -DSOLARIS2"
+			SYS_MAKEDEPENDFLAGS=""
+			SYS_CPPFLAGS="-DSYSV -DSOLARIS2 -DHAS_SYSINFO -DHAS_FDATASYNC -DHAS_INT_USLEEP -DHAVE_SELECT"
+			SYS_CPPINCLUDES=""
+			SYS_CPLUSPLUSFLAGS=""
+			SYS_LDFLAGS=""
+			SYS_LDLIBRARIES="-lsocket -lnsl"
+			SYS_LDLIBDEPENDS=""
+			CPLUSPLUS_PROGRAM="CC"
+			;;
+		4.*)	SYS_MAKEFLAGS=""
+			SYS_IMAKEFLAGS="-DSys_Name=SunOS4 -DBSD -DSUNOS4 -DUSE_RANLIB"
+			SYS_MAKEDEPENDFLAGS=""
+			SYS_CPPFLAGS="-DBSD -DSUNOS4 -DHAS_BSD_GETTIMEOFDAY -DHAS_INT_USLEEP -DNEED_FCHMOD -DNEED_FSYNC -DNEED_RENAME"
+			SYS_CPPINCLUDES=""
+			SYS_CPLUSPLUSFLAGS=""
+			SYS_LDFLAGS=""
+			SYS_LDLIBRARIES=""
+			SYS_LDLIBDEPENDS=""
+			CPLUSPLUS_PROGRAM="CC"
+			;;
+		esac
+		;;
+	HP-UX)	SYS_MAKEFLAGS=""
+		SYS_IMAKEFLAGS="-DSys_Name=HPUX -DSYSV -DHPUX -DMakeProg=gnumake -DCPP_HAS_HASHHASH"
+		SYS_MAKEDEPENDFLAGS=""
+		SYS_CPPFLAGS="-DSYSV -DHPUX -DHAS_BSD_GETTIMEOFDAY -DNEED_INT_USLEEP -DHAS_INT_USLEEP"
+		SYS_CPPINCLUDES=""
+		SYS_CPLUSPLUSFLAGS=""
+		SYS_LDFLAGS=""
+		SYS_LDLIBRARIES="-ldbm"
+		SYS_LDLIBDEPENDS=""
+		CPLUSPLUS_PROGRAM="CC"
+		;;
+	Linux)	SYS_MAKEFLAGS="--no-print-directory"
+		SYS_IMAKEFLAGS="-DSys_Name=Linux -DSYSV -DLINUX -DUSE_RANLIB"
+		SYS_MAKEDEPENDFLAGS=""
+		SYS_CPPFLAGS="-DSYSV -DLINUX -DHAS_BSD_GETTIMEOFDAY -DHAS_VOID_USLEEP -DNEED_RENAME"
+		SYS_CPPINCLUDES=""
+		SYS_CPLUSPLUSFLAGS=""
+		SYS_LDFLAGS=""
+		SYS_LDLIBRARIES="-lgdbm"
+		SYS_LDLIBDEPENDS=""
+		CPLUSPLUS_PROGRAM="g++"
+		;;
+	AIX)	SYS_MAKEFLAGS=""
+		SYS_IMAKEFLAGS="-DSys_Name=AIX -DSYSV -DAIX"
+		SYS_MAKEDEPENDFLAGS=""
+		SYS_CPPFLAGS="-DSYSV -DAIX -DHAS_BSD_GETTIMEOFDAY -DHAS_VOID_USLEEP"
+		SYS_CPPINCLUDES=""
+		SYS_CPLUSPLUSFLAGS=""
+		SYS_LDFLAGS=""
+		SYS_LDLIBRARIES=""
+		SYS_LDLIBDEPENDS=""
+		CPLUSPLUS_PROGRAM="xlC"
+		;;
+	WIN32)	SYS_MAKEFLAGS="-nologo"
+		SYS_IMAKEFLAGS="-DSys_Name=MSWindows -DWIN32 -DHAS_MULTILINEMAKESUBDIR -DHAS_RECURSIVEMAKEVARIABLES -DMakeProg=nmake -DNEED_VOID_USLEEP -DHAS_VOID_USLEEP"
+		SYS_MAKEDEPENDFLAGS=""
+		SYS_CPPFLAGS="-DWIN32"
+		SYS_CPPINCLUDES=""
+		SYS_CPLUSPLUSFLAGS=""
+		SYS_LDFLAGS=""
+		SYS_LDLIBRARIES=""
+		SYS_LDLIBDEPENDS=""
+		CPLUSPLUS_PROGRAM="CL"
+		;;
+	CYGWIN_95*)	SYS_MAKEFLAGS=""
+		SYS_IMAKEFLAGS="-DSys_Name=MSWindows -DWIN32 -DNEED_VOID_USLEEP -DHAS_VOID_USLEEP"
+		SYS_MAKEDEPENDFLAGS=""
+		SYS_CPPFLAGS="-DWIN32"
+		SYS_CPPINCLUDES=""
+		SYS_CPLUSPLUSFLAGS=""
+		SYS_LDFLAGS=""
+		SYS_LDLIBRARIES=""
+		SYS_LDLIBDEPENDS=""
+		CPLUSPLUS_PROGRAM="CL"
+		SYS="Windows"
+		SYS_VERSION="95"
+		INSTALLTOPDIR=C:/PROGRA~1/ARJUNA~1/ModuleBuildSystem
+		;;
+	CYGWIN_98*)	SYS_MAKEFLAGS=""
+		SYS_IMAKEFLAGS="-DSys_Name=MSWindows -DWIN32 -DNEED_VOID_USLEEP -DHAS_VOID_USLEEP"
+		SYS_MAKEDEPENDFLAGS=""
+		SYS_CPPFLAGS="-DWIN32"
+		SYS_CPPINCLUDES=""
+		SYS_CPLUSPLUSFLAGS=""
+		SYS_LDFLAGS=""
+		SYS_LDLIBRARIES=""
+		SYS_LDLIBDEPENDS=""
+		CPLUSPLUS_PROGRAM="CL"
+		SYS="Windows"
+		SYS_VERSION="98"
+		INSTALLTOPDIR=C:/PROGRA~1/ARJUNA~1/ModuleBuildSystem
+		;;
+	CYGWIN_NT*)	SYS_MAKEFLAGS=""
+		SYS_IMAKEFLAGS="-DSys_Name=MSWindows -DWIN32 -DNEED_VOID_USLEEP -DHAS_VOID_USLEEP"
+		SYS_MAKEDEPENDFLAGS=""
+		SYS_CPPFLAGS="-DWIN32"
+		SYS_CPPINCLUDES=""
+		SYS_CPLUSPLUSFLAGS=""
+		SYS_LDFLAGS=""
+		SYS_LDLIBRARIES=""
+		SYS_LDLIBDEPENDS=""
+		CPLUSPLUS_PROGRAM="CL"
+		SYS="Windows"
+		SYS_VERSION="NT"
+		INSTALLTOPDIR=C:/PROGRA~1/ARJUNA~1/ModuleBuildSystem
+		;;
+	*)	SYS_MAKEFLAGS=""
+		SYS_IMAKEFLAGS="-DSys_Name=Other -DUSE_RANLIB"
+		SYS_MAKEDEPENDFLAGS=""
+		SYS_CPPFLAGS=""
+		SYS_CPPINCLUDES=""
+		SYS_CPLUSPLUSFLAGS=""
+		SYS_LDFLAGS=""
+		SYS_LDLIBRARIES=""
+		SYS_LDLIBDEPENDS=""
+		CPLUSPLUS_PROGRAM="CC"
+		;;
+	esac
+
+	if test "'x$ARJUNA_INSTALLATION_DIRECTORY'" != "'x'"
+	then
+	    INSTALLTOPDIR=$ARJUNA_INSTALLATION_DIRECTORY
+	fi
+
+	echo
+	echo "System "$SYS" version "$SYS_VERSION
+
+	if test "'x$ARJUNA_INSTALLATION_DIRECTORY'" != "'x'"
+	then
+	    INSTALLTOPDIR=$ARJUNA_INSTALLATION_DIRECTORY
+	fi
+
+	TOPDIR=`pwd`
+	echo
+	echo $PRE_ECHO "Root of directory of ModuleBuildSystem installation ["$INSTALLTOPDIR"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		INSTALLTOPDIR=$INPUT
+	fi
+
+	CONF_MAKEFLAGS=""
+	CONF_IMAKEFLAGS="-TModuleBuildSystem.tmpl"
+	CONF_MAKEDEPENDFLAGS=""
+	CONF_CPPINCLUDES=""
+	CONF_LDLIBRARIES=""
+	CONF_LDLIBRDEPENDS=""
+
+	LOCAL_MAKEFLAGS=""
+	LOCAL_IMAKEFLAGS="-DVerboseMake=No -DTopDir="$TOPDIR" -DInstallTopDir="$INSTALLTOPDIR" "
+	LOCAL_MAKEDEPENDFLAGS=""
+	LOCAL_CPPFLAGS="-I\$(BUILDSYSTEMTOPDIR)/lib"
+	LOCAL_CPPINCLUDES=""
+	LOCAL_CPLUSPLUSFLAGS=""
+	LOCAL_LDFLAGS=""
+	LOCAL_LDLIBRARIES=""
+	LOCAL_LDLIBDEPENDS=""
+
+	MODULE_MAKEFLAGS=""
+	MODULE_IMAKEFLAGS=""
+	MODULE_MAKEDEPENDFLAGS=""
+	MODULE_CPPFLAGS=""
+	MODULE_CPPINCLUDES=""
+	MODULE_CPLUSPLUSFLAGS=""
+	MODULE_LDFLAGS=""
+	MODULE_LDLIBRARIES=""
+	MODULE_LDLIBDEPENDS=""
+
+	MODULE_IMAKEFLAGS="-I\$(BUILDSYSTEMTOPDIR)/config "$MODULE_IMAKEFLAGS
+	MODULE_CPPINCLUDES="-I\$(BUILDSYSTEMTOPDIR)/include "$MODULE_CPPINCLUDES
+
+else
+	TOPDIR=`pwd`
+	. $CONFIGFILE
+fi
+
+	case $SYS in
+	Windows) INSTALLTOPDIR="`cygpath -w $INSTALLTOPDIR | sed 's;\\\;/;g'`"
+		 TOPDIR="`cygpath -w $TOPDIR | sed 's;\\\;/;g'`"
+		;;
+	esac
+
+if test "$VERIFY" = "YES"
+then
+	echo
+	echo $PRE_ECHO "System make flags ["$SYS_MAKEFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			SYS_MAKEFLAGS=$INPUT
+		else
+			SYS_MAKEFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "System imake flags ["$SYS_IMAKEFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			SYS_IMAKEFLAGS=$INPUT
+		else
+			SYS_IMAKEFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "System makedepend flags ["$SYS_MAKEDEPENDFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			SYS_MAKEDEPENDFLAGS=$INPUT
+		else
+			SYS_MAKEDEPENDFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Configuration make flags ["$CONF_MAKEFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			CONF_MAKEFLAGS=$INPUT
+		else
+			CONF_MAKEFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Configuration imake flags ["$CONF_IMAKEFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			CONF_IMAKEFLAGS=$INPUT
+		else
+			CONF_IMAKEFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Configuration makedepend flags ["$CONF_MAKEDEPENDFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			CONF_MAKEDEPENDFLAGS=$INPUT
+		else
+			CONF_MAKEDEPENDFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Local make flags ["$LOCAL_MAKEFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			LOCAL_MAKEFLAGS=$INPUT
+		else
+			LOCAL_MAKEFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Local imake flags ["$LOCAL_IMAKEFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			LOCAL_IMAKEFLAGS=$INPUT
+		else
+			LOCAL_IMAKEFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Local makedepend flags ["$LOCAL_MAKEDEPENDFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			LOCAL_MAKEDEPENDFLAGS=$INPUT
+		else
+			LOCAL_MAKEDEPENDFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Module make flags ["$MODULE_MAKEFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			MODULE_MAKEFLAGS=$INPUT
+		else
+			MODULE_MAKEFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Module imake flags ["$MODULE_IMAKEFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			MODULE_IMAKEFLAGS=$INPUT
+		else
+			MODULE_IMAKEFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Module makedepend flags ["$MODULE_MAKEDEPENDFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			MODULE_MAKEDEPENDFLAGS=$INPUT
+		else
+			MODULE_MAKEDEPENDFLAGS=""
+		fi
+	fi
+fi
+
+(
+echo "#!/bin/sh"
+echo "#"
+echo "# Copyright (C) 1998, 1999, 2000,"
+echo "# "
+echo "# Arjuna Solutions Limited,"
+echo "# Tyne and Wear,"
+echo "# Tyne and Wear,"
+echo "# UK."
+echo "#"
+echo ""
+echo "# ModuleBuildSystem configure file"
+echo ""
+echo "INSTALLTOPDIR="$INSTALLTOPDIR
+echo ""
+echo "SYS='"$SYS"'"
+echo "SYS_VERSION='"$SYS_VERSION"'"
+echo ""
+echo "SYS_MAKEFLAGS='"$SYS_MAKEFLAGS"'"
+echo "SYS_IMAKEFLAGS='"$SYS_IMAKEFLAGS"'"
+echo "SYS_MAKEDEPENDFLAGS='"$SYS_MAKEDEPENDFLAGS"'"
+echo "SYS_CPPFLAGS='"$SYS_CPPFLAGS"'"
+echo "SYS_CPPINCLUDES='"$SYS_CPPINCLUDES"'"
+echo "SYS_LDFLAGS='"$SYS_LDFLAGS"'"
+echo "SYS_LDLIBRARIES='"$SYS_LDLIBRARIES"'"
+echo "SYS_LDLIBDEPENDS='"$SYS_LDLIBDEPENDS"'"
+echo ""
+echo "COMP='"$COMP"'"
+echo ""
+echo "COMP_MAKEFLAGS='"$COMP_MAKEFLAGS"'"
+echo "COMP_IMAKEFLAGS='"$COMP_IMAKEFLAGS"'"
+echo "COMP_MAKEDEPENDFLAGS='"$COMP_MAKEDEPENDFLAGS"'"
+echo "COMP_CPPFLAGS='"$COMP_CPPFLAGS"'"
+echo "COMP_CPPINCLUDES='"$COMP_CPPINCLUDES"'"
+echo "COMP_LDFLAGS='"$COMP_LDFLAGS"'"
+echo "COMP_LDLIBRARIES='"$COMP_LDLIBRARIES"'"
+echo "COMP_LDLIBDEPENDS='"$COMP_LDLIBDEPENDS"'"
+echo ""
+echo "CONF_MAKEFLAGS='"$CONF_MAKEFLAGS"'"
+echo "CONF_IMAKEFLAGS='"$CONF_IMAKEFLAGS"'"
+echo "CONF_MAKEDEPENDFLAGS='"$CONF_MAKEDEPENDFLAGS"'"
+echo "CONF_CPPFLAGS='"$CONF_CPPFLAGS"'"
+echo "CONF_CPPINCLUDES='"$CONF_CPPINCLUDES"'"
+echo "CONF_LDFLAGS='"$CONF_LDFLAGS"'"
+echo "CONF_LDLIBRARIES='"$CONF_LDLIBRARIES"'"
+echo "CONF_LDLIBDEPENDS='"$CONF_LDLIBDEPENDS"'"
+echo ""
+echo "LOCAL_MAKEFLAGS='"$LOCAL_MAKEFLAGS"'"
+echo "LOCAL_IMAKEFLAGS='"$LOCAL_IMAKEFLAGS"'"
+echo "LOCAL_MAKEDEPENDFLAGS='"$LOCAL_MAKEDEPENDFLAGS"'"
+echo "LOCAL_CPPFLAGS='"$LOCAL_CPPFLAGS"'"
+echo "LOCAL_CPPINCLUDES='"$LOCAL_CPPINCLUDES"'"
+echo "LOCAL_LDFLAGS='"$LOCAL_LDFLAGS"'"
+echo "LOCAL_LDLIBRARIES='"$LOCAL_LDLIBRARIES"'"
+echo "LOCAL_LDLIBDEPENDS='"$LOCAL_LDLIBDEPENDS"'"
+echo ""
+echo "MODULE_MAKEFLAGS='"$MODULE_MAKEFLAGS"'"
+echo "MODULE_IMAKEFLAGS='"$MODULE_IMAKEFLAGS"'"
+echo "MODULE_MAKEDEPENDFLAGS='"$MODULE_MAKEDEPENDFLAGS"'"
+echo "MODULE_CPPFLAGS='"$MODULE_CPPFLAGS"'"
+echo "MODULE_CPPINCLUDES='"$MODULE_CPPINCLUDES"'"
+echo "MODULE_LDFLAGS='"$MODULE_LDFLAGS"'"
+echo "MODULE_LDLIBRARIES='"$MODULE_LDLIBRARIES"'"
+echo "MODULE_LDLIBDEPENDS='"$MODULE_LDLIBDEPENDS"'"
+) > config/ModuleBuildSystem.cf
+chmod a+rx config/ModuleBuildSystem.cf
+
+(
+echo "#!/bin/sh"
+echo "#"
+echo "# Copyright (C) 1998, 1999, 2000,"
+echo "# "
+echo "# Arjuna Solutions Limited,"
+echo "# Tyne and Wear,"
+echo "# Tyne and Wear,"
+echo "# UK."
+echo "#"
+echo "#"
+echo
+echo "#"
+echo "#  Sys"
+echo "#"
+echo
+echo "echo "$SYS
+) > config/Sys
+chmod a+rx config/Sys
+
+(
+echo "#!/bin/sh"
+echo "#"
+echo "# Copyright (C) 1998, 1999, 2000,"
+echo "# "
+echo "# Arjuna Solutions Limited,"
+echo "# Tyne and Wear,"
+echo "# Tyne and Wear,"
+echo "# UK."
+echo "#"
+echo "#"
+echo
+echo "#"
+echo "#  Sys_Version"
+echo "#"
+echo
+echo "echo "$SYS_VERSION
+) > config/Sys_Version
+chmod a+rx config/Sys_Version
+
+(
+echo "/*"
+echo " * Copyright (C) 1998, 1999, 2000,"
+echo " * "
+echo " * Arjuna Solutions Limited,"
+echo " * Tyne and Wear,"
+echo " * Tyne and Wear,"
+echo " * UK."
+echo " */"
+echo
+echo "/*"
+echo " *  Sys.def"
+echo " */"
+echo
+if test "'x$SYS_MAKEFLAGS'" != "'x'"
+then
+	echo "AddToMakeFlags("$SYS_MAKEFLAGS")"
+fi
+if test "'x$SYS_IMAKEFLAGS'" != "'x'"
+then
+	echo "AddToIMakeFlags("$SYS_IMAKEFLAGS")"
+fi
+if test "'x$SYS_MAKEDEPENDFLAGS'" != "'x'"
+then
+	echo "AddToMakeDependFlags("$SYS_MAKEDEPENDFLAGS")"
+fi
+if test "'x$SYS_CPPINCLUDES'" != "'x'"
+then
+	echo "AddToCPPIncludes("$SYS_CPPINCLUDES")"
+fi
+if test "'x$SYS_LDFLAGS'" != "'x'"
+then
+	echo "AddToLdFlags("$SYS_LDFLAGS")"
+fi
+if test "'x$SYS_LDLIBRARIES'" != "'x'"
+then
+	echo "AddToLdLibraries("$SYS_LDLIBRARIES")"
+fi
+if test "'x$SYS_LDLIBDEPENDS'" != "'x'"
+then
+	echo "AddToLdLibDepends("$SYS_LDLIBDEPENDS")"
+fi
+) > config/Sys.def
+
+(
+echo "/*"
+echo " * Copyright (C) 1998, 1999, 2000,"
+echo " * "
+echo " * Arjuna Solutions Limited,"
+echo " * Tyne and Wear,"
+echo " * Tyne and Wear,"
+echo " * UK."
+echo " */"
+echo
+echo "/*"
+echo " *  Config.def"
+echo " */"
+echo
+if test "'x$CONF_MAKEFLAGS'" != "'x'"
+then
+	echo "AddToMakeFlags("$CONF_MAKEFLAGS")"
+fi
+if test "'x$CONF_IMAKEFLAGS'" != "'x'"
+then
+	echo "AddToIMakeFlags("$CONF_IMAKEFLAGS")"
+fi
+if test "'x$CONF_MAKEDEPENDFLAGS'" != "'x'"
+then
+	echo "AddToMakeDependFlags("$CONF_MAKEDEPENDFLAGS")"
+fi
+if test "'x$CONF_CPPINCLUDES'" != "'x'"
+then
+	echo "AddToCPPIncludes("$CONF_CPPINCLUDES")"
+fi
+if test "'x$CONF_LDFLAGS'" != "'x'"
+then
+	echo "AddToLdFlags("$CONF_LDFLAGS")"
+fi
+if test "'x$CONF_LDLIBRARIES'" != "'x'"
+then
+	echo "AddToLdLibraries("$CONF_LDLIBRARIES")"
+fi
+if test "'x$CONF_LDLIBDEPENDS'" != "'x'"
+then
+	echo "AddToLdLibDepends("$CONF_LDLIBDEPENDS")"
+fi
+) > config/Config.def
+
+(
+echo "/*"
+echo " * Copyright (C) 1998, 1999, 2000,"
+echo " * "
+echo " * Arjuna Solutions Limited,"
+echo " * Newcastle upon Tyne,"
+echo " * Tyne and Wear,"
+echo " * UK."
+echo " */"
+echo
+echo "/*"
+echo " *  Local.def"
+echo " */"
+echo
+if test "'x$LOCAL_MAKEFLAGS'" != "'x'"
+then
+	echo "AddToMakeFlags("$LOCAL_MAKEFLAGS")"
+fi
+if test "'x$LOCAL_IMAKEFLAGS'" != "'x'"
+then
+	echo "AddToIMakeFlags("$LOCAL_IMAKEFLAGS")"
+fi
+if test "'x$LOCAL_MAKEDEPENDFLAGS'" != "'x'"
+then
+	echo "AddToMakeDependFlags("$LOCAL_MAKEDEPENDFLAGS")"
+fi
+if test "'x$LOCAL_CPPINCLUDES'" != "'x'"
+then
+	echo "AddToCPPIncludes("$LOCAL_CPPINCLUDES")"
+fi
+if test "'x$LOCAL_LDFLAGS'" != "'x'"
+then
+	echo "AddToLdFlags("$LOCAL_LDFLAGS")"
+fi
+if test "'x$LOCAL_LDLIBRARIES'" != "'x'"
+then
+	echo "AddToLdLibraries("$LOCAL_LDLIBRARIES")"
+fi
+if test "'x$LOCAL_LDLIBDEPENDS'" != "'x'"
+then
+	echo "AddToLdLibDepends("$LOCAL_LDLIBDEPENDS")"
+fi
+echo
+echo "#include \""$TOPDIR"/config/Module.def\""
+) > config/Local.def
+
+(
+echo "/*"
+echo " * Copyright (C) 1998, 1999, 2000,"
+echo " * "
+echo " * Arjuna Solutions Limited,"
+echo " * Newcastle upon Tyne,"
+echo " * Tyne and Wear,"
+echo " * UK."
+echo " */"
+echo
+echo "/*"
+echo " *  Module.def (source)"
+echo " */"
+echo
+echo "BUILDSYSTEMTOPDIR="$TOPDIR
+echo
+if test "'x$MODULE_MAKEFLAGS'" != "'x'"
+then
+	echo "AddToMakeFlags("$MODULE_MAKEFLAGS")"
+fi
+if test "'x$MODULE_IMAKEFLAGS'" != "'x'"
+then
+	echo "AddToIMakeFlags("$MODULE_IMAKEFLAGS")"
+fi
+if test "'x$MODULE_MAKEDEPENDFLAGS'" != "'x'"
+then
+	echo "AddToMakeDependFlags("$MODULE_MAKEDEPENDFLAGS")"
+fi
+if test "'x$MODULE_CPPINCLUDES'" != "'x'"
+then
+	echo "AddToCPPIncludes("$MODULE_CPPINCLUDES")"
+fi
+if test "'x$MODULE_LDFLAGS'" != "'x'"
+then
+	echo "AddToLdFlags("$MODULE_LDFLAGS")"
+fi
+if test "'x$MODULE_LDLIBRARIES'" != "'x'"
+then
+	echo "AddToLdLibraries("$MODULE_LDLIBRARIES")"
+fi
+if test "'x$MODULE_LDLIBDEPENDS'" != "'x'"
+then
+	echo "AddToLdLibDepends("$MODULE_LDLIBDEPENDS")"
+fi
+echo
+) > config/Module.def
+
+(
+echo "/*"
+echo " * Copyright (C) 1998, 1999, 2000,"
+echo " * "
+echo " * Arjuna Solutions Limited,"
+echo " * Newcastle upon Tyne,"
+echo " * Tyne and Wear,"
+echo " * UK."
+echo " */"
+echo
+echo "/*"
+echo " *  Module.def (install)"
+echo " */"
+echo
+echo "BUILDSYSTEMTOPDIR="$INSTALLTOPDIR
+echo
+if test "'x$MODULE_MAKEFLAGS'" != "'x'"
+then
+	echo "AddToMakeFlags("$MODULE_MAKEFLAGS")"
+fi
+if test "'x$MODULE_IMAKEFLAGS'" != "'x'"
+then
+	echo "AddToIMakeFlags("$MODULE_IMAKEFLAGS")"
+fi
+if test "'x$MODULE_MAKEDEPENDFLAGS'" != "'x'"
+then
+	echo "AddToMakeDependFlags("$MODULE_MAKEDEPENDFLAGS")"
+fi
+if test "'x$MODULE_CPPINCLUDES'" != "'x'"
+then
+	echo "AddToCPPIncludes("$MODULE_CPPINCLUDES")"
+fi
+if test "'x$MODULE_LDFLAGS'" != "'x'"
+then
+	echo "AddToLdFlags("$MODULE_LDFLAGS")"
+fi
+if test "'x$MODULE_LDLIBRARIES'" != "'x'"
+then
+	echo "AddToLdLibraries("$MODULE_LDLIBRARIES")"
+fi
+if test "'x$MODULE_LDLIBDEPENDS'" != "'x'"
+then
+	echo "AddToLdLibDepends("$MODULE_LDLIBDEPENDS")"
+fi
+echo
+) > config/Module_install.def
+
