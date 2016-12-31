@@ -1,0 +1,543 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.  
+ *
+ * $Id: ORBServices.javatmpl,v 1.1.2.2 2000/05/02 08:41:15 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package com.arjuna.OrbCommon;
+
+import com.arjuna.ArjunaCommon.Common.*;
+import com.arjuna.orb.*;
+#ifndef DAISJ2
+import NAMESPACE_(CosNaming).NamingContext;
+import NAMESPACE_(CosNaming).NameComponent;
+#if defined(CORBA_2_1) || defined(CORBA_2_2) || defined(CORBA_2_3)
+import NAMESPACE_(CosNaming).NamingContextHelper;
+#endif
+#endif
+import java.io.*;
+import java.io.File;
+import java.io.LineNumberReader;
+import java.io.FileReader;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import NAMESPACE_(CORBA).SystemException;
+import NAMESPACE_(CORBA).UserException;
+import NAMESPACE_(CORBA.ORBPackage).InvalidName;
+import NAMESPACE_(CORBA).BAD_PARAM;
+import NAMESPACE_(CORBA).UNKNOWN;
+
+/**
+ * An attempt at some ORB portable ways of accessing ORB services.
+ */
+
+public class ORBServices
+{
+
+    /**
+     * The various means used to locate a service.
+     *
+     */
+
+public static final int CONFIGURATION_FILE = 0;
+public static final int RESOLVE_INITIAL_REFERENCES = 1;
+public static final int NAME_SERVICE = 2;
+public static final int FILE = 3;
+public static final int NAMED_CONNECT = 4;
+public static final int BIND_CONNECT = 5;
+    
+    /*
+     * Could have a method that tries all of them.
+     */
+    
+    /**
+     * The default implementation (probably specified on a per-ORB basis.)
+     */
+    
+public static NAMESPACE_(CORBA).Object getService (String serviceName,
+						   Object[] params) throws NAMESPACE_(CORBA.ORBPackage).InvalidName, IOException, SystemException
+    {
+	switch (com.arjuna.OrbCommon.Configuration.bindDefault())
+	{
+	case ORBServices.RESOLVE_INITIAL_REFERENCES:
+	    return getService(serviceName, params, RESOLVE_INITIAL_REFERENCES);
+	case ORBServices.NAME_SERVICE:
+	    return getService(serviceName, params, NAME_SERVICE);
+	case ORBServices.FILE:
+	    return getService(serviceName, params, FILE);
+	case ORBServices.NAMED_CONNECT:
+	    return getService(serviceName, params, NAMED_CONNECT);
+	default:
+	    return getService(serviceName, params, CONFIGURATION_FILE);
+	}
+    }
+    
+public static NAMESPACE_(CORBA).Object getService (String serviceName,
+						   Object[] params,
+						   int mechanism) throws NAMESPACE_(CORBA.ORBPackage).InvalidName, IOException, SystemException
+    {
+	NAMESPACE_(CORBA).Object objRef = null;
+	
+	switch (mechanism)
+	{
+	case RESOLVE_INITIAL_REFERENCES:
+	    {
+		try
+		{
+		    objRef = ORBInterface.orb().resolve_initial_references(serviceName);
+		}
+		catch (Exception e)
+		{
+		    System.err.println("ORBServices.getService - resolve_initial_references on "+serviceName+" failed");
+
+		    throw new InvalidName();
+		}
+	    }
+	break;
+	case NAME_SERVICE:
+	    {
+#ifndef DAISJ2
+		String kind = ((params == null) ? null : (String) params[0]);
+		
+		try
+		{
+		    NAMESPACE_(CORBA).Object nsRef = ORBInterface.orb().resolve_initial_references(ORBServices.nameService);
+	    
+		    NamingContext ncRef = HELPER_CLASS_(NamingContext).narrow(nsRef);
+	    
+		    // bind the Object Reference in Naming
+		    
+		    NameComponent nc = new NameComponent(serviceName, kind);
+		    NameComponent path[] = {nc};
+
+		    objRef = ncRef.resolve(path);
+		}
+		catch (UserException e)
+		{
+		    throw new NAMESPACE_(CORBA.ORBPackage).InvalidName();
+		}
+#else
+                if (true)
+                {
+                    System.err.println("ORBServices.getService - naming service not supported by ORB.");
+                    throw new BAD_PARAM();
+                }
+#endif
+	    }
+	break;
+	case CONFIGURATION_FILE:
+	    {
+		String cosservicesRoot = PropertyManager.getProperty(ORBEnvironment.INITIAL_REFERENCES_ROOT,
+								     com.arjuna.OrbCommon.Configuration.configFileRoot());
+		String configLocation = PropertyManager.getProperty(ORBEnvironment.INITIAL_REFERENCES_FILE,
+								    com.arjuna.OrbCommon.Configuration.configFile());
+		String configFile = cosservicesRoot+File.separatorChar+configLocation;
+		LineNumberReader input;
+
+		try
+		{
+		    input = new LineNumberReader(new FileReader(configFile));
+		}
+		catch (FileNotFoundException e)
+		{
+		    System.err.println("ORBServices.getService - could not open config file: "+configFile);
+
+		    throw new InvalidName();
+		}
+    
+		String ior = null;
+    
+		try
+		{
+		    boolean finished = false;
+	    
+		    while ((ior == null) && !finished)
+		    {
+			String line = input.readLine();
+
+			if (line == null)
+			    finished = true;
+			else
+			{
+			    int occur = line.indexOf(serviceName);
+
+			    if (occur == 0)  // should be first on line
+				ior = line.substring(serviceName.length() +1);  // +1 for space separator
+			}
+		    }
+		}
+		catch (Exception e)
+		{
+		    System.err.println("ORBServices.getService - caught unexpected exception: "+e);
+
+		    throw new UNKNOWN();
+		}
+
+		if (ior == null)
+		{
+		    System.err.println("ORBServices.getService - could not find service: "+
+				       serviceName+" in configuration file: "+configFile);
+
+		    throw new InvalidName();
+		}
+		else
+		{
+		    try
+		    {
+			objRef = ORBInterface.orb().string_to_object(ior);
+		    }
+		    catch (Exception e)
+		    {
+			objRef = null;
+		    }
+		}
+	    }
+	break;
+	case FILE:
+	    {
+		try
+		{
+		    String fileDir = PropertyManager.getProperty(ORBEnvironment.FILE_DIR, null);
+		    File f = null;
+
+		    if (fileDir != null)
+			f = new File(fileDir+File.separator+serviceName);
+		    else
+			f = new File(serviceName);
+		    
+		    FileInputStream ifile = new FileInputStream(f);
+		    int size = (int) f.length();
+		    byte b[] = new byte[size];
+
+		    ifile.read(b);
+		    ifile.close();
+	
+		    String objString = new String(b);
+		    objRef = ORBInterface.orb().string_to_object(objString);
+
+		    objString = null;
+		}
+		catch (FileNotFoundException e)
+		{
+		    throw new InvalidName();
+		}
+	    }
+	break;
+	case NAMED_CONNECT:
+	    {
+		if (ORBInfo.orbType() != ORBType.O_ORBACUS)
+		{
+		    System.err.println("ORBServices.getService - NAMED_CONNECT option not supported by ORB.");
+
+		    throw new BAD_PARAM();
+		}
+		else
+		{
+#if defined(ORBACUS) && !defined(HAVE_POA)
+		    if ((params == null) || (params.length < 1))
+		    {
+			System.err.println("ORBServices.getService - NAMED_CONNECT no host or port specified.");
+			throw new InvalidName();
+		    }
+
+		    String host = (String) params[0];
+
+		    if (host == null)
+		    {
+			System.err.println("ORBServices.getService - NAMED_CONNECT no host specified.");
+			throw new InvalidName();
+		    }
+
+		    if ((params.length == 1) || (params[1] == null))
+		    {
+			System.err.println("ORBServices.getService - NAMED_CONNECT no port specified.");
+			throw new InvalidName();
+		    }
+
+		    Integer port = (Integer) params[1];
+		    
+		    try
+		    {
+			objRef = ((com.ooc.CORBA.ORB) ORBInterface.orb()).get_inet_object(host, port.intValue(), serviceName);
+		    }
+		    catch (Exception e)
+		    {
+			System.err.println("ORBServices.getService - NAMED_CONNECT caught exception: "+e);
+
+			throw new NAMESPACE_(CORBA.ORBPackage).InvalidName();
+		    }
+#endif
+		}
+	    }
+	break;
+	}
+
+	return objRef;
+    }
+
+    /**
+     * The default implementation (probably specified on a per-ORB basis.)
+     */
+    
+public static void registerService (NAMESPACE_(CORBA).Object objRef,
+				    String serviceName,
+				    Object[] params) throws NAMESPACE_(CORBA.ORBPackage).InvalidName, IOException, SystemException
+    {
+	switch (com.arjuna.OrbCommon.Configuration.bindDefault())
+	{
+	case ORBServices.CONFIGURATION_FILE:
+	    registerService(objRef, serviceName, params, CONFIGURATION_FILE);
+	case ORBServices.RESOLVE_INITIAL_REFERENCES:
+	    registerService(objRef, serviceName, params, RESOLVE_INITIAL_REFERENCES);
+	case ORBServices.NAME_SERVICE:
+	    registerService(objRef, serviceName, params, NAME_SERVICE);
+	case ORBServices.NAMED_CONNECT:
+	    registerService(objRef, serviceName, params, NAMED_CONNECT);
+	default:
+	    registerService(objRef, serviceName, params, CONFIGURATION_FILE);
+	}
+    }
+    
+public static void registerService (NAMESPACE_(CORBA).Object objRef,
+				    String serviceName, Object[] params,
+				    int mechanism) throws NAMESPACE_(CORBA.ORBPackage).InvalidName, IOException, SystemException
+    {
+	switch (mechanism)
+	{
+        case RESOLVE_INITIAL_REFERENCES:
+            {
+#ifdef JBROKER
+		/*
+		 * It's up to the client to set the initial references
+		 * so all we can do is print out the object's IOR.
+		 */
+
+		String objString = ORBInterface.orb().object_to_string(objRef);
+		
+		System.out.println(serviceName+"="+objString);
+		
+		objString = null;
+#else
+		if (true)
+		    throw new BAD_PARAM();
+#endif
+            }
+        break;
+	case NAME_SERVICE:
+	    {
+#ifndef DAISJ2
+		String kind = ((params == null) ? null : (String) params[0]);
+		
+		try
+		{
+		    NAMESPACE_(CORBA).Object initServ = ORBInterface.orb().resolve_initial_references(ORBServices.nameService);
+		    NamingContext rootContext = HELPER_CLASS_(NamingContext).narrow(initServ);
+		    NameComponent[] contextName = new NameComponent[1];
+		    contextName[0] = new NameComponent(serviceName, kind);
+	    
+		    rootContext.rebind(contextName, objRef);
+
+		    if (DebugController.enabled())
+		    {
+			synchronized (DebugController.controller())
+			    {
+				DebugController.controller().setLevels(DebugLevel.CONSTRUCTORS,
+								       VisibilityLevel.VIS_PUBLIC,
+								       FacilityCode.FAC_RESERVED1);
+				DebugController.controller().println("ORBServices.registerService - object "+serviceName+" registered with name service.");
+			    }
+		    }		    
+		}
+		catch (NAMESPACE_(CORBA).ORBPackage.InvalidName e)
+		{
+		    throw new InvalidName();
+		}
+		catch (UserException e)
+		{
+		    throw new InvalidName();
+		}
+		catch (SystemException e)
+		{
+		    throw new UNKNOWN();
+		}
+#else
+                if (true)
+                {
+                    System.err.println("ORBServices.registerService - naming service not supported by ORB.");
+                    throw new BAD_PARAM();
+                }
+#endif
+	    }
+	break;
+	case CONFIGURATION_FILE:
+	    {
+		String cosservicesRoot = PropertyManager.getProperty(ORBEnvironment.INITIAL_REFERENCES_ROOT,
+								     com.arjuna.OrbCommon.Configuration.configFileRoot());
+		String configLocation = PropertyManager.getProperty(ORBEnvironment.INITIAL_REFERENCES_FILE,
+								    com.arjuna.OrbCommon.Configuration.configFile());
+		String configFile = cosservicesRoot+File.separatorChar+configLocation;
+		LineNumberReader input = null;
+		String objString = ORBInterface.orb().object_to_string(objRef);
+		File currFile = null;
+		String newFileName = configFile+ORBServices.tmpFile;
+		
+		try
+		{
+		    currFile = new File(configFile);
+		    input = new LineNumberReader(new FileReader(currFile));
+		}
+		catch (FileNotFoundException e)
+		{
+		    if (DebugController.enabled())
+			System.err.println("ORBServices.registerService - could not open config file: "+configFile);
+		    
+		    currFile = null;
+		    input = null;
+
+		    /*
+		     * File not present, so this must be the first
+		     * entry.
+		     */
+		    
+		    newFileName = configFile;  // file does not exist, so write directly.
+		}
+
+		File nuFile = new File(newFileName);
+		PrintWriter outputFile = new PrintWriter(new FileOutputStream(nuFile));
+		boolean found = false;
+
+		if (input != null)
+		{
+		    String line = null;
+
+		    do
+		    {
+			line = input.readLine();
+
+			if (line != null)
+			{
+			    int occur = line.indexOf(serviceName);
+
+			    if (occur == 0)  // should be first on line
+			    {
+				if (line.substring(serviceName.length() +1) != null) // found old line?
+				{
+				    found = true;
+				    outputFile.println(serviceName+" "+objString);
+				}
+			    }
+			    else
+				outputFile.println(line);
+
+			    outputFile.flush();
+			}
+			
+		    } while (line != null);
+		}
+
+		if (!found)
+		{
+		    outputFile.println(serviceName+" "+objString);
+		    outputFile.flush();
+		}
+
+		outputFile.close();
+
+		if (input != null)  // file existed.
+		{
+		    input.close();
+		    
+		    if (currFile.exists())
+		    {
+			currFile.delete();
+		    }
+		    
+		    nuFile.renameTo(currFile);
+		    input = null;
+		}
+		
+		newFileName = null;
+		outputFile = null;
+		nuFile = null;
+		
+		if (DebugController.enabled())
+		{
+		    synchronized (DebugController.controller())
+			{
+			    DebugController.controller().setLevels(DebugLevel.CONSTRUCTORS,
+								   VisibilityLevel.VIS_PUBLIC,
+								   FacilityCode.FAC_RESERVED1);
+			    DebugController.controller().println("ORBServices.registerService - object "+serviceName+" registered with configuration file: "+configFile);
+			}
+		}
+	    }
+	break;
+	case FILE:
+	    {
+		String fileDir = PropertyManager.getProperty(ORBEnvironment.FILE_DIR, null);
+		FileOutputStream ofile = null;
+
+		if (fileDir != null)
+		    ofile = new FileOutputStream(fileDir+File.separator+serviceName);
+		else
+		    ofile = new FileOutputStream(serviceName);
+		
+		String objString = ORBInterface.orb().object_to_string(objRef);
+		byte b[] = objString.getBytes();
+
+		ofile.write(b);
+		ofile.close();
+
+		if (DebugController.enabled())
+		{
+		    synchronized (DebugController.controller())
+			{
+			    DebugController.controller().setLevels(DebugLevel.CONSTRUCTORS,
+								   VisibilityLevel.VIS_PUBLIC,
+								   FacilityCode.FAC_RESERVED1);
+			    DebugController.controller().println("ORBServices.registerService - object "+serviceName+" reference file created: "+fileDir+serviceName);
+			}
+		}
+	    }
+	break;
+	case NAMED_CONNECT:
+	    {
+		if (ORBInfo.orbType() != ORBType.O_ORBACUS)
+		{
+		    System.err.println("ORBServices.registerService - NAMED_CONNECT option not supported by ORB.");
+
+		    throw new BAD_PARAM();
+		}
+		else
+		{
+#ifndef HAVE_POA
+		    Object[] name = new Object[1];
+		    name[0] = serviceName;
+
+		    if (!ORBInterface.objectIsReady(objRef, name))
+			throw new UNKNOWN();
+#endif
+		}
+	    }
+	break;
+	default:
+	    break;
+	}
+    }
+		    
+public static final String nameService = "NameService";
+public static final String transactionService = "TransactionService";
+
+public static final String otsKind = "OTS";
+
+private static final String tmpFile = ".tmp";
+
+};

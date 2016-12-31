@@ -1,0 +1,1389 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: ORBInterface.javatmpl,v 1.3.4.1.2.2.4.1 2000/07/24 11:30:27 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package com.arjuna.OrbCommon;
+
+import com.arjuna.ArjunaCommon.Common.*;
+import java.util.*;
+import java.applet.Applet;
+import java.io.*;
+#ifndef JAR_PACKAGE_PROBLEM
+import NAMESPACE_(CORBA.*);
+#endif
+#ifdef HAVE_POA
+import NAMESPACE_(PortableServer.*);
+#ifndef DAISJ2
+import NAMESPACE_(CORBA.Policy);
+#endif
+#endif
+#ifdef ORBIXWEB
+// Aaaghhhh!!!!
+import IE.Iona.OrbixWeb._CORBA;
+import IE.Iona.OrbixWeb._OrbixWeb;
+#endif
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import NAMESPACE_(CORBA.SystemException);
+#ifdef HAVE_POA
+#ifndef DAISJ2
+import POA_(POAPackage.AdapterAlreadyExists);
+import POA_(POAPackage.InvalidPolicy);
+import POA_(POAManagerPackage.AdapterInactive);
+#endif
+#endif
+
+/**
+ * An attempt at some ORB portable ways of interacting with the ORB
+ * and OA.
+ *
+ * NOTE: initORB and initBOA/initPOA *must* be called if you want to use the
+ * pre- and post- initialisation mechanisms.
+ */
+
+public class ORBInterface
+{
+
+    /**
+     * Initialise the default ORB.
+     */
+    
+public static synchronized void initORB () throws SystemException
+    {
+	/*
+	 * Since an ORB can be initialised multiple times we currently
+	 * allow the initialisation code to be activated multiple times
+	 * as well. Does this make sense?
+	 */
+	
+	if ((ORBInterface._orb == null) || (!ORBInterface._orbInit))
+	{
+	    loadProperties();
+
+	    ORBPreInitLoader preInit = new ORBPreInitLoader();
+	    preInit = null;
+
+	    parseORBProperties(null, false);
+
+#ifdef ORBACUS
+#ifdef HAVE_POA
+	    PropertyManager.setProperty("ooc.orb.conc_model", "threaded");
+#endif
+#endif
+	    ORBInterface._orb = NAMESPACE_(CORBA.ORB).init();
+#ifdef ORBACUS
+#ifndef HAVE_POA
+	    ((com.ooc.CORBA.ORB) ORBInterface._orb).conc_model(com.ooc.CORBA.ORB.ConcModel.ConcModelThreaded);
+#endif
+#endif
+
+	    parseORBProperties(null, true);
+	    
+	    ORBPostInitLoader postInit = new ORBPostInitLoader();
+	    postInit = null;
+
+	    ORBInterface._orbInit = true;
+	}
+    }
+
+    /**
+     * Initialise the ORB.
+     */
+
+public static synchronized void initORB (Applet a, Properties p) throws SystemException
+    {
+#if defined(CORBA_2_1) || defined(CORBA_2_2) || defined(CORBA_2_3)
+	if ((ORBInterface._orb == null) || (!ORBInterface._orbInit))
+	{
+	    loadProperties();
+	    
+	    ORBPreInitLoader preInit = new ORBPreInitLoader();
+	    preInit = null;
+
+	    parseORBProperties(null, false);
+#ifdef ORBACUS
+#ifdef HAVE_POA
+	    PropertyManager.setProperty("ooc.orb.conc_model", "threaded");
+#endif
+#endif
+	    ORBInterface._orb = NAMESPACE_(CORBA.ORB).init(a, p);
+#ifdef ORBACUS
+#ifndef HAVE_POA
+	    ((com.ooc.CORBA.ORB) ORBInterface._orb).conc_model(com.ooc.CORBA.ORB.ConcModel.ConcModelThreaded);
+#endif
+#endif
+	    parseORBProperties(null, true);
+
+	    ORBPostInitLoader postInit = new ORBPostInitLoader();
+	    postInit = null;
+
+	    ORBInterface._orbInit = true;
+	}
+#else
+#error "Unsupported initORB (Applet, Properties)"
+#endif
+    }
+
+    /**
+     * Initialise the ORB.
+     */
+
+public static synchronized void initORB (String[] s, Properties p) throws SystemException
+    {
+#if defined(CORBA_2_1) || defined(CORBA_2_2) || defined(CORBA_2_3)
+	if ((ORBInterface._orb == null) || (!ORBInterface._orbInit))
+	{
+	    loadProperties();
+	    
+	    ORBPreInitLoader preInit = new ORBPreInitLoader();
+	    preInit = null;
+
+	    parseORBProperties(s, false);
+#ifdef ORBACUS
+#ifdef HAVE_POA
+	    PropertyManager.setProperty("ooc.orb.conc_model", "threaded");
+#endif
+#endif
+	    ORBInterface._orb = NAMESPACE_(CORBA.ORB).init(s, p);
+#ifdef ORBACUS
+#ifndef HAVE_POA
+	    ((com.ooc.CORBA.ORB) ORBInterface._orb).conc_model(com.ooc.CORBA.ORB.ConcModel.ConcModelThreaded);
+#endif
+#endif
+	    parseORBProperties(s, true);
+	    
+	    ORBPostInitLoader postInit = new ORBPostInitLoader();
+	    postInit = null;
+
+	    ORBInterface._orbInit = true;
+	}
+#endif
+    }
+
+#ifndef HAVE_POA
+
+    /**
+     * Initialise the BOA.
+     */
+      
+public static synchronized void initBOA () throws SystemException
+    {
+#ifdef HAVE_BOA
+	if ((ORBInterface._boa == null) || (!ORBInterface._boaInit))
+#else
+	if (!ORBInterface._boaInit)
+#endif       
+	{
+	    if (ORBInterface._orb != null)
+	    {
+		parseOAProperties(null, true);
+
+#ifdef VISIBROKER
+#ifdef VB_VERSION_3
+		ORBInterface._boa = ((com.visigenic.vbroker.orb.ORB) _orb).BOA_init();
+#else
+		ORBInterface._boa = _orb.BOA_init();
+#endif		
+
+#else
+		String[] args = new String[0];
+		
+#ifdef HAVE_BOA
+#ifndef ORBACUS
+	        ORBInterface._boa = _orb.BOA_init(args, new java.util.Properties());
+#else
+	        ORBInterface._boa = ((com.ooc.CORBA.ORB) _orb).BOA_init(args, new java.util.Properties());
+		((com.ooc.CORBA.BOA) ORBInterface._boa).conc_model(com.ooc.CORBA.BOA.ConcModel.ConcModelThreadPerRequest);
+		((com.ooc.CORBA.BOA) ORBInterface._boa).init_servers();
+#endif
+#endif
+#endif
+		parseOAProperties(null, false);
+
+		ORBInterface._boaInit = true;
+	    }
+	    else
+	    {
+		System.err.println("ERROR - initBOA called without initialised ORB.");
+		System.exit(0);
+	    }
+	}
+    }
+
+    /**
+     * Initialise the BOA.
+     */
+
+public static synchronized void initBOA (String a, Properties p) throws SystemException
+    {
+#ifdef HAVE_BOA
+	if ((ORBInterface._boa == null) || (!ORBInterface._boaInit))
+#else
+	if (!ORBInterface._boaInit)
+#endif
+	{
+	    if (ORBInterface._orb != null)
+	    {
+		String[] args = new String[1];
+		args[0] = a;
+		
+#ifdef ORBACUS
+		if (DebugController.enabled())
+		{
+		    synchronized (DebugController.controller())
+			{
+			    DebugController.controller().setLevels(DebugLevel.FUNCTIONS,
+								   VisibilityLevel.VIS_PUBLIC,
+								   FacilityCode.FAC_RESERVED1);
+
+			    DebugController.controller().println("WARNING - initBOA(String) not supported by ORB. Using initBOA(String[])");
+			}
+		}
+
+		initBOA(args, p);
+#else
+		parseOAProperties(args, true);
+#ifdef VB_VERSION_3
+		ORBInterface._boa = ((com.visigenic.vbroker.orb.ORB) _orb).BOA_init(a, p);
+#else		
+#ifdef HAVE_BOA
+		ORBInterface._boa = _orb.BOA_init(a, p);
+#endif		
+		parseOAProperties(args, false);
+
+		ORBInterface._boaInit = true;
+#endif
+		parseOAProperties(args, false);
+#endif		
+
+		args = null;
+	    }
+	    else
+	    {
+		System.err.println("ERROR - initBOA called without initialised ORB.");
+		System.exit(0);
+	    }
+	}
+    }
+
+    /**
+     * Initialise the BOA.
+     */
+
+public static synchronized void initBOA (String[] a, Properties p) throws SystemException
+    {
+#ifdef HAVE_BOA
+	if ((ORBInterface._boa == null) || (!ORBInterface._boaInit))
+#else
+	if (!ORBInterface._boaInit)
+#endif
+	{
+	    if (ORBInterface._orb != null)
+	    {
+#if defined(VB_VERSION_3) || defined(VB_VERSION_4)
+		if (DebugController.enabled())
+		{
+		    synchronized (DebugController.controller())
+			{
+			    DebugController.controller().setLevels(DebugLevel.FUNCTIONS,
+								   VisibilityLevel.VIS_PUBLIC,
+								   FacilityCode.FAC_RESERVED1);
+			    DebugController.controller().println("WARNING - initBOA(String[]) not supported by ORB. Using initBOA(String)");
+			}
+		}
+
+		if (a != null)
+		    initBOA(a[0], p);
+		else
+		    initBOA((String) null, p);
+#else
+		parseOAProperties(a, true);
+#ifndef ORBACUS
+#ifdef HAVE_BOA
+		ORBInterface._boa = _orb.BOA_init(a, p);
+#endif
+#else
+		ORBInterface._boa = ((com.ooc.CORBA.ORB) _orb).BOA_init(a, p);
+
+		((com.ooc.CORBA.BOA) ORBInterface._boa).conc_model(com.ooc.CORBA.BOA.ConcModel.ConcModelThreadPerRequest);
+		((com.ooc.CORBA.BOA) ORBInterface._boa).init_servers();
+#endif
+		parseOAProperties(a, false);
+		
+		ORBInterface._boaInit = true;
+#endif
+	    }
+	    else
+	    {
+		System.err.println("ERROR - initBOA called without initialised ORB.");
+		System.exit(0);
+	    }
+	}
+    }    
+
+#else
+
+public static synchronized void initPOA () throws SystemException
+    {
+	initPOA(null);
+    }
+    
+public static synchronized void initPOA (String[] args) throws SystemException
+    {
+	if (ORBInterface._poa == null)
+	{
+	    if (ORBInterface._orb != null)
+	    {
+		parseOAProperties(args, true);
+
+		try
+		{
+#ifdef ORBACUS
+		    PropertyManager.setProperty("ooc.orb.oa.conc_model", "thread_per_request");
+#endif
+		    ORBInterface._poa = NARROW_(POA,_orb.resolve_initial_references("RootPOA"));
+		    
+		    _poa.the_POAManager().activate();
+
+#ifdef ORBACUS
+		    ((com.ooc.CORBA.ORB) _orb).run_init();  // start up listening thread for co-located applications
+#endif
+		}
+		catch (Exception e)
+		{
+		    System.err.println("ERROR - ORBInterface.initPOA caught: "+e);
+		    System.exit(0);
+		}
+		
+		parseOAProperties(args, false);
+	    }
+	    else
+	    {
+		System.err.println("ERROR - ORBInterface.initPOA called without initialised ORB.");
+		System.exit(0);
+	    }
+	}
+    }
+
+#ifndef DAISJ2
+public static synchronized void createPOA (String adapterName,
+					   Policy[] policies) throws AdapterAlreadyExists, InvalidPolicy, AdapterInactive
+    {
+	if (_poa == null)
+	{
+	    System.err.println("ORBInterface.createPOA called without root POA.");
+	    throw new AdapterInactive();
+	}
+	
+	if (_childPoa == null)
+	{
+	    _childPoa = _poa.create_POA(adapterName, _poa.the_POAManager(), policies);
+	    _childPoa.the_POAManager().activate();
+	}
+	else
+	    throw new AdapterAlreadyExists();
+    }
+#endif
+
+#endif
+
+public static void initOA () throws SystemException
+    {
+	initOA(null);
+    }
+
+public static void initOA (String[] args) throws SystemException
+    {
+#ifndef HAVE_POA
+	if (args == null)
+	    initBOA();
+	else
+	    initBOA(args, null);
+#else
+	initPOA(args);
+#endif
+    }
+
+public static synchronized boolean addORBAttribute (ORBAttribute p)
+    {
+	if (_orb != null)  // orb already set up!
+	    return false;
+	
+	if (p.postORBInit())
+	    _postORBInitProperty.put(p, p);
+	else
+	    _preORBInitProperty.put(p, p);
+
+	return true;
+    }
+
+public static synchronized boolean addOAAttribute (OAAttribute p)
+    {
+#ifdef HAVE_POA
+	if ((_poa != null) || (p == null)) // boa already set up!
+	    return false;
+#else
+#ifdef HAVE_BOA	
+	if ((_boa != null) || (p == null))  // boa already set up!
+	    return false;
+#else
+	if (ORBInterface._boaInit || (p == null)) // boa already set up!
+	    return false;
+#endif	
+#endif
+	
+	if (p.postOAInit())
+	    _postOAInitProperty.put(p, p);
+	else
+	    _preOAInitProperty.put(p, p);
+
+	return true;
+    }    
+
+    /**
+     * Shutdown the ORB.
+     */
+	
+public static synchronized void shutdownORB ()
+    {
+	/*
+	 * Do the cleanups first!
+	 */
+
+	if (!_preORBShutdown.isEmpty())
+	{
+	    Enumeration elements = _preORBShutdown.elements();
+
+	    while (elements.hasMoreElements())
+	    {
+		ORBPreShutdown c = (ORBPreShutdown) elements.nextElement();
+
+		if (c != null)
+		{
+		    c.work();
+		    c = null;
+		}
+	    }
+
+	    _preORBShutdown.clear();
+	}
+
+	if (_orb != null)
+	{
+	    ORBInterface._orbInit = false;
+
+#ifdef HAVE_POA
+	    _orb.shutdown(false);
+#else
+#ifdef VISIBROKER
+#ifdef VB_VERSION_3
+	    ((com.visigenic.vbroker.orb.ORB) _orb).shutdown();
+#else
+	    _orb.shutdown();
+#endif	    
+#else
+#ifdef ORBIXWEB
+	    _CORBA.Orbix.shutdown(false); // OrbixWeb ignores the parameter!
+#endif
+#endif
+#endif
+	}
+
+	if (!_postORBShutdown.isEmpty())
+	{
+	    Enumeration elements = _postORBShutdown.elements();
+
+	    while (elements.hasMoreElements())
+	    {
+		ORBPostShutdown c = (ORBPostShutdown) elements.nextElement();
+
+		if (c != null)
+		{
+		    c.work();
+		    c = null;
+		}
+	    }
+
+	    _postORBShutdown.clear();
+	}
+    }
+
+#ifndef HAVE_POA
+
+    /**
+     * Shutdown the BOA.
+     */
+
+public static synchronized void shutdownBOA (String name)
+    {
+	if (!_preOAShutdown.isEmpty())
+	{
+	    Enumeration elements = _preOAShutdown.elements();
+
+	    while (elements.hasMoreElements())
+	    {
+		OAPreShutdown c = (OAPreShutdown) elements.nextElement();
+
+		if (c != null)
+		{
+		    c.work();
+		    c = null;
+		}
+	    }
+
+	    _preOAShutdown.clear();
+	}
+
+#ifdef HAVE_BOA	
+	if (_boa != null)
+	{
+	    ORBInterface._boaInit = false;
+	    
+#ifdef ORBIXWEB
+	    _boa.deactivate_impl(name);
+#endif
+#ifdef ORBACUS
+	    _boa.deactivate_impl(null);
+#endif	    
+	}
+#else
+	ORBInterface._boaInit = false;
+#endif
+
+	if (!_postOAShutdown.isEmpty())
+	{
+	    Enumeration elements = _postOAShutdown.elements();
+
+	    while (elements.hasMoreElements())
+	    {
+		OAPostShutdown c = (OAPostShutdown) elements.nextElement();
+
+		if (c != null)
+		{
+		    c.work();
+		    c = null;
+		}
+	    }
+
+	    _postOAShutdown.clear();
+	}
+    }
+    
+public static synchronized void shutdownBOA ()
+    {
+	shutdownBOA(null);
+    }
+
+#else
+
+public static synchronized void destroyRootPOA () throws SystemException
+    {
+	if (_poa != null)
+	{
+	    if (!_preOAShutdown.isEmpty())
+	    {
+		Enumeration elements = _preOAShutdown.elements();
+
+		while (elements.hasMoreElements())
+		{
+		    OAPreShutdown c = (OAPreShutdown) elements.nextElement();
+
+		    if (c != null)
+		    {
+			c.work();
+			c = null;
+		    }
+		}
+
+		_preOAShutdown.clear();
+	    }
+
+	    _poa.destroy(true, true);
+	    _poa = null;
+
+	    if (!_postOAShutdown.isEmpty())
+	    {
+		Enumeration elements = _postOAShutdown.elements();
+		
+		while (elements.hasMoreElements())
+		{
+		    OAPostShutdown c = (OAPostShutdown) elements.nextElement();
+
+		    if (c != null)
+		    {
+			c.work();
+			c = null;
+		    }
+		}
+		
+		_postOAShutdown.clear();
+	    }
+	}
+    }
+
+public static synchronized void destroyPOA () throws SystemException
+    {
+	if (_childPoa != null)
+	{
+	    _childPoa.destroy(true, true);
+	    _childPoa = null;
+	}
+    }
+
+#endif
+
+public static void shutdownOA () throws SystemException
+    {
+#ifndef HAVE_POA
+	shutdownBOA();
+#else
+	// nothing equivalent for POA
+
+	if (!_preOAShutdown.isEmpty())
+	{
+	    Enumeration elements = _preOAShutdown.elements();
+
+	    while (elements.hasMoreElements())
+	    {
+		OAPreShutdown c = (OAPreShutdown) elements.nextElement();
+
+		if (c != null)
+		{
+		    c.work();
+		    c = null;
+		}
+	    }
+
+	    _preOAShutdown.clear();
+	}
+
+	if (!_postOAShutdown.isEmpty())
+	{
+	    Enumeration elements = _postOAShutdown.elements();
+
+	    while (elements.hasMoreElements())
+	    {
+		OAPostShutdown c = (OAPostShutdown) elements.nextElement();
+
+		if (c != null)
+		{
+		    c.work();
+		    c = null;
+		}
+	    }
+
+	    _postOAShutdown.clear();
+	}
+#endif
+    }
+
+public static void destroyOA () throws SystemException
+    {
+#ifndef HAVE_POA
+	destroyBOA();
+#else
+	destroyRootPOA();
+#endif
+    }
+    
+#ifndef HAVE_POA
+public static synchronized void destroyBOA () throws SystemException
+    {
+	if (ORBInterface._boaInit)
+	    shutdownBOA();
+	
+#ifdef HAVE_BOA
+	_boa = null;
+#endif
+    }
+#endif
+    
+public static synchronized void destroyORB () throws SystemException
+    {
+	if (ORBInterface._orbInit)
+	    ORBInterface.shutdownORB();
+	
+#ifdef HAVE_POA
+#ifndef JB_VERSION_2_1
+	_orb.destroy();
+#endif
+#endif
+
+	_orb = null;
+    }
+    
+    /**
+     * Obtain a reference to the current ORB.
+     */
+ 
+public static synchronized NAMESPACE_(CORBA.ORB) orb ()
+    {
+	return _orb;
+    }
+
+public static synchronized boolean setOrb (NAMESPACE_(CORBA.ORB) theORB)
+    {
+	if (_orb == null)
+	{
+	    _orb = theORB;
+	    
+	    return true;
+	}
+	else
+	    return false;
+    }
+
+#ifdef HAVE_BOA
+
+    /**
+     * Obtain a reference to the current BOA.
+     */
+  
+public static synchronized NAMESPACE_(CORBA.BOA) boa ()
+    {
+	return _boa;
+    }
+
+public static synchronized boolean setBoa (NAMESPACE_(CORBA.BOA) theBOA)
+    {
+	if (_boa == null)
+	{
+	    _boa = theBOA;
+
+	    return true;
+	}
+	else
+	    return false;
+    }
+
+#else
+
+#ifdef HAVE_POA
+
+public static synchronized POA_(POA) rootPoa ()
+    {
+	return _poa;
+    }
+
+/*
+ * DaisJ2 only supports the root POA.
+ */
+
+public static synchronized POA_(POA) poa ()
+    {
+#ifndef DAISJ2
+	return _childPoa;
+#else
+	return rootPoa();
+#endif
+    }
+    
+public static synchronized boolean setRootPoa (POA_(POA) thePOA)
+    {
+	if (_poa == null)
+	{
+	    _poa = thePOA;
+
+	    return true;
+	}
+	else
+	    return false;
+    }
+
+public static synchronized boolean setPoa (POA_(POA) thePOA)
+    {
+#ifndef DAISJ2
+	if (_childPoa == null)
+	{
+	    _childPoa = thePOA;
+
+	    return true;
+	}
+	else
+	    return false;
+#else
+	return true;
+#endif
+    }
+
+#endif
+
+#endif
+
+public static synchronized void addPreORBShutdown (ORBPreShutdown c)
+    {
+	_preORBShutdown.put(c, c);
+    }
+
+public static synchronized void addPostORBShutdown (ORBPostShutdown c)
+    {
+	_postORBShutdown.put(c, c);
+    }
+
+public static synchronized void addPreOAShutdown (OAPreShutdown c)
+    {
+	_preOAShutdown.put(c, c);
+    }
+
+public static synchronized void addPostOAShutdown (OAPostShutdown c)
+    {
+	_postOAShutdown.put(c, c);
+    }
+ 
+    /**
+     * Obtain a CORBA object reference for the Servant/Implementation.
+     */
+
+#ifndef HAVE_POA
+public static NAMESPACE_(CORBA).Object corbaReference (NAMESPACE_(CORBA).Object obj)
+    {
+	return obj;
+    }
+#else
+public static NAMESPACE_(CORBA).Object corbaReference (POA_(Servant) obj)
+    {
+	NAMESPACE_(CORBA).Object objRef = null;
+	
+	if (_childPoa != null)
+	{
+	    try
+	    {
+		objRef = corbaReference(obj, _childPoa);
+	    }
+	    catch (Exception e)
+	    {
+		objRef = null;
+	    }
+	}
+	
+	if (_poa != null)
+	{
+	    try
+	    {
+		objRef = corbaReference(obj, _poa);
+	    }
+	    catch (Exception e)
+	    {
+		objRef = null;
+	    }
+	}
+	
+	return objRef;
+    }
+    
+public static NAMESPACE_(CORBA).Object corbaReference (POA_(Servant) obj,
+						       POA_(POA) poa)
+    {
+	try
+	{
+	    return poa.servant_to_reference(obj);
+	}
+	catch (Exception e)
+	{
+	    return null;
+	}
+    }
+#endif
+ 
+    /**
+     * Register the object with the ORB.
+     */
+
+#ifdef HAVE_POA
+public static boolean objectIsReady (POA_(Servant) obj) 
+    {
+	return objectIsReady(obj, true);
+    }
+
+public static boolean objectIsReady (POA_(Servant) obj, byte[] id)
+    {
+	return objectIsReady(obj, id, true);
+    }
+
+public static boolean objectIsReady (POA_(Servant) obj, byte[] id,
+				     boolean rootPoa)
+    {
+	try
+	{
+	    if (rootPoa)
+		_poa.activate_object_with_id(id, obj);
+	    else
+		_childPoa.activate_object_with_id(id, obj);
+	}
+	catch (Exception e)
+	{
+	    System.err.println("ERROR - ORBInterface.objectIsReady: caught "+e);
+	    return false;
+	}
+
+	return true;
+    }
+
+public static boolean objectIsReady (POA_(Servant) obj,
+				     java.lang.Object[] params)
+    {
+	return objectIsReady(obj, params, true);
+    }
+#endif
+
+#ifndef HAVE_POA
+public static boolean objectIsReady (NAMESPACE_(CORBA).Object obj)
+#else
+public static boolean objectIsReady (POA_(Servant) obj, boolean rootPoa)
+#endif
+    {
+	boolean result = true;
+	
+	try
+	{
+#ifndef HAVE_POA
+#ifdef CORBA_2_2
+	    ORBInterface.orb().connect(obj);
+#endif
+#ifdef CORBA_2_1
+	    ORBInterface.boa().obj_is_ready(obj);
+#endif
+#ifdef CORBA_2_0
+	    ORBInterface.boa().object_is_ready(obj);
+#endif
+#else
+	    boolean invalidPOA = false;
+		
+	    if (rootPoa)
+	    {
+		if (_poa != null)
+		    _poa.activate_object(obj);
+		else
+		    invalidPOA = true;
+	    }
+	    else
+	    {
+		if (_childPoa != null)
+		    _childPoa.activate_object(obj);
+		else
+		    invalidPOA = true;
+	    }
+	    
+	    if (invalidPOA)
+	    {
+		System.err.println("ERROR - ORBInterface.objectIsReady - invalid POA: "+((rootPoa) ? "rootPOA" : "childPOA"));
+		result = false;
+	    }
+#endif
+	}
+	catch (Exception e)
+	{
+	    System.err.println("ERROR - ORBInterface.objectIsReady: caught "+e);
+	    result = false;
+	}
+	
+	return result;
+    }
+
+#ifndef HAVE_POA
+public static boolean objectIsReady (NAMESPACE_(CORBA).Object obj,
+				     java.lang.Object[] params)
+#else
+public static boolean objectIsReady (POA_(Servant) obj,
+				     java.lang.Object[] params,
+				     boolean rootPoa)
+#endif
+    {
+#ifdef HAVE_POA
+	return objectIsReady(obj, rootPoa);
+#else
+#ifndef ORBACUS
+	return objectIsReady(obj);
+#else
+	String name = (String) params[0];
+	
+	((com.ooc.CORBA.ORB) ORBInterface.orb()).connect(obj, name);
+	
+	return true;
+#endif	
+#endif
+    }
+
+    /**
+     * Dispose of the object, i.e., unregister is from the ORB.
+     */
+
+#ifdef HAVE_POA
+public static boolean shutdownObject (NAMESPACE_(CORBA).Object obj)
+    {
+	return shutdownObject(obj, true);
+    }
+#endif
+
+#ifndef HAVE_POA
+public static boolean shutdownObject (NAMESPACE_(CORBA).Object obj)
+#else
+public static boolean shutdownObject (NAMESPACE_(CORBA).Object obj,
+				      boolean rootPoa)
+#endif
+    {
+	boolean result = true;
+	
+	try
+	{
+#ifndef HAVE_POA
+#ifdef CORBA_2_2
+	    ORBInterface.orb().disconnect(obj);
+#endif
+#ifdef CORBA_2_1
+	    ORBInterface.boa().deactivate_obj(obj);
+#endif
+#ifdef CORBA_2_0
+	    ORBInterface.boa().dispose(obj);
+#endif
+#else
+	    boolean invalidPOA = false;
+	    
+	    if (rootPoa)
+	    {
+		if (_poa != null)
+		    _poa.deactivate_object(_poa.reference_to_id(obj));
+		else
+		    invalidPOA = true;
+	    }
+	    else
+	    {
+		if (_childPoa != null)
+		    _childPoa.deactivate_object(_childPoa.reference_to_id(obj));
+		else
+		    invalidPOA = true;
+	    }
+
+	    if (invalidPOA)
+	    {
+		System.err.println("ERROR - ORBInterface.shutdownObject - invalid POA: "+((rootPoa) ? "rootPOA" : "childPOA"));
+		result = false;
+	    }	    
+#endif
+	}
+	catch (Exception e)
+	{
+	    System.err.println("WARNING - ORBInterface.shutdownObject: caught "+e);
+	    e.printStackTrace();
+
+	    result = false;
+	}
+
+	return result;
+    }
+
+#ifdef HAVE_POA
+public static boolean shutdownObject (POA_(Servant) obj)
+    {
+	return shutdownObject(obj, true);
+    }
+    
+public static boolean shutdownObject (POA_(Servant) obj, boolean rootPoa)
+    {
+	boolean result = true;
+	
+	try
+	{
+	    boolean invalidPOA = false;
+	    
+	    if (rootPoa)
+	    {
+		if (_poa != null)
+		    _poa.deactivate_object(_poa.servant_to_id(obj));
+		else
+		    invalidPOA = true;
+	    }
+	    else
+	    {
+		if (_childPoa != null)
+		    _childPoa.deactivate_object(_childPoa.servant_to_id(obj));
+		else
+		    invalidPOA = true;
+	    }
+
+	    if (invalidPOA)
+	    {
+		System.err.println("ERROR - ORBInterface.shutdownObject - invalid POA: "+((rootPoa) ? "rootPOA" : "childPOA"));
+		result = false;
+	    }
+	}
+	catch (Exception e)
+	{
+	    System.err.println("WARNING - ORBInterface.shutdownObject: caught "+e);
+	    result = false;
+	}
+
+	return result;
+    }
+#endif
+    
+    /*
+     * Add any per-object filters which may have been registered.
+     */
+
+static synchronized void addFilters (NAMESPACE_(CORBA.Object) obj)
+    {
+#ifdef HAVE_THREAD_FILTER	
+#if defined(OMNIBROKER) || defined(ORBACUS)
+    if (_objectFilter == null)
+	_objectFilter = _filterManager.filter(ORBFilterManager.FT_OBJECT);
+	
+    if (_objectFilter != null)
+    {
+	obj.addInterceptor(_objectFilter.create(), true);
+    }
+#endif
+#endif
+    }
+    
+    /**
+     * Place the server into a state where it can begin to
+     * accept requests for objects from clients.
+     */
+
+public static void run (String name)
+    {
+#ifndef HAVE_POA
+#ifdef SUNSJDK
+	try
+	{
+	    java.lang.Object sync = new java.lang.Object();
+
+	    synchronized (sync)
+	    {
+		sync.wait();
+	    }
+	}
+	catch (Exception e)
+	{
+	}
+#else
+#ifdef VISIBROKER
+	_boa.impl_is_ready();
+#else
+#ifdef ORBACUS
+	_boa.impl_is_ready(null);
+#else
+#ifdef ORBIXWEB
+	int timeout = -1;
+	String waitTime = PropertyManager.getProperty(ORBEnvironment.SERVER_TIMEOUT);
+
+	if (waitTime != null)
+	{
+	    try
+	    {
+		Integer t = Integer.valueOf(waitTime);
+		timeout = t.intValue();
+	    }
+	    catch (Exception e)
+	    {
+		System.err.println("Invalid server timeout value "+waitTime);
+	    }
+	}
+
+	if (timeout != -1)
+	    _CORBA.Orbix.impl_is_ready(name, timeout);
+	else
+	    _CORBA.Orbix.impl_is_ready(name);
+#else	
+#ifdef JBROKER
+	ORBInterface.orb().run();  // BOA version uses POA signature
+#else
+#error "Run not implemented"
+#endif
+#endif
+#endif
+#endif
+#endif
+#else
+	ORBInterface.orb().run();
+#endif
+    }
+    
+public static void run ()
+    {
+#ifndef HAVE_POA
+#ifdef SUNSJDK
+	try
+	{
+	    java.lang.Object sync = new java.lang.Object();
+
+	    synchronized (sync)
+	    {
+		sync.wait();
+	    }
+	}
+	catch (Exception e)
+	{
+	}
+#else
+#ifdef VISIBROKER
+	_boa.impl_is_ready();
+#else
+#ifdef ORBACUS
+	_boa.impl_is_ready(null);
+#else
+#ifdef ORBIXWEB
+	int timeout = -1;
+	String waitTime = PropertyManager.getProperty(ORBEnvironment.SERVER_TIMEOUT);
+
+	if (waitTime != null)
+	{
+	    try
+	    {
+		Integer t = Integer.valueOf(waitTime);
+		timeout = t.intValue();
+	    }
+	    catch (Exception e)
+	    {
+		System.err.println("Invalid server timeout value "+waitTime);
+	    }
+	}
+
+	if (timeout != -1)
+	    _CORBA.Orbix.impl_is_ready(timeout);
+	else
+	    _CORBA.Orbix.impl_is_ready();
+#else
+#ifdef JBROKER
+	ORBInterface.orb().run();  // BOA version uses POA signature
+#else
+#error "Run not implemented"
+#endif
+#endif
+#endif
+#endif
+#endif	
+#else
+	ORBInterface.orb().run();
+#endif
+    }
+	     
+protected ORBInterface ()
+    {
+    }
+
+private static void loadProperties ()
+    {
+	try
+	{
+	    com.arjuna.ArjunaCommon.Common.PropertyManager.loadProperties();
+	}
+	catch (Exception e)
+	{
+	    System.err.println("ORBInterface.loadProperties failed: "+e);
+	    System.exit(0);
+	}
+    }
+    
+private static void parseORBProperties (String[] params, boolean postInit)
+    {
+	Hashtable work = ((postInit) ? _postORBInitProperty : _preORBInitProperty);
+
+	if (!work.isEmpty())
+	{
+	    Enumeration elements = work.elements();
+
+	    while (elements.hasMoreElements())
+	    {
+		ORBAttribute p = (ORBAttribute) elements.nextElement();
+
+		if (p != null)
+		{
+		    p.initialise(params);
+		    p = null;
+		}
+	    }
+
+	    work.clear();
+	}
+    }
+
+private static void parseOAProperties (String[] params, boolean preInit)
+    {
+	Hashtable work = ((preInit) ? _preOAInitProperty : _postOAInitProperty);
+
+	if (!work.isEmpty())
+	{
+	    Enumeration elements = work.elements();
+
+	    while (elements.hasMoreElements())
+	    {
+		OAAttribute p = (OAAttribute) elements.nextElement();
+
+		if (p != null)
+		{
+		    p.initialise(params);
+		    p = null;
+		}
+	    }
+
+	    work.clear();
+	}
+    }    
+    
+private static NAMESPACE_(CORBA.ORB) _orb = null;
+#ifndef HAVE_POA
+#ifdef HAVE_BOA    
+private static NAMESPACE_(CORBA.BOA) _boa = null;
+#endif
+#else
+
+    /*
+     * Keep reference to a single child POA. If we allow multiple
+     * child POAs then we would have to parameterise all calls with
+     * the relevant POA, and the programmer would have to keep track
+     * of the POAs anyway, thus reducing the requirement on the
+     * ORBInterface further.
+     */
+
+private static POA_(POA) _poa = null;
+private static POA_(POA) _childPoa = null;
+#endif
+
+private static Hashtable _preORBShutdown = new Hashtable();
+private static Hashtable _postORBShutdown = new Hashtable();
+private static Hashtable _preOAShutdown = new Hashtable();
+private static Hashtable _postOAShutdown = new Hashtable();    
+private static Hashtable _preORBInitProperty = new Hashtable();
+private static Hashtable _postORBInitProperty = new Hashtable();
+private static Hashtable _preOAInitProperty = new Hashtable();
+private static Hashtable _postOAInitProperty = new Hashtable();    
+private static ORBFilterManager _filterManager = new ORBFilterManager();
+
+    /*
+     * Some ORBs either don't support a shutdown operation or
+     * don't have one that waits until all outstanding references
+     * to the OA/ORB have been released. So, we can't simply
+     * null out our reference when our shutdown methods are called.
+     * This is more of an issue for multi-threaded applications, where
+     * one thread "shuts" the system down, while other threads are still
+     * active. So, we have state variables to allow us to tell whether
+     * the system is supposed to be shutdown. This then allows us to
+     * support multiple initialisations.
+     */
+    
+private static boolean _orbInit = false;
+#ifndef HAVE_POA
+private static boolean _boaInit = false;
+#endif
+    
+    static
+    {
+	addORBAttribute(new LocalSetup());
+#ifdef ORBIXWEB	
+	addORBAttribute(new com.arjuna.OrbCommon.Filters.orbixweb.Init());
+#endif
+    }
+
+};

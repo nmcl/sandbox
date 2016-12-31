@@ -1,0 +1,39 @@
+/*
+ * Copyright (C) 1999, 2000,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: o_daisj2.cf,v 1.1.2.1 2000/04/25 08:36:28 nmcl Exp $
+ */
+
+/*
+ *  Config rules for Dais J2 Orb.
+ */
+
+#ifndef CorbaJavaStubs
+#define CorbaJavaStubs(file,flags)					@@\
+Target(TMPSTUBS_FILE(file))						@@\
+									@@\
+TMPSTUBS_FILE(file): IDL_SOURCE(file)					@@\
+	@echo Processing IDL_SOURCE(file)		                @@\
+	CommandPrefix($(JAVAIDL)) $(IDLFLAGS) flags IDL_SOURCE(file)	@@\
+	CommandPrefix(touch TMPSTUBS_FILE(file))			@@\
+									@@\
+Clean(TMPSTUBS_FILE(file))						@@\
+Clean(JAVA_SOURCE(file))						@@\
+Clean(_/**/file/**/*)							@@\
+Clean(file/**/Helper.java file/**/Holder.java)				@@\
+Clean(mk_/**/file/**/.BAT)						@@\
+CleanDirectory(POA_*)
+#endif
+
+AddToCPPFlags(-DHAVE_POA -DORB_OTS_SUPPORT -DCORBA_2_3)
+
+ORB_NAME=daisj2
+ORB_VERSION=1_0
+
+AddToCPPFlags(-DORB_VERSION=\""1_0\"")
+

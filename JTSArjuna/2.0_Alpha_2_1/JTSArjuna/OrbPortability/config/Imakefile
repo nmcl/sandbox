@@ -1,0 +1,21 @@
+COMMENT 
+COMMENT Copyright (C) 1998, 1999, 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.3.2.1.2.2 2000/05/18 09:02:34 nmcl Exp $
+COMMENT
+
+InstallFile(/config,OrbPortability.tmpl)
+InstallFile(/config,OrbPortability_Override.def)
+InstallFile(/config,OrbPortability_Prog.def)
+InstallFile(/config,OrbPortability_Rule.def)
+InstallFile(/config,ORB_DEF.cf)
+InstallProgram(/config,ORB.def)
+InstallFile(/config,OrbPortability_Version.def)
+InstallFileAs(/config,OrbPortability_Module_install.def,OrbPortability_Module.def)
+
+Purge(OrbPortability.cf Local.def OrbPortability_Module.def OrbPortability_Module_install.def ORB.def OrbPortability_Version.def Info.h)

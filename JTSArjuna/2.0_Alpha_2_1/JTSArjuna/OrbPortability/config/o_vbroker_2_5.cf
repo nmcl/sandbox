@@ -1,0 +1,64 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: o_vbroker_2_5.cf,v 1.1.2.2.2.1 2000/05/02 12:29:00 nmcl Exp $
+ */
+
+/*
+ *  VisiBroker specific rules.
+ */
+
+/*
+ * Some rules we need to override.
+ */
+
+#ifndef CorbaJavaStubsIR
+#define CorbaJavaStubsIR(root,options)					@@\
+Target(TMPIR_FILE(file))						@@\
+									@@\
+TMPIR_FILE(file): IDL_SOURCE(file)					@@\
+	@echo Adding file/**/.idl to Interface Repository		@@\
+	CommandPrefix($(IDLIR)) options IDL_SOURCE(file)		@@\
+	@touch TMPIR_FILE(file)						@@\
+									@@\
+Clean(TMPIR_FILE(file))
+#endif
+
+#ifndef GlobalPackageRename
+#define GlobalPackageRename(name,scope)					@@\
+AddToIdlFlags(-idl2package \"::name\" scope.name)
+#endif
+
+#ifdef HAS_RECURSIVEMAKEVARIABLES
+
+#ifndef LocalPackageRename
+#define LocalPackageRename(name,scope,rule)				@@\
+rule = $(rule) -idl2package \"::name\" scope.name
+#endif
+
+#else
+
+#ifndef LocalPackageRename
+#define LocalPackageRename(name,scope,rule)				@@\
+rule += -idl2package \"::name\" scope.name
+#endif
+
+#endif
+
+#ifndef CorbaJavaStubsPackage
+#define CorbaJavaStubsPackage(idl,pkg,flags)			@@\
+CorbaJavaStubs(idl,-package pkg flags)
+#endif
+
+AddToCPPFlags(-DCORBA_2_0 -DHAVE_BOA -DHAVE_FILTER -DVB_VERSION_2_5 -DHAVE_BIND -DHAVE_MARKER_NAME)
+AddToIMakeFlags(-DHAVE_FILTER)
+
+ORB_NAME=vbroker
+ORB_VERSION=2_5
+
+AddToCPPFlags(-DORB_VERSION=\""2_5\"")
