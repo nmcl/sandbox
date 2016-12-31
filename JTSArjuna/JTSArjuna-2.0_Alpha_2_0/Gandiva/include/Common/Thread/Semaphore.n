@@ -1,0 +1,35 @@
+/*
+ * Copyright (C) 1994, 1995, 1996,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: Semaphore.n,v 1.1 1998/01/12 12:56:08 nmcl Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(SEMAPHORE_CC_)
+
+extern ostream& operator<< (ostream& strm, const Semaphore& m);
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF ostream& operator<< (ostream& strm, const Semaphore& s)
+{
+    return s.print(strm);
+}
+
+INLINEF const Uid& Semaphore::uid () const { return _semId; }
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif

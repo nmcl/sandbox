@@ -1,0 +1,84 @@
+/*
+ * Copyright (C) 1994, 1995, 1996, 1997, 1998,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: Thread.n,v 1.3 1998/07/21 13:54:54 nmcl Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(THREAD_CC_)
+
+extern ostream& operator<< (ostream& strm, const Thread& t);
+
+extern ostream& operator<< (ostream& strm, Thread::ThreadStatus s);
+
+extern ostream& operator<< (ostream& strm, Thread::ThreadAttachStatus s);
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF ostream& operator<< (ostream& strm, const Thread& t)
+{
+    return t.print(strm);
+}
+
+INLINEF ostream& operator<< (ostream& strm, Thread::ThreadAttachStatus s)
+{
+    switch (s)
+    {
+    case Thread::THR_IS_ATTACHED:
+	strm << "Thread::THR_IS_ATTACHED";
+	break;
+    case Thread::THR_IS_DETACHED:
+	strm << "Thread::THR_IS_DETACHED";
+	break;
+    }
+
+    return strm;
+}
+
+INLINEF ostream& operator<< (ostream& strm, Thread::ThreadStatus s)
+{
+    switch (s)
+    {
+    case Thread::THR_IS_RUNNING:
+	strm << "Thread::THR_IS_RUNNING";
+	break;
+    case Thread::THR_IS_SUSPENDED:
+	strm << "Thread::THR_IS_SUSPENDED";
+	break;
+    case Thread::THR_IS_BLOCKED:
+	strm << "Thread::THR_IS_BLOCKED";
+	break;
+    case Thread::THR_IS_WAITING:
+	strm << "Thread::THR_IS_WAITING";
+	break;
+    case Thread::THR_IS_TERMINATED:
+	strm << "Thread::THR_IS_TERMINATED";
+	break;
+    case Thread::THR_IS_CREATED:
+	strm << "Thread::THR_IS_CREATED";
+	break;
+    case Thread::THR_IS_PASSIVATED:
+	strm << "Thread::THR_IS_PASSIVATED";
+	break;	
+    }
+
+    return strm;
+}
+
+INLINEF HashedList<Thread, Uid>& Thread::list () { return *Thread::_list; }
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif

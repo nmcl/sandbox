@@ -1,0 +1,27 @@
+COMMENT
+COMMENT Copyright (C) 1994, 1995, 1996,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.4 1998/07/21 11:07:57 nmcl Exp $
+COMMENT
+
+CreateInstallDirectory(/include,/include/Common/Thread)
+
+InstallFile(/include/Common/Thread,Condition.h)
+InstallFile(/include/Common/Thread,InitThreads.h)
+InstallFile(/include/Common/Thread,Mutex.h)
+InstallFile(/include/Common/Thread,Mutex.n)
+InstallFile(/include/Common/Thread,MutexSetup.h)
+InstallFile(/include/Common/Thread,SemaphoreSetup.h)
+InstallFile(/include/Common/Thread,Thread.h)
+InstallFile(/include/Common/Thread,Thread.n)
+InstallFile(/include/Common/Thread,ThreadPool.h)
+InstallFile(/include/Common/Thread,ThreadReaper.h)
+InstallFile(/include/Common/Thread,ThreadRWLock.h)
+InstallFile(/include/Common/Thread,ThreadSetup.h)
+InstallFile(/include/Common/Thread,ThreadSpecific.h)
+InstallFile(/include/Common/Thread,ThreadSpecific.cc)
