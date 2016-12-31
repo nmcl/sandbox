@@ -1,0 +1,27 @@
+COMMENT
+COMMENT Copyright (C) 1999,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 2000/02/25 14:09:03 nmcl Exp $
+COMMENT
+
+CreateInstallDirectory(/.,/README)
+
+#ifdef ORBACUS
+InstallFileAs(/README,README_orbacus,README.ORB)
+#endif
+
+#ifdef VISIBROKER
+InstallFileAs(/README,README_vbroker,README.ORB)
+#endif
+
+#ifdef ORBIXWEB
+InstallFileAs(/README,README_orbix,README.ORB)
+#endif
+
+InstallFile(/README,README.properties)
+InstallFile(/README,README.init)
