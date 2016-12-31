@@ -1,0 +1,18 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ * 
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ */
+
+/*
+ *  Module.def (source)
+ */
+
+BUILDSYSTEMTOPDIR=/home/nmcl/JTSArjuna/2.0_Alpha_2_1/JTSArjuna/ModuleBuildSystem
+
+AddToIMakeFlags(-I$(BUILDSYSTEMTOPDIR)/config )
+AddToCPPIncludes(-I$(BUILDSYSTEMTOPDIR)/include )
+

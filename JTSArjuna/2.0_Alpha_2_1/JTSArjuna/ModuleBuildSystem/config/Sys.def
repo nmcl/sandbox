@@ -1,0 +1,16 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ * 
+ * Arjuna Solutions Limited,
+ * Tyne and Wear,
+ * Tyne and Wear,
+ * UK.
+ */
+
+/*
+ *  Sys.def
+ */
+
+AddToMakeFlags(--no-print-directory)
+AddToIMakeFlags(-DSys_Name=Linux -DSYSV -DLINUX -DUSE_RANLIB)
+AddToLdLibraries(-lgdbm)
