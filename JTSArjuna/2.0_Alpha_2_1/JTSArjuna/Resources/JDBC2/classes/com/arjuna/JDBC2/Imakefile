@@ -1,0 +1,51 @@
+COMMENT 
+COMMENT Copyright (C) 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.4.4.1.2.1 2000/07/17 08:30:14 nmcl Exp $
+COMMENT
+
+SOURCES = ArjunaJDBC2Driver.java \
+	  ArjunaJDBC2Connection.java \
+	  ArjunaJDBC2RecoveryConnection.java \
+	  ArjunaJDBC2DynamicRecoveryConnection.java \
+	  ArjunaJDBC2DynamicClass.java \
+	  ArjunaJDBC2ModifierFactory.java \
+	  ConnectionInfo.java \
+	  JDBC2ConnectionManager.java \
+	  Info.java
+
+OBJECTS = ArjunaJDBC2Driver.class \
+	  ArjunaJDBC2Connection.class \
+	  ArjunaJDBC2RecoveryConnection.class \
+	  ArjunaJDBC2DynamicRecoveryConnection.class \
+	  ArjunaJDBC2DynamicClass.class \
+	  ArjunaJDBC2ModifierFactory.class \
+	  ConnectionInfo.class \
+	  JDBC2ConnectionManager.class \
+	  Info.class
+
+Target($(SOURCES))
+Target($(OBJECTS))
+
+SubDirectory(drivers)
+
+PreprocessJavaCode(ArjunaJDBC2Connection,NullParam)
+PreprocessJavaCode(ArjunaJDBC2ModifierFactory,NullParam)
+PreprocessJavaCode(Info,NullParam)
+
+BuildJavaByteCode(ArjunaJDBC2Driver,NullParam)
+BuildJavaByteCode(ArjunaJDBC2Connection,NullParam)
+BuildJavaByteCode(ArjunaJDBC2RecoveryConnection,NullParam)
+BuildJavaByteCode(ArjunaJDBC2DynamicRecoveryConnection,NullParam)
+BuildJavaByteCode(ArjunaJDBC2DynamicClass,NullParam)
+BuildJavaByteCode(ArjunaJDBC2ModifierFactory,NullParam)
+BuildJavaByteCode(JDBC2ConnectionManager,NullParam)
+BuildJavaByteCode(ConnectionInfo,NullParam)
+BuildJavaByteCode(Info,NullParam)
+
+Clean(*.class)
