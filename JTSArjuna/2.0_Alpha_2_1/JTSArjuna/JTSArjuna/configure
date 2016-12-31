@@ -1,0 +1,780 @@
+#!/bin/sh
+
+#
+# Copyright (C) 1998, 1999, 2000,
+# 
+# Arjuna Solutions Limited,
+# Newcastle upon Tyne,
+# Tyne and Wear,
+# UK.
+# 
+# $Id: configure,v 1.3.4.2.4.1.2.1.2.2.2.6 2000/07/27 15:32:02 nmcl Exp $
+#
+
+BUILDRELEASE="NO"
+
+if test "$#" = "0"
+then
+	VERIFY="NO"
+	CONFIGFILE=""
+elif test "$#" = "1"
+then
+	if test "$1" = "-v"
+	then
+		VERIFY="YES"
+		CONFIGFILE=""
+	else
+	    if test "$1" = "-r"
+	    then
+		BUILDRELEASE="YES"
+	    else
+		VERIFY="NO"
+		CONFIGFILE="$1"
+	    fi
+	fi
+elif test "$#" = "2"
+then
+	if test "$1" != "-v"
+	then
+		echo $0": illegal usage"
+		echo "usage: "$0" [-v] [file]"
+		exit 1
+	else
+		VERIFY="YES"
+		CONFIGFILE="$2"
+	fi
+else
+	echo $0": illegal usage"
+	echo "usage: "$0" [-v] [file]"
+	exit 1
+fi
+
+if test "$CONFIGFILE" != ""
+then
+	if test -f $CONFIGFILE
+	then
+		if test "`head -11 $CONFIGFILE | tail -1`" != "# Java Harness configure file"
+		then
+			echo $0": configuration file \""$CONFIGFILE"\" is invalid/corrupt"
+			exit 1
+		fi
+	else
+		echo $0": configuration file \""$CONFIGFILE"\" does not exist"
+		exit 1
+	fi
+fi
+
+PRODUCT_NAME=JTSArjuna
+JTSARJUNA_VERSION=2
+MAJOR_REVISION=0
+MINOR_REVISION=0
+
+echo "+---------------------------+"
+echo "|  "$PRODUCT_NAME" version "$JTSARJUNA_VERSION"_"$MAJOR_REVISION"_"$MINOR_REVISION"  |"
+echo "+---------------------------+"
+
+ECHO_TEST=`echo "Test \c"`
+if test "$ECHO_TEST" = "Test "
+then
+	PRE_ECHO=""
+	POST_ECHO="\c"
+else
+	PRE_ECHO="-n"
+	POST_ECHO=""
+fi
+
+if test "$CONFIGFILE" = ""
+then
+	TOPDIR=`pwd`
+	INSTALLTOPDIR=/usr/local/JTSArjuna
+
+	if test "'x$ARJUNA_INSTALLATION_DIRECTORY'" != "'x'"
+	then
+	    INSTALLTOPDIR=$ARJUNA_INSTALLATION_DIRECTORY
+	fi
+
+	JTSARJUNA_HOME=$INSTALLTOPDIR
+
+	echo
+	echo $PRE_ECHO "Root of directory of JTSArjuna installation ["$INSTALLTOPDIR"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		INSTALLTOPDIR=$INPUT
+	fi
+
+	if test "'x$BUILDRELEASE'" != "'xNO'"
+	then
+	    BUILDSYSTEMTOPDIR=$INSTALLTOPDIR
+	else
+	    BUILDSYSTEMTOPDIR=`dirname $TOPDIR`/ModuleBuildSystem
+	fi
+
+	if test "'x$BUILDRELEASE'" != "'xNO'"
+	then
+	    JAVAHARNESSTOPDIR=$INSTALLTOPDIR
+	else
+	    JAVAHARNESSTOPDIR=`dirname $TOPDIR`/JavaHarness
+	fi
+
+	if test "'x$BUILDRELEASE'" != "'xNO'"
+	then
+	    ARJUNACOMMONTOPDIR=$INSTALLTOPDIR
+	else
+	    ARJUNACOMMONTOPDIR=`dirname $TOPDIR`/ArjunaCommon
+	fi
+
+	if test "'x$BUILDRELEASE'" != "'xNO'"
+	then
+	    ARJUNALITETOPDIR=$INSTALLTOPDIR
+	else
+	    ARJUNALITETOPDIR=`dirname $TOPDIR`/ArjunaLite
+	fi
+
+	if test "'x$BUILDRELEASE'" != "'xNO'"
+	then
+	    JTSTOPDIR=$INSTALLTOPDIR
+	else
+	    JTSTOPDIR=`dirname $TOPDIR`/CosServices/CosTransactions
+	fi
+
+	if test "'x$BUILDRELEASE'" != "'xNO'"
+	then
+	    ORBCOMMONTOPDIR=$INSTALLTOPDIR
+	else
+	    ORBCOMMONTOPDIR=`dirname $TOPDIR`/OrbPortability
+	fi
+
+	if test "'x$BUILDRELEASE'" != "'xNO'"
+	then
+	    JDBCTOPDIR=$INSTALLTOPDIR
+	else
+	    JDBCTOPDIR=`dirname $TOPDIR`/Resources/JDBC
+	fi
+
+	if test "'x$BUILDRELEASE'" != "'xNO'"
+	then
+	    JDBC2TOPDIR=$INSTALLTOPDIR
+	else
+	    JDBC2TOPDIR=`dirname $TOPDIR`/Resources/JDBC2
+	fi
+
+	echo
+	echo $PRE_ECHO "Root of directory of JavaHarness ["$JAVAHARNESSTOPDIR"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		JAVAHARNESSTOPDIR=$INPUT
+	fi
+
+	echo
+	echo $PRE_ECHO "Root of directory of ModuleBuildSystem ["$BUILDSYSTEMTOPDIR"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		BUILDSYSTEMTOPDIR=$INPUT
+	fi
+
+	if test -x $BUILDSYSTEMTOPDIR/config/Sys
+	then
+		SYS=`$BUILDSYSTEMTOPDIR/config/Sys`
+	else
+		echo
+		echo "Error: "$BUILDSYSTEMTOPDIR/config/Sys": was not found or would not run."
+		exit 1
+	fi
+
+	if test -x $BUILDSYSTEMTOPDIR/config/Sys_Version
+	then
+		SYS_VERSION=`$BUILDSYSTEMTOPDIR/config/Sys_Version`
+	else
+		echo
+		echo "Error: "$BUILDSYSTEMTOPDIR/config/Sys_Version": was not found or would not run."
+		exit 1
+	fi
+
+	echo
+	echo $PRE_ECHO "Root of directory of ArjunaCommon ["$ARJUNACOMMONTOPDIR"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		ARJUNACOMMONTOPDIR=$INPUT
+	fi
+
+	echo
+	echo $PRE_ECHO "Root of directory of ArjunaLite ["$ARJUNALITETOPDIR"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		ARJUNALITETOPDIR=$INPUT
+	fi
+
+	echo
+	echo $PRE_ECHO "Root of directory of OrbPortability ["$ORBCOMMONTOPDIR"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		ORBCOMMONTOPDIR=$INPUT
+	fi
+
+	echo
+	echo $PRE_ECHO "Root of directory of CosTransactions ["$JTSTOPDIR"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		JTSTOPDIR=$INPUT
+	fi
+
+	echo
+	echo $PRE_ECHO "Root of directory of JDBCArjuna ["$JDBCTOPDIR"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		JDBCTOPDIR=$INPUT
+	fi
+
+	echo
+	echo $PRE_ECHO "Root of directory of JDBC2Arjuna ["$JDBC2TOPDIR"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		JDBC2TOPDIR=$INPUT
+        fi
+
+	case $SYS in
+	Windows) BUILDSYSTEMTOPDIR="`cygpath -w $BUILDSYSTEMTOPDIR | sed 's;\\\;/;g'`"
+		 ARJUNACOMMONTOPDIR="`cygpath -w $ARJUNACOMMONTOPDIR | sed 's;\\\;/;g'`"
+		 ARJUNALITETOPDIR="`cygpath -w $ARJUNALITETOPDIR | sed 's;\\\;/;g'`"
+		 ORBCOMMONTOPDIR="`cygpath -w $ORBCOMMONTOPDIR | sed 's;\\\;/;g'`"
+		 JTSTOPDIR="`cygpath -w $JTSTOPDIR | sed 's;\\\;/;g'`"
+		 JDBCTOPDIR="`cygpath -w $JDBCTOPDIR | sed 's;\\\;/;g'`"
+		 JDBC2TOPDIR="`cygpath -w $JDBC2TOPDIR | sed 's;\\\;/;g'`"
+		 INSTALLTOPDIR="`cygpath -w $INSTALLTOPDIR | sed 's;\\\;/;g'`"
+		 TOPDIR="`cygpath -w $TOPDIR | sed 's;\\\;/;g'`"
+		 JTSARJUNA_HOME="`cygpath -w $JTSARJUNA_HOME | sed 's;\\\;/;g'`"
+		;;
+	esac
+
+	sed -e "s;INCLUDES;-Iconfig -I$JDBCTOPDIR/config -I$JDBC2TOPDIR/config -I$JTSTOPDIR/config -I$ORBCOMMONTOPDIR/config -I$ARJUNALITETOPDIR/config -I$ARJUNACOMMONTOPDIR/config -I$JAVAHARNESSTOPDIR/config -I$BUILDSYSTEMTOPDIR/config;" < MakefileBoot.tmpl > MakefileBoot
+
+	echo
+	echo $PRE_ECHO "What is the source identifier? ["$SOURCEID"] " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+	    SOURCEID=$INPUT
+	fi
+
+	echo
+	echo $PRE_ECHO "Candidate release information [none]? ["$CANDIDATE_RELEASE"] " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+	    CANDIDATE_RELEASE=$INPUT
+	fi
+
+	echo
+	echo $PRE_ECHO "Internal or external release (i/e) [i]? ["$RELEASE"] " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+	    RELEASE=$INPUT
+	fi
+
+	if test "'x$RELEASE'" = "'xe'"
+	then
+	    RELEASE="external"
+	else
+	    RELEASE="internal"
+	fi
+
+	echo
+	echo $PRE_ECHO "What is your name? ["$BUILDINFO"] " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+	    BUILDINFO=$INPUT
+	fi
+
+	echo
+	echo $PRE_ECHO "Any other information [none]? ["$NOTES"] " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+	    NOTES=$INPUT
+	fi
+
+	if test "'x$SOURCEID'" = "'x'"
+	then
+	    SOURCEID=unknown
+	fi
+
+	if test "'x$BUILDINFO'" = "'x'"
+	then
+	    BUILDINFO=unknown
+	fi
+
+	if test "'x$NOTES'" = "'x'"
+	then
+	    NOTES=none
+	fi
+
+	if test "'x$CANDIDATE_RELEASE'" = "'x'"
+	then
+	    CANDIDATE_RELEASE=none
+	fi
+
+	if test "'x$RELEASE'" = "'x'"
+	then
+	    RELEASE=internal
+	fi
+	    
+	LOCAL_MAKEFLAGS=""
+	LOCAL_IMAKEFLAGS="-DVerboseMake=No -DTopDir="$TOPDIR" -DInstallTopDir="$INSTALLTOPDIR
+	LOCAL_MAKEDEPENDFLAGS=""
+	LOCAL_CPPFLAGS=""
+	LOCAL_CPPINCLUDES=""
+	LOCAL_CPLUSPLUSFLAGS=""
+	LOCAL_LDFLAGS=""
+	LOCAL_LDLIBRARIES=""
+	LOCAL_LDLIBDEPENDS=""
+
+	MODULE_MAKEFLAGS=""
+	MODULE_IMAKEFLAGS="-I\$(JTSARJUNATOPDIR)/config"
+	MODULE_MAKEDEPENDFLAGS=""
+	MODULE_CPPFLAGS="-I\$(JTSARJUNATOPDIR)/config"
+	MODULE_CPPINCLUDES=""
+	MODULE_CPLUSPLUSFLAGS=""
+	MODULE_LDFLAGS=""
+	MODULE_LDLIBRARIES=""
+	MODULE_LDLIBDEPENDS=""
+else
+	TOPDIR=`pwd`
+	. $CONFIGFILE
+fi
+
+if test "$VERIFY" = "YES"
+then
+	echo
+	echo $PRE_ECHO "Local make flags ["$LOCAL_MAKEFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		LOCAL_MAKEFLAGS=$INPUT
+	fi
+
+	echo $PRE_ECHO "Local imake flags ["$LOCAL_IMAKEFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		LOCAL_IMAKEFLAGS=$INPUT
+	fi
+
+	echo $PRE_ECHO "Local makedepend flags ["$LOCAL_MAKEDEPENDFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		LOCAL_MAKEDEPENDFLAGS=$INPUT
+	fi
+
+	echo $PRE_ECHO "Local c pre-processor flags ["$LOCAL_CPPFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		LOCAL_CPPFLAGS=$INPUT
+	fi
+
+	echo $PRE_ECHO "Local c pre-processor includes ["$LOCAL_CPPINCLUDES"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		LOCAL_CPPINCLUDES=$INPUT
+	fi
+
+	echo $PRE_ECHO "Local c++ flags ["$LOCAL_CPLUSPLUSFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		LOCAL_CPLUSPLUSFLAGS=$INPUT
+	fi
+
+	echo $PRE_ECHO "Local ld flags ["$LOCAL_LDFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		LOCAL_LDFLAGS=$INPUT
+	fi
+
+	echo $PRE_ECHO "Local ld libraries ["$LOCAL_LDLIBRARIES"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		LOCAL_LDLIBRARIES=$INPUT
+	fi
+
+	echo $PRE_ECHO "Local ld lib depends ["$LOCAL_LDLIBDEPENDS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		LOCAL_LDLIBDEPENDS=$INPUT
+	fi
+
+	echo
+	echo $PRE_ECHO "Module make flags ["$MODULE_MAKEFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		MODULE_MAKEFLAGS=$INPUT
+	fi
+
+	echo $PRE_ECHO "Module imake flags ["$MODULE_IMAKEFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		MODULE_IMAKEFLAGS=$INPUT
+	fi
+
+	echo $PRE_ECHO "Module makedepend flags ["$MODULE_MAKEDEPENDFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		MODULE_MAKEDEPENDFLAGS=$INPUT
+	fi
+
+	echo $PRE_ECHO "Module c pre-processor flags ["$MODULE_CPPFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		MODULE_CPPFLAGS=$INPUT
+	fi
+
+	echo $PRE_ECHO "Module c pre-processor includes ["$MODULE_CPPINCLUDES"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		MODULE_CPPINCLUDES=$INPUT
+	fi
+
+	echo $PRE_ECHO "Module c++ flags ["$MODULE_CPLUSPLUSFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		MODULE_CPLUSPLUSFLAGS=$INPUT
+	fi
+
+	echo $PRE_ECHO "Module ld flags ["$MODULE_LDFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		MODULE_LDFLAGS=$INPUT
+	fi
+
+	echo $PRE_ECHO "Module ld libraries ["$MODULE_LDLIBRARIES"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		MODULE_LDLIBRARIES=$INPUT
+	fi
+
+	echo $PRE_ECHO "Module ld lib depends ["$MODULE_LDLIBDEPENDS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		MODULE_LDLIBDEPENDS=$INPUT
+	fi
+fi
+
+(
+echo "#!/bin/sh"
+echo "#"
+echo "# Copyright (C) 1998, 1999, 2000,"
+echo "# "
+echo "# Arjuna Solutions Limited,"
+echo "# Tyne and Wear,"
+echo "# Tyne and Wear,"
+echo "# UK."
+echo "#"
+echo ""
+echo "# JTSArjuna configure file"
+echo ""
+echo "INSTALLTOPDIR="$INSTALLTOPDIR
+echo "ORBCOMMONTOPDIR="$ORBCOMMONTOPDIR
+echo "JDBCTOPDIR="$JDBCTOPDIR
+echo "JDBC2TOPDIR="$JDBC2TOPDIR
+echo "JTSTOPDIR="$JTSTOPDIR
+echo "ARJUNALITETOPDIR="$ARJUNALITETOPDIR
+echo "ARJUNACOMMONTOPDIR="$ARJUNACOMMONTOPDIR
+echo "ARJUNALITETOPDIR="$ARJUNALITETOPDIR
+echo "BUILDSYSTEMTOPDIR="$BUILDSYSTEMTOPDIR
+echo ""
+echo "LOCAL_MAKEFLAGS='"$LOCAL_MAKEFLAGS"'"
+echo "LOCAL_IMAKEFLAGS='"$LOCAL_IMAKEFLAGS"'"
+echo "LOCAL_MAKEDEPENDFLAGS='"$LOCAL_MAKEDEPENDFLAGS"'"
+echo "LOCAL_CPPFLAGS='"$LOCAL_CPPFLAGS"'"
+echo "LOCAL_CPPINCLUDES='"$LOCAL_CPPINCLUDES"'"
+echo "LOCAL_CPLUSPLUSFLAGS='"$LOCAL_CPLUSPLUSFLAGS"'"
+echo "LOCAL_LDFLAGS='"$LOCAL_LDFLAGS"'"
+echo "LOCAL_LDLIBRARIES='"$LOCAL_LDLIBRARIES"'"
+echo "LOCAL_LDLIBDEPENDS='"$LOCAL_LDLIBDEPENDS"'"
+echo ""
+echo "MODULE_MAKEFLAGS='"$MODULE_MAKEFLAGS"'"
+echo "MODULE_IMAKEFLAGS='"$MODULE_IMAKEFLAGS"'"
+echo "MODULE_MAKEDEPENDFLAGS='"$MODULE_MAKEDEPENDFLAGS"'"
+echo "MODULE_CPPFLAGS='"$MODULE_CPPFLAGS"'"
+echo "MODULE_CPPINCLUDES='"$MODULE_CPPINCLUDES"'"
+echo "MODULE_CPLUSPLUSFLAGS='"$MODULE_CPLUSPLUSFLAGS"'"
+echo "MODULE_LDFLAGS='"$MODULE_LDFLAGS"'"
+echo "MODULE_LDLIBRARIES='"$MODULE_LDLIBRARIES"'"
+echo "MODULE_LDLIBDEPENDS='"$MODULE_LDLIBDEPENDS"'"
+echo
+echo "PRODUCT_NAME='"$PRODUCT_NAME"'"
+echo "VERSION='"$JTSARJUNA_VERSION"'"
+echo "MAJOR='"$MAJOR_REVISION"'"
+echo "MINOR='"$MINOR_REVISION"'"
+echo "SOURCEID='"$SOURCEID"'"
+echo "CANDIDATE_RELEASE='"$CANDIDATE_RELEASE"'"
+echo "RELEASE='"$RELEASE"'"
+echo "BUILDINFO='Arjuna Solutions Ltd. ["$BUILDINFO"]'"
+echo "NOTES='"$NOTES"'"
+) > config/JTSArjuna.cf
+chmod a+rx config/JTSArjuna.cf
+
+(
+echo "/*"
+echo " * Copyright (C) 1998, 1999, 2000,"
+echo " * "
+echo " * Arjuna Solutions Limited,"
+echo " * Newcastle upon Tyne,"
+echo " * Tyne and Wear,"
+echo " * UK."
+echo " */"
+echo
+echo "/*"
+echo " *  Local.def"
+echo " */"
+echo
+if test "'x$LOCAL_MAKEFLAGS'" != "'x'"
+then
+	echo "AddToMakeFlags("$LOCAL_MAKEFLAGS")"
+fi
+if test "'x$LOCAL_IMAKEFLAGS'" != "'x'"
+then
+	echo "AddToIMakeFlags("$LOCAL_IMAKEFLAGS")"
+fi
+if test "'x$LOCAL_MAKEDEPENDFLAGS'" != "'x'"
+then
+	echo "AddToMakeDependFlags("$LOCAL_MAKEDEPENDFLAGS")"
+fi
+if test "'x$LOCAL_CPPFLAGS'" != "'x'"
+then
+	echo "AddToCPPFlags("$LOCAL_CPPFLAGS")"
+fi
+if test "'x$LOCAL_CPPINCLUDES'" != "'x'"
+then
+	echo "AddToCPPIncludes("$LOCAL_CPPINCLUDES")"
+fi
+if test "'x$LOCAL_CPLUSPLUSFLAGS'" != "'x'"
+then
+	echo "AddToCPLUSPLUSFlags("$LOCAL_CPLUSPLUSFLAGS")"
+fi
+if test "'x$LOCAL_LDFLAGS'" != "'x'"
+then
+	echo "AddToLdFlags("$LOCAL_LDFLAGS")"
+fi
+if test "'x$LOCAL_LDLIBRARIES'" != "'x'"
+then
+	echo "AddToLdLibraries("$LOCAL_LDLIBRARIES")"
+fi
+if test "'x$LOCAL_LDLIBDEPENDS'" != "'x'"
+then
+	echo "AddToLdLibDepends("$LOCAL_LDLIBDEPENDS")"
+fi
+echo
+echo "#include \""$TOPDIR"/config/JTSArjuna_Module.def\""
+echo "#include \""$ARJUNALITETOPDIR"/config/ArjunaLite_Module.def\""
+echo "#include \""$ARJUNACOMMONTOPDIR"/config/ArjunaCommon_Module.def\""
+echo "#include \""$JTSTOPDIR"/config/CosTransactions_Module.def\""
+echo "#include \""$ORBCOMMONTOPDIR"/config/OrbPortability_Module.def\""
+echo "#include \""$JDBCTOPDIR"/config/JDBC_Module.def\""
+echo "#include \""$JDBC2TOPDIR"/config/JDBC2_Module.def\""
+echo "#include \""$JAVAHARNESSTOPDIR"/config/JavaHarness_Module.def\""
+echo "#include \""$BUILDSYSTEMTOPDIR"/config/Module.def\""
+) > config/Local.def
+chmod a+r config/Local.def
+
+#
+# This is required to be installed in order that cosmkmf
+# will work.
+#
+
+(
+echo "/*"
+echo " * Copyright (C) 1998, 1999, 2000,"
+echo " * "
+echo " * Arjuna Solutions Limited,"
+echo " * Newcastle upon Tyne,"
+echo " * Tyne and Wear,"
+echo " * UK."
+echo " */"
+echo
+echo "/*"
+echo " *  Local.def (install)"
+echo " */"
+echo
+echo "#define TopDir "$INSTALLTOPDIR
+echo "#define InstallTopDir "$INSTALLTOPDIR
+echo
+if test "'x$BUILDRELEASE'" = "'xNO'"
+then
+echo "#include \""$INSTALLTOPDIR"/config/CosTransactions_Module.def\""
+echo "#include \""$ORBCOMMONTOPDIR"/config/OrbPortability_Module.def\""
+echo "#include \""$ARJUNALITETOPDIR"/config/ArjunaLite_Module.def\""
+echo "#include \""$ARJUNACOMMONTOPDIR"/config/ArjunaCommon_Module.def\""
+echo "#include \""$JTSTOPDIR"/config/CosTransactions_Module.def\""
+echo "#include \""$JDBCTOPDIR"/config/JDBC_Module.def\""
+echo "#include \""$JDBC2TOPDIR"/config/JDBC2_Module.def\""
+echo "#include \""$JAVAHARNESSTOPDIR"/config/JavaHarness_Module.def\""
+echo "#include \""$BUILDSYSTEMTOPDIR"/config/Module.def\""
+else
+echo "#include \"\$(JTSARJUNA_HOME)/config/CosTransactions_Module.def\""
+echo "#include \"\$(JTSARJUNA_HOME)/config/OrbPortability_Module.def\""
+echo "#include \"\$(JTSARJUNA_HOME)/config/ArjunaLite_Module.def\""
+echo "#include \"\$(JTSARJUNA_HOME)/config/ArjunaCommon_Module.def\""
+echo "#include \"\$(JTSARJUNA_HOME)/config/CosTransactions_Module.def\""
+echo "#include \"\$(JTSARJUNA_HOME)/config/JDBC_Module.def\""
+echo "#include \"\$(JTSARJUNA_HOME)/config/JDBC2_Module.def\""
+echo "#include \"\$(JTSARJUNA_HOME)/config/JavaHarness_Module.def\""
+echo "#include \"\$(JTSARJUNA_HOME)/config/Module.def\""
+fi
+) > config/Local_install.def
+chmod a+r config/Local_install.def
+
+(
+echo "/*"
+echo " * Arjuna Solutions Limited,"
+echo " * Newcastle upon Tyne,"
+echo " * Tyne and Wear,"
+echo " * UK."
+echo " */"
+echo
+echo "/*"
+echo " *  JTSArjuna_Module.def (source)"
+echo " */"
+echo
+echo "JTSARJUNATOPDIR="$TOPDIR
+echo
+if test "'x$MODULE_MAKEFLAGS'" != "'x'"
+then
+	echo "AddToMakeFlags("$MODULE_MAKEFLAGS")"
+fi
+if test "'x$MODULE_IMAKEFLAGS'" != "'x'"
+then
+	echo "AddToIMakeFlags("$MODULE_IMAKEFLAGS")"
+fi
+if test "'x$MODULE_MAKEDEPENDFLAGS'" != "'x'"
+then
+	echo "AddToMakeDependFlags("$MODULE_MAKEDEPENDFLAGS")"
+fi
+if test "'x$MODULE_CPPFLAGS'" != "'x'"
+then
+	echo "AddToCPPFlags("$MODULE_CPPFLAGS")"
+fi
+if test "'x$MODULE_CPPINCLUDES'" != "'x'"
+then
+	echo "AddToCPPIncludes("$MODULE_CPPINCLUDES")"
+fi
+if test "'x$MODULE_CPLUSPLUSFLAGS'" != "'x'"
+then
+	echo "AddToCPLUSPLUSFlags("$MODULE_CPLUSPLUSFLAGS")"
+fi
+if test "'x$MODULE_LDFLAGS'" != "'x'"
+then
+	echo "AddToLdFlags("$MODULE_LDFLAGS")"
+fi
+if test "'x$MODULE_LDLIBRARIES'" != "'x'"
+then
+	echo "AddToLdLibraries("$MODULE_LDLIBRARIES")"
+fi
+if test "'x$MODULE_LDLIBDEPENDS'" != "'x'"
+then
+	echo "AddToLdLibDepends("$MODULE_LDLIBDEPENDS")"
+fi
+echo
+echo "AddToCPPFlags(-DJTSARJUNA_VERSION=\\\"$JTSARJUNA_VERSION"_"$MAJOR_REVISION"_"$MINOR_REVISION\\\")"
+) > config/JTSArjuna_Module.def
+chmod a+r config/JTSArjuna_Module.def
+
+(
+echo "/*"
+echo " * Copyright (C) 1998, 1999, 2000,"
+echo " * "
+echo " * Arjuna Solutions Limited,"
+echo " * Tyne and Wear,"
+echo " * Tyne and Wear,"
+echo " * UK."
+echo " */"
+echo
+echo "/*"
+echo " *  JTSArjuna_Module.def (install)"
+echo " */"
+echo
+echo "JTSARJUNATOPDIR="$INSTALLTOPDIR
+echo
+if test "'x$MODULE_MAKEFLAGS'" != "'x'"
+then
+	echo "AddToMakeFlags("$MODULE_MAKEFLAGS")"
+fi
+if test "'x$MODULE_IMAKEFLAGS'" != "'x'"
+then
+	echo "AddToIMakeFlags("$MODULE_IMAKEFLAGS")"
+fi
+if test "'x$MODULE_MAKEDEPENDFLAGS'" != "'x'"
+then
+	echo "AddToMakeDependFlags("$MODULE_MAKEDEPENDFLAGS")"
+fi
+if test "'x$MODULE_CPPFLAGS'" != "'x'"
+then
+	echo "AddToCPPFlags("$MODULE_CPPFLAGS")"
+fi
+if test "'x$MODULE_CPPINCLUDES'" != "'x'"
+then
+	echo "AddToCPPIncludes("$MODULE_CPPINCLUDES")"
+fi
+if test "'x$MODULE_CPLUSPLUSFLAGS'" != "'x'"
+then
+	echo "AddToCPLUSPLUSFlags("$MODULE_CPLUSPLUSFLAGS")"
+fi
+if test "'x$MODULE_LDFLAGS'" != "'x'"
+then
+	echo "AddToLdFlags("$MODULE_LDFLAGS")"
+fi
+if test "'x$MODULE_LDLIBRARIES'" != "'x'"
+then
+	echo "AddToLdLibraries("$MODULE_LDLIBRARIES")"
+fi
+if test "'x$MODULE_LDLIBDEPENDS'" != "'x'"
+then
+	echo "AddToLdLibDepends("$MODULE_LDLIBDEPENDS")"
+fi
+echo
+echo "AddToCPPFlags(-DJTSARJUNA_VERSION=\\\"$JTSARJUNA_VERSION"_"$MAJOR_REVISION"_"$MINOR_REVISION\\\")"
+) > config/JTSArjuna_Module_install.def
+chmod a+r config/JTSArjuna_Module_install.def
+
+(
+echo "JTSArjuna version "$JTSARJUNA_VERSION"_"$MAJOR_REVISION"_"$MINOR_REVISION
+) > config/JTSArjuna_Version.def
+
+(
+echo "#define PRODUCT_NAME \""$PRODUCT_NAME"\""
+echo "#define VERSION \""$JTSARJUNA_VERSION"\""
+echo "#define MAJOR \""$MAJOR_REVISION"\""
+echo "#define MINOR \""$MINOR_REVISION"\""
+echo "#define CANDIDATE_RELEASE \""$CANDIDATE_RELEASE"\""
+echo "#define RELEASE \""$RELEASE"\""
+echo "#define MODULE \"JTSArjuna\""
+echo "#define SOURCEID \""$SOURCEID"\""
+echo "#define BUILDINFO \"Arjuna Solutions Ltd. ["$BUILDINFO"]\""
+echo "#define DATE \""`date`"\""
+echo "#define NOTES \""$NOTES"\""
+) > config/Info.h

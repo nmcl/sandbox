@@ -1,0 +1,51 @@
+#!/bin/sh
+#
+# Copyright (C) 1998, 1999, 2000,
+# 
+# Arjuna Solutions Limited,
+# Tyne and Wear,
+# Tyne and Wear,
+# UK.
+#
+
+# JTSArjuna configure file
+
+INSTALLTOPDIR=/home/nmcl/Install
+ORBCOMMONTOPDIR=/home/nmcl/JTSArjuna/2.0_Alpha_2_1/JTSArjuna/OrbPortability
+JDBCTOPDIR=/home/nmcl/JTSArjuna/2.0_Alpha_2_1/JTSArjuna/Resources/JDBC
+JDBC2TOPDIR=/home/nmcl/JTSArjuna/2.0_Alpha_2_1/JTSArjuna/Resources/JDBC2
+JTSTOPDIR=/home/nmcl/JTSArjuna/2.0_Alpha_2_1/JTSArjuna/CosServices/CosTransactions
+ARJUNALITETOPDIR=/home/nmcl/JTSArjuna/2.0_Alpha_2_1/JTSArjuna/ArjunaLite
+ARJUNACOMMONTOPDIR=/home/nmcl/JTSArjuna/2.0_Alpha_2_1/JTSArjuna/ArjunaCommon
+ARJUNALITETOPDIR=/home/nmcl/JTSArjuna/2.0_Alpha_2_1/JTSArjuna/ArjunaLite
+BUILDSYSTEMTOPDIR=/home/nmcl/JTSArjuna/2.0_Alpha_2_1/JTSArjuna/ModuleBuildSystem
+
+LOCAL_MAKEFLAGS=''
+LOCAL_IMAKEFLAGS='-DVerboseMake=No -DTopDir=/home/nmcl/JTSArjuna/2.0_Alpha_2_1/JTSArjuna/JTSArjuna -DInstallTopDir=/home/nmcl/Install'
+LOCAL_MAKEDEPENDFLAGS=''
+LOCAL_CPPFLAGS=''
+LOCAL_CPPINCLUDES=''
+LOCAL_CPLUSPLUSFLAGS=''
+LOCAL_LDFLAGS=''
+LOCAL_LDLIBRARIES=''
+LOCAL_LDLIBDEPENDS=''
+
+MODULE_MAKEFLAGS=''
+MODULE_IMAKEFLAGS='-I$(JTSARJUNATOPDIR)/config'
+MODULE_MAKEDEPENDFLAGS=''
+MODULE_CPPFLAGS='-I$(JTSARJUNATOPDIR)/config'
+MODULE_CPPINCLUDES=''
+MODULE_CPLUSPLUSFLAGS=''
+MODULE_LDFLAGS=''
+MODULE_LDLIBRARIES=''
+MODULE_LDLIBDEPENDS=''
+
+PRODUCT_NAME='JTSArjuna'
+VERSION='2'
+MAJOR='0'
+MINOR='0'
+SOURCEID='unknown'
+CANDIDATE_RELEASE='none'
+RELEASE='internal'
+BUILDINFO='Arjuna Solutions Ltd. [unknown]'
+NOTES='none'

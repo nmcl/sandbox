@@ -1,0 +1,113 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.  
+ *
+ * $Id: Info.javatmpl,v 1.3.2.1.2.1 2000/05/04 15:47:55 nmcl Exp $
+ */
+
+#include <Info.h>
+
+package com.arjuna.JTSArjuna;
+
+import com.arjuna.JavaHarness.ModuleInfo;
+import java.io.*;
+import java.util.Hashtable;
+
+public class Info implements ModuleInfo
+{
+
+public Info ()
+    {
+	_attributes = new Hashtable();
+	
+	_attributes.put("PRODUCT", PRODUCT_NAME);
+	_attributes.put("MAJOR VERSION", MAJOR);
+	_attributes.put("MINOR VERSION", MINOR);
+	_attributes.put("CANDIDATE RELEASE", CANDIDATE_RELEASE);
+	_attributes.put("RELEASE", RELEASE);
+	_attributes.put("MODULE", MODULE);
+	_attributes.put("SOURCE IDENTIFIER", SOURCEID);
+	_attributes.put("BUILD_INFORMATION", BUILDINFO);
+	_attributes.put("VERSION", VERSION);
+	_attributes.put("DATE", DATE);
+	_attributes.put("NOTES", NOTES);
+
+	_constituents = new ModuleInfo[7];
+	
+	_constituents[0] = new com.arjuna.JavaHarness.Info("\t");
+	_constituents[1] = new com.arjuna.ArjunaCommon.Info("\t");
+	_constituents[2] = new com.arjuna.ArjunaLite.Info("\t");
+	_constituents[3] = new com.arjuna.OrbCommon.Info("\t");
+	_constituents[4] = new com.arjuna.CosTransactions.Info("\t");
+	_constituents[5] = new com.arjuna.JDBC.Info("\t");
+	_constituents[6] = new com.arjuna.JDBC2.Info("\t");
+    }
+
+public final void setPreString (String s)
+    {
+	_preString = s;
+    }
+
+public final void getInfo ()
+    {
+	System.out.println(toString());
+    }
+
+public String query (String attribute)
+    {
+	return (String) _attributes.get(attribute);
+    }
+
+public ModuleInfo[] constituents ()
+    {
+	return null;
+    }
+
+public String toString ()
+    {
+	String product = "PRODUCT: "+PRODUCT_NAME;
+	String version = "VERSION: "+VERSION;
+	String major = "MAJOR VERSION: "+MAJOR;
+	String minor = "MINOR VERSION: "+MAJOR;
+	String candidate;
+	
+	if (CANDIDATE_RELEASE == "none")
+	    candidate = null;
+	else
+	    candidate = "CANDIDATE RELEASE: "+CANDIDATE_RELEASE;
+
+	String release = "RELEASE: "+RELEASE;
+	String module = "MODULE: "+MODULE;
+	String source = "SOURCE IDENTIFIER: "+SOURCEID;
+	String build = "BUILD INFORMATION: "+BUILDINFO;
+	String date = "DATE: "+DATE;
+	String notes = "NOTES: "+NOTES;
+	String constituents = "CONSTITUENT MODULE INFORMATION:";
+	String myInfo;
+	
+	if (candidate != null)
+	    myInfo = product+"\n"+version+"\n"+major+"\n"+minor+"\n"+candidate+"\n"+release+"\n"+module+"\n"+source+"\n"+build+"\n"+date+"\n"+notes+"\n"+constituents;
+	else
+	    myInfo = product+"\n"+version+"\n"+major+"\n"+minor+"\n"+release+"\n"+module+"\n"+source+"\n"+build+"\n"+date+"\n"+notes+"\n"+constituents;
+
+	String toReturn = myInfo;
+	
+	for (int i = 0; i < 7; i++)
+	{
+	    toReturn = toReturn + "\n\n" + _constituents[i].toString();
+	}
+
+	return toReturn;
+    }
+
+private Hashtable _attributes;
+private ModuleInfo[] _constituents;
+private String _preString = "";
+    
+};
+
+

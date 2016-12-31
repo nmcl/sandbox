@@ -1,0 +1,17 @@
+/*
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ */
+
+/*
+ *  JTSArjuna_Module.def (source)
+ */
+
+JTSARJUNATOPDIR=/home/nmcl/JTSArjuna/2.0_Alpha_2_1/JTSArjuna/JTSArjuna
+
+AddToIMakeFlags(-I$(JTSARJUNATOPDIR)/config)
+AddToCPPFlags(-I$(JTSARJUNATOPDIR)/config)
+
+AddToCPPFlags(-DJTSARJUNA_VERSION=\"2_0_0\")

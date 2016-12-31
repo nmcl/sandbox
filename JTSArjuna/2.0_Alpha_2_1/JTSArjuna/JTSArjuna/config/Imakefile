@@ -1,0 +1,16 @@
+COMMENT 
+COMMENT Copyright (C) 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2.4.2.4.1.4.1.4.1 2000/07/18 09:15:18 nmcl Exp $
+COMMENT
+
+InstallFile(/config,JTSArjuna_Version.def)
+InstallFileAs(/config,JTSArjuna_Module_install.def,JTSArjuna_Module.def)
+InstallFileAs(/config,Local_install.def,Local.def)
+
+Purge(JTSArjuna.cf Local.def Local_install.def JTSArjuna_Module.def JTSArjuna_Module_install.def JTSArjuna_Version.def Info.h)
