@@ -1,0 +1,23 @@
+COMMENT 
+COMMENT Copyright (C) 1999,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.2.1 2000/05/02 08:41:16 nmcl Exp $
+COMMENT
+
+SOURCES = BasicThreadFilter.java \
+	  Init.java
+
+OBJECTS = BasicThreadFilter.class \
+	  Init.class
+
+Target($(OBJECTS))
+
+BuildJavaByteCode(BasicThreadFilter,NullParam)
+BuildJavaByteCode(Init,NullParam)
+
+Clean(*.class)

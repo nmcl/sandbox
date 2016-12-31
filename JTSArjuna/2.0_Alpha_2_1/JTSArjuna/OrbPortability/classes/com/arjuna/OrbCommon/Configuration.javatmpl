@@ -1,0 +1,80 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.  
+ *
+ * $Id: Configuration.javatmpl,v 1.1 2000/02/25 14:09:13 nmcl Exp $
+ */
+
+package com.arjuna.OrbCommon;
+
+public class Configuration
+{
+
+public static synchronized final String configFile ()
+    {
+	return _configFile;
+    }
+
+public static synchronized void setConfigFile (String s)
+    {
+	_configFile = s;
+    }
+
+public static synchronized final String configFileRoot ()
+    {
+	return _configFileRoot;
+    }
+
+public static synchronized void setConfigFileRoot (String s)
+    {
+	_configFileRoot = s;
+    }
+
+public static synchronized final int bindDefault ()
+    {
+	return _bindDefault;
+    }
+
+public static synchronized final void setBindDefault (int i)
+    {
+	if ((i < ORBServices.CONFIGURATION_FILE) || (i > ORBServices.NAMED_CONNECT))
+	    System.err.println("com.arjuna.OrbCommon.Configuration.setBindDefault - invalid value "+i);
+	else
+	    _bindDefault = i;
+    }
+    
+public static final String version ()
+    {
+	return ORBPORTABILITY_VERSION;
+    }
+
+private static String _configFile = CONFIG_FILE;
+private static String _configFileRoot = COSSERVICES_ROOT;
+private static int _bindDefault;
+
+    static
+    {
+#ifdef USE_RESOLVE_INITIAL_REFERENCES
+	_bindDefault = ORBServices.RESOLVE_INITIAL_REFERENCES;
+#else
+#ifdef USE_NAME_SERVICE
+	_bindDefault = ORBServices.NAME_SERVICE;
+#else
+#ifdef USE_FILE
+	_bindDefault = ORBServices.FILE;
+#else
+#ifdef USE_NAMED_CONNECT
+	_bindDefault = ORBServices.NAMED_CONNECT;
+#else
+	_bindDefault = ORBServices.CONFIGURATION_FILE;
+#endif
+#endif
+#endif
+#endif
+    }
+    
+};

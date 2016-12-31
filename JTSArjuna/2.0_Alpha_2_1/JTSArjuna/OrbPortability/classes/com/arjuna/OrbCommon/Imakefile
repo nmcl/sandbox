@@ -1,0 +1,94 @@
+COMMENT 
+COMMENT Copyright (C) 1998, 1999, 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.3.2.1 2000/04/25 12:55:37 nmcl Exp $
+COMMENT
+
+CreateInstallDirectory(/classes/com/arjuna,/classes/com/arjuna/OrbCommon)
+
+SubDirectory(Filters)
+
+SOURCES = ORBEnvironment.java \
+	  ORBShutdown.java \
+	  ORBPreShutdown.java \
+	  ORBPostShutdown.java \
+	  ORBInterface.java \
+	  ORBAttribute.java \
+	  OAAttribute.java \
+	  LocalSetup.java \
+	  ORBServices.java \
+	  ORBObject.java \
+	  ORBFilter.java \
+	  ORBFilterManager.java \
+	  ORBPreInitLoader.java \
+	  ORBPostInitLoader.java \
+	  ORBClassLoader.java \
+	  OAShutdown.java \
+	  OAPreShutdown.java \
+	  OAPostShutdown.java \
+	  ORBInitLoader.java \
+	  ORBExceptions.java \
+	  Configuration.java \
+	  Info.java
+
+OBJECTS = ORBEnvironment.class \
+	  ORBShutdown.class \
+	  ORBPreShutdown.class \
+	  ORBPostShutdown.class \
+	  ORBAttribute.class \
+	  OAAttribute.class \
+	  LocalSetup.class \
+	  ORBFilter.class \
+	  ORBFilterManager.class \
+	  ORBClassLoader.class \
+	  ORBPreInitLoader.class \
+	  ORBPostInitLoader.class \
+	  ORBInterface.class \
+	  ORBServices.class \
+	  ORBObject.class \
+	  OAShutdown.class \
+	  OAPreShutdown.class \
+	  OAPostShutdown.class \
+	  ORBInitLoader.class \
+	  ORBExceptions.class \
+	  Configuration.class \
+	  Info.class
+
+Target($(SOURCES))
+Target($(OBJECTS))
+
+PreprocessJavaCode(ORBInterface,NullParam)
+PreprocessJavaCode(ORBServices,NullParam)
+PreprocessJavaCode(ORBObject,NullParam)
+PreprocessJavaCode(Configuration,NullParam)
+PreprocessJavaCode(Info,NullParam)
+
+BuildJavaByteCode(ORBInterface,NullParam)
+BuildJavaByteCode(ORBServices,NullParam)
+BuildJavaByteCode(ORBObject,NullParam)
+BuildJavaByteCode(ORBEnvironment,NullParam)
+BuildJavaByteCode(ORBFilter,NullParam)
+BuildJavaByteCode(ORBFilterManager,NullParam)
+BuildJavaByteCode(ORBPreInitLoader,NullParam)
+BuildJavaByteCode(ORBPostInitLoader,NullParam)
+BuildJavaByteCode(ORBShutdown,NullParam)
+BuildJavaByteCode(ORBPreShutdown,NullParam)
+BuildJavaByteCode(ORBPostShutdown,NullParam)
+BuildJavaByteCode(ORBAttribute,NullParam)
+BuildJavaByteCode(OAAttribute,NullParam)
+BuildJavaByteCode(ORBClassLoader,NullParam)
+BuildJavaByteCode(LocalSetup,NullParam)
+BuildJavaByteCode(OAShutdown,NullParam)
+BuildJavaByteCode(OAPreShutdown,NullParam)
+BuildJavaByteCode(OAPostShutdown,NullParam)
+BuildJavaByteCode(ORBInitLoader,NullParam)
+BuildJavaByteCode(ORBExceptions,NullParam)
+BuildJavaByteCode(Configuration,NullParam)
+BuildJavaByteCode(Info,NullParam)
+
+Clean(*.class)
