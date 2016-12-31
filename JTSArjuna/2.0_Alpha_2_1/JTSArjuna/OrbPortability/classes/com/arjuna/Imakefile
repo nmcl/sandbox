@@ -1,0 +1,15 @@
+COMMENT 
+COMMENT Copyright (C) 1996, 1997, 1998, 1999,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 2000/03/16 16:17:20 nmcl Exp $
+COMMENT
+
+CreateInstallDirectory(/classes/com,/classes/com/arjuna)
+
+SubDirectory(orb)
+SubDirectory(OrbCommon)
