@@ -1,0 +1,18 @@
+COMMENT
+COMMENT Copyright (C) 1994, 1995, 1996,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 1998/01/12 13:58:37 nmcl Exp $
+COMMENT
+
+CreateInstallDirectory(/include,/include/os)
+CreateInstallDirectory(/include/os,/include/os/msd)
+
+InstallFile(/include/os/msd,thread.hh)
+InstallFile(/include/os/msd,tsd.hh)
+InstallFile(/include/os/msd,time.hh)
+InstallFile(/include/os/msd,sighandler.hh)
