@@ -1,0 +1,18 @@
+/*
+ * Copyright (C) 1994, 1995, 1996, 1997,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ */
+
+/*
+ *  Local.def
+ */
+
+AddToIMakeFlags(-UBUILDUTILITIES -UINSTALLUTILITIES -UBUILDTESTS -UINSTALLTESTS -DVerboseMake=No -DTopDir=/home/nmcl/JTSArjuna/Gandiva -DInstallTopDir=/usr/local/Gandiva1.5.0 -DSINGLETHREADS -DTHREADPACKAGE=Single)
+AddToCPPFlags(-I$(GANDIVATOPDIR)/lib)
+
+#include "/home/nmcl/JTSArjuna/Gandiva/config/Module.def"

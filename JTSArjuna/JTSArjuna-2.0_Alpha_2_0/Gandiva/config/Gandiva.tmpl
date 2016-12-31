@@ -1,0 +1,139 @@
+/*
+ * Copyright (C) 1994, 1995, 1996, 1997,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: Gandiva.tmpl,v 1.6 1999/11/29 14:23:21 nmcl Exp $
+ */
+
+/*
+ *  Inclusion of Overriding definitions.
+ */
+
+#include <Override.def>
+
+/*
+ *  Inclusion of Macro definitions.
+ */
+
+#include <Macro.def>
+
+/*
+ *  Inclusion of Local definitions.
+ */
+
+#include <Local.def>
+
+/*
+ *  Inclusion of Config template.
+ */
+
+#include <Config.def>
+
+/*
+ *  Inclusion of Compiler template.
+ */
+
+#include <C++.def>
+
+/*
+ *  Inclusion of System template.
+ */
+
+#include <Sys.def>
+
+/*
+ *  Inclusion of Programs definitions.
+ */
+
+#include <Prog.def>
+
+/*
+ *  Inclusion of Rule definitions.
+ */
+
+#include <Rule.def>
+
+/*
+ * Generater Makefile
+ */
+
+COMMENT
+COMMENT Make generated for System=Sys_Name, Compiler=Comp_Name.
+COMMENT
+
+TOPDIR          = TopDir
+
+INSTALLTOPDIR   = InstallTopDir
+
+CURDIR          = .
+
+CPLUSPLUS       = CPLUSPLUSProg
+
+MAKE            = MakeProg
+IMAKE           = IMakeProg
+
+MAKEDEPEND      = MakeDependProg
+
+AR              = ArProg
+RANLIB          = RanlibProg
+
+INSTALL         = InstallProg
+
+RM              = RmProg
+RMDIR           = RmDirProg
+CP              = CpProg
+MV              = MvProg
+
+all : all.local
+
+all.local :: 
+
+Makefile ::
+	@echo "Building 'Makefile'"
+	CommandPrefix($(IMAKE)) $(IMAKEFLAGS)
+
+Makefiles :: 
+
+depend : depend.local
+
+depend.local ::
+
+install : all.local install.local
+
+install.local ::
+
+tidy : tidy.local
+
+clean : tidy.local clean.local 
+
+purge : tidy.local clean.local purge.local
+
+CreateRootInstallDirectory
+
+CreateInstallDirectory(NullParam,/bin)
+CreateInstallDirectory(NullParam,/config)
+CreateInstallDirectory(NullParam,/include)
+CreateInstallDirectory(NullParam,/lib)
+CreateInstallDirectory(NullParam,/man)
+
+/*
+ * Include the local Imakefile.
+ */
+
+#include INCLUDE_IMAKEFILE
+
+Print
+
+#ifndef WIN32
+Tidy(core *~ \#*\# *.bak *.BAK *\%)
+#else
+Tidy(*.core *~ \#*\# *.bak *.BAK *\%)
+#endif
+
+Clean(*.o gmon.out *.d *.tcov)
+
+Purge(Makefile)

@@ -1,0 +1,17 @@
+/*
+ * Copyright (C) 1994, 1995, 1996, 1997,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ */
+
+/*
+ *  Sys.def
+ */
+
+AddToIMakeFlags(-DSys_Name=Solaris2 -DSYSV -DSOLARIS2)
+AddToCPPFlags(-DSYSV -DSOLARIS2 -DHAS_SYSINFO -DHAS_FDATASYNC -DHAS_BSD_GETTIMEOFDAY -DHAS_INT_USLEEP -DHAVE_SELECT)
+AddToLdLibraries(-lsocket -lnsl)

@@ -1,0 +1,27 @@
+COMMENT 
+COMMENT Copyright (C) 1994, 1995, 1996, 1997,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.6 1997/08/05 14:05:23 nmcl Exp $
+COMMENT
+
+InstallFile(/config,C++.def)
+InstallProgram(/config,C++)
+InstallProgram(/config,C++Prog)
+InstallFile(/config,Config.def)
+InstallProgram(/config,Gandiva.cf)
+InstallFile(/config,Gandiva.tmpl)
+InstallFile(/config,Macro.def)
+InstallFileAs(/config,Module_install.def,Module.def)
+InstallFile(/config,Override.def)
+InstallFile(/config,Prog.def)
+InstallFile(/config,Rule.def)
+InstallFile(/config,Sys.def)
+InstallProgram(/config,Sys)
+InstallProgram(/config,Sys_Version)
+
+Purge(C++ C++.def Config.def Local.def Gandiva.cf Module.def Module_install.def Sys Sys_Version Sys.def)
