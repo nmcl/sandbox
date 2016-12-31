@@ -1,0 +1,56 @@
+COMMENT
+COMMENT Copyright (C) 1994, 1995, 1996,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.13 1998/07/21 12:40:58 nmcl Exp $
+COMMENT
+
+CreateInstallDirectory(/include,/include/os)
+
+SubDirectory(arpa)
+SubDirectory(dce)
+SubDirectory(lwp)
+SubDirectory(msd)
+SubDirectory(netinet)
+SubDirectory(pthread)
+SubDirectory(sys)
+
+InstallFile(/include/os,cthread.h)
+InstallFile(/include/os,ctype.h)
+InstallFile(/include/os,dirent.h)
+InstallFile(/include/os,errno.h)
+InstallFile(/include/os,fcntl.h)
+InstallFile(/include/os,fstream.h)
+InstallFile(/include/os,lwp.h)
+InstallFile(/include/os,iomanip.h)
+InstallFile(/include/os,iostream.h)
+InstallFile(/include/os,limits.h)
+InstallFile(/include/os,math.h)
+InstallFile(/include/os,ndbm.h)
+InstallFile(/include/os,netdb.h)
+InstallFile(/include/os,process.h)
+InstallFile(/include/os,semaphore.h)
+InstallFile(/include/os,setjmp.h)
+InstallFile(/include/os,signal.h)
+InstallFile(/include/os,stddef.h)
+InstallFile(/include/os,stdio.h)
+InstallFile(/include/os,stdlib.h)
+InstallFile(/include/os,string.h)
+InstallFile(/include/os,strstrea.h)
+InstallFile(/include/os,strstream.h)
+InstallFile(/include/os,synch.h)
+InstallFile(/include/os,task.h)
+InstallFile(/include/os,thread.h)
+InstallFile(/include/os,time.h)
+InstallFile(/include/os,unistd.h)
+InstallFile(/include/os,wait.h)
+InstallFile(/include/os,windows.h)
+InstallFile(/include/os,winsock.h)
+InstallFile(/include/os,CORBA.ch)
+InstallFile(/include/os,ON_init.h)
+InstallFile(/include/os,ON_sync.h)
+InstallFile(/include/os,omnithread.h)
