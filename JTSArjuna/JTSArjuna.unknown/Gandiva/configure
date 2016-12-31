@@ -1,0 +1,2005 @@
+#!/bin/sh
+
+#
+# Copyright (C) 1994, 1995, 1996, 1997, 1998, 1999,
+# 
+# Department of Computing Science,
+# University of Newcastle upon Tyne,
+# Newcastle upon Tyne,
+# UK.
+# 
+# $Id: configure,v 1.82 1999/12/09 15:14:01 nmcl Exp $
+#
+
+INSIGHT="insight"
+PURIFY="purify"
+
+if test "$#" = "0"
+then
+	VERIFY="NO"
+	CONFIGFILE=""
+elif test "$#" = "1"
+then
+	if test "$1" = "-v"
+	then
+		VERIFY="YES"
+		CONFIGFILE=""
+	else
+		VERIFY="NO"
+		CONFIGFILE="$1"
+	fi
+	if test "$1" = "-d"
+	then
+		PURIFYON="YES"
+		CONFIGFILE=""
+	else
+		PURIFYON="NO"
+		CONFIGFILE=""
+	fi
+elif test "$#" = "3"
+then
+	if test "$1" != "-v"
+	then
+		echo $0": illegal usage"
+		echo "usage: "$0" [-v] [file] [-d]"
+		exit 1
+	else
+		VERIFY="YES"
+		CONFIGFILE="$2"
+	fi
+	if test "$3" = "-d"
+	then
+		PURIFYON="YES"
+	else
+		echo $0": illegal usage"
+		echo "usage: "$0" [-v] [file] [-d]"
+		exit 1
+	fi
+else
+	echo $0": illegal usage"
+	echo "usage: "$0" [-v] [file] [-d]"
+	exit 1
+fi
+
+if test "$CONFIGFILE" != ""
+then
+	if test -f $CONFIGFILE
+	then
+		if test "`head -11 $CONFIGFILE | tail -1`" != "# Gandiva configure file"
+		then
+			echo $0": configuration file \""$CONFIGFILE"\" is invalid/corrupt"
+			exit 1
+		fi
+	else
+		echo $0": configuration file \""$CONFIGFILE"\" does not exist"
+		exit 1
+	fi
+fi
+
+echo "+-----------------------+"
+echo "| Gandiva version 1.6.1 |"
+echo "+-----------------------+"
+
+ECHO_TEST=`echo "Test \c"`
+if test "$ECHO_TEST" = "Test "
+then
+	PRE_ECHO=""
+	POST_ECHO="\c"
+else
+	PRE_ECHO="-n"
+	POST_ECHO=""
+fi
+
+if test "$CONFIGFILE" = ""
+then
+	SYS=`(uname -s) 2> /dev/null`
+	if test -n "$SYS" 
+	then
+		SYS_VERSION=`uname -r`
+	else
+		SYS="Other"
+		SYS_VERSION="0.0"
+	fi
+
+	case $SYS in
+	SunOS)
+		case $SYS_VERSION in
+		5.6|5.6.*)
+			SYS_MAKEFLAGS=""
+			SYS_IMAKEFLAGS="-DSys_Name=Solaris2 -DSYSV -DSOLARIS2"
+			SYS_MAKEDEPENDFLAGS=""
+			SYS_CPPFLAGS="-DSYSV -DSOLARIS2 -DHAS_SYSINFO -DHAS_FDATASYNC -DHAS_BSD_GETTIMEOFDAY -DHAS_INT_USLEEP -DHAVE_SELECT"
+			SYS_CPPINCLUDES=""
+			SYS_CPLUSPLUSFLAGS=""
+			SYS_LDFLAGS=""
+			SYS_LDLIBRARIES="-lsocket -lnsl"
+			SYS_LDLIBDEPENDS=""
+			CPLUSPLUS_PROGRAM="CC"
+			;;
+		5.5|5.5.*)
+			SYS_MAKEFLAGS=""
+			SYS_IMAKEFLAGS="-DSys_Name=Solaris2 -DSYSV -DSOLARIS2"
+			SYS_MAKEDEPENDFLAGS=""
+			SYS_CPPFLAGS="-DSYSV -DSOLARIS2 -DHAS_SYSINFO -DHAS_FDATASYNC -DHAS_BSD_GETTIMEOFDAY -DHAS_INT_USLEEP -DHAVE_SELECT"
+			SYS_CPPINCLUDES=""
+			SYS_CPLUSPLUSFLAGS=""
+			SYS_LDFLAGS=""
+			SYS_LDLIBRARIES="-lsocket -lnsl"
+			SYS_LDLIBDEPENDS=""
+			CPLUSPLUS_PROGRAM="CC"
+			;;
+		5.*)	SYS_MAKEFLAGS=""
+			SYS_IMAKEFLAGS="-DSys_Name=Solaris2 -DSYSV -DSOLARIS2"
+			SYS_MAKEDEPENDFLAGS=""
+			SYS_CPPFLAGS="-DSYSV -DSOLARIS2 -DHAS_SYSINFO -DHAS_FDATASYNC -DHAS_INT_USLEEP -DHAVE_SELECT"
+			SYS_CPPINCLUDES=""
+			SYS_CPLUSPLUSFLAGS=""
+			SYS_LDFLAGS=""
+			SYS_LDLIBRARIES="-lsocket -lnsl"
+			SYS_LDLIBDEPENDS=""
+			CPLUSPLUS_PROGRAM="CC"
+			;;
+		4.*)	SYS_MAKEFLAGS=""
+			SYS_IMAKEFLAGS="-DSys_Name=SunOS4 -DBSD -DSUNOS4 -DUSE_RANLIB"
+			SYS_MAKEDEPENDFLAGS=""
+			SYS_CPPFLAGS="-DBSD -DSUNOS4 -DHAS_BSD_GETTIMEOFDAY -DHAS_INT_USLEEP -DNEED_FCHMOD -DNEED_FSYNC -DNEED_RENAME"
+			SYS_CPPINCLUDES=""
+			SYS_CPLUSPLUSFLAGS=""
+			SYS_LDFLAGS=""
+			SYS_LDLIBRARIES=""
+			SYS_LDLIBDEPENDS=""
+			CPLUSPLUS_PROGRAM="CC"
+			;;
+		esac
+		;;
+	HP-UX)	SYS_MAKEFLAGS=""
+		SYS_IMAKEFLAGS="-DSys_Name=HPUX -DSYSV -DHPUX -DMakeProg=gnumake -DCPP_HAS_HASHHASH"
+		SYS_MAKEDEPENDFLAGS=""
+		SYS_CPPFLAGS="-DSYSV -DHPUX -DHAS_BSD_GETTIMEOFDAY -DNEED_INT_USLEEP -DHAS_INT_USLEEP"
+		SYS_CPPINCLUDES=""
+		SYS_CPLUSPLUSFLAGS=""
+		SYS_LDFLAGS=""
+		SYS_LDLIBRARIES="-ldbm"
+		SYS_LDLIBDEPENDS=""
+		CPLUSPLUS_PROGRAM="CC"
+		;;
+	Linux)	SYS_MAKEFLAGS="--no-print-directory"
+		SYS_IMAKEFLAGS="-DSys_Name=Linux -DSYSV -DLINUX -DUSE_RANLIB"
+		SYS_MAKEDEPENDFLAGS=""
+		SYS_CPPFLAGS="-DSYSV -DLINUX -DHAS_BSD_GETTIMEOFDAY -DHAS_VOID_USLEEP -DNEED_RENAME"
+		SYS_CPPINCLUDES=""
+		SYS_CPLUSPLUSFLAGS=""
+		SYS_LDFLAGS=""
+		SYS_LDLIBRARIES="-lgdbm"
+		SYS_LDLIBDEPENDS=""
+		CPLUSPLUS_PROGRAM="g++"
+		;;
+	AIX)	SYS_MAKEFLAGS=""
+		SYS_IMAKEFLAGS="-DSys_Name=AIX -DSYSV -DAIX"
+		SYS_MAKEDEPENDFLAGS=""
+		SYS_CPPFLAGS="-DSYSV -DAIX -DHAS_BSD_GETTIMEOFDAY -DHAS_VOID_USLEEP"
+		SYS_CPPINCLUDES=""
+		SYS_CPLUSPLUSFLAGS=""
+		SYS_LDFLAGS=""
+		SYS_LDLIBRARIES=""
+		SYS_LDLIBDEPENDS=""
+		CPLUSPLUS_PROGRAM="xlC"
+		;;
+	WIN32)	SYS_MAKEFLAGS="-nologo"
+		SYS_IMAKEFLAGS="-DSys_Name=MSWindows -DWIN32 -DHAS_MULTILINEMAKESUBDIR -DHAS_RECURSIVEMAKEVARIABLES -DMakeProg=nmake -DNEED_VOID_USLEEP -DHAS_VOID_USLEEP"
+		SYS_MAKEDEPENDFLAGS=""
+		SYS_CPPFLAGS="-DWIN32"
+		SYS_CPPINCLUDES=""
+		SYS_CPLUSPLUSFLAGS=""
+		SYS_LDFLAGS=""
+		SYS_LDLIBRARIES=""
+		SYS_LDLIBDEPENDS=""
+		CPLUSPLUS_PROGRAM="CL"
+		;;
+	CYGWIN_95*)	SYS_MAKEFLAGS="-nologo"
+		SYS_IMAKEFLAGS="-DSys_Name=MSWindows -DWIN32 -DHAS_MULTILINEMAKESUBDIR -DHAS_RECURSIVEMAKEVARIABLES -DMakeProg=nmake -DNEED_VOID_USLEEP -DHAS_VOID_USLEEP"
+		SYS_MAKEDEPENDFLAGS=""
+		SYS_CPPFLAGS="-DWIN32"
+		SYS_CPPINCLUDES=""
+		SYS_CPLUSPLUSFLAGS=""
+		SYS_LDFLAGS=""
+		SYS_LDLIBRARIES=""
+		SYS_LDLIBDEPENDS=""
+		CPLUSPLUS_PROGRAM="CL"
+		SYS="WIN32"
+		SYS_VERSION="9x"
+		;;
+	*)	SYS_MAKEFLAGS=""
+		SYS_IMAKEFLAGS="-DSys_Name=Other -DUSE_RANLIB"
+		SYS_MAKEDEPENDFLAGS=""
+		SYS_CPPFLAGS=""
+		SYS_CPPINCLUDES=""
+		SYS_CPLUSPLUSFLAGS=""
+		SYS_LDFLAGS=""
+		SYS_LDLIBRARIES=""
+		SYS_LDLIBDEPENDS=""
+		CPLUSPLUS_PROGRAM="CC"
+		;;
+	esac
+
+	echo
+	echo "System "$SYS" version "$SYS_VERSION
+
+	TOPDIR=`pwd`
+	INSTALLTOPDIR=/usr/local/Gandiva1.5.0
+	echo
+	echo $PRE_ECHO "Root of directory of Gandiva installation ["$INSTALLTOPDIR"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		INSTALLTOPDIR=$INPUT
+	fi
+
+	echo
+	echo $PRE_ECHO "C++ compiler ["$CPLUSPLUS_PROGRAM"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		CPLUSPLUS_PROGRAM=$INPUT
+	fi
+
+	echo
+	echo $PRE_ECHO "Checking for" $CPLUSPLUS_PROGRAM "... " $POST_ECHO
+	echo 'main(){}' > configtest.C
+	($CPLUSPLUS_PROGRAM -c configtest.C) > /dev/null 2>&1
+	if [ $? -ne 0 ]
+	then
+		echo "Cannot find $CPLUSPLUS_PROGRAM"
+		exit
+	fi
+	rm -f configtest.*
+
+	#
+	# If we are using Insure++ then we need to replace the compiler with insight, but
+	# remember the actual compiler so that we get the right options set.
+	#
+
+	case "$CPLUSPLUS_PROGRAM" in
+	*gcc*|*g++*) version="`$CPLUSPLUS_PROGRAM -v 2>&1 | grep version | sed 's/^[^0-9]*\([0-9.]*\).*/\1/'`"
+		echo "version is "$version
+		case "$version" in
+		2.3.*|2.4.*)	echo "Sorry - Gandiva requires at least g++ 2.5.0"
+			exit
+			;;
+		2.5.8*)	COMP="GCC2.5.8"
+			COMP_MAKEFLAGS=""
+			COMP_IMAKEFLAGS="-DComp_Name=GNU_gcc_2.5.8 -DGCC2_5_8"
+			COMP_MAKEDEPENDFLAGS=""
+			COMP_CPPFLAGS="-DGCC2_5_8 -DNEED_GCC_PROTOTYPES"
+			COMP_CPPINCLUDES=""
+			COMP_CPLUSPLUSFLAGS=""
+			COMP_LDFLAGS=""
+			COMP_LDLIBRARIES=""
+			COMP_LDLIBDEPENDS=""
+			;;
+		2.6.3*)	COMP="GCC2.6.3"
+			COMP_MAKEFLAGS=""
+			COMP_IMAKEFLAGS="-DComp_Name=GNU_gcc_2.6.3 -DGCC2_6_3"
+			COMP_MAKEDEPENDFLAGS=""
+			COMP_CPPFLAGS="-DGCC2_6_3 -DNEED_GCC_PROTOTYPES"
+			COMP_CPPINCLUDES=""
+			COMP_CPLUSPLUSFLAGS=""
+			COMP_LDFLAGS=""
+			COMP_LDLIBRARIES=""
+			COMP_LDLIBDEPENDS=""
+			;;
+		2.7.0*)	COMP="GCC2.7.0"
+			COMP_MAKEFLAGS=""
+			COMP_IMAKEFLAGS="-DComp_Name=GNU_gcc_2.7.0 -DGCC2_7_0"
+			COMP_MAKEDEPENDFLAGS=""
+			COMP_CPPFLAGS="-DGCC2_7_0 -DNEED_GCC_PROTOTYPES"
+			COMP_CPPINCLUDES=""
+			COMP_CPLUSPLUSFLAGS=""
+			COMP_LDFLAGS=""
+			COMP_LDLIBRARIES=""
+			COMP_LDLIBDEPENDS=""
+			;;
+		2.7.1*)	COMP="GCC2.7.1"
+			COMP_MAKEFLAGS=""
+			COMP_IMAKEFLAGS="-DComp_Name=GNU_gcc_2.7.1 -DGCC2_7_1"
+			COMP_MAKEDEPENDFLAGS=""
+			COMP_CPPFLAGS="-DGCC2_7_1"
+			COMP_CPPINCLUDES=""
+			COMP_CPLUSPLUSFLAGS=""
+			COMP_LDFLAGS=""
+			COMP_LDLIBRARIES=""
+			COMP_LDLIBDEPENDS=""
+			;;
+		2.7.2*)	COMP="GCC2.7.2"
+			COMP_MAKEFLAGS=""
+			COMP_IMAKEFLAGS="-DComp_Name=GNU_gcc_2.7.2 -DGCC2_7_2"
+			COMP_MAKEDEPENDFLAGS=""
+			COMP_CPPFLAGS="-DGCC2_7_2"
+			COMP_CPPINCLUDES=""
+			if test "$SYS" = "Linux"
+			then
+			    COMP_CPLUSPLUSFLAGS="-DHAS_ISTRSTREAM_BUG"
+			else
+			    COMP_CPLUSPLUSFLAGS=""
+			fi
+			COMP_LDFLAGS=""
+			COMP_LDLIBRARIES=""
+			COMP_LDLIBDEPENDS=""
+			;;
+		2.8.1*)	COMP="GCC2.8.1"
+			COMP_MAKEFLAGS=""
+			COMP_IMAKEFLAGS="-DComp_Name=GNU_gcc_2.8.1 -DGCC2_8_1"
+			COMP_MAKEDEPENDFLAGS=""
+			COMP_CPPFLAGS="-DGCC2_8_1"
+			COMP_CPPINCLUDES=""
+			COMP_LDFLAGS=""
+			COMP_LDLIBRARIES=""
+			COMP_LDLIBDEPENDS=""
+			;;
+		2.90.*)	COMP="GCC2.90.0"
+			COMP_MAKEFLAGS=""
+			COMP_IMAKEFLAGS="-DComp_Name=GNU_gcc_2.90.0 -DGCC2_90_0"
+			COMP_MAKEDEPENDFLAGS=""
+			COMP_CPPFLAGS="-DGCC2_90_0"
+			COMP_CPPINCLUDES=""
+			COMP_LDFLAGS=""
+			COMP_LDLIBRARIES=""
+			COMP_LDLIBDEPENDS=""
+			;;
+		2.91.*)	COMP="GCC2.91.0"
+			COMP_MAKEFLAGS=""
+			COMP_IMAKEFLAGS="-DComp_Name=GNU_gcc_2.91.0 -DGCC2_91_0"
+			COMP_MAKEDEPENDFLAGS=""
+			COMP_CPPFLAGS="-DGCC2_91_0"
+			COMP_CPPINCLUDES=""
+			COMP_LDFLAGS=""
+			COMP_LDLIBRARIES=""
+			COMP_LDLIBDEPENDS=""
+			;;
+		*)	COMP="GCC"$version
+			COMP_MAKEFLAGS=""
+			echo "-DGCC_"$version > version
+			sed -e 's/\./_/g' < version > version.tmp
+			VERSION=`awk '{print $0}' version.tmp`
+			rm -f version version.tmp
+
+			COMP_IMAKEFLAGS="-DComp_Name=GNU_gcc_"$version" $VERSION"
+			COMP_MAKEDEPENDFLAGS=""
+			COMP_CPPFLAGS="-DGCC"$VERSION" -DNEED_GCC_PROTOTYPES"
+			COMP_CPPINCLUDES=""
+			COMP_CPLUSPLUSFLAGS=""
+			COMP_LDFLAGS=""
+			COMP_LDLIBRARIES=""
+			COMP_LDLIBDEPENDS=""
+			;;
+		esac
+		;;
+	BCC)	COMP="BCC4.0"
+		COMP_MAKEFLAGS=""
+		COMP_IMAKEFLAGS="-DComp_Name=Borland_C++_4.0 -DBCC4_0"
+		COMP_MAKEDEPENDFLAGS=""
+		COMP_CPPFLAGS="-DBCC4_0"
+		COMP_CPPINCLUDES=""
+		COMP_CPLUSPLUSFLAGS=""
+		COMP_LDFLAGS=""
+		COMP_LDLIBRARIES=""
+		COMP_LDLIBDEPENDS=""
+		;;
+	CL)	COMP="MSVCC"
+		COMP_MAKEFLAGS=""
+		COMP_IMAKEFLAGS="-DComp_Name=Microsoft_Visual_C++ -DMSVCC"
+		COMP_MAKEDEPENDFLAGS=""
+		COMP_CPPFLAGS="-DMSVCC -D__STDC__"
+		COMP_CPPINCLUDES=""
+		COMP_CPLUSPLUSFLAGS=""
+		COMP_LDFLAGS=""
+		COMP_LDLIBRARIES=""
+		COMP_LDLIBDEPENDS=""
+		CPLUSPLUS_INCLUDE_DEFAULT="$MSVCC_DIR/include"
+		;;
+	*CC*)	echo 'int x;' > configtest.C 
+		fullversion="`$CPLUSPLUS_PROGRAM -V 2>&1| grep -v 'warning' | grep '^CC:'`"
+		if [ -z "$fullversion" ]
+		then
+			fullversion="`$CPLUSPLUS_PROGRAM -F configtest.C 2>/dev/null| grep '<<' | sed -e 's|.*\(<<.*>>\).*|\1|'`"
+		fi
+		rm -f configtest.C
+
+		case "$fullversion" in
+			*SC*)version="`echo $fullversion | sed -e 's|.*\(SC[0-9.]*\).*|\1|'`";;
+			*WorkShop*)version="`echo $fullversion`";;
+			*AT*)version="`echo $fullversion | sed -e 's|<<[^0-9]*\([0-9.]*\).*>>|\1|'`" ;;
+			*Sun*)version="`echo $fullversion | sed -e 's|<<[^0-9]*\([0-9.]*\).*>>|\1|'`" ;;
+			*HP*)version="`echo $fullversion | sed -e 's|<<.*A\.\([0-9.]*\).*>>|A.\1|'`" ;;
+			*) version=unknown ;;
+		esac
+
+		echo "version is "$version
+		case "$version" in
+		SC2*)	COMP="SUNCC2.0.1"
+			COMP_MAKEFLAGS=""
+			COMP_IMAKEFLAGS="-DComp_Name=Sun_C++_2.0.1 -DSCC2_0_1"
+			COMP_MAKEDEPENDFLAGS=""
+			COMP_CPPFLAGS="-DSCC2_0_1"
+			COMP_CPPINCLUDES=""
+			COMP_CPLUSPLUSFLAGS=""
+			COMP_LDFLAGS="-L/opt/SUNWspro/SC2.0.1"
+			COMP_LDLIBRARIES=""
+			COMP_LDLIBDEPENDS=""
+			;;
+		SC3.0)	COMP="SUNCC3.0"
+			COMP_MAKEFLAGS=""
+			COMP_IMAKEFLAGS="-DComp_Name=Sun_C++_3.0 -DSCC3_0"
+			COMP_MAKEDEPENDFLAGS=""
+			COMP_CPPFLAGS="-DSCC3_0"
+			COMP_CPPINCLUDES=""
+			COMP_CPLUSPLUSFLAGS=""
+			COMP_LDFLAGS=""
+			COMP_LDLIBRARIES=""
+			COMP_LDLIBDEPENDS=""
+			;;
+		SC3.*)	COMP="SUNCC3.0.1"
+			COMP_MAKEFLAGS=""
+			COMP_IMAKEFLAGS="-DComp_Name=Sun_C++_3.0.1 -DSCC3_0_1"
+			COMP_MAKEDEPENDFLAGS=""
+			COMP_CPPFLAGS="-DSCC3_0_1"
+			COMP_CPPINCLUDES=""
+			COMP_CPLUSPLUSFLAGS=""
+			COMP_LDFLAGS=""
+			COMP_LDLIBRARIES=""
+			COMP_LDLIBDEPENDS=""
+			;;
+	    *WorkShop*) COMP="SUNCC4.2"
+			COMP_MAKEFLAGS=""
+			COMP_IMAKEFLAGS="-DComp_Name=Sun_C++_4.2 -DSCC4_2"
+			COMP_MAKEDEPENDFLAGS=""
+			COMP_CPPFLAGS="-DSCC4_2"
+			COMP_CPPINCLUDES=""
+			COMP_CPLUSPLUSFLAGS=""
+			COMP_LDFLAGS=""
+			COMP_LDLIBRARIES=""
+			COMP_LDLIBDEPENDS=""
+			;;
+		3.0.1)	COMP="CC3.0.1"
+			COMP_MAKEFLAGS=""
+			COMP_IMAKEFLAGS="-DComp_Name=Cfront_3.0.1 -DCC3_0_1"
+			COMP_MAKEDEPENDFLAGS=""
+			COMP_CPPFLAGS="-DCC3_0_1"
+			COMP_CPPINCLUDES=""
+			COMP_CPLUSPLUSFLAGS=""
+			COMP_LDFLAGS=""
+			COMP_LDLIBRARIES=""
+			COMP_LDLIBDEPENDS=""
+			;;
+		A.03.*)	COMP="HPCC3.5"
+			COMP_MAKEFLAGS=""
+			COMP_IMAKEFLAGS="-DComp_Name=HP_C++_3.5 -DHPCC3_5"
+			COMP_MAKEDEPENDFLAGS=""
+			COMP_CPPFLAGS="-DHPCC3_5 -DCPP_HAS_HASHHASH"
+			COMP_CPPINCLUDES=""
+			COMP_CPLUSPLUSFLAGS=""
+			COMP_LDFLAGS=""
+			COMP_LDLIBRARIES=""
+			COMP_LDLIBDEPENDS=""
+			;;
+		A.10.*)	COMP="HPCC10"
+			COMP_MAKEFLAGS=""
+			COMP_IMAKEFLAGS="-DComp_Name=HP_C++_10 -DHPCC10"
+			COMP_MAKEDEPENDFLAGS=""
+			COMP_CPPFLAGS="-DHPCC10 -DCPP_HAS_HASHHASH"
+			COMP_CPPINCLUDES=""
+			COMP_CPLUSPLUSFLAGS=""
+			COMP_LDFLAGS=""
+			COMP_LDLIBRARIES=""
+			COMP_LDLIBDEPENDS=""
+			;;
+		unknown)	COMP="OTHER"
+			COMP_MAKEFLAGS=""
+			COMP_IMAKEFLAGS="-DComp_Name=Other_C++"
+			COMP_MAKEDEPENDFLAGS=""
+			COMP_CPPFLAGS=""
+			COMP_CPPINCLUDES=""
+			COMP_CPLUSPLUSFLAGS=""
+			COMP_LDFLAGS=""
+			COMP_LDLIBRARIES=""
+			COMP_LDLIBDEPENDS=""
+			;;
+		esac
+		;;
+	*)	COMP="OTHER"
+		COMP_MAKEFLAGS=""
+		COMP_IMAKEFLAGS="-DComp_Name=Other_C++"
+		COMP_MAKEDEPENDFLAGS=""
+		COMP_CPPFLAGS=""
+		COMP_CPPINCLUDES=""
+		COMP_CPLUSPLUSFLAGS=""
+		COMP_LDFLAGS=""
+		COMP_LDLIBRARIES=""
+		COMP_LDLIBDEPENDS=""
+		;;
+	esac
+
+	if test "$PURIFYON" = "YES"
+	then
+	        echo
+	        echo "Software checking tool :"
+		echo 
+		echo "    1) Purify"
+		echo "    2) Insure++"
+		echo
+		INPUT="xxxx"
+		FINISHED=""
+		while test -z "$FINISHED"
+		do
+		    echo $PRE_ECHO "Package number : " $POST_ECHO
+		    read INPUT
+
+		    case $INPUT in
+		    1) echo "Sorry, not currently supported"
+		       FINISHED="TRUE"
+		       ;;
+		    2) COMP_IMAKEFLAGS="-DCPLUSPLUSProg="$INSIGHT" "$COMP_IMAKEFLAGS
+		       FINISHED="TRUE"
+		       ;;
+		    esac
+		done
+	else
+	        COMP_IMAKEFLAGS="-DCPLUSPLUSProg="$CPLUSPLUS_PROGRAM" "$COMP_IMAKEFLAGS
+	fi
+
+	if test "'x$CPLUSPLUS_INCLUDE_DEFAULT'" = "'x'"
+	then
+		echo '#include <iostream.h>' > configtest.C
+		CPLUSPLUS_INCLUDE_DEFAULT=`$CPLUSPLUS_PROGRAM -E configtest.C | grep "/iostream.h" | head -1 | sed -e 's|[^"]*"\([^"]*\).*|\1|' -e 's|/iostream.h||'`
+		rm -f configtest.C
+		
+		COMP_MAKEDEPENDFLAGS=$COMP_MAKEDEPENDFLAGS" -I$CPLUSPLUS_INCLUDE_DEFAULT"
+		COMP_CPPINCLUDES=$COMP_CPPINCLUDES" -I$CPLUSPLUS_INCLUDE_DEFAULT"
+	else
+		COMP_MAKEDEPENDFLAGS=$COMP_MAKEDEPENDFLAGS" -I$CPLUSPLUS_INCLUDE_DEFAULT"
+		echo
+	fi
+
+	echo
+	echo "Compiler pre-processor flags:"
+	echo "-DDEBUG           Enable debugging messages"
+	echo "-DNO_INLINES      Disable inlining"
+	echo
+	echo $PRE_ECHO "Flags ["$CONF_CPPFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			CONF_CPPFLAGS=$INPUT
+		else
+			CONF_CPPFLAGS=""
+		fi
+	fi
+
+	echo
+	echo "C++ compiler flags:"
+	echo "-g                Enable debugging"
+	echo "-O                Enable optimisation"
+	echo
+	echo $PRE_ECHO "Flags ["$CONF_CPLUSPLUSFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then	
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			CONF_CPLUSPLUSFLAGS=$INPUT
+		else
+			CONF_CPLUSPLUSFLAGS=""
+		fi
+	fi
+
+	echo
+	echo "Loader flags:"
+	echo "-g                Enable debugging"
+	echo "-O                Enable optimisation"
+	echo
+	echo $PRE_ECHO "Flags ["$CONF_LDFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			CONF_LDFLAGS=$INPUT
+		else
+			CONF_LDFLAGS=""
+		fi
+	fi
+
+	CONF_MAKEFLAGS=""
+	CONF_IMAKEFLAGS="-TGandiva.tmpl"
+	CONF_MAKEDEPENDFLAGS=""
+	CONF_CPPINCLUDES=""
+	CONF_LDLIBRARIES=""
+	CONF_LDLIBRDEPENDS=""
+
+	LOCAL_MAKEFLAGS=""
+	LOCAL_IMAKEFLAGS="-DVerboseMake=No -DTopDir="$TOPDIR" -DInstallTopDir="$INSTALLTOPDIR" "
+	LOCAL_MAKEDEPENDFLAGS=""
+	LOCAL_CPPFLAGS="-I\$(GANDIVATOPDIR)/lib"
+	LOCAL_CPPINCLUDES=""
+	LOCAL_CPLUSPLUSFLAGS=""
+	LOCAL_LDFLAGS=""
+	LOCAL_LDLIBRARIES=""
+	LOCAL_LDLIBDEPENDS=""
+
+	MODULE_MAKEFLAGS=""
+	MODULE_IMAKEFLAGS=""
+	MODULE_MAKEDEPENDFLAGS=""
+	MODULE_CPPFLAGS=""
+	MODULE_CPPINCLUDES=""
+	MODULE_CPLUSPLUSFLAGS=""
+	MODULE_LDFLAGS=""
+	MODULE_LDLIBRARIES=""
+	MODULE_LDLIBDEPENDS=""
+
+	MODULE_IMAKEFLAGS="-I\$(GANDIVATOPDIR)/config "$MODULE_IMAKEFLAGS
+	MODULE_CPPINCLUDES="-I\$(GANDIVATOPDIR)/include "$MODULE_CPPINCLUDES
+	if test $COMP = "CC3.0.1" -o $COMP = "SUNCC2.0.1" -o $COMP = "HPCC3.5" -o $COMP = "HPCC10"
+	then
+		MODULE_CPLUSPLUSFLAGS="-ptr\$(GANDIVATOPDIR)/Templates.DB -I\$(GANDIVATOPDIR)/include "$MODULE_CPLUSPLUSFLAGS
+		MODULE_LDFLAGS="-ptr\$(GANDIVATOPDIR)/Templates.DB -I\$(GANDIVATOPDIR)/include "$MODULE_LDFLAGS
+
+		if test $COMP != "CC3.0.1"
+		then
+			MODULE_CPLUSPLUSFLAGS="-DHAVE_TEMPLATE_REPOSITORY "$MODULE_CPLUSPLUSFLAGS
+		else
+			MODULE_CPLUSPLUSFLAGS="-DNO_NESTED_CLASSES "$MODULE_CPLUSPLUSFLAGS
+			MODULE_LDFLAGS="-DNO_NESTED_CLASSES "$MODULE_LDFLAGS
+		fi
+	elif test $COMP = "SUNCC3.0" -o $COMP = "SUNCC3.0.1" -o $COMP = "SUNCC4.2"
+	then
+		MODULE_CPLUSPLUSFLAGS="-DHAVE_TEMPLATE_REPOSITORY -ptr\$(GANDIVATOPDIR) -pti\$(GANDIVATOPDIR)/include "$MODULE_CPLUSPLUSFLAGS
+		MODULE_LDFLAGS="-ptr\$(GANDIVATOPDIR) -pti\$(GANDIVATOPDIR)/include "$MODULE_LDFLAGS
+	fi
+	MODULE_LDLIBRARIES="\$(GANDIVATOPDIR)/lib/libGandiva.a "$MODULE_LDLIBRARIES
+	MODULE_LDLIBDEPENDS="\$(GANDIVATOPDIR)/lib/libGandiva.a "$MODULE_LDLIBDEPENDS
+
+	echo
+	echo "Threads package :"
+	echo "    0) External threads"
+	echo
+	echo "    1) Sun threads (Solaris2)"
+	echo "    2) Sun light weight processes (SunOS4)"
+	echo "    3) pthreads (POSIX)"
+	echo "    4) PC threads (Linux)"
+	echo "    5) Rex light weight processes"
+	echo "    6) C threads"
+	echo "    7) Win95/WinNT threads"
+	echo "    8) C++ tasks"
+	echo "    9) LinuxThreads"
+	echo "   10) HPUX pthreads"
+	echo "   11) RCP threads"
+	echo "   12) OmniORB threads"
+	echo "   13) OrbPlus"
+	echo "   14) Single threaded"
+	echo ""
+	INPUT="xxxx"
+	FINISHED=""
+	while test -z "$FINISHED"
+	do
+		echo $PRE_ECHO "Package number : " $POST_ECHO
+		read INPUT
+
+	case $INPUT in
+	0)	LOCAL_IMAKEFLAGS=$LOCAL_IMAKEFLAGS" -DEXTERNAL_THREADPACKAGE"
+		FINISHED="TRUE"
+		;;
+	1)	LOCAL_IMAKEFLAGS=$LOCAL_IMAKEFLAGS" -DTHREADPACKAGE=Solaris"
+		case "$COMP" in
+		*SUNCC*)
+		    case "$CPLUSPLUS_PROGRAM" in
+		    *CC*) 	MODULE_CPLUSPLUSFLAGS=$MODULE_CPLUSPLUSFLAGS" -mt"
+				MODULE_LDFLAGS=$MODULE_LDFLAGS" -mt"
+				;;
+		    esac
+				MODULE_CPPFLAGS="-DHAS_MTSAFE_SELECT -DHAS_MTAWARE_SELECT "$MODULE_CPPFLAGS
+				;;
+		*)		MODULE_LDLIBRARIES=$MODULE_LDLIBRARIES" -lthread"
+				MODULE_CPPFLAGS="-DHAS_MTSAFE_SELECT -DHAS_MTAWARE_SELECT "$MODULE_CPPFLAGS
+				;;
+		esac
+		FINISHED="TRUE"
+		;;
+	2)	echo '#include <lwp/lwp.h>' > configtest.C
+		LWP_CHECKDIR=`$CPLUSPLUS_PROGRAM -E configtest.C | grep "/lwp.h" | head -1 |sed -e 's|[^"]*"\([^"]*\).*|\1|' -e 's|/lwp.h||'`
+		rm -f configtest.C
+
+		#
+		# Assume if the prototype for lwp_create is not present then
+		# the others will also not be there.
+		#
+
+		TEMPVAR=`grep lwp_create $LWP_CHECKDIR/lwp.h`
+		if test -z "$TEMPVAR"
+		then
+			MODULE_CPPFLAGS=$MODULE_CPPFLAGS" -DBROKEN_LWP_H"
+		fi
+
+		LOCAL_IMAKEFLAGS=$LOCAL_IMAKEFLAGS" -DTHREADPACKAGE=SunLWP"
+		MODULE_LDLIBRARIES=$MODULE_LDLIBRARIES" -lnbio -llwp"
+		MODULE_CPPFLAGS="-DHAS_MTAWARE_SELECT "$MODULE_CPPFLAGS
+		FINISHED="TRUE"
+		;;
+	3)	PTHREAD_DRAFT=sun
+		echo
+		echo $PRE_ECHO "What is the draft version (6, 8, sun)? ["$PTHREAD_DRAFT"] : " $POST_ECHO
+		read INPUT
+		if test "'x$INPUT'" != "'x'"
+		then
+		    PTHREAD_DRAFT=$INPUT
+		fi
+
+		if test "'x$PTHREAD_DRAFT'" = "'x6'"
+		then
+			MODULE_CPPFLAGS=$MODULE_CPPFLAGS" -DPTHREAD_DRAFT_6 -DHAS_TV_TIMESPEC -DHAVE_VOID_YIELD"
+			MODULE_LDLIBRARIES=$MODULE_LDLIBRARIES" -lpthread"
+		fi
+		if test "'x$PTHREAD_DRAFT'" = "'x8'"
+		then
+			MODULE_CPPFLAGS=$MODULE_CPPFLAGS" -DPTHREAD_DRAFT_8 -DNEED_ANY_T -DHAS_TV_TIMESPEC -DHAVE_RECURSIVE_MUTEX"
+			MODULE_LDLIBRARIES=$MODULE_LDLIBRARIES" -lpthread -lm"
+		fi
+		if test "'x$PTHREAD_DRAFT'" = "'xsun'"
+		then
+		    case "$CPLUSPLUS_PROGRAM" in
+		    *CC*) MODULE_CPPFLAGS=$MODULE_CPPFLAGS" -mt"
+			  ;;
+		    esac
+			MODULE_CPPFLAGS=$MODULE_CPPFLAGS" -D_REENTRANT -DPTHREAD_SUN -DNEED_ANY_T -DHAS_TV_TIMESPEC"
+			MODULE_LDLIBRARIES=$MODULE_LDLIBRARIES" -lpthread -lposix4 -lthread"
+		fi
+
+		LOCAL_IMAKEFLAGS=$LOCAL_IMAKEFLAGS" -DTHREADPACKAGE=Posix"
+		FINISHED="TRUE"
+		;;
+	4)	LOCAL_IMAKEFLAGS=$LOCAL_IMAKEFLAGS" -DTHREADPACKAGE=PC"
+		MODULE_CPPFLAGS=$MODULE_CPPFLAGS" -DNEED_ANY_T"
+		MODULE_LDLIBRARIES=$MODULE_LDLIBRARIES" -lpthread -lexc"
+		FINISHED="TRUE"
+		;;
+	5)	LOCAL_IMAKEFLAGS=$LOCAL_IMAKEFLAGS" -DTHREADPACKAGE=RexLWP"
+		MODULE_LDLIBRARIES=$MODULE_LDLIBRARIES" -llwp"
+		FINISHED="TRUE"
+		;;
+	6)	CTHREAD_THREADS=10
+		CTHREAD_STACK=10240
+		echo
+		echo "CThreads places a limit on the number of threads in a"
+		echo "process and all threads must be assigned the same amount"
+		echo "of stack space. These values must be chosen now; any"
+		echo "attempts to change these during the execution of an"
+		echo "application will be ignored."
+		echo
+		echo $PRE_ECHO "Number of threads per process ["$CTHREAD_THREADS"] : " $POST_ECHO
+		read INPUT
+		echo
+		if test "'x$INPUT'" != "'x'"
+		then
+			CTHREADS_THREADS=$INPUT
+		fi
+
+		echo $PRE_ECHO "Thread stack size ["$CTHREAD_STACK"] : " $POST_ECHO
+		read INPUT
+		echo
+		if test "'x$INPUT'" != "'x'"
+		then
+			CTHREADS_STACK=$INPUT
+		fi
+
+		LOCAL_IMAKEFLAGS=$LOCAL_IMAKEFLAGS" -DTHREADPACKAGE=C"
+		MODULE_CPPFLAGS=$MODULE_CPPFLAGS" -DCTHREAD_THREADS="$CTHREAD_THREADS" -DCTHREAD_STACK="$CTHREAD_STACK
+		MODULE_LDLIBRARIES=$MODULE_LDLIBRARIES" -lcthreads -lIO"
+		FINISHED="TRUE"
+		;;
+	7)	LOCAL_IMAKEFLAGS=$LOCAL_IMAKEFLAGS" -DTHREADPACKAGE=NT"
+		FINISHED="TRUE"
+		;;
+	8)	LOCAL_IMAKEFLAGS=$LOCAL_IMAKEFLAGS" -DTHREADPACKAGE=CPPTask"
+		case $SYS in
+		HP-UX) 	MODULE_LDLIBRARIES=$MODULE_LDLIBRARIES" -ltask -lV3"
+			;;
+		*)	MODULE_LDLIBRARIES=$MODULE_LDLIBRARIES" -ltask"
+			;;
+		esac
+		FINISHED="TRUE"
+		;;
+	9)      LOCAL_IMAKEFLAGS=$LOCAL_IMAKEFLAGS" -DLINUXTHREADS -DTHREADPACKAGE=Linux"
+		MODULE_CPPFLAGS="-DHAS_MTSAFE_SELECT -DHAS_MTAWARE_SELECT -D_REENTRANT -DHAVE_RECURSIVE_MUTEX -DNEED_ANY_T -DHAS_TV_TIMESPEC -DLINUXTHREADS "$MODULE_CPPFLAGS
+		MODULE_LDLIBRARIES=$MODULE_LDLIBRARIES" -lpthread"
+		FINISHED="TRUE"
+		;;
+        10)     LOCAL_IMAKEFLAGS=$LOCAL_IMAKEFLAGS" -DHPPOSIXTHREADS -DTHREADPACKAGE=HPPosix"
+		MODULE_CPPFLAGS=$MODULE_CPPFLAGS" -D_CMA_NOWRAPPERS_ -DPTHREAD_HPUX -D_REENTRANT -DHAVE_STRUCT_PTHREAD_T -DHAVE_RECURSIVE_MUTEX -DHAVE_DCE_THREAD -DHAVE_VOID_YIELD"
+		MODULE_LDLIBRARIES=$MODULE_LDLIBRARIES" -ldce"
+		FINISHED="TRUE"
+		;;
+	11)     LOCAL_IMAKEFLAGS=$LOCAL_IMAKEFLAGS" -DRCPTHREADS -DTHREADPACKAGE=RCPORB"
+		MODULE_IMAKEFLAGS=$MODULE_IMAKEFLAGS" -DRCPTHREADS"
+		MODULE_CPPFLAGS=$MODULE_CPPFLAGS" -I\$(ODS_ROOT)/CORBA/include -I\$(ODS_ROOT)/ODSCL/include -I\$(ODS_ROOT)/ORB/include -I\$(ODS_ROOT)/ORB++/include -I\$(ODS_ROOT)/nucleus/include"
+		MODULE_LDFLAGS=$MODULE_LDFLAGS" -L\$(ODS_ROOT)/lib -L\$(ODS_ROOT)/nucleus/lib"
+		
+		case $SYS in
+		SunOS)
+		    MODULE_CPPFLAGS="-DON_SOLARIS_2 -D_REENTRANT -DON_SUN4 -DON_THREADS -DON_ASSERTIONS "$MODULE_CPPFLAGS
+		    MODULE_LDLIBRARIES=$MODULE_LDLIBRARIES" -lorb++ -lodscl -lm -lsocket -lnsl -lposix4 -lorb -lrni \$(ODS_ROOT)/lib/ON_udp.o \$(ODS_ROOT)/lib/ON_llb.o \$(ODS_ROOT)/lib/ON_lmp.o \$(ODS_ROOT)/lib/ON_uclp.o"
+		    case "$CPLUSPLUS_PROGRAM" in
+		    *CC*)	MODULE_CPLUSPLUSFLAGS=$MODULE_CPLUSPLUSFLAGS" -mt"
+				MODULE_LDFLAGS="-mt "$MODULE_LDFLAGS
+				;;
+		    esac
+		    ;;
+		HP-UX)
+		    MODULE_CPPFLAGS="-DON_HP9000S70 -D_REENTRANT -DON_THREADS -DON_ASSERTIONS "$MODULE_CPPFLAGS
+		    MODULE_LDLIBRARIES=$MODULE_LDLIBRARIES" -lorb++ -lutils -lodscl -lm -lorb -lrni \$(ODS_ROOT)/nucleus/lib/ON_udp.o \$(ODS_ROOT)/nucleus/lib/ON_llb.o \$(ODS_ROOT)/nucleus/lib/ON_lmp.o \$(ODS_ROOT)/nucleus/lib/ON_uclp.o"
+		    ;;
+		esac
+
+		FINISHED="TRUE"
+		;;
+	12)     LOCAL_IMAKEFLAGS=$LOCAL_IMAKEFLAGS" -DOMNIORBTHREADS -DTHREADPACKAGE=OmniORB"
+		MODULE_CPPFLAGS=$MODULE_CPPFLAGS" -D__REENTRANT -I\$(OMNIORB_ROOT)/include"
+		MODULE_LDFLAGS=$MODULE_LDFLAGS" -L\$(OMNIORB_ROOT)/lib"
+	        MODULE_LDLIBRARIES=$MODULE_LDLIBRARIES" -lomnithread"
+
+		case $SYS in
+		SunOS|Solaris)
+		    case $SYS_VERSION in
+		    5.5*|5.6*)	MODULE_CPPFLAGS=$MODULE_CPPFLAGS" -D__sunos__ -D__OSVERSION__=5"
+				MODULE_LDLIBRARIES=$MODULE_LDLIBRARIES" -lposix4 -lpthread -lm"
+				case "$CPLUSPLUS_PROGRAM" in
+				*CC*) MODULE_CPLUSPLUSFLAGS=$MODULE_CPLUSPLUSFLAGS" -mt"
+				      MODULE_LDFLAGS=$MODULE_LDFLAGS" -mt"
+				      ;;
+				*gcc*|*g++*) MODULE_CPLUSPLUSFLAGS=$MODULE_CPLUSPLUSFLAGS" -fhandle-exceptions"
+				             ;;
+				esac
+				;;
+		    *)  	;;
+		    esac
+		;;
+		Linux)	MODULE_LDLIBRARIES=$MODULE_LDLIBRARIES" -lpthread -lm"
+			;;
+		esac
+
+		MODULE_LDLIBRARIES=" -lomnithread "$MODULE_LDLIBRARIES
+		FINISHED="TRUE"
+		;;
+	13)     LOCAL_IMAKEFLAGS=$LOCAL_IMAKEFLAGS" -DORBPLUSTHREADS -DTHREADPACKAGE=OrbPlus"
+		MODULE_CPPFLAGS=$MODULE_CPPFLAGS" -D_REENTRANT -I/opt/orbplus/include"
+
+		case $SYS in
+		SunOS|Solaris)  MODULE_LDLIBRARIES=$MODULE_LDLIBRARIES" -lmsdthread_sol -lthread -lPL"
+				MODULE_CPPFLAGS=$MODULE_CPPFLAGS" -DSUNOS5"
+				MODULE_LDFLAGS=$MODULE_LDFLAGS" -DSUNOS5"
+				case "$CPLUSPLUS_PROGRAM" in
+				*CC*) MODULE_CPLUSPLUSFLAGS=$MODULE_CPLUSPLUSFLAGS" -mt"
+				      ;;
+				esac
+				;;
+		*)              MODULE_LDLIBRARIES=$MODULE_LDLIBRARIS" -lmsdthread_pt4 -lPL -lcma"
+				MODULE_CPPFLAGS=$MODULE_CPPFLAGS" -D_HPUX_SOURCE"
+				MODULE_CPLUSPLUSFLAGS=$MODULE_CPLUSPLUSFLAGS" +eh"
+				;;
+		esac
+
+		FINISHED="TRUE"
+		;;		
+		
+	14)	LOCAL_IMAKEFLAGS=$LOCAL_IMAKEFLAGS" -DSINGLETHREADS -DTHREADPACKAGE=Single"
+
+		#
+		# Can specify MT_SAFE_SELECT since we are not multi-threaded!
+		#
+
+		MODULE_CPPFLAGS="-DHAS_MTSAFE_SELECT "$MODULE_CPPFLAGS
+		FINISHED="TRUE"
+		;;
+	esac
+
+	done
+
+	echo
+	INPUT=""
+	while test "'x$INPUT'" != "'xy'" -a "'x$INPUT'" != "'xn'"
+	do
+		echo $PRE_ECHO "Build test programs (y/n) : " $POST_ECHO
+		read INPUT
+	done
+	if test "'x$INPUT'" = "'xy'"
+	then	
+		INPUT=""
+		while test "'x$INPUT'" != "'xy'" -a "'x$INPUT'" != "'xn'"
+		do
+			echo $PRE_ECHO "Install test programs (y/n) : " $POST_ECHO
+			read INPUT
+		done
+		if test "'x$INPUT'" = "'xy'"
+		then	
+			LOCAL_IMAKEFLAGS="-DBUILDTESTS -DINSTALLTESTS "$LOCAL_IMAKEFLAGS
+		else
+			LOCAL_IMAKEFLAGS="-DBUILDTESTS -UINSTALLTESTS "$LOCAL_IMAKEFLAGS
+		fi
+	else
+		LOCAL_IMAKEFLAGS="-UBUILDTESTS -UINSTALLTESTS "$LOCAL_IMAKEFLAGS
+	fi
+
+	echo
+	INPUT=""
+	while test "'x$INPUT'" != "'xy'" -a "'x$INPUT'" != "'xn'"
+	do
+		echo $PRE_ECHO "Build utility programs (y/n) : " $POST_ECHO
+		read INPUT
+	done
+	if test "'x$INPUT'" = "'xy'"
+	then	
+		INPUT=""
+		while test "'x$INPUT'" != "'xy'" -a "'x$INPUT'" != "'xn'"
+		do
+			echo $PRE_ECHO "Install utility programs (y/n) : " $POST_ECHO
+			read INPUT
+		done
+		if test "'x$INPUT'" = "'xy'"
+		then	
+			LOCAL_IMAKEFLAGS="-DBUILDUTILITIES -DINSTALLUTILITIES "$LOCAL_IMAKEFLAGS
+		else
+			LOCAL_IMAKEFLAGS="-DBUILDUTILITIES -UINSTALLUTILITIES "$LOCAL_IMAKEFLAGS
+		fi
+	else
+		LOCAL_IMAKEFLAGS="-UBUILDUTILITIES -UINSTALLUTILITIES "$LOCAL_IMAKEFLAGS
+	fi
+
+else
+	TOPDIR=`pwd`
+	. $CONFIGFILE
+fi
+
+if test "$VERIFY" = "YES"
+then
+	echo
+	echo $PRE_ECHO "System make flags ["$SYS_MAKEFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			SYS_MAKEFLAGS=$INPUT
+		else
+			SYS_MAKEFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "System imake flags ["$SYS_IMAKEFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			SYS_IMAKEFLAGS=$INPUT
+		else
+			SYS_IMAKEFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "System makedepend flags ["$SYS_MAKEDEPENDFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			SYS_MAKEDEPENDFLAGS=$INPUT
+		else
+			SYS_MAKEDEPENDFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "System c pre-processor flags ["$SYS_CPPFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			SYS_CPPFLAGS=$INPUT
+		else
+			SYS_CPPFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "System c pre-processor includes ["$SYS_CPPINCLUDES"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			SYS_CPPINCLUDES=$INPUT
+		else
+			SYS_CPPINCLUDES=""
+		fi
+	fi
+
+	echo $PRE_ECHO "System c++ flags ["$SYS_CPLUSPLUSFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			SYS_CPLUSPLUSFLAGS=$INPUT
+		else
+			SYS_CPLUSPLUSFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "System ld flags ["$SYS_LDFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			SYS_LDFLAGS=$INPUT
+		else
+			SYS_LDFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "System ld libraries ["$SYS_LDLIBRARIES"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			SYS_LDLIBRARIES=$INPUT
+		else
+			SYS_LDLIBRARIES=""
+		fi
+	fi
+
+	echo $PRE_ECHO "System ld lib depends ["$SYS_LDLIBDEPENDS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			SYS_LDLIBDEPENDS=$INPUT
+		else
+			SYS_LDLIBDEPENDS=""
+		fi
+	fi
+
+	echo
+	echo $PRE_ECHO "Compiler make flags ["$COMP_MAKEFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			COMP_MAKEFLAGS=$INPUT
+		else
+			COMP_MAKEFLAGS=""
+		fi
+	fi
+	
+	echo $PRE_ECHO "Compiler imake flags ["$COMP_IMAKEFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			COMP_IMAKEFLAGS=$INPUT
+		else
+			COMP_IMAKEFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Compiler makedepend flags ["$COMP_MAKEDEPENDFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			COMP_MAKEDEPENDFLAGS=$INPUT
+		else
+			COMP_MAKEDEPENDFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Compiler c pre-processor flags ["$COMP_CPPFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			COMP_CPPFLAGS=$INPUT
+		else
+			COMP_CPPFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Compiler c pre-processor includes ["$COMP_CPPINCLUDES"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			COMP_CPPINCLUDES=$INPUT
+		else
+			COMP_CPPINCLUDES=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Compiler c++ flags ["$COMP_CPLUSPLUSFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			COMP_CPLUSPLUSFLAGS=$INPUT
+		else
+			COMP_CPLUSPLUSFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Compiler ld flags ["$COMP_LDFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			COMP_LDFLAGS=$INPUT
+		else
+			COMP_LDFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Compiler ld libraries ["$COMP_LDLIBRARIES"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			COMP_LDLIBRARIES=$INPUT
+		else
+			COMP_LDLIBRARIES=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Compiler ld lib depends ["$COMP_LDLIBDEPENDS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			COMP_LDLIBRDEPENDS=$INPUT
+		else
+			COMP_LDLIBRDEPENDS=""
+		fi
+	fi
+
+	echo
+	echo $PRE_ECHO "Configuration make flags ["$CONF_MAKEFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			CONF_MAKEFLAGS=$INPUT
+		else
+			CONF_MAKEFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Configuration imake flags ["$CONF_IMAKEFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			CONF_IMAKEFLAGS=$INPUT
+		else
+			CONF_IMAKEFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Configuration makedepend flags ["$CONF_MAKEDEPENDFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			CONF_MAKEDEPENDFLAGS=$INPUT
+		else
+			CONF_MAKEDEPENDFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Configuration c pre-processor flags ["$CONF_CPPFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			CONF_CPPFLAGS=$INPUT
+		else
+			CONF_CPPFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Configuration c pre-processor includes ["$CONF_CPPINCLUDES"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			CONF_CPPINCLUDES=$INPUT
+		else
+			CONF_CPPINCLUDES=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Configuration c++ flags ["$CONF_CPLUSPLUSFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			CONF_CPLUSPLUSFLAGS=$INPUT
+		else
+			CONF_CPLUSPLUSFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Configuration ld flags ["$CONF_LDFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			CONF_LDFLAGS=$INPUT
+		else
+			CONF_LDFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Configuration ld libraries ["$CONF_LDLIBRARIES"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			CONF_LDLIBRARIES=$INPUT
+		else
+			CONF_LDLIBRARIES=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Configuration ld lib depends ["$CONF_LDLIBDEPENDS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			CONF_LDLIBRDEPENDS=$INPUT
+		else
+			CONF_LDLIBRDEPENDS=""
+		fi
+	fi
+
+	echo
+	echo $PRE_ECHO "Local make flags ["$LOCAL_MAKEFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			LOCAL_MAKEFLAGS=$INPUT
+		else
+			LOCAL_MAKEFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Local imake flags ["$LOCAL_IMAKEFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			LOCAL_IMAKEFLAGS=$INPUT
+		else
+			LOCAL_IMAKEFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Local makedepend flags ["$LOCAL_MAKEDEPENDFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			LOCAL_MAKEDEPENDFLAGS=$INPUT
+		else
+			LOCAL_MAKEDEPENDFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Local c pre-processor flags ["$LOCAL_CPPFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			LOCAL_CPPFLAGS=$INPUT
+		else
+			LOCAL_CPPFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Local c pre-processor includes ["$LOCAL_CPPINCLUDES"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			LOCAL_CPPINCLUDES=$INPUT
+		else
+			LOCAL_CPPINCLUDES=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Local c++ flags ["$LOCAL_CPLUSPLUSFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			LOCAL_CPLUSPLUSFLAGS=$INPUT
+		else
+			LOCAL_CPLUSPLUSFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Local ld flags ["$LOCAL_LDFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			LOCAL_LDFLAGS=$INPUT
+		else
+			LOCAL_LDFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Local ld libraries ["$LOCAL_LDLIBRARIES"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			LOCAL_LDLIBRARIES=$INPUT
+		else
+			LOCAL_LDLIBRARIES=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Local ld lib depends ["$LOCAL_LDLIBDEPENDS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			LOCAL_LDLIBDEPENDS=$INPUT
+		else
+			LOCAL_LDLIBDEPENDS=""
+		fi
+	fi
+
+	echo
+	echo $PRE_ECHO "Module make flags ["$MODULE_MAKEFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			MODULE_MAKEFLAGS=$INPUT
+		else
+			MODULE_MAKEFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Module imake flags ["$MODULE_IMAKEFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			MODULE_IMAKEFLAGS=$INPUT
+		else
+			MODULE_IMAKEFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Module makedepend flags ["$MODULE_MAKEDEPENDFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			MODULE_MAKEDEPENDFLAGS=$INPUT
+		else
+			MODULE_MAKEDEPENDFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Module c pre-processor flags ["$MODULE_CPPFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			MODULE_CPPFLAGS=$INPUT
+		else
+			MODULE_CPPFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Module c pre-processor includes ["$MODULE_CPPINCLUDES"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			MODULE_CPPINCLUDES=$INPUT
+		else
+			MODULE_CPPINCLUDES=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Module c++ flags ["$MODULE_CPLUSPLUSFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			MODULE_CPLUSPLUSFLAGS=$INPUT
+		else
+			MODULE_CPLUSPLUSFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Module ld flags ["$MODULE_LDFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			MODULE_LDFLAGS=$INPUT
+		else
+			MODULE_LDFLAGS=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Module ld libraries ["$MODULE_LDLIBRARIES"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			MODULE_LDLIBRARIES=$INPUT
+		else
+			MODULE_LDLIBRARIES=""
+		fi
+	fi
+
+	echo $PRE_ECHO "Module ld lib depends ["$MODULE_LDLIBDEPENDS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		if test "'x$INPUT'" != "'xNONE'"
+		then
+			MODULE_LDLIBDEPENDS=$INPUT
+		else
+			MODULE_LDLIBDEPENDS=""
+		fi
+	fi
+fi
+
+(
+echo "#!/bin/sh"
+echo "#"
+echo "# Copyright (C) 1994, 1995, 1996, 1997,"
+echo "#"
+echo "# Department of Computing Science,"
+echo "# University of Newcastle upon Tyne,"
+echo "# Newcastle upon Tyne,"
+echo "# UK."
+echo "#"
+echo ""
+echo "# Gandiva configure file"
+echo ""
+echo "INSTALLTOPDIR="$INSTALLTOPDIR
+echo ""
+echo "SYS='"$SYS"'"
+echo "SYS_VERSION='"$SYS_VERSION"'"
+echo ""
+echo "SYS_MAKEFLAGS='"$SYS_MAKEFLAGS"'"
+echo "SYS_IMAKEFLAGS='"$SYS_IMAKEFLAGS"'"
+echo "SYS_MAKEDEPENDFLAGS='"$SYS_MAKEDEPENDFLAGS"'"
+echo "SYS_CPPFLAGS='"$SYS_CPPFLAGS"'"
+echo "SYS_CPPINCLUDES='"$SYS_CPPINCLUDES"'"
+echo "SYS_CPLUSPLUSFLAGS='"$SYS_CPLUSPLUSFLAGS"'"
+echo "SYS_LDFLAGS='"$SYS_LDFLAGS"'"
+echo "SYS_LDLIBRARIES='"$SYS_LDLIBRARIES"'"
+echo "SYS_LDLIBDEPENDS='"$SYS_LDLIBDEPENDS"'"
+echo ""
+echo "COMP='"$COMP"'"
+echo ""
+echo "COMP_MAKEFLAGS='"$COMP_MAKEFLAGS"'"
+echo "COMP_IMAKEFLAGS='"$COMP_IMAKEFLAGS"'"
+echo "COMP_MAKEDEPENDFLAGS='"$COMP_MAKEDEPENDFLAGS"'"
+echo "COMP_CPPFLAGS='"$COMP_CPPFLAGS"'"
+echo "COMP_CPPINCLUDES='"$COMP_CPPINCLUDES"'"
+echo "COMP_CPLUSPLUSFLAGS='"$COMP_CPLUSPLUSFLAGS"'"
+echo "COMP_LDFLAGS='"$COMP_LDFLAGS"'"
+echo "COMP_LDLIBRARIES='"$COMP_LDLIBRARIES"'"
+echo "COMP_LDLIBDEPENDS='"$COMP_LDLIBDEPENDS"'"
+echo ""
+echo "CONF_MAKEFLAGS='"$CONF_MAKEFLAGS"'"
+echo "CONF_IMAKEFLAGS='"$CONF_IMAKEFLAGS"'"
+echo "CONF_MAKEDEPENDFLAGS='"$CONF_MAKEDEPENDFLAGS"'"
+echo "CONF_CPPFLAGS='"$CONF_CPPFLAGS"'"
+echo "CONF_CPPINCLUDES='"$CONF_CPPINCLUDES"'"
+echo "CONF_CPLUSPLUSFLAGS='"$CONF_CPLUSPLUSFLAGS"'"
+echo "CONF_LDFLAGS='"$CONF_LDFLAGS"'"
+echo "CONF_LDLIBRARIES='"$CONF_LDLIBRARIES"'"
+echo "CONF_LDLIBDEPENDS='"$CONF_LDLIBDEPENDS"'"
+echo ""
+echo "LOCAL_MAKEFLAGS='"$LOCAL_MAKEFLAGS"'"
+echo "LOCAL_IMAKEFLAGS='"$LOCAL_IMAKEFLAGS"'"
+echo "LOCAL_MAKEDEPENDFLAGS='"$LOCAL_MAKEDEPENDFLAGS"'"
+echo "LOCAL_CPPFLAGS='"$LOCAL_CPPFLAGS"'"
+echo "LOCAL_CPPINCLUDES='"$LOCAL_CPPINCLUDES"'"
+echo "LOCAL_CPLUSPLUSFLAGS='"$LOCAL_CPLUSPLUSFLAGS"'"
+echo "LOCAL_LDFLAGS='"$LOCAL_LDFLAGS"'"
+echo "LOCAL_LDLIBRARIES='"$LOCAL_LDLIBRARIES"'"
+echo "LOCAL_LDLIBDEPENDS='"$LOCAL_LDLIBDEPENDS"'"
+echo ""
+echo "MODULE_MAKEFLAGS='"$MODULE_MAKEFLAGS"'"
+echo "MODULE_IMAKEFLAGS='"$MODULE_IMAKEFLAGS"'"
+echo "MODULE_MAKEDEPENDFLAGS='"$MODULE_MAKEDEPENDFLAGS"'"
+echo "MODULE_CPPFLAGS='"$MODULE_CPPFLAGS"'"
+echo "MODULE_CPPINCLUDES='"$MODULE_CPPINCLUDES"'"
+echo "MODULE_CPLUSPLUSFLAGS='"$MODULE_CPLUSPLUSFLAGS"'"
+echo "MODULE_LDFLAGS='"$MODULE_LDFLAGS"'"
+echo "MODULE_LDLIBRARIES='"$MODULE_LDLIBRARIES"'"
+echo "MODULE_LDLIBDEPENDS='"$MODULE_LDLIBDEPENDS"'"
+) > config/Gandiva.cf
+chmod a+rx config/Gandiva.cf
+
+(
+echo "#!/bin/sh"
+echo "#"
+echo "# Copyright (C) 1994, 1995, 1996, 1997,"
+echo "#"
+echo "# Department of Computing Science,"
+echo "# University of Newcastle upon Tyne,"
+echo "# Newcastle upon Tyne,"
+echo "# UK."
+echo "#"
+echo "#"
+echo
+echo "#"
+echo "#  Sys"
+echo "#"
+echo
+echo "echo "$SYS
+) > config/Sys
+chmod a+rx config/Sys
+
+(
+echo "#!/bin/sh"
+echo "#"
+echo "# Copyright (C) 1994, 1995, 1996, 1997,"
+echo "#"
+echo "# Department of Computing Science,"
+echo "# University of Newcastle upon Tyne,"
+echo "# Newcastle upon Tyne,"
+echo "# UK."
+echo "#"
+echo "#"
+echo
+echo "#"
+echo "#  Sys_Version"
+echo "#"
+echo
+echo "echo "$SYS_VERSION
+) > config/Sys_Version
+chmod a+rx config/Sys_Version
+
+(
+echo "/*"
+echo " * Copyright (C) 1994, 1995, 1996, 1997,"
+echo " *"
+echo " * Department of Computing Science,"
+echo " * University of Newcastle upon Tyne,"
+echo " * Newcastle upon Tyne,"
+echo " * UK."
+echo " *"
+echo " */"
+echo
+echo "/*"
+echo " *  Sys.def"
+echo " */"
+echo
+if test "'x$SYS_MAKEFLAGS'" != "'x'"
+then
+	echo "AddToMakeFlags("$SYS_MAKEFLAGS")"
+fi
+if test "'x$SYS_IMAKEFLAGS'" != "'x'"
+then
+	echo "AddToIMakeFlags("$SYS_IMAKEFLAGS")"
+fi
+if test "'x$SYS_MAKEDEPENDFLAGS'" != "'x'"
+then
+	echo "AddToMakeDependFlags("$SYS_MAKEDEPENDFLAGS")"
+fi
+if test "'x$SYS_CPPFLAGS'" != "'x'"
+then
+	echo "AddToCPPFlags("$SYS_CPPFLAGS")"
+fi
+if test "'x$SYS_CPPINCLUDES'" != "'x'"
+then
+	echo "AddToCPPIncludes("$SYS_CPPINCLUDES")"
+fi
+if test "'x$SYS_CPLUSPLUSFLAGS'" != "'x'"
+then
+	echo "AddToCPLUSPLUSFlags("$SYS_CPLUSPLUSFLAGS")"
+fi
+if test "'x$SYS_LDFLAGS'" != "'x'"
+then
+	echo "AddToLdFlags("$SYS_LDFLAGS")"
+fi
+if test "'x$SYS_LDLIBRARIES'" != "'x'"
+then
+	echo "AddToLdLibraries("$SYS_LDLIBRARIES")"
+fi
+if test "'x$SYS_LDLIBDEPENDS'" != "'x'"
+then
+	echo "AddToLdLibDepends("$SYS_LDLIBDEPENDS")"
+fi
+) > config/Sys.def
+
+(
+echo "#!/bin/sh"
+echo "#"
+echo "# Copyright (C) 1994, 1995, 1996, 1997,"
+echo "#"
+echo "# Department of Computing Science,"
+echo "# University of Newcastle upon Tyne,"
+echo "# Newcastle upon Tyne,"
+echo "# UK."
+echo "#"
+echo "#"
+echo
+echo "#"
+echo "#  C++"
+echo "#"
+echo
+echo "echo "$COMP
+) > config/C++
+chmod a+rx config/C++
+
+(
+echo "#!/bin/sh"
+echo "#"
+echo "# Copyright (C) 1994, 1995, 1996, 1997,"
+echo "#"
+echo "# Department of Computing Science,"
+echo "# University of Newcastle upon Tyne,"
+echo "# Newcastle upon Tyne,"
+echo "# UK."
+echo "#"
+echo "#"
+echo
+echo "#"
+echo "#  C++Prog"
+echo "#"
+echo
+echo "echo "$CPLUSPLUS_PROGRAM
+) > config/C++Prog
+chmod a+rx config/C++Prog
+
+(
+echo "/*"
+echo " * Copyright (C) 1994, 1995, 1996, 1997,"
+echo " *"
+echo " * Department of Computing Science,"
+echo " * University of Newcastle upon Tyne,"
+echo " * Newcastle upon Tyne,"
+echo " * UK."
+echo " *"
+echo " */"
+echo
+echo "/*"
+echo " *  C++.def"
+echo " */"
+echo
+if test "'x$COMP_MAKEFLAGS'" != "'x'"
+then
+	echo "AddToMakeFlags("$COMP_MAKEFLAGS")"
+fi
+if test "'x$COMP_IMAKEFLAGS'" != "'x'"
+then
+	echo "AddToIMakeFlags("$COMP_IMAKEFLAGS")"
+fi
+if test "'x$COMP_MAKEDEPENDFLAGS'" != "'x'"
+then
+	echo "AddToMakeDependFlags("$COMP_MAKEDEPENDFLAGS")"
+fi
+if test "'x$COMP_CPPFLAGS'" != "'x'"
+then
+	echo "AddToCPPFlags("$COMP_CPPFLAGS")"
+fi
+if test "'x$COMP_CPPINCLUDES'" != "'x'"
+then
+	echo "AddToCPPIncludes("$COMP_CPPINCLUDES")"
+fi
+if test "'x$COMP_CPLUSPLUSFLAGS'" != "'x'"
+then
+	echo "AddToCPLUSPLUSFlags("$COMP_CPLUSPLUSFLAGS")"
+fi
+if test "'x$COMP_LDFLAGS'" != "'x'"
+then
+	echo "AddToLdFlags("$COMP_LDFLAGS")"
+fi
+if test "'x$COMP_LDLIBRARIES'" != "'x'"
+then
+	echo "AddToLdLibraries("$COMP_LDLIBRARIES")"
+fi
+if test "'x$COMP_LDLIBDEPENDS'" != "'x'"
+then
+	echo "AddToLdLibDepends("$COMP_LDLIBDEPENDS")"
+fi
+) > config/C++.def
+
+(
+echo "/*"
+echo " * Copyright (C) 1994, 1995, 1996, 1997,"
+echo " *"
+echo " * Department of Computing Science,"
+echo " * University of Newcastle upon Tyne,"
+echo " * Newcastle upon Tyne,"
+echo " * UK."
+echo " *"
+echo " */"
+echo
+echo "/*"
+echo " *  Config.def"
+echo " */"
+echo
+if test "'x$CONF_MAKEFLAGS'" != "'x'"
+then
+	echo "AddToMakeFlags("$CONF_MAKEFLAGS")"
+fi
+if test "'x$CONF_IMAKEFLAGS'" != "'x'"
+then
+	echo "AddToIMakeFlags("$CONF_IMAKEFLAGS")"
+fi
+if test "'x$CONF_MAKEDEPENDFLAGS'" != "'x'"
+then
+	echo "AddToMakeDependFlags("$CONF_MAKEDEPENDFLAGS")"
+fi
+if test "'x$CONF_CPPFLAGS'" != "'x'"
+then
+	echo "AddToCPPFlags("$CONF_CPPFLAGS")"
+fi
+if test "'x$CONF_CPPINCLUDES'" != "'x'"
+then
+	echo "AddToCPPIncludes("$CONF_CPPINCLUDES")"
+fi
+if test "'x$CONF_CPLUSPLUSFLAGS'" != "'x'"
+then
+	echo "AddToCPLUSPLUSFlags("$CONF_CPLUSPLUSFLAGS")"
+fi
+if test "'x$CONF_LDFLAGS'" != "'x'"
+then
+	echo "AddToLdFlags("$CONF_LDFLAGS")"
+fi
+if test "'x$CONF_LDLIBRARIES'" != "'x'"
+then
+	echo "AddToLdLibraries("$CONF_LDLIBRARIES")"
+fi
+if test "'x$CONF_LDLIBDEPENDS'" != "'x'"
+then
+	echo "AddToLdLibDepends("$CONF_LDLIBDEPENDS")"
+fi
+) > config/Config.def
+
+(
+echo "/*"
+echo " * Copyright (C) 1994, 1995, 1996, 1997,"
+echo " *"
+echo " * Department of Computing Science,"
+echo " * University of Newcastle upon Tyne,"
+echo " * Newcastle upon Tyne,"
+echo " * UK."
+echo " *"
+echo " */"
+echo
+echo "/*"
+echo " *  Local.def"
+echo " */"
+echo
+if test "'x$LOCAL_MAKEFLAGS'" != "'x'"
+then
+	echo "AddToMakeFlags("$LOCAL_MAKEFLAGS")"
+fi
+if test "'x$LOCAL_IMAKEFLAGS'" != "'x'"
+then
+	echo "AddToIMakeFlags("$LOCAL_IMAKEFLAGS")"
+fi
+if test "'x$LOCAL_MAKEDEPENDFLAGS'" != "'x'"
+then
+	echo "AddToMakeDependFlags("$LOCAL_MAKEDEPENDFLAGS")"
+fi
+if test "'x$LOCAL_CPPFLAGS'" != "'x'"
+then
+	echo "AddToCPPFlags("$LOCAL_CPPFLAGS")"
+fi
+if test "'x$LOCAL_CPPINCLUDES'" != "'x'"
+then
+	echo "AddToCPPIncludes("$LOCAL_CPPINCLUDES")"
+fi
+if test "'x$LOCAL_CPLUSPLUSFLAGS'" != "'x'"
+then
+	echo "AddToCPLUSPLUSFlags("$LOCAL_CPLUSPLUSFLAGS")"
+fi
+if test "'x$LOCAL_LDFLAGS'" != "'x'"
+then
+	echo "AddToLdFlags("$LOCAL_LDFLAGS")"
+fi
+if test "'x$LOCAL_LDLIBRARIES'" != "'x'"
+then
+	echo "AddToLdLibraries("$LOCAL_LDLIBRARIES")"
+fi
+if test "'x$LOCAL_LDLIBDEPENDS'" != "'x'"
+then
+	echo "AddToLdLibDepends("$LOCAL_LDLIBDEPENDS")"
+fi
+echo
+echo "#include \""$TOPDIR"/config/Module.def\""
+) > config/Local.def
+
+(
+echo "/*"
+echo " * Copyright (C) 1994, 1995, 1996, 1997,"
+echo " *"
+echo " * Department of Computing Science,"
+echo " * University of Newcastle upon Tyne,"
+echo " * Newcastle upon Tyne,"
+echo " * UK."
+echo " *"
+echo " */"
+echo
+echo "/*"
+echo " *  Module.def (source)"
+echo " */"
+echo
+echo "GANDIVATOPDIR="$TOPDIR
+echo
+if test "'x$MODULE_MAKEFLAGS'" != "'x'"
+then
+	echo "AddToMakeFlags("$MODULE_MAKEFLAGS")"
+fi
+if test "'x$MODULE_IMAKEFLAGS'" != "'x'"
+then
+	echo "AddToIMakeFlags("$MODULE_IMAKEFLAGS")"
+fi
+if test "'x$MODULE_MAKEDEPENDFLAGS'" != "'x'"
+then
+	echo "AddToMakeDependFlags("$MODULE_MAKEDEPENDFLAGS")"
+fi
+if test "'x$MODULE_CPPFLAGS'" != "'x'"
+then
+	echo "AddToCPPFlags("$MODULE_CPPFLAGS")"
+fi
+if test "'x$MODULE_CPPINCLUDES'" != "'x'"
+then
+	echo "AddToCPPIncludes("$MODULE_CPPINCLUDES")"
+fi
+if test "'x$MODULE_CPLUSPLUSFLAGS'" != "'x'"
+then
+	echo "AddToCPLUSPLUSFlags("$MODULE_CPLUSPLUSFLAGS")"
+fi
+if test "'x$MODULE_LDFLAGS'" != "'x'"
+then
+	echo "AddToLdFlags("$MODULE_LDFLAGS")"
+fi
+if test "'x$MODULE_LDLIBRARIES'" != "'x'"
+then
+	echo "AddToLdLibraries("$MODULE_LDLIBRARIES")"
+fi
+if test "'x$MODULE_LDLIBDEPENDS'" != "'x'"
+then
+	echo "AddToLdLibDepends("$MODULE_LDLIBDEPENDS")"
+fi
+echo
+echo "OBJ_INIT_QANBOBUFFERIMPLE = \$(GANDIVATOPDIR)/lib/Init_QANBOBufferImple.o"
+echo "OBJ_INIT_GANDIVADEDICATEDINVENTORYIMPLE = \$(GANDIVATOPDIR)/lib/Init_GandivaDedicatedInventoryImple.o"
+echo "OBJ_PRIM_GANDIVADEDICATEDINVENTORYIMPLE = \$(GANDIVATOPDIR)/lib/Prim_GandivaDedicatedInventoryImple.o"
+echo "OBJ_INIT_CREATEFUNCTIONLISTINVENTORYIMPLE = \$(GANDIVATOPDIR)/lib/Init_CreateFunctionListInventoryImple.o"
+echo "OBJ_PRIM_CREATEFUNCTIONLISTINVENTORYIMPLE = \$(GANDIVATOPDIR)/lib/Prim_CreateFunctionListInventoryImple.o"
+echo "OBJ_INIT_INSNAMESERVICEIMPLE = \$(GANDIVATOPDIR)/lib/Init_INSNameServiceImple.o"
+echo "OBJ_INIT_LNSNAMESERVICEIMPLE = \$(GANDIVATOPDIR)/lib/Init_LNSNameServiceImple.o"
+echo "OBJ_INIT_SNSNAMESERVICEIMPLE = \$(GANDIVATOPDIR)/lib/Init_SNSNameServiceImple.o"
+echo
+) > config/Module.def
+
+(
+echo "/*"
+echo " * Copyright (C) 1994, 1995, 1996, 1997,"
+echo " *"
+echo " * Department of Computing Science,"
+echo " * University of Newcastle upon Tyne,"
+echo " * Newcastle upon Tyne,"
+echo " * UK."
+echo " *"
+echo " */"
+echo
+echo "/*"
+echo " *  Module.def (install)"
+echo " */"
+echo
+echo "GANDIVATOPDIR="$INSTALLTOPDIR
+echo
+if test "'x$MODULE_MAKEFLAGS'" != "'x'"
+then
+	echo "AddToMakeFlags("$MODULE_MAKEFLAGS")"
+fi
+if test "'x$MODULE_IMAKEFLAGS'" != "'x'"
+then
+	echo "AddToIMakeFlags("$MODULE_IMAKEFLAGS")"
+fi
+if test "'x$MODULE_MAKEDEPENDFLAGS'" != "'x'"
+then
+	echo "AddToMakeDependFlags("$MODULE_MAKEDEPENDFLAGS")"
+fi
+if test "'x$MODULE_CPPFLAGS'" != "'x'"
+then
+	echo "AddToCPPFlags("$MODULE_CPPFLAGS")"
+fi
+if test "'x$MODULE_CPPINCLUDES'" != "'x'"
+then
+	echo "AddToCPPIncludes("$MODULE_CPPINCLUDES")"
+fi
+if test "'x$MODULE_CPLUSPLUSFLAGS'" != "'x'"
+then
+	echo "AddToCPLUSPLUSFlags("$MODULE_CPLUSPLUSFLAGS")"
+fi
+if test "'x$MODULE_LDFLAGS'" != "'x'"
+then
+	echo "AddToLdFlags("$MODULE_LDFLAGS")"
+fi
+if test "'x$MODULE_LDLIBRARIES'" != "'x'"
+then
+	echo "AddToLdLibraries("$MODULE_LDLIBRARIES")"
+fi
+if test "'x$MODULE_LDLIBDEPENDS'" != "'x'"
+then
+	echo "AddToLdLibDepends("$MODULE_LDLIBDEPENDS")"
+fi
+echo
+echo "OBJ_INIT_QANBOBUFFERIMPLE = \$(GANDIVATOPDIR)/lib/Init_QANBOBufferImple.o"
+echo "OBJ_INIT_GANDIVADEDICATEDINVENTORYIMPLE = \$(GANDIVATOPDIR)/lib/Init_GandivaDedicatedInventoryImple.o"
+echo "OBJ_PRIM_GANDIVADEDICATEDINVENTORYIMPLE = \$(GANDIVATOPDIR)/lib/Prim_GandivaDedicatedInventoryImple.o"
+echo "OBJ_INIT_CREATEFUNCTIONLISTINVENTORYIMPLE = \$(GANDIVATOPDIR)/lib/Init_CreateFunctionListInventoryImple.o"
+echo "OBJ_PRIM_CREATEFUNCTIONLISTINVENTORYIMPLE = \$(GANDIVATOPDIR)/lib/Prim_CreateFunctionListInventoryImple.o"
+echo "OBJ_INIT_INSNAMESERVICEIMPLE = \$(GANDIVATOPDIR)/lib/Init_INSNameServiceImple.o"
+echo "OBJ_INIT_LNSNAMESERVICEIMPLE = \$(GANDIVATOPDIR)/lib/Init_LNSNameServiceImple.o"
+echo "OBJ_INIT_SNSNAMESERVICEIMPLE = \$(GANDIVATOPDIR)/lib/Init_SNSNameServiceImple.o"
+echo
+) > config/Module_install.def
+
