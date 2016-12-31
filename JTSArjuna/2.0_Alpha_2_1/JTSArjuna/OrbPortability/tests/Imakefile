@@ -1,0 +1,29 @@
+COMMENT 
+COMMENT Copyright (C) 1996, 1997, 1998, 1999,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 2000/03/16 16:17:21 nmcl Exp $
+COMMENT
+
+SOURCES = DemoPostInit.java \
+	  DemoPreInit.java \
+	  InitTest.java
+
+OBJECTS = DemoPostInit.class \
+	  DemoPreInit.class \
+	  InitTest.class
+
+#ifdef BUILDTESTS
+Target($(OBJECTS))
+#endif
+
+BuildJavaByteCode(DemoPostInit,NullParam)
+BuildJavaByteCode(DemoPreInit,NullParam)
+BuildJavaByteCode(InitTest,NullParam)
+
+Clean(*.class *.prof out)
+

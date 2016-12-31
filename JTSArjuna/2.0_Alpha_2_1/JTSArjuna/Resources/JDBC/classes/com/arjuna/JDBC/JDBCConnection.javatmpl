@@ -1,0 +1,491 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Tyne and Wear,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: JDBCConnection.javatmpl,v 1.1.2.1.4.1 2000/07/17 08:30:11 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package com.arjuna.JDBC;
+
+import com.arjuna.OrbCommon.*;
+import com.arjuna.ArjunaCommon.Common.*;
+import com.arjuna.CosTransactions.OTS;
+import com.arjuna.CosTransactions.OTS_Current;
+import com.arjuna.CosTransactions.ArjunaOTS.AtomicTransaction;
+import com.arjuna.CosTransactions.ArjunaOTS.TopLevelTransaction;
+import org.omg.CosTransactions.*;
+import java.util.*;
+import java.sql.*;
+
+import org.omg.CosTransactions.Unavailable;
+import org.omg.CosTransactions.NotPrepared;
+import org.omg.CosTransactions.HeuristicRollback;
+import org.omg.CosTransactions.HeuristicCommit;
+import org.omg.CosTransactions.HeuristicMixed;
+import org.omg.CosTransactions.HeuristicHazard;
+import org.omg.CosTransactions.SubtransactionsUnavailable;
+import org.omg.CosTransactions.NoTransaction;
+import NAMESPACE_(CORBA).SystemException;
+import java.sql.SQLException;
+
+#include <CosTransactions/CosTranExceptions.h>
+
+/*
+ * JDBC 1.0 has no notion of assigning a txid to a given operation,
+ * so all accesses through the same connection are implicitly associated
+ * with the same transaction in the db.
+ */
+
+public class JDBCConnection implements java.sql.Connection
+{
+
+public JDBCConnection (String url, Properties info, java.sql.Connection conn) throws SQLException
+    {
+	int type = JDBCType.ONE_POINT_ZERO;
+
+	if (info != null)
+	{
+	    String typeProp = info.getProperty(JDBCType.typeProperty);
+
+	    if (typeProp != null)
+	    {
+		try
+		{
+		    _type = Integer.parseInt(typeProp);
+		}
+		catch (Exception e)
+		{
+		    _type = JDBCType.ONE_POINT_ZERO;
+		}
+	    }
+	}
+
+	_autoCommit = true;
+	_readOnly = false;
+	_oldIsolationLevel = -1;
+	_theResource = null;
+	_theConnection = conn;
+	_url = url;
+	_info = info;
+    }
+
+public JDBCConnection (String url, Properties info) throws SQLException
+    {
+	int type = JDBCType.ONE_POINT_ZERO;
+
+	if (info != null)
+	{
+	    String typeProp = info.getProperty(JDBCType.typeProperty);
+
+	    if (typeProp != null)
+	    {
+		try
+		{
+		    _type = Integer.parseInt(typeProp);
+		}
+		catch (Exception e)
+		{
+		    _type = JDBCType.ONE_POINT_ZERO;
+		}
+	    }
+	}
+
+	_autoCommit = true;
+	_readOnly = false;
+	_oldIsolationLevel = -1;
+	_theResource = null;
+	_theConnection = DriverManager.getConnection(url, info);
+	_url = url;
+	_info = info;
+    }
+
+public void finalize ()
+    {
+	endConnection();
+	
+	_theResource = null;
+	_theConnection = null;
+    }
+
+public int jdbcType ()
+    {
+	return _type;
+    }
+    
+public Statement createStatement () throws SQLException
+    {
+	checkConnection();
+	
+	registerDatabase();
+	
+	return _theConnection.createStatement();
+    }
+
+#if defined(JDK_1_2) || defined(JDK_1_3)
+public Statement createStatement (int rs, int rc) throws SQLException
+    {
+	checkConnection();
+	
+	registerDatabase();
+	
+	return _theConnection.createStatement(rs, rc);
+    }    
+#endif
+    
+public PreparedStatement prepareStatement (String sql) throws SQLException
+    {
+	checkConnection();
+	
+	registerDatabase();
+
+	return _theConnection.prepareStatement(sql);
+    }
+
+#if defined(JDK_1_2) || defined(JDK_1_3)
+public PreparedStatement prepareStatement (String sql, int rs, int rc) throws SQLException
+    {
+	checkConnection();
+	
+	registerDatabase();
+	
+	return _theConnection.prepareStatement(sql, rs, rc);
+    }
+#endif
+    
+public CallableStatement prepareCall (String sql) throws SQLException
+    {
+	checkConnection();
+	
+	registerDatabase();
+
+	return _theConnection.prepareCall(sql);
+    }
+
+#if defined(JDK_1_2) || defined(JDK_1_3)
+public CallableStatement prepareCall (String sql, int rs, int rc) throws SQLException
+    {
+	checkConnection();
+	
+	registerDatabase();
+	
+	return _theConnection.prepareCall(sql, rs, rc);
+    }
+#endif
+
+public String nativeSQL (String sql) throws SQLException
+    {
+	checkConnection();
+	
+	registerDatabase();
+
+	return _theConnection.nativeSQL(sql);
+    }
+
+#if defined(JDK_1_2) || defined(JDK_1_3)
+public Map getTypeMap () throws SQLException
+    {
+	checkConnection();
+
+	return _theConnection.getTypeMap();
+    }
+
+public void setTypeMap (Map map) throws SQLException
+    {
+	checkConnection();
+
+	_theConnection.setTypeMap(map);
+    }
+#endif
+    
+    /*
+     * Not allowed.
+     */
+    
+public void setAutoCommit (boolean autoCommit) throws SQLException
+    {
+	checkConnection();
+
+	if (autoCommit)
+	    throw new SQLException("Autocommit not allowed by OTS.");
+
+	_theConnection.setAutoCommit(autoCommit);
+    }
+
+public boolean getAutoCommit () throws SQLException
+    {
+	checkConnection();
+
+	return _autoCommit;
+    }
+
+public void commit () throws SQLException
+    {
+	checkConnection();
+
+	throw new SQLException("Commit not allowed by OTS.");
+    }
+
+public void rollback () throws SQLException
+    {
+	checkConnection();
+
+	throw new SQLException("Rollback not allowed by OTS.");
+    }
+
+    /**
+     * If there is a transaction running when close is called then we throw an exception
+     * and mark it as rollback only.
+     */
+    
+public void close () throws SQLException
+    {
+	checkConnection();
+
+	if (_theResource != null)
+	{
+	    throw new SQLException("Transaction running when close called!");
+	}
+
+	endConnection();
+	
+	_theConnection = null;
+    }
+
+public boolean isClosed () throws SQLException
+    {
+	checkConnection();
+	
+	if (_theConnection != null)
+	    return _theConnection.isClosed();
+	else
+	    return true;
+    }
+    
+public DatabaseMetaData getMetaData () throws SQLException
+    {
+	checkConnection();
+
+	return _theConnection.getMetaData();
+    }
+
+    /**
+     * Can only set readonly before we use the connection in a
+     * given transaction!
+     */
+    
+public void setReadOnly (boolean ro) throws SQLException
+    {
+	checkConnection();
+
+	if (_theResource == null)
+	    _readOnly = ro;
+	else
+	    throw new SQLException("Cannot set readonly when within a transaction!");
+    }
+    
+public boolean isReadOnly () throws SQLException
+    {
+	checkConnection();
+
+	return _readOnly;
+    }
+
+public void setCatalog (String cat) throws SQLException
+    {
+	checkConnection();
+	
+	registerDatabase();
+
+	_theConnection.setCatalog(cat);
+    }
+	    
+public String getCatalog () throws SQLException
+    {
+	checkConnection();
+	
+	registerDatabase();
+
+	return _theConnection.getCatalog();
+    }
+
+public void setTransactionIsolation (int iso) throws SQLException
+    {
+	checkConnection();
+
+	if (iso != Connection.TRANSACTION_SERIALIZABLE)
+	    throw new SQLException("Must be Connection.TRANSACTION_SERIALIZABLE");
+    }
+
+public int getTransactionIsolation () throws SQLException
+    {
+	checkConnection();
+
+	return _oldIsolationLevel;
+    }
+
+public SQLWarning getWarnings () throws SQLException
+    {
+	checkConnection();
+
+	return _theConnection.getWarnings();
+    }
+    
+public void clearWarnings () throws SQLException
+    {
+	checkConnection();
+
+	_theConnection.clearWarnings();
+    }
+
+synchronized java.sql.Connection getConnection ()
+    {
+	return _theConnection;
+    }
+   
+synchronized void removeResource ()
+    {
+	_theResource = null;
+	
+	endConnection();
+    }
+
+String connectionUrl ()
+    {
+	return _url;
+    }
+
+Properties connectionProperties ()
+    {
+	return _info;
+    }
+
+private synchronized void checkConnection () throws SQLException
+    {
+	if (_theConnection == null)
+	    throw new SQLException("Invalid connection.");
+    }
+    
+private synchronized void setupConnection () throws SQLException
+    {
+	/*
+	 * Try to setup the db connection in a way which makes
+	 * sense for the OTS.
+	 */
+
+	try
+	{
+	    _theConnection.setAutoCommit(false);
+	    _autoCommit = false;
+	}
+	catch (SQLException e)
+	{
+	    /*
+	     * Could not set autocommit off. In which case all
+	     * calls to the db are separate top-level transactions,
+	     * and this resource becomes useless.
+	     */
+
+	    System.err.println("WARNING - JDBCConnection - could not disable autocommit.");
+	    
+	    _autoCommit = true;
+	}
+
+	try
+	{
+	    DatabaseMetaData metaData = _theConnection.getMetaData();
+
+	    if (metaData.supportsTransactionIsolationLevel(Connection.TRANSACTION_SERIALIZABLE))
+	    {
+		try
+		{
+		    _oldIsolationLevel = _theConnection.getTransactionIsolation();
+
+		    if (_oldIsolationLevel != Connection.TRANSACTION_SERIALIZABLE)
+			_theConnection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+		}
+		catch (SQLException e)
+		{
+		    System.err.print("WARNING - JDBCConnection - failed to set isolation level: "+e);
+		}
+	    }
+	}
+	catch (Exception e)
+	{
+	    System.err.print("WARNING - JDBCConnection - failed to set isolation level: "+e);
+	}
+    }
+
+private synchronized void endConnection ()
+    {
+	if (_theConnection != null)
+	{
+	    if (_oldIsolationLevel != -1)
+	    {
+		try
+		{
+		    _theConnection.setTransactionIsolation(_oldIsolationLevel);
+		}
+		catch (SQLException e)
+		{
+		    System.err.print("WARNING - JDBCResource.endConnection: attempt to reset isolation level ");
+		    System.err.println(_oldIsolationLevel+" failed.");
+		}
+
+		_oldIsolationLevel = -1;
+	    }
+	}
+    }
+    
+private synchronized void registerDatabase () throws SQLException
+    {
+	if (_theResource == null)
+	{
+	    setupConnection();
+	    
+	    try
+	    {
+		_theResource = new JDBCResource(this, _type, _readOnly, _url, _info);
+	    
+		Coordinator coord = OTS.current().get_control().get_coordinator();		
+		Resource res = new SCOPED_TIE_INSTANCE_(org.omg.CosTransactions,Resource)(_theResource);
+
+		READY_IMPL_(res);
+	    
+		RecoveryCoordinator rc = coord.register_resource(res);
+	    
+		_theResource.setTransaction(coord);
+
+		coord = null;
+	    }
+	    catch (Unavailable e1)
+	    {
+		throw new SQLException("JDBCConnection.registerDatabase - "+e1);
+	    }
+	    catch (Inactive e2)
+	    {
+		throw new SQLException("JDBCConnection.registerDatabase - "+e2);
+	    }
+	    catch (SystemException e3)
+	    {
+		throw new SQLException("JDBCConnection.registerDatabase - "+e3);
+	    }
+	}
+    }
+
+private java.sql.Connection _theConnection;
+private int                 _type;
+private boolean             _autoCommit;
+private boolean             _readOnly;
+private int                 _oldIsolationLevel;
+private JDBCResource        _theResource;
+private String              _url;
+private Properties          _info;
+    
+};
+

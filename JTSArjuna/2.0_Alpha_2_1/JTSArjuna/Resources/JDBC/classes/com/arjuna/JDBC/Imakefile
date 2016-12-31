@@ -1,0 +1,49 @@
+COMMENT 
+COMMENT Copyright (C) 1998, 1999, 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Tyne and Wear,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.6.4.1.4.1 2000/07/17 08:30:11 nmcl Exp $
+COMMENT
+
+AddToIdlFlags(-DDRAFT3)
+
+SOURCES = JDBCResource.java \
+	  OTS_JDBCDriver.java \
+	  OTS_JDBCConnection.java \
+	  JDBCConnection.java \
+	  JDBCException.java \
+	  JDBCType.java \
+	  JDBCConnectionManager.java \
+	  Info.javatmpl
+
+OBJECTS = JDBCException.class \
+	  JDBCResource.class \
+	  OTS_JDBCDriver.class \
+	  JDBCConnection.class \
+	  OTS_JDBCConnection.class \
+	  JDBCType.class \
+	  JDBCConnectionManager.class \
+	  Info.class
+
+Target($(SOURCES))
+Target($(OBJECTS))
+
+PreprocessJavaCode(JDBCResource,NullParam)
+PreprocessJavaCode(OTS_JDBCConnection,NullParam)
+PreprocessJavaCode(JDBCConnection,NullParam)
+PreprocessJavaCode(Info,NullParam)
+
+BuildJavaByteCode(JDBCException,NullParam)
+BuildJavaByteCode(JDBCResource,NullParam)
+BuildJavaByteCode(OTS_JDBCDriver,NullParam)
+BuildJavaByteCode(OTS_JDBCConnection,NullParam)
+BuildJavaByteCode(JDBCConnection,NullParam)
+BuildJavaByteCode(JDBCType,NullParam)
+BuildJavaByteCode(JDBCConnectionManager,NullParam)
+BuildJavaByteCode(Info,NullParam)
+
+Clean(*.class)
