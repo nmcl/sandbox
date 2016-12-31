@@ -1,0 +1,52 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.  
+ *
+ * $Id: ArjunaJDBC2ModifierFactory.javatmpl,v 1.1 2000/04/06 11:00:32 nmcl Exp $
+ */
+
+package com.arjuna.JDBC2;
+
+import com.arjuna.jta.JTA_XAModifier;
+import com.arjuna.JDBC2.drivers.modifiers.*;
+import java.util.*;
+
+/*
+ * Keep track of any "modifiers" we may require to run
+ * transactions over specific databases.
+ */
+
+public class ArjunaJDBC2ModifierFactory
+{
+
+public static final String oracle_name = "oracle:";
+ 
+public static JTA_XAModifier getModifier (String dbName)
+    {
+	Enumeration e = _modifiers.keys();
+	
+	while (e.hasMoreElements())
+	{
+	    String s = (String) e.nextElement();
+	    
+	    if (dbName.startsWith(s))
+		return (JTA_XAModifier) _modifiers.get(s);
+	}
+	
+	return null;
+    }
+
+private static Hashtable _modifiers = new Hashtable();
+    
+    static
+    {
+#ifdef BUILD_ORACLE
+	_modifiers.put(oracle_name, new oracle());
+#endif
+    }
+    
+};
