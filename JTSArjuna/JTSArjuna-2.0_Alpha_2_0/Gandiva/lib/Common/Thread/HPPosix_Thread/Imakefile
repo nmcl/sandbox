@@ -1,0 +1,32 @@
+COMMENT
+COMMENT Copyright (C) 1994, 1995, 1996,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 1998/06/01 13:42:39 nmcl Exp $
+COMMENT
+
+SOURCES = HPPosix_Sem.cc \
+	  HPPosix_SpecificData.cc \
+	  HPPosix_Thread.cc \
+	  HPPosix_ThreadPool.cc \
+	  HPPosix_Condition.cc
+
+OBJECTS = HPPosix_Sem.o \
+	  HPPosix_SpecificData.o \
+	  HPPosix_Thread.o \
+	  HPPosix_ThreadPool.o \
+	  HPPosix_Condition.o
+
+Target($(OBJECTS))
+
+BuildObject(HPPosix_Sem,NullParam,NullParam)
+BuildObject(HPPosix_SpecificData,NullParam,NullParam)
+BuildObject(HPPosix_Thread,NullParam,NullParam)
+BuildObject(HPPosix_ThreadPool,NullParam,NullParam)
+BuildObject(HPPosix_Condition,NullParam,NullParam)
+
+AddDependences($(SOURCES),NullParam)
