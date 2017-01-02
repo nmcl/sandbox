@@ -1,0 +1,29 @@
+COMMENT
+COMMENT Copyright (C) 1994, 1995, 1996,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1998/01/12 13:07:40 nmcl Exp $
+COMMENT
+
+SOURCES = RexLWP_Sem.cc \
+	  RexLWP_SpecificData.cc \
+	  RexLWP_Thread.cc \
+	  RexLWP_ThreadPool.cc
+
+OBJECTS = RexLWP_Sem.o \
+	  RexLWP_SpecificData.o \
+	  RexLWP_Thread.o \
+	  RexLWP_ThreadPool.o
+
+Target($(OBJECTS))
+
+BuildObject(RexLWP_Sem,NullParam,NullParam)
+BuildObject(RexLWP_SpecificData,NullParam,NullParam)
+BuildObject(RexLWP_Thread,NullParam,NullParam)
+BuildObject(RexLWP_ThreadPool,NullParam,NullParam)
+
+AddDependences($(SOURCES),NullParam)
