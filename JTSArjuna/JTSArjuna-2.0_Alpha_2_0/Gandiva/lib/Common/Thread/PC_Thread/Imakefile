@@ -1,0 +1,32 @@
+COMMENT
+COMMENT Copyright (C) 1994, 1995, 1996,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 1998/06/01 14:13:59 nmcl Exp $
+COMMENT
+
+SOURCES = PC_Sem.cc \
+	  PC_SpecificData.cc \
+	  PC_Thread.cc \
+	  PC_ThreadPool.cc \
+	  PC_Condition.cc
+
+OBJECTS = PC_Sem.o \
+	  PC_SpecificData.o \
+	  PC_Thread.o \
+	  PC_ThreadPool.o \
+	  PC_Condition.o
+
+Target($(OBJECTS))
+
+BuildObject(PC_Sem,NullParam,NullParam)
+BuildObject(PC_SpecificData,NullParam,NullParam)
+BuildObject(PC_Thread,NullParam,NullParam)
+BuildObject(PC_ThreadPool,NullParam,NullParam)
+BuildObject(PC_Condition,NullParam,NullParam)
+
+AddDependences($(SOURCES),NullParam)
