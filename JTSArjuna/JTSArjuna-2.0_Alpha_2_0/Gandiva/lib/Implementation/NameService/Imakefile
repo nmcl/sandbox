@@ -1,0 +1,41 @@
+COMMENT
+COMMENT Copyright (C) 1994, 1995, 1996,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.7 1996/02/02 13:44:05 nmcl Exp $
+COMMENT
+
+SOURCES = INS.cc \
+          Init_INSNameServiceImple.cc \
+          LNS.cc \
+          Init_LNSNameServiceImple.cc \
+	  SNS.cc \
+	  SNSAttribute.cc \
+	  SNSAttributeNode.cc \
+	  Init_SNSNameServiceImple.cc
+
+OBJECTS = INS.o \
+          ../../Init_INSNameServiceImple.o \
+          LNS.o \
+          ../../Init_LNSNameServiceImple.o \
+	  SNS.o \
+	  SNSAttribute.o \
+	  SNSAttributeNode.o \
+	  ../../Init_SNSNameServiceImple.o
+
+Target($(OBJECTS))
+
+BuildObject(INS,NullParam,NullParam)
+BuildObjectAs(Init_INSNameServiceImple,../../Init_INSNameServiceImple,NullParam,NullParam)
+BuildObject(LNS,NullParam,NullParam)
+BuildObjectAs(Init_LNSNameServiceImple,../../Init_LNSNameServiceImple,NullParam,NullParam)
+BuildObject(SNS,NullParam,NullParam)
+BuildObject(SNSAttribute,NullParam,NullParam)
+BuildObject(SNSAttributeNode,NullParam,NullParam)
+BuildObjectAs(Init_SNSNameServiceImple,../../Init_SNSNameServiceImple,NullParam,NullParam)
+
+AddDependences($(SOURCES),NullParam)
