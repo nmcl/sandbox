@@ -1,0 +1,21 @@
+COMMENT
+COMMENT Copyright (C) 1994, 1995, 1996, 1997,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.4 1998/04/15 13:43:32 nmcl Exp $
+COMMENT
+
+CreateInstallDirectory(/man,/man/man3)
+
+InstallFile(/man/man3,ClassName.3)
+InstallFile(/man/man3,Mutex.3)
+InstallFile(/man/man3,MutexSetup.3)
+InstallFile(/man/man3,Resource.3)
+InstallFile(/man/man3,Semaphore.3)
+InstallFile(/man/man3,SemaphoreSetup.3)
+InstallFile(/man/man3,Thread.3)
+InstallFile(/man/man3,ThreadSetup.3)

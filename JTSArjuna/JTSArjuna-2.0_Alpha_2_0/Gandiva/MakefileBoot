@@ -1,0 +1,27 @@
+#
+# Copyright (C) 1994, 1995, 1996, 1997, 1998, 1999,
+#
+# Department of Computing Science,
+# University of Newcastle upon Tyne,
+# Newcastle upon Tyne,
+# UK.
+#
+
+#
+# $Id: MakefileBoot,v 1.4 1999/11/29 14:19:27 nmcl Exp $
+#
+
+MAKE                   = make
+IMAKE                  = imake
+RM                     = rm -f
+
+GANDIVA_IMAKE_INCLUDE  = config
+GANDIVA_IMAKE_TEMPLATE = Gandiva.tmpl
+GANDIVA_IMAKE_FLAGS    = 
+MAKEFILE_TMP           = Makefile.tmp
+
+Makefile ::
+	@echo "Building 'Makefile.tmp'"
+	@$(IMAKE) -T$(GANDIVA_IMAKE_TEMPLATE) -I$(GANDIVA_IMAKE_INCLUDE) $(GANDIVA_IMAKE_FLAGS) -s $(MAKEFILE_TMP)
+	@$(MAKE) -f $(MAKEFILE_TMP) Makefile
+	@$(RM) $(MAKEFILE_TMP)

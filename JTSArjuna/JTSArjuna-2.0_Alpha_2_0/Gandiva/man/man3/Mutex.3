@@ -1,0 +1,89 @@
+.\"
+.\" Copyright (C) 1994, 1995, 1996,
+.\"
+.\" Department of Computing Science,
+.\" University of Newcastle upon Tyne,
+.\" Newcastle upon Tyne,
+.\" UK.
+.\"
+.\" $Id: Mutex.3,v 1.2 1996/01/02 13:25:41 nsmw Exp $
+.\"
+.TH Mutex 3 "23 July 1995" "Gandiva" "C++ class"
+.SH NAME
+Mutex \- mutual exclusion base class
+.SH SYNOPSIS
+.B "#ifndef BASE_MUTEX_H_"
+.br
+.B "#   include <Base/Mutex.h>"
+.br
+.B "#endif"
+.sp
+.BI "class Mutex : public Resource"
+.br
+.BI "{"
+.br
+.BI "public:"
+.br
+.BI "    enum MutexStatus { DONE, ERROR, WOULD_BLOCK };"
+.sp
+.BI "    virtual MutexStatus wait    () = 0;"
+.br
+.BI "    virtual MutexStatus signal  () = 0;"
+.br
+.BI "    virtual MutexStatus trywait () = 0;"
+.sp
+.BI "    static Mutex* create (MutexSetup* = 0);"
+.sp
+.BI "protected:"
+.br
+.BI "    Mutex ();"
+.br
+.BI "    virtual ~Mutex ();"
+.br
+.BI "};"
+
+.SH DESCRIPTION
+This is the base class from which all implementations of mutexes
+should be derived. To isolate the application programmer
+from a given implementation, all mutexes should be manipulated as
+instances of this class.
+
+Mutexes are typically used to control access to shared data: only one
+user (thread) may enter a region controlled by a mutex, all other users
+being blocked until that user has relinguished control.
+
+All mutex variables are reference counted, by virtue of them
+being derived from the \fBResource\fR base class.
+
+The \fIcreate\fR method creates a \fBMutex\fR variable. The optional
+\fIMutexSetup\fR parameter can be used to control various aspects of
+the mutex creation, e.g., whether it is created already owned by the invoker
+of \fIcreate\fR.
+
+\fIwait\fR attempts to acquire the mutex for the caller. When, and if,
+the mutex is granted to the caller, this returns \fIDONE\fR
+otherwise it returns \fIERROR\fR indicating some error occurred.
+
+\fIsignal\fR attempts to unlock the mutex, which must belong to the caller.
+It returns \fIDONE\fR upon success, and \fIERROR\fR if an error occurs.
+
+\fItrywait\fR can be used to attempt to acquire the mutex, but will
+not block the caller if the mutex could not be granted (as is the case
+with the \fIwait\fR method). If the mutex is granted then \fIDONE\fR
+is returned. \fIERROR\fR indicates an error occured. \fIWOULD_BLOCK\fR
+indicates that any attempt to acquire the mutex by the caller
+would result in the caller blocking.
+
+.SH NOTES
+If the mutex goes out of scope with threads still waiting
+for it then they will be woken up, and \fIERROR\fR
+will be returned from the method which was invoked causing
+them to become suspended.
+
+By default all mutex variables are re-entrant, i.e., a
+thread which has acquired a mutex can call \fIwait\fR
+or \fItrywait\fR multiple times without being blocked. For each call of
+\fIwait\fR or \fItrywait\fR there should be a corresponding call to
+\fIsignal\fR to release the mutex.
+.SH SEE ALSO
+MutexSetup(3), Resource(3), Semaphore(3)

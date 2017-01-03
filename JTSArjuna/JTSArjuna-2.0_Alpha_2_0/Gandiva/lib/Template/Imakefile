@@ -1,0 +1,24 @@
+COMMENT
+COMMENT Copyright (C) 1994, 1995, 1996,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 1996/01/02 13:30:06 nsmw Exp $
+COMMENT
+
+SOURCES = ListGen.cc \
+          SetGen.cc
+
+OBJECTS = ListGen.o \
+          SetGen.o
+
+Target($(OBJECTS))
+
+BuildObject(BinSequSearchTreeGen,NullParam,NullParam)
+BuildObject(ListGen,NullParam,NullParam)
+BuildObject(SetGen,NullParam,NullParam)
+
+AddDependences($(SOURCES),NullParam)
