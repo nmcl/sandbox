@@ -1,0 +1,202 @@
+.\"
+.\" Copyright (C) 1994, 1995, 1996,
+.\"
+.\" Department of Computing Science,
+.\" University of Newcastle upon Tyne,
+.\" Newcastle upon Tyne,
+.\" UK.
+.\"
+.\" $Id: Thread.3,v 1.5 1997/02/10 15:45:19 nmcl Exp $
+.\"
+.TH Thread 3 "25 January 1997" "Gandiva" "C++ class"
+.SH NAME
+Thread \- base class for all thread implementations
+.SH SYNOPSIS
+.B "#ifndef BASE_THREAD_H_"
+.br
+.B "#   include <Base/Thread.h>"
+.br
+.B "#endif"
+.sp
+.BI "class Thread : public Resource"
+.br
+.BI "{"
+.br
+.BI "public:"
+.br
+.BI "    enum ThreadStatus { RUNNING, SUSPENDED, BLOCKED,"
+.br
+.BI "                        WAITING, TERMINATED, CREATED };"
+.br
+.BI "    const Uid& uid  () const;"
+.sp
+.BI "    static Thread* current ();"
+.br
+.BI "    static Thread* find (const Uid& id);"
+.sp
+.BI "    static Thread* create (void* (*body)(void*),"
+.br
+.BI "                          void* param, ThreadSetup* = 0);"
+.sp
+.BI "    ThreadStatus status () const;"
+.sp
+.BI "	 virtual Boolean run () = 0;"
+.br
+.BI "    virtual Boolean suspend () = 0;"
+.br
+.BI "    virtual Boolean resume () = 0;"
+.sp
+.BI "    static Boolean yield ();"
+.br
+.BI "    static Boolean sleep (unsigned long time);"
+.sp
+.BI "    static void*   wait (Thread* waitFor);"
+.br
+.BI "    static void    waitForAllChildren ();"
+.br    
+.BI "    static void terminate ();"
+.sp
+.BI "    Boolean addCleanup (ThreadCleanup* cleanup);"
+.sp
+.BI "    virtual ostream& print (ostream& strm) const;"
+.br
+.BI "	 statis ostream& printAll (ostream& strm);"
+.sp
+.BI "protected:"
+.br
+.BI "    Thread ();"
+.br
+.BI "    virtual ~Thread ();"
+.br
+.BI "};"
+.SH DESCRIPTION
+This class defines a template for all thread implementations,
+which must be derived from it. It provides routines for creating
+and manipulating independant threads of control. To isolate
+applications from the thread implementation, all thread creation
+and usage should occur through instances of the \fBThread\fR
+base class.
+
+All thread objects are reference counted by virtue of
+being inherited from the \fBResource\fR class.
+
+At any given time, a thread can only be in one of six states:
+.sp
+.I
+	CREATED
+: the thread has been created in a suspended mode. To start the
+thread, the \fIrun\fR method must be used.
+.sp
+.I
+	RUNNING
+: the thread is active and performing work. (On a uni-processor
+machine the thread may not currently be in control of the processor,
+but logically it is running in parallel with any other active
+threads).
+.sp
+.I
+	SUSPENDED
+: the thread has been suspended, and will only continue to execute
+if some other thread resumes it.
+.sp
+.I
+	BLOCKED
+: the thread has blocked on some condition, and can only we resumed
+when this condition is satisfied.
+.sp
+.I
+	WAITING
+: the thread is waiting for the termination of some other thread(s).
+These threads may be the 
+.I
+children
+of this thread, or may be unrelated to it.
+.sp
+.I
+	TERMINATED
+: the thread of control has terminated. The object associated with
+the thread is still useable, and any results this thread returned
+may still be available.
+
+All threads are uniquely  identified   by instances of the   \fBUid\fR
+class. (This is  irrespective of  the  way in which the  actual thread
+implementation may internally identify threads). A thread's "external"
+identity can be obtained via the \fIuid\fR method.
+
+The object representing the current thread can be obtained through the
+\fIstatic\fR current  method,  or, if  its UID is  known,  through the
+\fIstatic\fR find method, where \fIid\fR is the thread's identity.
+
+The \fIstatic  create\fR  method is used to   create  a new thread  of
+control.   It  returns a pointer  to   this newly created \fIThread\fR
+object. The first parameter is the body of the  function the thread is
+to run within, while \fIparam\fR is  a pointer to  a parameter to pass
+to  this function, or   NULL. The \fIcontrol\fR  parameter  is used to
+specify  various options   for  creating  the thread.   For   example,
+controlling  whether  the thread  is created  in  the \fIRUNNING\fR or
+\fISUSPENDED\fR  (the  default)  state, or the  size   of the thread's
+stack.
+
+\fIstatus\fR returns the current status of this thread.
+
+The \fIsuspend\fR method is used to suspend the thread  to which it is
+applied.  It returns  \fITRUE\fR   if   the thread   is   successfully
+suspended, and \fIFALSE\fR otherwise.
+
+The \fIresume\fR  method  resumes  the thread it   is applied  to.  It
+returns \fITRUE\fR if   the   thread  is successfully resumed,     and
+\fIFALSE\fR otherwise.
+
+The \fIrun\fR method starts  a  \fICREATED\fR thread, i.e.,  a  thread
+which has been created in a suspended mode.  This method will not work
+if the thread is \fISUSPENDED\fR.
+
+\fIyield\fR causes  the  current   thread  to  yield  control of   the
+processor   to   any other   thread which   is   in the  \fIRUNNING\fR
+state. This does  not suspend the thread,  and can be used  to prevent
+processor starvation.
+
+\fIsleep\fR   causes   the current   thread   to sleep  for the period
+\fItime\fR milliseconds.  This method will   only affect the  specific
+thread, and not the entire process.
+
+\fIwait\fR  causes  the thread to wait  for  the  specified  thread to
+finish (i.e.,  terminate).  The results (if  any)  from the terminated
+thread  are   returned. A thread  can   wait for any  other  thread to
+complete, even if it is not the parent of the thread to wait for.
+
+\fIterminate\fR   returns \fITRUE\fR if    the thread  is successfully
+terminated,  and \fIFALSE\fR otherwise. If this  method is called by a
+thread other than the one to which it applies, then the calling thread
+will  be   put into   the  \fIWAITING\fR state   until  the thread has
+terminated itself.
+
+Since  a thread can  potentially spawn  many  child threads it  may be
+necessary for  the parent thread to  rendezvous  with them.  Using the
+\fIwait\fR method  requires  the application  to keep track  of  these
+children (which may be  a subset of those spawned  by the parent). The
+\fIwaitForAllChildren\fR method suspends  the parent  until all  child
+threads have terminated. Any results returned by  the children must be
+collected separately if required.
+
+The \fIaddCleanup\fR method  is used to  add a \fIThreadCleanup\fR  to
+the  thread state. This \fIaction\fR  will be executed when the thread
+terminates. Typically these actions  are  used to  tidy up the  thread
+before it exits, and remove any thread specific  data from other parts
+of the application.
+
+\fIprint\fR can be used to print out thread specific information.
+
+.SH NOTES
+Some thread packages only allow thread control routines, such
+as suspending and resuming, to operate on the currently active
+thread, whereas others allow any thread to control any other.
+Rather than impose one implementation model these differences
+have been supported where possible in the various thread class
+implementations. As such, some calls to control routines
+may succeed when using one thread implementation, and may
+fail when using another, because the thread being controlled
+was not the current thread.
+
+.SH SEE ALSO
+Resource(3), ThreadCleanup(3), ThreadSetup(3)
