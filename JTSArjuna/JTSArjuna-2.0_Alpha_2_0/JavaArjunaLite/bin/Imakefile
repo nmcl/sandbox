@@ -1,0 +1,44 @@
+COMMENT 
+COMMENT Copyright (C) 1996, 1997, 1998, 1999,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.8 1999/06/23 13:39:45 nmcl Exp $
+COMMENT
+
+SOURCES = ActionMonitor.java \
+	  ObjectStoreMonitor.java \
+	  OTM.java
+
+#ifdef HAVE_SWING
+OBJECTS = ActionMonitor.class \
+	  OTM.class \
+	  ObjectStoreMonitor.class
+#else
+OBJECTS = ActionMonitor.class \
+	  ObjectStoreMonitor.class
+#endif
+
+#ifdef BUILDUTILITIES
+Target($(OBJECTS))
+#endif
+
+BuildJavaByteCode(ActionMonitor,NullParam)
+BuildJavaByteCode(ObjectStoreMonitor,NullParam)
+BuildJavaByteCode(OTM,NullParam)
+
+#ifdef INSTALLUTILITIES
+InstallProgram(/bin,ActionMonitor.class)
+InstallProgram(/bin,ObjectStoreMonitor.class)
+
+#ifdef HAVE_SWING
+InstallProgram(/bin,OTM.class)
+#endif
+
+#endif
+
+Clean(*.class *.prof out)
+
