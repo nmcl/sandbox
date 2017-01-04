@@ -1,0 +1,36 @@
+COMMENT 
+COMMENT Copyright (C) 1996, 1997, 1998, 1999,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.9.2.1 1999/01/28 19:00:16 nmcl Exp $
+COMMENT
+
+SOURCES = JavaArjunaLiteNames.java \
+	  Atomic/AbstractRecord.java \
+	  Implementation/ObjectStore/ShadowingStore.java \
+	  Implementation/ObjectStoreImple.java \
+	  Implementation/LockStore/BasicPersistentLockStore.java
+
+OBJECTS = JavaArjunaLiteNames.class
+
+Target($(SOURCES))
+Target($(OBJECTS))
+
+SubDirectory(Thread)
+SubDirectory(Interface)
+SubDirectory(Common)
+SubDirectory(Atomic)
+SubDirectory(Implementation)
+
+PreprocessJavaCodeDir(Atomic,AbstractRecord,NullParam)
+PreprocessJavaCodeDir(Implementation,ObjectStoreImple,NullParam)
+PreprocessJavaCodeDir(Implementation/ObjectStore,ShadowingStore,NullParam)
+PreprocessJavaCodeDir(Implementation/LockStore,BasicPersistentLockStore,NullParam)
+
+BuildJavaByteCode(JavaArjunaLiteNames,NullParam)
+
+Clean(*.class)
