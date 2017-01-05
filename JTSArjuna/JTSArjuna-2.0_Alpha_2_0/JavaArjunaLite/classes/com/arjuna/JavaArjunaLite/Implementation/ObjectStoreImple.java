@@ -1,0 +1,159 @@
+/*
+ * Copyright (C) 1996, 1997, 1998, 1999,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: ObjectStoreImple.javatmpl,v 1.2.8.1 1999/08/25 10:46:10 nmcl Exp $
+ */
+
+package com.arjuna.JavaArjunaLite.Implementation;
+
+import com.arjuna.JavaArjunaLite.JavaArjunaLiteNames;
+import com.arjuna.JavaGandiva.Common.*;
+import java.io.File;
+
+import com.arjuna.JavaArjunaLite.Common.ObjectStoreException;
+import java.io.IOException;
+
+
+
+/*
+ * This is the base class from which all object store types are derived.
+ * Note that because object store instances are stateless, to improve
+ * efficiency we try to only create one instance of each type per process.
+ * Therefore, the create and destroy methods are used instead of new
+ * and delete. If an object store is accessed via create it *must* be
+ * deleted using destroy. Of course it is still possible to make use of
+ * new directly.
+ */
+
+public abstract class ObjectStoreImple
+{
+
+public abstract boolean allObjUids (String s, InputObjectState buff, int m) throws ObjectStoreException;
+public abstract boolean allTypes (InputObjectState buff) throws ObjectStoreException;
+public abstract int currentState (Uid u, String tn) throws ObjectStoreException;
+public abstract String getStoreName ();
+public abstract boolean commit_state (Uid u, String tn) throws ObjectStoreException;
+public abstract boolean hide_state (Uid u, String tn) throws ObjectStoreException;
+public abstract boolean reveal_state (Uid u, String tn) throws ObjectStoreException;
+public abstract InputObjectState read_committed (Uid u, String tn) throws ObjectStoreException;
+public abstract InputObjectState read_uncommitted (Uid u, String tn) throws ObjectStoreException;
+public abstract boolean remove_committed (Uid u, String tn) throws ObjectStoreException;
+public abstract boolean remove_uncommitted (Uid u, String tn) throws ObjectStoreException;
+public abstract boolean write_committed (Uid u, String tn, OutputObjectState buff) throws ObjectStoreException;
+public abstract boolean write_uncommitted (Uid u, String tn, OutputObjectState buff) throws ObjectStoreException;
+
+    /*
+     * Generate the full path of the store. location is always a relative name
+     * NOTE this path always ends in a /
+     */
+
+public String locateStore (String location) throws ObjectStoreException
+    {
+	String objectStoreRoot = System.getProperty(JavaArjunaLiteNames.Implementation_ObjectStore_storeRoot());
+	String finalLocation = System.getProperty(JavaArjunaLiteNames.Implementation_ObjectStore_storeDir(), "/usr/local/JTSArjuna/ObjectStore");
+
+	if (finalLocation == null)
+	    throw new ObjectStoreException(JavaArjunaLiteNames.Implementation_ObjectStore_storeDir()+" not set.");
+	
+	int len = finalLocation.length();
+    
+	if ((len > 0) && (!finalLocation.endsWith(File.separator)))
+	    finalLocation = finalLocation + File.separator;
+
+	/*
+	 * We use the classname of the object store implementation to locate
+	 * specify the directory for the object store.
+	 */
+	
+	finalLocation = finalLocation + className().stringForm();
+	
+	if ((location == null) || (location.length() == 0))
+	{
+	    if ((objectStoreRoot != null) && (objectStoreRoot.length() > 0))
+		location = objectStoreRoot;
+	    else
+		location = "defaultStore"+File.separator;
+	}
+    
+	if ((location != null) && (location.length() > 0))
+	{
+	    len = finalLocation.length();
+	
+	    if ((len > 0) && (!finalLocation.endsWith(File.separator)))
+		finalLocation = finalLocation + File.separator;
+
+	    finalLocation = finalLocation + location;
+	}
+
+	len = finalLocation.length();
+
+	if ((len > 0) && (!finalLocation.endsWith(File.separator)))
+	    finalLocation = finalLocation + File.separator;
+	
+	return finalLocation;
+    }
+    
+    /*
+     * Does this store need to do the full write_uncommitted/commit protocol
+     */
+
+public boolean fullCommitNeeded ()
+    {
+	return true;
+    }
+
+public boolean isType (Uid u, String tn, int st) throws ObjectStoreException
+    {
+	return (((st & currentState(u, tn)) == st) ? true : false);
+    }
+
+    /* These methods only make sense for remote object stores */
+
+public void storeLocation (String[] s)
+    {
+    }
+    
+public void useStoreLocation (boolean b)
+    {
+    }
+    
+public void setObjectData (Uid u, String tn)
+    {
+    }
+
+public void initialise (Uid u, String tn)
+    {
+    }
+
+public void pack (OutputBuffer buff) throws IOException
+    {
+    }
+    
+public void unpack (InputBuffer buff) throws IOException
+    {
+    }
+
+public ClassName className ()
+    {
+	return ObjectStoreImple._className;
+    }
+
+public static ClassName name ()
+    {
+	return ObjectStoreImple._className;
+    }
+    
+protected ObjectStoreImple ()
+    {
+    }
+
+protected abstract boolean supressEntry (String name);
+
+private static final ClassName _className = new ClassName("ObjectStoreImple");
+    
+}
