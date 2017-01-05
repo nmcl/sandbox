@@ -1,0 +1,564 @@
+/*
+ * Copyright (C) 1996, 1997, 1998, 1999,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: ShadowingStore.javatmpl,v 1.6.2.1 1999/01/28 19:00:18 nmcl Exp $
+ */
+
+package com.arjuna.JavaArjunaLite.Implementation.ObjectStore;
+
+import com.arjuna.JavaArjunaLite.JavaArjunaLiteNames;
+import com.arjuna.JavaArjunaLite.Atomic.*;
+import com.arjuna.JavaArjunaLite.Interface.ObjectStore;
+import com.arjuna.JavaGandiva.Common.*;
+import java.io.*;
+import java.io.File;
+
+import com.arjuna.JavaArjunaLite.Common.ObjectStoreException;
+import java.io.IOException;
+import java.io.FileNotFoundException;
+
+
+import java.io.SyncFailedException;
+
+
+public class ShadowingStore extends FileSystemStore
+{
+
+    /*
+     * Determine current state of object. Assumes that genPathName allocates
+     * enough extra space to allow extra chars to be added.
+     * State search is ordered OS_SHADOW, OS_HIDDEN, OS_ORIGINAL, OS_HIDDEN
+     */
+
+public int currentState (Uid objUid, String tName) throws ObjectStoreException
+    {
+	int theState = ObjectStore.OS_UNKNOWN;
+    
+	if (storeValid())
+	{
+	    String path = genPathName(objUid, tName, ObjectStore.OS_SHADOW);
+
+	    if (exists(path))
+		theState = ObjectStore.OS_UNCOMMITTED;
+	    else
+	    {
+		path = path + HIDDINGCHAR;
+	    
+		if (exists(path))
+		    theState = ObjectStore.OS_UNCOMMITTED_HIDDEN;
+		else
+		{
+		    path = genPathName(objUid, tName, ObjectStore.OS_ORIGINAL);
+		
+		    if (exists(path))
+			theState = ObjectStore.OS_COMMITTED;
+		    else
+		    {
+			path = path + HIDDINGCHAR;
+		    
+			if (exists(path))
+			    theState = ObjectStore.OS_COMMITTED_HIDDEN;
+		    }
+		}
+	    }
+	}
+
+	return theState;
+    }
+
+    /*
+     * The following operation commits a previous write_state operation which
+     * was made with the SHADOW StateType argument. This is achieved by
+     * renaming the shadow and removing the hidden version.
+     */
+
+public boolean commit_state (Uid objUid, String tName) throws ObjectStoreException
+    {
+	boolean result = false;
+
+	/* Bail out if the object store is not set up */
+
+	if (!storeValid())
+	    return false;
+
+	if (tName != null)
+	{
+	    int state = currentState(objUid, tName);
+	    String shadow = null;
+	    String filename = null;
+
+	    if ((state == ObjectStore.OS_UNCOMMITTED_HIDDEN) ||
+		(state == ObjectStore.OS_UNCOMMITTED))
+	    {
+		shadow = genPathName(objUid, tName, ObjectStore.OS_SHADOW);
+		filename = genPathName(objUid, tName, ObjectStore.OS_ORIGINAL);
+	    
+		if (state == ObjectStore.OS_UNCOMMITTED_HIDDEN)
+		{
+		    /* maintain hidden status on rename */
+
+		    shadow = shadow + HIDDINGCHAR;
+		    filename = filename + HIDDINGCHAR;
+		}
+
+		File newState = new File(shadow);
+		File oldState = new File(filename);
+
+		/*
+		 * Windows does not allow a rename to a file
+		 * which already exists. We could just catch the
+		 * exception and remove the file in that case.
+		 */
+		
+		if (oldState.exists())
+		    oldState.delete();
+
+		result = newState.renameTo(oldState);
+
+		newState = null;
+		oldState = null;
+	    }
+	}
+	else
+	    throw new ObjectStoreException("object with uid "+objUid+" has no TypeName");
+
+	return result;
+    }
+
+    /*
+     * The following operations hide/reveal an object regardless of state.
+     * Hidden objects cannot be read but they can be written (Crash recovery
+     * needs this)
+     */
+
+public boolean hide_state (Uid objUid, String tName) throws ObjectStoreException
+    {
+	boolean hiddenOk = true;
+
+	/* Bail out if the object store is not set up */
+
+	if (storeValid())
+	{
+	    int state = currentState(objUid, tName);
+	    String path1 = null;
+	    String path2 = null;
+	    
+	    switch (state)
+	    {
+	    case ObjectStore.OS_UNCOMMITTED_HIDDEN:
+	    case ObjectStore.OS_COMMITTED_HIDDEN:
+		break;
+	    case ObjectStore.OS_COMMITTED:
+		{
+		    path1 = genPathName(objUid, tName, ObjectStore.OS_ORIGINAL);
+		    path2 = new String(path1) + HIDDINGCHAR;
+
+		    File newState = new File(path1);
+		    File oldState = new File(path2);
+
+		    if (oldState.exists())
+			oldState.delete();
+		    
+		    newState.renameTo(oldState);
+
+		    newState = null;
+		    oldState = null;
+		    
+		    break;
+		}
+	    case ObjectStore.OS_UNCOMMITTED:
+		{
+		    path1 = genPathName(objUid, tName, ObjectStore.OS_SHADOW);
+		    path2 = new String(path1) + HIDDINGCHAR;
+
+		    File newState = new File(path1);
+		    File oldState = new File(path2);
+
+		    if (oldState.exists())
+			oldState.delete();
+		    
+		    newState.renameTo(oldState);
+
+		    newState = null;
+		    oldState = null;
+		    
+		    break;
+		}
+	    default:
+		hiddenOk = false;
+	    }
+	}
+	else
+	    hiddenOk = false;
+
+	return hiddenOk;
+    }
+
+public boolean reveal_state (Uid objUid, String tName) throws ObjectStoreException
+    {
+	boolean revealedOk = true;
+
+	if (storeValid())
+	{
+	    int state = currentState(objUid, tName);
+	    String path1 = null;
+	    String path2 = null;
+
+	    switch (state)
+	    {
+	    case ObjectStore.OS_UNCOMMITTED_HIDDEN:
+		{
+		    path1 = genPathName(objUid, tName, ObjectStore.OS_SHADOW);
+		    path2 = new String(path1) + HIDDINGCHAR;
+
+		    File newState = new File(path2);
+		    File oldState = new File(path1);
+
+		    if (oldState.exists())
+			oldState.delete();
+		    
+		    newState.renameTo(oldState);
+
+		    newState = null;
+		    oldState = null;
+		    
+		    break;
+		}
+	    case ObjectStore.OS_COMMITTED_HIDDEN:
+		{
+		    path1 = genPathName(objUid, tName, ObjectStore.OS_ORIGINAL);
+		    path2 = new String(path1) + HIDDINGCHAR;
+		    
+		    File newState = new File(path2);
+		    File oldState = new File(path1);
+
+		    if (oldState.exists())
+			oldState.delete();
+		    
+		    newState.renameTo(oldState);
+
+		    newState = null;
+		    oldState = null;
+		    
+		    break;
+		}
+	    case ObjectStore.OS_COMMITTED:
+	    case ObjectStore.OS_UNCOMMITTED:
+		break;
+	    default:
+		revealedOk = false;
+	    }
+	}
+	else
+	    revealedOk = false;
+
+	return revealedOk;
+    }
+
+    /*
+     * Function to return the file name for the state of the object
+     * identified by the Uid and TypeName. If the StateType argument
+     * is OS_SHADOW then the Uid part of the name includes # characters.
+     * Return char * is dynamically allocated and must be freed by caller
+     * Builds on lower level genPathName which allocates enough slop to
+     * accomodate the extra chars
+     */
+
+public String genPathName (Uid objUid, String tName, int ft) throws ObjectStoreException
+    {
+	String fname = super.genPathName(objUid, tName, ft);
+
+	if (ft == ObjectStore.OS_SHADOW)
+	    fname = fname + SHADOWCHAR;
+
+	return fname;
+    }
+    
+public ClassName className ()
+    {
+	return JavaArjunaLiteNames.Implementation_ObjectStore_ShadowingStore();
+    }
+    
+public static ClassName name ()
+    {
+	return JavaArjunaLiteNames.Implementation_ObjectStore_ShadowingStore();
+    }
+
+public static ShadowingStore create ()
+    {
+	return new ShadowingStore("");
+    }
+
+public static ShadowingStore create (Object[] param)
+    {
+	if (param == null)
+	    return null;
+
+	String location = (String) param[0];
+	
+	return new ShadowingStore(location);
+    }
+    
+protected InputObjectState read_state (Uid objUid, String tName,
+				       int ft) throws ObjectStoreException
+    {
+	InputObjectState new_image = null;
+
+	if (!storeValid())
+	    return new_image;
+
+	if (tName != null)
+	{
+	    int state = currentState(objUid, tName);
+
+	    if ((state == ObjectStore.OS_COMMITTED) ||
+		(state == ObjectStore.OS_UNCOMMITTED))
+	    {
+		String fname = genPathName(objUid, tName, ObjectStore.OS_ORIGINAL);
+		File fd = openAndLock(fname, FileLock.F_RDLCK, false);
+
+		if (fd != null)
+		{
+		    int imageSize = (int) fd.length();
+		    byte[] buffer = new byte[imageSize];
+		    FileInputStream ifile = null;
+
+		    try
+		    {
+			ifile = new FileInputStream(fd);
+		    }
+		    catch (FileNotFoundException e)
+		    {
+			throw(new ObjectStoreException("Invalid Uid file name."));
+		    }
+
+		    /* now try to read the actual image out of the store */
+
+		    try
+		    {
+			if ((buffer != null) && (ifile.read(buffer, 0, imageSize) == imageSize))
+			{
+			    new_image = new InputObjectState(objUid, tName, buffer);
+			}
+			else
+			    System.out.println("ShadowingStore::read_state() failed");
+
+			ifile.close();
+		    }
+		    catch (IOException e)
+		    {
+			throw(new ObjectStoreException("read_state failed."));
+		    }
+		    
+		    if (!closeAndUnlock(fd))
+		    {
+			System.out.println("Unlock or close of "+fname+" failed ");
+		    }
+		}
+	    }
+	}
+	else
+	    throw(new ObjectStoreException("Object with uid "+objUid+" has no TypeName"));
+
+	return new_image;
+    }
+
+protected boolean remove_state (Uid objUid, String name, int ft) throws ObjectStoreException
+    {
+	boolean removeOk = true;
+
+	if (!storeValid())
+	    return false;
+    
+	if (name != null)
+	{
+	    int state = currentState(objUid, name);
+
+	    if ((state == ObjectStore.OS_COMMITTED) || (state == ObjectStore.OS_UNCOMMITTED))
+	    {
+		String fname = genPathName(objUid, name, ft);
+		File fd = openAndLock(fname, FileLock.F_WRLCK, false);
+
+		if (fd != null)
+		{
+		    if (!fd.canWrite())
+		    {
+			removeOk = false;
+			if (ft == ObjectStore.OS_ORIGINAL)
+			    System.out.println("ShadowingStore::remove_state() - access problems on "+objUid);
+		    }
+		    else
+		    {
+			if (!fd.delete())
+			{
+			    removeOk = false;
+			    if (ft == ObjectStore.OS_ORIGINAL)
+				System.out.println("ShadowingStore::remove_state() - unlink failed on "+fname);
+			}
+		    }
+
+		    closeAndUnlock(fd);
+		}
+		else
+		    return false;
+	    }
+	    else
+	    {
+		removeOk = false;
+		System.out.print("ShadowingStore::remove_state() attempted removal of ");
+		
+		if (state == ObjectStore.OS_UNKNOWN)
+		    System.out.print("unknown ");
+		else
+		    System.out.print("hidden ");
+		
+		System.out.println("state for object with uid "+objUid);
+	    }
+	}
+	else
+	{
+	    removeOk = false;
+	    System.out.println("type() operation of object with uid "+objUid+" returns NULL");
+	}
+    
+	return removeOk;
+    }
+
+    /*
+     * write_state saves the ObjectState in a file named by the type and Uid
+     * of the ObjectState. If the second argument is SHADOW, then the file name
+     * is different so that a subsequent commit_state invocation will rename
+     * the file.
+     */
+
+protected boolean write_state (Uid objUid, String tName, OutputObjectState state,
+			       int ft) throws ObjectStoreException
+    {
+	if (!storeValid())
+	    return false;
+    
+	if (tName != null)
+	{
+	    String fname = genPathName(objUid, tName, ft);
+	    File fd = openAndLock(fname, FileLock.F_WRLCK, true);
+	    int imageSize = (int) state.length();
+	
+	    if (fd == null)
+	    {
+		System.out.println("ShadowingStore::write_state() - openAndLock failed for "+fname);
+		return false;
+	    }
+
+	    if (imageSize > 0)
+	    {
+		FileOutputStream ifile = null;
+
+		try
+		{
+		    ifile = new FileOutputStream(fd);
+
+		    ifile.write(state.buffer(), 0, imageSize);
+
+		    // must flush any in-memory buffering prior to sync
+		    
+		    ifile.flush();
+		    
+
+		    FileDescriptor fileDesc = ifile.getFD();  // assume it's valid!
+
+		    fileDesc.sync();
+
+
+		    ifile.close();
+		}
+
+		catch (SyncFailedException e)
+		{
+		    throw new ObjectStoreException("ShadowingStore::write_state() - write failed to sync for "+fname);
+		}
+
+		catch (IOException e)
+		{
+		    throw new ObjectStoreException("ShadowingStore::write_state() - write failed for "+fname);
+		}
+	    }
+	    
+	    if (!closeAndUnlock(fd))
+		System.out.println("Unlock or close of "+fname+" failed.");
+	
+	    return true;
+	}
+	else
+	    throw new ObjectStoreException("Object with uid "+objUid+" has no TypeName");
+    }
+
+    /*
+     * Unlock and close the file. Note that if the unlock fails we set
+     * the return value to false to indicate an error but rely on the
+     * close to really do the unlock.
+     */
+
+private boolean closeAndUnlock (File fd)
+    {
+	return unlock(fd);
+    }
+
+private File openAndLock (String fname, int lmode, boolean create)
+    {
+	File fd = new File(fname);
+
+	if (!fd.exists())
+	{
+	    try
+	    {
+		if (createHierarchy(fname))
+		{
+		    if (!lock(fd, lmode, create))
+		    {
+			return null;
+		    }
+		    else
+			return fd;
+		}
+	    }
+	    catch (ObjectStoreException e)
+	    {
+		return null;
+	    }
+	}
+
+	if (!lock(fd, lmode, create))
+	    fd = null;
+
+	return fd;
+    }
+
+protected ShadowingStore (String locationOfStore)
+    {
+	super();
+	
+	try
+	{
+	    setupStore(locationOfStore);
+	}
+	catch (ObjectStoreException e)
+	{
+	    System.out.println(e.getMessage());
+	    System.exit(0);
+	}
+    }
+    
+protected ShadowingStore ()
+    {
+	super();
+    }
+
+public static final char HIDDINGCHAR = '#';
+public static final char SHADOWCHAR = '!';
+    
+}
