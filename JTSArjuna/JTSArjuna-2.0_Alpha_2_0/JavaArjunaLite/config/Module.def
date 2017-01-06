@@ -1,0 +1,22 @@
+/*
+ * Copyright (C) 1995, 1996, 1997,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ */
+
+/*
+ *  Module.def (source)
+ */
+
+JAVAARJUNALITETOPDIR=/home/nmcl/JTSArjuna/JavaArjunaLite
+
+AddToIMakeFlags(-I$(JAVAARJUNALITETOPDIR)/config)
+AddToCPPIncludes(-I$(JAVAARJUNALITETOPDIR)/include)
+AddToCPLUSPLUSFlags(-ptr$(JAVAARJUNALITETOPDIR) -pti$(JAVAARJUNALITETOPDIR)/include )
+AddToLdFlags(-ptr$(JAVAARJUNALITETOPDIR) -pti$(JAVAARJUNALITETOPDIR)/include )
+
+AddToCPPFlags(-DARJUNA_VERSION=\"2.4.2\")

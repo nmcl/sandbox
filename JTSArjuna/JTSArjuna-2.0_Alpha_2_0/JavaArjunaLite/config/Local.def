@@ -1,0 +1,20 @@
+/*
+ * Copyright (C) 1995, 1996, 1997,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ */
+
+/*
+ *  Local.def
+ */
+
+AddToIMakeFlags(-DBUILDUTILITIES -DINSTALLUTILITIES -UBUILDTESTS -UINSTALLTESTS -DVerboseMake=No -DBUILDDAEMONS -DINSTALLDAEMONS -DTopDir=/home/nmcl/JTSArjuna/JavaArjunaLite -DInstallTopDir=/usr/local/JTSArjuna)
+AddToCPPFlags(-I$(JAVAARJUNALITETOPDIR)/config -I$(JAVAARJUNALITETOPDIR)/lib -DDEFAULT_OS_ROOT=\"$(INSTALLTOPDIR)/ObjectStore\" -DDEFAULT_LS_ROOT=\"$(INSTALLTOPDIR)/LockStore\")
+
+#include "/home/nmcl/JTSArjuna/JavaArjunaLite/config/Module.def"
+#include "/home/nmcl/JTSArjuna/JavaHarness/config/Module.def"
+#include "/home/nmcl/JTSArjuna/Gandiva/config/Module.def"
