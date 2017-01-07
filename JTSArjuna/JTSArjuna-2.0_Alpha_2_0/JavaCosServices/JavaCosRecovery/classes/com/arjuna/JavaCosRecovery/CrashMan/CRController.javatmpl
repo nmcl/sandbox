@@ -1,0 +1,280 @@
+/*
+ * Copyright (C) 1996, 1997, 1998,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: CRController.javatmpl,v 1.2 1998/07/06 10:49:48 nmcl Exp $
+ */
+
+package com.arjuna.JavaCosRecovery.CrashMan;
+
+import com.arjuna.JavaCosRecovery.AADoctor.*;
+import com.arjuna.JavaGandiva.Common.*;
+import com.arjuna.JavaArjunaLite.JavaArjunaLiteNames;
+#if !defined(JDK_1_0_2) && !defined(JDK_1_0) && !defined(JDK_0_1)
+import java.io.PrintWriter;
+import java.util.Calendar;
+#endif
+import java.util.Date;
+import java.io.PrintStream;
+import java.net.InetAddress;
+
+import java.lang.InterruptedException;
+import java.net.UnknownHostException;
+
+/*
+ * Class: CrashRecoveryController (CRController)
+ * Manages and controls the recovery operations performed by the recovery
+ * doctors (i.e. AADoctor, RepDoctor...)
+ */
+
+public class CRController implements ThresholdObject
+{
+
+public CRController (PrintStream strm)
+    {
+	outStrm = strm;
+	workList = new CRRecordList(strm);
+
+	// Check if we've got the hostname
+	if (host == null)
+	{
+	    try
+	    {
+		InetAddress addr = InetAddress.getLocalHost();
+		host = addr.getHostName();
+	    }
+	    catch (UnknownHostException e)
+	    {
+		host = "";
+	    }
+	}
+
+	// Increment reference count
+	refCount++;
+    }
+
+public void finalize ()
+    {
+	workList = null;
+
+	if (--refCount == 0)
+	{
+	    host = null;
+	}
+    }
+
+    /*
+     * Assume that this is called once when the machine initially recovers.
+     */
+    
+public void recover ()
+    {
+	banner(outStrm, true);
+
+	Dozer dozer = new Dozer(outStrm, 30);
+	dozer.setThreshold(4);
+	dozer.setThresholdObject(this);
+
+	/*
+	 * Since we don't yet have a manager in the Java RPC we can't
+	 * do this yet. Leave here as a reminder though.
+	 *
+	 * // Make sure we have a connection but it is refusing external
+	 * // requests
+	 *
+	 * while (!connection.control(false))
+	 * {
+	 * // There is a problem with the connection, sleep, then retry
+	 * dozer.doze();
+	 * }
+	 */
+
+	if (dozer.fired())
+	    calmAdmin();
+
+	/*
+	 * Check once per application. At present this means
+	 * that all objects have the same object store implementation.
+	 * However, this need not be the case, and could be an
+	 * attribute of the object, or derived from the object's name.
+	 */
+
+	ClassName objectStoreType = new ClassName(System.getProperty("OBJECTSTORE", JavaArjunaLiteNames.Implementation_ObjectStore_defaultStore().stringForm()));
+
+	// Create the doctors, these actually perform the recovery
+		
+	AADoctor aaDoc = new AADoctor(outStrm, host, workList, objectStoreType);
+
+	/*
+	 * No replication yet, so no RepDoctor.
+	 */
+	
+	/*
+	 * Phase 1 recovery is concerned with determining the recovery work
+	 * required. The node is made available after phase 1 is complete.
+	 */
+
+	aaDoc.phase1();
+
+	// Make one recovery pass
+	makeRecoveryPass();
+
+	// It is now safe to allow external connections
+	dozer.reset();
+
+	/*
+	 *
+	 * while (!connection.control(true))
+	 * {
+	 * // There is a problem with the connection, sleep, then retry
+	 * dozer.doze();
+	 * }
+	 */
+
+	/*
+	 * Phase 2 recovery performs continued attempts to resolve the work
+	 * that was found during phase 1 and also to find any subsequent work
+	 * that has arisen
+	 */
+
+	for (;;)
+	{
+	    aaDoc.phase2();
+	    makeRecoveryPass();
+	    phaseTwoSleep();
+	}
+    }
+
+public boolean reached ()
+    {
+	return warnAdmin();
+    }
+    
+private boolean makeRecoveryPass ()
+    {
+	boolean res = true;
+
+	if (workList.getWorkLevel() > 0)
+	{
+	    outStrm.println("\nCrashRecovery: Commencing recovery pass");
+	    
+	    res = workList.resolve();
+	    
+	    outStrm.println("CrashRecovery: Completed recovery pass");
+	}
+	
+	return res;
+    }
+
+private void printStatus (PrintStream strm)
+    {
+	strm.println("Crash recovery controller status:");
+	strm.println("recovering host    = "+host);
+	//	strm.println("connection status:   ");
+	//	connection.print(strm);
+	strm.println("Work list follows:");
+	workList.print(strm);
+    }
+
+private void banner (PrintStream strm)
+    {
+	banner(strm, false);
+    }
+    
+private void banner (PrintStream strm, boolean first)
+    {
+#if defined(JDK_1_0_2) || defined(JDK_1_0) || defined(JDK_0_1)	
+	Date date = new Date();
+#endif	
+	
+	if (first)
+	{
+#if defined(JDK_1_0_2) || defined(JDK_1_0) || defined(JDK_0_1)
+	    strm.println("\nARJUNA CRASH RECOVERY MANAGER STARTUP at "+date.toGMTString());
+#else
+	    strm.println("\nARJUNA CRASH RECOVERY MANAGER STARTUP at "+Calendar.getInstance().getTime());
+#endif	    
+	}
+	else
+	{
+	    int numJobs = workList.getWorkLevel();
+
+#if defined(JDK_1_0_2) || defined(JDK_1_0) || defined(JDK_0_1)
+	    strm.println("\nARJUNA CRASH RECOVERY MANAGER PERIODIC WAKEUP at "+date.toGMTString());
+#else
+	    strm.println("\nARJUNA CRASH RECOVERY MANAGER PERIODIC WAKEUP at "+Calendar.getInstance().getTime());
+#endif
+	    if (numJobs == 0)
+	    {
+		strm.println("There is currently no work pending recovery");
+	    }
+	    else
+	    {
+		strm.println("There are currently "+numJobs
+			     +" item(s) of work pending recovery.");
+	    }
+	}
+    }
+
+private void phaseTwoSleep ()
+    {
+	Date date = new Date();
+	
+#if defined(JDK_1_0_2) || defined(JDK_1_0) || defined(JDK_0_1)
+	outStrm.println("Crash recovery hibernating for "+PHASE2SLEEP
+			+" secs. Its now "+date.toGMTString());
+#else
+	outStrm.println("Crash recovery hibernating for "+PHASE2SLEEP
+			+" secs. Its now "+Calendar.getInstance().getTime());
+#endif
+	try
+	{
+	    Thread.sleep(PHASE2SLEEP*1000);
+	}
+	catch (InterruptedException e)
+	{
+	}
+	
+	banner(outStrm);
+    }
+
+private boolean warnAdmin ()
+    {
+	Mailer m = new Mailer(System.err);
+
+	m.println("Crash recovery has made several"
+		  +" attempts to contact the rpc manager");
+    
+	m.println("\nAttempts are continuing. "
+		  +"If this matter is resolved you will be informed.");
+
+	m.sendMessage();
+
+	return true;
+    }
+
+private boolean calmAdmin ()
+    {
+	Mailer m = new Mailer(System.err);
+
+	m.println("Re: Previous warning message\n");
+	m.println("Crash recovery has now successfully contacted the rpc manager.");
+    
+	m.sendMessage();
+	
+	return true;
+    }
+    
+private PrintStream outStrm;
+private CRRecordList workList;
+    
+private static String host = null;
+private static int refCount = 0;
+
+private static final int PHASE2SLEEP = 300;  // seconds
+    
+}
