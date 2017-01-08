@@ -1,0 +1,22 @@
+COMMENT 
+COMMENT Copyright (C) 1995, 1996, 1997, 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 1998/06/29 09:33:51 nmcl Exp $
+COMMENT
+
+SOURCES = CrashMan/Mailer.java \
+	  CrashMan/CRController.java
+
+Target($(SOURCES))
+
+PreprocessJavaCodeDir(CrashMan,Mailer,NullParam)
+PreprocessJavaCodeDir(CrashMan,CRController,NullParam)
+
+SubDirectory(AADoctor)
+SubDirectory(AAStatus)
+SubDirectory(CrashMan)
