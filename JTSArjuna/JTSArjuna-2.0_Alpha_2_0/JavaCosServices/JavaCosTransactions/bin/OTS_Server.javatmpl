@@ -1,0 +1,113 @@
+/*
+ * Copyright (C) 1996, 1997, 1998, 1999,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: OTS_Server.javatmpl,v 1.10.2.1.4.2 1999/09/10 14:38:50 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+import com.arjuna.JavaCosTransactions.*;
+import com.arjuna.OrbCommon.ORBInterface;
+import com.arjuna.OrbCommon.ORBServices;
+import com.arjuna.JavaGandiva.Common.Uid;
+import org.omg.CosTransactions.*;
+
+import NAMESPACE_(CORBA).SystemException;
+import NAMESPACE_(CosNaming).NamingContextPackage.InvalidName;
+
+public class OTS_Server
+{
+    
+public static void main (String[] args)
+    {
+	String refFile = ORBServices.transactionService;
+	String objectName = null;
+	
+	for (int i = 0; i < args.length; i++)
+	{
+	    if (args[i].compareTo("-otsname") == 0)
+		objectName = args[i+1];
+	    if (args[i].compareTo("-help") == 0)
+	    {
+		System.out.println("Usage: OTS_Server [-otsname <name>] [-help] [-version]");
+		System.exit(0);
+	    }
+	    if (args[i].compareTo("-version") == 0)
+	    {
+		System.out.println("JTSArjuna verion "+JTSARJUNA_VERSION+" (JavaCosServices version "+COSSERVICES_VERSION+").");
+		System.exit(0);
+	    }
+	}
+
+	Uid u = new Uid();
+	int resolver = ORBServices.CONFIGURATION_FILE;
+	String resolveService = System.getProperty("RESOLVE_SERVICE", "CONFIGURATION_FILE");
+	
+	if (resolveService.compareTo("NAME_SERVICE") == 0)
+	    resolver = ORBServices.NAME_SERVICE;
+	else
+	{
+	    if (resolveService.compareTo("BIND_CONNECT") == 0)
+		resolver = ORBServices.BIND_CONNECT;
+	}
+
+	OTS_Factory theOTS = null;
+	
+	try
+	{
+	    ORBInterface.initORB(args, null);
+	    ORBInterface.initBOA();
+
+	    theOTS = new OTS_Factory(objectName);
+
+	    try
+	    {
+		if (resolver != ORBServices.BIND_CONNECT)
+		{
+		    String[] params = new String[1];
+
+		    params[0] = ORBServices.otsKind;
+
+		    /*
+		     * Register using the default mechanism.
+		     */
+		
+		    ORBServices.registerService(theOTS, ORBServices.transactionService, params, resolver);
+
+		    params = null;
+		}
+		
+		System.out.println("Transaction manager registered.");
+	    }
+	    catch (Exception e1)
+	    {
+		System.err.println("Failed to bind transaction manager: "+e1);
+		System.exit(0);
+	    }
+
+	    System.out.println("Arjuna OTS Server startup");
+
+	    if (resolver == ORBServices.BIND_CONNECT)
+		ORBInterface.run(ORBServices.transactionService);
+	    else
+		ORBInterface.run();
+	}
+	catch (Exception e2)
+	{
+	    System.err.println("Caught exception "+e2);
+	}
+    
+	System.out.println("Arjuna OTS Server shutdown");
+
+	theOTS = null;
+
+	ORBInterface.shutdownBOA();
+	ORBInterface.shutdownORB();
+    }
+
+};
