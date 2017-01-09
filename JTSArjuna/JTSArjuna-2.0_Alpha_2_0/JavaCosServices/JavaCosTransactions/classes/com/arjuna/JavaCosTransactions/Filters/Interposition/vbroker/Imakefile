@@ -1,0 +1,46 @@
+COMMENT 
+COMMENT Copyright (C) 1996, 1997, 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1999/09/10 15:01:14 nmcl Exp $
+COMMENT
+
+SOURCES = OTS_ClientInterpositionFilter.java \
+	  OTS_ClientInterpositionFilterFactory.java \
+	  OTS_ServerInterpositionFilter.java \
+	  OTS_ServerInterpositionFilterFactory.java \
+	  OTS_ClientInterpositionBindFilter.java \
+	  OTS_InterpositionFilterManager.java \
+	  Init.java
+
+OBJECTS = OTS_InterpositionFilterManager.class \
+	  OTS_ClientInterpositionFilter.class \
+	  OTS_ClientInterpositionFilterFactory.class \
+	  OTS_ServerInterpositionFilter.class \
+	  OTS_ServerInterpositionFilterFactory.class \
+	  OTS_ClientInterpositionBindFilter.class \
+	  Init.class
+
+PreprocessJavaCode(OTS_ClientInterpositionFilter,NullParam)
+PreprocessJavaCode(OTS_ServerInterpositionFilter,NullParam)
+PreprocessJavaCode(OTS_ClientInterpositionBindFilter,NullParam)
+PreprocessJavaCode(Init,NullParam)
+
+#ifdef HAVE_FILTER
+Target($(SOURCES))
+Target($(OBJECTS))
+#endif
+
+BuildJavaByteCode(OTS_ClientInterpositionFilter,NullParam)
+BuildJavaByteCode(OTS_ClientInterpositionFilterFactory,NullParam)
+BuildJavaByteCode(OTS_ServerInterpositionFilter,NullParam)
+BuildJavaByteCode(OTS_ServerInterpositionFilterFactory,NullParam)
+BuildJavaByteCode(OTS_ClientInterpositionBindFilter,NullParam)
+BuildJavaByteCode(OTS_InterpositionFilterManager,NullParam)
+BuildJavaByteCode(Init,NullParam)
+
+Clean(*.class)
