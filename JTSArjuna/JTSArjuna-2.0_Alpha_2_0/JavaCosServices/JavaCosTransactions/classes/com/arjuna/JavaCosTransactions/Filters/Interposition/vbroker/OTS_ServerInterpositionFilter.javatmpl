@@ -1,0 +1,293 @@
+/*
+ * Copyright (C) 1996, 1997, 1998, 1999,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: OTS_ServerInterpositionFilter.javatmpl,v 1.1 1999/09/10 15:01:19 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+#include <CosTransactions/CosTranNames.h>
+
+package com.arjuna.JavaCosTransactions.Filters.Interposition.vbroker;
+
+import com.arjuna.OrbCommon.ORBInterface;
+import com.arjuna.JavaCosTransactions.*;
+import org.omg.CosTransactions.*;
+import com.arjuna.ArjunaOTS.*;
+
+import com.visigenic.vbroker.interceptor.*;
+import com.visigenic.vbroker.IOP.*;
+import com.visigenic.vbroker.GIOP.*;
+import com.visigenic.vbroker.orb.*;
+import org.omg.CORBA.portable.*;
+
+#ifndef JAR_PACKAGE_PROBLEM
+import NAMESPACE_(CORBA).*;
+#else
+import NAMESPACE_(CORBA).BOA;
+import NAMESPACE_(CORBA).CompletionStatus;
+#endif
+
+import NAMESPACE_(CORBA).SystemException;
+import NAMESPACE_(CORBA).BAD_PARAM;
+import NAMESPACE_(CORBA).UNKNOWN;
+
+#include <CosTransactions/CosTranExceptions.h>
+
+/*
+ * IMPORTANT: the stream returned from the interceptor in a send 
+ * or receive call must have the dataOffset field set to the beginning
+ * of the data body (following all headers) and the offset field set 
+ * to the end of the message.  This is absolutely necessary so that 
+ * the ORB can tell if you have increased the length of your message.
+ * Set these using offset() and dataOffset() settors.
+ */
+
+public class OTS_ServerInterpositionFilter implements ServerInterceptor
+{
+    
+public OTS_ServerInterpositionFilter ()
+    {
+#ifdef DEBUG	
+	System.out.println("OTS_ServerInterpositionFilter");
+#endif
+	
+	if (!otsHaveChecked)
+	{
+	    String env = System.getProperty(OTS_Environment.OTS_NEED_TRAN_CONTEXT, null);
+
+	    if (env != null)
+	    {
+		if (env.compareTo("YES") == 0)
+		    otsNeedTranContext = true;
+	    }
+
+	    env = System.getProperty(OTS_Environment.OTS_ALWAYS_PROPAGATE_CONTEXT, null);
+
+	    if (env != null)
+	    {
+		if (env.compareTo("NO") == 0)
+		    otsAlwaysPropagate = false;
+	    }
+
+	    otsHaveChecked = true;
+	}
+    }
+
+public IOR locate (int req_id, byte[] object_key, Closure closure)
+    {
+        return null;
+    }
+
+public void locate_succeeded (int req_id, Closure closure)
+    {
+    }
+
+public void locate_forwarded (int req_id, IORHolder forward_ior, Closure closure)
+    {
+    }
+
+public IOR locate_failed (int req_id, byte[] object_key, Closure closure)
+    {
+        return null;
+    }
+
+public InputStream receive_request (RequestHeader hdr, org.omg.CORBA.ObjectHolder target,
+				    org.omg.CORBA.portable.InputStream buf, Closure closure)
+    {
+#ifdef DEBUG
+	System.out.println("OTS_ServerInterpositionFilter.receive_request called for "+hdr.operation);
+#endif
+
+	Thread currentThread = Thread.currentThread();
+	GiopInputStream istr = (GiopInputStream) buf;
+	int dataStart = istr.dataOffset();
+	int dataEnd = istr.offset();
+
+	istr.offset(dataEnd-OTS_ServerInterpositionFilter.dataOffset);
+	
+	if (OTS_InterpositionFilterManager.isDisabled(currentThread))
+	{
+	    /*
+	     * Must remember to "pull" something from the
+	     * message even if we have been disabled - the
+	     * client will not know that!
+	     */
+
+	    istr.offset(dataEnd);
+	}
+	else
+	{
+	    /*
+	     * Now disable interceptors to prevent us getting
+	     * into an infinite loop!
+	     */
+	
+	    OTS_InterpositionFilterManager.disable(currentThread);
+	
+	    if (!otsAlwaysPropagate)
+	    {
+		TransactionalObject tranObject = null;
+	    
+		try
+		{
+		    tranObject = SCOPED_NARROW_(org.omg.CosTransactions,TransactionalObject,target.value);
+
+		    if (tranObject == null)
+			throw new BAD_PARAM();
+		}
+		catch (BAD_PARAM e)
+		{
+		    /*
+		     * Not a transactional object so return.
+		     * Remember to enable interceptors.
+		     */
+
+		    OTS_InterpositionFilterManager.enable(currentThread);
+		    istr.offset(dataEnd);
+		    
+		    return null;
+		}
+		
+		tranObject = null;
+	    }
+	
+	    try
+	    {
+		istr.offset(istr.read_long());
+
+		PropagationContext ctx = unpackPropagationContext(istr, true);
+
+		if (ctx != null)
+		{
+#ifdef DEBUG
+		    System.out.println("OTS_ServerInterpositionFilter.receive_request got context.");
+#endif
+
+		    Control theControl = OTS.factory().recreate(ctx);
+
+		    if (theControl != null)
+		    {
+			READY_IMPL_(theControl);
+		    
+			OTS_Current current = OTS.current();
+
+#ifdef DEBUG
+			System.out.println("OTS_ServerInterpositionFilter.receive_request - resuming control for "+hdr.operation);
+#endif
+
+			current.resume(theControl);
+
+			ctx = null;
+			theControl = null;
+		    }
+		    else
+		    {
+			System.err.println("OTS_ServerInterpositionFilter received transaction context but could not deal with it!");
+			System.exit(0);
+		    }
+		}
+		else
+		{
+		    /*
+		     * Only throw an exception if we have no transaction context
+		     * and we require one.
+		     */
+	    
+		    if (otsNeedTranContext)
+		    {
+			OTS_InterpositionFilterManager.enable(currentThread);
+			istr.offset(dataEnd);
+			
+			throw new TransactionRequired();
+		    }
+		}
+	    }
+	    catch (InvalidControl e1)
+	    {
+		System.err.println("OTS_ServerInterpositionFilter.receive_request - caught InvalidControl: "+e1);
+	    }
+	    catch (Exception e2)
+	    {
+		System.err.println("OTS_ServerInterpositionFilter.receive_request - caught unexpected exception: "+e2);
+	    }
+
+	    istr.offset(dataEnd);
+	    
+	    OTS_InterpositionFilterManager.enable(currentThread);
+	}
+	
+	return null;
+    }
+
+public void prepare_reply (RequestHeader hdr, ReplyHeaderHolder reply,
+			   org.omg.CORBA.Object target, Closure closure)
+    {
+    }
+
+public org.omg.CORBA.portable.OutputStream send_reply (RequestHeader reqHdr, ReplyHeader hdr,
+						       org.omg.CORBA.Object target,
+						       org.omg.CORBA.portable.OutputStream buf,
+						       org.omg.CORBA.Environment env,
+						       Closure closure)
+    {
+	Control c = OTS.current().suspend();
+
+	c = null;
+	
+	return null;
+    }
+
+public void send_reply_failed (RequestHeader reqHdr, ReplyHeader replyHdr, org.omg.CORBA.Object target, org.omg.CORBA.Environment env, Closure closure)
+    {
+    }
+
+public void request_completed (RequestHeader reqHdr, org.omg.CORBA.Object target, Closure closure)
+    {
+    }
+
+public void shutdown (com.visigenic.vbroker.interceptor.ServerInterceptorPackage.ShutdownReason reason)
+    {
+    }
+
+public void exception_occurred (RequestHeader reqHdr, org.omg.CORBA.Environment env, Closure closure)
+    {
+    }
+
+private PropagationContext unpackPropagationContext (GiopInputStream istr)
+    {
+	return unpackPropagationContext(istr, true);
+    }
+
+private PropagationContext unpackPropagationContext (GiopInputStream istr, boolean fullUnpack)
+    {
+	boolean haveContext = istr.read_boolean();
+	PropagationContext ctx = null;
+
+	if (haveContext && fullUnpack)
+	{
+	    try
+	    {
+		ctx = PropagationContextHelper.read(istr);
+	    }
+	    catch (Exception e)
+	    {
+		System.err.println("WARNING OTS_ServerInterpositionFilter.unpackPropagationContext caught exception: "+e);
+		ctx = null;
+	    }
+	}
+
+	return ctx;
+    }
+	
+private boolean otsHaveChecked = false;
+private boolean otsNeedTranContext = OTS_Defaults.needTransactionContext;
+private boolean otsAlwaysPropagate = OTS_Defaults.alwaysPropagateContext;
+
+private static final int dataOffset = 4;
+    
+};

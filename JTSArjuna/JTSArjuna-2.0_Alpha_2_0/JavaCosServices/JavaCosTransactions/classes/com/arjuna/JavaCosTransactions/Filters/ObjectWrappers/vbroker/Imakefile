@@ -1,0 +1,60 @@
+COMMENT 
+COMMENT Copyright (C) 1997, 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1999/09/10 15:04:04 nmcl Exp $
+COMMENT
+
+SOURCES = OTS_ClientControlWrapper.java \
+	  OTS_ClientCoordinatorWrapper.java \
+	  OTS_ClientRecoveryCoordinatorWrapper.java \
+	  OTS_ClientResourceWrapper.java \
+	  OTS_ClientSubtransactionAwareResourceWrapper.java \
+	  OTS_ClientSynchronizationWrapper.java \
+	  OTS_ClientTerminatorWrapper.java \
+	  OTS_ClientTransactionFactoryWrapper.java \
+	  OTS_ClientActionControlWrapper.java \
+	  OTS_ClientArjunaSubtranAwareResourceWrapper.java \
+	  OTS_ClientArjunaTransactionWrapper.java \
+	  OTS_ClientUidCoordinatorWrapper.java \
+	  OTS_ClientOTSAbstractRecordWrapper.java \
+	  OTS_WrapperPostInit.java \
+	  OTS_WrapperPreInit.java
+
+OBJECTS = OTS_ClientControlWrapper.class \
+	  OTS_ClientCoordinatorWrapper.class \
+	  OTS_ClientRecoveryCoordinatorWrapper.class \
+	  OTS_ClientResourceWrapper.class \
+	  OTS_ClientSubtransactionAwareResourceWrapper.class \
+	  OTS_ClientSynchronizationWrapper.class \
+	  OTS_ClientTerminatorWrapper.class \
+	  OTS_ClientTransactionFactoryWrapper.class \
+	  OTS_ClientActionControlWrapper.class \
+	  OTS_ClientArjunaSubtranAwareResourceWrapper.class \
+	  OTS_ClientArjunaTransactionWrapper.class \
+	  OTS_ClientUidCoordinatorWrapper.class \
+	  OTS_ClientOTSAbstractRecordWrapper.class \
+	  OTS_WrapperPostInit.class \
+	  OTS_WrapperPreInit.class
+
+BuildJavaByteCode(OTS_ClientControlWrapper,NullParam)
+BuildJavaByteCode(OTS_ClientCoordinatorWrapper,NullParam)
+BuildJavaByteCode(OTS_ClientRecoveryCoordinatorWrapper,NullParam)
+BuildJavaByteCode(OTS_ClientResourceWrapper,NullParam)
+BuildJavaByteCode(OTS_ClientSubtransactionAwareResourceWrapper,NullParam)
+BuildJavaByteCode(OTS_ClientSynchronizationWrapper,NullParam)
+BuildJavaByteCode(OTS_ClientTerminatorWrapper,NullParam)
+BuildJavaByteCode(OTS_ClientTransactionFactoryWrapper,NullParam)
+BuildJavaByteCode(OTS_ClientActionControlWrapper,NullParam)
+BuildJavaByteCode(OTS_ClientArjunaSubtranAwareResourceWrapper,NullParam)
+BuildJavaByteCode(OTS_ClientArjunaTransactionWrapper,NullParam)
+BuildJavaByteCode(OTS_ClientUidCoordinatorWrapper,NullParam)
+BuildJavaByteCode(OTS_ClientOTSAbstractRecordWrapper,NullParam)
+BuildJavaByteCode(OTS_WrapperPostInit,NullParam)
+BuildJavaByteCode(OTS_WrapperPreInit,NullParam)
+
+Clean(*.class)
