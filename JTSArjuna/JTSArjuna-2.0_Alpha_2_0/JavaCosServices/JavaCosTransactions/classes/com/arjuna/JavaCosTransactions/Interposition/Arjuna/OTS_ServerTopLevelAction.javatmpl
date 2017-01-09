@@ -1,0 +1,403 @@
+/*
+ * Copyright (C) 1997, 1998,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: OTS_ServerTopLevelAction.javatmpl,v 1.9 1998/11/12 09:01:59 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package com.arjuna.JavaCosTransactions.Interposition.Arjuna;
+
+import com.arjuna.OrbCommon.*;
+import com.arjuna.JavaGandiva.Common.Uid;
+import com.arjuna.JavaArjunaLite.Atomic.PrepareOutcome;
+import com.arjuna.JavaArjunaLite.Atomic.ActionStatus;
+import com.arjuna.JavaArjunaLite.Thread.ThreadActionData;
+import com.arjuna.JavaCosTransactions.*;
+import org.omg.CosTransactions.*;
+import NAMESPACE_(CORBA).CompletionStatus;
+
+import NAMESPACE_(CORBA).SystemException;
+import NAMESPACE_(CORBA).UNKNOWN;
+
+#include <CosTransactions/CosTranExceptions.h>
+#include <CosTransactions/OTS_Exceptions.h>
+
+/*
+ * This looks like an atomic action, but is not actually derived from
+ * BasicAction or OTS_Transaction. This is because of the way in which the
+ * OTS creates and manipulates transactions.
+ *
+ * As with OTS_Transaction, we only create actions here, and do not associated
+ * these contexts with any thread. We do the association later.
+ *
+ * If we were to do the creation via a suitably modified current interface
+ * then the thread association would be done for us automatically, and we
+ * would not have to call resume at all.
+ *
+ * This is a top-level action proxy.
+ */
+
+/*
+ * We must maintain a hierarchy on a per thread basis. Multiple threads
+ * running within the same client transaction could talk to the same
+ * server at different points within their hierarchy *concurrently*. If
+ * we didn't look at the thread id then we would tear down hierarchies
+ * unnecessarily.
+ */
+
+public class OTS_ServerTopLevelAction extends SCOPED_BOA_(org.omg.CosTransactions,Resource)
+{
+
+public OTS_ServerTopLevelAction (Coordinator coordinator, Terminator terminator, OTS_ServerControl control)
+    {
+	_theControl = control;
+	_child = null;
+	_theUid = new Uid(control.getImplHandle().get_uid());
+
+	_theCoordinator = coordinator;
+	_theTerminator = terminator;
+	
+	READY_IMPL_(this);	
+
+	if (!registerResource(coordinator))
+	{
+	    System.err.println("OTS_ServerTopLevelAction - could not register interposed hierarchy!");
+	    
+	    /*
+	     * Failed to register, so force this hierarchy to rollback immediately.
+	     */
+
+	    if (_theControl != null)
+	    {
+		try
+		{
+		    Terminator term = _theControl.get_terminator();
+
+		    if (term != null)
+		    {
+			term.rollback();
+			term = null;
+		    }
+		}
+		catch (Exception e)
+		{
+		    System.err.println("OTS_ServerTopLevelAction - could not rollback local hierarchy! "+e);
+		}
+	    }
+	}
+    }
+
+public void finalize ()
+    {
+	if (_child != null)
+	{
+	    DESTROY_IMPL_(_child);
+	    _child = null;
+	}
+
+	if (_theControl != null)
+	{
+	    DESTROY_IMPL_(_theControl);
+	    _theControl = null;
+	}
+
+	_theUid = null;
+
+	_theCoordinator = null;
+	_theTerminator = null;
+    }
+
+/*
+ * Will only be called by the remote top-level transaction.
+ */
+
+#if defined(CORBA_2_2) || defined(CORBA_2_1)
+public org.omg.CosTransactions.Vote prepare () throws SystemException, HeuristicMixed, HeuristicHazard
+#else
+public int prepare () throws SystemException, HeuristicMixed, HeuristicHazard
+#endif    
+    {
+	if (_theControl == null)
+	{
+#ifdef ORB_OTS_SUPPORT	    
+	    throw new InvalidTransaction(0, CompletionStatus.COMPLETED_NO);
+#else
+	    throw new UNKNOWN(INACTIVE_TRANSACTION, CompletionStatus.COMPLETED_NO);
+#endif
+	}
+	
+	OTS_ServerTransaction theTransaction = (OTS_ServerTransaction) _theControl.getImplHandle();
+	
+	ThreadActionData.pushAction(theTransaction); // unnecessary if context goes with all calls.
+	
+	int result = theTransaction.doPrepare();
+
+	ThreadActionData.popAction();
+	
+	switch (result)
+	{
+	case PrepareOutcome.PREP_OK:
+	    return Vote.VoteCommit;
+	case PrepareOutcome.PREP_NOTOK:
+	    return Vote.VoteRollback;
+	case PrepareOutcome.READONLY:
+	    return Vote.VoteReadOnly;
+	case PrepareOutcome.HEURISTIC_MIXED:
+	    throw new HeuristicMixed();
+	case PrepareOutcome.HEURISTIC_HAZARD:
+	default:
+	    throw new HeuristicHazard();
+	}
+    }
+
+public void rollback () throws SystemException, HeuristicCommit, HeuristicMixed, HeuristicHazard
+    {
+	if (_theControl == null)
+	{
+#ifdef ORB_OTS_SUPPORT	    
+	    throw new InvalidTransaction(0, CompletionStatus.COMPLETED_NO);
+#else
+	    throw new UNKNOWN(INACTIVE_TRANSACTION, CompletionStatus.COMPLETED_NO);
+#endif
+	}
+	
+	OTS_ServerTransaction theTransaction = (OTS_ServerTransaction) _theControl.getImplHandle();
+	
+	ThreadActionData.pushAction(theTransaction);
+	
+	int actionStatus = theTransaction.status();
+    
+	if (actionStatus == ActionStatus.PREPARED)
+	{
+	    actionStatus = theTransaction.doPhase2Abort();
+	}
+	else
+	{
+	    theTransaction.rollback();  // must rollback
+	    actionStatus = ActionStatus.ABORTED;
+	}
+
+	ThreadActionData.popAction();
+	
+	switch (actionStatus)
+	{
+	case ActionStatus.ABORTED:
+	case ActionStatus.H_ROLLBACK:
+	    break;
+	case ActionStatus.COMMITTED:
+	case ActionStatus.H_COMMIT:
+	    throw new HeuristicCommit();
+	case ActionStatus.H_MIXED:
+	    throw new HeuristicMixed();
+	case ActionStatus.H_HAZARD:
+	    throw new HeuristicHazard();
+	default:
+	    break;
+	}
+    }
+
+public void commit () throws SystemException, NotPrepared, HeuristicRollback, HeuristicMixed, HeuristicHazard
+    {
+	if (_theControl == null)
+	{
+#ifdef ORB_OTS_SUPPORT	    
+	    throw new InvalidTransaction(0, CompletionStatus.COMPLETED_NO);
+#else	    
+	    throw new UNKNOWN(INACTIVE_TRANSACTION, CompletionStatus.COMPLETED_NO);
+#endif
+	}
+	
+	OTS_ServerTransaction theTransaction = (OTS_ServerTransaction) _theControl.getImplHandle();
+	
+	ThreadActionData.pushAction(theTransaction);
+	
+	int actionStatus = theTransaction.status();
+	boolean notPrepared = false;
+
+	if (actionStatus == ActionStatus.PREPARED)
+	    actionStatus = theTransaction.doPhase2Commit();
+	else
+	{
+	    notPrepared = true;
+	}
+
+	ThreadActionData.popAction();
+
+	if (notPrepared)
+	    throw new NotPrepared();
+	
+	switch (actionStatus)
+	{
+	case ActionStatus.COMMITTED:
+	case ActionStatus.H_COMMIT:
+	    break;
+	case ActionStatus.ABORTED:
+	case ActionStatus.H_ROLLBACK:
+	    throw new HeuristicRollback();
+	case ActionStatus.H_MIXED:
+	    throw new HeuristicMixed();
+	case ActionStatus.H_HAZARD:
+	    throw new HeuristicHazard();
+	default:
+	    break;
+	}
+    }
+
+public void forget () throws SystemException
+    {
+	/*
+	 * We can't raise exceptions, so there should be nothing to forget!
+	 */
+    }
+
+public void commit_one_phase () throws SystemException, HeuristicHazard
+    {
+	try
+	{
+#if defined(CORBA_2_2) || defined(CORBA_2_1)
+	    org.omg.CosTransactions.Vote v = prepare();
+#else
+	    int v = prepare();
+#endif	    
+
+	    if ((v == Vote.VoteCommit) || (v == Vote.VoteReadOnly))
+		commit();
+	    else
+		rollback();
+	}
+	catch (NotPrepared e1)
+	{
+	    // should not happen!!
+	}
+#ifdef DRAFT3	
+	catch (HeuristicMixed e2)
+	{
+	    throw new HeuristicHazard();
+	}
+	catch (HeuristicRollback e3)
+	{
+	    throw new HeuristicHazard();	    
+	}
+#endif	
+	catch (HeuristicCommit e4)
+	{
+	    // this is ok!!
+	}
+    }
+
+public final synchronized Control control ()
+    {
+	return _theControl;
+    }
+
+public synchronized void add (OTS_ServerNestedAction c)
+    {
+	if (_child != null)
+	    _child.add(c);
+	else
+	    _child = c;
+    }
+ 
+public synchronized OTS_ServerNestedAction child ()
+    {
+	return _child;
+    }
+
+public synchronized void abortChild (OTS_ServerNestedAction toAbort)
+    {
+	if (_child != null)
+	{
+	    if (_child == toAbort)
+	    {
+		org.omg.CosTransactions.Status nestedStatus = _child.otsStatus();
+
+		if ((nestedStatus != org.omg.CosTransactions.Status.StatusRolledBack) &&
+		    (nestedStatus != org.omg.CosTransactions.Status.StatusCommitted) &&
+		    (nestedStatus != org.omg.CosTransactions.Status.StatusNoTransaction))
+		{
+		    _child.rollback_subtransaction();
+		}
+
+		DESTROY_IMPL_(_child);
+		_child = null;
+	    }
+	    else
+		_child.abortChild(toAbort);
+	}
+	else
+	    System.err.println("WARNING:OTS_ServerTopLevelAction::abortChild - error, no child!");
+    }
+ 
+public final Uid get_uid ()
+    {
+	return _theUid;
+    }
+
+#if defined(CORBA_2_2) || defined(CORBA_2_1)
+public final org.omg.CosTransactions.Status otsStatus ()
+#else
+public final int otsStatus ()
+#endif    
+    {
+	try
+	{
+	    if (_theControl != null)
+		return _theControl.getImplHandle().get_status();
+	    else
+		return org.omg.CosTransactions.Status.StatusNoTransaction;
+	}
+	catch (SystemException e)
+	{
+	    return Status.StatusUnknown;
+	}
+    }
+
+protected OTS_ServerTopLevelAction ()
+    {
+	_theControl = null;
+	_child = null;
+	_theUid = new Uid();
+
+	_theCoordinator = null;
+	_theTerminator = null;
+    }
+ 
+protected boolean registerResource (Coordinator theCoordinator)
+    {
+	boolean result = false;
+
+	if (theCoordinator != null)
+	{
+	    try
+	    {
+		theCoordinator.register_resource(this);
+		result = true;
+	    }
+	    catch (Inactive e)
+	    {
+		System.err.println("OTS_ServerTopLevelAction::registerResource - Inactive exception");
+	    }
+	    catch (SystemException e)
+	    {
+		System.err.println("OTS_ServerTopLevelAction::registerResource - caught unexpceted exception: "+e);
+	    }
+	}
+    
+	return result;
+    }
+
+protected OTS_ServerControl _theControl;
+protected OTS_ServerNestedAction _child;
+protected Uid _theUid;
+protected Coordinator _theCoordinator;
+protected Terminator _theTerminator;
+
+};
+
+

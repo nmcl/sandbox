@@ -1,0 +1,147 @@
+/*
+ * Copyright (C) 1996, 1997, 1998,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: OTS_StrictInterposition.javatmpl,v 1.4 1998/08/14 10:30:08 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package com.arjuna.JavaCosTransactions.Interposition.Strict;
+
+import com.arjuna.JavaGandiva.Template.*;
+import com.arjuna.JavaGandiva.Common.Uid;
+import com.arjuna.JavaCosTransactions.OTS_ServerControl;
+import com.arjuna.JavaCosTransactions.OTS_Utility;
+import com.arjuna.JavaCosTransactions.Interposition.Arjuna.*;
+import org.omg.CosTransactions.*;
+import com.arjuna.ArjunaOTS.*;
+
+import NAMESPACE_(CORBA).SystemException;
+
+public class OTS_StrictInterposition extends OTS_Interposition
+{
+
+public static Control create (PropagationContext context)
+    {
+	return __list.setupHierarchy(context);
+    }
+
+    /*
+     * Assume that all actions in the imported hierarchy are of the same
+     * type, i.e., all Arjuna transactions.
+     *
+     * Because of the way garbage collection works in the ORB we have to
+     * run an explicit garbage collection phase for finished hierarchies.
+     */
+
+public synchronized Control setupHierarchy (PropagationContext context) throws SystemException
+    {
+	/*
+	 * First of all check for any garbage.
+	 */
+
+	super.garbageCollect();
+
+	/*
+	 * Now deal with the current request.
+	 */
+    
+	Control controlPtr = null;
+	Uid theUid = OTS_Utility.otidToUid(context.currentTransaction.otid);
+	InterposedHierarchy proxyAction = present(theUid);
+
+	if (proxyAction != null)
+	{
+	    /*
+	     * Create a new proxyAction element and return the "current" transaction.
+	     */
+
+	    controlPtr = createHierarchy(context, theUid);
+	}
+	else
+	{
+	    if (proxyAction.action().child() != null)
+		controlPtr = proxyAction.action().child().control();
+	    else
+		controlPtr = proxyAction.action().control();
+	}
+
+	return controlPtr;
+    }
+
+protected OTS_StrictInterposition ()
+    {
+    }
+    
+protected Control createHierarchy (PropagationContext ctx, Uid currentUid)
+    {
+	/*
+	 * Create a proxy for the current action and a new top-level action if current is
+	 * nested.
+	 */
+
+	TransIdentity currentTransaction = ctx.currentTransaction;
+	Coordinator coordinator = currentTransaction.coord;
+	Terminator terminator = currentTransaction.term;
+	OTS_ServerStrictTopLevelAction topLevelAction = null;
+	OTS_ServerControl control = null;
+    
+	if (ctx.parents.length > 0)
+	{
+	    Uid dummyUid = new Uid();
+	
+	    /*
+	     * Current is nested so we must create a local top-level action within which
+	     * to run it's proxy.
+	     */
+
+	    control = new OTS_ServerControl(dummyUid, null, null);
+	    topLevelAction = new OTS_ServerStrictTopLevelAction(control);  // local transaction only
+	    control = control.create_subtransaction(currentUid);
+	
+	    OTS_ServerStrictNestedAction currentAction = new OTS_ServerStrictNestedAction(coordinator,
+											  terminator, control);
+	}
+	else
+	{
+	    /*
+	     * Current is top-level.
+	     */
+
+	    control = new OTS_ServerControl(currentUid, null, null);
+	    topLevelAction = new OTS_ServerStrictTopLevelAction(coordinator, terminator, control);
+	}
+
+	InterposedHierarchy newElement = new InterposedHierarchy(topLevelAction);
+
+	_head.add(newElement);
+
+	/*
+	 * Now give the top-level transaction to the transcation reaper.
+	 */
+	
+	/*
+	  if (ctx.timeout > 0)
+	  OTS_TransactionReaper.transactionReaper().insert(tlAction.control(), ctx.timeout);
+	  */
+	
+	return control;
+    }
+
+protected Control checkHierarchy (InterposedHierarchy l, PropagationContext p)
+    {
+	/*
+	 * Nothing to check.
+	 */
+
+	return null;
+    }
+
+private static OTS_StrictInterposition __list = new OTS_StrictInterposition();
+ 
+};

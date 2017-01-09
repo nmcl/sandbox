@@ -1,0 +1,357 @@
+/*
+ * Copyright (C) 1996, 1997, 1998, 1999,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: OTS_Control.javatmpl,v 1.12.2.1 1999/01/28 19:04:02 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package com.arjuna.JavaCosTransactions;
+
+import com.arjuna.OrbCommon.*;
+import org.omg.CosTransactions.*;
+import com.arjuna.ArjunaOTS.*;
+import com.arjuna.JavaGandiva.Common.Uid;
+import com.arjuna.JavaGandiva.Template.*;
+import java.io.PrintStream;
+import java.util.Hashtable;
+
+import NAMESPACE_(CORBA).SystemException;
+
+/*
+ * Although a transaction may have a timeout associated with it,
+ * this can only happen for a top-level transaction. This, combined
+ * with the fact that the default timeout is 0 means that many (most?)
+ * transactions will not have a timeout. So, rather than increase the
+ * size of all of the transaction objects, we keep the information
+ * separate in the TransactionReaper. (Since it already needs to have this
+ * information anyway this is no extra burden.) It also means that we can
+ * support non-Arjuna transactions: if we were to add a new method to the
+ * control (get_timeout, say) then this would be Arjuna specific.
+ */
+
+public class OTS_Control extends SCOPED_BOA_(com.arjuna.ArjunaOTS,ActionControl) implements UidListElement
+{
+
+public OTS_Control (Control parentCon, OTS_Transaction parentTran)
+    {
+	READY_IMPL_(this);
+	
+	_theTerminator = null;
+	_theCoordinator = null;
+	_parentControl = parentCon;
+	_transactionHandle = new OTS_Transaction(_parentControl, parentTran);
+	_transactionReference = null;
+	_theUid = _transactionHandle.get_uid();
+	_destroyed = false;
+	_timeout = 0;
+
+	createTransactionHandle();
+	addControl();
+    }
+
+public void finalize ()
+    {
+	if (!_destroyed)
+	    tidyup();
+
+	/*
+	 * Do this here rather than in tidyup so anyone else
+	 * with a reference to this control can continue to
+	 * determine the status of the transaction until the
+	 * control is garbage collected.
+	 */
+	
+	_theTerminator = null;
+	_theCoordinator = null;
+	
+	_theUid = null;
+
+	removeControl();
+    }
+ 
+/*
+ * Used for garbage collection so we can keep a list
+ * of controls and delete local ones.
+ */
+
+public Uid get_uid ()
+    {
+	return _theUid;
+    }
+
+public final synchronized OTS_Transaction getImplHandle ()
+    {
+	return _transactionHandle;
+    }
+
+public Terminator get_terminator () throws SystemException, org.omg.CosTransactions.Unavailable
+    {
+	if (_theTerminator != null)
+	    return _theTerminator;
+	else
+	    throw new Unavailable();
+    }
+
+public Coordinator get_coordinator () throws SystemException, org.omg.CosTransactions.Unavailable
+    {
+	if (_theCoordinator != null)
+	    return _theCoordinator;
+	else
+	    throw new Unavailable();
+    }
+
+public void set_terminator (Terminator terminator) throws SystemException, org.omg.CosTransactions.Unavailable
+    {
+	throw new org.omg.CosTransactions.Unavailable();
+    }
+
+public void set_coordinator (Coordinator coordinator) throws SystemException, org.omg.CosTransactions.Unavailable
+    {
+	throw new org.omg.CosTransactions.Unavailable();
+    }
+
+public Control getParentControl () throws SystemException
+    {
+	if (_parentControl != null)
+	    return _parentControl;
+	else
+	    return null;
+    }
+
+/*
+ * This method should only be called for remote Control objects.
+ * Destroy them locally by calling DESTROY_IMPL.
+ *
+ * Since we assume that a factory will either be remote or local, we can
+ * destroy this object and rely upon the ORB to return an exception to subsequent
+ * clients which indicates they no longer have a valid reference.
+ *
+ * In ORBs such as RCP which do good (i.e., location transparent) memory management
+ * then even in the local case this would work. In other ORBs (e.g., Orbix) where
+ * the _ptr is a pointer, we could get scr*wed.
+ */
+
+public synchronized void destroy () throws ActiveTransaction, ActiveThreads, BadControl, Destroyed, SystemException
+    {
+	canDestroy();
+
+	tidyup();
+
+	try
+	{
+	    DESTROY_IMPL_(this);
+	}
+	catch (Exception e)
+	{
+	    System.err.println("WARNING: OTS_Control could not destroy object.");
+	}
+    }
+
+protected synchronized void canDestroy () throws ActiveTransaction, ActiveThreads, BadControl, Destroyed, SystemException
+    {
+	canDestroy(true);
+    }
+
+/*
+ * Generally we do not want to destroy the transaction if it is doing
+ * some work, or other threads are still registered with it. However,
+ * for some situations (e.g., the transaction reaper) we must terminate
+ * the transaction regardless.
+ */
+
+protected synchronized void canDestroy (boolean force) throws ActiveTransaction, ActiveThreads, BadControl, Destroyed, SystemException
+    {
+	if (_destroyed)
+	    throw new Destroyed();
+	
+	if (_transactionHandle != null)  // not a proxy control.
+	{
+	    if ((_transactionHandle.activeThreads() != 0) && (!force))
+		throw new ActiveThreads();
+	    
+	    try
+	    {
+		Coordinator coord = get_coordinator();
+		org.omg.CosTransactions.Status status = coord.get_status();
+
+		if ((status == org.omg.CosTransactions.Status.StatusActive) && (!force))
+		    throw new ActiveTransaction();
+	    }
+	    catch (Exception e)
+	    {
+		throw new ActiveTransaction();
+	    }
+	}  // it is always safe to delete proxies.
+
+	/*
+	 * Got here, so it is either ok to destroy or the caller
+	 * wants to force the destruction regardless.
+	 */
+    }
+ 
+/*
+ * This is used for implicit context propagation, and for
+ * Current.resume on remote transactions. In both cases we
+ * need to create a local control given a remove coordinator
+ * and terminator, but we can't create a transaction handle.
+ */
+
+protected OTS_Control (Coordinator coordinator, Terminator terminator)
+    {
+	this(coordinator, terminator, null, null);
+    }
+
+protected OTS_Control (Coordinator coordinator, Terminator terminator, Uid uid)
+    {
+	this(coordinator, terminator, null, uid);
+    }
+
+protected OTS_Control (Coordinator coordinator, Terminator terminator,
+		       Control parentControl, Uid uid)
+    {
+	READY_IMPL_(this);
+	
+	_theTerminator = terminator;
+	_theCoordinator = coordinator;
+	_parentControl = parentControl;
+	_transactionHandle = null;
+	_transactionReference = null;	
+	_destroyed = false;
+	_timeout = 0;	
+
+	duplicateTransactionHandle(coordinator, terminator);
+
+	if (uid == null)
+	{
+	    UidCoordinator uidCoord = OTS_Utility.getUidCoordinator(coordinator);
+
+	    if (uidCoord != null)
+	    {
+		try
+		{
+		    _theUid = OTS_Utility.getUid(uidCoord);
+		}
+		catch (Exception e)
+		{
+		    /*
+		     * Not an Arjuna transaction, so allocate any Uid.
+		     */
+		
+		    _theUid = new Uid();
+		}
+
+		uidCoord = null;
+	    }
+	    else
+		_theUid = new Uid();
+	}
+	else
+	    _theUid = uid;
+
+	addControl();
+    } 
+ 
+/*
+ * Protected constructor for inheritance. The derived
+ * classes are responsible for setting everything up,
+ * including adding the control to the list of controls
+ * and assigning the Uid variable.
+ */
+ 
+protected OTS_Control ()
+    {
+	_theTerminator = null;
+	_theCoordinator = null;
+	_parentControl = null;
+	_transactionHandle = null;
+	_transactionReference = null;	
+	_theUid = Uid.nullUid();
+	_destroyed = false;
+	_timeout = 0;	
+	
+	READY_IMPL_(this);
+    }
+
+protected final void createTransactionHandle ()
+    {
+	/* Create/bind the 2 IDL interfaces to the same implementation */
+
+	_transactionReference = new SCOPED_TIE_INSTANCE_(com.arjuna.ArjunaOTS,ArjunaTransaction)(_transactionHandle);
+
+	READY_IMPL_(_transactionReference);
+	
+	_theCoordinator = SCOPED_NARROW_(com.arjuna.ArjunaOTS,UidCoordinator,_transactionReference);
+	_theTerminator = SCOPED_NARROW_(org.omg.CosTransactions,Terminator,_transactionReference);
+	
+	/*
+	 * Pass a pointer to the control to the transaction so it knows
+	 * what the control is. We use this for transaction comparison and
+	 * thread-to-context management.
+	 */
+
+	_transactionHandle.setControlHandle(this);
+    }
+
+protected final void duplicateTransactionHandle (Coordinator coord, Terminator term)
+    {
+	_theCoordinator = coord;
+	_theTerminator = term;
+    }
+
+protected final boolean addControl ()
+    {
+	synchronized (OTS_Control.allControls)
+        {
+	    OTS_Control.allControls.add(this);
+	}
+	
+	return true;
+    }
+
+protected final boolean removeControl ()
+    {
+	synchronized (OTS_Control.allControls)
+        {
+	    OTS_Control.allControls.remove(this);
+	}
+
+	return true;
+    }
+
+/*
+ * No need to protect with mutex since only called from
+ * destroy (and destructor), which is protected with a
+ * mutex.
+ */
+
+private final void tidyup ()
+    {
+	_destroyed = true;
+    
+	_parentControl = null;
+
+	DESTROY_IMPL_(_transactionReference);
+ 
+	_transactionHandle = null;
+	_transactionReference = null;
+    }
+ 
+public static HashUidList allControls = new HashUidList(29); 
+ 
+protected Terminator _theTerminator;
+protected Coordinator _theCoordinator;
+protected Control _parentControl;
+protected OTS_Transaction _transactionHandle;
+protected ArjunaTransaction _transactionReference;
+protected Uid _theUid;
+ 
+private boolean _destroyed;
+private long _timeout;
+
+};

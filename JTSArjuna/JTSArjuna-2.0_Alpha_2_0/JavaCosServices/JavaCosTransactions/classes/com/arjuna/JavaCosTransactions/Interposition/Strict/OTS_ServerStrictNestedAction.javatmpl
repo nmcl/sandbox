@@ -1,0 +1,106 @@
+/*
+ * Copyright (C) 1997, 1998,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: OTS_ServerStrictNestedAction.javatmpl,v 1.3 1998/07/06 13:29:16 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package com.arjuna.JavaCosTransactions.Interposition.Strict;
+
+import com.arjuna.JavaGandiva.Template.*;
+import com.arjuna.JavaGandiva.Common.Uid;
+import com.arjuna.JavaCosTransactions.*;
+import com.arjuna.JavaCosTransactions.Interposition.Arjuna.*;
+import org.omg.CosTransactions.*;
+import com.arjuna.ArjunaOTS.*;
+
+import NAMESPACE_(CORBA).SystemException;
+
+public class OTS_ServerStrictNestedAction extends OTS_ServerNestedAction
+{
+
+    /*
+     * Create local transactions with same ids as remote.
+     * The base class is responsible for registering us with the
+     * parent transaction.
+     */
+
+public OTS_ServerStrictNestedAction (Coordinator coordinator, Terminator terminator,
+				     OTS_ServerControl control)
+    {
+	super(coordinator, terminator, control);
+
+	_finished = false;
+    }
+
+    /*
+     * Since we may be called multiple times if we are nested and are propagated
+     * to our parents, we remember the initial response and return it subsequently.
+     */
+
+public void commit_subtransaction (Coordinator parent) throws SystemException
+    {
+	if (!_finished)
+	{
+	    super.commit_subtransaction(parent);
+
+	    /*
+	     * Since we were registered using register_resource, we should
+	     * be propagated automatically to our parent.
+	     */
+	
+	    _finished = true;
+	}
+    }
+
+public void rollback_subtransaction () throws SystemException
+    {
+	if (!_finished)
+	{
+	    super.rollback_subtransaction();
+	
+	    _finished = true;
+	}
+    }
+
+    /*
+     * Register as a resource so we get propagated to our real parent.
+     */
+
+protected boolean registerSubTran (Coordinator theCoordinator)
+    {
+	boolean result = false;
+    
+	try
+	{
+	    /*
+	     * Since this resource is a subtransaction_aware resource, calling
+	     * register_resource should register us with the nested transaction
+	     * and do propagation for us automatically.
+	     */
+	    
+	    theCoordinator.register_resource(this);
+	
+	    result = true;
+	}
+	catch (Inactive e1)
+	{
+	    System.err.println("WARNING:OTS_ServerStrictNestedAction::registerSubTran - Inactive exception");
+	}
+	catch (Exception e2)
+	{
+	    System.err.println("WARNING:OTS_ServerNestedAction::registerSubTran - other exception");
+	}
+    
+	return result;
+    }
+
+protected boolean _finished;
+ 
+};
