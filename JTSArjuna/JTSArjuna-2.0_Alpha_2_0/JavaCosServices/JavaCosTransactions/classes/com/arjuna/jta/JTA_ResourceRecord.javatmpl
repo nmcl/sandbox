@@ -1,0 +1,539 @@
+/*
+ * Copyright (C) 1999,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: JTA_ResourceRecord.javatmpl,v 1.3 1999/03/08 12:41:52 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+#include <CosTransactions/CosTranNames.h>
+
+package com.arjuna.jta;
+
+import com.arjuna.JavaGandiva.Common.*;
+import com.arjuna.JavaArjunaLite.Atomic.*;
+import com.arjuna.JavaCosTransactions.tx.*;
+import org.omg.CosTransactions.*;
+import javax.transaction.*;
+import javax.transaction.xa.*;
+import java.io.*;
+
+import org.omg.CosTransactions.NotPrepared;
+import org.omg.CosTransactions.HeuristicCommit;
+import org.omg.CosTransactions.HeuristicMixed;
+import org.omg.CosTransactions.HeuristicHazard;
+import org.omg.CosTransactions.HeuristicRollback;
+import java.io.IOException;
+import NAMESPACE_(CORBA).UNKNOWN;
+
+#include <CosTransactions/CosTranExceptions.h>
+#include <CosTransactions/OTS_Exceptions.h>
+
+public class JTA_ResourceRecord extends StateManager implements SCOPED_TIE_CLASS_(org.omg.CosTransactions,Resource)
+{
+    
+public JTA_ResourceRecord (XAResource res, JTA_XID xid)
+    {
+	super(ObjectType.ANDPERSISTENT);
+	
+	_theResource = res;
+	_tranID = xid;
+	_prepared = false;
+	_heuristic = JTA_ResourceRecord.NONE;
+	_valid = true;
+	
+	if ((_theResource != null) && (_tranID != null))
+	{
+	    super.activate();
+
+	    super.modified();
+
+	    _valid = super.deactivate();
+	}
+	else
+	    _valid = false;
+    }
+
+public JTA_ResourceRecord (Uid u, boolean commit)
+    {
+	super(u);
+	
+	_theResource = null;
+	_tranID = null;
+	_prepared = true;
+	_heuristic = JTA_ResourceRecord.NONE;
+	_valid = true;
+
+	_valid = super.activate();
+
+	if (_valid)
+	{
+	    if (recover(commit))
+		destroyState();
+	}
+    } 
+
+#ifdef DRAFT2	
+#if defined(CORBA_2_2) || defined(CORBA_2_1)
+public org.omg.CosTransactions.Vote prepare () throws NAMESPACE_(CORBA).SystemException
+#else
+public int prepare () throws NAMESPACE_(CORBA).SystemException
+#endif
+#else
+#if defined(CORBA_2_2) || defined(CORBA_2_1)
+public org.omg.CosTransactions.Vote prepare () throws HeuristicMixed, HeuristicHazard, NAMESPACE_(CORBA).SystemException
+#else
+public int prepare () throws HeuristicMixed, HeuristicHazard, NAMESPACE_(CORBA).SystemException
+#endif
+#endif
+    {
+	if (!_valid || (_theResource == null))
+	{
+	    destroyState();
+	    
+	    return Vote.VoteReadOnly;
+	}
+
+	if (_tranID == null)
+	{
+	    System.err.println("JTA_ResourceRecord.prepare - null transaction!");
+	    
+	    destroyState();
+	    
+	    return Vote.VoteRollback;
+	}
+
+	_prepared = true;
+	
+	try
+	{
+	    _theResource.end(_tranID, XAResource.TMSUCCESS);
+	    
+	    if (_theResource.prepare(_tranID) == XAResource.XA_RDONLY)
+	    {
+		destroyState();
+		
+		return Vote.VoteReadOnly;
+	    }
+	    else
+		return Vote.VoteCommit;
+	}
+	catch (Exception e)
+	{
+	    /*
+	     * XA_RB*, XAER_RMERR, XAER_RMFAIL,
+	     * XAER_NOTA, XAER_INVAL, or XAER_PROTO.
+	     */
+
+	    destroyState();
+	    
+	    return Vote.VoteRollback;
+	}
+    }
+
+public void rollback () throws NAMESPACE_(CORBA).SystemException, HeuristicCommit, HeuristicMixed, HeuristicHazard
+    {
+	if (!_valid)
+	    return;
+	
+	if (_tranID == null)
+	{
+	    System.err.println("JTA_ResourceRecord.rollback - null transaction!");
+	}
+	else
+	{
+	    if (_theResource != null)
+	    {
+		switch (_heuristic)
+		{
+		case JTA_ResourceRecord.HAZARD:
+		    throw new org.omg.CosTransactions.HeuristicHazard();
+		case JTA_ResourceRecord.MIXED:
+		    throw new org.omg.CosTransactions.HeuristicMixed();
+		default:
+		    break;
+		}
+		
+		try
+		{
+		    if (!_prepared)
+			_theResource.end(_tranID, XAResource.TMSUCCESS);
+		    
+		    _theResource.rollback(_tranID);
+
+		    destroyState();
+		}
+		catch (XAException e1)
+		{
+		    switch (e1.errorCode)
+		    {
+		    case XAException.XAER_RMERR:			
+		    case XAException.XA_HEURHAZ:
+			updateState(JTA_ResourceRecord.HAZARD);
+			
+			throw new org.omg.CosTransactions.HeuristicHazard();
+		    case XAException.XA_HEURCOM:
+			updateState(JTA_ResourceRecord.COMMIT);
+			
+			throw new org.omg.CosTransactions.HeuristicCommit();
+		    case XAException.XA_HEURMIX:
+			updateState(JTA_ResourceRecord.MIXED);
+			
+			throw new org.omg.CosTransactions.HeuristicMixed();
+		    case XAException.XA_HEURRB:
+		    case XAException.XA_RBROLLBACK:
+			destroyState();
+			break;
+		    default:
+			destroyState();
+			
+			throw new NAMESPACE_(CORBA).UNKNOWN();
+		    }
+		}
+		catch (Exception e2)
+		{
+		    destroyState();
+
+		    throw new NAMESPACE_(CORBA).UNKNOWN();
+		}
+	    }
+	}
+    }
+
+public void commit () throws NAMESPACE_(CORBA).SystemException, NotPrepared, HeuristicRollback, HeuristicMixed, HeuristicHazard
+    {
+	if (!_prepared)
+	    throw new NotPrepared();
+	
+	if (_tranID == null)
+	{
+	    System.err.println("JTA_ResourceRecord.commit - null transaction!");
+	}
+	else
+	{
+	    if (_theResource != null)
+	    {
+		switch (_heuristic)
+		{
+		case JTA_ResourceRecord.HAZARD:
+		    throw new org.omg.CosTransactions.HeuristicHazard();
+		case JTA_ResourceRecord.MIXED:
+		    throw new org.omg.CosTransactions.HeuristicMixed();
+		case JTA_ResourceRecord.ROLLBACK:
+		    throw new org.omg.CosTransactions.HeuristicRollback();
+		default:
+		    break;
+		}
+		
+		try
+		{
+		    _theResource.commit(_tranID, false);
+
+		    destroyState();
+
+		}
+		catch (XAException e1)
+		{
+		    /*
+		     * XA_HEURHAZ, XA_HEURCOM, XA_HEURRB,
+		     * XA_HEURMIX, XAER_RMERR, XAER_RMFAIL,
+		     * XAER_NOTA, XAER_INVAL, or XAER_PROTO.
+		     */
+
+		    switch (e1.errorCode)
+		    {
+		    case XAException.XAER_RMERR:
+		    case XAException.XA_HEURHAZ:
+			updateState(JTA_ResourceRecord.HAZARD);
+			
+			throw new org.omg.CosTransactions.HeuristicHazard();
+		    case XAException.XA_HEURCOM:
+			destroyState();
+			
+			break;
+		    case XAException.XA_HEURRB:
+			updateState(JTA_ResourceRecord.ROLLBACK);
+			
+			throw new org.omg.CosTransactions.HeuristicRollback();
+		    case XAException.XA_HEURMIX:
+			updateState(JTA_ResourceRecord.MIXED);
+			
+			throw new org.omg.CosTransactions.HeuristicMixed();
+		    case XAException.XAER_NOTA:
+		    case XAException.XAER_INVAL:
+		    case XAException.XAER_PROTO:
+		    case XAException.XAER_RMFAIL:  // resource manager failed, did it rollback?
+			destroyState();
+
+			throw new NAMESPACE_(CORBA).UNKNOWN();
+		    default:
+			destroyState();
+
+			throw new NAMESPACE_(CORBA).UNKNOWN();
+		    }
+		}
+		catch (Exception e2)
+		{
+		    destroyState();
+
+		    throw new NAMESPACE_(CORBA).UNKNOWN();
+		}
+	    }
+	}
+    }
+
+public void commit_one_phase () throws HeuristicHazard, NAMESPACE_(CORBA).SystemException
+    {
+	if (_tranID == null)
+	{
+	    System.err.println("JTA_ResourceRecord.commit - null transaction!");
+	}
+	else
+	{
+	    if (_theResource != null)
+	    {
+		switch (_heuristic)
+		{
+		case JTA_ResourceRecord.HAZARD:
+		    throw new org.omg.CosTransactions.HeuristicHazard();
+		default:
+		    break;
+		}
+		
+		try
+		{
+		    _theResource.commit(_tranID, true);
+
+		    destroyState();
+		}
+		catch (XAException e1)
+		{
+		    /*
+		     * XA_HEURHAZ, XA_HEURCOM, XA_HEURRB,
+		     * XA_HEURMIX, XAER_RMERR, XAER_RMFAIL,
+		     * XAER_NOTA, XAER_INVAL, or XAER_PROTO.
+		     * XA_RB*
+		     */
+
+		    if ((e1.errorCode > XAException.XA_RBBASE) &&
+			(e1.errorCode < XAException.XA_RBEND))
+		    {
+			destroyState();
+			
+			throw new TransactionRolledBack();
+		    }
+		    
+		    switch (e1.errorCode)
+		    {
+		    case XAException.XAER_RMERR:
+		    case XAException.XA_HEURHAZ:
+		    case XAException.XA_HEURMIX:
+			updateState(JTA_ResourceRecord.HAZARD);
+			
+			throw new org.omg.CosTransactions.HeuristicHazard();
+		    case XAException.XA_HEURCOM:
+			destroyState();
+			break;
+		    case XAException.XA_HEURRB:
+			destroyState();
+			
+			throw new TransactionRolledBack();
+		    case XAException.XAER_NOTA:
+		    case XAException.XAER_INVAL:
+		    case XAException.XAER_PROTO:
+		    case XAException.XAER_RMFAIL:  // resource manager failed, did it rollback?
+			destroyState();
+
+			throw new NAMESPACE_(CORBA).UNKNOWN();
+		    default:
+			destroyState();
+
+			throw new NAMESPACE_(CORBA).UNKNOWN();
+		    }
+		}
+		catch (Exception e2)
+		{
+		    destroyState();
+
+		    throw new NAMESPACE_(CORBA).UNKNOWN();
+		}
+	    }
+	}
+    }
+ 
+public void forget () throws NAMESPACE_(CORBA).SystemException
+    {
+	if ((_theResource != null) && (_tranID != null))
+	{
+	    try
+	    {
+		_theResource.forget(_tranID);
+	    }
+	    catch (Exception e)
+	    {
+	    }
+	}
+		
+	destroyState();
+    }
+
+/*
+ * How do we recreate the connection to the db for recovery?
+ * Provide some abstract method for JTA_XAResource class which
+ * programmers override, and which we can save the contents on
+ * here? save_state/restore_state?
+ *
+ * Serialise resource?
+ */
+ 
+public boolean save_state (OutputObjectState os, int ot)
+    {
+	boolean res = false;
+
+	try
+	{
+	    os.packInt(_heuristic);
+
+	    _tranID.packInto(os);
+
+	    ByteArrayOutputStream s = new ByteArrayOutputStream();
+	    ObjectOutputStream o = new ObjectOutputStream(s);
+
+	    o.writeObject(_theResource);
+	    o.close();
+
+	    os.packBytes(s.toByteArray());
+	    
+	    res = true;
+	}
+	catch (Exception e)
+	{
+	    e.printStackTrace();
+	    
+	    res = false;
+	}
+
+	return res;
+    }
+
+public boolean restore_state (InputObjectState os, int ot)
+    {
+	boolean res = false;
+
+	try
+	{
+	    _heuristic = os.unpackInt();
+
+	    byte[] b = os.unpackBytes();
+	    
+	    ByteArrayInputStream s = new ByteArrayInputStream(b);
+	    ObjectInputStream o = new ObjectInputStream(s);
+
+	    _theResource = (XAResource) o.readObject();
+	    o.close();
+
+	    res = true;
+	}
+	catch (Exception e)
+	{
+	    res = false;
+	}
+
+	return res;
+    }
+
+public String type ()
+    {
+	return "/StateManager/JTA_ResourceRecord";
+    }
+ 
+private void updateState (int h)
+    {
+	super.activate();
+	
+	_heuristic = h;
+
+	super.modified();
+
+	if (!super.deactivate())
+	    System.err.println("JTA_ResourceRecord - could not update state.");
+    }
+
+private void destroyState ()
+    {
+	super.destroy();
+    }
+
+private boolean recover (boolean commit)
+    {
+	boolean result = false;
+	
+	if ((_theResource != null) && (_tranID != null))
+	{
+	    try
+	    {
+		Xid[] trans = _theResource.recover(XAResource.TMSTARTRSCAN);
+
+		/*
+		 * Find our transaction and then resolve it.
+		 */
+		
+		if (trans != null)
+		{
+		    for (int i = 0; i < trans.length; i++)
+		    {
+			if (JTA_Utility.sameXID(trans[i], _tranID))
+			{
+			    /*
+			     * Do some crash recovery thing!
+			     */
+
+			    try
+			    {
+				if (commit)
+				    commit();
+				else
+				    rollback();
+
+				result = true;
+			    }
+			    catch (Exception e1)
+			    {
+				System.err.println("JTA_ResourceRecord.recover: "+e1);
+			    }
+			}
+		    }
+
+		    // not found!
+		    
+		    System.err.println("JTA_ResourceRecord.recover - could not find transaction id!");
+		}
+
+		_theResource.recover(XAResource.TMENDRSCAN);
+	    }
+	    catch (Exception e2)
+	    {
+		System.err.println("JTA_ResourceRecord.recover: "+e2);
+	    }
+	}
+
+	return result;
+    }
+ 
+private static final int NONE = 0;
+private static final int ROLLBACK = 1;
+private static final int HAZARD = 2;
+private static final int MIXED = 3;
+private static final int COMMIT = 4;  
+ 
+private XAResource _theResource;
+private JTA_XID _tranID;
+private boolean _prepared;
+private boolean _valid;
+private int _heuristic;
+ 
+};
