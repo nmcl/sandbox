@@ -1,0 +1,193 @@
+/*
+ * Copyright (C) 1996, 1997, 1998,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: OTS_Factory.javatmpl,v 1.9.2.1.2.1 1999/04/16 13:47:35 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package com.arjuna.JavaCosTransactions;
+
+import com.arjuna.JavaGandiva.Common.Uid;
+import com.arjuna.OrbCommon.*;
+import org.omg.CosTransactions.*;
+import com.arjuna.ArjunaOTS.*;
+import java.io.PrintStream;
+import NAMESPACE_(CORBA).CompletionStatus;
+
+import NAMESPACE_(CORBA).SystemException;
+import NAMESPACE_(CORBA).NO_MEMORY;
+import java.lang.OutOfMemoryError;
+
+/*
+ * Problem: garbage collection! If a user keeps a reference to a Control, say,
+ * then we will delete the implementation object when the action terminates. However,
+ * the user's reference is still valid, only the thing it points to is no longer
+ * there. In the remote case this is ok as the Orb will raise an exception. In the
+ * local case, however, the program is likely to crash when it tries to dereference
+ * freed memory! There's nothing we can do about this (unless we decide never to
+ * garbage collect!) apart from warn against using Control, Coordinator, and
+ * Terminator explicitly - if you go via Current then everything's ok.
+ */
+
+public class OTS_Factory extends SCOPED_BOA_(org.omg.CosTransactions,TransactionFactory)
+{
+
+public OTS_Factory ()
+    {
+	READY_IMPL_(this);
+    }
+
+public OTS_Factory (String name)
+    {
+#ifdef HAVE_MARKER_NAME
+	super(name);
+#endif
+
+	READY_IMPL_(this);
+    }
+    
+public Control create (int time_out) throws SystemException
+    {
+	try
+	{
+	    OTS_Control tranControl = new OTS_Control((Control) null, (OTS_Transaction) null);
+
+	    if (time_out != 0)
+	    {
+		/*
+		 * Currently we do not remove controls from the list once they
+		 * have terminated. We should to save time and space!
+		 */
+
+		if (OTS_TransactionReaper.transactionReaper() == null)
+		    OTS_TransactionReaper.create();
+		
+		OTS_TransactionReaper.transactionReaper().insert(tranControl, time_out);
+	    }
+
+	    return tranControl;
+	}
+	catch (OutOfMemoryError e)
+	{
+	    /*
+	     * Rather than try again after running gc simply return and
+	     * let the user deal with it. May help with memory!
+	     */
+	    
+	    System.gc();
+
+	    throw new NO_MEMORY(0, CompletionStatus.COMPLETED_NO);	    
+	}
+    }
+
+    /*
+     * In Arjuna we can do low-cost nested aborts at clients which do not
+     * involve telling servers. The server finds out the next time a call is
+     * made when it checks the hierarchy.
+     */
+
+#if defined(DRAFT3) || defined(DRAFT4)
+ 
+public Control recreate (PropagationContext ctx) throws SystemException
+    {
+	if (ctx.currentTransaction.coord == null)  // nothing to use!!
+	    return null;
+
+	/*
+	 * Now take the propagation context and create a local proxy for it
+	 * which matches.
+	 *
+	 * We maintain a proxy for each top-level action. If we already have
+	 * a proxy for this action, then pass it the context and let it figure
+	 * out what the hierarchy should be - we may already have created it, or
+	 * have most of it.
+	 */
+
+	/*
+	 * For each type of transaction we know about, we maintain a creator
+	 * function. This allows us to remain implementation neutral, while at
+	 * the same time retaining flexibility: to support a new transaction type
+	 * simple register a new creator function.
+	 */
+
+	return creators.recreate(ctx, ctx.currentTransaction.otid.formatID);
+    }
+
+#endif
+
+/*
+ * Non-idl methods, but we put them here because they
+ * are related to the work the factory does.
+ */
+ 
+public static Control create_subtransaction (Control control, OTS_Transaction parent)
+    {
+	try
+	{
+	    return new OTS_Control(control, parent);
+	}
+	catch (OutOfMemoryError e)
+	{
+	    System.gc();
+
+	    throw new NO_MEMORY(0, CompletionStatus.COMPLETED_NO);
+	}
+    }
+
+public static Control createProxy (Coordinator coordinator, Terminator terminator)
+    {
+	return OTS_Factory.createProxy(coordinator, terminator, null);
+    }
+    
+public static Control createProxy (Coordinator coordinator, Terminator terminator,
+				   Control parentControl)
+    {
+	UidCoordinator uidCoord = OTS_Utility.getUidCoordinator(coordinator);
+	Uid theUid = null;
+	
+	if (uidCoord != null)
+	{
+	    try
+	    {
+		theUid = OTS_Utility.getUid(uidCoord);
+
+		if (OTS_Control.allControls != null)
+		{
+		    OTS_Control c = (OTS_Control) OTS_Control.allControls.lookFor(theUid);
+
+		    if (c != null)
+			return c;
+		}
+	    }
+	    catch (Exception e)
+	    {
+		/*
+		 * Not an Arjuna transaction, so allocate any Uid.
+		 */
+		
+		theUid = new Uid();
+	    }
+
+	    uidCoord = null;
+	}
+	else
+	    theUid = new Uid();
+
+	return new OTS_Control(coordinator, terminator, parentControl, theUid);
+    }
+
+public static Control createPropagatedControl (Coordinator coord)
+    {
+	return new OTS_Control(coord, null);
+    }
+
+private static OTS_FactoryList creators = new OTS_FactoryList();
+
+};
+
