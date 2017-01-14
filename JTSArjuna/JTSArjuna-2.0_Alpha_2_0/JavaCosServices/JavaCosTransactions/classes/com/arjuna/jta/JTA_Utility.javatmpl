@@ -1,0 +1,101 @@
+/*
+ * Copyright (C) 1999,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: JTA_Utility.javatmpl,v 1.1.2.1 1999/02/16 14:56:31 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package com.arjuna.jta;
+
+import org.omg.CosTransactions.*;
+import javax.transaction.*;
+import javax.transaction.xa.*;
+
+public class JTA_Utility
+{
+
+#if defined(CORBA_2_2) || defined(CORBA_2_1)
+public static int convertStatus (org.omg.CosTransactions.Status status)
+#else
+public static int convertStatus (int status)
+#endif
+    {
+	switch (ENUM_VALUE_(status))
+	{
+	case ENUM_CONST_(org.omg.CosTransactions.Status,StatusActive):
+	    return javax.transaction.Status.STATUS_ACTIVE;
+	case ENUM_CONST_(org.omg.CosTransactions.Status,StatusCommitted):
+	    return javax.transaction.Status.STATUS_COMMITTED;
+#if defined(DRAFT3) || defined(DRAFT4)
+	case ENUM_CONST_(org.omg.CosTransactions.Status,StatusPreparing):
+	    return javax.transaction.Status.STATUS_PREPARING;
+	case ENUM_CONST_(org.omg.CosTransactions.Status,StatusCommitting):
+	    return javax.transaction.Status.STATUS_COMMITTING;
+	case ENUM_CONST_(org.omg.CosTransactions.Status,StatusRollingBack):
+	    return javax.transaction.Status.STATUS_ROLLING_BACK;
+#endif
+	case ENUM_CONST_(org.omg.CosTransactions.Status,StatusMarkedRollback):
+	    return javax.transaction.Status.STATUS_MARKED_ROLLBACK;
+	case ENUM_CONST_(org.omg.CosTransactions.Status,StatusNoTransaction):
+	    return javax.transaction.Status.STATUS_NO_TRANSACTION;
+	case ENUM_CONST_(org.omg.CosTransactions.Status,StatusPrepared):
+	    return javax.transaction.Status.STATUS_PREPARED;
+	case ENUM_CONST_(org.omg.CosTransactions.Status,StatusRolledBack):
+	    return javax.transaction.Status.STATUS_ROLLEDBACK;
+	case ENUM_CONST_(org.omg.CosTransactions.Status,StatusUnknown):
+	    return javax.transaction.Status.STATUS_UNKNOWN;
+	default:
+	    return javax.transaction.Status.STATUS_UNKNOWN;
+	}
+    }
+
+public static boolean sameXID (Xid x1, Xid x2)
+    {
+	if (x1 == x2)
+	    return true;
+	else
+	{
+	    if (x1.getFormatId() == x2.getFormatId())
+	    {
+		byte[] gtrid1 = x1.getGlobalTransactionId();
+		byte[] gtrid2 = x2.getGlobalTransactionId();
+		
+		if (gtrid1.length == gtrid2.length)
+		{
+		    for (int i = 0; i < gtrid1.length; i++)
+		    {
+			if (gtrid1[i] != gtrid2[i])
+			    return false;
+		    }
+		}
+		else
+		    return false;
+
+		byte[] bqual1 = x1.getBranchQualifier();
+		byte[] bqual2 = x2.getBranchQualifier();
+
+		if (bqual1.length == bqual2.length)
+		{
+		    for (int i = 0; i < bqual1.length; i++)
+		    {
+			if (bqual1[i] != bqual2[i])
+			    return false;
+		    }
+		}
+		else
+		    return false;
+
+		return true;
+	    }
+	    else
+		return false;
+	}
+    }
+ 
+};
