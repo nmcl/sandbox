@@ -1,0 +1,23 @@
+If  you write idl  which requires CosTransactions.idl or ArjunaOTS.idl
+then you will need to use the -idl2package option for the idl compiler.
+
+	    -idl2package "::CosTransactions" org.omg.CosTransactions
+	    -idl2package "::ArjunaOTS" com.arjuna.ArjunaOTS
+
+Also, when using implicit context propagation and/or interposition,
+you must supply the correct Visibroker filter on the command-line:
+
+	com.arjuna.JavaCosTransactions.Filters.Context.vbroker for implicit propagation
+	only.
+
+	com.arjuna.JavaCosTransactions.Filters.Interposition.vbroker for implicit and
+	interposition.
+
+It is important that *both* client and server use the same filter. For example:
+
+    java -DORBservices=com.arjuna.JavaCosTransactions.Filters.Interposition.vbroker myclient
+
+    java -DORBservices=com.arjuna.JavaCosTransactions.Filters.Interposition.vbroker myserver
+
+
+
