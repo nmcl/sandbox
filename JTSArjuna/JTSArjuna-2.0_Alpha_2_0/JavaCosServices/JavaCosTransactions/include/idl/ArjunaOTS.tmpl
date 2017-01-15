@@ -1,0 +1,138 @@
+/*
+ * Copyright (C) 1996, 1997, 1998, 1999,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: ArjunaOTS.tmpl,v 1.5.2.1.6.1 1999/11/29 14:33:50 nmcl Exp $
+ */
+
+#ifndef ARJUNAOTS_IDL_
+#define ARJUNAOTS_IDL_
+
+#ifndef NO_PRAGMA_SUPPORT
+#pragma prefix "arjuna.com"
+#endif
+
+#ifndef RCPORB
+INCLUDE_DIRECTIVE <idl/CosTransactions.idl>
+#else
+INCLUDE_DIRECTIVE "CosTransactions.idl"  // uugghh!!
+#endif
+
+#ifdef SUNSJDK
+#pragma javaPackage "com.arjuna"
+#endif
+
+#ifdef ORBIX_IR_MODULE_BUG
+
+/*
+ * These interfaces are here because of a bug in Orbix which
+ * does not allow us to narrow to any interface which is
+ * within a module!
+ */
+
+// Some useful exceptions
+
+exception ActiveTransaction {};
+exception BadControl {};
+exception Destroyed {};
+exception ActiveThreads {};
+exception InterpositionFailed {};
+
+interface UidCoordinator : CosTransactions::Coordinator
+{
+    readonly attribute string uid;
+    readonly attribute string topLevelUid;
+};
+
+interface ActionControl : CosTransactions::Control
+{
+    CosTransactions::Control getParentControl () raises(CosTransactions::Unavailable, CosTransactions::NotSubtransaction);
+
+    void destroy () raises (ActiveTransaction, ActiveThreads, BadControl, Destroyed);
+};
+
+interface ArjunaSubtranAwareResource : SubtransactionAwareResource
+{
+    CosTransactions::Vote prepare_subtransaction ();
+};
+
+interface OTSAbstractRecord : ArjunaSubtranAwareResource
+{
+    readonly attribute long type;
+    readonly attribute string uid;
+
+    boolean propagateOnAbort ();
+    boolean propagateOnCommit ();
+
+    void merge (in OTSAbstractRecord record);
+    void alter (in OTSAbstractRecord record);
+
+    boolean shouldAdd (in OTSAbstractRecord record);
+    boolean shouldAlter (in OTSAbstractRecord record);
+    boolean shouldMerge (in OTSAbstractRecord record);
+    boolean shouldReplace (in OTSAbstractRecord record);
+};
+
+#endif
+
+module ArjunaOTS
+{
+#ifndef ORBIX_IR_MODULE_BUG
+    // Some useful exceptions
+
+    exception ActiveTransaction {};
+    exception BadControl {};
+    exception Destroyed {};
+    exception ActiveThreads {};
+    exception InterpositionFailed {};
+    
+    interface UidCoordinator : CosTransactions::Coordinator
+    {
+	readonly attribute string uid;
+	readonly attribute string topLevelUid;
+    };
+
+    interface ActionControl : CosTransactions::Control
+    {
+        CosTransactions::Control getParentControl () raises(CosTransactions::Unavailable, CosTransactions::NotSubtransaction);
+
+        void destroy () raises (ActiveTransaction, ActiveThreads, BadControl, Destroyed);
+    };
+
+    interface ArjunaSubtranAwareResource : CosTransactions::SubtransactionAwareResource
+    {
+	CosTransactions::Vote prepare_subtransaction ();
+    };
+#endif
+
+    interface ArjunaTransaction : UidCoordinator, CosTransactions::Terminator
+    {
+    };
+
+#ifndef ORBIX_IR_MODULE_BUG    
+    interface OTSAbstractRecord : ArjunaSubtranAwareResource
+    {
+	readonly attribute long type;
+	readonly attribute string uid;
+
+	boolean propagateOnAbort ();
+	boolean propagateOnCommit ();
+
+	void merge (in OTSAbstractRecord record);
+	void alter (in OTSAbstractRecord record);
+
+	boolean shouldAdd (in OTSAbstractRecord record);
+	boolean shouldAlter (in OTSAbstractRecord record);
+	boolean shouldMerge (in OTSAbstractRecord record);
+	boolean shouldReplace (in OTSAbstractRecord record);
+    };
+#endif    
+    
+};
+
+#endif
+

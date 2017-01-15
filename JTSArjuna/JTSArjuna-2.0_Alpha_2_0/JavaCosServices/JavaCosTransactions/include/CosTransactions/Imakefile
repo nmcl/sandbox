@@ -1,0 +1,16 @@
+COMMENT 
+COMMENT Copyright (C) 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.4 1998/11/12 08:59:51 nmcl Exp $
+COMMENT
+
+CreateInstallDirectory(/include,/include/CosTransactions)
+
+InstallFile(/include/CosTransactions,CosTranNames.h)
+InstallFile(/include/CosTransactions,CosTranExceptions.h)
+InstallFile(/include/CosTransactions,OTS_Exceptions.h)
