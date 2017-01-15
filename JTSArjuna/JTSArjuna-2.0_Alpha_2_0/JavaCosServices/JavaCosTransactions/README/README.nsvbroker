@@ -1,0 +1,30 @@
+By default, JTSArjuna assumes that the transaction manager server will
+be located using the JTSArjuna specific initial-references file (See
+the System Administrator's Guide for further details). However, support
+for using the naming service (via resolve_initial_references) is also
+provided.
+
+To use the naming service in VisiBroker you are required to:
+
+(i) use the extended naming service, and start it with an initial root called
+	OTS, i.e., -DSVCnameroot=OTS
+
+	vbj -DORBservices=CosNaming -DSVCnameroot=OTS \
+		com.visigenic.vbroker.services.CosNaming.ExtFactory OTS mylog
+
+(ii) add an entry to the property file Arjuna.properties:
+	 RESOLVE_SERVICE=NAME_SERVICE
+	 This entry must be present in the property file used by the transaction
+	 manager server, and application clients and servers which will use the
+	 service.
+
+(iii) start the transaction manager server (via one of the scripts in the
+	  bin directory), with -DORBservices=CosNaming -DSVCnameroot=OTS as
+	  extra properties. IMPORTANT: You may have to edit the script to ensure
+	  that these properties occur before the name of the java program
+	  (OTS_Server). It should be possible to place these in the
+	  Arjuna.properties file.
+
+(iv) when starting any clients or servers, it is necessary to pass them the
+	 same property variables (-DORBservices=CosNaming -DSVCnameroot=OTS).
+
