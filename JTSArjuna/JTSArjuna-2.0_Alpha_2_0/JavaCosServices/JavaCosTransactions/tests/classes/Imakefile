@@ -1,0 +1,31 @@
+COMMENT 
+COMMENT Copyright (C) 1996, 1997, 1998, 1999,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.10 1999/09/10 15:14:45 nmcl Exp $
+COMMENT
+
+AddToIdlFlags(-DDRAFT3 -I$(JAVACOSTRANSACTIONSTOPDIR)/include)
+AddToIRFlags(-DDRAFT3 -I$(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+Target(TestModule.idl)
+
+ProcessIDL(TestModule,NullParam)
+
+#ifndef SUPPORT_IDL_PREFIX
+GlobalPackageRename(CosTransactions,org.omg)
+#else
+AddPrefixFlags(omg.org,org.omg)
+#endif
+
+CorbaJavaStubs(TestModule,NullParam)
+
+SubDirectory(JavaCosTransactionsTests)
+
+PurgeDirectory(TestModule)
+
+Clean(TestModule.idl)
