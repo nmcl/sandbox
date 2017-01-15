@@ -1,0 +1,26 @@
+/*
+ * Copyright (C) 1996, 1997, 1998,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: TSIdentification.idl,v 1.2 1998/11/12 09:00:25 nmcl Exp $
+ */
+
+#ifndef TSIDENTIFICATION_IDL_
+#define TSIDENTIFICATION_IDL_
+
+#pragma prefix "omg.org"
+
+#include <idl/CosTSPortability.idl>
+
+interface TSIdentification  // PIDL
+{
+    exception NotAvailable {};
+    exception AlreadyIdentified {};
+
+    void identify_sender (in CosTSPortability::Sender sender) raises (NotAvailable, AlreadyIdentified);
+    void identify_receiver (in CosTSPortability::Receiver receiver) raises (NotAvailable, AlreadyIdentified);
+};
