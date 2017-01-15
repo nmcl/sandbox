@@ -1,0 +1,20 @@
+COMMENT 
+COMMENT Copyright (C) 1995, 1996, 1997, 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 1998/07/28 09:00:57 nmcl Exp $
+COMMENT
+
+#ifdef BUILDHTDOCS
+
+Target(AllNames.html)
+
+GenerateJavaDocs(org.omg.CosTransactions com.arjuna.ArjunaOTS com.arjuna.JavaCosTransactions com.arjuna.JavaCosTransactions.ArjunaOTS com.arjuna.JavaCosTransactions.Filters com.arjuna.JavaCosTransactions.Interposition com.arjuna.JavaCosTransactions.tx,NullParam)
+
+Clean(*.html)
+
+#endif
