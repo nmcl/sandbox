@@ -1,0 +1,62 @@
+/*
+ * Copyright (C) 1996, 1997, 1998,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: tranobject_i.javatmpl,v 1.3 1998/07/06 13:29:54 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package JavaCosTransactionsTests;
+
+import com.arjuna.OrbCommon.ORBInterface;
+import com.arjuna.JavaCosTransactions.OTS_Factory;
+import org.omg.CosTransactions.*;
+
+import org.omg.CosTransactions.Unavailable;
+import NAMESPACE_(CORBA).SystemException;
+
+public class tranobject_i extends SCOPED_BOA_(org.omg.CosTransactions,Resource)
+{
+    
+public tranobject_i ()
+    {
+	READY_IMPL_(this);
+    }
+
+public void foobar ()
+    {
+    }
+
+public org.omg.CosTransactions.Vote prepare () throws SystemException
+    {
+	System.out.println("TRANOBJECT : PREPARE");
+    
+	return Vote.VoteCommit;
+    }
+
+public void rollback () throws SystemException, HeuristicCommit, HeuristicMixed, HeuristicHazard
+    {
+	System.out.println("TRANOBJECT : ROLLBACK");
+    }
+
+public void commit () throws SystemException, NotPrepared, HeuristicRollback, HeuristicMixed, HeuristicHazard
+    {
+	System.out.println("TRANOBJECT : COMMIT");
+    }
+
+public void forget () throws SystemException
+    {
+	System.out.println("TRANOBJECT : FORGET");
+    }
+
+public void commit_one_phase () throws SystemException, HeuristicHazard
+    {
+	System.out.println("TRANOBJECT : COMMIT_ONE_PHASE");
+    }
+
+};
