@@ -1,0 +1,28 @@
+COMMENT 
+COMMENT Copyright (C) 1995, 1996, 1997, 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.3 1999/05/14 10:18:18 nmcl Exp $
+COMMENT
+
+AddToIdlFlags(-DDRAFT3 -I$(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+SOURCES = InterpositionClient.java
+
+FILTEROBJECTS = InterpositionClient.class
+
+Target($(SOURCES))
+
+#ifdef HAVE_FILTER
+Target($(FILTEROBJECTS))
+#endif
+
+PreprocessJavaCode(InterpositionClient,NullParam)
+
+BuildJavaByteCode(InterpositionClient,NullParam)
+
+Clean(*.class)
