@@ -1,0 +1,67 @@
+/*
+ * Copyright (C) 1997, 1998, 1999,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: ExplicitStackServer.javatmpl,v 1.4 1999/09/10 15:13:32 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+import JavaCosTransactionsTests.*;
+import TestModule.*;
+import com.arjuna.OrbCommon.*;
+
+public class ExplicitStackServer
+{
+    
+public static void main (String[] args)
+    {
+	ORBInterface.initORB(args, null);
+	ORBInterface.initBOA();
+	
+	String refFile = "/tmp/explicitstack.ref";
+	String serverName = "ExplicitStack";
+	
+	for (int i = 0; i < args.length; i++)
+	{
+	    if (args[i].compareTo("-reffile") == 0)
+		refFile = args[i+1];
+	    if (args[i].compareTo("-help") == 0)
+	    {
+		System.out.println("Usage: ExplicitStackServer [-reffile <file>] [-help]");
+		System.exit(0);
+	    }
+	}
+
+	ExplicitStack theObject = new SCOPED_TIE_INSTANCE_(TestModule,ExplicitStack)(new ExplicitStackImple());
+	
+	READY_IMPL_(theObject);
+
+	try
+	{
+	    ORBObject.objectToFile(theObject, refFile);
+    
+	    System.out.println("**ExplicitStackServer started**");
+
+#ifndef ORBIXWEB	    
+	    ORBInterface.run();
+#else
+	    ORBInterface.run(serverName);
+#endif
+	}
+	catch (Exception e)
+	{
+	    System.err.println("ExplicitStackServer caught exception: "+e);
+	    System.exit(1);
+	}
+
+	DESTROY_IMPL_(theObject);
+	
+	System.out.println("**ExplicitStackServer exiting**");
+    }
+
+};

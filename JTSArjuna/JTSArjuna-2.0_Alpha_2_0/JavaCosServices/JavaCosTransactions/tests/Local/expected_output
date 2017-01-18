@@ -1,0 +1,22 @@
+grid[2,4] is 123
+GRID : PREPARE
+GRID : COMMIT
+Test completed successfully.
+
+Will now try different thread terminating transaction.
+
+Starting new transaction.
+Creating new thread.
+Waiting for thread to terminate transaction.
+
+New thread resuming transaction.
+Non-creating thread trying to commit transaction. Should succeed.
+Commit of action id -7f0f2f97:16ce2c:374417df:3 invoked while multiple threads active within it.
+
+WARNING CheckedAction::check - atomic action -7f0f2f97:16ce2c:374417df:3 committing with 2 threads active!
+
+Non-creating thread committed transaction. 
+
+Creator will now attempt to rollback transaction. Should fail.
+Correct termination - caught: org.omg.CORBA.INVALID_TRANSACTION[completed=NO]
+Test completed successfully.

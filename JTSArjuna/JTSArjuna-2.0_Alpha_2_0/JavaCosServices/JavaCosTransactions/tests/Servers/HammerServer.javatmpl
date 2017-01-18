@@ -1,0 +1,103 @@
+/*
+ * Copyright (C) 1997, 1998, 1999,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: HammerServer.javatmpl,v 1.7 1999/09/10 15:13:34 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+import JavaCosTransactionsTests.*;
+import TestModule.*;
+import com.arjuna.OrbCommon.*;
+
+public class HammerServer
+{
+    
+public static void main (String[] args)
+    {
+	ORBInterface.initORB(args, null);
+	ORBInterface.initBOA();
+
+	String refFile1 = "/tmp/hammer1.ref";
+	String refFile2 = "/tmp/hammer2.ref";
+
+	if (System.getProperty("os.name").startsWith("Windows"))
+	{
+	    refFile1 = "C:\\temp\\hammer1.ref";
+	    refFile2 = "C:\\temp\\hammer2.ref";
+	}
+
+	String refFile = null;
+	int number = 0;
+
+	for (int i = 0; i < args.length; i++)
+	{
+	    if (args[i].compareTo("-reffile") == 0)
+		refFile = args[i+1];
+	    if (args[i].compareTo("-server") == 0)
+	    {
+		if (args[i+1].compareTo("1") == 0)
+		    number = 1;
+		else
+		    number = 2;
+	    }
+	    if (args[i].compareTo("-help") == 0)
+	    {
+		System.out.println("Usage: HammerServer -server <1 | 2> [-reffile <file>] [-help]");
+		System.exit(0);
+	    }
+	}
+	
+	if ((number != 1) && (number != 2))
+	{
+	    System.out.println("Usage: HammerServer -server <1 | 2> [-reffile <file>] [-help]");
+	    System.exit(0);
+	}
+
+	if (number == 1)
+	    refFile = refFile1;
+	else
+	    refFile = refFile2;
+	
+	Hammer theObject = new SCOPED_TIE_INSTANCE_(TestModule,Hammer)(new HammerObject());
+
+	READY_IMPL_(theObject);
+
+	try
+	{
+#ifndef ORBIXWEB
+	    ORBObject.objectToFile(theObject, refFile);
+#endif
+	    
+	    System.out.println("**HammerServer started**");
+
+#ifndef ORBIXWEB
+	    System.out.println("\nIOR file: "+refFile);
+#endif	    
+
+#ifndef ORBIXWEB	    
+	    ORBInterface.run();
+#else
+	    if (number == 1)
+		ORBInterface.run("Hammer1");
+	    else
+		ORBInterface.run("Hammer2");
+#endif
+	}
+	catch (Exception e)
+	{
+	    System.err.println("HammerServer caught exception: "+e);
+	    System.exit(1);
+	}
+
+	DESTROY_IMPL_(theObject);
+
+	System.out.println("**HammerServer exiting**");
+    }
+
+};
