@@ -1,0 +1,2 @@
+Set the transaction reaper timeout value (OTS_TX_REAPER_TIMEOUT) to 1000000
+before running this test.

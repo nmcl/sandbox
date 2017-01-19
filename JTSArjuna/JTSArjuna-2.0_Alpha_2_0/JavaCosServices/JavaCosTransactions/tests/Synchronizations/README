@@ -1,0 +1,7 @@
+NOTE: If not running with Orbix and running with a transaction manager
+server then remember to specify the  OTS factory reference file in the
+environment variable OTS_TRANSACTION_MANAGER.
+
+Not a remote test.
+
+expected_output: from SyncTest
