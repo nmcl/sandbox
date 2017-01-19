@@ -1,0 +1,6 @@
+if test "'x$JTSARJUNA_HOME'" = "'x'"
+then
+    echo Environment variable JTSARJUNA_HOME is not set.
+else
+    java -DOTS_TX_REAPER_TIMEOUT=1000000 -DOBJECTSTORE_DIR=$JTSARJUNA_HOME/ObjectStore $@
+fi
