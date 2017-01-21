@@ -1,0 +1,21 @@
+COMMENT 
+COMMENT Copyright (C) 1995, 1996, 1997, 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 1998/07/25 17:03:11 nmcl Exp $
+COMMENT
+
+SOURCES = ThreadSpecificData.java
+
+OBJECTS = ThreadSpecificData.class
+
+Target($(OBJECTS))
+
+BuildJavaByteCode(ThreadSpecificData,NullParam)
+
+Clean(*.class)
+
