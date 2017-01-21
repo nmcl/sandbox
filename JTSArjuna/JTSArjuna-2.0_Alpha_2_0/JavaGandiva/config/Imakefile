@@ -1,0 +1,16 @@
+COMMENT 
+COMMENT Copyright (C) 1995, 1996, 1997, 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 1998/12/11 14:21:56 nmcl Exp $
+COMMENT
+
+InstallFile(/config,JavaGandiva.cf)
+InstallFile(/config,Version.def)
+InstallFileAs(/config,Module_install.def,Module.def)
+
+Purge(JavaGandiva.cf Local.def Module.def Module_install.def Version.def)
