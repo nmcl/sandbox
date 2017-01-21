@@ -1,0 +1,628 @@
+#!/bin/sh
+
+#
+# Copyright (C) 1996, 1997, 1998, 1999,
+# 
+# Department of Computing Science,
+# University of Newcastle upon Tyne,
+# Newcastle upon Tyne,
+# UK.
+# 
+# $Id: configure,v 1.18 1999/11/29 14:41:22 nmcl Exp $
+#
+
+if test "$#" = "0"
+then
+	VERIFY="NO"
+	CONFIGFILE=""
+elif test "$#" = "1"
+then
+	if test "$1" = "-v"
+	then
+		VERIFY="YES"
+		CONFIGFILE=""
+	else
+		VERIFY="NO"
+		CONFIGFILE="$1"
+	fi
+elif test "$#" = "2"
+then
+	if test "$1" != "-v"
+	then
+		echo $0": illegal usage"
+		echo "usage: "$0" [-v] [file]"
+		exit 1
+	else
+		VERIFY="YES"
+		CONFIGFILE="$2"
+	fi
+else
+	echo $0": illegal usage"
+	echo "usage: "$0" [-v] [file]"
+	exit 1
+fi
+
+if test "$CONFIGFILE" != ""
+then
+	if test -f $CONFIGFILE
+	then
+		if test "`head -11 $CONFIGFILE | tail -1`" != "# Java Harness configure file"
+		then
+			echo $0": configuration file \""$CONFIGFILE"\" is invalid/corrupt"
+			exit 1
+		fi
+	else
+		echo $0": configuration file \""$CONFIGFILE"\" does not exist"
+		exit 1
+	fi
+fi
+
+JAVAHARNESSVERSION=1.3.0
+echo "+-----------------------------+"
+echo "|  Java Harness version "$JAVAHARNESSVERSION" |"
+echo "+-----------------------------+"
+
+ECHO_TEST=`echo "Test \c"`
+if test "$ECHO_TEST" = "Test "
+then
+	PRE_ECHO=""
+	POST_ECHO="\c"
+else
+	PRE_ECHO="-n"
+	POST_ECHO=""
+fi
+
+if test "$CONFIGFILE" = ""
+then
+	TOPDIR=`pwd`
+	INSTALLTOPDIR=/usr/local/JavaHarness$JAVAHARNESS_VERSION
+	GANDIVATOPDIR=`dirname $TOPDIR`/Gandiva
+
+	echo
+	echo $PRE_ECHO "Root of directory of Java Harness installation ["$INSTALLTOPDIR"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		INSTALLTOPDIR=$INPUT
+	fi
+
+	echo
+	echo $PRE_ECHO "Root of directory of Gandiva ["$GANDIVATOPDIR"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		GANDIVATOPDIR=$INPUT
+	fi
+
+	if test -x $GANDIVATOPDIR/config/Sys
+	then
+		SYS=`$GANDIVATOPDIR/config/Sys`
+	else
+		echo
+		echo "Error: "$GANDIVATOPDIR/config/Sys": was not found or would not run."
+		exit 1
+	fi
+
+	if test -x $GANDIVATOPDIR/config/Sys_Version
+	then
+		SYS_VERSION=`$GANDIVATOPDIR/config/Sys_Version`
+	else
+		echo
+		echo "Error: "$GANDIVATOPDIR/config/Sys_Version": was not found or would not run."
+		exit 1
+	fi
+
+	if test -x $GANDIVATOPDIR/config/C++
+	then
+		COMP=`$GANDIVATOPDIR/config/C++`
+	else
+		echo
+		echo "Error: "$GANDIVATOPDIR/config/C++": was not found or would not run."
+		exit 1
+	fi
+
+	sed -e "s;INCLUDES;-Iconfig -I$GANDIVATOPDIR/config;" < MakefileBoot.tmpl > MakefileBoot
+
+	JAVAC=`which javac`
+	if test $? -ne 0
+	then
+		JAVAC=""
+	fi
+	echo
+	echo $PRE_ECHO "Java compiler ["$JAVAC"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		JAVAC=$INPUT
+	fi
+
+	version=1.1
+	JAVA=`which java`
+	if test $? -ne 0
+	then
+		JAVA=""
+	fi
+	echo
+	echo $PRE_ECHO "Java ["$JAVA"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		JAVA=$INPUT
+	fi
+
+	version="`$JAVA -version 2>&1 | grep version | sed 's/^[^0-9]*\([0-9.]*\).*/\1/'`"
+	JDKVERSION=1_1
+
+#
+# Sometimes java -version does not give anything helpful.
+# So, check with user just in case.
+#
+
+	echo
+	echo $PRE_ECHO "Java version ["$version"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		version=$INPUT
+	fi
+
+	case $version in
+	*1.3*) JDKVERSION=1_3
+	       ;;
+	*1.2*) JDKVERSION=1_2
+	       ;;
+	*1.1.1) JDKVERSION=1_1
+		MODULE_CPPFLAGS="-DJAR_PACKAGE_PROBLEM "$MODULE_CPPFLAGS
+	       ;;
+	*1.1.*) JDKVERSION=1_1
+	       ;;
+	*1.0.2*) JDKVERSION=1_0_2
+		 MODULE_CPPFLAGS="-DJAR_PACKAGE_PROBLEM "$MODULE_CPPFLAGS
+		 ;;
+	*1.0.*) JDKVERSION=1_0
+		;;
+	*0.1.*) JDKVERSION=0_1
+	       ;;
+	esac
+
+	JAVADOC=`which javadoc`
+	if test $? -ne 0
+	then
+		JAVADOC=""
+	fi
+	echo
+	echo $PRE_ECHO "Java documention generator ["$JAVADOC"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		JAVADOC=$INPUT
+	fi
+
+	JAR=`which jar`
+	if test $? -ne 0
+	then
+		JAR=""
+	fi
+	echo
+	echo $PRE_ECHO "Java archive ["$JAR"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		JAR=$INPUT
+	fi
+
+	RMIC=`which rmic`
+	if test $? -ne 0
+	then
+		RMIC=""
+	fi
+	echo
+	echo $PRE_ECHO "Java RMI stub compiler ["$RMIC"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		RMIC=$INPUT
+	fi
+
+	echo
+	CROSS_OPTIONS=""
+	echo "Specific flags governing cross compilation:"
+	echo "-DWIN32            Build for Windows 95/98/NT"
+	echo "-DUNIX             Build for Unix"
+	echo
+	echo $PRE_ECHO "Cross compiler options ["$CROSS_OPTIONS"] : " $POST_ECHO
+	read INPUT
+	echo
+	if test "'x$INPUT'" != "'x'"
+	then  
+		if test "'x$INPUT'" != "'xnone'"
+		then
+			CROSS_OPTIONS=$INPUT
+		else
+			CROSS_OPTIONS=
+		fi
+	fi
+
+	LOCAL_MAKEFLAGS=""
+	LOCAL_IMAKEFLAGS="-DVerboseMake=No -DTopDir="$TOPDIR" -DInstallTopDir="$INSTALLTOPDIR
+	LOCAL_MAKEDEPENDFLAGS=""
+	LOCAL_CPPFLAGS=""
+	LOCAL_CPPINCLUDES=""
+	LOCAL_CPLUSPLUSFLAGS=""
+	LOCAL_LDFLAGS=""
+	LOCAL_LDLIBRARIES=""
+	LOCAL_LDLIBDEPENDS=""
+
+	MODULE_MAKEFLAGS=""
+	MODULE_IMAKEFLAGS="-I\$(JAVAHARNESSTOPDIR)/config -DJavaCProg=$JAVAC -DJavaDocProg=$JAVADOC -DJarProg=$JAR -DRMICProg=$RMIC -DJavaProg=$JAVA "$CROSS_OPTIONS
+	MODULE_MAKEDEPENDFLAGS=""
+	MODULE_CPPFLAGS="-DJDK_$JDKVERSION "$MODULE_CPPFLAGS" "$CROSS_OPTIONS
+	MODULE_CPPINCLUDES=""
+	MODULE_CPLUSPLUSFLAGS=""
+	MODULE_LDFLAGS=""
+	MODULE_LDLIBRARIES=""
+	MODULE_LDLIBDEPENDS=""
+else
+	TOPDIR=`pwd`
+	. $CONFIGFILE
+fi
+
+CPP_PROGRAM_DEFAULT=`which cpp`
+
+case $SYS in
+Linux)
+    CPP_PROGRAM_DEFAULT=/lib/cpp
+    ;;
+WIN32)
+    CPP_PROGRAM_DEFAULT=cl
+    ;;
+esac
+
+MODULE_IMAKEFLAGS="-DCPP_PROGRAM="$CPP_PROGRAM_DEFAULT" "$MODULE_IMAKEFLAGS
+
+if test "$VERIFY" = "YES"
+then
+	echo
+	echo $PRE_ECHO "Local make flags ["$LOCAL_MAKEFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		LOCAL_MAKEFLAGS=$INPUT
+	fi
+
+	echo $PRE_ECHO "Local imake flags ["$LOCAL_IMAKEFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		LOCAL_IMAKEFLAGS=$INPUT
+	fi
+
+	echo $PRE_ECHO "Local makedepend flags ["$LOCAL_MAKEDEPENDFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		LOCAL_MAKEDEPENDFLAGS=$INPUT
+	fi
+
+	echo $PRE_ECHO "Local c pre-processor flags ["$LOCAL_CPPFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		LOCAL_CPPFLAGS=$INPUT
+	fi
+
+	echo $PRE_ECHO "Local c pre-processor includes ["$LOCAL_CPPINCLUDES"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		LOCAL_CPPINCLUDES=$INPUT
+	fi
+
+	echo $PRE_ECHO "Local c++ flags ["$LOCAL_CPLUSPLUSFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		LOCAL_CPLUSPLUSFLAGS=$INPUT
+	fi
+
+	echo $PRE_ECHO "Local ld flags ["$LOCAL_LDFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		LOCAL_LDFLAGS=$INPUT
+	fi
+
+	echo $PRE_ECHO "Local ld libraries ["$LOCAL_LDLIBRARIES"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		LOCAL_LDLIBRARIES=$INPUT
+	fi
+
+	echo $PRE_ECHO "Local ld lib depends ["$LOCAL_LDLIBDEPENDS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		LOCAL_LDLIBDEPENDS=$INPUT
+	fi
+
+	echo
+	echo $PRE_ECHO "Module make flags ["$MODULE_MAKEFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		MODULE_MAKEFLAGS=$INPUT
+	fi
+
+	echo $PRE_ECHO "Module imake flags ["$MODULE_IMAKEFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		MODULE_IMAKEFLAGS=$INPUT
+	fi
+
+	echo $PRE_ECHO "Module makedepend flags ["$MODULE_MAKEDEPENDFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		MODULE_MAKEDEPENDFLAGS=$INPUT
+	fi
+
+	echo $PRE_ECHO "Module c pre-processor flags ["$MODULE_CPPFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		MODULE_CPPFLAGS=$INPUT
+	fi
+
+	echo $PRE_ECHO "Module c pre-processor includes ["$MODULE_CPPINCLUDES"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		MODULE_CPPINCLUDES=$INPUT
+	fi
+
+	echo $PRE_ECHO "Module c++ flags ["$MODULE_CPLUSPLUSFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		MODULE_CPLUSPLUSFLAGS=$INPUT
+	fi
+
+	echo $PRE_ECHO "Module ld flags ["$MODULE_LDFLAGS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		MODULE_LDFLAGS=$INPUT
+	fi
+
+	echo $PRE_ECHO "Module ld libraries ["$MODULE_LDLIBRARIES"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		MODULE_LDLIBRARIES=$INPUT
+	fi
+
+	echo $PRE_ECHO "Module ld lib depends ["$MODULE_LDLIBDEPENDS"] : " $POST_ECHO
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		MODULE_LDLIBDEPENDS=$INPUT
+	fi
+fi
+
+(
+echo "#!/bin/sh"
+echo "#"
+echo "# Copyright (C) 1996, 1997,"
+echo "#"
+echo "# Department of Computing Science,"
+echo "# University of Newcastle upon Tyne,"
+echo "# Newcastle upon Tyne,"
+echo "# UK."
+echo "#"
+echo ""
+echo "# Java Harness configure file"
+echo ""
+echo "INSTALLTOPDIR="$INSTALLTOPDIR
+echo "GANDIVATOPDIR="$GANDIVATOPDIR
+echo ""
+echo "LOCAL_MAKEFLAGS='"$LOCAL_MAKEFLAGS"'"
+echo "LOCAL_IMAKEFLAGS='"$LOCAL_IMAKEFLAGS"'"
+echo "LOCAL_MAKEDEPENDFLAGS='"$LOCAL_MAKEDEPENDFLAGS"'"
+echo "LOCAL_CPPFLAGS='"$LOCAL_CPPFLAGS"'"
+echo "LOCAL_CPPINCLUDES='"$LOCAL_CPPINCLUDES"'"
+echo "LOCAL_CPLUSPLUSFLAGS='"$LOCAL_CPLUSPLUSFLAGS"'"
+echo "LOCAL_LDFLAGS='"$LOCAL_LDFLAGS"'"
+echo "LOCAL_LDLIBRARIES='"$LOCAL_LDLIBRARIES"'"
+echo "LOCAL_LDLIBDEPENDS='"$LOCAL_LDLIBDEPENDS"'"
+echo ""
+echo "MODULE_MAKEFLAGS='"$MODULE_MAKEFLAGS"'"
+echo "MODULE_IMAKEFLAGS='"$MODULE_IMAKEFLAGS"'"
+echo "MODULE_MAKEDEPENDFLAGS='"$MODULE_MAKEDEPENDFLAGS"'"
+echo "MODULE_CPPFLAGS='"$MODULE_CPPFLAGS"'"
+echo "MODULE_CPPINCLUDES='"$MODULE_CPPINCLUDES"'"
+echo "MODULE_CPLUSPLUSFLAGS='"$MODULE_CPLUSPLUSFLAGS"'"
+echo "MODULE_LDFLAGS='"$MODULE_LDFLAGS"'"
+echo "MODULE_LDLIBRARIES='"$MODULE_LDLIBRARIES"'"
+echo "MODULE_LDLIBDEPENDS='"$MODULE_LDLIBDEPENDS"'"
+) > config/JavaHarness.cf
+chmod a+rx config/JavaHarness.cf
+
+(
+echo "/*"
+echo " * Copyright (C) 1996, 1997,"
+echo " *"
+echo " * Department of Computing Science,"
+echo " * University of Newcastle upon Tyne,"
+echo " * Newcastle upon Tyne,"
+echo " * UK."
+echo " *"
+echo " */"
+echo
+echo "/*"
+echo " *  Local.def"
+echo " */"
+echo
+if test "'x$LOCAL_MAKEFLAGS'" != "'x'"
+then
+	echo "AddToMakeFlags("$LOCAL_MAKEFLAGS")"
+fi
+if test "'x$LOCAL_IMAKEFLAGS'" != "'x'"
+then
+	echo "AddToIMakeFlags("$LOCAL_IMAKEFLAGS")"
+fi
+if test "'x$LOCAL_MAKEDEPENDFLAGS'" != "'x'"
+then
+	echo "AddToMakeDependFlags("$LOCAL_MAKEDEPENDFLAGS")"
+fi
+if test "'x$LOCAL_CPPFLAGS'" != "'x'"
+then
+	echo "AddToCPPFlags("$LOCAL_CPPFLAGS")"
+fi
+if test "'x$LOCAL_CPPINCLUDES'" != "'x'"
+then
+	echo "AddToCPPIncludes("$LOCAL_CPPINCLUDES")"
+fi
+if test "'x$LOCAL_CPLUSPLUSFLAGS'" != "'x'"
+then
+	echo "AddToCPLUSPLUSFlags("$LOCAL_CPLUSPLUSFLAGS")"
+fi
+if test "'x$LOCAL_LDFLAGS'" != "'x'"
+then
+	echo "AddToLdFlags("$LOCAL_LDFLAGS")"
+fi
+if test "'x$LOCAL_LDLIBRARIES'" != "'x'"
+then
+	echo "AddToLdLibraries("$LOCAL_LDLIBRARIES")"
+fi
+if test "'x$LOCAL_LDLIBDEPENDS'" != "'x'"
+then
+	echo "AddToLdLibDepends("$LOCAL_LDLIBDEPENDS")"
+fi
+echo
+echo "#include \""$TOPDIR"/config/Module.def\""
+echo "#include \""$GANDIVATOPDIR"/config/Module.def\""
+) > config/Local.def
+chmod a+r config/Local.def
+
+(
+echo "/*"
+echo " * Copyright (C) 1996, 1997,"
+echo " *"
+echo " * Department of Computing Science,"
+echo " * University of Newcastle upon Tyne,"
+echo " * Newcastle upon Tyne,"
+echo " * UK."
+echo " *"
+echo " */"
+echo
+echo "/*"
+echo " *  Module.def (source)"
+echo " */"
+echo
+echo "JAVAHARNESSTOPDIR="$TOPDIR
+echo
+if test "'x$MODULE_MAKEFLAGS'" != "'x'"
+then
+	echo "AddToMakeFlags("$MODULE_MAKEFLAGS")"
+fi
+if test "'x$MODULE_IMAKEFLAGS'" != "'x'"
+then
+	echo "AddToIMakeFlags("$MODULE_IMAKEFLAGS")"
+fi
+if test "'x$MODULE_MAKEDEPENDFLAGS'" != "'x'"
+then
+	echo "AddToMakeDependFlags("$MODULE_MAKEDEPENDFLAGS")"
+fi
+if test "'x$MODULE_CPPFLAGS'" != "'x'"
+then
+	echo "AddToCPPFlags("$MODULE_CPPFLAGS")"
+fi
+if test "'x$MODULE_CPPINCLUDES'" != "'x'"
+then
+	echo "AddToCPPIncludes("$MODULE_CPPINCLUDES")"
+fi
+if test "'x$MODULE_CPLUSPLUSFLAGS'" != "'x'"
+then
+	echo "AddToCPLUSPLUSFlags("$MODULE_CPLUSPLUSFLAGS")"
+fi
+if test "'x$MODULE_LDFLAGS'" != "'x'"
+then
+	echo "AddToLdFlags("$MODULE_LDFLAGS")"
+fi
+if test "'x$MODULE_LDLIBRARIES'" != "'x'"
+then
+	echo "AddToLdLibraries("$MODULE_LDLIBRARIES")"
+fi
+if test "'x$MODULE_LDLIBDEPENDS'" != "'x'"
+then
+	echo "AddToLdLibDepends("$MODULE_LDLIBDEPENDS")"
+fi
+echo
+echo "#include \""$TOPDIR"/config/JavaHarness.tmpl\""
+) > config/Module.def
+chmod a+r config/Module.def
+
+(
+echo "/*"
+echo " * Copyright (C) 1996, 1997,"
+echo " *"
+echo " * Department of Computing Science,"
+echo " * University of Newcastle upon Tyne,"
+echo " * Newcastle upon Tyne,"
+echo " * UK."
+echo " *"
+echo " */"
+echo
+echo "/*"
+echo " *  Module.def (install)"
+echo " */"
+echo
+echo "JAVAHARNESSTOPDIR="$INSTALLTOPDIR
+echo
+if test "'x$MODULE_MAKEFLAGS'" != "'x'"
+then
+	echo "AddToMakeFlags("$MODULE_MAKEFLAGS")"
+fi
+if test "'x$MODULE_IMAKEFLAGS'" != "'x'"
+then
+	echo "AddToIMakeFlags("$MODULE_IMAKEFLAGS")"
+fi
+if test "'x$MODULE_MAKEDEPENDFLAGS'" != "'x'"
+then
+	echo "AddToMakeDependFlags("$MODULE_MAKEDEPENDFLAGS")"
+fi
+if test "'x$MODULE_CPPFLAGS'" != "'x'"
+then
+	echo "AddToCPPFlags("$MODULE_CPPFLAGS")"
+fi
+if test "'x$MODULE_CPPINCLUDES'" != "'x'"
+then
+	echo "AddToCPPIncludes("$MODULE_CPPINCLUDES")"
+fi
+if test "'x$MODULE_CPLUSPLUSFLAGS'" != "'x'"
+then
+	echo "AddToCPLUSPLUSFlags("$MODULE_CPLUSPLUSFLAGS")"
+fi
+if test "'x$MODULE_LDFLAGS'" != "'x'"
+then
+	echo "AddToLdFlags("$MODULE_LDFLAGS")"
+fi
+if test "'x$MODULE_LDLIBRARIES'" != "'x'"
+then
+	echo "AddToLdLibraries("$MODULE_LDLIBRARIES")"
+fi
+if test "'x$MODULE_LDLIBDEPENDS'" != "'x'"
+then
+	echo "AddToLdLibDepends("$MODULE_LDLIBDEPENDS")"
+fi
+echo
+echo "#include \""$INSTALLTOPDIR"/config/JavaHarness.tmpl\""
+) > config/Module_install.def
+chmod a+r config/Module_install.def
+
+(
+echo "echo "$JDKVERSION
+) > config/JDKVersion
+chmod a+rx config/JDKVersion

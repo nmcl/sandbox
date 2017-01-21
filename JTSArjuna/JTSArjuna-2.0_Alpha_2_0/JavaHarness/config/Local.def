@@ -1,0 +1,18 @@
+/*
+ * Copyright (C) 1996, 1997,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ */
+
+/*
+ *  Local.def
+ */
+
+AddToIMakeFlags(-DVerboseMake=No -DTopDir=/home/nmcl/JTSArjuna/JavaHarness -DInstallTopDir=/usr/local/JavaHarness)
+
+#include "/home/nmcl/JTSArjuna/JavaHarness/config/Module.def"
+#include "/home/nmcl/JTSArjuna/Gandiva/config/Module.def"

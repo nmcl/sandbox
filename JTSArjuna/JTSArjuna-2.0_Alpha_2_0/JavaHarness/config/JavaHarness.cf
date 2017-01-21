@@ -1,0 +1,34 @@
+#!/bin/sh
+#
+# Copyright (C) 1996, 1997,
+#
+# Department of Computing Science,
+# University of Newcastle upon Tyne,
+# Newcastle upon Tyne,
+# UK.
+#
+
+# Java Harness configure file
+
+INSTALLTOPDIR=/usr/local/JavaHarness
+GANDIVATOPDIR=/home/nmcl/JTSArjuna/Gandiva
+
+LOCAL_MAKEFLAGS=''
+LOCAL_IMAKEFLAGS='-DVerboseMake=No -DTopDir=/home/nmcl/JTSArjuna/JavaHarness -DInstallTopDir=/usr/local/JavaHarness'
+LOCAL_MAKEDEPENDFLAGS=''
+LOCAL_CPPFLAGS=''
+LOCAL_CPPINCLUDES=''
+LOCAL_CPLUSPLUSFLAGS=''
+LOCAL_LDFLAGS=''
+LOCAL_LDLIBRARIES=''
+LOCAL_LDLIBDEPENDS=''
+
+MODULE_MAKEFLAGS=''
+MODULE_IMAKEFLAGS='-DCPP_PROGRAM=/usr/ccs/lib/cpp -I$(JAVAHARNESSTOPDIR)/config -DJavaCProg=/usr/local/jdk1.1.6/bin/javac -DJavaDocProg=/usr/local/jdk1.1.6/bin/javadoc -DJarProg=/usr/local/jdk1.1.6/bin/jar -DRMICProg=/usr/local/jdk1.1.6/bin/rmic -DJavaProg=/usr/local/jdk1.1.6/bin/java '
+MODULE_MAKEDEPENDFLAGS=''
+MODULE_CPPFLAGS='-DJDK_1_1 '
+MODULE_CPPINCLUDES=''
+MODULE_CPLUSPLUSFLAGS=''
+MODULE_LDFLAGS=''
+MODULE_LDLIBRARIES=''
+MODULE_LDLIBDEPENDS=''

@@ -1,0 +1,20 @@
+/*
+ * Copyright (C) 1996, 1997,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ */
+
+/*
+ *  Module.def (install)
+ */
+
+JAVAHARNESSTOPDIR=/usr/local/JavaHarness
+
+AddToIMakeFlags(-DCPP_PROGRAM=/usr/ccs/lib/cpp -I$(JAVAHARNESSTOPDIR)/config -DJavaCProg=/usr/local/jdk1.1.6/bin/javac -DJavaDocProg=/usr/local/jdk1.1.6/bin/javadoc -DJarProg=/usr/local/jdk1.1.6/bin/jar -DRMICProg=/usr/local/jdk1.1.6/bin/rmic -DJavaProg=/usr/local/jdk1.1.6/bin/java )
+AddToCPPFlags(-DJDK_1_1 )
+
+#include "/usr/local/JavaHarness/config/JavaHarness.tmpl"
