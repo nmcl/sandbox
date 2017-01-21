@@ -1,0 +1,22 @@
+/*
+ * Copyright (C) 1995, 1996, 1997,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ */
+
+/*
+ *  Module.def (source)
+ */
+
+JAVAGANDIVATOPDIR=/home/nmcl/JTSArjuna/JavaGandiva
+
+AddToIMakeFlags(-I$(JAVAGANDIVATOPDIR)/config)
+AddToCPPIncludes(-I$(JAVAGANDIVATOPDIR)/include)
+AddToCPLUSPLUSFlags(-ptr$(JAVAGANDIVATOPDIR) -pti$(JAVAGANDIVATOPDIR)/include )
+AddToLdFlags(-ptr$(JAVAGANDIVATOPDIR) -pti$(JAVAGANDIVATOPDIR)/include )
+
+AddToCPPFlags(-DGANDIVA_VERSION=\"2.5.0\")

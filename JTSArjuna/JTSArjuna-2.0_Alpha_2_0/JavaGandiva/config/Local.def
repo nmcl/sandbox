@@ -1,0 +1,20 @@
+/*
+ * Copyright (C) 1995, 1996, 1997,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ */
+
+/*
+ *  Local.def
+ */
+
+AddToIMakeFlags(-DBUILDUTILITIES -DINSTALLUTILITIES -UBUILDTESTS -UINSTALLTESTS -DVerboseMake=No -DBUILDDAEMONS -DINSTALLDAEMONS -DTopDir=/home/nmcl/JTSArjuna/JavaGandiva -DInstallTopDir=/usr/local/JTSArjuna)
+AddToCPPFlags(-I$(JAVAGANDIVATOPDIR)/config -I$(JAVAGANDIVATOPDIR)/lib -DPROPERTIES_FILE=\"/usr/local/JTSArjuna/etc/Arjuna.properties\")
+
+#include "/home/nmcl/JTSArjuna/JavaGandiva/config/Module.def"
+#include "/home/nmcl/JTSArjuna/JavaHarness/config/Module.def"
+#include "/home/nmcl/JTSArjuna/Gandiva/config/Module.def"
