@@ -1,0 +1,20 @@
+/*
+ * Copyright (C) 1996, 1997, 1998,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ */
+
+/*
+ *  Local.def
+ */
+
+AddToIMakeFlags(-DBUILDUTILITIES -DINSTALLUTILITIES -UBUILDTESTS -UINSTALLTESTS -DVerboseMake=No -DTopDir=/home/nmcl/JTSArjuna/JavaOrbPortability -DInstallTopDir=/usr/local/JTSArjuna)
+AddToCPPIncludes(-I$(JAVAORBPORTABILITYTOPDIR)/config -I$(JAVAORBPORTABILITYTOPDIR)/lib)
+
+#include "/home/nmcl/JTSArjuna/JavaOrbPortability/config/Module.def"
+#include "/home/nmcl/JTSArjuna/JavaHarness/config/Module.def"
+#include "/home/nmcl/JTSArjuna/Gandiva/config/Module.def"
