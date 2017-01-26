@@ -1,0 +1,16 @@
+#!/bin/sh
+#
+# Copyright (C) 1997, 1998,
+#
+# Department of Computing Science,
+# University of Newcastle upon Tyne,
+# Newcastle upon Tyne,
+# UK.
+#
+#
+
+#
+# ORB.def
+#
+
+echo orbacus
