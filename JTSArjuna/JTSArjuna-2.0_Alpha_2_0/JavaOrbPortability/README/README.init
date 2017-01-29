@@ -1,0 +1,8 @@
+If you do not use ORBInterface to initialise the ORB and BOA, then you
+must call setOrb   and setBoa  with   references to  the  ORB and  BOA
+respectively immediately after initialisation.
+
+In addition to using the ORBInterface methods  initORB and initBOA you
+must also  use  shutdownBOA and  shutdownORB  (in that   order) before
+terminating   your application. This  is to  allow   the OTS to do any
+tidying up that is necessary.
