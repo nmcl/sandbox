@@ -1,0 +1,38 @@
+COMMENT 
+COMMENT Copyright (C) 1998, 1999,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.3 1999/06/22 15:12:34 nmcl Exp $
+COMMENT
+
+AddToIdlFlags(-DDRAFT3)
+
+SOURCES = JDBCResource.java \
+	  OTS_JDBCDriver.java \
+	  OTS_JDBCConnection.java \
+	  JDBCException.java \
+	  JDBCType.java
+
+OBJECTS = JDBCException.class \
+	  JDBCResource.class \
+	  OTS_JDBCDriver.class \
+	  OTS_JDBCConnection.class \
+	  JDBCType.class
+
+Target($(SOURCES))
+Target($(OBJECTS))
+
+PreprocessJavaCode(JDBCResource,NullParam)
+PreprocessJavaCode(OTS_JDBCConnection,NullParam)
+
+BuildJavaByteCode(JDBCException,NullParam)
+BuildJavaByteCode(JDBCResource,NullParam)
+BuildJavaByteCode(OTS_JDBCDriver,NullParam)
+BuildJavaByteCode(OTS_JDBCConnection,NullParam)
+BuildJavaByteCode(JDBCType,NullParam)
+
+Clean(*.class)
