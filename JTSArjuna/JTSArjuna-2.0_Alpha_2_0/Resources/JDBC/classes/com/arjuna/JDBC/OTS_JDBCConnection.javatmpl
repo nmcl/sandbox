@@ -1,0 +1,609 @@
+/*
+ * Copyright (C) 1998, 1999,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: OTS_JDBCConnection.javatmpl,v 1.3.6.1 2000/01/04 14:06:20 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package com.arjuna.JDBC;
+
+import com.arjuna.OrbCommon.*;
+import com.arjuna.JavaGandiva.Common.*;
+import com.arjuna.JavaCosTransactions.OTS;
+import com.arjuna.JavaCosTransactions.OTS_Current;
+import com.arjuna.JavaCosTransactions.ArjunaOTS.AtomicTransaction;
+import com.arjuna.JavaCosTransactions.ArjunaOTS.TopLevelTransaction;
+import org.omg.CosTransactions.*;
+import java.util.*;
+import java.sql.*;
+
+import org.omg.CosTransactions.Unavailable;
+import org.omg.CosTransactions.NotPrepared;
+import org.omg.CosTransactions.HeuristicRollback;
+import org.omg.CosTransactions.HeuristicCommit;
+import org.omg.CosTransactions.HeuristicMixed;
+import org.omg.CosTransactions.HeuristicHazard;
+import org.omg.CosTransactions.SubtransactionsUnavailable;
+import org.omg.CosTransactions.NoTransaction;
+import NAMESPACE_(CORBA).SystemException;
+import java.sql.SQLException;
+
+#include <CosTransactions/CosTranExceptions.h>
+
+public class OTS_JDBCConnection implements java.sql.Connection
+{
+
+public OTS_JDBCConnection (String url, Properties info) throws SQLException
+    {
+	int type = JDBCType.ONE_POINT_ZERO;
+
+	if (info != null)
+	{
+	    String typeProp = info.getProperty(JDBCType.typeProperty);
+
+	    if (typeProp != null)
+	    {
+		try
+		{
+		    _type = Integer.parseInt(typeProp);
+		}
+		catch (Exception e)
+		{
+		    _type = JDBCType.ONE_POINT_ZERO;
+		}
+	    }
+	}
+
+	_autoCommit = true;
+	_closed = false;
+	_readOnly = false;
+	_oldIsolationLevel = -1;
+	_theResource = null;
+	_theConnection = DriverManager.getConnection(url, info);
+	_url = url;
+	_info = info;
+	
+	setupConnection();
+    }
+
+public void finalize ()
+    {
+	endConnection();
+
+	_theResource = null;
+	_theConnection = null;
+    }
+
+public int jdbcType ()
+    {
+	return _type;
+    }
+    
+public Statement createStatement () throws SQLException
+    {
+	if (_theConnection == null)
+	    throw new SQLException("Invalid connection!");
+	
+	try
+	{
+	    checkTransaction();
+
+	    registerDatabase();
+	}
+	catch (Unavailable e)
+	{
+	    /*
+	     * No transaction running, so do nothing.
+	     */
+	}
+	
+	return _theConnection.createStatement();
+    }
+
+#ifdef JDK_1_2
+public Statement createStatement (int rs, int rc) throws SQLException
+    {
+	if (_theConnection == null)
+	    throw new SQLException("Invalid connection!");
+	
+	try
+	{
+	    checkTransaction();
+
+	    registerDatabase();
+	}
+	catch (Unavailable e)
+	{
+	    /*
+	     * No transaction running, so do nothing.
+	     */
+	}
+	
+	return _theConnection.createStatement(rs, rc);
+    }    
+#endif
+    
+public PreparedStatement prepareStatement (String sql) throws SQLException
+    {
+	if (_theConnection == null)
+	    throw new SQLException("Invalid connection!");
+	
+	try
+	{
+	    checkTransaction();
+
+	    registerDatabase();
+	}
+	catch (Unavailable e)
+	{
+	    /*
+	     * No transaction running, so do nothing.
+	     */
+	}
+	
+	return _theConnection.prepareStatement(sql);
+    }
+
+#ifdef JDK_1_2
+    public PreparedStatement prepareStatement (String sql, int rs, int rc) throws SQLException
+    {
+	if (_theConnection == null)
+	    throw new SQLException("Invalid connection!");
+	
+	try
+	{
+	    checkTransaction();
+
+	    registerDatabase();
+	}
+	catch (Unavailable e)
+	{
+	    /*
+	     * No transaction running, so do nothing.
+	     */
+	}
+	
+	return _theConnection.prepareStatement(sql, rs, rc);
+    }
+#endif
+    
+public CallableStatement prepareCall (String sql) throws SQLException
+    {
+	if (_theConnection == null)
+	    throw new SQLException("Invalid connection!");
+	
+	try
+	{
+	    checkTransaction();
+
+	    registerDatabase();
+	}
+	catch (Unavailable e)
+	{
+	    /*
+	     * No transaction running, so do nothing.
+	     */
+	}
+	
+	return _theConnection.prepareCall(sql);
+    }
+
+#ifdef JDK_1_2
+public CallableStatement prepareCall (String sql, int rs, int rc) throws SQLException
+    {
+	if (_theConnection == null)
+	    throw new SQLException("Invalid connection!");
+	
+	try
+	{
+	    checkTransaction();
+
+	    registerDatabase();
+	}
+	catch (Unavailable e)
+	{
+	    /*
+	     * No transaction running, so do nothing.
+	     */
+	}
+	
+	return _theConnection.prepareCall(sql, rs, rc);
+    }
+#endif
+
+public String nativeSQL (String sql) throws SQLException
+    {
+	if (_theConnection == null)
+	    throw new SQLException("Invalid connection!");
+	
+	try
+	{
+	    checkTransaction();
+
+	    registerDatabase();
+	}
+	catch (Unavailable e)
+	{
+	    /*
+	     * No transaction running, so do nothing.
+	     */
+	}
+	
+	return _theConnection.nativeSQL(sql);
+    }
+
+#ifdef JDK_1_2
+public Map getTypeMap () throws SQLException
+    {
+	if (_theConnection == null)
+	    throw new SQLException("Invalid connection!");
+	else
+	    return _theConnection.getTypeMap();
+    }
+
+public void setTypeMap (Map map) throws SQLException
+    {
+	if (_theConnection == null)
+	    throw new SQLException("Invalid connection!");
+	else
+	    _theConnection.setTypeMap(map);
+    }
+#endif
+    
+    /*
+     * Not allowed.
+     */
+    
+public void setAutoCommit (boolean autoCommit) throws SQLException
+    {
+	if (autoCommit)
+	    throw new SQLException("Autocommit not allowed by OTS.");
+    }
+
+public boolean getAutoCommit () throws SQLException
+    {
+	return _autoCommit;
+    }
+
+public void commit () throws SQLException
+    {
+	throw new SQLException("Commit not allowed by OTS.");
+    }
+
+public void rollback () throws SQLException
+    {
+	throw new SQLException("Rollback not allowed by OTS.");
+    }
+
+    /**
+     * If there is a transaction running when close is called then we throw an exception
+     * and mark it as rollback only.
+     */
+    
+public void close () throws SQLException
+    {
+	try
+	{
+	    Control c = OTS.current().get_control();
+
+	    if (c != null)
+	    {
+		Coordinator coord = c.get_coordinator();
+
+		if (coord != null)
+		{
+		    coord.rollback_only();
+
+		    throw new SQLException("Transaction running when close called!");
+		}
+	    }
+	}
+	catch (Unavailable e1)
+	{
+	    /*
+	     * No transaction running, so ok.
+	     */
+	}
+	catch (SQLException e2)
+	{
+	    throw e2;
+	}
+	catch (Exception e3)
+	{
+	    throw new SQLException("OTS_JDBCConnection.close error: "+e3);
+	}
+
+	_theResource = null;
+
+	endConnection();
+    }
+
+public boolean isClosed () throws SQLException
+    {
+	return _closed;
+    }
+    
+public DatabaseMetaData getMetaData () throws SQLException
+    {
+	if (_theConnection != null)
+	    return _theConnection.getMetaData();
+	else
+	    throw new SQLException("Invalid connection!");
+    }
+
+    /**
+     * Can only set readonly before we use the connection in a
+     * given transaction!
+     */
+    
+public void setReadOnly (boolean ro) throws SQLException
+    {
+	if (_theResource == null)
+	    _readOnly = ro;
+	else
+	    throw new SQLException("Cannot set readonly when within a transaction!");
+    }
+    
+public boolean isReadOnly () throws SQLException
+    {
+	return _readOnly;
+    }
+
+public void setCatalog (String cat) throws SQLException
+    {
+	if (_theConnection == null)
+	    throw new SQLException("Invalid connection!");
+	
+	try
+	{
+	    checkTransaction();
+
+	    registerDatabase();
+	}
+	catch (Unavailable e)
+	{
+	    /*
+	     * No transaction running, so do nothing.
+	     */
+	}
+
+	_theConnection.setCatalog(cat);
+    }
+	    
+public String getCatalog () throws SQLException
+    {
+	if (_theConnection == null)
+	    throw new SQLException("Invalid connection!");
+	
+	try
+	{
+	    checkTransaction();
+
+	    registerDatabase();
+	}
+	catch (Unavailable e)
+	{
+	    /*
+	     * No transaction running, so do nothing.
+	     */
+	}
+
+	return _theConnection.getCatalog();
+    }
+
+public void setTransactionIsolation (int iso) throws SQLException
+    {
+	if (iso != Connection.TRANSACTION_SERIALIZABLE)
+	    throw new SQLException("Must be Connection.TRANSACTION_SERIALIZABLE");
+    }
+
+public int getTransactionIsolation () throws SQLException
+    {
+	return _oldIsolationLevel;
+    }
+
+public SQLWarning getWarnings () throws SQLException
+    {
+	if (_theConnection != null)
+	    return _theConnection.getWarnings();
+	else
+	    throw new SQLException("Invalid connection!");
+    }
+    
+public void clearWarnings () throws SQLException
+    {
+	if (_theConnection != null)
+	    _theConnection.clearWarnings();
+	else
+	    throw new SQLException("Invalid connection!");
+    }
+
+java.sql.Connection getConnection ()
+    {
+	return _theConnection;
+    }
+    
+void removeResource ()
+    {
+	_theResource = null;
+    }
+
+String connectionUrl ()
+    {
+	return _url;
+    }
+
+Properties connectionProperties ()
+    {
+	return _info;
+    }
+
+private void setupConnection () throws SQLException
+    {
+	/*
+	 * Try to setup the dbc connection in a way which makes
+	 * sense for the OTS.
+	 */
+
+	try
+	{
+	    _theConnection.setAutoCommit(false);
+	    _autoCommit = false;
+	}
+	catch (SQLException e)
+	{
+	    /*
+	     * Could not set autocommit off. In which case all
+	     * calls to the db are separate top-level transactions,
+	     * and this resource becomes useless.
+	     */
+
+	    System.err.println("WARNING - OTS_JDBCConnection - could not disable autocommit.");
+	    
+	    _autoCommit = true;
+	}
+
+	try
+	{
+	    DatabaseMetaData metaData = _theConnection.getMetaData();
+
+	    if (metaData.supportsTransactionIsolationLevel(Connection.TRANSACTION_SERIALIZABLE))
+	    {
+		try
+		{
+		    _oldIsolationLevel = _theConnection.getTransactionIsolation();
+
+		    _theConnection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+		}
+		catch (SQLException e)
+		{
+		    System.err.print("WARNING - OTS_JDBCConnection - failed to set isolation level.");
+		}
+	    }
+	}
+	catch (Exception e)
+	{
+	    System.err.print("WARNING - OTS_JDBCConnection - failed to set isolation level.");
+	}
+    }
+
+private void endConnection ()
+    {
+	if (_theConnection != null)
+	{
+	    try
+	    {
+		if (_oldIsolationLevel != -1)
+		{
+		    try
+		    {
+			_theConnection.setTransactionIsolation(_oldIsolationLevel);
+		    }
+		    catch (SQLException e)
+		    {
+			System.err.print("WARNING - JDBCResource.endConnection: attempt to reset isolation level ");
+			System.err.println(_oldIsolationLevel+" failed.");
+		    }
+
+		    _oldIsolationLevel = -1;
+		}
+		
+		_theConnection.close();
+		_closed = true;
+	    }
+	    catch (SQLException e)
+	    {
+		System.err.println(e);
+	    }
+
+	    _theConnection = null;
+	}
+    }
+    
+    /*
+     * Currently we allow a connection to be involved in multiple transactions.
+     * So, multiple threads can use the same connection instance within
+     * difference transactions.
+     */
+    
+private void registerDatabase () throws SQLException
+    {
+	if (_theResource == null)
+	{
+	    try
+	    {
+		_theResource = new JDBCResource(this, _type, _readOnly, _url, _info);
+	    
+		Coordinator coord = OTS.current().get_control().get_coordinator();		
+		Resource res = new SCOPED_TIE_INSTANCE_(org.omg.CosTransactions,Resource)(_theResource);
+
+		READY_IMPL_(res);
+	    
+		RecoveryCoordinator rc = coord.register_resource(res);
+	    
+		_theResource.setTransaction(coord);
+		
+		coord = null;
+	    }
+	    catch (Unavailable e1)
+	    {
+		throw new SQLException("JDBCResourceManager.registerDatabase - "+e1);
+	    }
+	    catch (Inactive e2)
+	    {
+		throw new SQLException("JDBCResourceManager.registerDatabase - "+e2);
+	    }
+	    catch (SystemException e3)
+	    {
+		throw new SQLException("JDBCResourceManager.registerDatabase - "+e3);
+	    }
+	}
+    }
+
+private void checkTransaction () throws SQLException, Unavailable
+    {
+	try
+	{
+	    Control c = OTS.current().get_control();
+
+	    if (c != null)
+	    {
+		Coordinator coord = c.get_coordinator();
+	    
+		if (!coord.is_top_level_transaction())
+		    throw new SubtransactionsUnavailable();
+
+		coord = null;
+		c = null;
+	    }
+	    else
+		throw new Unavailable();
+	}
+	catch (SubtransactionsUnavailable e2)
+	{
+	    throw new SQLException("Subtransactions unavailable!");
+	}
+	catch (Exception e3)
+	{
+	    throw new SQLException("Could not get transaction information.");
+	}
+    }
+
+private java.sql.Connection _theConnection;
+private int _type;
+private boolean _autoCommit;
+private boolean _closed;
+private boolean _readOnly;
+private int _oldIsolationLevel;
+private JDBCResource _theResource;
+private String _url;
+private Properties _info;
+    
+};
+
