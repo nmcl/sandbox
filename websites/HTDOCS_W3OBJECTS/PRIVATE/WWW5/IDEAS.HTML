@@ -1,0 +1,148 @@
+<!doctype html public "-//IETF//DTD HTML//EN">
+<HTML>
+
+<HEAD>
+
+<TITLE>Scaleable Referencing for the Web</TITLE>
+
+<META NAME="GENERATOR" CONTENT="Internet Assistant for Word 1.0Z">
+<META NAME="SUBJECT" CONTENT="5th International World-Wide Web Conf">
+<META NAME="AUTHOR" CONTENT="Dave Ingham">
+<META NAME="KEYWORDS" CONTENT="referencing, world-wide web, object-oriented">
+<META NAME="OPERATOR" CONTENT="David Ingham">
+<META NAME="DOCCOMM" CONTENT="submission date 29th Jan 1996">
+</HEAD>
+
+<BODY>
+
+<H1>Scaleable Referencing for the Web</H1>
+
+<P>
+<B>5th International World-Wide Web Conference, Paris, May 1996</B>
+<P>
+(Submission date: 29th January 1996)
+<H2>Aims</H2>
+
+<UL>
+<LI>To provide referential integrity guarantees for W3Objects
+(web objects)
+<LI>To provide object migration transparency
+</UL>
+
+<H2>Requirements</H2>
+
+<P>
+(random order brain dump noting Doug Seaton's comments)
+<P>
+<I>Object owner control must be maintained.</I>
+<P>
+There will be cases where a referenced object must be removed
+for reasons orthogonal to referential integrity. Any proposed
+referencing mechanisms should remove this kind of ultimate control
+from object owners.
+<P>
+<I>The system must be robust.</I>
+<P>
+The conflict between correctness and robustness has to be acknowledged
+(blocking forever cannot really be tolerated); complex integrity-preservation
+protocols may not operate in the large-scale, heterogeneous, failure-prone
+world of the Internet. One of the factors contributing to the
+success of the web is the simplicity of the design; stateless
+system (clients, servers and protocol).
+<H2>Basic Concepts</H2>
+
+<P>
+This can be based upon the description from the WWW4 paper.
+<H2>Pragmatic Refinements</H2>
+
+<P>
+One of the main issues here is to augment the basic referencing
+design with features that improve the robustness of the system.
+Approaches include:
+<UL>
+<LI>Collections - structuring technique for organising information,
+minimises number of refs
+<LI>Proxies - reduce the number of inter-host references
+<LI>Alternate reference types - e.g. notification facilities via
+call-back using a 2-way reference
+</UL>
+
+<H3>Notes</H3>
+
+<P>
+<I>URL to Object reference translation</I>
+<P>
+Since we cannot replace all URLs with object references, we must
+deduce the correct way for URL-&gt;reference translation to be
+done. The shadows' feature of allowing a reference to contain
+multiple paths to the resource (is this implemented?) needs to
+be considered; it's my feeling we'll need to use this technique
+extensively.
+<P>
+<I>Client-stub, server-stub matching (?)</I>
+<P>
+In the current implementation, although this may have now changed
+in Shadows, referencing is achieved by pure reference counts,
+there is no <I>identity</I> associated with a reference. This
+has the potential to cause problems as multiple 'de-reference'
+messages via the same reference may cause an object to be incorrectly
+collected. I have refreshed my memory of Shapiro's work and SSPs
+have this identity property, in that stubs are 'matched' with
+their associated scions. From the W3Objects point of view this
+is a good property.
+<P>
+<I>Minimising inter-host references</I>
+<P>
+We have spoken about using proxies to minimise the number of inter-host
+references. Basic SSP also provides this property as the default.
+Every reference contained in space A for object o, residing in
+space B, passes through the same outgoing stub. That is, in any
+given space there is only one stub per object in any remote space.
+However,  every incoming reference has a separate scion.
+<H2>Comparisons with Competing Technology</H2>
+
+<H3>Hyper-G</H3>
+
+<P>
+Hyper-G from Graz, Austria is a fully functioning rival to the
+web (in fact it was in existence prior to Tim's creation). Among
+the nice features present in Hyper-G are support for referential
+integrity, links from arbitrary resources, user-authenticated
+access, and efficient searching. Hyper-G's links, which are bi-directional,
+are held separate from the resources within which they are held
+in local databases. Referential integrity is maintained locally
+through the use of the database, if a resource is removed, links
+to that resource are also removed. In the wider scale, link update
+information is propagated between servers using the p-flood algorithm
+which claims to scale well.
+<H3>IETF Uniform Resource Name Proposals</H3>
+
+<P>
+The decisions about URNs have currently stalled. A number of alternate
+mechanisms have been proposed and are currently being implemented
+for evaluation. The IETF is not proposing to specify a single
+scheme, rather a number of schemes which all provide (at least)
+the same lowest-common-denominator functionality.
+<P>
+URNs are seen to be the solution to migration transparency. We
+must compare our scheme and highlight the advantages it offers:
+distributed-responsibility, removes name-server bottlenecks, provides
+migration transparency with minimal overhead, also addressing
+referential integrity problem.
+<H3>Microcosm (University of Southampton)</H3>
+
+<P>
+(possibly -- need to read latest web-related papers)
+<H2>Likely Criticisms</H2>
+
+<P>
+The most likely criticism that will be raised will be scaleability.
+We will have to work hard to prove that the proposed mechanisms
+will scale to a system as large as the current web, which will
+only grow over time. How can we prevent the inter-object referencing
+descending into an unmanageable chaos. Will an object reference
+count ever descend to zero in reality? Are hierarchical or domain
+based solutions required?
+</BODY>
+
+</HTML>

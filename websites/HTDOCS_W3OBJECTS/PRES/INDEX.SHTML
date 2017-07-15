@@ -1,0 +1,78 @@
+<HTML>
+<HEAD>
+<TITLE>W3Objects Presentations</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+
+<!--#include virtual="/chunks/buttons.shtml" -->
+<HR>
+
+<H1>Presentations</H1>
+
+<UL>
+
+<LI><A HREF="www6/wshop/">W3Objects: A Distributed Object-Oriented Web
+Server</A>
+<BR>
+<!--#include virtual="/chunks/oows&dm.html" -->
+<BR><!--#include virtual="/chunks/www6.html" -->.
+<BR>Santa Clara, California, USA. April 97.
+</LI>
+
+<LI><A HREF="www6/manage/">Supporting Highly Manageable Web Services</A>
+<BR>
+<!--#include virtual="/chunks/www6.html" -->.
+<BR>Santa Clara, California, USA. April 97.
+</LI>
+
+<LI><A HREF="www6/caching/">Flexible Open Caching for the Web</A>
+<BR><!--#include virtual="/chunks/www6.html" -->.
+<BR>Santa Clara, California, USA. April 97.
+</LI>
+
+<LI><A HREF="www6/actions/">Building Reliable Web Applications using
+Atomic Actions</A>
+<BR><!--#include virtual="/chunks/www6.html" -->.
+<BR>Santa Clara, California, USA. April 97.
+</LI>
+
+<LI><A HREF="www5/">Fixing the &quot;Broken-Link&quot; Problem: The
+W3Objects Approach</A>
+<BR><!--#include virtual="/chunks/www5.html" -->.
+<BR>Paris, France. May 96.
+</LI>
+
+<LI><A HREF="ansa96/">The W3Objects Referencing Model</A>
+<BR><!--#include virtual="/chunks/ansa96.html" -->.
+<BR>Cambridge, UK. April 96.
+</LI>
+ 
+<LI><A HREF="www4/">W3Objects: Bringing Object-Oriented Technology
+to the Web</A>
+<BR><!--#include virtual="/chunks/www4.html" -->.
+<BR>Boston, Mass., USA. December 95.
+</LI>
+
+<LI><A HREF="ansa95/">WebObjects: Towards an Object-Oriented Web</A>
+<BR><!--#include virtual="/chunks/ansa95.html" -->.
+<BR>Cambridge, UK. May 95.
+</LI>
+
+<LI><A HREF="bcast95/">WebObjects: Ideas for an Object-Oriented Web</A>
+<BR><!--#include virtual="/chunks/bcast95.html" -->.
+<BR>Lisbon, Portugal. February 95.
+</LI>
+
+</UL>
+
+<P>
+<HR>
+<!--#include virtual="/chunks/buttons.shtml" -->
+<HR>
+<FONT SIZE=-1>
+<!--#include virtual="/chunks/footer.ihtml" -->
+<BR>Last modified: <!--#echo var="LAST_MODIFIED" -->
+</FONT>
+<HR>
+</BODY>
+</HTML>

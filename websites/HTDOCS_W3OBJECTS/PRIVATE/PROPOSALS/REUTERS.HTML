@@ -1,0 +1,161 @@
+<!doctype html public "-//IETF//DTD HTML//EN">
+<HTML>
+
+<HEAD>
+
+<TITLE>The Proposed Project</TITLE>
+
+<META NAME="GENERATOR" CONTENT="Internet Assistant for Word 1.0Z">
+<META NAME="AUTHOR" CONTENT="David Ingham">
+</HEAD>
+
+<BODY>
+
+<H2>The Proposed Project</H2>
+
+<P>
+Until recently accessing the wide variety of resources (textual
+documents, pictures, services, etc.) available on the internet
+required specific knowledge of the resource type and the use of
+a matching protocol (or set of protocols) e.g., telnet, ftp, etc.,
+and a matching viewer in order to display or interact with the
+resource. As a result the internet was largely the domain of 'experts'
+i.e., those familiar with the required protocols and viewers,
+or of 'specialists' i.e., those concerned with particular resource
+types, accessed through the use of type specific tools. This situation
+has changed with the widespread use of client programs such as
+those produced by Mosaic and Netscape, enabling the creation of
+the world-wide mesh of inter-related resources, of many types,
+which we call the Web. These products owe their success to the
+provision of a common, easily understood interface to all resources
+through the use of i) <I>hyper-text</I> as a means of structuring
+and accessing information in a form readily understood to all
+those familiar with documentation schemes, and ii) a single, simple
+interface i.e., <I>HTTP</I>, which all client browsers are capable
+of supporting.
+<P>
+However, although the Web as it currently stands, has proved very
+successful as a means of publishing and accessing document-based
+information, it suffers from a number of limitations which, if
+not addressed, will limit its usefulness as a environment which
+supports commercial ventures. The current function of the Web
+is, primarily, to provide a mechanism by which stable documents
+can be browsed freely, within the public domain, and inter-relationships
+created between those documents. In order to encourage information
+providers to publish on the Web emphasis has been placed upon
+low-cost (in terms of computing resource required i.e., a simple,
+stateless communication protocol and a minimum of infrastructure)
+and in freedom from responsibility i.e., few obligations are placed
+upon the publisher in terms of maintaining the availability or
+correctness of the information. The policy has been to &quot;Let
+the user beware&quot;; whilst this has suited academic institutions
+and publishers of other free information, it is clearly inappropriate
+for commercial activity (beyond the limited field of advertising).
+<P>
+Service providers want to offer services which are frequently
+more than passive documentation. For example they will want to
+be able to provide multi-media services, such as video-on-demand
+and electronic newspapers, interactive services such as at-home-learning
+and banking systems. Above all service providers want to be able
+to charge users for their services. This requires a means of exchanging
+payment but more importantly needs mechanisms for security and
+authentication to prevent free access and therefore provide a
+rationale for charging. In return for payment, service providers
+accept obligations such as prescribed availability, performance
+and correctness of the service. All of this requires that the
+Web be capable of extension in the interfaces via which users
+(and administrators) interact with services.
+<P>
+HTTP may be extended either by applying to the Web's governing
+body (the IANA) with detailed proposals, or by the use of <I>CGI
+scripts</I> which enable the setting up of arbitrarily complex
+protocols between client and server, through a process of negotiation
+using HTTP. However, the former is a long process requiring wide-spread
+consensus, whilst the later relies on the underlying HTTP in order
+to initiate the new protocol, and on a rather unwieldy programming
+model which makes it difficult to share interfaces or implementations
+between resources.
+<P>
+In the field of distributed systems design, within which we at
+Newcastle University have considerable experience, the object-oriented
+approach is widely accepted as an appropriate model for communication
+between distributed resources, and as a programming methodology
+which encourages the reuse of interfaces and implementations.
+For this reason we have been investigating the use of the object-oriented
+paradigm within the Web, and have developed an object-oriented
+system [Ref. 1], which allows Web resources to be implemented
+as objects; <I>W3Objects</I> in our terminology. Our approach
+is evolutionary, in that our system runs in parallel to the existing
+Web browsers and servers without any detrimental effects, but
+users who wish to introduce new resources may design them as W3objects,
+or may transform existing resources into W3Objects. W3Objects
+support multiple interfaces so whilst they may be accessed through
+traditional Web browsers, they can also provide a rich new set
+of functionality.
+<P>
+Our approach is to provide simple guarantees for all W3Objects
+in order to maintain the overall integrity of the system, and
+flexible mechanisms which allow users to obtain additional guarantees
+concerning their personal relationship with chosen W3Objects.
+Users of W3Objects are guaranteed that, for as long as they hold
+a reference to it, the W3Object continues to be accessible, despite
+migrations (a common occurrence for Web resources) and communication
+or node failures (a common occurrence on the internet). Maintaining
+this guarantee provides a solution to the frustrating problem
+of 'broken links' which any Web user will be familiar with, and
+allows the automatic garbage collection of W3Objects which are
+no longer referenced. Our mechanisms provide a user-centered view
+of the Web, making it easy for users to create individualized
+name spaces for the W3Objects in which they have an interest,
+for groups of users to share such spaces, and for users to specify
+appropriate levels of availability, performance and fault-tolerance
+for each W3Object, independent of the requirements of others.
+<P>
+We believe that our model and mechanisms enable service providers
+to design flexible, extensible, interactive services. The use
+of the object-oriented paradigm encourages component re-use and
+will ease interworking with other object-based systems, such as
+those providing CORBA implementations.
+<P>
+As an example consider a service such as an electronic newspaper,
+which would allow users to access pages of information linked
+in a complex mesh, describing the current news. The paper could
+provide links to external information sources, which interested
+readers could follow to obtain more detailed knowledge, and to
+earlier articles for background and historical perspective. Such
+a paper could be updated dynamically as news breaks, provide multi-media
+presentations, and offer readers views to match their particular
+interests, i.e., personalized newspapers. Implementing this service
+poses many challenges. Secure protocols are required for charging
+purposes, multiple pages need to be updated atomically so that
+users do not obtain inconsistent information, certain pages may
+require high availability e.g., the financial news, mechanisms
+are required for archiving old news and for monitoring access
+to the most popular pages, journalists require write access to
+pages (potentially from their personal mobile computers), readers
+may require write access to letter pages, etc. The demands on
+the service will vary from page to page, minute to minute, demanding
+an extremely dynamic response from the provider. We believe that
+the high performance and flexibility required by such a service
+are beyond the scope of the current static, documentation-based
+Web infrastructure but that these demands can be met by the object-oriented
+system which we provide.
+<P>
+We are currently engaged in formulating a research proposal to
+explore the use of W3Objects and their interaction with CORBA
+services. To this end we are seeking a partner who has experience
+as an information provider and is interested in researching and
+developing a service such as that described above. We are open
+to suggestions as to alternative services with similar requirements
+for flexibility and dynamism.
+<H3>References</H3>
+
+<P>
+1. D. B. Ingham, M. C. Little, S. J. Caughey, S. K. Shrivastava,
+&quot;W3Objects: Bringing Object-Oriented Technology To The Web,&quot;
+The Web Journal, 1(1), pp. 89-105, Proceedings of the 4th International
+World Wide Web Conference, Boston, USA, December 1995.<BR>
+URL: http://www.w3.org/pub/Conferences/WWW4/Papers2/141/ 
+</BODY>
+
+</HTML>

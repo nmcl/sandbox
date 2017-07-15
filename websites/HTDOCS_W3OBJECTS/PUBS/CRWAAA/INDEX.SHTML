@@ -1,0 +1,72 @@
+<HTML>
+<HEAD>
+<TITLE>Constructing Reliable Web Applications using Atomic Actions</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+
+<NOBR>
+<!--#include virtual="/chunks/buttons.shtml" -->
+</NOBR>
+<HR>
+
+<H1>Constructing Reliable Web Applications using Atomic Actions</H1>
+
+<H2>Citation</H2>
+
+M. C. Little, S. K. Shrivastava, S. J. Caughey, and D. B. Ingham,
+<I>"Constructing Reliable Web Applications using Atomic Actions,"</I>
+Proceedings of the <!--#include virtual="/chunks/www6.html"-->,
+Santa Clara, California, USA,
+7-11 April 1997.
+
+<H2>Abstract</H2>
+
+<P>The Web frequently suffers from failures which affect the
+performance and consistency of applications run over it. An important
+fault-tolerance technique is the use of atomic actions (atomic
+transactions) for controlling operations on services. Atomic actions
+guarantee the consistency of applications despite concurrent accesses
+and failures. Techniques for implementing transactions on distributed
+objects are well-known: in order to become &quot;transaction
+aware&quot;, an object requires facilities for concurrency control,
+persistence, and the ability to participate in a commit
+protocol. While it is possible to make server-side applications
+transactional, browsers typically do not possess such facilities, a
+situation which is likely to persist for the foreseeable
+future. Therefore, the browser will not normally be able to take part
+in transactional applications. The paper presents a design and
+implementation of a scheme that does permit non-transactional browsers
+to participate in transactional applications, thereby providing much
+needed end-to-end transactional guarantees.</P>
+
+<P><B>Keywords</B>: World Wide Web, atomic actions, transactional integrity,
+consistency, fault-tolerance, distributed systems</P>
+
+<H2>Available formats</H2>
+
+At WWW6 site:
+[<A HREF="http://proceedings.www6conf.org/HyperNews/get/PAPER12.html">HTML</A>]
+
+<BR>At W3Objects site:
+[<A HREF="html/">HTML</A>]
+[<A HREF="ps/paper.ps">Postscript</A>]
+[<A HREF="pdf/paper.pdf">PDF</A>]
+[<A HREF="word/paper.doc">Microsoft Word</A>]
+
+
+<P>Note: A <A HREF="../../pres/www6/actions/">set of slides</A>
+relating to this paper are also available.</P>
+
+<P>
+<HR>
+<NOBR>
+<!--#include virtual="/chunks/buttons.shtml" -->
+</NOBR>
+<HR>
+<FONT SIZE=-1>
+<!--#include virtual="/chunks/footer.ihtml" -->
+<BR>Last modified: <!--#echo var="LAST_MODIFIED" -->
+</FONT>
+<HR>
+</BODY>
+</HTML>

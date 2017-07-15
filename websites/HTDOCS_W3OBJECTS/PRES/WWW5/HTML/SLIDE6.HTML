@@ -1,0 +1,31 @@
+<html><head><title>: slide 6
+</title>
+</head><body bgcolor="#0028a0" text="#ffffff" link="#ffffe8" vlink="#eeffee">
+<a href="slide7.html"><img align=right border=none alt="on" src="next.gif"></a>
+<a href="overview.html"><img align=right border=none alt="up" src="home.gif"></a>
+<a href="slide5.html"><img align=right border=none alt="back" src="back.gif"></a>
+<a href="http://www5conf.inria.fr/"><img align=down border=none alt=w3c src="W3K-transparent.gif"></a>
+<em><font size=-1>Fifth International World Wide Web Conference</font></em>
+<hr>
+<font size="">
+<H1>Object Migration Scenario</H1>
+<UL>
+  <LI>Consider a system partitioned into S spaces
+  <LI>An object, O, resides at one of the spaces, S<SUB>source</SUB>
+  <LI>R spaces contain a  reference to O
+  <LI>N spaces contain name-servers which refer to O
+  <LI>Reference holder on space S<SUB>migrator</SUB> sends a message to S<SUB>source</SUB> instructing O to migrate to S<SUB>destination</SUB>
+  <LI>Assumptions
+  <UL>
+    <LI>R and N are disjoint sets
+    <LI>S<SUB>migrator</SUB> is not equal to S<SUB>source</SUB> which is not equal to S<SUB>destination</SUB>
+    <LI>communication achieved using unicast RPC with at-most-once semantics
+  </UL>
+</UL>
+
+<p>
+<hr>
+<font size=-3><em class H1>Fixing the &quot;Broken-Link&quot; Problem:</em></font>
+<em><font size=-3> (D.Ingham,S.Caughey,M.Little)</font></em>
+</font>
+</body></html>

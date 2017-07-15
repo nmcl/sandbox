@@ -1,0 +1,297 @@
+<!doctype html public "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<TITLE>Fixing the &quot;Broken-Link&quot; Problem: The W3Objects Approach</TITLE>
+</HEAD>
+<BODY>
+
+<H1>Fixing the &quot;Broken-Link&quot; Problem:
+<br>The W3Objects Approach</H1>
+<p>by
+<a href="http://www.cs.ncl.ac.uk/~dave.ingham">David Ingham</A>,
+<a href="http://www.cs.ncl.ac.uk/~s.j.caughey">Steve Caughey</A>, and
+<a href="http://www.cs.ncl.ac.uk/~m.c.little">Mark Little</A>
+<p><A HREF="http://arjuna.ncl.ac.uk/">Arjuna Distributed Systems Group</A>,
+<br><A HREF="http://www.cs.ncl.ac.uk/">Department of Computing Science</A>,
+<br><A HREF="http://www.ncl.ac.uk/">Newcastle University</A>,
+<br>United kingdom.
+<p>For more information, see the <a href="http://arjuna.ncl.ac.uk/w3objects/">
+W3Objects</A> site.
+<p>
+
+<H1>Presentation Contents</H1> 
+<UL>
+  <LI>Motivation for W3Objects research
+  <LI>W3Objects overview
+  <LI>Referencing in the Web
+  <LI>Techniques for tracking migrating objects
+  <LI>The W3Objects referencing model
+  <LI>W3Objects system architecture
+  <LI>Interoperability with current Web software
+  <LI>Conclusions
+</UL>
+
+<H1>Motivation for W3Objects Research</H1>
+<UL>
+  <LI>Extensibility
+  <UL>
+    <LI>HTTP defines a fixed set of operations for all resources
+    <UL>
+      <LI>difficult to augment interface or alter implementation
+    </UL>
+    <LI>Incorporating non-standard resources using CGI is difficult
+    <UL>
+      <LI>too low-level programming model cf. stub generation
+      <LI>difficult to write parameter marshaling code; easy to introduce errors
+      <LI>no architectural support for advanced resources
+    </UL>
+  </UL>
+  <LI>Referencing Model
+  <UL>
+    <LI>Highly visible problem of broken-links
+  </UL>
+</UL>
+
+<H1>W3Objects Overview</H1>
+<UL>
+  <LI>Key goal is to provide an <EM>extensible</EM> Web architecture
+  <LI>Framework to aid in the construction of Web-based applications
+  <LI>Based on an object-oriented distributed computing approach
+  <LI>W3Objects are <EM>encapsulated</EM> entities
+  <LI>W3Objects support <EM>abstraction</EM>
+  <LI>Interface inheritance provides <EM>polymorphism</EM>
+  <LI>Code reuse achieved using behavioral inheritance
+</UL>
+<P><EM>See <A HREF="http://arjuna.ncl.ac.uk/w3objects/">http://arjuna.ncl.ac.uk/w3objects/</A></EM>
+
+<H1>Referencing in the Web</H1>
+<UL>
+  <LI>The Web as a whole is greater than the sum of the parts
+  <UL>
+    <LI>the Web’s power is achieved by the connection of related information
+    <LI>uni-directional linking using location-based addressing (URLs)
+  </UL>
+  <LI>System lacks referential integrity and migration transparency
+  <UL>
+    <LI>referenced resources are deleted
+    <LI>resources move around (both intra and inter-server)
+    <LI>resulting in broken-links or dangling references
+  </UL>
+  <LI>Proposed solutions
+  <UL>
+    <LI>HTTP redirect directive (HTTP code 302)
+    <LI>Persistent URLs (PURLs) from OCLC
+    <LI>Uniform Resource Names (URNs)
+    <LI>Hyper-G’s p-flood - broadcast updates using flooding technique
+  </UL>
+</UL>
+
+<H1>Object Migration Scenario</H1>
+<UL>
+  <LI>Consider a system partitioned into S spaces
+  <LI>An object, O, resides at one of the spaces, S<SUB>source</SUB>
+  <LI>R spaces contain a  reference to O
+  <LI>N spaces contain name-servers which refer to O
+  <LI>Reference holder on space S<SUB>migrator</SUB> sends a message to S<SUB>source</SUB> instructing O to migrate to S<SUB>destination</SUB>
+  <LI>Assumptions
+  <UL>
+    <LI>R and N are disjoint sets
+    <LI>S<SUB>migrator</SUB> is not equal to S<SUB>source</SUB> which is not equal to S<SUB>destination</SUB>
+    <LI>communication achieved using unicast RPC with at-most-once semantics
+  </UL>
+</UL>
+
+<H1>Object Migration Scenario</H1>
+<IMG SRC="fig1.gif">
+
+<H1>Options for Tracking Object Migration</H1>
+
+<UL>
+  <LI>Option 1: do nothing at migration time
+  <UL>
+    <LI>object fault occurs at next invocation through each reference
+    <LI>object must be located through the use of search
+  </UL>
+  <LI>Option 2: replace migrated object with forward reference
+  <UL>
+    <LI>invocations are redirected transparently to the new location
+    <LI>references are updated through piggy-backed information
+  </UL>
+  <LI>Option 3: callback to all references at migration time
+  <UL>
+    <LI>no further work necessary at invocation time
+  </UL>
+  <LI>Option 4: update name-server(s) at migration time
+  <UL>
+    <LI>object fault occurs at next invocation through each reference
+    <LI>name-server query to determine new location of object
+    <LI>reference invokes object at new location
+  </UL>
+</UL>
+
+<H1>Comparison of Messaging Costs</H1>
+<TABLE BORDER=1>
+<TR>
+  <TD COLSPAN=2><STRONG>Option 1: search</STRONG></TD>
+</TR>
+<TR>
+  <TD>M: no additional messages</TD>
+  <TD><P ALIGN=CENTER><CODE><STRONG>0</STRONG></CODE></TD>
+</TR>
+<TR>
+  <TD>I: fault, search from 1 to S-2 spaces per reference</TD>
+  <TD><P ALIGN=CENTER><CODE><STRONG>(R-1)(1..(S-2))</STRONG></CODE></TD>
+</TR>
+<TR>
+  <TD COLSPAN=2><STRONG>Option 2: forward referencing</STRONG></TD>
+</TR>
+<TR>
+  <TD>M: no additional messages</TD>
+  <TD><P ALIGN=CENTER><CODE><STRONG>0</STRONG></CODE></TD>
+</TR>
+<TR>
+  <TD>I: 1 message per reference to forward invocation</TD>
+  <TD><P ALIGN=CENTER><CODE><STRONG>R-1</STRONG></CODE></TD>
+</TR>
+<TR>
+  <TD COLSPAN=2><STRONG>Option 3: callback</STRONG></TD>
+</TR>
+<TR>
+  <TD>M: 1 message to update each reference</TD>
+  <TD><P ALIGN=CENTER><CODE><STRONG>R-1</STRONG></CODE></TD>
+</TR>
+<TR>
+  <TD>I: no additional messages</TD>
+  <TD><P ALIGN=CENTER><CODE><STRONG>0</STRONG></CODE></TD>
+</TR>
+<TR>
+  <TD COLSPAN=2><STRONG>Option 4: name-server</STRONG></TD>
+</TR>
+<TR>
+  <TD>M: update all name-servers</TD>
+  <TD><P ALIGN=CENTER><CODE><STRONG>N</STRONG></CODE></TD>
+</TR>
+<TR>
+  <TD>I: fault, name-server query & new invocation</TD>
+  <TD><P ALIGN=CENTER><CODE><STRONG>2(R-1)</STRONG></CODE></TD>
+</TR>
+</TABLE>
+<EM>(assuming fault-free environment)</EM>
+
+<H1>Comparison of Messaging Costs</H1> 
+<UL>
+  <LI>Consider the effects of faults:
+  <UL>
+    <LI>callbacks & name-server updates must now be atomic
+    <LI>transactional update mechanisms can be expensive
+    <LI>migrations are more likely to fail
+  </UL>
+</UL>
+<P><EM>forward referencing solution imposes least cost</EM>
+<UL>
+  <LI>Fault-tolerance, availability & performance
+  <UL>
+    <LI>referencing chains can introduce additional points of failure
+    <LI>invocation overhead cannot always be tolerated
+  </UL>
+</UL>
+<P><EM>composite model provides greatest flexibility</EM>
+
+
+<H1>W3Objects Referencing Model</H1>
+<UL>
+  <LI>Aims
+  <UL>
+    <LI>to provide referential integrity
+    <LI>to provide migration transparency
+    <LI>to provide flexible mechanisms to support differing object requirements
+  </UL>
+  <LI>Integration of referencing techniques
+  <UL>
+    <LI>all W3Objects support forward referencing with chain short-cutting
+    <LI>cheapest guarantee of referential integrity
+    <LI>per reference customisation for fault-tolerance or performance
+  </UL>
+  <LI>Prototype implementation built using Shadows
+  <LI>Deployed within W3Objects servers
+  <UL>
+    <LI>guarantees integrity of links between W3Objects
+  </UL>
+</UL>
+
+<H1>Object Migration & Short-cutting</H1>
+<IMG SRC="fig2.gif">
+
+<H1>Obtaining References</H1>
+<IMG SRC="fig3.gif">
+
+<H1>Name-servers</H1>
+<H2>maintaining bindings between names and objects</H2>
+<IMG SRC="fig4.gif">
+
+<H1>Name-servers</H1>
+<H2>providing alternative paths to objects</H2>
+<IMG SRC="fig5.gif">
+
+<H1>Referencing Model Summary</H1>
+<UL>
+  <LI>Forward referencing
+  <UL>
+    <LI>default mechanisms for all W3Objects
+    <LI>achieves referential integrity
+    <LI>provides migration transparency
+    <LI>chain-shortcutting reduces points of failure
+  </UL>
+  <LI>Name-servers
+  <UL>
+    <LI>used to provide name to object bindings
+    <LI>used to provide alternative paths to an object
+  </UL>
+  <LI>Callback
+  <UL>
+    <LI>used in conjunction with name-servers to eliminate common paths
+    <LI>used with references to minimise invocation overhead
+  </UL>
+</UL>
+
+<H1>W3Objects System Architecture</H1>
+<IMG SRC="fig6.gif">
+
+<H1>Working with Existing Web Software</H1>
+<UL>
+  <LI>Supporting HTTP access
+  <UL>
+    <LI>gateway module incorporated into ‘extensible’ Web servers
+    <LI>CGI-based gateway
+  </UL>
+  <LI>Reference translation; browsers only understand URLs
+  <UL>
+    <LI>URLs to W3Objects provide no RI guarantees
+    <LI>URLs are correct at time of translation, perhaps not after short-cutting
+    <LI>URLs based on name-server references provide best option`
+    <LI>compound references translated to multiple URLs
+  </UL>
+  <LI> Bringing W3Object references closer to clients
+  <UL>
+    <LI>W3Object-based hotlist server
+  </UL>
+</UL>
+
+<H1>Conclusions</H1>
+<UL>
+  <LI>Object-oriented, flexible & distributed scheme
+  <LI>Forward-referencing provides cheap referential integrity
+  <LI>Supplemented with name-server & callback
+  <UL>
+    <LI>to achieve higher degrees of fault-tolerance
+    <LI>to improve performance
+  </UL>
+  <LI>Appropriate combination chosen on a per-reference basis
+  <LI>Evolutionary approach
+  <UL>
+    <LI>can be used as added-value service for existing resources
+  </UL>
+</UL>
+
+</BODY>
+</HTML>

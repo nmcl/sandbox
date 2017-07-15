@@ -1,0 +1,35 @@
+<HTML>
+<HEAD>
+<TITLE>W3Objects site search</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<!--#include virtual="/chunks/buttons.shtml" -->
+<HR>
+<H1>W3Objects Site Search</H1>
+<P>This will search all of the public resources at this site.</P>
+<P><FORM METHOD="POST" ACTION="/search/htsearch.cgi">
+Match:
+<SELECT NAME="method">
+<OPTION VALUE="and">All
+<OPTION VALUE="boolean">Boolean
+<OPTION VALUE="or" SELECTED>Any
+</SELECT>
+Format:
+<SELECT NAME="format">
+<OPTION VALUE="builtin-long">Long
+<OPTION VALUE="builtin-short">Short
+</SELECT>
+
+<INPUT TYPE=HIDDEN NAME="config" VALUE="W3Objects">
+<INPUT TYPE=HIDDEN NAME="restrict" VALUE="">
+<INPUT TYPE=HIDDEN NAME="exclude" VALUE="">
+<BR>
+Search:
+<INPUT TYPE="text" SIZE="30" name="words" value="">
+<INPUT TYPE="submit" VALUE="Search">
+</FORM>
+<HR>
+<A HREF="http://htdig.sdsu.edu"><IMG SRC="htdig.gif" ALIGN=BOTTOM ALT="ht://Dig" BORDER=0></A>
+</BODY>
+</HTML>
+

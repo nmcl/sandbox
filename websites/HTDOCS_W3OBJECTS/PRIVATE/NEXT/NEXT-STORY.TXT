@@ -1,0 +1,54 @@
+All,
+
+Here is the history of the WebObjects trademark problem:
+
+We have been using the name WebObjects since late 1994. Since that time I
+have given 2 public presentations of the work, and submitted 1 paper, the 
+details follow:
+
+Date:		3rd Feb 1995
+Workshop:	Broadcast workshop, Lisbon, Portugal
+Title:		WebObjects: Ideas for an Object-oriented Web (presentation)
+
+Date:		25th May 1995
+Workshop:	ANSA, Cambridge, UK
+Title:		WebObjects: Towards an Object-oriented Web
+
+Date:		17th July 1995
+submission:	4th International WWW Conference
+Title:		WebObjects: Bringing Object-Oriented Technology To The Web
+
+The final item, the paper submitted to the web conference, is what has
+started the trouble. The paper was accepted and appeared in the
+on-line programme for the conference, to be held in Boston in
+December.  NeXT Computers Inc. saw the reference in the programme and
+had their attorney send a fax to the conference organisers to request
+that the name WebObjects was removed, to which they complied.  I
+received an urgent email message from the publishers saying that it
+had to be changed.
+
+The letter from NeXT stated that they had begun using the term "long
+ago" and had made significant investment in the mark and had filed a
+trademark application to protect it. In reality the first public
+statement from NeXT announcing WebObjects was a press release on the
+14th August 1995.
+
+Because we were afraid that they would pull our paper from the
+conference, we decided to change the name from WebObjects to
+W3Objects. We asked the publishers to add the following text within
+the paper:
+
+"Since 1994, W3Objects was known as WebObjects. We have been forced to
+change this owing to a recent trademark application by NeXT Computer
+Inc."
+
+The publishers have made the WebObjects->W3Objects change in both the
+hypertext and paper version of the proceedings and will definitely
+add the above text to the hypertext and probably to the paper version.
+The problem here is that they were in the very late stages of 
+typesetting when this problem arose.
+
+We have made no direct contact with NeXt ourselves.
+
+Dave Ingham
+3/11/95

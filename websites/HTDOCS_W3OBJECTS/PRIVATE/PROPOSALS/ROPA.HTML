@@ -1,0 +1,261 @@
+<!doctype html public "-//IETF//DTD HTML//EN">
+<HTML>
+
+<HEAD>
+
+<TITLE>Building Responsive and Available Information Discovery and
+Repository Services</TITLE>
+
+<META NAME="GENERATOR" CONTENT="Internet Assistant for Word 1.0Z">
+<META NAME="AUTHOR" CONTENT="Santosh Shrivastava">
+</HEAD>
+
+<BODY>
+
+<H1>Building Responsive and Available Information Discovery and
+Repository Services</H1>
+
+<P>
+<B>(Case for support: ROPA)</B>
+<P>
+<I>S.K. Shrivastava </I>
+<P>
+<I>Department of Computing Science, </I>
+<P>
+<I>University of Newcastle upon Tyne, NE1 7RU<B>.</B></I>
+<H2>1. Introduction </H2>
+
+<P>
+The growth in the use of tools and services for searching and
+accessing information available over the Internet has been phenomenal.
+<I>Information discovery and repository services</I>  organise
+and/or search information distributed across many repositories.
+For example, servers for the <I>World Wide Web</I> (WWW) [1] organise
+the information as distributed hypertext. WWW clients are provided
+with hypertext browsing tools, such as <I>Mosaic</I>, for searching
+and fetching information. The list of WWW servers is growing by
+leaps and bounds.  
+<P>
+As researchers in the area of distributed computing, we find the
+above trend in the use of the Internet very exciting: there is
+now a real scope for field testing and putting to use many of
+the ideas we have developed and are in the process of developing.
+The services and facilities offered by currently available discovery
+and repository services are quite primitive; even simple enhancements,
+such as caching facilities, if implemented properly, can yield
+substantial performance improvements. More sophisticated enhancements,
+such as the provision of attribute based information searching,
+inter-server protocols for consistency management of replicated
+information etc. can significantly boost a user's ability to explore
+the vast amounts of multimedia information available. In short,
+experimenting with information discovery and repository services
+offers an excellent way of learning and gaining an appreciation
+of how the &quot;information highway&quot; will be used. We believe
+that the programme of experimental research that we are proposing
+here will add to our knowledge of building and managing truly
+large scale distributed applications (the areas identified by
+the CDS Committee under the heading &quot;Networking Applications&quot;).
+ 
+<P>
+We are fortunate in having obtained research funding from SERC,
+MOD and ESPRIT for basic research in large scale distributed systems
+(SERC grant no. GR/H81078 and ESPRIT basic research project BROADCAST,
+project no. 6360). I direct the BROADCAST project which involves
+some of Europe's best known academic research groups. Our research
+work is addressing the areas of both theory (e.g., scalable algorithms
+for group management and multicasting, replica management, locating
+objects) and practice (systems architectures and application building
+tools). The ROPA  award will enable us to  enhance the scope of
+our work  quite significantly.
+<P>
+The main outcome of our research work has been the development
+of tools and techniques for constructing distributed fault-tolerant
+systems that make use of standard, commodity hardware and software
+components. Two research systems have been designed and implemented.
+The first system, <I>Arjuna</I>, demonstrates the application
+of modern object-oriented software technology in building general
+purpose fault-tolerant distributed applications in workstation
+environments [2], whereas the second system, <I>Voltan</I>, demonstrates
+the application of novel redundancy management techniques in building
+specialist high availability computer systems using ordinary processors
+[3].  
+<H2>2. Planned Research Work</H2>
+
+<P>
+Our main objective is to develop the infrastructure necessary
+for the construction of available and responsive multimedia information
+repositories that provide information storage, retrieval, searching,
+discovery and indexing services by co-operating with other servers
+scattered over the Internet. (We intend to side-step the issues
+of media synchronisation - there are plenty of other research
+groups active in this area; we will exploit their results in our
+work.) To get wider user acceptance, we intend to build these
+services as much as possible out of existing facilities (e.g.,
+WWW). Much of the Arjuna software developed by us for distributed
+object management [2], distributed programming [4], storage, replication
+and clustering [5, 6]  and transactions will be of direct use
+in our work. As remarked earlier, the services and facilities
+offered by currently available discovery and repository services
+are quite primitive, and open to several improvements indicated
+below. The main body of our research is divided into three tasks.
+   
+<P>
+<I>(i) Systems architecture</I>: Believing that the vast numbers
+of users will continue to use commodity hardware and software
+systems (e.g., PCs running OS/2 or Windows NT) for information
+retrieval, we intend to examine ways of constructing a local repository
+(object storage service) out of a collection of workstations and
+PCs connected by high-speed ATM switch network. Arjuna already
+provides a means of treating a collection of distributed object
+stores as logically single, dependable store. Further, we are
+close to completing a distributed database system on top of Arjuna
+that provides indexing and attribute based searching facilities
+[7]. Thus, barring equipment, we have the necessary expertise
+for constructing such a storage system.         
+<P>
+<I>(ii) Replication and caching of information</I>: We envisage
+two levels of replication: (i) information will be replicated
+within a cluster of object stores at a site mainly for increasing
+availability; and (ii) there will be extensive caching and replication
+of information between sites for performance as well as availability
+reasons. At present, WWW clients (and for that matter, clients
+of other servers such as Archie) make little effort to cache frequently
+used information; further, protocols between servers for exchanging
+information for replication purposes are either non-existent or
+<I>ad hoc</I>. What is required is a carefully controlled lazy
+replication scheme that ensures eventual propagation of updates.
+This is an area that requires considerable work. Careful design
+and implementation can yield rich rewards in terms of responsiveness
+and availability of information.
+<P>
+<I>(iii) System Monitoring and Managing changes</I>: Related to
+the previous task, we envisage the provision of notification services
+that enable servers to discard or update out-of-date information
+(such as rebinding hyperlinks if some object has moved, obtaining
+a fresh copy of  a replica). Further, the use of atomic transactions
+will be necessary to make changes to important configuration information.
+Monitoring services would be necessary to affect migration of
+services as system characteristics, network topology etc. change.
+<P>
+The work that we will perform above is of generic interest. We
+expect the techniques that we will develop to have applicability
+in various educational, industrial and commercial settings; an
+example would be a commercial information publishing system. There
+are several other, quite important aspects of the work that we
+are not addressing here (such as charging policies and mechanisms,
+security); we expect other groups to take up these issues.   
+
+<H2> 3. Current Industry Supported Research Work</H2>
+
+<P>
+Present day telecommunication systems make use of computing technology
+that places excessive reliance on specialist equipment and techniques
+for delivering core services of switching and call management.
+It is becoming increasingly difficult to maintain and enhance
+these systems to incorporate new services and functionalities.
+Continuing advances in distributed computing technology hold the
+promise of a way out of this difficulty. Not surprisingly, industry
+led initiatives on distributed systems architecture are examining
+approaches to the creation, maintenance and enhancement of telecommunication
+services that make use of computing platforms built from commodity
+hardware and software. This is easier said than done. It is clear
+that the ideas developed within the arena of distributed computing
+(e.g., objects interacting via invocations, with dependability
+achieved by replication of hardware and software components) will
+need considerable refinement before they can be adapted to deliver
+the availability as well as the timeliness requirements demanded
+by telecommunication services. This observation captures the essence
+of our collaborative research effort with industry, for which
+we have obtained industrial funding to examine the application
+of Arjuna and Voltan technologies. 
+<P>
+In collaboration with Hewlett-Packard Ltd. (Bristol Research Laboratory),
+we are investigating the application of Voltan technology in building
+high-availability telecommunications platforms. We are also close
+to finalising an agreement with GEC-Plessey Telecommunications
+Ltd. to collaborate on the application of Arjuna technology in
+structuring call processing software. (See ROPA application form,
+section 19 for more details.).
+<P>
+The work that we have proposed in the previous section is complementary
+to the industry funded work described here.
+<H2>4. Staffing, Equipment and Travel</H2>
+
+<P>
+We are seeking funds for supporting one senior research associate
+(Dr. G. D. Parrington). Dr. Parrington has played a key role in
+the design, implementation, distribution and maintenance of Arjuna
+systems software. He has experience of variety of operating systems
+and has skills in computer system management, system integration
+and networking. A senior position is being requested as not only
+we ourselves have developed large amount of software that we maintain,
+distribute, and upgrade, but the kind of work we are proposing
+also requires expertise in being able to integrate software developed
+by other groups. Some support for secretarial work (arranging
+meetings with industrial colleagues etc.) and a technician's time
+(equipment maintenance and installation) is also being requested.
+On the equipment side we are seeking funds (&#163;53K) for the
+purchase of ATM hardware for connecting a cluster of Unix and
+PC based workstations and  some 'high-spec' PCs and software detailed
+in the application form for constructing our information repository.
+ATM hardware is rather expensive at the moment; what we are seeking
+is the bare essential. Travel funds (&#163;6k) are being requested
+to keep in touch with other research groups in UK, continental
+Europe and USA, and for participation at conferences and workshops
+(e.g.., Distributed Computing Conference, Fault-tolerant symposium,
+Symposium on Operating System Principles, Symp. on Reliable Distributed
+Systems, Workshop on the Management of Replicated Data). Finally,
+we are seeking funds for equipment maintenance and consumables.
+ 
+<H2>5. Exploitation of Research Results </H2>
+
+<P>
+We have excellent contacts with industry and have worked hard
+to make our work accessible to them. In addition to the two industrial
+contracts, we are in the process of negotiating Arjuna technology
+transfer deals with at least two SMEs. We also work closely with
+the ANSA laboratory in Cambridge. Newcastle is the co-ordinating
+partner for the ESPRIT funded 'distributed computing network of
+excellence' scheme (CaberNet) which provides us with a forum for
+discussing our work with academic as well  as industrial workers
+from all over Europe. We have been distributing Arjuna software
+to users all over the world for R&amp;D and teaching purposes
+(via WWW server of course!).
+<H2>References</H2>
+
+<P>
+[1] Berners-Lee, T et al., &quot;World-Wide-Web: the information
+universe&quot;, Electronic Networking: Research, Applications
+and Policy, 1(2), Spring 1992.
+<P>
+[2] Shrivastava, S.K. and D.L. McCue, &quot;Structuring fault-tolerant
+object systems for modularity in a distributed environment&quot;,
+IEEE Trans. on Parallel and Distributed Systems, April 1994. 
+<P>
+[3] Shrivastava, S.K, P.D. Ezhilchelvan, N.A. Speirs, S. Tao and
+A. Tully, &quot;Principle Features of the VOLTAN Family of Reliable
+Node Architectures for Distributed Systems&quot;, IEEE Trans.
+on Computers, 41 (5), pp. 542-549, May 1992.
+<P>
+[4] Parrington, G.D. &quot;Reliable Distributed Programming in
+C++: The Arjuna Approach&quot;, Proceedings of the USENIX Second
+C++ Conference, San Francisco, pp. 37-50, April 1990.
+<P>
+[5] Wheater, S.M. and  S.K. Shrivastava, &quot;Exercising application
+specific run-control over clustering of objects&quot;, Proc. of
+Second Intl. Workshop on Configurable Distributed Systems, March,
+1994, Pittsburgh. (Also, Broadcast Deliverable Report, Vol. 3,
+Oct 1993).
+<P>
+[6] Little, M.C. and D.L. McCue, &quot;Replica management system:
+a scheme for flexible and dynamic replication&quot;, Proc. of
+Second Intl. Workshop on Configurable Distributed Systems, March,
+1994, Pittsburgh.
+<P>
+[7] Buzato, L.E and A. Calsvara, &quot;Stabilis: a case study
+in writing fault-tolerant distributed application using persistent
+objects&quot; Proc. of 5th Workshop on Persistent Object Systems,
+San Miniato (Pisa), September 1992.
+</BODY>
+
+</HTML>

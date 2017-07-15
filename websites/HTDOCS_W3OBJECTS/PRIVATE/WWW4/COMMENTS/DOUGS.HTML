@@ -1,0 +1,302 @@
+<!doctype html public "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD><TITLE>Doug Seaton's WebObjects Comments</TITLE></HEAD>
+<BODY>
+<h1>Doug Seaton's WebObjects Comments</h1>
+<P>
+Tiny but significant point: the Web gets its name from three initial
+aspects: the existence of resolvable access references (e.g. URLs),
+the existence of a distributed hypermedium information base under
+which references can be embedded within references (HTML), and
+the existence of devices which can conveniently follow those references
+(browsers). Presumably, anything which augments this can legitimately
+be claimed to be part of the Web; anything which is distinct from
+this cannot?
+<P>
+So what are WebObjects?
+<P>
+<B>Referential Integrity</B>
+<P>
+Brief comments on the abstraction which emerges from the implementation
+description. This puts the rest in context.
+<P>
+Results of a commercial 'straw poll' w.r.t. the proposed mechanisms:
+<UL>
+<LI>Disbelief that the proposed mechanisms do, as suggested, scale
+and retain their characteristics
+<LI>Criticism that it does not localise control into the hands
+of those who must have that control 
+<LI>Doubt that decentralised WWW resilience properties are retained
+(note conflict between 'correctness' and 'robustness')
+</UL>
+
+<P>
+Discussion:
+<P>
+The web does not support RI 'since the system is unaware of the
+number of references that exist'. True, but misleading. The real
+background is:
+<UL>
+<LI>references outside the domain of the system (e.g. CD-ROMs,
+magazines, containing URLs, HTML editing support, browser 'hot
+page' maintenance,....)
+<LI>design of the 'HTML pages' of the future: copy a reference
+=&gt; ?
+<LI>change of status MUST be local and fast. 
+</UL>
+
+<P>
+ How could a court enforce removal of unacceptable material?
+<P>
+ How could a vendor remove material he owns?
+<P>
+ Government Agency publication ban mechanisms
+<P>
+ Time-bounds: valid from XX/XX/XXuntil YY/YY/YY
+<P>
+   valid for ZZ days (per user!)
+<P>
+The paper proposes the property: existence is guaranteed as long
+as there are outstanding references. This is not realistic. For
+instance, on very large scale, there will be vast numbers of cross-links,
+and material is cross-linked from other material having nothing
+to do with the original material provider. Practical removal following
+this strategy becomes out of the question: the chances of reducing
+a typical reference count to zero are virtually nil. Net resources
+would be virtually undeletable in practice: the only material
+which would be garbage-collectable would be brand new with no
+links yet established. The simple mechanism of denying delete
+of <I>any</I> object once it has at least one reference would
+exhibit almost the same behaviour as the complex one proposed!
+<P>
+How necessary is this guarantee? The justification given is that
+broken links are 'the single most annoying problem faced by browsing
+users'. But: is it acceptable to substitute as an alternative
+the 'annoyance' of a material rightsholder simply being unable
+to remove his material because someone outside his control happens
+to have a reference? This is not an 'annoyance' or 'low QoS to
+service providers' argument: it would be legally indefensible
+as a principle. So: not a solution.
+<P>
+It is certainly true that low QoS observed by users is unacceptable.
+So what might meet both requirements? Suppose that links within
+a management domain,<I> </I>i.e. able to be assured on some basis
+by the rightsholder of the material referenced, were assured of
+RI. With some elaboration, this may be made capable of being mapped
+to the real commercial world. 
+<P>
+The idea is to distinguish two types of link: controlled links
+and uncontrolled links, respectively. Controlled links are <I>references
+within a domain controlled by a single service provider</I>, or
+(most importantly for the wider application) <I>references to
+objects for which an existence guarantee has been purchased </I>(which
+may be time-limited). 
+<P>
+Controlled links are the ones which are subject to RI. 
+<P>
+Uncontrolled links are all others, including URLs in browser 'hot
+lists', on CD-ROM HTML pages (see many recent examples), on magazine
+pages, on business cards, on 'the back of an envelope'..... Uncontrolled
+links are 'caveat emptor', and could be signalled as such, to
+preempt 'user annoyance'
+<P>
+Such a possibility is evolutionary from where we are now: uncontrolled
+links are what we have today, controlled links start when the
+technology supports them.
+<P>
+It would be possible for the control to apply to objects, rather
+than links. But there will still be good reason to want to permit
+uncontrolled links. Consider the 'mixed-mode delivery' systems
+currently being evolved.
+<P>
+<B>Mobility</B>
+<P>
+Again, we'll go back-to-front, and comment on the properties of
+the proposed implementation of migration transparency first:
+<P>
+A common reason for wanting to migrate objects off a server is
+to take it offline. Another reason is to solve performance bottlenecks.
+Often, it is urgent; sometimes it can be planned. The strategy
+described in the paper is incomplete two-phase; the second phase,
+short-cutting and garbage-collecting the intermediate stubs, relies
+on all references happening to be invoked. 
+<P>
+There is a real need to ensure that this is <I>placed under the
+control of the service provider</I>, and a mechanism that is assured
+to complete, not necessarily before some definable deadline, but
+at the very least based on ensuring active progress towards the
+goal. This is not achieved with the passive strategy described.
+
+<P>
+So let's return to the arguments for this approach:
+<P>
+For the URN: the abstract properties are good, and avoid an uncomfortable
+'usually physical, but perhaps logical' characteristic present
+in the proposed URL 'forwarding address' approach.
+<P>
+The URN concept is criticised for performance w.r.t. name-server
+lookup, update, access bottleneck. Yes, agreed: the cost of indirection
+is always carried. This is a criticism of an abstraction on implementation
+grounds, which is dangerous. (I've done it too, but claim to be
+questioning the acceptability of the abstract properties which
+result!)
+<P>
+There are yet-to-be-tried implementation directions which, following
+work on WANs, hold considerable promise. Some were tried; about
+10 years ago, Xerox PARC (I think) did research on 'yellow-pages'
+hierarchical heuristic name-service support mechanisms (I haven't
+yet found the ref, but will continue searching). This involved
+:
+<UL>
+<LI>local, regional, name-mapping caches (URN-&gt;probable-URL)
++ forwarding-address (probable-URL-&gt;probable-URL). Like address-books,
+such mechanisms importantly <I>need not be guaranteed to return
+the right reference</I> but usually do: if actual-URL is not found,
+then the search mechanism 'falls back' to using a conventional
+name-server. 
+<LI>Second-level optimisation involves a hierarchy of URN-&gt;probable-URL
+mappings, pursued upwards until correct reference was found, and
+complementary mechanisms to dissipate new reference downwards.
+
+</UL>
+
+<P>
+Or, no hierarchy, but a loose 'confederacy' in which a correct
+reference dissipates throughout, and a natural direction of search
+approaches correctness.
+<UL>
+<LI>Third level involves browser 'intelligent cacheing': group
+of usually-associated URN-&gt;probable-URL mappings are supplied
+on first URN query, group contents adaptive
+</UL>
+
+<P>
+
+<P>
+This sort of stuff can be very benign, with emergent proprerties
+which would suit the somewhat anarchic Web culture. The one requirement
+is that there is an <I>overall</I> guarantee that the URM-&gt;actual-URL
+mapping will be found eventually. Almost all 'probes' would be
+satisfied immediately.
+<P>
+<B>Non-standard Resources</B>
+<P>
+An interesting point is being made about CGI users being 'forced
+to adopt ad-hoc solutions to persistence, concurrency control,
+shared resources'.
+<P>
+The world of standards involves a tension between two opposing
+forces. For some issues 'A', common global solutions are necessary
+to all, because each user needs correct behaviour and for those
+issues others can cause him to experience incorrect behaviour.
+For other issues 'B', common global solutions are not necessary
+and we actually want to retain the opportunity for added-value,
+evolution, proprietary 'ingredient X', etc, both to users and
+to suppliers who support these users.
+<P>
+So which side of this important fence are: persistence, concurrency-control,
+shared resources? All of these are w.r.t. a local domain, so I
+would have regarded these as category 'B' rather than 'A'! The
+CGI user will certainly prefer solutions provided by tools to
+having to implement his own in an ad-hoc manner, but need not
+use a single <I>standardised</I> method. 
+<P>
+(Consider an analogy with 'standard' windows programming libraries
+from Microsoft, Borland,......!)
+<P>
+The 'WebObjects' 'Object Model'  statement 'The objects themselves
+are responsible for managing their own state transitions and properties'
+incorporates aspects of both A and B. To be a 'good' WebObject
+means respecting and supporting those conventions which offer
+globally important properties. All else is a potential targets
+for proprietary, added value properties and evolution.
+<P>
+<B>Object Model</B>
+<P>
+I'm not sure from description of fig 2 just how 'inheritance'
+is different to its language-level implementation. What comes
+across is the notion of a domain to which an interface is exported
+(corresponding to ANSA trading domains)? 
+<P>
+<B>System Architecture</B>
+<P>
+To be blunt, I detest the current Web travesty of a Client-Server
+model. In an infinitely better model (literally), entities are
+not 'clients' or 'servers' per-se: the term is applied to the
+two ends of a specific relationship, from the point of view of
+that relationship. Thus a 'server' can also be the 'client' of
+another 'server'. (There are some brain-damaged late signs of
+this being half-recognised, with the 'introduction' of the concept
+of a 'three-level' system, with special intermediate entities
+able to be servers to 'pure' clients, and clients to 'pure' servers.
+(!!!))
+<P>
+Can the introduction of support for an Object model not also 'introduce'
+this abstraction? This would remove the distinction between Client
+and Server objects.
+<P>
+What of the distinction also drawn w.r.t. Published Objects? I
+don't like the identification of these with 'HTML documents'.
+In an Object model, would they not exhibit behaviour? Consider
+an active Published Object, the 'electronic journal of the future'.
+This would offer various services (including sharing control),
+would 'delivers itself', in a form suitable for any destination
+platform, and according to the user status (a distinct form of
+mobility, or an instantiation from a set of ancestral 'class'es?).
+Some actions should be permitted but not others, subject to subscription
+negotiation and controls imposed by rightsholders and by ancestral
+contracts (class inheritance?). The user would like to browse
+(as in a bookshop) a new magazine and decide if it is for them,
+if they want to take advantage of a different relationship with
+it, and so on. 
+<P>
+An organisation may wish to advertise services in this 'e-journal'.
+It wants two things: a guarantee that this will be brought to
+the attention of the e-journal user, and a clean way for that
+user to immediately obtain their services.
+<P>
+I think that the Published Object as the canonic form of this
+does not correspond to 'HTML documents', but to the embedding
+of HTML (and/or VRML, or any other emergent convention: it shouldn't
+matter....) within an infrastructure presenting the illusion that
+it is an active entity.  We already have the beginnings of this:
+<UL>
+<LI>HTML is not confined to 'documents'. It is often constructed
+on-the-fly by CGI servers, as part of a high-level interaction
+with the user.
+<LI>HTTP,SMTP,NNTP,FTP,.... Also VRML, etc (and embedded images,
+video, etc) are all supported today by natuive browsers or browser
+add-ons. HotJava renders this whole area dynamic. The browser
+should properly be viewed as a particular form of remote GUI,
+as infrastructure. 
+<LI>W.r.t. comment on elegance but lack of standard support for
+dynamic loading (of support for new types). This is surely no
+longer valid. They're here, and will gain in popularity. The adoption
+of HotJava by Netscape is surely a preemptive strike.
+</UL>
+
+<P>
+
+<P>
+What we need is the right abstraction.
+<P>
+Fig 3 doesn't seem to highlight 'interoperability', so much as
+highlight two apparent distinct forms of client-server interaction,
+HTTP and RPC, capable of a 'much richer [interface] than that
+provided through HTTP' - can that claim really be defended? Aren't
+they orthogonal? Is this comparing like with like? I ask because
+this issue keeps cropping up, with incompatible viewpoints expressed
+by different schools of thought. The issue is more profound than
+discussed here.
+<P>
+The pragmatic approach of creating servers to support object types
+has all sorts of disadvantages. How do I build my e-journal Object,
+other than with dynamic loading?
+<P>
+Won't the HTTP Gateway suffer from performance limitations - lookup,
+update, access bottlenecks - analogous to those of URM indirection?
+(These may perhaps be dressed up with implementation heuristics,
+in just the same way).
+</BODY>
+
+</HTML>

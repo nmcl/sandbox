@@ -1,0 +1,909 @@
+<html><head>
+<title>WebObjects: Bringing Object-Oriented Technology To The Web</title>
+</head>
+<body>
+<h1>WebObjects: Bringing Object-Oriented Technology to the Web</h1>
+<p><p>
+
+<dl>
+<dt><b>David Ingham</b>
+<dd>
+<a href="mailto:dave.ingham@ncl.ac.uk"><code>dave.ingham@ncl.ac.uk</a></code>
+<dd>
+<a href="http://www.cs.ncl.ac.uk/~dave.ingham/">
+<code>http://www.cs.ncl.ac.uk/~dave.ingham</a></code>
+<p>
+<dt><b>Mark Little</b>
+<dd>
+<a href="mailto:m.c.little@ncl.ac.uk"><code>m.c.little@ncl.ac.uk</a></code>
+<dd>
+<a href="http://www.cs.ncl.ac.uk/~m.c.little/">
+<code>http://www.cs.ncl.ac.uk/~m.c.little</a></code>
+<p>
+<dt><b>Steve Caughey</b>
+<dd>
+<a href="mailto:s.j.caughey@ncl.ac.uk"><code>s.j.caughey@ncl.ac.uk</a></code>
+<dd>
+<a href="http://www.cs.ncl.ac.uk/~s.j.caughey/">
+<code>http://www.cs.ncl.ac.uk/~s.j.caughey</a></code>
+
+</dl>
+
+<address>
+<br>The Arjuna Project,
+<br>Department of Computing Science,
+<br>University of Newcastle upon Tyne
+<br>Newcastle upon Tyne, NE1 7RU,
+<br>United Kingdom
+</address>
+
+<p>
+
+<dl>
+<dt><b>Abstract:</b>
+<dd> In this paper we shall discuss some of the problems of the
+current web and show how the introduction of object-orientation provides
+flexible and extensible solutions. Web resources become encapsulated as
+objects, with well-defined interfaces through which all interactions occur. The
+interfaces and their implementations can be inherited by builders of objects,
+and methods (operations) can be redefined to better suit the object. New
+characteristics, such as concurrency control and persistence, can be obtained
+by inheriting from suitable base classes, without necessarily requiring any
+changes to users of these resources. We shall describe the WebObject model
+which we have developed based upon these ideas, and show, through a prototype
+implementation, how we have used the model to address the problems of
+referential integrity and transparent object (resource) migration. We also give
+indications of future work.
+<p>
+<dt><b>Keywords:</b>
+<dd> world-wide web; object-oriented; referential integrity;
+mobility; distributed systems
+</dl>
+
+<h2>
+1.	Introduction</h2>
+Electronic publishing in the large has grown massively since the advent of the
+world-wide web. Many factors have contributed to its success, in particular,
+the simplicity of the system has played a significant role in its acceptance.
+Accessing information via the hypertext interface is relatively easy to learn
+and use. Becoming a publisher on the web is also straight-forward; users from
+all professions have been able to participate, resulting in the huge diversity
+of the information currently available. These factors coupled with free web
+software with cross-platform support have helped the web gain critical mass.<p>
+Within the current web environment, hypertext links are used to glue together
+resources which are primarily static, read-only, and file-based (henceforth
+referred to as <i>standard resources</i>). Although, the web has been very
+successful in serving such resources, it suffers from a number of shortcomings
+and it is questionable whether the current system will be able to scale
+indefinitely given the massive growth rates currently being witnessed. In
+particular, one highly visible problem is that of broken links between
+documents, caused by the lack of referential integrity within the current
+hypertext implementation. With the predicted growth in the number of resources,
+this problem will increase in significance, and the web will become more
+difficult to use and manage.<p>
+The future is also likely to bring new demands on the web in terms of the types
+of resources that it will be required to serve. The web has proved its
+usefulness in the organisation of distributed documentation, and users will
+wish to access other kinds of resource, with richer interfaces, within the same
+environment. Furthermore, service providers will wish to take advantage of the
+web in order to tap the potentially huge customer base.<p>
+In this paper, we will show how the current web implementation is object-based,
+with a single interface, comprising the set of HTTP [BLT95] operations.
+Although extensions to this model are currently in use to allow the
+incorporation of non-standard resources, it is the opinion of the authors that
+the system does not exhibit the necessary extensibility characteristics that
+are required if the web is to cope with the introduction of more advanced
+resources and services. We will show how making the change to an
+object-oriented system can yield an extensible infrastructure that is capable
+of supporting existing functionality and allows the seamless integration of
+more complex resources and services. We aim to use proven technical solutions
+from the distributed object-oriented community to show how many of the current
+problems with the web can be addressed within the proposed model.<p>
+In the next section, a critique of the current web is presented, highlighting
+existing problems in serving standard resources and the current approach for
+incorporating <i>non-standard resources</i>. Section 3 describes the WebObject
+design, its aims, object model, and system architecture. Section 4 gives an
+example, illustrating how particular shortcomings can be addressed within the
+proposed architecture. Finally, we present some conclusions and planned further
+work.
+<a name="_Ref329435582">
+<h2>
+2.	Critique Of The Current Web</a></h2>
+This section explores some of the problems with the current world-wide web,
+which we have classified into three categories. Firstly, we consider the
+problems associated with the primary function of the web, that is, in serving
+standard resources. The current techniques for incorporating non-standard
+resources are then discussed. Finally, the recent proposals for extending the
+existing web model are analysed and reviewed.
+<a name="_Ref329824318">
+<h3>
+2.1	Serving Standard Resources</a></h3>
+Currently the web is primarily populated with standard resources including
+Hypertext Markup Language (HTML) [BLT93] documents, GIF images, postscript
+files, audio files etc., with the common characteristics of being passive,
+read-only, and static. All resources are currently named using Uniform Resource
+Locators (URLs) [BLT94], a locational naming scheme which describes the
+protocol used to access the resource, the Internet address of the server
+containing the resource, and the location of the resource within that server.
+HTML documents contain hypertext links which are either intra-resource, for
+providing multiple navigational paths through a document, or inter-resource,
+providing the <i>webglue</i>, allowing related resources to be connected.<p>
+One of the major advantages of the web is the speed and ease by which
+information can be made available. In this environment web resources are
+frequently created, moved, and destroyed in an ad-hoc manner, suiting the owner
+of the information or publishing site. These changes are usually made
+autonomously, with little regard for users of the information. There are three
+distinct problems tied together here, namely referential integrity, migration
+transparency and resource management, which are presented in Sections 2.1.1 to
+2.1.3. Quality of service, which is also affected by these issues, is discussed
+in Section 2.1.4.
+<a name="_Ref329823744">
+<h4>
+2.1.1	Referential Integrity</a></h4>
+A system supports referential integrity if it guarantees that resources will
+continue to exist as long as there are outstanding references to the resources.
+The web does not support this property and cannot do so since the system is
+unaware of the number of references that exist to a particular resource. <p>
+It is impractical to maintain every resource that has ever been published on a
+particular server forever, this simply does not scale. Resources that are no
+longer of value, for whatever reason, become garbage and need to be collected.
+This may involve moving the resources to backing storage, or in some cases,
+deleting the resources entirely. Access pattern information, which is currently
+available through examination of server logs, is not a sufficient basis to
+decide whether an object is safe to garbage collect as important though rarely
+used references to a resource may exist. Safe garbage collection can only be
+performed if referencing information is available.<p>
+The consequences of deleting resources that are still referenced affects both
+the user and the information provider. In the web environment deleting a
+resource that is referenced by another resource results in a broken hypertext
+link. Such broken links are the single most annoying problem faced by browsing
+users in the current web. Broken links result in a tarnished reputation for the
+provider of the document containing the link, annoyance for the document user,
+and possible lost opportunity for the owner of the resource pointed to by the
+link.
+<a name="_Ref329060711">
+<h4>
+2.1.2	Migration Transparency</a></h4>
+In addition to the problems associated with deleting web resources, migrating
+resources (either intra- or inter-server) also has the potential to break
+hypertext links. Using the URL naming scheme, when a resource moves, its
+identity also changes. Therefore, hypertext links to the old name will now
+break, with the same consequences as stated previously.<p>
+A partial solution to this problem is provided by the use of the HTTP redirect
+directive, which provides a  forwarding pointer to the new location, allowing
+clients to rebind to the resource (automatically in the case of
+redirection-aware browsers). However, this is only a partial solution for the
+following reasons; firstly, documents containing references to the old location
+of the resource are not automatically updated, and so future requests will
+continue to access the old location first. Secondly, even if there was an
+automatic update mechanism, the lack of referential integrity means that the
+redirector can never be safely removed since it is impossible to determine
+whether all of the links have been updated. There is also the possibility that
+the URL may be re-allocated following the migration.<p>
+The IETF Uniform Resource Identifiers (URI) Working Group's [URIWG] work on
+Uniform Resource Names (URNs) [M94], an alternative naming scheme, based upon
+logical rather than locational naming attempts to address the problem of
+migration transparency. The mapping from logical name (URN) to locational name
+(URL) is stored within a name-server [HPE95] which is updated with the new URL
+when the resource moves. The disadvantage of this approach is the performance
+penalty associated with name-server lookups, updates, and access bottlenecks.
+Furthermore, this scheme does not address the issue of referential integrity.
+<a name="_Ref329823766">
+<h4>
+2.1.3	Resource and Service Management</a></h4>
+As previously mentioned, most resource access through the web is a read-only
+operation. Updates to the resources by the information provider are performed
+using mechanisms orthogonal to the web, that is, using the native commands and
+editing tools of the server machine. In effect web resources reside in two
+distinct domains in parallel; the traditional structure of the filesystem and
+the complex interlinking web of hypertext. Within these two environments, the
+interfaces to the resources as well as the relationships between the resources
+are fundamentally different, as illustrated in Figure 1.<p>
+<IMG SRC="www41.gif"><a name="_Ref328901892"><p>
+<b>Figure </a>1: Disjoint interfaces to web resources</b><p>
+<b></b>Maintenance operations carried out by the information provider or site
+maintainer typically require manipulation of the resources within both domains.
+As described in Section 2.1.2, moving a resource within the file system has the
+side-effect of changing its name in the web domain. To reflect such changes,
+other web resources must also be modified. Further, the internal state of the
+moved resource may also require modification, due to the use of relative naming
+[FR95]. At present such changes are performed manually and are prone to
+mistakes and inconsistencies (although tools, for example, <i>MOMSpider</i>
+[FR94] exist to help eventually detect some of these). This can be seen as a
+result of having two parallel interfaces without any support for maintaining
+consistency.
+<a name="_Ref329823840">
+<h4>
+2.1.4	Quality of Service</a></h4>
+The perceived quality of service (QoS) of the web is influenced by many
+factors, including the broken link problems already mentioned. Even if a user
+holds a correct reference to an existing web resource, it may still be
+unavailable due to a number of reasons, including downtime of the machine
+serving the resource, and partitions in the network between the client and
+server. Partitions may either be real, caused by breaks in the physical
+network, or virtual, due to excessive network or server load making
+communications between the client and server impossible. Even if communication
+is possible, very poor response characteristics may effectively make the
+resource unusable. QoS will become more of an issue as the web continues its
+transformation into a commercially-oriented system<p>
+Technical solutions for improving QoS are well understood, including caching
+for responsiveness, replication for availability, and migration for load
+balancing. Caching in the web is reasonably common, both through the use of
+browser memory and disc caches, and also through the use of caching servers
+[LA94]. Effective caching is not a trivial task since there are many subtle
+problems that need to be addressed, including cache consistency, accounting
+etc. Current caching servers use an heuristic approach for consistency
+management, where resources can only apply coarse-grained tuning, based on
+expiry dates. The IETF URI working group are implementing a framework for
+resource replication, but appear to only be addressing the problem within the
+realm of read-only, static resources, where a read-from-any policy is
+appropriate [HPE95]. Replicating more complex read/write resources is much more
+difficult due to the problems associated with maintaining consistency between
+concurrent users and in the presence of failures.
+<a name="_Ref329073087">
+<h3>
+2.2	Incorporating Non-standard Resources</a></h3>
+Those web resources, which possess a richer interface than standard resources,
+are manipulated through the Common Gateway Interface (CGI) protocol [CGI],
+which sits above HTTP. Through this protocol it is possible to perform
+arbitrary operations, not supported directly by HTTP, on these resources. Such
+resources are still identified by URLs, but the HTTP daemon is able to
+distinguish CGI URLs from standard resources. On receiving a request containing
+a CGI URL, rather than dealing with the request itself the daemon invokes a CGI
+<i>script</i> identified in the URL. Additional parameters can be included in
+the URL, which the daemon passes directly to the script, to be used in an
+application specific manner in the servicing of the request. When the script
+finishes the request it returns a reply message to the client and terminates.<p>
+Unlike publishing standard resources, writing CGI scripts is not simple; the
+resources manipulated need no longer be read-only resources and the issues
+involved in interacting with them are much more complex. There is no support
+for controlled sharing of resources, and because HTTP is still the underlying
+communication protocol, connections between client and resource last only for
+each request. This forces users to adopt ad-hoc solutions to problems such as
+persistence, concurrency control, and sharing of resources between requests.
+<h3>
+2.3	Extending The Model</h3>
+The HTTP protocol specifies the operations a client can attempt to perform on a
+web resource; for example GET, POST, etc. There is also support for an
+<i>extension method</i>, which allows user-specific operations to be added to
+the protocol. Resource providers who wish to use this feature, must liase with
+the IANA to register these operations. The IETF have also proposed new standard
+methods to be incorporated into HTTP in response to user requests [HTTPWG].
+Irrespective of the approach used to add new methods to the protocol, changes
+will be required to both the daemon and browsers. Further, the new methods may
+be inappropriate for the majority of web resources and also there will still be
+requirements which they do not address. This will result in a further round of
+protocol negotiations and changes to web software. There is a long lead time
+involved between initial method proposals and final implementations.<p>
+The result of this model and the constraints it imposes is that people may
+change the daemons in an ad-hoc manner. This makes migration of web resources
+from modified daemons difficult because modifications need to be made to every
+daemon which services them. There is also no easy route for code reuse, leading
+to individuals implementing similar methods in different ways.
+<h3>
+2.4	Conclusions</h3>
+From an object perspective, the HTTP daemon provides a single interface through
+which all objects it manages are accessed. In effect, the current web may be
+viewed as an object-based system with a single class of object. What is desired
+is the ability to modify this interface on a per-resource basis. Within the
+object-oriented paradigm such specialisations are achieved through the use of
+inheritance, and it is the absence of this which distinguishes an object-based
+from an object-oriented system [CL85].<p>
+We believe that the model and implementation we shall present in this paper
+represent a cleaner way of addressing the issues of flexibility and
+extensibility in a uniform manner, and can be used to provide solutions to the
+problems highlighted in Section 2.1. They can also be applied to the current
+web with little or no modifications to users of these resources, and minor
+requirements from their providers. In the following sections we will describe
+our model, and illustrate it with an implementation which supports referential
+integrity and transparent object migration.
+<a name="_Ref328902596">
+<h2>
+3.	WebObjects</a></h2>
+The primary objective of our research is to develop an extensible web
+infrastructure which is able to support a wide range of resources and services.
+Our model makes extensive use of the concepts of object-orientation to achieve
+the necessary extensibility characteristics. Within this object-oriented
+framework, proven concepts from the distributed object-oriented community will
+be applied to the problems currently facing the web.<p>
+The next section introduces our object model, describing how the principles of
+object-orientation are applied to the web domain. The system architecture is
+described in section 3.2, showing the interactions between the system
+components. Section 3.3 classifies and describes a collection of properties
+applicable to different classes of WebObject.
+<h3>
+3.1	Object Model</h3>
+In the proposed model, web resources are transformed from file-based resources
+into objects, <i>WebObjects</i>. WebObjects are <i>encapsulated</i> resources
+possessing internal state and a well defined behavior. The objects themselves
+are responsible for managing their own state transitions and properties, in
+response to method invocations. This model supports <i>abstraction</i> since
+clients only interact with WebObjects through the published interfaces; the
+implementation of a particular operation is not externally visible.<p>
+Different classes of WebObject support different operational interfaces, which
+are obtained through the use of <i>interface inheritance</i>. Abstract classes
+are used to define an interface to a particular object abstraction, without
+specifying any particular implementation of the operations. Different classes
+of WebObject may share conformance to a particular abstract interface, but may
+implement the operations differently, in a manner appropriate to the particular
+class. For example, consider a manageable interface, including a migrate
+operation, for moving objects from one location to another. While the same
+interface is appropriate for many classes of WebObject, the implementations may
+differ; for example, migration of a hypertext object may require some internal
+link manipulation operations in addition to the operations required by, say, a
+text file.<p>
+The use of interface inheritance provides <i>polymorphism</i>, that is, all
+derived classes that conform to an interface provided by some base class may be
+treated as instances of that base class, without regard for any other aspects
+of that class' behavior. Continuing with the previous example, consider a
+dedicated GUI-based website management tool, providing a graphical interface
+for performing management-style operations on the objects; one such operation
+may be object migration. The management tool is able to abstract away from
+other features of the different objects (supported through various other
+interfaces) and simply address all of the different objects as instances of the
+manageable interface.
+In addition to inheritance of interface, the model also supports <i>behavioral
+inheritance</i>, thereby supporting code reuse. For example, object properties
+such as persistence, and concurrency control may be provided by <i>mixin
+</i>base classes to be inherited as required. Mixin classes are not designed to
+be instantiated themselves. They are used to augment the functionality of the
+derived class, by providing some particular behavior, usually orthogonal to the
+primary function of the class.
+<IMG SRC="www42.gif"><a name="_Ref328901985"><a name="_Ref329015230"><p>
+<b>Figure </a>2: Illustration of Use of Object Model</a></b><p>
+<b></b>The diagram in Figure 2 illustrates the key points of our object model
+by showing how two example WebObject classes, Spreadsheet and Performance, are
+composed using both interface and behavioral inheritance. The abstract class,
+Manageable provides the interface description for management-style operations
+(only a single operation, migrate, is shown). Both of the derived classes
+inherit this interface, providing their own implementations. In addition, both
+of the derived classes provide other interfaces, describing the primary
+operations of the classes. The Performance class, representing a theatrical
+play, provides a bookSeat operation, and Spreadsheet provides get and set
+operations for manipulating the contents of the spreadsheet cells. Further, the
+Spreadsheet class is concurrency controlled, having derived this property from
+the mixin class, ConcControllable. The operations setLock and releaseLock are
+used in the implementation of the get and set operations to ensure the
+integrity of the spreadsheet in the event of concurrent access.<p>
+Also shown in the diagram are three different clients which manipulate
+instances of Performance and Spreadsheet. A website management tool, previously
+mentioned, is solely concerned with the operations provided through the
+Manageable interface. The tool is able to invoke the migrate operation on
+instances of either derived class without knowledge of the nature of the class.
+Two further clients are shown, a theatre booking application and a spreadsheet
+tool, which manipulate instances of <i>Performance</i> and <i>Spreadsheet</i>
+respectively. The fact that these classes are also <i>Manageable</i> is of no
+consequence to the clients who only interact with the objects via the
+interfaces supporting the classes' primary function.
+<a name="_Ref329002989">
+<h3>
+3.2	System Architecture</a></h3>
+In common with the current web, the proposed WebObject architecture consists of
+three basic entity types, namely clients, servers, and published objects. In
+the current web environment, these three types correspond to web browsers (e.g.
+mosaic), web daemons (e.g. CERN HTTPD) and documentation resources (e.g. HTML
+documents) respectively. Our architecture supports both client-object
+(client-server) and inter-object (peer-to-peer) communication.
+<h4>
+3.2.1	Client-Object Interactions</h4>
+Figure 3 illustrates, the logical view of client-object interactions within the
+WebObject architecture. A single server process is shown, managing a single
+object<sup> </sup>(although servers are capable of managing multiple objects of
+different types), which is being accessed via two different clients, a standard
+web browser, and a dedicated bespoke application. This diagram highlights
+<i>interoperability</i> as one of the key concepts of the architecture, that
+is, the support for object accessibility via different applications using
+multiple protocols.<p>
+<IMG SRC="www43.gif"><a name="_Ref328901829"><p>
+<b>Figure </a>3: Client-Object Interactions</b><p>
+<b></b>As stated earlier, WebObjects are encapsulated, meaning that they are
+responsible for managing their own properties (e.g. security, persistence,
+concurrency control etc.) rather than the application accessing the object. For
+example, in the case of concurrency, the object manages its own access control,
+based upon its internal policy, irrespective of from which application method
+invocations originate from.<p>
+The local representation of an object, together with the available operations,
+may vary depending upon the particular type of client accessing it. The web
+browser uses a URL to bind to the particular object in the server. The
+operations that are permitted on the object, via the URL, are defined by the
+HTTP protocol. The HTTP communication end-point of the server may perform name
+mapping between URL and the internal name for the object and may also map HTTP
+requests to appropriate method invocations on the object. Within the bespoke
+application, a client-stub object acts as the local representation of the
+remote object. From the point of view of the application, this stub object
+presents the illusion that the remote object is actually within the address
+space of the client. Like any other object, the stub presents a well-defined
+interface describing the supported operations. This interface has the potential
+to be much richer than that provided through HTTP, including application
+specific operations. Operation invocations on the stub are passed to the object
+using the remote procedure call (RPC) protocol. Client-stub objects may be
+automatically generated from a description of an object interface. Our
+implementation uses C++ as the definition language and we provide
+stub-generation support for creating client and server side stubs which handle
+operation invocation and parameter marshalling [PGD95b]. Other possible
+interface definition languages are possible, including CORBA IDL [OMG91] and
+ILU ISL [Xerox91].<p>
+Continuing with the previous example of a web-based theatre booking
+application; to support access via conventional browsers using HTTP, the
+theatre object would conform to an HTTP interface, supporting an operation,
+say, htmlGet. An HTTP GET request from the browser would be mapped to an
+invocation of the htmlGet method of the object. Through this limited interface,
+the programme of events and availability information may be available. A
+client-stub object for the theatre may support more advanced operations such as
+seat booking using <i>atomic actions</i> (<i>transactions</i>) [LDB77].<p>
+Although not illustrated, a number of other client implementations are
+possible. The common gateway interface (CGI), described in Section 2.2, could
+be used to provide a richer client-side interface than is readily available
+through HTTP. Although, it has been already stated that we believe CGI to be
+too low level for direct programming, CGI interfaces to remote objects can be
+automatically created using stub-generation tools. We have implemented a basic
+stub-generator, which uses an abstract definition of the remote object and ANSA
+have recently released a more complete tool [EN95] based on CORBA IDL. Recent
+developments using interpreted languages within the web, including Java [GJ95]
+and SafeTcl [BNS94] are potentially very useful for developing client-side
+interfaces to WebObjects. Using such languages, complex, architecture-neutral,
+front-ends dedicated to a particular WebObject class can be developed,
+supporting rich sets of operations.
+<a name="_Ref329105818">
+<h4>
+3.2.2	Inter-object Interactions</a></h4>
+In addition to client-object communication, our architecture also supports
+inter-object communication, regardless of the objects' location. In effect, the
+architecture may be viewed as a single distributed service, partitioned over
+different hosts as illustrated in Figure 4. Inter-object communication is used
+for a variety of purposes, including referencing, migration, cacheing, and
+replication.<p>
+<IMG SRC="www44.gif"><a name="_Ref329100457"><p>
+<b>Figure </a>4: Inter-Object Interactions</b><p>
+<b></b>In addition to WebObjects, servers may contain WebObject stubs, or
+aliases, which are named objects that simply forward operation invocations to
+another object, transparently to clients. One particular use of aliases is in
+implementation of name-servers, since a name-server may be viewed simply as a
+collection of named objects which alias other objects with alternative names
+(server S1 in diagram). Objects may also contain stubs to other objects (shown
+in S2 in diagram). This feature is used in our implementation of referencing,
+which is described further in Section 4.
+<a name="_Ref329840312">
+<h4>
+3.2.3	Implementation Considerations</a></h4>
+As previously mentioned, a particular WebObject server is capable of holding
+WebObjects belonging to a set of specific types. At the time it is created, it
+is unlikely that one can predict all of the object types that a particular
+server will be required to be serve over its lifetime. This raises the question
+of how new types are introduced to the system. The usual approach is to bring
+down a server, rebuild it with the code which supports the new object types,
+and then restart it. This approach is less than ideal for an application such
+as the web where there is a requirement for keeping downtime to a minimum. An
+alternative technique relies on <i>dynamic loading</i>, which allows an active
+process to load new code as necessary. Although, this approach is clearly more
+elegant and we do not preclude its use, dynamic loaders currently suffer from
+lack of standardisation and therefore portability. A third, more pragmatic,
+approach is to create another server to support the new object types. This
+approach may be desirable even if suitable dynamic loading support is available
+due to requirements for fault tolerance and security because, as a single
+server for all object types is a single point of failure,  multiple servers can
+be used to protect users against such failures.<p>
+One method of interfacing with multiple servers is to make use of an HTTP
+Gateway, through which all client invocations pass, and are redirected to one
+of a number of servers. The gateway is transparent to clients accessing the
+objects; incoming requests are simply forwarded to the destination object,
+which parses the request and replies accordingly. This is illustrated in Figure
+5, in which server S1 manages a number of different types of object
+(illustrated by different shapes) and server S2 manages objects of a single
+type. As the processing of operations is entirely the responsibility of the
+individual object, then the introduction of new object types  is transparent to
+the gateway.<p>
+<IMG SRC="www45.gif"><a name="_Ref329176034"><p>
+<b>Figure </a>5: Client-Object Communication Through Gateway
+<a name="_Ref330626210"></b>
+<h3>
+3.3	WebObject Properties</a></h3>
+Based on critiques of the current web by ourselves and others [EN94], and also
+our experience with distributed systems in general, we have attempted to
+identify the set of properties that are required by WebObjects. We have
+classified these properties into three categories: core properties, common
+properties, and class-specific properties. In this section we shall present
+what we believe to be the core properties required by all WebObjects, and give
+examples of some common properties.
+<a name="_Ref329939483">
+<h4>
+3.3.1	Core Properties</a></h4>
+Four properties have been identified as being the core requirements for
+WebObjects: Naming, Sharing, Mobility and Referencing. The implementation of
+these properties is divided between the objects themselves and the supporting
+infrastructure which manages the objects. Each property shall be considered in
+turn.<p>
+&#183;	<i>Naming</i>: One of the fundamental concepts of the object-oriented
+paradigm is identity. The ability to name an object is required in order to
+unambiguously communicate with and about it. Context-relative naming is an
+essential feature of our environment so as to support interoperability and
+scaleability. As mentioned previously, different clients may use different
+local representations of a remote object (URLs, client-stub objects etc.).
+Since it is impractical to impose new naming conventions on existing systems,
+we require the ability to translate names between system-boundaries.
+Furthermore, for extensibility, we need to be able to incorporate new naming
+systems. Within our design, naming is provided via the object infrastructure.
+Context-relative naming is supported via the use of name-servers, implemented
+as collections of object aliases, as described in Section 3.2.2.<p>
+&#183;	<i>Sharing</i>: Implicit within the web domain is the requirement that
+objects can be shared. Although the basic function of allowing multiple users
+to interact with objects is simple to achieve, there are a number of other
+associated mechanisms that require interaction with the base sharing
+functionality. Access control, either user and group based or access
+restriction based on the location of the client, are both likely requirements.
+Additionally, with objects supporting a rich set of interfaces, the granularity
+of the control must be configurable.<p>
+&#183;	<i>Mobility</i>: One of the lessons learned from the current web is that
+support for object mobility is a necessary requirement for WebObjects. At
+object creation time, migration of the object may not be envisaged, but it is
+virtually impossible to predict the future requirements of a particular object.
+Mobility may be required for many reasons, including load balancing, cacheing,
+and improved performance through locality etc., with different forms of
+migration, including intra- or inter-host.<p>
+&#183;	<i>Referencing</i>: In order to address what may be viewed as the
+primary problem with the current web, namely referential integrity, we believe
+that low-level referencing support is required by all objects. A range of
+schemes are possible, including forward referencing [SM92], call-backs, and
+redirection through a location server (as in the URN approach). Referencing is
+closely related to mobility, since referencing schemes may be used to locate
+objects even in the event of object migration. Our approach to referencing is
+described in detail in Section 4.
+<a name="_Ref329943938">
+<h4>
+3.3.2	Common Properties</a></h4>
+There are a potentially large number of common properties for WebObjects which
+can be encapsulated within appropriate base classes. In the rest of this
+section we shall highlight four of these properties which we have selected
+based upon our experience of building reliable distributed systems [PGD95a].<p>
+&#183;	<i>replication</i>: there is a range of replication protocols from
+active to passive, and strong consistency to weak consistency. There is no
+single replication protocol which is suitable for every object which may need
+to be replicated and at the same time can satisfy a user's required quality of
+service [LMC91]. As such, it is our intention to implement a suitable base
+class for object providers, which will enable them to select the appropriate
+replication protocol on a per object basis. In addition object providers will
+also be able to select the optimum number and location of these replicas, and
+modify this as required [LMC94].<p>
+&#183;	<i>concurrency control</i>: by enabling users to share arbitrary objects
+it may be necessary for these object state transitions to be managed through an
+appropriate concurrency control mechanism. Consider the theatre booking example
+earlier: if user A wishes to examine the seats which are available whilst user
+B is in the process of booking a seat, it would be desirable for B to lock the
+seat in order to prevent conflicting updates. There are a number of concurrency
+control mechanisms available [PGD88], but our initial implementation will be
+based upon the familiar multiple reader, single writer policy.<p>
+&#183;	<i>cacheing</i>: the cacheing of object states, either at or close to
+users, can help alleviate problems of network congestion and object latency.
+However, as with replication, there is a need for a range of cacheing policies
+based upon user requirements and object properties.<p>
+&#183;	<i>fault tolerance</i>: in a large-scale distributed system,
+fault-tolerance is an important property. One way of addressing the issues of
+fault-tolerance is by using atomic actions to control method invocations.
+Objects inherit necessary persistence and concurrency control characteristics,
+and application programmers then manipulate these objects within atomic actions
+which guarantee the usual ACID properties [DBL77].
+<a name="_Ref328902784">
+<h2>
+4.	Illustrations</a></h2>
+Having described our model in the previous sections, we shall now illustrate
+how two of the core properties, referencing and mobility, are implemented
+within the model. Our aim is to address the current web problems of broken
+links and transparent object migration.
+<h3>
+4.1	Referential Integrity</h3>
+In our model web resources are represented as WebObjects and may be referenced
+from some <i>root</i>, either directly, via WebObject stubs, or by being
+contained within another WebObject (note that WebObject stubs are themselves
+WebObjects). This is illustrated in Figure 6, which shows a number of objects,
+all of which are reachable from some roots.<p>
+Our service maintains the distributed referencing graph and uses reference
+counting to detect unreferenced objects. Stubs, when created, perform an
+explicit <i>bind</i> operation on the object they refer to (thereby
+incrementing the object's reference count)  and perform an <i>unbind</i>
+operation whenever the stub is deleted (thereby decrementing the count).<p>
+<IMG SRC="www46.gif"><a name="_Ref329424012"><p>
+<b>Figure </a>6: Object Referencing</b><p>
+<b></b>Reference from a root represents the service's continued
+interest in the object while stubs represent hypertext links from one object to
+another. Therefore an object is not available for deletion until 1) the service
+has expressed its lack of further interest in the object (by no longer
+referencing it from a root) and 2) there are no hypertext links from other
+objects. Once these conditions are met the object is marked as unreferenced and
+is available for deletion.
+<a name="_Ref329840757">
+<h3>
+4.2	Migration Transparency</a></h3>
+An object may be moved from one location to another (potentially to some remote
+site). Our service guarantees that object moves are transparent to all other
+objects i.e., references to the moved object continue to be valid. Whenever an
+object is moved a stub representing the object is left behind at the old
+location and this automatically forwards invocations (without involving the
+invoker) to the new location. Further moves of the object may cause a chain of
+such stubs to be created (in a similar manner to that used by SSP chains
+[SM92]), leading ultimately to the real object. For example, in Figure 7,
+object y has been moved, first to server B, and then subsequently to server C,
+leaving behind the forwarding chain shown. Whenever an invocation follows such
+a chain these indirections are short-cut i.e., the invoker's stub
+communicates directly with the WebObject at the new location. Following a short
+cut intermediate stubs which are no longer referenced are automatically garbage
+collected.<p>
+<IMG SRC="www47.gif"><a name="_Ref329424034"><p>
+<b>Figure </a>7: Referencing Chains</b><p>
+<b></b>Using the short-cutting mechanism stubs will in general point directly
+at their WebObject, however there may be circumstances where the chain becomes
+longer than is desirable i.e., the Object moves a number of times between
+invocations from a particular stub. Long chains have more points of failure and
+a performance cost in the necessary indirections at invocation time, and
+consequently there may be situations in which long chains are to be avoided.
+Therefore as an extension to our basic forwarding location mechanism we allow
+stubs to register callbacks with objects such that, whenever an object moves,
+the registered stubs are automatically informed of the move. These stubs may
+either represent hypertext links from other resources and/or belong to a
+location service which offers the current position of the object to any of its
+users. More details are given in [CSJ95].<p>
+Our use of forward references is an entirely distributed solution which scales
+well by not relying on centralised location services or broadcasts of moves, as
+is proposed by Hyper-G [KF93]. Hyper-G ensures that all references to all
+resources are (eventually) updated to reflect any movement but this requires
+additional network traffic that may be appropriate for individual enterprises
+but does not scale to a world-wide solution. Our system also guarantees that
+any object movement is transparent to any reference holder and does not require
+the handling of object faults and subsequent rebinding. Our policy is to
+provide inexpensive forward referencing (which introduces no extra network
+traffic when an object is moved) as the default location service but to offer
+alternative, potentially more expensive solutions such as callback and the use
+of location servers for resources with specific performance or fault-tolerance
+requirements. Our model allows the choice of appropriate location mechanisms
+for an application and the ability to vary that choice at run-time as
+required.<p>
+The mechanisms described above offer a consistent view of referencing within
+the system so long as 1) neither the referenced objects or their stubs can be
+lost through failures, and 2) the bind and unbind operations are totally
+reliable. We guarantee that WebObjects and stubs recover from failures by
+saving them on stable store i.e. a file system. The bind and unbind operations
+use an RPC to access the WebObject, which may be held within a remote server
+(optimised to a local procedure call whenever the object is held in the same
+server). Our remote object-invocation layer guarantees `at-most-once' semantics
+for the RPC, i.e., despite failures operations will eventually be performed.
+<h2>
+5.	Implementation Progress</h2>
+Using Shadows, a lightweight object support system [CSJ93], we have begun the
+implementation of the core WebObject properties described in Section 3.3.1,
+concentrating initially on referential integrity and object mobility. During
+this prototyping stage, we have developed a system which operates in parallel
+with conventional HTTP daemons. Therefore, object states are stored in their
+native formats, (e.g. HTML files etc.) and are available for direct
+manipulation through the standard file system and web interfaces. The advantage
+of this approach is that we are able to develop and test our design without
+requiring site maintainers to alter any aspect of their existing web
+configurations. The disadvantage is the inherent loose coupling between the two
+systems, requiring users to register entities with our service and be
+sufficiently disciplined so as not to delete entities directly through the file
+system without consulting the service. Following this prototyping stage we will
+introduce the HTTP Gateway, described in Section 3.2.3, and provide user-level
+tools to replace the direct manipulation of the object through the file system,
+without restricting the use of any existing resource manipulation tools, e.g.
+text editors.<p>
+In the prototype system, an additional daemon per host is used to provide the
+referencing service, which is administered using a GUI-based tool. This tool
+allows the site maintainer to browse through the entities currently being
+served by the HTTP daemon and to <i>include</i> them within the service. On
+being instructed to include a web entity, the service creates a corresponding
+WebObject which is <i>registered</i>, causing it to be referenced from a root
+and thereby ensuring it is not immediately marked as unreferenced. The
+administration tool then parses the resource to identify any hypertext links it
+contains. If the links point to resources already included in the service, then
+references to their corresponding objects are created and stored within the
+newly created object, thereby extending the referencing graph. Links to
+resources not already within the service are reported back to the user who then
+has the option to explicitly include them if they are under his control. A
+<i>deregister</i> operation is used to express the site maintainer's lack of
+further interest in a resource which causes the reference count for the
+resource to be decremented. If the reference count reaches zero the site
+maintainer is informed that it is available for deletion. If the site
+maintainer confirms it is to be deleted then the WebObject is removed from the
+service and the corresponding resource removed from the file system. Deleting
+an object may result in the reference counts of other objects being
+decremented, i.e. those referenced from the deleted object.<p>
+The site maintainer may <i>move</i> a resource from one location to another
+(potentially to some remote site where the resource may come under new
+ownership). In addition to moving the object through the process described in
+Section 4.2, the service performs the following operations: 1) the resource is
+removed from the file system, 2) a HTTP redirector is inserted, 3) all relative
+URLs contained within the moving resource are transformed, and 4) the resource
+is placed in the file system at the new location.<p>
+The next stage of our development is to implement the full WebObject model as
+described in this paper, integrating the referencing work with other software
+sub-systems developed locally as part of the Arjuna Project [Arjuna]. To
+provide the flexibility and extensibility we have described, we shall make use
+of the Gandiva system [WSM95] which supports the separation of object
+interfaces from implementation, and enables reconfiguration of this
+relationship without requiring the rebuilding of objects or applications. For
+the common WebObject properties described in Section 3.3.2 we shall make use of
+the work developed for the Arjuna system [PGD95a], which provides the necessary
+fault-tolerance and replication support.
+<h2>
+6.	Conclusions</h2>
+As a way of serving standard resources, the web has proven extremely successful
+but still suffers from a number of shortcomings. Furthermore, in order to cope
+with new resource types the web needs improved flexibility and extensibility
+characteristics. We have illustrated how the application of the concepts of
+object-orientation can achieve these extensibility requirements and how
+problems, such as the lack of referential integrity, can be addressed through
+the application of techniques developed by the distributed object research
+community.<p>
+The WebObject model, presented in this paper, is intended to provide a flexible
+and extensible way of building web applications, where web resources are
+encapsulated as objects with well defined interfaces. Objects inherit desirable
+characteristics, redefining operations as is appropriate; users interact with
+these objects in a uniform manner. We have identified three categories of
+object properties: core, common, and specific, and have described an
+implementation using the core properties which addresses what we believe to be
+one of the most significant problems facing the current web - that of
+referential integrity. A key feature of our design is support for
+interoperability, for example, in addition to sophisticated clients which may
+use the rich object interfaces that our model provides, our implementation will
+also allow WebObjects to continue to be accessed using existing web browsers.
+<h2>
+7.	References</h2>
+
+<dl>
+
+<dt>[Arjuna]
+<dd>The Arjuna Project Information Web Page.
+<dd>URL:http://arjuna.ncl.ac.uk/
+
+<dt>[BLT93]
+<dd>Berners-Lee, T. and Connolly, D. W., Hypertext Markup Language<i>: A
+Representation of Textual Information and Metainformation for Retrieval and
+Interchange</i>,1993.
+<dd>URL:http://www.w3.org/hypertext/WWW/MarkUp/HTML.html
+
+<dt>[BLT94]
+<dd>Berners-Lee, T. et al, <i>Uniform Resource Locators (URL)
+(RFC1738)</i>, December 1994.
+<dd>URL:http://www.cis.ohio-state.edu/htbin/rfc/rfc1738.html
+
+<dt>[BLT95]
+<dd>Berners-Lee, T., <i>et al</i>, <i>Hypertext Transfer Protocol - 
+HTTP/1.0</i>, March 1995.
+<dd>URL:http://www.ics.uci.edu/pub/ietf/http/draft-ietf-http-v10-spec-00.psZ
+
+<dt>[BNS94]
+<dd>Borenstein, N.S., <i>EMail With A Mind of Its Own: The Safe-Tcl
+Language for Enabled Mail</i>, ULPAA '94, Barcelona,
+1994.
+<dd>URL:http://minsky.med.virginia.edu/sdm7g/Projects/Python/safe-tcl/ulpaa94.txt
+
+<dt>[CGI]
+<dd>The Common Gateway Interface
+<dd>URL:http://hoohoo.ncsa.uiuc.edu/cgi/
+
+<dt>[CL85]
+<dd>Cardelli, L. and Wegner, P. <i>On Understanding Types, Data Abstraction,
+and Polymorphism</i>, ACM Computing Surveys Vol. 17, No. 4, p. 481, December
+1985.
+
+<dt>[CSJ93]
+<dd>Caughey, S. J. et al, <i>SHADOWS: A Flexible Support System for Objects
+in a Distributed System</i>, Proceedings of the 3rd IEEE International Workshop
+on Object Orientation in Operating Systems (IWOOOS), Ashville, North Carolina,
+USA, December 1993.
+
+<dt>[CSJ95]
+<dd>Caughey, S. J. and Shrivastava, S. K<i>., Architectural Support for
+Mobile Objects in Large Scale Distributed Systems</i>, To appear in Proceedings
+of the 4th IEEE International Workshop on Object Orientation in Operating
+Systems (IWOOOS), Lund, Sweden, August 1995.
+
+<dt>[DGN88]
+<dd>Dixon, G. N., <i>Object Management for Persistence and
+Recoverability</i>, PhD Thesis (Newcastle University Computing Science
+Laboratory Technical Report 276), December 1988.
+
+<dt>[EN94]
+<dd>Edwards, N. and Rees, O., <i>Distributed Objects and The World Wide
+Web</i>, ANSA Technical Report APM.1283.00.08, 1994.
+<dd>URL:http://www.ansa.co.uk/phase3-doc-root/sponsors/APM.1283.00.08.html
+
+<dt>[EN95]
+<dd>Edwards, N., <i>The ANSAweb stub-compiler</i>,
+1995.
+<dd>URL:http://www.ansa.co.uk/phase3-activities/ANSAweb.html
+
+<dt>[FR94]
+<dd>Fielding, R., <i>Maintaining Distributed Hypertext Infostructures:
+Welcome to MOMspider's Web</i>, First International Conference on the
+World-Wide Web, 1994.
+<dd>URL:http://www.ics.uci.edu/WebSoft/MOMspider/WWW94/paper.html
+
+<dt>[FR95]
+<dd>Fielding, R., Relative <i>Uniform Resource Locators (RFC1808)</i>, June
+1995.
+<dd>URL:http://www.ics.uci.edu/pub/ietf/uri/rfc1808.txt
+
+<dt>[GJ95]
+<dd>Gosling, J. and McGilton, H., <i>The Java Language Environment: A White
+Paper</i>, Sun Microsystems, 1995.
+<dd>URL:http://java.sun.com/whitePaper/javawhitepaper_1.html
+
+<dt>[HPE95]
+<dd>Hoffman, P. E. and Daniel, R. Jr., <i>URN Resolution Overview</i>,
+Internet Draft, April 1995
+<dd>URL:http://www.ics.uci.edu/pub/ietf/uri/draft-ietf-uri-urn-res-descript-0.txt
+
+<dt>[HTTPWG]
+<dd><i>IETF Hypertext Transfer Protocol (HTTP) Working Group</i>, 1995
+<dd>URL:http://www.ics.uci.edu/pub/ietf/http/
+
+<dt>[KF93]
+<dd>Kappe, F., <i>Hyper-G: A Distributed Hypermedia System</i>, in The
+Proceedings of INET `93.<br>URL:http://info.iicm.tu-graz.ac.at/
+
+<dt>[LA94]
+<dd>Luotonen, A., <i>World-Wide Web Proxies</i>, Computer Networks and ISDN
+Systems. Vol. 27, No.2, 1994.
+<dd>URL:http://www1.cern.ch/PapersWWW94/luotonen.ps
+
+<dt>[LDB77]
+<dd>Lomett, D. B., <i>Process structure, synchronisation and recovery using
+atomic actions</i>, in Proceedings of ACM Conference on Language Design for
+Reliable Software, SIGPLAN Notices, Vol. 12, No. 3, March 1977
+
+<dt>[LMC91]
+<dd>Little, M. C., <i>Object Replication in a Distributed System</i>, PhD
+Thesis (Newcastle University Computing Science Laboratory Technical Report
+376), September 1991.
+<dd>URL:ftp://arjuna.ncl.ac.uk/pub/Arjuna/Docs/Theses/TR-376-9-91_USLetter.ar.Z
+
+<dt>[LMC94]
+<dd>Little, M. C. and McCue, D<i>., The Replica Management System: A Scheme
+for Flexible and Dynamic Replication</i>, in The Proceedings of the Second
+International Workshop on Configuration, Pittsburgh, March 1994.
+<dd>URL:http://arjuna.ncl.ac.uk/arjuna/papers/replica_management_system.ps
+
+<dt>[M94]
+<dd>Mitra, et al, <i>Uniform Resource Names</i>, Internet Draft, November 1994.
+<dd>URL:http://www.ics.uci.edu/pub/ietf/uri/draft-ietf-uri-resource-names-0.txt
+
+<dt>[OMG91]
+<dd>OMG,<i> Common Object Request Broker Architecture and Specification</i>,
+OMG Document Number 91.12.1
+
+<dt>[PGD88]
+<dd>Parrington, G. D., <i>Management of Concurrency in a Reliable
+Object-Oriented Computing System</i>, PhD Thesis (Newcastle University
+Computing Science Laboratory Technical Report 277), December 1988.
+
+<dt>[PGD95a]
+<dd>Parrington, G. D. et al, <i>The Design and Implementation of
+Arjuna</i>, in The USENIX Association, Computing Systems, (to
+appear).
+<dd>URL:http://arjuna.ncl.ac.uk/arjuna/papers/designimplearjuna.ps
+
+<dt>[PGD95b]
+<dd>Parrington, G. D., <i>A Stub Generation System for C++</i>, in The
+USENIX Association, Computing Systems, Vol. 8, No. 2, Spring 1995, pp.
+135-169
+<dd>URL:http://arjuna.ncl.ac.uk/arjuna/papers/stubgen-c++.ps
+
+<dt>[SM92]
+<dd>Shapiro, M., Dickman, P. and Plainfosse, D., <i>Robust, Distributed
+References and Acyclic Garbage Collection</i>, Symposium on Principles of
+Distributed Computing, Vancouver, August 1992.
+<dd>URL:ftp://ftp.inria.fr/INRIA/Projects/SOR/RDRAGC:podc92.ps.gz
+
+<dt>[URIWG]
+<dd>IETF Uniform Resource Identifiers (URI) Working Group
+<dd>URL:http://www.ics.uci.edu/pub/ietf/uri/
+
+<dt>[WSM95]
+<dd>Wheater, S. M. and Little, M. C. <i>The Design and Implementation of a
+Framework for Extensible Software</i>, Broadcast Project Technical Report,
+University of Newcastle upon Tyne, 1995.
+
+<dt>[Xerox91]
+<dd>Inter-Language Unification (ILU), Xerox Parc,
+1991<br>URL:ftp://parcftp.parc.xerox.com/pub/ilu/ilu.html
+</dl>
+</body></html>

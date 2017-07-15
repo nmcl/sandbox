@@ -1,0 +1,89 @@
+<HTML>
+<HEAD>
+<TITLE>W3Objects Activities</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+
+<!--#include virtual="/chunks/buttons.shtml" -->
+<HR>
+
+<H1>Activities</H1>
+
+<H4>April 97</H4> 
+
+<P>The <A HREF="../people/">W3Objects team</A> was busy at the <A
+HREF="http://www6conf.org/">Sixth International World-Wide Web
+Conference</A> (WWW6) that was held in Santa Clara, California:</P>
+
+<UL>
+
+<LI><B>Workshop:</B> Dave Ingham was an invited participant in the <A
+HREF="http://ice.www6conf.org/cgi-bin/ice.pl?x-a=v&x-id=213">Object-Oriented
+Web Servers and Data Modeling</A> workshop.
+His <A HREF="../pubs/doows/">position paper</A> and
+<A HREF="../pres/www6/wshop/">set of slides</A> are available.</LI>
+
+<LI><B>Technical Papers:</B> three W3Objects papers were presented in
+the technical program of the conference:
+<UL>
+<LI>Dave Ingham
+<A HREF="../pres/www6/manage/">presented</A>
+<I><A HREF="../pubs/shmws/">Supporting Highly Manageable Web Services</A></I>;
+<LI>Steve Caughey 
+<A HREF="../pres/www6/caching/">presented</A>
+<I><A HREF="../pubs/focw/">Flexible Open Caching for the Web</A></I>;
+<LI>Mark Little
+<A HREF="../pres/www6/actions/">presented</A>
+<I><A HREF="../pubs/crwaaa/">Constructing Reliable Web Applications using Atomic Actions</A></I>.
+</UL></LI>
+
+<LI><B>CHEP'97:</B> WWW6 &quot;virtually collaborated&quot; with the
+<A HREF="http://www.ifh.de/CHEP97/chep97.html">Computing in High
+Energy Physics</A> Conference that took place during the same week in
+Berlin, Germany. The CHEP'97 Program Committee selected one tutorial
+and one paper (namely, our <I>Supporting Highly Manageable Web
+Services</I> paper) to be relayed to Berlin. To accomodate the time
+differences Dave gave the presentation a second time for the benefit
+of the CHEP audience using <A
+HREF="http://www.picturetel.com">PictureTel</A> video conferencing
+software over ISDN channels.</LI>
+</UL>
+
+<H4>January 97</H4>
+
+<P>A paper entitled <I>W3Objects: Distributed Objects and the Web</I>
+was published in the <A
+HREF="http://www.ddj.com/ddsbk/1997/1997.01/index.htm">Jan/Feb
+edition</A> of <A HREF="http://www.ddj.com/ddsbk">Dr. Dobbs
+Sourcebook</A>. This was a revised version of the WWW4 paper.</P>
+
+<H4>May 96</H4>
+
+<P>At the <A HREF="http://www.w3.org/pub/Conferences/WWW5/">Fifth
+International World-Wide Web Conference</A> (WWW5), held in Paris,
+France, Dave Ingham gave a <A HREF="../pres/www5/">presentation</A> of
+a paper entitled <I><A HREF="../pubs/fblp/">Fixing the
+&quot;Broken-Link&quot; Problem: The W3Objects Approach</A></I>.</P>
+
+<H4>December 95</H4>
+
+<P>At the <A HREF="http://www.w3.org/pub/Conferences/WWW4/">Fourth
+International World-Wide Web Conference</A> (WWW4), held in Boston,
+USA, Dave Ingham gave a <A HREF="../pres/www4/">presentation</A> of a
+paper entitled <I><A HREF="../pubs/bootw/">W3Objects: Bringing
+Object-Oriented technology to the Web</A></I>. In addition, Dave was
+an invited pannelist at the <A
+HREF="http://www.w3.org/pub/Conferences/WWW4/Panels/obj3.html">The
+Future of Object Technology in the WWW</A> panel session.</P>
+
+<P>
+<HR>
+<!--#include virtual="/chunks/buttons.shtml" -->
+<HR>
+<FONT SIZE=-1>
+<!--#include virtual="/chunks/footer.ihtml" -->
+<BR>Last modified: <!--#echo var="LAST_MODIFIED" -->
+</FONT>
+<HR>
+</BODY>
+</HTML>

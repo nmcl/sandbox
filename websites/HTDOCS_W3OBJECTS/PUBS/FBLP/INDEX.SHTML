@@ -1,0 +1,72 @@
+<HTML>
+<HEAD>
+<TITLE>Fixing the &quot;Broken-Link&quot; Problem: The W3Objects Approach</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+
+<NOBR>
+<!--#include virtual="/chunks/buttons.shtml" -->
+</NOBR>
+<HR>
+
+<H1>Fixing the &quot;Broken-Link&quot; Problem: The W3Objects
+Approach</H1>
+
+<H2>Citation</H2>
+
+D. B. Ingham, S. J. Caughey, and M. C. Little,
+<I>"Fixing the Broken-Link Problem: The W3Objects Approach,"</I>
+Computer Networks & ISDN Systems, Vol. 28, Nos. 7-11, pp. 1255-1268:
+Proceedings of the <!--#include virtual="/chunks/www5.html"-->,
+Paris, France, 6-10 May 1996.
+
+<H2>Abstract</H2>
+
+<P>One of most serious problems plaguing the World Wide Web today is
+that of broken hypertext links, which are a major annoyance to
+browsing users and also a cause of tarnished reputation and possible
+loss of opportunity for information providers. The root of the problem
+lies in the current Web architecture's lack of support for referential
+integrity. This paper presents a model for the provision of
+referential integrity for Web resources which supports resource
+migration and tolerates site and communication failures. The approach
+is object-oriented, highly flexible, completely distributed, and does
+not require any global administration. An attractive feature of our
+design is the provision of a lightweight mechanism which provides
+referential integrity, and which may be customised on a per resource
+basis to provide increased fault-tolerance and performance. Our system
+follows an evolutionary approach, supporting parallel operation with
+the existing Web, allowing users to gain the additional benefits of
+referential integrity while allowing continued access through trusted
+software components.</P>
+
+<P><B>Keywords:</B> distributed systems, World Wide Web,
+object-oriented, referential integrity, migration transparency</P>
+
+<H2>Available formats</H2>
+
+At WWW5 site:
+[<A HREF="http://www5conf.inria.fr/fich_html/papers/P32/Overview.html">HTML</A>]
+<BR>At W3Objects site:
+[<A HREF="html/">HTML</A>]
+[<A HREF="ps/paper.ps">Postscript</A>]
+[<A HREF="pdf/paper.pdf">PDF</A>]
+[<A HREF="word/paper.doc">Microsoft Word</A>]
+
+
+<P>Note: A <A HREF="../../pres/www5/">set of slides</A>
+relating to this paper are also available.</P>
+
+<P>
+<HR>
+<NOBR>
+<!--#include virtual="/chunks/buttons.shtml" -->
+</NOBR>
+<HR>
+<FONT SIZE=-1>
+<!--#include virtual="/chunks/footer.ihtml" -->
+<BR>Last modified: <!--#echo var="LAST_MODIFIED" -->
+</FONT>
+<HR>
+</BODY>
+</HTML>

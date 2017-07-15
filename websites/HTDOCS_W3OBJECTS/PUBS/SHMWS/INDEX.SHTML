@@ -1,0 +1,80 @@
+<HTML>
+<HEAD>
+<TITLE>Supporting Highly Manageable Web Services</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+
+<NOBR>
+<!--#include virtual="/chunks/buttons.shtml" -->
+</NOBR>
+<HR>
+
+<H1>Supporting Highly Manageable Web Services</H1>
+
+<H2>Citation</H2>
+
+D. B. Ingham, S. J. Caughey, and M. C. Little,
+<I>"Supporting Highly Manageable Web Services,"</I>
+Proceedings of the <!--#include virtual="/chunks/www6.html"-->,
+Santa Clara, California, USA,
+7-11 April 1997.
+
+<H2>Abstract</H2>
+
+<P>This paper focuses on the management aspects of Web service
+provision. We argue that support for manageability has to be
+considered at the design stage if services are to be capable of
+delivering high levels of quality of service for their users. Examples
+of the problems caused by lack of manageability include maintenance
+operations that necessitate service downtime, or difficulties in
+ensuring consistency of information. We categorise management issues
+into those concerning a site as a whole and those pertaining to
+individual services. Our approach to site management supports the
+arbitrary distribution of services to machines, allowing the optimum
+cost/performance configuration to be selected. Services can be easily
+migrated between machines, resulting in sites that scale, both in
+terms of the number of services and the number of users. Service
+management issues may be generalised as supporting evolution, for
+example, supporting changes to the functionality, the presentation
+logic, and the overall look and feel of a service. Our approach, based
+on the separation of functionality and presentation, allows such
+changes to be performed on-line and ensures that updates are reflected
+consistency across the various pages of a service, or across services.
+This approach also facilitates the development of services that
+utilise dynamic content for service customisations, such as tailoring
+a service to match the profile of users. Furthermore, all management
+operations are available through Web-based interfaces, making them
+accessible to a broad range of users, not only specialist system
+administrators.</P>
+
+<P><B>Keywords:</B> web; management; object-oriented; dynamic content;
+Dublin core; metadata</P>
+
+<H2>Available formats</H2>
+
+At WWW6 site:
+[<A HREF="http://proceedings.www6conf.org/HyperNews/get/PAPER27.html">HTML</A>]
+
+<BR>At W3Objects site:
+[<A HREF="html/">HTML</A>]
+[<A HREF="ps/paper.ps">Postscript</A>]
+[<A HREF="pdf/paper.pdf">PDF</A>]
+[<A HREF="word/paper.doc">Microsoft Word</A>]
+
+
+<P>Note: A <A HREF="../../pres/www6/manage/">set of slides</A>
+relating to this paper are also available.</P>
+
+<P>
+<HR>
+<NOBR>
+<!--#include virtual="/chunks/buttons.shtml" -->
+</NOBR>
+<HR>
+<FONT SIZE=-1>
+<!--#include virtual="/chunks/footer.ihtml" -->
+<BR>Last modified: <!--#echo var="LAST_MODIFIED" -->
+</FONT>
+<HR>
+</BODY>
+</HTML>

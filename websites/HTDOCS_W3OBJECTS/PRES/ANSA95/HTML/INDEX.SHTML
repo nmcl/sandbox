@@ -1,0 +1,504 @@
+<HTML>
+<HEAD>
+<TITLE>WebObjects: Moving towards an Object-Oriented Web</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="FFFFFF"  TEXT="222222" LINK="FF0000">
+ 
+<NOBR>
+<!--#include virtual="/chunks/buttons.shtml" -->
+</NOBR>
+<HR>
+ 
+<H1>WebObjects:
+<br>Moving Towards an Object-Oriented Web</H1>
+<H3><I>ANSA Technical Committee Meeting, Cambridge, May 1995</I></H3>
+
+<P>The following slides were used to present the WebObjects work at the
+<A HREF="http://www.ansa.co.uk">ANSA</A>
+Technical Committee Meeting held on the 25th May 1995 at Cambridge.
+They are also available in postscript:
+<A HREF="../ps/slides1.ps">1 slide per page</A>
+and
+<A HREF="../ps/slides2.ps">2 slides per page</A>
+<P>
+<!--#include virtual="/chunks/dbisig.html" -->
+<P>
+
+<HR>
+
+<H2>Overview of Current WWW (i)</H2>
+
+<UL>
+<LI>Organises information as a distributed hypertext
+<LI>Focused on documentation resources
+<LI>Hypertext linking achieved through HTML documents
+<UL>
+<LI>content information
+<UL>
+<LI>structure is described rather than how it is to be displayed
+</UL>
+<LI>hypertext links
+<UL>
+<LI>either intra- or inter-document
+</UL>
+</UL>
+<LI>Resources are named using locational naming scheme (URL)
+<UL>
+<LI>fully qualified naming: <CODE>http://www.ncl.ac.uk/index.html</CODE>
+<LI>also relative naming: <CODE>../delayline/index.html</CODE>
+</UL>
+<LI>URLs &amp; browsers provide support for other protocols
+<UL>
+<LI>FTP, Gopher, WAIS, NNTP, mail ...
+</UL>
+</UL>
+
+<HR>
+<H2>Overview of Current WWW (ii)</H2>
+<UL>
+<LI>IETF developing associative naming scheme
+<UL>
+<LI>globally unique abstract names (URN), allocated by naming authorities
+<LI>URN maps to a characteristic (URC) which maps to URL(s)
+<LI>soon to be accepted as <I>standard!</I> 
+</UL>
+<LI>Client-server model using stateless HTTP protocol
+<UL>
+<LI>HTTPD supports 2 primary methods GET &amp; POST
+<LI>Connections created/destroyed for each item
+</UL>
+<LI>Currently suffers from a number of shortcomings:
+<UL>
+<LI>the user's perspective
+<LI>the information provider's perspective
+<LI>functional limitations
+</UL>
+</UL>
+
+<HR>
+
+<H2>The User's Perspective</H2>
+<UL>
+<LI>The <I>missing-link</I> problem
+<UL>
+<LI>largest cause of user annoyance
+<LI>&quot;Users should beware that there is no general guarantee
+that a URL which at one time points to a given object continues
+to do so, and does not even at some later time point to a different
+object due to the movement of objects on servers.&quot; URL definition
+document, RFC 1738, Tim Berners-Lee
+<LI>problem of <I>referential integrity</I> 
+</UL>
+<UL>
+<LI>Resource unavailability
+<UL>
+<LI>network partitioning, servers down
+</UL>
+<LI>Resource responsiveness
+<UL>
+<LI>excessive network &amp; machine load
+</UL>
+</UL>
+</UL>
+
+<HR>
+<H2>The Provider's Perspective (i)</H2>
+<UL>
+<LI>Maintaining reputation of publishing site
+<UL>
+<LI>remote referenced information may move
+<LI>again, the referential integrity problem
+<LI>broken links lead to tarnished reputation &amp; lost opportunity
+<LI>techniques for discovering broken links
+<UL>
+<LI>rely on complaints
+<LI>manual traversal of site
+<LI>web traversing robots
+</UL>
+<LI>correcting them is more difficult
+</UL>
+<LI>Garbage collection
+<UL>
+<LI>cannot keep every resource for ever - doesn't scale
+<LI>access pattern information is not enough
+</UL>
+</UL>
+
+<HR>
+<H2>2-way Referencing Problem</H2>
+<P>
+<IMG SRC="fig1.gif" ALT="2-way referencing problem" ALIGN="MIDDLE">
+
+<HR>
+<H2>The Provider's Perspective (ii)</H2>
+<UL>
+<LI>The name and location allocated to a new resource at creation
+time is unlikely to remain appropriate for its lifetime
+<LI>The nature of resources change
+<LI>Web sites require occasional re-organisation
+<LI>Disjoint interfaces to information complicates restructuring
+<UL>
+<LI>changes required at different levels
+</UL>
+
+</UL>
+<HR>
+
+<H2>Multiple Interfaces to Resources</H2>
+
+<P>
+<IMG SRC="fig2.gif" ALIGN="BOTTOM"><HR>
+
+<H2>Multiple Interfaces to Resources</H2>
+
+<P>
+<IMG SRC="fig3.gif" ALT="Multiple Interfaces to resources (http)" ALIGN="BOTTOM">
+<HR>
+
+<H2>Functional Limitations (i)</H2>
+
+<H3>Common Gateway Interface (CGI)</H3>
+
+<P>
+<IMG SRC="fig4.gif" ALIGN="BOTTOM"> 
+<H3>Deficiencies:</H3>
+
+<UL>
+<LI>program is forked on each invocation
+<LI>cannot maintain state between successive accesses
+<LI>too low-level programming model cf. stub generation
+</UL>
+<HR>
+
+<H2>Functional Limitations (ii)</H2>
+
+<UL>
+<LI>Extensibility
+<UL>
+<LI>limited support for non-standard resources achieved through
+CGI
+</UL>
+
+<LI>Concurrency control
+<UL>
+<LI>no architectural support; primarily read-only resources
+</UL>
+
+<LI>Caching
+<UL>
+<LI>range of schemes required
+</UL>
+
+<LI>Fault tolerance
+<UL>
+<LI>replication
+<UL>
+<LI>read-only replication has been considered (IETF URN/URC work)
+</UL>
+
+<LI>atomic transactions
+</UL>
+
+</UL>
+<HR>
+
+<H2>Summary of Observations</H2>
+
+<UL>
+<LI>Current web is focused on read-only resources
+<LI>Strict client server architecture with stateless protocol
+<UL>
+<LI>no server-server communication
+</UL>
+
+<LI>Referential integrity is a major problem
+<UL>
+<LI>primary cause of user dissatisfaction
+<LI>complicates maintenance task of information providers
+</UL>
+
+<LI>Multiple disjoint interfaces to resources
+<UL>
+<LI>e.g. view, management, and security interfaces
+</UL>
+
+<LI>Limited interface to non-standard resources (CGI)
+<LI>No architectural support for advanced resources
+<LI>Limited support for interoperability
+</UL>
+<HR>
+
+<H2>Web Research At Newcastle</H2>
+
+<H2>A New Web Infrastructure - WebObjects</H2>
+
+<UL>
+<LI>Provide an extensible framework which will:
+<UL>
+<LI>Encompass existing functionality &amp; address shortcomings
+<LI>Allow integration of more complex resources
+<LI>Allow objects to be accessed through multiple interfaces
+</UL>
+</UL>
+<UL>
+<LI>An object-oriented distributed computing approach
+</UL>
+
+<HR>
+<H2>WebObject Principles</H2>
+<UL>
+<LI>Object-oriented distributed computing model
+<UL>
+<LI>model maps well to web entities
+<LI>experience of distributed computing community
+<UL>
+<LI>RPC, scaleable naming &amp; referencing schemes, fault-tolerance
+</UL>
+
+<LI>extensibility
+</UL>
+
+<LI>Separation of data and &quot;meta-data&quot;
+<UL>
+<LI>link information, author, last modified, size, media-type...
+</UL>
+
+<LI>Separation of interface and implementation
+<LI>Several Categories of WebObject properties
+<UL>
+<LI>those required by all WebObjects
+<LI>those required by a large sub-set of objects
+<LI>properties specific to the object
+</UL>
+
+</UL>
+<HR>
+
+<H2>Example Object Interfaces</H2>
+
+<P>
+<IMG SRC="fig5.gif" ALT="Example object interfaces" ALIGN="BOTTOM">
+<HR>
+
+<H2>Objects Share Some Common Interfaces</H2>
+
+<P>
+<IMG SRC="fig6.gif" ALT="example common interfaces" ALIGN="BOTTOM">
+<HR>
+
+<H2>Core Properties</H2>
+
+<UL>
+<LI>Naming
+<UL>
+<LI>unambiguously communicate with and about objects
+<LI>context-relative naming required for scaleability
+</UL>
+
+<LI>Sharing
+<UL>
+<LI>implicit requirement in proposed application domain
+<LI>range of additional policies required: security &amp; concurrency
+control
+</UL>
+
+<LI>Mobility
+<UL>
+<LI>web objects are dynamic in nature and movement is likely
+</UL>
+
+<LI>Referencing
+<UL>
+<LI>lack of referential integrity is the current primary weakness
+</UL>
+
+</UL>
+<HR>
+
+<H2>Example Additional Properties</H2>
+
+<UL>
+<LI>Concurrency control
+<UL>
+<LI>read/write objects will require techniques for ensuring integrity
+of data
+</UL>
+
+<LI>Fault tolerance
+<UL>
+<LI>atomicity
+<UL>
+<LI>chargeable resources will require transactional support for
+accounting purposes
+</UL>
+
+<LI>replication
+<UL>
+<LI>necessary for objects with high availability requirements
+</UL>
+
+</UL>
+
+<LI>Caching
+<UL>
+<LI>range of policies required
+<LI>techniques required for ensuring consistency
+</UL>
+
+</UL>
+<HR>
+
+<H2>Accessing Objects</H2>
+
+<P>
+<IMG SRC="fig7.gif" ALT="object access" ALIGN="BOTTOM"><HR>
+
+<H2>Object Referencing for WebObjects</H2>
+
+<UL>
+<LI>Necessary for future manageability of the web
+<LI>Scaleability is a key issue
+<LI>Range of possible techniques:
+<UL>
+<LI>send update information to all servers - broadcast (Hyper-G)
+<LI>call-back to referencing objects - multicast
+<LI>forward referencing
+</UL>
+
+<LI>WebObject referencing based on Stub-Scion Pair (SSP) Chains
+<LI>Referencing scheme serves two purposes
+<UL>
+<LI>Referential Integrity
+<UL>
+<LI>Safety
+<LI>Garbage Collection
+</UL>
+
+<LI>Object Location Transparency
+</UL>
+
+</UL>
+<HR>
+
+<H2>Object Referencing (I)</H2>
+
+<P>
+<IMG SRC="fig8.gif" ALIGN="BOTTOM"><HR>
+
+<H2>Object Referencing (ii)</H2>
+
+<P>
+<IMG SRC="fig9.gif" ALT="object referencing (migration)" ALIGN="BOTTOM">
+<HR>
+
+<H2>Object Referencing (iii)</H2>
+
+<P>
+<IMG SRC="fig10.gif" ALT="object referencing (chain shortcutting)" ALIGN="BOTTOM">
+<HR>
+
+<H2>Object Referencing (iv)</H2>
+
+<P>
+<IMG SRC="fig11.gif" ALIGN="BOTTOM"><HR>
+
+<H2>Background Technology</H2>
+
+<UL>
+<LI>Gandiva
+<UL>
+<LI>framework for building modular systems
+<LI>provides interface &amp; implementation separation in C++
+</UL>
+
+<LI>Shadows
+<UL>
+<LI>lightweight distributed object system supporting referencing
+<LI>used to prototype referential integrity ideas
+</UL>
+
+<LI>Arjuna
+<UL>
+<LI>programming toolkit for building fault-tolerant distributed
+applications
+<LI>atomic transactions
+<LI>object replication
+</UL>
+
+</UL>
+<HR>
+
+<H2>Project Status</H2>
+
+<UL>
+<LI>Background:
+<UL>
+<LI>evaluated current web technology e.g. CGI, Mosaic CCI, Java
+etc.
+<LI>developed cgi stub generator
+<LI>developed html tokenizer
+</UL>
+
+<LI>In Progress:
+<UL>
+<LI>currently developing some basic WebObjects e.g. html_webobject
+and prototyping referencing scheme in Shadows
+<LI>evaluation and refinement of ideas
+<LI>developing Admin Tool for management of WebObject servers
+</UL>
+
+<LI>Future:
+<UL>
+<LI>Integrate WebObjects with other Newcastle technology using
+the Gandiva framework
+<LI>Track ANSA web research (possible collaboration?)
+</UL>
+
+</UL>
+<HR>
+
+<H2>Conclusions</H2>
+
+<UL>
+<LI>WWW provides major advantages over previous systems but suffers
+from a number of weaknesses
+<LI>WWW has critical mass; interoperability with the web provides
+a large potential user base
+<LI>Current resources are primitive
+<LI>More advanced resources will appear, requiring additional
+infrastructural support
+<LI>Aim of proposed research is to develop a framework in which
+such diverse resources may be integrated
+<LI>Object-oriented model appears best suited to address the problem
+</UL>
+<HR>
+
+<H2>The Future of the Web (?)</H2>
+
+<UL>
+<LI>The web has achieved <I>critical mass</I> 
+<LI>Changes must be evolutionary rather than revolutionary
+<LI>Documentation resources will be augmented with more complex
+objects and services
+<LI>Number of objects will grow rapidly
+<LI>Granularity of objects will vary widely
+<LI>QoS will increase in importance
+<LI>Many resources will be charged
+<LI>Commerce on the web will become widespread
+<LI>Agent technology will continue to grow
+</UL>
+
+<P>
+<HR>
+<NOBR>
+<!--#include virtual="/chunks/buttons.shtml" -->
+</NOBR>
+<HR>
+<FONT SIZE=-1>
+<!--#include virtual="/chunks/footer.ihtml" -->
+<BR>Last modified: <!--#echo var="LAST_MODIFIED" -->
+</FONT>
+<HR>
+</BODY>
+</HTML>

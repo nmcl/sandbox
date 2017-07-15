@@ -1,0 +1,36 @@
+<HTML>
+<HEAD>
+<TITLE>W3Objects Personnel</TITLE>
+</HEAD>
+<BODY BGCOLOR="FFFFFF"  TEXT="222222" LINK="FF0000">
+
+<!--#include virtual="/chunks/buttons.shtml" -->
+<HR>
+
+<H1>W3Objects Personnel</H1>
+
+<TABLE><TR ALIGN=CENTER>
+<TD><a href="http://arjuna.ncl.ac.uk/group/David.Ingham/index.html"><img src="http://arjuna.ncl.ac.uk/group/David.Ingham/photo_small.jpg" alt="[Dave]" border="0" width="100" height="115"></a></TD>
+<TD><a href="http://arjuna.ncl.ac.uk/group/Steve.Caughey/index.html"><img src="http://arjuna.ncl.ac.uk/group/Steve.Caughey/photo_small.jpg" alt="[Steve]" border=0 width="100" height="115"></a></TD>
+<TD><a href="http://arjuna.ncl.ac.uk/group/Mark.Little/index.html"><img src="http://arjuna.ncl.ac.uk/group/Mark.Little/photo_small.jpg" alt="[Mark]" border="0" width="100" height="115"></a></TD>
+</TR>
+<TR ALIGN=CENTER>
+<TD><a href="http://arjuna.ncl.ac.uk/group/David.Ingham/index.html">Dave Ingham</a></TD>
+<TD><a href="http://arjuna.ncl.ac.uk/group/Steve.Caughey/index.html">Steve Caughey</a></TD>
+<TD><a href="http://arjuna.ncl.ac.uk/group/Mark.Little/index.html">Mark Little</a></TD>
+</TR></TABLE>
+
+<P>
+Note: W3Objects research is carried out by the <A
+HREF="http://arjuna.ncl.ac.uk/">Arjuna Project</A>. 
+<BR>Here are the rest of the
+<A HREF="http://arjuna.ncl.ac.uk/group/members.html">Arjuna personnel</A>.
+<P>
+<HR>
+<FONT SIZE=-1>
+<!--#include virtual="/chunks/footer.ihtml" -->
+<BR>Last modified: <!--#echo var="LAST_MODIFIED" -->
+</FONT>
+<HR>
+</BODY>
+</HTML>

@@ -1,0 +1,55 @@
+<HTML>
+<HEAD>
+<TITLE>Supporting Highly Manageable Web Services</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+
+<NOBR>
+<!--#include virtual="/chunks/buttons.shtml" -->
+</NOBR>
+<HR>
+
+<!--#include virtual="/chunks/www6pic.html" -->
+<H1>Supporting Highly Manageable Web Services</H1>
+
+<H2>Details</H2>
+<TABLE>
+<TR>
+  <TD>Event:</TD>
+  <TD><!--#include virtual="/chunks/www6.html" --> and 
+  <BR><!--#include virtual="/chunks/chep97.html" --> (via video conference)</TD>
+</TR>
+<TR>
+  <TD>Presenter:</TD>
+  <TD><!--#include virtual="/chunks/dbisig.html" --></TD>
+</TR>
+<TR>
+  <TD>Location:</TD>
+  <TD>Santa Clara, California, USA</TD>
+</TR>
+<TR>
+  <TD>Date:</TD>
+  <TD>8th & 9th April 1997</TD>
+</TR>
+</TABLE>
+
+<H2>Available formats</H2>
+ 
+At W3Objects site
+<UL>
+<LI>HTML
+[<A HREF="html/">no frames</A>]
+[<A HREF="html-frames/">with frames</A>]
+<LI><A HREF="ppt/slides.ppt">Powerpoint</A>
+<LI><A HREF="ps/slides.ps">Postscript</A>
+</UL>
+
+<P>
+<HR>
+<FONT SIZE=-1>
+<!--#include virtual="/chunks/footer.ihtml" -->
+<BR>Last modified: <!--#echo var="LAST_MODIFIED" -->
+</FONT>
+<HR>
+</BODY>
+</HTML>

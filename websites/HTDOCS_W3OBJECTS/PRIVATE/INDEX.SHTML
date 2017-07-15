@@ -1,0 +1,85 @@
+<HTML>
+<HEAD>
+<TITLE>W3Objects Private Resources</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+
+<NOBR>
+<!--#include virtual="/chunks/buttons.shtml" -->
+</NOBR>
+<HR>
+
+<H1>Private Resources</H1>
+
+<!-- -------------------------------------------------------------------->
+
+<h2>Conferences</H2>
+
+<UL>
+
+
+<LI><A HREF="http://www7.conf.au/">7th International World-wide Web
+Conference</A>
+
+<LI><A HREF="http://www6conf.org/">6th International World-wide
+Web Conference</A>
+[<A HREF="http://ice.www6conf.org/">ICE</A>]
+[<A HREF="http://proceedings.www6conf.org/">Proceedings</A>]
+
+<LI><A HREF="http://www5conf.inria.fr/">5th International World-wide
+Web Conference</A>
+<ul>
+<li><A HREF="www5/comments/dougs.html">Doug Seaton's Comments</A>
+<li><A HREF="www5/initial/Overview.html">Submitted version</A>
+<li><A HREF="www5/initial/Cover.html">Submission note</A>
+<li><A HREF="www5/ideas.html">Original ideas document</A>
+</ul>
+
+<LI><A HREF="http://www.w3.org/hypertext/Conferences/WWW4/">4th
+International World-wide Web Conference</A>
+<ul>
+<li><A HREF="www4/panel/panel.html">Objects on the web panel statement</A>
+<li><A HREF="www4/comments/dougs.html">Doug Seaton's Comments</A>
+<li><A HREF="www4/submit.html">Submission note</A>
+<li><A HREF="www4/final/Overview.html">Final HTML version</A>
+<li><A HREF="www4/initial/www4.html">Submitted HTML version</A>
+<li><A HREF="www4/initial/www4.ps">Postscript version</A>
+<li><A HREF="www4/struct.html">Original Structuring notes</A>
+<LI><A HREF="archive/www4/triprep.html">WWW4 Trip Report</a>
+</ul>
+
+</UL>
+
+<h3>Proposals</h3>
+<UL>
+<LI>Notes for ESPRIT proposal
+<A HREF="proposals/esprit.html">[html]</A>
+<A HREF="proposals/esprit.txt">[text]</A>
+<LI><A HREF="proposals/reuters.html">Steve`s note to Reuters</a>
+<LI><A HREF="proposals/ropa.html">Building Responsive and Available Information
+Discovery and Repository Service (ROPA)</A>
+<LI><A HREF="proposals/jisc.html">Arjuna component of JISC Proposal</a>
+</UL>
+
+<H3>Misc Resources</H3>
+<UL>
+<LI><A HREF="NeXT/NeXT-story.txt">History of the NeXT trademark prob</A>
+<LI><A HREF="ideas/orig.html">Original WebObjects Ideas Document</A>
+(14th Jan 1995)
+</UL>
+
+<!-- -------------------------------------------------------------------->
+
+<P>
+<HR>
+<NOBR>
+<!--#include virtual="/chunks/buttons.shtml" -->
+</NOBR>
+<HR>
+<FONT SIZE=-1>
+<!--#include virtual="/chunks/footer.ihtml" -->
+<BR>Last modified: <!--#echo var="LAST_MODIFIED" -->
+</FONT>
+<HR>
+</BODY>
+</HTML>

@@ -1,0 +1,40 @@
+<HTML>
+<HEAD>
+<TITLE>W3Objects Demonstration</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+
+<!--#include virtual="/chunks/buttons.shtml" -->
+<HR>
+
+<H1>W3Objects Demonstration</H1>
+
+<P>Welcome. The demo is not yet in full swing; for the moment you can
+just access some simple W3Objects.</P>
+
+<P>Object 1
+[<A HREF="http://rock.ncl.ac.uk/w3o/obj1">Default view</A>]
+[<A HREF="http://rock.ncl.ac.uk/w3o/obj1?manage">Manage view</A>]
+
+<BR><SMALL>Note: the W3Objects server is not always available as its
+running on a dual boot machine.</SMALL></P>
+
+<H2>Contact Information</H2>
+
+<ADDRESS>
+<!--#include virtual="/chunks/dbisig.html" -->
+<BR><A HREF="http://arjuna.ncl.ac.uk/">Arjuna Project</A> Research Associate 
+<BR><A HREF="http://www.cs.ncl.ac.uk/">Department of Computing Science</A>
+<BR><A HREF="http://www.ncl.ac.uk/">Newcastle University</A>
+<BR>Newcastle upon Tyne NE1 7RU
+<BR>United Kingdom
+</ADDRESS>
+<P>
+<HR>
+<FONT SIZE=-1>
+<!--#include virtual="/chunks/footer.ihtml" -->
+<BR>Last modified: <!--#echo var="LAST_MODIFIED" -->
+</FONT>
+<HR>
+</BODY>
+</HTML>

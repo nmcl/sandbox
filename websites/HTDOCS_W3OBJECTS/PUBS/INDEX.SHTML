@@ -1,0 +1,53 @@
+<HTML>
+<HEAD>
+<TITLE>W3Objects Publications</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+
+<!--#include virtual="/chunks/buttons.shtml" -->
+<HR>
+
+<H1>Publications</H1>
+
+<UL>
+
+<LI><A HREF="shmws/">Supporting Highly Manageable Web Services</A>
+<BR>D. B. Ingham, S. J. Caughey, and M. C. Little, April 97.
+</LI>
+
+<LI><A HREF="focw/">Flexible Open Caching for the Web</A>
+<BR>S. J. Caughey, D. B. Ingham, and M. C. Little, April 97.
+</LI>
+
+<LI><A HREF="crwaaa/">Constructing Reliable Web Applications using
+Atomic Actions</A>
+<BR>M. C. Little, S. K. Shrivastava, S. J. Caughey, and D. B. Ingham,
+April 97.
+</LI>
+
+<LI><A HREF="doows/">W3Objects: A Distributed Object-Oriented Web Server</A>
+(position paper)
+<BR>D. B. Ingham, April 97.
+</LI>
+
+<LI><A HREF="fblp/">Fixing the &quot;Broken-Link&quot; Problem: The
+W3Objects Approach</A>
+<BR>D. B. Ingham, S. J. Caughey, and M. C. Little, April 96.
+</LI>
+
+<LI><A HREF="bootw/">W3Objects: Bringing Object-Oriented Technology to the Web
+</A>
+<BR>D. B. Ingham, M. C. Little, S. J. Caughey, and S. K. Shrivastava, December 95.
+</LI>
+
+</UL>
+
+<P>
+<HR>
+<FONT SIZE=-1>
+<!--#include virtual="/chunks/footer.ihtml" -->
+<BR>Last modified: <!--#echo var="LAST_MODIFIED" -->
+</FONT>
+<HR>
+</BODY>
+</HTML>

@@ -1,0 +1,41 @@
+<HTML>
+<HEAD>
+<TITLE>W3Objects Information</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+
+<!--#include virtual="/chunks/buttons.shtml" -->
+<HR>
+
+<H2>Overview</H2>
+
+<P>As part of the <a href="http://arjuna.ncl.ac.uk/">Arjuna Project</a>,
+we are investigating the application of object-oriented technology to
+the area of the World-Wide Web. We believe that the current web model
+suffers from poor extensibility characteristics and that an
+object-oriented architecture would yield a more flexible system. Based
+on this new architecure we aim to address the problems facing the
+current web in its primary role as a documentation server and also
+show how more complex resources and services can be integrated.</P>
+
+<H2>Contact Information</H2>
+
+<ADDRESS>
+<!--#include virtual="/chunks/dbisig.html" -->
+<BR><A HREF="http://arjuna.ncl.ac.uk/">Arjuna Project</A> 
+<BR><A HREF="http://www.cs.ncl.ac.uk/">Department of Computing Science</A>
+<BR><A HREF="http://www.ncl.ac.uk/">Newcastle University</A>
+<BR>Newcastle upon Tyne NE1 7RU
+<BR>United Kingdom
+</ADDRESS>
+<P>
+<HR>
+<!--#include virtual="/chunks/buttons.shtml" -->
+<HR>
+<FONT SIZE=-1>
+<!--#include virtual="/chunks/footer.ihtml" -->
+<BR>Last modified: <!--#echo var="LAST_MODIFIED" -->
+</FONT>
+<HR>
+</BODY>
+</HTML>

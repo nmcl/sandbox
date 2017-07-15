@@ -1,0 +1,33 @@
+<HTML>
+<HEAD>
+<TITLE>W3Objects Home Page</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+
+<P ALIGN="CENTER">
+<IMG 
+  SRC="img/main/title.gif" 
+  WIDTH="400" 
+  HEIGHT="113" 
+  BORDER="0" 
+  ALT="[W3Objects]" >
+</P>
+
+<CENTER>
+<!--#include virtual="/chunks/buttons.shtml" -->
+</CENTER>
+
+<P ALIGN="CENTER"><STRONG>W3Objects research is part of the
+<A HREF = "http://arjuna.ncl.ac.uk/">Arjuna Project</A></STRONG></P>
+
+<P>
+<HR><SMALL>
+<!--#include virtual="/chunks/footer.ihtml" -->
+<BR>Last modified: <!--#echo var="LAST_MODIFIED" -->
+</SMALL>
+<HR>
+
+</BODY>
+</HTML>
+
+

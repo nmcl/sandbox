@@ -1,0 +1,51 @@
+<HTML>
+<HEAD>
+<TITLE>WebObjects: Towards an Object-Oriented Web</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+
+<NOBR>
+<!--#include virtual="/chunks/buttons.shtml" -->
+</NOBR>
+<HR>
+
+<H1>WebObjects: Towards an Object-Oriented Web</H1>
+
+<H2>Details</H2>
+<TABLE>
+<TR>
+  <TD>Event:</TD>
+  <TD><!--#include virtual="/chunks/ansa95.html" --></TD>
+</TR>
+<TR>
+  <TD>Presenter:</TD>
+  <TD><!--#include virtual="/chunks/dbisig.html" --></TD>
+</TR>
+<TR>
+  <TD>Location:</TD>
+  <TD>Cambridge, UK.</TD>
+</TR>
+<TR>
+  <TD>Date:</TD>
+  <TD>25th May 1995</TD>
+</TR>
+</TABLE>
+<H2>Available formats</H2>
+ 
+At W3Objects site
+<UL>
+<LI><A HREF="ppt/slides.ppt">Powerpoint</A>
+<LI><A HREF="html/">HTML</A>
+<LI>Postscript [<A HREF="ps/slides1.ps">1 per page</A>]
+[<A HREF="ps/slides2.ps">2 per page</A>]
+</UL>
+
+<P>
+<HR>
+<FONT SIZE=-1>
+<!--#include virtual="/chunks/footer.ihtml" -->
+<BR>Last modified: <!--#echo var="LAST_MODIFIED" -->
+</FONT>
+<HR>
+</BODY>
+</HTML>

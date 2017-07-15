@@ -1,0 +1,55 @@
+<!-- START BUTTONS -->
+
+<TABLE>
+<TR ALIGN=CENTER>
+<!--#if expr="\"$DOCUMENT_URI\" != \"/index.shtml\""-->
+<TD><A HREF="/"><IMG SRC="/img/main/home.gif" ALT="Home"
+BORDER=0 WIDTH="144" HEIGHT="35"></A></TD>
+<!--#endif -->
+<TD><A HREF="/info/"><IMG SRC="/img/main/info.gif" ALT="Info"
+BORDER=0 WIDTH="54" HEIGHT="35"></A></TD>
+<TD><A HREF="/activities/"><IMG SRC="/img/main/cal.gif" ALT="Activities"
+BORDER=0 WIDTH="54" HEIGHT="35"></A></TD>
+<TD><A HREF="/pubs/"><IMG SRC="/img/main/pub.gif" ALT="Pubs"
+BORDER=0 WIDTH="54" HEIGHT="35"></A></TD>
+<TD><A HREF="/pres/"><IMG SRC="/img/main/slides.gif" ALT="Presentations"
+BORDER=0 WIDTH="54" HEIGHT="35"></A></TD>
+<TD><A HREF="/people/"><IMG SRC="/img/main/people.gif" ALT="People"
+BORDER=0 WIDTH="54" HEIGHT="35"></A></TD>
+<TD><A HREF="/search/"><IMG SRC="/img/main/search.gif" ALT="Search"
+BORDER=0 WIDTH="54" HEIGHT="35"></A></TD>
+
+<!--#if expr="$REMOTE_ADDR = /^128.240.150./" -->
+<TD><A HREF="/demo/"><IMG SRC="/img/main/demo.gif" ALT="Demo"
+BORDER=0 WIDTH="57" HEIGHT="35" ALIGN="CENTER"></A></TD>
+
+<TD><A HREF="/private/"><IMG SRC="/img/main/private.gif" ALT="Private"
+BORDER=0 WIDTH="57" HEIGHT="35" ALIGN="CENTER"></A></TD>
+
+<TD><A HREF="http://www.hensa.ac.uk/hal-bin/html-check.pl?recommended=0&level=Wilbur&input=1&esis=0&render=0&URLs=http://<!--#echo var="SERVER_NAME" -->:<!--#echo var="SERVER_PORT" --><!--#echo var="DOCUMENT_URI" -->"><IMG BORDER="0" WIDTH="54" HEIGHT="35" SRC="/img/main/check.gif" ALIGN="CENTER"></A></TD>
+<!--#endif -->
+
+</TR>
+
+<TR ALIGN="CENTER">
+<!--#if expr="\"$DOCUMENT_URI\" != \"/index.shtml\""-->
+<TD><A HREF="/"><SMALL>W3Objects Home</SMALL></A></TD>
+<!--#endif -->
+<TD><A HREF="/info/"><SMALL>Information</SMALL></A></TD>
+<TD><A HREF="/activities/"><SMALL>Activities</SMALL></A></TD>
+<TD><A HREF="/pubs/"><SMALL>Papers</SMALL></A></TD>
+<TD><A HREF="/pres/"><SMALL>Slides</SMALL></A></TD>
+<TD><A HREF="/people/"><SMALL>People</SMALL></A></TD>
+<TD><A HREF="/search/"><SMALL>Search</SMALL></A></TD>
+
+<!--#if expr="$REMOTE_ADDR = /^128.240.150./" -->
+<TD><A HREF="/demo/"><SMALL>Demo</SMALL></A></TD>
+<TD><A HREF="/private/"><SMALL>Private</SMALL></A></TD>
+<TD><A HREF="http://www.hensa.ac.uk/hal-bin/html-check.pl?recommended=0&level=Wilbur&input=1&esis=0&render=0&URLs=http://<!--#echo var="SERVER_NAME" -->:<!--#echo var="SERVER_PORT" --><!--#echo var="DOCUMENT_URI" -->"><SMALL>Validate</SMALL></A></TD>
+<!--#endif -->
+
+</TR>
+
+</TABLE>
+<!-- END BUTTONS -->
+

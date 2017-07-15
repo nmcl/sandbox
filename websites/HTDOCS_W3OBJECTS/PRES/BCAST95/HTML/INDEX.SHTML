@@ -1,0 +1,59 @@
+<HTML>
+<HEAD>
+<TITLE>WebObjects: Ideas for an Object-Oriented Web</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+
+<NOBR>
+<!--#include virtual="/chunks/buttons.shtml" -->
+</NOBR>
+<HR>
+
+<H1>WebObjects: Ideas for an Object-Oriented Web</H1>
+
+<H3><I>4th Closed Broadcast Workshop, Lisbon, 3rd February 1995</I></H3>
+
+<P>The following slides were used to present the WebObjects work at
+the <!--#include virtual="/chunks/bcast95.html" --> held in Lisbon,
+Portugal in early February 1995.
+They are also available in postscript:
+<A HREF="../ps/slides1.ps">1 slide per page</A>
+and
+<A HREF="..ps//slides2.ps">2 slides per page</A>
+<P>
+<!--#include virtual="/chunks/dbisig.html" -->
+<P>
+<HR>
+<H3>Contents</H3>
+
+<UL>
+<LI><A HREF="slide1.html">The world-wide web</A>
+<LI><A HREF="slide2.html">The world-wide web (2)</A>
+<LI><A HREF="slide3.html">Shortcomings from the user's perspective</A>
+<LI><A HREF="slide4.html">Shortcomings from the information provider's perspective</A>
+<LI><A HREF="slide5.html">2-way referencing problem</A>
+<LI><A HREF="slide6.html">Shortcomings from the information provider's perspective (2)</A>
+<LI><A HREF="slide7.html">Multiple interfaces to resources (ftp)</A>
+<LI><A HREF="slide8.html">Multiple interfaces to resources (www)</A>
+<LI><A HREF="slide9.html">Functional limitations</A>
+<LI><A HREF="slide10.html">Summary of observations</A>
+<LI><A HREF="slide11.html">Propsed research</A>
+<LI><A HREF="slide12.html">Justification for object-oriented approach</A>
+<LI><A HREF="slide13.html">Example object interfaces</A>
+<LI><A HREF="slide14.html">Objects share some common interfaces</A>
+<LI><A HREF="slide15.html">Core properties</A>
+<LI><A HREF="slide16.html">Example additional properties</A>
+<LI><A HREF="slide17.html">Development plan</A>
+<LI><A HREF="slide18.html">Possible applications</A>
+<LI><A HREF="slide19.html">Conclusions</A>
+</UL>
+
+<P>
+<HR>
+<FONT SIZE=-1>
+<!--#include virtual="/chunks/footer.ihtml" -->
+<BR>Last modified: <!--#echo var="LAST_MODIFIED" -->
+</FONT>
+<HR>
+</BODY>
+</HTML>

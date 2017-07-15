@@ -1,0 +1,72 @@
+<HTML>
+<HEAD>
+<TITLE>Flexible Open Caching For the Web</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+
+<NOBR>
+<!--#include virtual="/chunks/buttons.shtml" -->
+</NOBR>
+<HR>
+
+<H1>Flexible Open Caching for the Web</H1>
+
+<H2>Citation</H2>
+
+S. J. Caughey, D. B. Ingham and M. C. Little,
+<I>"Flexible Open Caching for the Web,"</I>
+Proceedings of the <!--#include virtual="/chunks/www6.html"-->,
+Santa Clara, California, USA,
+7-11 April 1997.
+
+<H2>Abstract</H2>
+
+<P>Caching plays a vital role in the performance of any large-scale
+distributed system and, as the variety and number of Web applications
+grows, is becoming an increasingly important research topic within the
+Web community.  Existing caching mechanisms are largely transparent to
+their users and cater for resources which are primarily read-only,
+offering little support for customisable or complex caching
+strategies. In this paper we examine the deficiencies in these
+mechanisms with regard to applications with requirements for shared
+access to data where clients may require a variety of consistency
+guarantees. We present 'open' caching within an object-oriented
+framework, an approach to solving these problems which, instead of
+offering caching transparency makes the caching mechanism highly
+visible allowing great flexibility in caching choices. Our
+implementation is built upon the W3Objects infrastructure and allows
+clients to make caching decisions for individual resources with
+minimal impact upon other resources which do not support our
+mechanisms.</P>
+
+<P><B>Keywords</B>: web; caching; object-oriented; weak
+consistency</P>
+
+<H2>Available formats</H2>
+
+At WWW6 site:
+[<A HREF="http://proceedings.www6conf.org/HyperNews/get/PAPER159.html">HTML</A>]
+
+<BR>At W3Objects site:
+[<A HREF="html/">HTML</A>]
+[<A HREF="ps/paper.ps">Postscript</A>]
+[<A HREF="pdf/paper.pdf">PDF</A>]
+[<A HREF="word/paper.doc">Microsoft Word</A>]
+
+
+<P>Note: A <A HREF="../../pres/www6/caching/">set of slides</A>
+relating to this paper are also available.</P>
+
+<P>
+<HR>
+<NOBR>
+<!--#include virtual="/chunks/buttons.shtml" -->
+</NOBR>
+<HR>
+<FONT SIZE=-1>
+<!--#include virtual="/chunks/footer.ihtml" -->
+<BR>Last modified: <!--#echo var="LAST_MODIFIED" -->
+</FONT>
+<HR>
+</BODY>
+</HTML>

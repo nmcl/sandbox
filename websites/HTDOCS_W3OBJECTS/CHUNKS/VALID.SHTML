@@ -1,0 +1,3 @@
+<!-- START-HTML-VALID -->
+<A HREF="http://www.hensa.ac.uk/hal-bin/html-check.pl?recommended=0&level=Wilbur&input=1&esis=0&render=0&URLs=http://<!--#echo var="SERVER_NAME" -->:<!--#echo var="SERVER_PORT" --><!--#echo var="DOCUMENT_URI" -->">foo</A>
+

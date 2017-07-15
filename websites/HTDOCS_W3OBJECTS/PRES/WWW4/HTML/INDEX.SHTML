@@ -1,0 +1,302 @@
+<!doctype html public "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<TITLE>W3Objects: Bringing Object-Oriented Technology to the Web</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF">
+ 
+<NOBR>
+<!--#include virtual="/chunks/buttons.shtml" -->
+</NOBR>
+<HR>
+ 
+<H1>W3Objects:
+<br>Bringing Object-Oriented Technology to the Web</H1>
+
+<H3><I><a href="http://www.w3.org/pub/Conferences/WWW4">4th
+International World-Wide Web Conference</a>, Boston, USA, December
+1995</I></H3>
+
+<P>The following slides were used during the W3Objects presentation at the
+Boston conference on 12th Decmeber 1995.
+They are also available in postscript:
+<A HREF="../ps/slides1.ps">1 slide per page</A>
+and
+<A HREF="../ps/slides2.ps">2 slides per page</A>
+<P>
+<!--#include virtual="/chunks/dbisig.html" -->
+<P>
+<HR>
+
+<H2>Critique of the Current Web</H2>
+
+<H3>Standard resources - HTTP</H3>
+
+<UL>
+<LI><I>object based </I>approach with a single object interface
+to all resources
+<LI>difficult to augment operation set or alter operation implementation
+<LI>PEP is not a complete solution
+</UL>
+
+<H3>Non-standard resources - CGI</H3>
+
+<UL>
+<LI>program is forked on each invocation
+<LI>too low-level programming model cf. stub generation
+<UL>
+<LI>difficult to write parameter marshaling code
+<LI>easy to introduce errors
+</UL>
+
+<LI>no type checking
+<LI>matching form to script cf. compile type checking
+<LI>client-side validation of entered parameters
+<LI>no architectural support for advanced resources
+</UL>
+<HR>
+
+<H2>W3Objects Overview</H2>
+
+<UL>
+<LI>Key goal is to provide an <I>extensible</I> web architecture
+<LI>Framework to aid in the construction of web-based applications
+<LI>Based on an object-oriented distributed computing approach
+<LI>W3Objects are <I>encapsulated</I> entities
+<LI>W3Objects support <I>abstraction</I> 
+<LI>Interface inheritance provides <I>polymorphism</I> 
+<LI>Code <I>reuse</I> achieved using behavioral inheritance
+</UL>
+<HR>
+
+<H2>Example Object Interfaces</H2>
+
+<P>
+<IMG SRC="fig1.gif" ALT="[Example Object Interfaces]" ALIGN="BOTTOM">
+
+<UL>
+<LI>Client access occurs through well-defined interfaces
+<LI>Interfaces obtained through inheritance
+</UL>
+<HR>
+
+<H2>Polymorphism</H2>
+
+<P>
+<IMG SRC="fig2.gif" ALT="[Ploymorphism]" ALIGN="BOTTOM"> <HR>
+
+<H2>Client-Server Interactions</H2>
+
+<P>
+<IMG SRC="fig3.gif" ALT="[Client-Server Interactions]" ALIGN="BOTTOM">
+
+<UL>
+<LI>A W3Object server supports a set of object types
+<LI>Servers support interoperability between different client
+types
+<LI>W3Objects manage their own state transitions &amp; properties
+in response to requests
+</UL>
+<HR>
+
+<H2>Core Properties</H2>
+
+<H3>Naming</H3>
+
+<UL>
+<LI>unambiguously communicate with and about objects
+<LI>context-relative naming required for scaleability
+</UL>
+
+<H3>Sharing</H3>
+
+<UL>
+<LI>implicit requirement in proposed application domain
+<LI>range of additional policies required: security &amp; concurrency
+control
+</UL>
+
+<H3>Mobility</H3>
+
+<UL>
+<LI>web objects are dynamic in nature and movement is likely
+</UL>
+
+<H3>Referencing</H3>
+
+<UL>
+<LI>lack of referential integrity is the current primary weakness
+</UL>
+<HR>
+
+<H2>Common Properties</H2>
+
+<H3>Concurrency Control</H3>
+
+<UL>
+<LI>imperative for more complex read/write resources
+<LI>object-specific concurrency control provides flexible solution
+</UL>
+
+<H3>Caching &amp; Replication</H3>
+
+<UL>
+<LI>performance, availability
+<LI>multitude of policies; no one suitable for all objects
+</UL>
+
+<H3>Fault Tolerance</H3>
+
+<UL>
+<LI>necessary for <I>industrial strength </I>applications e.g.
+commerce
+<LI>state transitions managed by atomic actions (transactions)
+<LI>replication for fault-tolerance
+</UL>
+<HR>
+
+<H2>Illustration: Referencing for W3Objects</H2>
+
+<UL>
+<LI>Aim to address the problem of broken links
+<LI>Range of possible techniques:
+<UL>
+<LI>fault &amp; rebind using name servers (URN)
+<LI>broadcast: send update information to all servers (Hyper-G)
+<LI>multicast: call-back to referencing objects
+<LI>forward referencing
+</UL>
+
+<LI>Prototype implementation built using Shadows
+<UL>
+<LI>provides variation on SSP-chain based forward referencing
+</UL>
+
+<LI>Provides referential integrity &amp; migration transparency
+<LI>W3Object model allows a variety of schemes on per-object basis
+</UL>
+<HR>
+
+<H2>Referencing Illustration</H2>
+
+<P>
+<IMG SRC="fig4.gif" ALT="[Referencing Model]" ALIGN="BOTTOM">
+
+<UL>
+<LI>W3Objects are referenced from some root:
+<UL>
+<LI>either directly, via stubs or through containment
+</UL>
+
+<LI>Stubs perform bind on creation and unbind on deletion
+<LI>Service maintains distributed referencing graph &amp; guarantees
+referential integrity
+</UL>
+<HR>
+
+<H2>Referencing Illustration</H2>
+
+<P>
+<IMG SRC="fig5.gif" ALT="[Referencing Illustration Step 1]" ALIGN="BOTTOM">
+
+<P>
+<I>Step 1: Object Y migrates to server C </I>
+<UL>
+<LI>Object migration leaves stub object (Y') at old location
+</UL>
+
+<UL>
+<LI>Chains of references may be created leading to the <I>real</I>
+object
+</UL>
+<HR>
+
+<H2>Referencing Illustration</H2>
+
+<P>
+<IMG SRC="fig6.gif" ALT="[Referencing Illustration Step 2]" ALIGN="BOTTOM">
+
+<P>
+<I>Step 2: Object Z makes invocation on object Y</I> 
+<UL>
+<LI>Stub object Y' transparently forwards invocation to Y
+<LI>Stub object within Z is updated to point to Y
+</UL>
+
+<UL>
+<LI>Invocation causes chain shortcutting without <I>fault &amp;
+rebind</I> 
+</UL>
+<HR>
+
+<H2>Referencing Illustration</H2>
+
+<P>
+<IMG SRC="fig7.gif" ALT="[Referencing Illustration Step 3]" ALIGN="BOTTOM">
+
+<P>
+<I>Step 3: Object X makes invocation on object Y</I> 
+<UL>
+<LI>Stub object Y' transparently forwards invocation to Y
+<LI>Stub object within X is updated to point to Y
+<LI>Stub object Y' is garbage collected
+</UL>
+
+<UL>
+<LI>Variations on the basic mechanisms can be provided on per
+object type basis
+</UL>
+<HR>
+
+<H2>Prototype Implementation</H2>
+
+<P>
+<IMG SRC="fig8.gif" ALT="[Prototype Implementation]" ALIGN="BOTTOM">
+
+<UL>
+<LI>Evolutionary approach; parallel operation with HTTPD
+<LI>Supports referential integrity &amp; migration transparency
+<LI>Developed GUI-based server management tool
+</UL>
+<HR>
+
+<H2>Future Work</H2>
+
+<H3>Integration of software components</H3>
+
+<UL>
+<LI>Shadows: referencing, migration
+<LI>Gandiva: Object interface/implementation separation &amp;
+reconfiguration
+<LI>Arjuna: fault-tolerance, replication
+<LI>CORBA
+</UL>
+
+<H3>Dependable web server</H3>
+
+<UL>
+<LI>Arjuna fault-tolerance &amp; replication
+<LI>transactional manipulation of web resources
+</UL>
+
+<H3>Refinement of referencing schemes</H3>
+
+<UL>
+<LI>continue work on improving robustness
+<LI>evaluate performance in wide-area
+</UL>
+
+<P>
+<HR>
+<NOBR>
+<!--#include virtual="/chunks/buttons.shtml" -->
+</NOBR>
+<HR>
+<FONT SIZE=-1>
+<!--#include virtual="/chunks/footer.ihtml" -->
+<BR>Last modified: <!--#echo var="LAST_MODIFIED" -->
+</FONT>
+<HR>
+</BODY>
+</HTML>

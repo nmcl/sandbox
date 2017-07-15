@@ -1,0 +1,65 @@
+<html><head><title>: slide 9
+</title>
+</head><body bgcolor="#0028a0" text="#ffffff" link="#ffffe8" vlink="#eeffee">
+<a href="slide10.html"><img align=right border=none alt="on" src="next.gif"></a>
+<a href="overview.html"><img align=right border=none alt="up" src="home.gif"></a>
+<a href="slide8.html"><img align=right border=none alt="back" src="back.gif"></a>
+<a href="http://www5conf.inria.fr/"><img align=down border=none alt=w3c src="W3K-transparent.gif"></a>
+<em><font size=-1>Fifth International World Wide Web Conference</font></em>
+<hr>
+<font size="">
+<H1>Comparison of Messaging Costs</H1>
+<TABLE BORDER=1>
+<TR>
+  <TD COLSPAN=2><STRONG>Option 1: search</STRONG></TD>
+</TR>
+<TR>
+  <TD>M: no additional messages</TD>
+  <TD><P ALIGN=CENTER><CODE><STRONG>0</STRONG></CODE></TD>
+</TR>
+<TR>
+  <TD>I: fault, search from 1 to S-2 spaces per reference</TD>
+  <TD><P ALIGN=CENTER><CODE><STRONG>(R-1)(1..(S-2))</STRONG></CODE></TD>
+</TR>
+<TR>
+  <TD COLSPAN=2><STRONG>Option 2: forward referencing</STRONG></TD>
+</TR>
+<TR>
+  <TD>M: no additional messages</TD>
+  <TD><P ALIGN=CENTER><CODE><STRONG>0</STRONG></CODE></TD>
+</TR>
+<TR>
+  <TD>I: 1 message per reference to forward invocation</TD>
+  <TD><P ALIGN=CENTER><CODE><STRONG>R-1</STRONG></CODE></TD>
+</TR>
+<TR>
+  <TD COLSPAN=2><STRONG>Option 3: callback</STRONG></TD>
+</TR>
+<TR>
+  <TD>M: 1 message to update each reference</TD>
+  <TD><P ALIGN=CENTER><CODE><STRONG>R-1</STRONG></CODE></TD>
+</TR>
+<TR>
+  <TD>I: no additional messages</TD>
+  <TD><P ALIGN=CENTER><CODE><STRONG>0</STRONG></CODE></TD>
+</TR>
+<TR>
+  <TD COLSPAN=2><STRONG>Option 4: name-server</STRONG></TD>
+</TR>
+<TR>
+  <TD>M: update all name-servers</TD>
+  <TD><P ALIGN=CENTER><CODE><STRONG>N</STRONG></CODE></TD>
+</TR>
+<TR>
+  <TD>I: fault, name-server query & new invocation</TD>
+  <TD><P ALIGN=CENTER><CODE><STRONG>2(R-1)</STRONG></CODE></TD>
+</TR>
+</TABLE>
+<EM>(assuming fault-free environment)</EM>
+
+<p>
+<hr>
+<font size=-3><em class H1>Fixing the &quot;Broken-Link&quot; Problem:</em></font>
+<em><font size=-3> (D.Ingham,S.Caughey,M.Little)</font></em>
+</font>
+</body></html>

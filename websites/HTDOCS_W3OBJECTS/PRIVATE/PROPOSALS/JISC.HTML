@@ -1,0 +1,108 @@
+<!doctype html public "-//IETF//DTD HTML//EN">
+<HTML>
+
+<HEAD>
+
+<TITLE>Arjuna Component of JISC Proposal</TITLE>
+
+<META NAME="GENERATOR" CONTENT="Internet Assistant for Word 1.0Z">
+<META NAME="AUTHOR" CONTENT="David Ingham">
+<META NAME="OPERATOR" CONTENT="David Ingham">
+</HEAD>
+
+<BODY>
+
+<H1>Arjuna Component of JISC Proposal</H1>
+
+<P>
+Large-scale electronic publishing has grown massively since the
+advent of the world-wide web. Many factors have contributed to
+its success, in particular, the simplicity of the system has played
+a significant role in its wide-spread acceptance. Accessing web
+information via the hypertext interface is relatively easy to
+learn and use. Becoming a publisher on the web is also relatively
+straight-forward; users from all professions have been able to
+participate, resulting in the huge diversity of the information
+currently available. These factors, coupled with free web software
+and cross-platform support, have helped establish it as the standard
+mechanism for information dissemination for industry and academia.
+<P>
+However, current Web technology is based on read-only, document-like
+resources, with a stateless, connectionless communication protocol.
+Although it is possible to construct complex applications using
+the basic mechanisms provided and their extensions (e.g., cgi
+scripts), this does not form an adequate infrastructure for future
+expansion. It can also be extremely difficult for applications
+programmers to build these complex applications. Common services,
+such as persistence and concurrency control mechanisms are often
+implemented in an ad hoc manner, making reuse difficult. What
+is required is the necessary infrastructural support to enable
+the construction of these complex applications in a scaleable
+and extensible manner. We believe that the principles of object-orientation
+provide a means to build such an infrastructure.
+<P>
+Currently, Web resources possess two distinct access interfaces,
+namely, via the file system and the HTTP daemon. These access
+methods are uncoordinated and not suitable for the types of resources
+envisaged in the future. For example, a web-based banking application
+providing remote-access to customer accounts, should ideally support
+multiple interfaces to the account information; the view a bank
+manager sees may be different from that of the customer. The industry
+standard object-oriented solution to this type of application
+is the OMG ORB architecture (CORBA), which defines a set of standard
+services for implementing distributed applications in a heterogeneous
+environment. Through the object-oriented principle of data abstraction,
+users interact with objects through well defined interfaces, without
+being aware of the actual implementation. Those organisations
+which possess legacy systems which they require to be used in
+their Web environment, e.g., SQL databases, can do so through
+suitable object interfaces. Through the use of object-orientation
+it will be possible to provide suitable abstract interfaces to
+enable the implementations of services and mechanisms (e.g., persistence
+through an object-oriented database) to be changed based upon
+user requirements.
+<P>
+Another important issue in distributed systems is that they are
+inherently more prone to failures than their centralised counterparts.
+The current Web fails to address this issue. The lack of fault-tolerance
+and also limited security mechanisms are two of the main reasons
+which have delayed the take-up of Web technology for the construction
+of complex applications (e.g., management information systems).
+<P>
+Techniques such as atomic actions (transactions) and replication
+can be used to improve fault-tolerance of distributed applications.
+Atomic actions possess the well known ACID properties (atomicity,
+concurrency, isolation and durability), and are used to guarantee
+consistency. Replication can be used to improve object availability
+and provide forward progress in the presence of failures. The
+Distributed Systems Group of the Department of Computing Science
+has over 10 years experience in these areas. One of the outcomes
+of this research has been the Arjuna system, which provides tools
+to assist in the construction of fault-tolerant distributed applications
+using objects and actions. Arjuna is built around the concepts
+of object-orientation, whereby objects inherit desirable properties,
+such as persistence and concurrency control. Arjuna objects can
+also be replicated. Arjuna has been available to academic establishments
+for a number of years, and is now being taken up by industry.
+<P>
+We aim to use the principles and techniques developed in the Arjuna
+project to construct the suitable infrastructural support previously
+highlighted as being essential for the evolution of the Web. In
+order to ensure future compatibility with industrial solutions,
+we intend to use CORBA technology as the basis for this work.
+This will necessarily involve making the current Arjuna transactional
+components compliant with the OMG OTS specification. It is also
+possible to build upon existing Arjuna technology to provide other
+OMG specified services, such as Concurrency Control, Persistence,
+and Externalisation.
+<P>
+Once complete this infrastructure will allow applications to be
+built which comprise arbitrary read/write manipulation of Web
+objects, which may be replicated, under transactional control.
+Using this infrastructure we shall construct a reliable, distributed
+Web server capable of supporting industrial strength applications,
+for example the demonstrator applications specified elsewhere
+in this proposal.
+</BODY>
+
+</HTML>

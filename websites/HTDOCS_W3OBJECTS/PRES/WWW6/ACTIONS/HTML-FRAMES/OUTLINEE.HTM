@@ -1,0 +1,223 @@
+<HTML>
+<BODY >
+
+<P></P><A HREF="JavaScript:parent.ItemClicked(1, 0)"> Building reliable Web applications using atomic actions </A><br><UL>
+Mark C. Little,Department of Computing Science,
+<BR></UL><UL>
+University of Newcastle
+</UL></P>
+<P>
+<P></P><A HREF="JavaScript:parent.ItemClicked(2, 0)"> Background </A><br><UL>
+<LI>prior to Java, Web applications were concentrated at the server and accessed by a thin-client
+<LI>fault-tolerance techniques only at server-side
+<LI>Java-like technology turns Web into more traditional distributed system, allowing development of complex applications
+<UL>
+<LI>word processors
+<LI>spreadsheets
+</UL><LI>fault-tolerance must now encompass browsers</UL></P>
+<P>
+<P></P><A HREF="JavaScript:parent.ItemClicked(3, 0)"> End-to-end transactional guarantees </A><br><UL>
+<LI>new Web applications require “all-or-nothing” guarantees between browser and server(s)
+<UL>
+<LI>electronic newspapers
+<LI>credit cards purchases
+</UL><LI>require that purchase (e.g., cookie) is delivered if user’s account is debited
+<UL>
+<LI>failures at browser/server may prevent either from occurring
+<UL>
+<LI>application and user’s account could become inconsistent
+</UL><LI>attempts at manual resolution may be difficult
+</UL><LI>end-to-end transactional guarantees already used in traditional distributed systems</UL></P>
+<P>
+<P></P><A HREF="JavaScript:parent.ItemClicked(4, 0)"> Atomic actions (atomic transactions) </A><br><UL>
+<LI>possess the following properties:
+<UL>
+<LI>Atomic: if interrupted by failure, all effects are undone
+<LI>Consistent: transaction effects preseve invariant properties
+<LI>Isolated: intermediate states are not visible to other transactions
+<LI>Durable: effects of completed transactions are persistent
+</UL><LI>transaction manager controls protocol
+<UL>
+<LI>use a two-phase commit protocol to commit/abort changes
+<LI>transactional resources obey protocol
+</UL><LI>“all-or-nothing” guarantee
+<UL>
+<LI>build applications without considering failure scenarios</UL></UL></P>
+<P>
+<P></P><A HREF="JavaScript:parent.ItemClicked(5, 0)"> Transactional cgi-scripts </A><br><UL>
+<LI>no end-to-end transactional guarantees
+<UL>
+<LI>suitable only for server-side transactions</UL></UL></P>
+<P><UL>
+cgi-script<BR></UL></P>
+<P><UL>
+Web servers<BR></UL></P>
+<P>
+<P></P><A HREF="JavaScript:parent.ItemClicked(6, 0)"> Transactional Web requirements </A><br><UL>
+<LI>support the construction of arbitrary transactional Web applications
+<UL>
+<LI>browser-server
+<LI>server only
+<LI>browser-browser
+</UL><LI>should not require changes to browsers
+<UL>
+<LI>too slow
+<LI>affects portability
+</UL><LI>lightweight transactional browsers
+<UL>
+<LI>end-to-end guarantees without requiring full transactional infrastructure</UL></UL></P>
+<P>
+<P></P><A HREF="JavaScript:parent.ItemClicked(7, 0)"> General transactional Web </A><br><UL>
+<LI>support transactional clients
+<UL>
+<LI>enables wider range of applications
+<LI>turns browser into another address space</UL></UL></P>
+<P><UL>
+TM<BR></UL></P>
+<P><UL>
+AO<BR></UL></P>
+<P><UL>
+AO<BR></UL></P>
+<P><UL>
+AO<BR></UL></P>
+<P>
+<P></P><A HREF="JavaScript:parent.ItemClicked(8, 0)"> Transactional proxies </A><br><UL>
+<LI>transactional resources must obey transaction protocol
+<UL>
+<LI>provide operations required to participate within commit protocol
+</UL><LI>transactional proxies “wrap” legacy code/resources 
+<UL>
+<LI>proxy registered with transaction instead of actual resource
+<LI>performs implementation specific work to make resource transactional
+<LI>proxy participates within commit/abort protocol
+<LI>work guaranteed to be completed or undone despite failures
+<UL>
+<LI>simply another resource to transaction manager
+</UL><LI>open commit, reflection</UL></UL></P>
+<P>
+<P></P><A HREF="JavaScript:parent.ItemClicked(9, 0)"> Lightweight transactional applications </A><br><UL>
+<LI>support “thin” clients
+<UL>
+<LI>require minimal client resources
+<LI>concentrate sensitive resources at servers</UL></UL></P>
+<P><UL>
+TM<BR></UL></P>
+<P><UL>
+AO<BR></UL></P>
+<P><UL>
+AO<BR></UL></P>
+<P><UL>
+TP<BR></UL></P>
+<P><UL>
+commit
+<BR></UL><UL>
+protocol</UL></P>
+<P>
+<P></P><A HREF="JavaScript:parent.ItemClicked(10, 0)"> Browser proxies </A><br><UL>
+<LI>used when browser-side requires end-to-end guarantees
+<UL>
+<LI>e.g., purchase and receive cookie
+</UL><LI>no transactional resources within browser
+<UL>
+<LI>lightweight, Java support
+</UL><LI>main transactional application executes at servers
+<UL>
+<LI>need not be written in Java
+</UL><LI>proxy code at server and browser
+<UL>
+<LI>makes browser transactional
+<UL>
+<LI>e.g., write encyrpted cookie during phase 1 and decrypt or remove during phase 2</UL></UL></UL></P>
+<P>
+<P></P><A HREF="JavaScript:parent.ItemClicked(11, 0)"> Typical browser proxy </A><br><UL>
+<LI>browser downloads application
+<UL>
+<LI>contains browser-side proxy code
+</UL><LI>server-side registers browser proxy
+<LI>applet presents user with operations, e.g., subscribe
+<UL>
+<LI>may require other information, e.g., credit card details
+<LI>results transmitted by proxy
+</UL><LI>operations performed at server within atomic action
+<UL>
+<LI>may use transactional resources at other sites, e.g., bank
+</UL><LI>transaction manager at server co-ordinates commit
+<LI>maintain results until commit completes</UL></P>
+<P>
+<P></P><A HREF="JavaScript:parent.ItemClicked(12, 0)"> W3OTrans toolkit </A><br><UL>
+<LI>supports the construction of fault-tolerant Web applications using objects and actions
+<UL>
+<LI>fully transactional browsers
+<LI>thin, transaction aware browsers
+</UL><LI>provides end-to-end transactional guarantees between browser(s) and server(s)
+<UL>
+<LI>top-level, nested, nested-top-level transactions
+</UL><LI>built in Java and C++
+<UL>
+<LI>runs on any Java-aware browser
+</UL><LI>standards compliant (OTS and JTS)</UL></P>
+<P>
+<P></P><A HREF="JavaScript:parent.ItemClicked(13, 0)"> W3OTrans implementation </A><br><UL>
+<LI>object-oriented, based upon Arjuna
+<UL>
+<LI>State management, lock management and AtomicAction classes
+<LI>user classes inherit desired properties, e.g., replication
+</UL><LI>stub generation tool
+<UL>
+<LI>C++ /Java client and server stubs
+<LI>can use ORB for distribution
+</UL><LI>flexible implementations
+<UL>
+<LI>persistence
+<LI>concurrency control</UL></UL></P>
+<P>
+<P></P><A HREF="JavaScript:parent.ItemClicked(14, 0)"> Building W3OTrans applications </A><br><UL>
+<LI>build server-side transactional application 
+<LI>specify application operations in high-level language
+<UL>
+<LI>tools generate Java object (stub) for application
+</UL><LI>automatically generate browser proxy code
+<UL>
+<LI>simple “are-you-alive” protocol
+<LI>applet stub hides browser-side proxy
+</UL><LI>server-side application registers browser proxy in each transaction
+<LI>proxy automatically invoked during commit/abort protocol
+<UL>
+<LI>transmit result or error response
+</UL><LI>crash recovery completes transactions</UL></P>
+<P>
+<P></P><A HREF="JavaScript:parent.ItemClicked(15, 0)"> Bank account example </A><br><UL>
+<LI>insert, inspect and withdraw operations
+<LI>require end-to-end guarantees for</UL></P>
+<P>
+<P></P><A HREF="JavaScript:parent.ItemClicked(16, 0)"> Bank account </A><br>
+<P></P><A HREF="JavaScript:parent.ItemClicked(17, 0)"> Standards compliance </A><br><UL>
+<LI>industry standard for transactions is OTS
+<UL>
+<LI>C++ version of W3OTrans is OTS compliant
+<UL>
+<LI>supports nested transactions
+<LI>runs on various Orbs
+<LI>no OMG Recovery Service!
+</UL><LI>JTS recently announced
+<UL>
+<LI>not a new standard, but OTS in Java
+</UL><LI>W3OTrans is JTS compliant
+<UL>
+<LI>interoperates with OTS objects/applications</UL></UL></UL></P>
+<P>
+<P></P><A HREF="JavaScript:parent.ItemClicked(18, 0)"> Future work </A><br><UL>
+<LI>replication and caching techniques
+<UL>
+<LI>disconnected operation
+</UL><LI>groupware
+<LI>additional flavours of transactions
+<UL>
+<LI>weaker forms of consistency
+</UL><LI>failure detection
+<LI>security
+<UL>
+<LI>SET</UL></UL></P>
+<P>
+</BODY>
+</HTML>

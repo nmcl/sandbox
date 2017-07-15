@@ -1,0 +1,41 @@
+<html><head><title>: slide 8
+</title>
+</head><body bgcolor="#0028a0" text="#ffffff" link="#ffffe8" vlink="#eeffee">
+<a href="slide9.html"><img align=right border=none alt="on" src="next.gif"></a>
+<a href="overview.html"><img align=right border=none alt="up" src="home.gif"></a>
+<a href="slide7.html"><img align=right border=none alt="back" src="back.gif"></a>
+<a href="http://www5conf.inria.fr/"><img align=down border=none alt=w3c src="W3K-transparent.gif"></a>
+<em><font size=-1>Fifth International World Wide Web Conference</font></em>
+<hr>
+<font size="">
+<H1>Options for Tracking Object Migration</H1>
+
+<UL>
+  <LI>Option 1: do nothing at migration time
+  <UL>
+    <LI>object fault occurs at next invocation through each reference
+    <LI>object must be located through the use of search
+  </UL>
+  <LI>Option 2: replace migrated object with forward reference
+  <UL>
+    <LI>invocations are redirected transparently to the new location
+    <LI>references are updated through piggy-backed information
+  </UL>
+  <LI>Option 3: callback to all references at migration time
+  <UL>
+    <LI>no further work necessary at invocation time
+  </UL>
+  <LI>Option 4: update name-server(s) at migration time
+  <UL>
+    <LI>object fault occurs at next invocation through each reference
+    <LI>name-server query to determine new location of object
+    <LI>reference invokes object at new location
+  </UL>
+</UL>
+
+<p>
+<hr>
+<font size=-3><em class H1>Fixing the &quot;Broken-Link&quot; Problem:</em></font>
+<em><font size=-3> (D.Ingham,S.Caughey,M.Little)</font></em>
+</font>
+</body></html>

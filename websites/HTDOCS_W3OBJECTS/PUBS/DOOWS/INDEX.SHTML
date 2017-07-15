@@ -1,0 +1,42 @@
+<HTML>
+<HEAD>
+<TITLE>W3Objects: A Distributed Object-Oriented Web Server</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+
+<NOBR>
+<!--#include virtual="/chunks/buttons.shtml" -->
+</NOBR>
+<HR>
+
+<H1>W3Objects: A Distributed Object-Oriented Web Server</H1>
+
+<H2>Citation</H2>
+
+D. B. Ingham,
+<I>"W3Objects: A Distributed Object-Oriented Web Server,"</I>
+<!--#include virtual="/chunks/oows&dm.html"-->,
+<!--#include virtual="/chunks/www6.html"-->,
+April 1997.
+
+<H2>Available formats</H2>
+
+At W3Objects site
+<UL>
+<LI><A HREF="word/paper.doc">Microsoft Word</A>
+<LI><A HREF="html/">HTML</A>
+<LI><A HREF="ps/paper.ps">Postscript</A>
+</UL>
+
+<P>Note: A <A HREF="../../pres/www6/wshop/">set of slides</A>
+relating to this paper are also available.</P>
+
+<P>
+<HR>
+<FONT SIZE=-1>
+<!--#include virtual="/chunks/footer.ihtml" -->
+<BR>Last modified: <!--#echo var="LAST_MODIFIED" -->
+</FONT>
+<HR>
+</BODY>
+</HTML>

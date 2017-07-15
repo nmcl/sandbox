@@ -1,0 +1,79 @@
+<!doctype html public "-//IETF//DTD HTML//EN">
+<HTML>
+
+<HEAD>
+<TITLE>Doug Seaton's Comments on WWW5 Paper</TITLE>
+<META NAME="GENERATOR" CONTENT="Internet Assistant for Word 1.0Z">
+<META NAME="AUTHOR" CONTENT="David Ingham">
+</HEAD>
+
+<BODY>
+
+<H1>Doug Seaton's Comments on WWW5 Paper</H1>
+
+<P>
+You asked for any comments. There are lots of points over we could
+have interesting debates if &amp; when we can afford the time.
+Let me pick just a couple.
+<H2>You do not identify 'forward references' as objects in their
+own right. </H2>
+
+<P>
+But it's interesting to do so, since it is then evident that they
+have a great deal in common with the lightweight objects which
+you refer to as 'gravestones'. (I don't like the name much, since
+resurrection is clearly possible and supported by the concept).
+Archiving an object, as you describe it, could be considered to
+be just another form of migration, with the difference that under
+certain circumstances, the object may migrate back again. The
+underlying mechanisms could be unified.
+<P>
+Pursuing this line of thought further: one of the rules which
+should clearly apply to archived objects is that no additional
+managed references are accepted to the 'gravestone' object. Much
+the same should be true of forward references.
+<P>
+I still don't see an active mechanism which ensures progress in
+indirect reference reduction. Or have I missed something?
+<H2>A point made in the 'W3Objects Background' section prompted
+some thoughts about current Web abstractions.</H2>
+
+<P>
+The example of GET applied to a bank account object is a case
+in point of where current practice has to use nasty primitives
+at too low a level. Consider a current implementation of this
+service: the response to this particular GET is *not* the HTML
+which the user desires, but what is, in effect, a 'callback' *by*
+the server *on* the browser to authenticate the user's identity.
+This may use a browser plug-in which must perform a protocol (e.g.
+smartcard-to-smartcard), perhaps built above native HTTP + SSL.
+The 'response to this callback' (the completion of the 'protocol')
+is, in a conceptual inversion of the high-level design, an invocation
+*of* the server *by* the browser plug-in (a POST not a GET since
+the server 'response' must not be directed to the plug-in). The
+expected information requested by the original GET is then constructed
+by the server and returned as a reply to this POST. The server
+is maintaining 'state' w.r.t. previous invocations, and matching
+these through parameters attached to URLs.
+<P>
+It's analogous to being forced to use assembler, and worse being
+required to use 'jumps' to fake 'calls' and explicitly managing
+state. It's error-prone and laborious. Design primitives should
+be at least *two* levels of abstraction away from such things.
+The first level is to support a higher-level GET in which the
+response is semantically attached to the invocation, and also
+a 'back-call' which is conceptually contained within that GET.
+And distributed threads! The second level is that of objects as
+we know them: the GET is a genuine method, with all that that
+implies as far as instantiation and inheritance is concerned.
+<P>
+I know this is off the point of your paper, but it may help characterise
+the infrastructure towards which we are steadily working (I nearly
+said 'groping'). Knowing the end-point can influence intermediate
+design decisions. For instance, does not a 'gravestone' inherit
+the methods of the original object?
+<P>
+As I say, lots more we could discuss, but little time. 
+</BODY>
+
+</HTML>

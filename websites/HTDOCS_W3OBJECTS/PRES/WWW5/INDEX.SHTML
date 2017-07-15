@@ -1,0 +1,60 @@
+<HTML>
+<HEAD>
+<TITLE>Fixing the &quot;Broken-Link&quot; Problem: The W3Objects
+Approach</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+
+<NOBR>
+<!--#include virtual="/chunks/buttons.shtml" -->
+</NOBR>
+<HR>
+
+<!--#include virtual="/chunks/www5pic.html" -->
+<H1>Fixing the &quot;Broken-Link&quot; Problem:
+<br>The W3Objects Approach</H1>
+
+<H2>Details</H2>
+<TABLE>
+<TR>
+  <TD>Event:</TD>
+  <TD><!--#include virtual="/chunks/www5.html" --></TD>
+</TR>
+<TR>
+  <TD>Presenter:</TD>
+  <TD><!--#include virtual="/chunks/dbisig.html" --></TD>
+</TR>
+<TR>
+  <TD>Location:</TD>
+  <TD>Paris, France</TD>
+</TR>
+<TR>
+  <TD>Date:</TD>
+  <TD>6th-10th May 1996</TD>
+</TR>
+</TABLE>
+
+<H2>Available formats</H2>
+ 
+At W3Objects site
+<UL>
+<LI><A HREF="ppt/slides.ppt">Powerpoint</A>
+<LI><A HREF="html/">HTML</A>
+<LI>Postscript [<A HREF="ps/slides1.ps">1 per page</A>]
+[<A HREF="ps/slides2.ps">2 per page</A>]
+</UL>
+
+At W3C (INRIA, France)
+<UL>
+<LI><A HREF="http://www5conf.inria.fr/fich_html/slides/papers/PS11/P32/overview.htm"</A>HTML</A>
+</UL>
+
+<P>
+<HR>
+<FONT SIZE=-1>
+<!--#include virtual="/chunks/footer.ihtml" -->
+<BR>Last modified: <!--#echo var="LAST_MODIFIED" -->
+</FONT>
+<HR>
+</BODY>
+</HTML>

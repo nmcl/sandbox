@@ -1,0 +1,172 @@
+<!doctype html public "-//IETF//DTD HTML//EN">
+<HTML>
+
+<HEAD>
+
+<TITLE>WebObjects: Ideas for WWW Research</TITLE>
+
+<META NAME="GENERATOR" CONTENT="Internet Assistant for Word 1.0Z">
+<META NAME="SUBJECT" CONTENT="ROPA">
+<META NAME="AUTHOR" CONTENT="Dave Ingham">
+</HEAD>
+
+<BODY>
+
+<H1>WebObjects</H1>
+
+<P>
+WWW4 &quot;The WEB Revolution&quot;
+<P>
+4th International World-Wide Web Conference
+<P>
+Draft version, 12 June, 1995
+<H3>Introduction</H3>
+
+<P>
+web has lead to a vast explosion in use of large-scale electronic
+publishing
+<P>
+critical mass; cross-platform support; easy to publish; excited
+users from all professions
+<P>
+problems with existing technology; numerous groups working on
+ad-hoc fixes to specific problems
+<P>
+incorporating extra functionality into HTTP transport (HTTP-NG,
+HTTPS....)
+<P>
+unwritten premise that resources are read-only; not being addressed
+(IETF URN/URC)
+<P>
+massive growth; manageability will get more difficult
+<P>
+nature of resources will change; need to incorporate wide range
+of entities and services, not just docs
+<P>
+extensible framework needed, allowing integration of more complex
+resources
+<P>
+object-oriented approach provides key to extensible system
+<P>
+paper first highlights problems of current web
+<P>
+discusses how principles of object-orientation can be used to
+provide the required extensible framework
+<P>
+shows how proven results from distributed computing community
+research can address shortcomings
+<P>
+describe our work; principles and implementation; integration:
+evolution not revolution
+<P>
+cf. related work (Hyper-G...)
+<P>
+conclusions
+<H3>Description of shortcomings</H3>
+
+<P>
+(Use the 3 category split (user, provider, functional) ?; maybe
+better to focus on functional limitations)
+<H4>Problems with current web</H4>
+
+<P>
+referential integrity; collecting garbage
+<P>
+migration transparency
+<P>
+resource unavailability
+<P>
+resource responsiveness
+<P>
+resource/server management
+<H4>Functional limitations</H4>
+
+<P>
+currently focused on read-only documentation resources
+<P>
+future web will require integration of more complex entities and
+services
+<P>
+current extensibility techniques, although usable (e.g. WebMake)
+are clunky
+<H3>An object-oriented approach</H3>
+
+<P>
+cannot bolt additional functionality into monolithic web daemon
+<P>
+require extensible system, ability to add object types to servers
+<P>
+reveal hidden object-orientedness within current web
+<P>
+distinct set of interfaces possessed by objects
+<P>
+different classes of object share interfaces;
+<P>
+encapsulate resources (state + methods)
+<P>
+interoperability; properties such as conc. control belong to object
+not access method
+<P>
+extensibility through the use of inheritance
+<P>
+future web resources will have richer interfaces
+<P>
+multiple interfaces to objects i.e. http access, management, security
+<P>
+range of implementations of object properties are necessary
+<P>
+granularity of future web entities will vary widely
+<P>
+learn from proven results from distributed object-oriented computing
+research (Arjuna et al)
+<H3>Our Research: WebObjects</H3>
+
+<P>
+aim: develop an extensible web architecture based upon the ideas
+of object-orientation
+<P>
+principles: separation of interface/implementation, separation
+of data/meta-data
+<P>
+webobject properties
+<P>
+justification; based upon current web and predictions of requirements
+for future web (read/write; actions etc)
+<P>
+categorisation (core; common; object dependent)
+<P>
+discuss properties (naming, referencing, sharing, replication,
+caching...)
+<P>
+implementation strategy based on inheritance; interface/implementation
+separation
+<P>
+our toolbag (Arjuna, Shadows, Gandiva)
+<P>
+evolutionary integration approach
+<P>
+[fitting in: need to talk about contexts as URC servers]
+<H3>Example: referencing</H3>
+
+<P>
+serves two purposes; migration transparency &amp; referential
+integrity
+<P>
+describe key ideas of forward referencing and chain shortcutting
+<P>
+additional tweaks; proxies, collections
+<P>
+prototype implementation?
+<H3>Related work</H3>
+
+<P>
+Hyper-G
+<H3>Conclusions</H3>
+
+<P>
+Advantages of oo approach
+<P>
+development plan? 
+</BODY>
+
+</HTML>
