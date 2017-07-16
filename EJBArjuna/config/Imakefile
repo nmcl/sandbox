@@ -1,0 +1,15 @@
+COMMENT 
+COMMENT Copyright (C) 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id$
+COMMENT
+
+InstallFile(/config,JavaCosTransactions.cf)
+InstallFileAs(/config,Module_install.def,Module.def)
+
+Purge(EJBArjuna.cf Local.def Module.def Module_install.def)

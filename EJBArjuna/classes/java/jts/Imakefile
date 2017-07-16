@@ -1,0 +1,48 @@
+COMMENT 
+COMMENT Copyright (C) 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id$
+COMMENT
+
+SOURCES = CurrentTransaction.java \
+	  TransactionControl.java \
+	  HeuristicCommitException.java \
+	  HeuristicException.java \
+	  HeuristicMixedException.java \
+	  HeuristicRollbackException.java \
+	  TransactionRequiredException.java \
+	  TransactionRolledbackException.java \
+	  InvalidTransactionException.java \
+	  Status.java
+
+OBJECTS = CurrentTransaction.class \
+	  TransactionControl.class \
+	  HeuristicCommitException.class \
+	  HeuristicException.class \
+	  HeuristicMixedException.class \
+	  HeuristicRollbackException.class \
+	  TransactionRequiredException.class \
+	  TransactionRolledbackException.class \
+	  InvalidTransactionException.class \
+	  Status.class
+
+Target($(SOURCES))
+Target($(OBJECTS))
+
+BuildJavaByteCode(HeuristicCommitException,NullParam)
+BuildJavaByteCode(HeuristicException,NullParam)
+BuildJavaByteCode(HeuristicMixedException,NullParam)
+BuildJavaByteCode(HeuristicRollbackException,NullParam)
+BuildJavaByteCode(TransactionRequiredException,NullParam)
+BuildJavaByteCode(TransactionRolledbackException,NullParam)
+BuildJavaByteCode(InvalidTransactionException,NullParam)
+BuildJavaByteCode(TransactionControl,NullParam)
+BuildJavaByteCode(CurrentTransaction,NullParam)
+BuildJavaByteCode(Status,NullParam)
+
+Clean(*.class)
