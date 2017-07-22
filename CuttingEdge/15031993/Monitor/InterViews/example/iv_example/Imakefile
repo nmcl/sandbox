@@ -1,0 +1,48 @@
+LIBRARIES = 
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES) -I/usr/local/InterViews3.1/include)
+
+SetLocalLdFlags(-L/usr/local/InterViews3.1/lib/$$CPU -L/usr/local/X11R5/lib -lIV -lX11 -lXext -lX11 -lm)
+
+SOURCES = Main.cc \
+          ActionStructure.cc \
+          BasicAction.cc \
+          BasicActionInteractor.cc \
+          BasicActionDialog.cc \
+          BasicActionFigure.cc \
+          ConcurrentActions.cc \
+          SerialActions.cc
+
+OBJECTS = Main.o \
+          ActionStructure.o \
+          BasicAction.o \
+          BasicActionInteractor.o \
+          BasicActionDialog.o \
+          BasicActionFigure.o \
+          ConcurrentActions.o \
+          SerialActions.o
+
+MakeNonRecursiveAllTarget(ActionStructureEdit)
+
+MakeNonRecursiveInstall
+
+MakeProgramCPLUSPLUS(ActionStructureEdit,$(OBJECTS) $(LIBRARIES),)
+
+MakeObjectCPLUSPLUS(Main,)
+MakeObjectCPLUSPLUS(ActionStructure,)
+MakeObjectCPLUSPLUS(BasicAction,)
+MakeObjectCPLUSPLUS(BasicActionInteractor,)
+MakeObjectCPLUSPLUS(BasicActionDialog,)
+MakeObjectCPLUSPLUS(BasicActionFigure,)
+MakeObjectCPLUSPLUS(ConcurrentActions,)
+MakeObjectCPLUSPLUS(SerialActions,)
+
+MakeMakefile
+
+MakeDummyMakefiles
+
+MakeNonRecursiveTidyCleanPurge(ActionStructureEdit)
+
+MakeNonRecursiveMakedepend($(SOURCES))
+
+MakeNonRecursiveStripdepend
