@@ -1,0 +1,72 @@
+Machine 0 availability is 0.987257 <90.5954, 1.16937>
+Machine 1 availability is 0.987391 <85.3196, 1.08955>
+Machine 2 availability is 0.991171 <101.306, 0.902394>
+Machine 3 availability is 0.988175 <86.7568, 1.03814>
+Machine 4 availability is 0.990907 <84.0537, 0.771331>
+Machine 5 availability is 0.990516 <100.852, 0.965645>
+Machine 6 availability is 0.989885 <102.247, 1.04477>
+Machine 7 availability is 0.988539 <88.663, 1.02794>
+Machine 8 availability is 0.990244 <81.4656, 0.802601>
+Machine 9 availability is 0.990502 <96.003, 0.920569>
+Placing replica 0 on node 2
+Placing replica 1 on node 4
+Machine 0 availability is 0.989257 <231.875, 2.51812>
+Machine 1 availability is 0.989697 <178.079, 1.85377>
+Machine 2 availability is 0.989891 <216.531, 2.21123>
+Machine 3 availability is 0.988543 <160.46, 1.85968>
+Machine 4 availability is 0.989356 <218.684, 2.35275>
+Machine 5 availability is 0.992684 <218.402, 1.60953>
+Machine 6 availability is 0.988478 <194.286, 2.26456>
+Machine 7 availability is 0.989888 <197.545, 2.01792>
+Machine 8 availability is 0.991158 <200.632, 1.78991>
+Machine 9 availability is 0.992168 <204.252, 1.61227>
+Placing replica 0 on node 5
+Placing replica 1 on node 9
+Machine 0 availability is 0.988508 <350.147, 4.07079>
+Machine 1 availability is 0.988398 <375.099, 4.40283>
+Machine 2 availability is 0.990676 <466.282, 4.38838>
+Machine 3 availability is 0.992586 <458.447, 3.42427>
+Machine 4 availability is 0.988387 <387.968, 4.55836>
+Machine 5 availability is 0.989382 <372.557, 3.99824>
+Machine 6 availability is 0.991258 <410.496, 3.62026>
+Machine 7 availability is 0.991414 <455.156, 3.94196>
+Machine 8 availability is 0.988402 <377.023, 4.42396>
+Machine 9 availability is 0.987637 <362.35, 4.5357>
+Placing replica 0 on node 3
+Placing replica 1 on node 7
+Machine 0 availability is 0.987979 <784.683, 9.54781>
+Machine 1 availability is 0.98963 <847.557, 8.88157>
+Machine 2 availability is 0.991659 <881.646, 7.4154>
+Machine 3 availability is 0.991587 <849.826, 7.20985>
+Machine 4 availability is 0.991702 <1006.12, 8.41844>
+Machine 5 availability is 0.989846 <834.214, 8.5576>
+Machine 6 availability is 0.988276 <731.701, 8.68059>
+Machine 7 availability is 0.99064 <993.424, 9.38623>
+Machine 8 availability is 0.989626 <731.48, 7.66798>
+Machine 9 availability is 0.988119 <674.289, 8.10729>
+Placing replica 0 on node 4
+Placing replica 1 on node 2
+Machine 0 availability is 0.99043 <1898.43, 18.3442>
+Machine 1 availability is 0.987506 <1200.78, 15.1918>
+Machine 2 availability is 0.989648 <1457.63, 15.2471>
+Machine 3 availability is 0.992634 <1646.24, 12.2166>
+Machine 4 availability is 0.988782 <1467.11, 16.6452>
+Machine 5 availability is 0.989457 <1632.37, 17.3939>
+Machine 6 availability is 0.990846 <1626.32, 15.025>
+Machine 7 availability is 0.990197 <1615.08, 15.9891>
+Machine 8 availability is 0.991244 <1582.7, 13.9812>
+Machine 9 availability is 0.988001 <1486.98, 18.0588>
+Placing replica 0 on node 3
+Placing replica 1 on node 8
+Machine 0 availability is 0.990888 <3269.53, 30.0651>
+Machine 1 availability is 0.988159 <2881.38, 34.5259>
+Machine 2 availability is 0.991482 <3565.04, 30.6274>
+Machine 3 availability is 0.989434 <2899.82, 30.9665>
+Machine 4 availability is 0.991963 <3582.78, 29.0291>
+Machine 5 availability is 0.987167 <2971.13, 38.6236>
+Machine 6 availability is 0.990896 <3661.62, 33.6434>
+Machine 7 availability is 0.990481 <3086.63, 29.6629>
+Machine 8 availability is 0.988776 <2769.94, 31.4425>
+Machine 9 availability is 0.98945 <3512.5, 37.4531>
+Placing replica 0 on node 4
+Placing replica 1 on node 2
