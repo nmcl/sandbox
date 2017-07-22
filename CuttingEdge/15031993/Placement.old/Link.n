@@ -1,0 +1,40 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ */
+
+
+#if defined(NO_INLINES) && !defined(LINK_CC_)
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF Link* Link::Pred () const
+{
+    return prev;
+}
+
+INLINEF Link* Link::Suc () const
+{
+    return next;
+}
+
+INLINEF void Link::Precede (Head* list)
+{
+    this->InTo(list);
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif

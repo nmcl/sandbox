@@ -1,0 +1,13 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ */
+
+To create the thread library libThreads.a simply type make. If you do not
+possess Sun's lwp package then you will have to create a new class along the
+same lines as the lwp_thread class and link it into the library. Such a class
+has been provided for the GNU threads package, which is also included.
