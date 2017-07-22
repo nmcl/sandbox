@@ -1,0 +1,272 @@
+Policy	Protocol	Avail(g)	#ofReplicas	Avail(m)
+
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Group availability = 0.99
+Random	AC	0.99	1	0.806413	0
+Random	AC	0.99	1	0.844461	0
+Random	AC	0.99	1	0.873874	0
+Random	AC	0.99	1	0.919486	0
+Random	AC	0.99	1	0.923707	0
+Random	AC	0.99	1	0.94572	0
+Random	AC	0.99	1	0.953361	0
+Random	AC	0.99	1	0.977794	0
+Random	AC	0.99	1	0.983369	0
+Random	AC	0.99	2	0.691798	0
+Random	AC	0.99	2	0.761638	0
+Random	AC	0.99	2	0.768811	0
+Random	AC	0.99	2	0.823137	0
+Random	AC	0.99	2	0.874363	0
+Random	AC	0.99	2	0.912752	0
+Random	AC	0.99	2	0.914611	0
+Random	AC	0.99	2	0.941379	0
+Random	AC	0.99	2	0.95628	0
+Random	AC	0.99	3	0.669295	0
+Random	AC	0.99	3	0.714361	0
+Random	AC	0.99	3	0.718064	0
+Random	AC	0.99	3	0.743435	0
+Random	AC	0.99	3	0.833333	0
+Random	AC	0.99	3	0.894668	0
+Random	AC	0.99	3	0.899196	0
+Random	AC	0.99	3	0.919192	0
+Random	AC	0.99	3	0.942009	0
+Random	AC	0.99	4	0.592754	0
+Random	AC	0.99	4	0.656991	0
+Random	AC	0.99	4	0.685995	0
+Random	AC	0.99	4	0.758929	0
+Random	AC	0.99	4	0.808855	0
+Random	AC	0.99	4	0.867347	0
+Random	AC	0.99	4	0.87628	0
+Random	AC	0.99	4	0.899676	0
+Random	AC	0.99	4	0.917168	0
+Random	AC	0.99	5	0.496708	0
+Random	AC	0.99	5	0.591641	0
+Random	AC	0.99	5	0.672609	0
+Random	AC	0.99	5	0.709812	0
+Random	AC	0.99	5	0.759556	0
+Random	AC	0.99	5	0.826958	0
+Random	AC	0.99	5	0.843854	0
+Random	AC	0.99	5	0.880745	0
+Random	AC	0.99	5	0.888603	0
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Read Quorum is 1
+Simple	AC	0.99	2	0.7	0
+Simple	AC	0.99	2	0.780657	0
+Simple	AC	0.99	2	0.815126	0
+Simple	AC	0.99	2	0.87959	0
+Simple	AC	0.99	2	0.88419	0
+Simple	AC	0.99	2	0.941489	0
+Simple	AC	0.99	2	0.949686	0
+Simple	AC	0.99	2	0.955276	0
+Simple	AC	0.99	2	0.96338	0
+Write Quorum is 1
+Write Quorum is 1
+Write Quorum is 1
+Write Quorum is 1
+Write Quorum is 1
+Write Quorum is 1
+Write Quorum is 1
+Write Quorum is 1
+Write Quorum is 1
+Write Quorum is 2
+Write Quorum is 2
+Write Quorum is 2
+Write Quorum is 2
+Write Quorum is 2
+Write Quorum is 2
+Write Quorum is 2
+Write Quorum is 2
+Write Quorum is 2
+Write Quorum is 2
+Write Quorum is 2
+Write Quorum is 2
+Write Quorum is 2
+Write Quorum is 2
+Write Quorum is 2
+Write Quorum is 2
+Write Quorum is 2
+Write Quorum is 2
+Write Quorum is 3
+Write Quorum is 3
+Write Quorum is 3
+Write Quorum is 3
+Write Quorum is 3
+Write Quorum is 3
+Write Quorum is 3
+Write Quorum is 3
+Write Quorum is 3
+Write Quorum is 4
+Write Quorum is 4
+Write Quorum is 4
+Write Quorum is 4
+Write Quorum is 4
+Write Quorum is 4
+Write Quorum is 4
+Write Quorum is 4
+Write Quorum is 4
+Write Quorum is 5
+Write Quorum is 5
+Write Quorum is 5
+Write Quorum is 5
+Write Quorum is 5
+Write Quorum is 5
+Write Quorum is 5
+Write Quorum is 5
+Write Quorum is 5
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
+starting client
