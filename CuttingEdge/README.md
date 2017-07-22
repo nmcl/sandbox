@@ -3,3 +3,5 @@ For instance, some of the early ArjunaII stuff was here, as was the early protot
 
 There are a number of versions here ordered roughly by the dates in which they were probably last updated. However, there's no guarantee
 that the dates are accurate.
+
+Relevant licence files will be within specific directories.
