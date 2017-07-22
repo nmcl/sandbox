@@ -1,0 +1,470 @@
+This paper presents some examples dealing with event handling, action
+callbacks and timers in InterViews 3.0.
+
+We will begin by creating LeftMouser, a class that responds to left
+mouse events.  Here is the header file:
+
+      #ifndef _leftmouser_
+      #define _leftmouser_
+      
+      #include <InterViews/listener.h>
+      #include <InterViews/ptrhandler.h>
+      #include <InterViews/geometry.h>
+      
+      class LeftMouser : public Listener, public PointerHandler
+      {
+      public:
+          LeftMouser(Glyph*);
+      
+          virtual void doit(Event&);
+      
+          void allocate(Canvas*, Allocation&, Extension&);
+          void commit(Event&);
+      private:
+          Allocation alloc;
+      };
+      
+      #endif
+
+A LeftMouser, being a Listener, is a MonoGlyph that uses some other
+glyph as its body, and hence to define its appearance. A LeftMouser,
+being a PointerHandler, is equipped with methods for handling pointer
+events.  All that is left for the implementation to do is to assign
+the body and specify the events of interest. Here is the
+implementation file:
+
+      #include <InterViews/sensor.h>
+      
+      #include <leftmouser.h>
+      
+      LeftMouser::LeftMouser(Glyph *m) : Listener(m, this)
+      {
+          sensor()->button(true, Event::left);
+      }
+          
+      void LeftMouser::allocate(Canvas *c, Allocation &a, Extension &ext)
+      {
+          Listener::allocate(c, a, ext);
+          alloc = a;
+      }
+      
+      void LeftMouser::commit(Event &e)
+      {
+          if (e.pointer_x() >= alloc.left() 
+              && e.pointer_x() <= alloc.right() 
+              && e.pointer_y() >= alloc.bottom() 
+              && e.pointer_y() <= alloc.top())
+          {
+              doit(e);
+          }
+      }
+      
+      void LeftMouser::doit(Event&) {}
+
+The LeftMouser constructor takes a glyph as argument. It is passed
+straight on to Listener to be used as its body. The Listener
+constructor is called with a second argument of "this", i.e a
+LeftMouser is its own Handler. The assignment phase of construction
+registers the required interest in left mouse events.
+
+PointerHandler::commit is called when a button is released. I
+discovered that commit is called even if the release takes place
+outside the listening area, i.e. the allocation, so commit does
+nothing in those circumstances. Otherwise commit calls doit. The
+default doit does nothing so it is necessary to derive from LeftMouser
+in order to do anything useful. Here is, LeftClicker, a simple derived
+class that prints the coordinates of the button release event:
+
+      #ifndef _leftclicker_
+      #define _leftclicker_
+      
+      #include "leftmouser.h"
+      
+      class LeftClicker : public LeftMouser
+      {
+      public:
+          LeftClicker(Glyph*);
+      
+          void doit(Event&);
+      };
+      
+      #endif
+
+
+      #include "leftclicker.h"
+      
+      #include <stdio.h>
+      
+      LeftClicker::LeftClicker(Glyph *g) : LeftMouser(g) {}
+      
+      void LeftClicker::doit(Event &e)
+      {
+          printf("Left mouse clicked at %f %f\n", 
+                                          e.pointer_x(), e.pointer_y());
+      }
+
+
+and a simple application that demonstrates it in action:
+
+      #include <InterViews/world.h>
+      #include <InterViews/window.h>
+      #include <InterViews/background.h>
+      #include <InterViews/margin.h>
+      #include <InterViews/label.h>
+      
+      #include "leftclicker.h"
+      
+      main(int argc, char *argv[])
+      {
+          World world("ClickerDemo", argc, argv);
+      
+          ApplicationWindow window(new LeftClicker(new Background(new Margin(
+      		         new Label("Click me", 
+      			            world.font(), 
+      			            world.foreground()), 50.0),
+      			 world.background())));
+      
+          window.map();
+      
+          world.run();
+      }
+
+
+For comparison, here is a similar example implemented using action
+callbacks. An action is an object that performs some operation when
+some event happens. In this example there is a single action that
+does something on a button release.  An action callback is a generic
+action that creates an action that calls a particular member function
+of a given object. I will try to expand on those definitions as we go
+along. Here is our header file
+
+      #include <InterViews/listener.h>
+      #include <InterViews/handler.h>
+      #include <InterViews/action.h>
+      
+      class Upper
+      {
+      public:
+          void Up();
+      };
+      
+      declare(ActionCallback, Upper);
+      
+      class Responder : public Listener, public Handler
+      {
+      public:
+          Responder(Glyph*, Upper*);
+      
+          void event(Event&);
+      private:
+          ActionCallback(Upper) *up;
+          Upper *upper;
+      };
+
+First we define the class Upper. It is going to be the class whose
+member function, Up, is going to be called by the action that we are
+going to create using an action callback. The latter is done using
+declare.
+
+If you were to run a program consisting of just these two statements
+
+      #include <InterViews/action.h>
+      declare(ActionCallback, Upper);
+
+through the preprocessor phase of compilation you would obtain
+(amongst other things) the following (tidied up) output:
+
+      typedef void  Upper::Upper_ActionMemberFunction();
+      
+      class  Upper_ActionCallback : public ivAction 
+      {
+      public:  
+          Upper_ActionCallback(Upper*,  Upper_ActionMemberFunction*);
+      
+          virtual void execute(); 
+      private:  
+          Upper* obj_;
+      
+          Upper_ActionMemberFunction* func_;
+      };
+
+In other words, declare(ActionCallback, T) declares a class
+T_ActionCallback whose constructor takes two arguments: a pointer to
+an object of type T and a pointer to something of type
+T_ActionMemberFunction. The typedef defines this type to be a member
+function of class T that takes no arguments and returns void. (It is
+sufficient to know that ivAction is a class that is defined in
+action.h that defines the function execute that the action callback
+redefines). Also,
+
+      ActionCallback(T)
+
+expands to
+
+      T_ActionCallback
+
+so the statement
+
+      ActionCallback(Upper) *up;
+
+declares up to be a pointer to something of type Upper_ActionCallback.
+
+Responder is a class that is going to respond to mouse events. It is
+analogous to LeftClicker in the previous example but is derived
+from Listener and the more general handler class, Handler, so will
+need to do its own event handling. A Responder requires to be supplied
+with a Glyph, that will be become the body of the Listener, and an
+Upper, the class of which a member function is going to be called when
+the action takes place.
+
+Now let's turn to the Responder implementation file:
+
+      #include <InterViews/event.h>
+      #include <InterViews/sensor.h>
+      #include <stdio.h>
+      
+      #include "responder.h"
+      
+      void Upper::Up()
+      {
+          printf("Left mouse clicked\n");
+      }
+      
+      implement(ActionCallback, Upper);
+      
+      Responder::Responder(Glyph *m, Upper *u)
+               : Listener(m, this), upper(u)
+      {
+          sensor()->button(true, Event::left);
+      
+          up = new ActionCallback(Upper) (upper, &Upper::Up);
+      }
+          
+      void Responder::event(Event &e)
+      {
+          if (e.type() == Event::up)
+          {
+      	up->execute();
+          }
+      }
+
+The statement implement(ActionCallback, Upper) implements the action
+callback declared, using declare, in the header file. Let us look at
+the expansion of implement by examining the output of preprocessing
+
+      #include <InterViews/action.h>
+      declare(ActionCallback, Upper)
+      implement(ActionCallback, Upper)
+
+The additional output generated by the inclusion of the implement
+statement, is, when tidied up:
+
+      Upper_ActionCallback
+          ::Upper_ActionCallback(Upper* obj, Upper_ActionMemberFunction* func) 
+      { 
+          obj_ = obj; 
+          func_ = func; 
+      } 
+      
+      void Upper_ActionCallback::execute() 
+      { 
+          (obj_->*func_)(); 
+      }
+
+So, executing the action callback's execute method invokes the member
+function of an object, both being passed as constructor arguments.
+
+So what does all this mean for the Responder class? After registering
+its interest in left mouse button events, Responder assigns a value to
+up, viz.
+
+          up = new ActionCallback(Upper) (upper, &Upper::Up);
+
+which means that up is an action whose execute operation calls the
+member function Up of upper. 
+
+It may seem complicated when looking behind the scenes, which is why
+the mechanism is implemented using macros in the first place, but
+doing so might provide a better understanding. When cut down to the
+bare minimum the statements
+
+      declare(ActionCallback, T)
+      implement(ActionCallback, T)
+
+      ActionCallback(T) *obj;
+      t = new ActionCallback(T) (obj, &T::func);
+      t->execute();
+
+are just about all that are needed in order to have member function
+func of class T executed for some object obj of type T when some event
+happens.
+
+The next example demonstrates the use of timers. The mechanism also
+uses macros to declare and implement IO callbacks, and so the
+procedure is very similar to that for action callbacks. The
+application will present a window that is sensitive to left mouse
+button events. Clicking the left hand button will set up two
+single-shot timers that expire after one and one and a half seconds
+respectively.  All that happens on the timeouts is that a message is
+printed on standard output. The program will make use of a LeftMouser
+to capture the mouse events.
+
+This example has to make use of Dispatcher from the Dispatch library.
+The Dispatcher is a class that handles the detection of new data on
+multiple file descriptors as well as dealing with the notification of
+expired timers. A timer is started by calling 
+
+      Dispatch::startTimer(long, long, IOHandler*)
+
+The two longs are the time to expiry in seconds and microseconds, and
+IOHandler* is the handler that is attached to the timer, and which is
+to be notifed when the timeout takes place. The code to perform the
+action on timeout can reside in the handler itself, or in any
+arbitrary class. The demonstartion program contains an example of
+each.
+
+Here is the header file for a new class, Tocker, that will be used:
+
+      #ifndef _timer_
+      #define _timer_
+      
+      #include <InterViews/handler.h>
+      #include <InterViews/listener.h>
+      #include <InterViews/event.h>
+      #include <InterViews/sensor.h>
+      #include <Dispatch/dispatcher.h>
+      #include <Dispatch/iohandler.h>
+      #include <Dispatch/iocallback.h>
+      
+      #include "leftmouser.h"
+      
+      class Ticker
+      {
+      public:
+          void DoTick(long, long);
+      };
+      
+      class Tocker;
+      declare(IOCallback, Ticker)
+      declare(IOCallback, Tocker)
+      
+      class Tocker : public LeftMouser
+      {
+      public:
+          Tocker(Glyph*, Ticker*);
+      
+          void doit(Event&);
+          void DoTock(long, long);
+      private:
+          IOCallback(Ticker) *tick;
+          IOCallback(Tocker) *tock;
+          Ticker *ticker;
+      };
+      
+      #endif
+
+The Ticker class will be used as an example of an arbitrary class in
+which code that gets executed when a timer expires resides. That code
+is the member function DoTick. 
+
+Briefly, without going into the detail that I did for action
+callbacks, declare(IOCallback, Ticker) defines an IOCallback class
+(for use with the Ticker class) that has a member function called
+timerExpired. This is the function that the dispatcher calls to notify
+an iohandler that a timer has expired. 
+
+The generated IOCallback class takes two constructor arguments: the
+first is a pointer to an object of the nominated type, T say, and the
+second is of type IOTimer(T), where IOTimer is defined thus:
+
+      typedef void T::IOTimer(T) (long sec, long usec)
+
+A second IOCallback, that causes code (DoTock) in Tocker itself to be
+called, is declared.  tick and tock are pointers to instances of the
+IOCallback classes that uses of the declare macro generated.
+
+Here is the implementation file
+
+      #include <stdio.h>
+      
+      #include "timer.h"
+      
+      void Ticker::DoTick(long, long)
+      {
+          printf("Tick\n");
+      };
+      
+      implement(IOCallback, Ticker);
+      implement(IOCallback, Tocker);
+      
+      Tocker::Tocker(Glyph *g, Ticker *ticker) : LeftMouser(g), ticker(ticker)
+      {
+          tock = new IOCallback(Tocker) (this, &Tocker::DoTock);
+          tick = new IOCallback(Ticker) (ticker, &Ticker::DoTick);
+      }
+          
+      void Tocker::doit(Event&)
+      {
+          Dispatcher &dispatcher = Dispatcher::instance();
+      
+          dispatcher.startTimer(1L, 0L, tick);
+          dispatcher.startTimer(1L, 500000L, tock);
+      }
+      
+      void Tocker::DoTock(long, long)
+      {
+          printf("Tock\n");
+      }    
+
+As can be seen, Ticker::DoTick simply prints out a message confirming
+that the Ticker timer has expired. The same is true of Tocker::DoTock. 
+
+It should also go without saying that the implement statements
+implement the classes defined using declare in the header file. 
+timerExpired is implemented to call the IOTimer of the object passed
+as argument at creation time.
+
+The Tocker constructor body creates instances of each of the two
+IOCallback classes.  In the first "this" is a pointer to an object of
+type Tocker, and &Tocker::DoTock is a pointer to a member function of
+class Tocker taking two long arguments and returning void, i.e. it is
+of type IOTimer(Tocker). So when the timer attached to Tocker expires,
+DoTock will be called. Similarly, when the timer attached to the
+Ticker ticker expires, Ticker::DoTick will be called.
+
+Tocker::doit, which is the method that is invoked when a LeftMouser
+is informed of a button release, creates a new Dispatcher and sets the
+timers going.
+
+Here is the demonstration program that proves that it all works.
+
+#include <InterViews/world.h>
+#include <InterViews/window.h>
+#include <InterViews/background.h>
+#include <InterViews/margin.h>
+#include <InterViews/label.h>
+
+#include "timer.h"
+
+main(int argc, char *argv[])
+{
+    World world("TimerDemo", argc, argv);
+
+    ApplicationWindow window(new Tocker(new Background(new Margin(
+			 new Label("Click to Tick/Tock",
+				   world.font(),
+				   world.foreground()), 50.0),
+                         world.background()),
+			     new Ticker()));
+
+
+    window.map();
+
+    world.run();
+}
+
+The application presents an area in which to click the left mouse
+button. Each click will result in Tick being printed one second, and
+Tock one and a half seconds, later. Further clicks can be entered
+without waiting for the previous ones to complete. The interleaving of
+printed Ticks and Tocks will depend on the intervals between clicks.

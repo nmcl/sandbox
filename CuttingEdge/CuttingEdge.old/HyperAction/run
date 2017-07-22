@@ -1,0 +1,7 @@
+#!/bin/sh
+
+#
+# $Id: run,v 1.1 1991/08/28 15:45:42 nsmw Exp $
+#
+
+HyperAction -font lucidasans-18 < input

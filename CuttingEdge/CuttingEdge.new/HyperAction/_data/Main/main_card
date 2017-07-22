@@ -1,0 +1,21 @@
+Main
+5
+HyperText
+#include "main_text"
+HyperWord
+HyperAction 1 HyperAction Main
+HyperText
+400
+2
+Arjuna 1 Arjuna Main
+(Dismiss) 1 Arjuna_Win Dismiss
+HyperText
+400
+2
+Newcastle 1 Newcastle Main
+(Dismiss) 1 Newcastle_Win Dismiss
+HyperText
+400
+2
+People 1 People Main
+(Dismiss) 1 People_Win Dismiss

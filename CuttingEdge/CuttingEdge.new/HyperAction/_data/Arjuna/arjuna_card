@@ -1,0 +1,6 @@
+Bitmap
+2
+HyperImage
+#include "arjuna_image"
+HyperText
+#include "arjuna_text"

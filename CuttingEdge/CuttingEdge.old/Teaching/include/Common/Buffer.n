@@ -1,0 +1,127 @@
+/*
+ * Copyright 1990, 1991, 1992
+ * Computing Laboratory, University of Newcastle upon Tyne, UK.
+ *
+ * Permission to use, copy, modify and distribute this program for
+ * evaluation, teaching and/or research purposes only and without fee is
+ * hereby granted, providing that this copyright and permission notice
+ * appear on all copies and supporting documentation, and that similar
+ * conditions are imposed on any individual or organization to whom the
+ * program is distributed. The University of Newcastle upon Tyne makes no
+ * representation about the suitability of this software for any purpose.
+ * It is provided "as is" without express or implied warranty.
+ *
+ * $Id: Buffer.n,v 1.5 1992/01/28 13:08:26 ngdp Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(BUFFER_CC_)
+
+class ostream;
+
+extern ostream& operator<< (ostream&, const Buffer&);
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF ostream& operator<<  ( ostream& strm, const Buffer& b )
+{
+    return b.print (strm);
+}
+
+INLINEF char *Buffer::buffer () const
+{
+    return buffer_start;
+}
+
+INLINEF size_t Buffer::length () const
+{
+    return (pack_point - buffer_start);
+}
+
+INLINEF Buffer_State Buffer::readstate () const
+{
+    return buff_state;
+}
+INLINEF void Buffer::rewind ()
+{
+    pack_point = unpack_point = buffer_start;
+}
+
+INLINEF void Buffer::set_length ( size_t new_length )
+{
+    pack_point = buffer_start + new_length;
+}
+
+INLINEF Boolean Buffer::pack ( const char c )
+{
+    return (pack((const unsigned long) c));
+}
+
+INLINEF Boolean Buffer::pack ( const unsigned char c )
+{
+    return (pack((const unsigned long) c));
+}
+
+INLINEF Boolean Buffer::pack ( const short s )
+{
+    return (pack((const unsigned long) s));
+}
+
+INLINEF Boolean Buffer::pack ( const unsigned short s )
+{
+    return (pack((const unsigned long) s));
+}
+
+INLINEF Boolean Buffer::pack ( const int i )
+{
+    return (pack((const unsigned long) i));
+}
+
+INLINEF Boolean Buffer::pack ( const unsigned int i )
+{
+    return (pack((const unsigned long) i));
+}
+
+INLINEF Boolean Buffer::pack ( const long l )
+{
+    return (pack((const unsigned long) l));
+}
+
+INLINEF Boolean Buffer::pack ( const float f )
+{
+    double d = f;
+
+    return (pack(d));
+}
+
+INLINEF Boolean Buffer::unpack ( char& c )
+{
+    return (unpack((unsigned char&) c));
+}
+
+INLINEF Boolean Buffer::unpack ( short& s )
+{
+    return (unpack((unsigned short&) s));
+}
+
+INLINEF Boolean Buffer::unpack ( int& i )
+{
+    return (unpack((unsigned int&) i));
+}
+
+INLINEF Boolean Buffer::unpack ( long& l )
+{
+    return (unpack((unsigned long&) l));
+}
+
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif
