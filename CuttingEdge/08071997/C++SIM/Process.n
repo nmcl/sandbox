@@ -1,0 +1,56 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ */
+
+
+#if defined(NO_INLINES) && !defined(PROCESS_CC_)
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF double Scheduler::CurrentTime () const
+{
+    return SimulatedTime;
+}
+
+INLINEF double Process::Time () const
+{
+    return SimulatedTime;
+}
+
+INLINEF void Process::set_evtime (double time)
+{
+    wakeuptime = time;
+}
+
+INLINEF void Process::Activate ()
+{
+    ReActivate();
+}
+
+INLINEF double  Process::evtime () const
+{
+    return wakeuptime;
+}
+
+INLINEF boolean Process::terminated () const
+{
+    return Terminated;
+}
+
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif
