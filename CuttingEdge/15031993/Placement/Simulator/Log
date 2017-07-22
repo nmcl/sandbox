@@ -1,0 +1,950 @@
+Machine 0 availability is 0.987257 <90.5954, 1.16937>
+Machine 1 availability is 0.987391 <85.3196, 1.08955>
+Machine 2 availability is 0.991171 <101.306, 0.902394>
+Machine 3 availability is 0.988175 <86.7568, 1.03814>
+Machine 4 availability is 0.990907 <84.0537, 0.771331>
+Machine 5 availability is 0.990516 <100.852, 0.965645>
+Machine 6 availability is 0.989885 <102.247, 1.04477>
+Machine 7 availability is 0.988539 <88.663, 1.02794>
+Machine 8 availability is 0.990244 <81.4656, 0.802601>
+Machine 9 availability is 0.990502 <96.003, 0.920569>
+Placing replica 0 on node 2
+Placing replica 1 on node 4
+Operations performed 618
+Operations performed 1234
+Total operations attempted 1582
+Total operations completed 1235
+Machine 0 availability is 0.987257 <90.5954, 1.16937>
+Machine 1 availability is 0.987391 <85.3196, 1.08955>
+Machine 2 availability is 0.991171 <101.306, 0.902394>
+Machine 3 availability is 0.988175 <86.7568, 1.03814>
+Machine 4 availability is 0.990907 <84.0537, 0.771331>
+Machine 5 availability is 0.990516 <100.852, 0.965645>
+Machine 6 availability is 0.989885 <102.247, 1.04477>
+Machine 7 availability is 0.988539 <88.663, 1.02794>
+Machine 8 availability is 0.990244 <81.4656, 0.802601>
+Machine 9 availability is 0.990502 <96.003, 0.920569>
+Placing replica 0 on node 8
+Operations performed 560
+Operations performed 1112
+Total operations attempted 1318
+Total operations completed 1113
+Machine 0 availability is 0.987257 <90.5954, 1.16937>
+Machine 1 availability is 0.987391 <85.3196, 1.08955>
+Machine 2 availability is 0.991171 <101.306, 0.902394>
+Machine 3 availability is 0.988175 <86.7568, 1.03814>
+Machine 4 availability is 0.990907 <84.0537, 0.771331>
+Machine 5 availability is 0.990516 <100.852, 0.965645>
+Machine 6 availability is 0.989885 <102.247, 1.04477>
+Machine 7 availability is 0.988539 <88.663, 1.02794>
+Machine 8 availability is 0.990244 <81.4656, 0.802601>
+Machine 9 availability is 0.990502 <96.003, 0.920569>
+Placing replica 0 on node 8
+Placing replica 1 on node 4
+Operations performed 656
+Operations performed 1266
+Total operations attempted 1648
+Total operations completed 1267
+Machine 0 availability is 0.987257 <90.5954, 1.16937>
+Machine 1 availability is 0.987391 <85.3196, 1.08955>
+Machine 2 availability is 0.991171 <101.306, 0.902394>
+Machine 3 availability is 0.988175 <86.7568, 1.03814>
+Machine 4 availability is 0.990907 <84.0537, 0.771331>
+Machine 5 availability is 0.990516 <100.852, 0.965645>
+Machine 6 availability is 0.989885 <102.247, 1.04477>
+Machine 7 availability is 0.988539 <88.663, 1.02794>
+Machine 8 availability is 0.990244 <81.4656, 0.802601>
+Machine 9 availability is 0.990502 <96.003, 0.920569>
+Placing replica 0 on node 8
+Placing replica 1 on node 4
+Placing replica 2 on node 3
+Operations performed 738
+Operations performed 1438
+Total operations attempted 2004
+Total operations completed 1439
+Machine 0 availability is 0.987257 <90.5954, 1.16937>
+Machine 1 availability is 0.987391 <85.3196, 1.08955>
+Machine 2 availability is 0.991171 <101.306, 0.902394>
+Machine 3 availability is 0.988175 <86.7568, 1.03814>
+Machine 4 availability is 0.990907 <84.0537, 0.771331>
+Machine 5 availability is 0.990516 <100.852, 0.965645>
+Machine 6 availability is 0.989885 <102.247, 1.04477>
+Machine 7 availability is 0.988539 <88.663, 1.02794>
+Machine 8 availability is 0.990244 <81.4656, 0.802601>
+Machine 9 availability is 0.990502 <96.003, 0.920569>
+Placing replica 0 on node 8
+Placing replica 1 on node 4
+Placing replica 2 on node 3
+Placing replica 3 on node 7
+Operations performed 779
+Operations performed 1537
+Total operations attempted 2242
+Total operations completed 1538
+Machine 0 availability is 0.987257 <90.5954, 1.16937>
+Machine 1 availability is 0.987391 <85.3196, 1.08955>
+Machine 2 availability is 0.991171 <101.306, 0.902394>
+Machine 3 availability is 0.988175 <86.7568, 1.03814>
+Machine 4 availability is 0.990907 <84.0537, 0.771331>
+Machine 5 availability is 0.990516 <100.852, 0.965645>
+Machine 6 availability is 0.989885 <102.247, 1.04477>
+Machine 7 availability is 0.988539 <88.663, 1.02794>
+Machine 8 availability is 0.990244 <81.4656, 0.802601>
+Machine 9 availability is 0.990502 <96.003, 0.920569>
+Placing replica 0 on node 8
+Placing replica 1 on node 4
+Placing replica 2 on node 3
+Placing replica 3 on node 7
+Placing replica 4 on node 9
+Operations performed 821
+Operations performed 1659
+Total operations attempted 2468
+Total operations completed 1660
+Machine 0 availability is 0.989257 <231.875, 2.51812>
+Machine 1 availability is 0.989697 <178.079, 1.85377>
+Machine 2 availability is 0.989891 <216.531, 2.21123>
+Machine 3 availability is 0.988543 <160.46, 1.85968>
+Machine 4 availability is 0.989356 <218.684, 2.35275>
+Machine 5 availability is 0.992684 <218.402, 1.60953>
+Machine 6 availability is 0.988478 <194.286, 2.26456>
+Machine 7 availability is 0.989888 <197.545, 2.01792>
+Machine 8 availability is 0.991158 <200.632, 1.78991>
+Machine 9 availability is 0.992168 <204.252, 1.61227>
+Placing replica 0 on node 5
+Placing replica 1 on node 9
+Operations performed 518
+Operations performed 1029
+Total operations attempted 1171
+Total operations completed 1030
+Machine 0 availability is 0.989257 <231.875, 2.51812>
+Machine 1 availability is 0.989697 <178.079, 1.85377>
+Machine 2 availability is 0.989891 <216.531, 2.21123>
+Machine 3 availability is 0.988543 <160.46, 1.85968>
+Machine 4 availability is 0.989356 <218.684, 2.35275>
+Machine 5 availability is 0.992684 <218.402, 1.60953>
+Machine 6 availability is 0.988478 <194.286, 2.26456>
+Machine 7 availability is 0.989888 <197.545, 2.01792>
+Machine 8 availability is 0.991158 <200.632, 1.78991>
+Machine 9 availability is 0.992168 <204.252, 1.61227>
+Placing replica 0 on node 8
+Operations performed 481
+Operations performed 997
+Operations performed 1464
+Total operations attempted 1586
+Total operations completed 1465
+Machine 0 availability is 0.989257 <231.875, 2.51812>
+Machine 1 availability is 0.989697 <178.079, 1.85377>
+Machine 2 availability is 0.989891 <216.531, 2.21123>
+Machine 3 availability is 0.988543 <160.46, 1.85968>
+Machine 4 availability is 0.989356 <218.684, 2.35275>
+Machine 5 availability is 0.992684 <218.402, 1.60953>
+Machine 6 availability is 0.988478 <194.286, 2.26456>
+Machine 7 availability is 0.989888 <197.545, 2.01792>
+Machine 8 availability is 0.991158 <200.632, 1.78991>
+Machine 9 availability is 0.992168 <204.252, 1.61227>
+Placing replica 0 on node 8
+Placing replica 1 on node 4
+Operations performed 518
+Operations performed 1029
+Total operations attempted 1178
+Total operations completed 1030
+Machine 0 availability is 0.989257 <231.875, 2.51812>
+Machine 1 availability is 0.989697 <178.079, 1.85377>
+Machine 2 availability is 0.989891 <216.531, 2.21123>
+Machine 3 availability is 0.988543 <160.46, 1.85968>
+Machine 4 availability is 0.989356 <218.684, 2.35275>
+Machine 5 availability is 0.992684 <218.402, 1.60953>
+Machine 6 availability is 0.988478 <194.286, 2.26456>
+Machine 7 availability is 0.989888 <197.545, 2.01792>
+Machine 8 availability is 0.991158 <200.632, 1.78991>
+Machine 9 availability is 0.992168 <204.252, 1.61227>
+Placing replica 0 on node 8
+Placing replica 1 on node 4
+Placing replica 2 on node 3
+Operations performed 547
+Operations performed 1084
+Total operations attempted 1302
+Total operations completed 1085
+Machine 0 availability is 0.989257 <231.875, 2.51812>
+Machine 1 availability is 0.989697 <178.079, 1.85377>
+Machine 2 availability is 0.989891 <216.531, 2.21123>
+Machine 3 availability is 0.988543 <160.46, 1.85968>
+Machine 4 availability is 0.989356 <218.684, 2.35275>
+Machine 5 availability is 0.992684 <218.402, 1.60953>
+Machine 6 availability is 0.988478 <194.286, 2.26456>
+Machine 7 availability is 0.989888 <197.545, 2.01792>
+Machine 8 availability is 0.991158 <200.632, 1.78991>
+Machine 9 availability is 0.992168 <204.252, 1.61227>
+Placing replica 0 on node 8
+Placing replica 1 on node 4
+Placing replica 2 on node 3
+Placing replica 3 on node 7
+Operations performed 561
+Operations performed 1150
+Total operations attempted 1423
+Total operations completed 1151
+Machine 0 availability is 0.989257 <231.875, 2.51812>
+Machine 1 availability is 0.989697 <178.079, 1.85377>
+Machine 2 availability is 0.989891 <216.531, 2.21123>
+Machine 3 availability is 0.988543 <160.46, 1.85968>
+Machine 4 availability is 0.989356 <218.684, 2.35275>
+Machine 5 availability is 0.992684 <218.402, 1.60953>
+Machine 6 availability is 0.988478 <194.286, 2.26456>
+Machine 7 availability is 0.989888 <197.545, 2.01792>
+Machine 8 availability is 0.991158 <200.632, 1.78991>
+Machine 9 availability is 0.992168 <204.252, 1.61227>
+Placing replica 0 on node 8
+Placing replica 1 on node 4
+Placing replica 2 on node 3
+Placing replica 3 on node 7
+Placing replica 4 on node 9
+Operations performed 627
+Operations performed 1231
+Total operations attempted 1622
+Total operations completed 1232
+Machine 0 availability is 0.988508 <350.147, 4.07079>
+Machine 1 availability is 0.988398 <375.099, 4.40283>
+Machine 2 availability is 0.990676 <466.282, 4.38838>
+Machine 3 availability is 0.992586 <458.447, 3.42427>
+Machine 4 availability is 0.988387 <387.968, 4.55836>
+Machine 5 availability is 0.989382 <372.557, 3.99824>
+Machine 6 availability is 0.991258 <410.496, 3.62026>
+Machine 7 availability is 0.991414 <455.156, 3.94196>
+Machine 8 availability is 0.988402 <377.023, 4.42396>
+Machine 9 availability is 0.987637 <362.35, 4.5357>
+Placing replica 0 on node 3
+Placing replica 1 on node 7
+Operations performed 478
+Operations performed 966
+Operations performed 1415
+Total operations attempted 1504
+Total operations completed 1416
+Machine 0 availability is 0.988508 <350.147, 4.07079>
+Machine 1 availability is 0.988398 <375.099, 4.40283>
+Machine 2 availability is 0.990676 <466.282, 4.38838>
+Machine 3 availability is 0.992586 <458.447, 3.42427>
+Machine 4 availability is 0.988387 <387.968, 4.55836>
+Machine 5 availability is 0.989382 <372.557, 3.99824>
+Machine 6 availability is 0.991258 <410.496, 3.62026>
+Machine 7 availability is 0.991414 <455.156, 3.94196>
+Machine 8 availability is 0.988402 <377.023, 4.42396>
+Machine 9 availability is 0.987637 <362.35, 4.5357>
+Placing replica 0 on node 8
+Operations performed 463
+Operations performed 951
+Operations performed 1389
+Total operations attempted 1458
+Total operations completed 1390
+Machine 0 availability is 0.988508 <350.147, 4.07079>
+Machine 1 availability is 0.988398 <375.099, 4.40283>
+Machine 2 availability is 0.990676 <466.282, 4.38838>
+Machine 3 availability is 0.992586 <458.447, 3.42427>
+Machine 4 availability is 0.988387 <387.968, 4.55836>
+Machine 5 availability is 0.989382 <372.557, 3.99824>
+Machine 6 availability is 0.991258 <410.496, 3.62026>
+Machine 7 availability is 0.991414 <455.156, 3.94196>
+Machine 8 availability is 0.988402 <377.023, 4.42396>
+Machine 9 availability is 0.987637 <362.35, 4.5357>
+Placing replica 0 on node 8
+Placing replica 1 on node 4
+Operations performed 492
+Operations performed 986
+Operations performed 1445
+Total operations attempted 1581
+Total operations completed 1446
+Machine 0 availability is 0.988508 <350.147, 4.07079>
+Machine 1 availability is 0.988398 <375.099, 4.40283>
+Machine 2 availability is 0.990676 <466.282, 4.38838>
+Machine 3 availability is 0.992586 <458.447, 3.42427>
+Machine 4 availability is 0.988387 <387.968, 4.55836>
+Machine 5 availability is 0.989382 <372.557, 3.99824>
+Machine 6 availability is 0.991258 <410.496, 3.62026>
+Machine 7 availability is 0.991414 <455.156, 3.94196>
+Machine 8 availability is 0.988402 <377.023, 4.42396>
+Machine 9 availability is 0.987637 <362.35, 4.5357>
+Placing replica 0 on node 8
+Placing replica 1 on node 4
+Placing replica 2 on node 3
+Operations performed 492
+Operations performed 988
+Operations performed 1453
+Total operations attempted 1617
+Total operations completed 1454
+Machine 0 availability is 0.988508 <350.147, 4.07079>
+Machine 1 availability is 0.988398 <375.099, 4.40283>
+Machine 2 availability is 0.990676 <466.282, 4.38838>
+Machine 3 availability is 0.992586 <458.447, 3.42427>
+Machine 4 availability is 0.988387 <387.968, 4.55836>
+Machine 5 availability is 0.989382 <372.557, 3.99824>
+Machine 6 availability is 0.991258 <410.496, 3.62026>
+Machine 7 availability is 0.991414 <455.156, 3.94196>
+Machine 8 availability is 0.988402 <377.023, 4.42396>
+Machine 9 availability is 0.987637 <362.35, 4.5357>
+Placing replica 0 on node 8
+Placing replica 1 on node 4
+Placing replica 2 on node 3
+Placing replica 3 on node 7
+Operations performed 530
+Operations performed 1026
+Total operations attempted 1172
+Total operations completed 1027
+Machine 0 availability is 0.988508 <350.147, 4.07079>
+Machine 1 availability is 0.988398 <375.099, 4.40283>
+Machine 2 availability is 0.990676 <466.282, 4.38838>
+Machine 3 availability is 0.992586 <458.447, 3.42427>
+Machine 4 availability is 0.988387 <387.968, 4.55836>
+Machine 5 availability is 0.989382 <372.557, 3.99824>
+Machine 6 availability is 0.991258 <410.496, 3.62026>
+Machine 7 availability is 0.991414 <455.156, 3.94196>
+Machine 8 availability is 0.988402 <377.023, 4.42396>
+Machine 9 availability is 0.987637 <362.35, 4.5357>
+Placing replica 0 on node 8
+Placing replica 1 on node 4
+Placing replica 2 on node 3
+Placing replica 3 on node 7
+Placing replica 4 on node 9
+Operations performed 504
+Operations performed 1015
+Total operations attempted 1204
+Total operations completed 1016
+Machine 0 availability is 0.987979 <784.683, 9.54781>
+Machine 1 availability is 0.98963 <847.557, 8.88157>
+Machine 2 availability is 0.991659 <881.646, 7.4154>
+Machine 3 availability is 0.991587 <849.826, 7.20985>
+Machine 4 availability is 0.991702 <1006.12, 8.41844>
+Machine 5 availability is 0.989846 <834.214, 8.5576>
+Machine 6 availability is 0.988276 <731.701, 8.68059>
+Machine 7 availability is 0.99064 <993.424, 9.38623>
+Machine 8 availability is 0.989626 <731.48, 7.66798>
+Machine 9 availability is 0.988119 <674.289, 8.10729>
+Placing replica 0 on node 4
+Placing replica 1 on node 2
+Operations performed 447
+Operations performed 940
+Operations performed 1366
+Total operations attempted 1431
+Total operations completed 1367
+Machine 0 availability is 0.987979 <784.683, 9.54781>
+Machine 1 availability is 0.98963 <847.557, 8.88157>
+Machine 2 availability is 0.991659 <881.646, 7.4154>
+Machine 3 availability is 0.991587 <849.826, 7.20985>
+Machine 4 availability is 0.991702 <1006.12, 8.41844>
+Machine 5 availability is 0.989846 <834.214, 8.5576>
+Machine 6 availability is 0.988276 <731.701, 8.68059>
+Machine 7 availability is 0.99064 <993.424, 9.38623>
+Machine 8 availability is 0.989626 <731.48, 7.66798>
+Machine 9 availability is 0.988119 <674.289, 8.10729>
+Placing replica 0 on node 8
+Operations performed 443
+Operations performed 933
+Operations performed 1364
+Total operations attempted 1396
+Total operations completed 1365
+Machine 0 availability is 0.987979 <784.683, 9.54781>
+Machine 1 availability is 0.98963 <847.557, 8.88157>
+Machine 2 availability is 0.991659 <881.646, 7.4154>
+Machine 3 availability is 0.991587 <849.826, 7.20985>
+Machine 4 availability is 0.991702 <1006.12, 8.41844>
+Machine 5 availability is 0.989846 <834.214, 8.5576>
+Machine 6 availability is 0.988276 <731.701, 8.68059>
+Machine 7 availability is 0.99064 <993.424, 9.38623>
+Machine 8 availability is 0.989626 <731.48, 7.66798>
+Machine 9 availability is 0.988119 <674.289, 8.10729>
+Placing replica 0 on node 8
+Placing replica 1 on node 4
+Operations performed 461
+Operations performed 945
+Operations performed 1377
+Total operations attempted 1441
+Total operations completed 1378
+Machine 0 availability is 0.987979 <784.683, 9.54781>
+Machine 1 availability is 0.98963 <847.557, 8.88157>
+Machine 2 availability is 0.991659 <881.646, 7.4154>
+Machine 3 availability is 0.991587 <849.826, 7.20985>
+Machine 4 availability is 0.991702 <1006.12, 8.41844>
+Machine 5 availability is 0.989846 <834.214, 8.5576>
+Machine 6 availability is 0.988276 <731.701, 8.68059>
+Machine 7 availability is 0.99064 <993.424, 9.38623>
+Machine 8 availability is 0.989626 <731.48, 7.66798>
+Machine 9 availability is 0.988119 <674.289, 8.10729>
+Placing replica 0 on node 8
+Placing replica 1 on node 4
+Placing replica 2 on node 3
+Operations performed 464
+Operations performed 961
+Operations performed 1396
+Total operations attempted 1483
+Total operations completed 1397
+Machine 0 availability is 0.987979 <784.683, 9.54781>
+Machine 1 availability is 0.98963 <847.557, 8.88157>
+Machine 2 availability is 0.991659 <881.646, 7.4154>
+Machine 3 availability is 0.991587 <849.826, 7.20985>
+Machine 4 availability is 0.991702 <1006.12, 8.41844>
+Machine 5 availability is 0.989846 <834.214, 8.5576>
+Machine 6 availability is 0.988276 <731.701, 8.68059>
+Machine 7 availability is 0.99064 <993.424, 9.38623>
+Machine 8 availability is 0.989626 <731.48, 7.66798>
+Machine 9 availability is 0.988119 <674.289, 8.10729>
+Placing replica 0 on node 8
+Placing replica 1 on node 4
+Placing replica 2 on node 3
+Placing replica 3 on node 7
+Operations performed 459
+Operations performed 951
+Operations performed 1390
+Total operations attempted 1545
+Total operations completed 1390
+Machine 0 availability is 0.987979 <784.683, 9.54781>
+Machine 1 availability is 0.98963 <847.557, 8.88157>
+Machine 2 availability is 0.991659 <881.646, 7.4154>
+Machine 3 availability is 0.991587 <849.826, 7.20985>
+Machine 4 availability is 0.991702 <1006.12, 8.41844>
+Machine 5 availability is 0.989846 <834.214, 8.5576>
+Machine 6 availability is 0.988276 <731.701, 8.68059>
+Machine 7 availability is 0.99064 <993.424, 9.38623>
+Machine 8 availability is 0.989626 <731.48, 7.66798>
+Machine 9 availability is 0.988119 <674.289, 8.10729>
+Placing replica 0 on node 8
+Placing replica 1 on node 4
+Placing replica 2 on node 3
+Placing replica 3 on node 7
+Placing replica 4 on node 9
+Operations performed 466
+Operations performed 967
+Operations performed 1417
+Total operations attempted 1610
+Total operations completed 1418
+Machine 0 availability is 0.99043 <1898.43, 18.3442>
+Machine 1 availability is 0.987506 <1200.78, 15.1918>
+Machine 2 availability is 0.989648 <1457.63, 15.2471>
+Machine 3 availability is 0.992634 <1646.24, 12.2166>
+Machine 4 availability is 0.988782 <1467.11, 16.6452>
+Machine 5 availability is 0.989457 <1632.37, 17.3939>
+Machine 6 availability is 0.990846 <1626.32, 15.025>
+Machine 7 availability is 0.990197 <1615.08, 15.9891>
+Machine 8 availability is 0.991244 <1582.7, 13.9812>
+Machine 9 availability is 0.988001 <1486.98, 18.0588>
+Placing replica 0 on node 3
+Placing replica 1 on node 8
+Operations performed 452
+Operations performed 936
+Operations performed 1367
+Total operations attempted 1420
+Total operations completed 1368
+Machine 0 availability is 0.99043 <1898.43, 18.3442>
+Machine 1 availability is 0.987506 <1200.78, 15.1918>
+Machine 2 availability is 0.989648 <1457.63, 15.2471>
+Machine 3 availability is 0.992634 <1646.24, 12.2166>
+Machine 4 availability is 0.988782 <1467.11, 16.6452>
+Machine 5 availability is 0.989457 <1632.37, 17.3939>
+Machine 6 availability is 0.990846 <1626.32, 15.025>
+Machine 7 availability is 0.990197 <1615.08, 15.9891>
+Machine 8 availability is 0.991244 <1582.7, 13.9812>
+Machine 9 availability is 0.988001 <1486.98, 18.0588>
+Placing replica 0 on node 8
+Operations performed 445
+Operations performed 930
+Operations performed 1359
+Total operations attempted 1383
+Total operations completed 1360
+Machine 0 availability is 0.99043 <1898.43, 18.3442>
+Machine 1 availability is 0.987506 <1200.78, 15.1918>
+Machine 2 availability is 0.989648 <1457.63, 15.2471>
+Machine 3 availability is 0.992634 <1646.24, 12.2166>
+Machine 4 availability is 0.988782 <1467.11, 16.6452>
+Machine 5 availability is 0.989457 <1632.37, 17.3939>
+Machine 6 availability is 0.990846 <1626.32, 15.025>
+Machine 7 availability is 0.990197 <1615.08, 15.9891>
+Machine 8 availability is 0.991244 <1582.7, 13.9812>
+Machine 9 availability is 0.988001 <1486.98, 18.0588>
+Placing replica 0 on node 8
+Placing replica 1 on node 4
+Operations performed 448
+Operations performed 933
+Operations performed 1364
+Total operations attempted 1450
+Total operations completed 1365
+Machine 0 availability is 0.99043 <1898.43, 18.3442>
+Machine 1 availability is 0.987506 <1200.78, 15.1918>
+Machine 2 availability is 0.989648 <1457.63, 15.2471>
+Machine 3 availability is 0.992634 <1646.24, 12.2166>
+Machine 4 availability is 0.988782 <1467.11, 16.6452>
+Machine 5 availability is 0.989457 <1632.37, 17.3939>
+Machine 6 availability is 0.990846 <1626.32, 15.025>
+Machine 7 availability is 0.990197 <1615.08, 15.9891>
+Machine 8 availability is 0.991244 <1582.7, 13.9812>
+Machine 9 availability is 0.988001 <1486.98, 18.0588>
+Placing replica 0 on node 8
+Placing replica 1 on node 4
+Placing replica 2 on node 3
+Operations performed 452
+Operations performed 935
+Operations performed 1364
+Total operations attempted 1485
+Total operations completed 1365
+Machine 0 availability is 0.99043 <1898.43, 18.3442>
+Machine 1 availability is 0.987506 <1200.78, 15.1918>
+Machine 2 availability is 0.989648 <1457.63, 15.2471>
+Machine 3 availability is 0.992634 <1646.24, 12.2166>
+Machine 4 availability is 0.988782 <1467.11, 16.6452>
+Machine 5 availability is 0.989457 <1632.37, 17.3939>
+Machine 6 availability is 0.990846 <1626.32, 15.025>
+Machine 7 availability is 0.990197 <1615.08, 15.9891>
+Machine 8 availability is 0.991244 <1582.7, 13.9812>
+Machine 9 availability is 0.988001 <1486.98, 18.0588>
+Placing replica 0 on node 8
+Placing replica 1 on node 4
+Placing replica 2 on node 3
+Placing replica 3 on node 7
+Operations performed 453
+Operations performed 935
+Operations performed 1372
+Total operations attempted 1497
+Total operations completed 1373
+Machine 0 availability is 0.99043 <1898.43, 18.3442>
+Machine 1 availability is 0.987506 <1200.78, 15.1918>
+Machine 2 availability is 0.989648 <1457.63, 15.2471>
+Machine 3 availability is 0.992634 <1646.24, 12.2166>
+Machine 4 availability is 0.988782 <1467.11, 16.6452>
+Machine 5 availability is 0.989457 <1632.37, 17.3939>
+Machine 6 availability is 0.990846 <1626.32, 15.025>
+Machine 7 availability is 0.990197 <1615.08, 15.9891>
+Machine 8 availability is 0.991244 <1582.7, 13.9812>
+Machine 9 availability is 0.988001 <1486.98, 18.0588>
+Placing replica 0 on node 8
+Placing replica 1 on node 4
+Placing replica 2 on node 3
+Placing replica 3 on node 7
+Placing replica 4 on node 9
+Operations performed 454
+Operations performed 951
+Operations performed 1380
+Total operations attempted 1553
+Total operations completed 1380
+Machine 0 availability is 0.990888 <3269.53, 30.0651>
+Machine 1 availability is 0.988159 <2881.38, 34.5259>
+Machine 2 availability is 0.991482 <3565.04, 30.6274>
+Machine 3 availability is 0.989434 <2899.82, 30.9665>
+Machine 4 availability is 0.991963 <3582.78, 29.0291>
+Machine 5 availability is 0.987167 <2971.13, 38.6236>
+Machine 6 availability is 0.990896 <3661.62, 33.6434>
+Machine 7 availability is 0.990481 <3086.63, 29.6629>
+Machine 8 availability is 0.988776 <2769.94, 31.4425>
+Machine 9 availability is 0.98945 <3512.5, 37.4531>
+Placing replica 0 on node 4
+Placing replica 1 on node 2
+Operations performed 442
+Operations performed 928
+Operations performed 1358
+Total operations attempted 1431
+Total operations completed 1359
+Machine 0 availability is 0.990888 <3269.53, 30.0651>
+Machine 1 availability is 0.988159 <2881.38, 34.5259>
+Machine 2 availability is 0.991482 <3565.04, 30.6274>
+Machine 3 availability is 0.989434 <2899.82, 30.9665>
+Machine 4 availability is 0.991963 <3582.78, 29.0291>
+Machine 5 availability is 0.987167 <2971.13, 38.6236>
+Machine 6 availability is 0.990896 <3661.62, 33.6434>
+Machine 7 availability is 0.990481 <3086.63, 29.6629>
+Machine 8 availability is 0.988776 <2769.94, 31.4425>
+Machine 9 availability is 0.98945 <3512.5, 37.4531>
+Placing replica 0 on node 8
+Operations performed 442
+Operations performed 928
+Operations performed 1358
+Total operations attempted 1437
+Total operations completed 1359
+Machine 0 availability is 0.990888 <3269.53, 30.0651>
+Machine 1 availability is 0.988159 <2881.38, 34.5259>
+Machine 2 availability is 0.991482 <3565.04, 30.6274>
+Machine 3 availability is 0.989434 <2899.82, 30.9665>
+Machine 4 availability is 0.991963 <3582.78, 29.0291>
+Machine 5 availability is 0.987167 <2971.13, 38.6236>
+Machine 6 availability is 0.990896 <3661.62, 33.6434>
+Machine 7 availability is 0.990481 <3086.63, 29.6629>
+Machine 8 availability is 0.988776 <2769.94, 31.4425>
+Machine 9 availability is 0.98945 <3512.5, 37.4531>
+Placing replica 0 on node 8
+Placing replica 1 on node 4
+Operations performed 444
+Operations performed 930
+Operations performed 1359
+Total operations attempted 1490
+Total operations completed 1360
+Machine 0 availability is 0.990888 <3269.53, 30.0651>
+Machine 1 availability is 0.988159 <2881.38, 34.5259>
+Machine 2 availability is 0.991482 <3565.04, 30.6274>
+Machine 3 availability is 0.989434 <2899.82, 30.9665>
+Machine 4 availability is 0.991963 <3582.78, 29.0291>
+Machine 5 availability is 0.987167 <2971.13, 38.6236>
+Machine 6 availability is 0.990896 <3661.62, 33.6434>
+Machine 7 availability is 0.990481 <3086.63, 29.6629>
+Machine 8 availability is 0.988776 <2769.94, 31.4425>
+Machine 9 availability is 0.98945 <3512.5, 37.4531>
+Placing replica 0 on node 8
+Placing replica 1 on node 4
+Placing replica 2 on node 3
+Operations performed 444
+Operations performed 930
+Operations performed 1358
+Total operations attempted 1519
+Total operations completed 1359
+Machine 0 availability is 0.990888 <3269.53, 30.0651>
+Machine 1 availability is 0.988159 <2881.38, 34.5259>
+Machine 2 availability is 0.991482 <3565.04, 30.6274>
+Machine 3 availability is 0.989434 <2899.82, 30.9665>
+Machine 4 availability is 0.991963 <3582.78, 29.0291>
+Machine 5 availability is 0.987167 <2971.13, 38.6236>
+Machine 6 availability is 0.990896 <3661.62, 33.6434>
+Machine 7 availability is 0.990481 <3086.63, 29.6629>
+Machine 8 availability is 0.988776 <2769.94, 31.4425>
+Machine 9 availability is 0.98945 <3512.5, 37.4531>
+Placing replica 0 on node 8
+Placing replica 1 on node 4
+Placing replica 2 on node 3
+Placing replica 3 on node 7
+Operations performed 444
+Operations performed 930
+Operations performed 1359
+Total operations attempted 1568
+Total operations completed 1360
+Machine 0 availability is 0.990888 <3269.53, 30.0651>
+Machine 1 availability is 0.988159 <2881.38, 34.5259>
+Machine 2 availability is 0.991482 <3565.04, 30.6274>
+Machine 3 availability is 0.989434 <2899.82, 30.9665>
+Machine 4 availability is 0.991963 <3582.78, 29.0291>
+Machine 5 availability is 0.987167 <2971.13, 38.6236>
+Machine 6 availability is 0.990896 <3661.62, 33.6434>
+Machine 7 availability is 0.990481 <3086.63, 29.6629>
+Machine 8 availability is 0.988776 <2769.94, 31.4425>
+Machine 9 availability is 0.98945 <3512.5, 37.4531>
+Placing replica 0 on node 8
+Placing replica 1 on node 4
+Placing replica 2 on node 3
+Placing replica 3 on node 7
+Placing replica 4 on node 9
+Operations performed 446
+Operations performed 933
+Operations performed 1362
+Total operations attempted 1647
+Total operations completed 1362
+Machine 0 availability is 0.990953 <5875.67, 53.6453>
+Machine 1 availability is 0.990711 <6936.19, 65.0316>
+Machine 2 availability is 0.989408 <6550.5, 70.1263>
+Machine 3 availability is 0.992344 <7528.4, 58.0859>
+Machine 4 availability is 0.98859 <5661.51, 65.3436>
+Machine 5 availability is 0.991447 <7271.6, 62.7296>
+Machine 6 availability is 0.990201 <7493.39, 74.1555>
+Machine 7 availability is 0.992301 <7149.98, 55.4746>
+Machine 8 availability is 0.985957 <4668.8, 66.4974>
+Machine 9 availability is 0.990832 <5611.98, 51.926>
+Placing replica 0 on node 3
+Placing replica 1 on node 7
+Operations performed 443
+Operations performed 930
+Operations performed 1358
+Total operations attempted 1537
+Total operations completed 1359
+Machine 0 availability is 0.990953 <5875.67, 53.6453>
+Machine 1 availability is 0.990711 <6936.19, 65.0316>
+Machine 2 availability is 0.989408 <6550.5, 70.1263>
+Machine 3 availability is 0.992344 <7528.4, 58.0859>
+Machine 4 availability is 0.98859 <5661.51, 65.3436>
+Machine 5 availability is 0.991447 <7271.6, 62.7296>
+Machine 6 availability is 0.990201 <7493.39, 74.1555>
+Machine 7 availability is 0.992301 <7149.98, 55.4746>
+Machine 8 availability is 0.985957 <4668.8, 66.4974>
+Machine 9 availability is 0.990832 <5611.98, 51.926>
+Placing replica 0 on node 8
+Operations performed 442
+Operations performed 928
+Operations performed 1358
+Total operations attempted 1478
+Total operations completed 1359
+Machine 0 availability is 0.990953 <5875.67, 53.6453>
+Machine 1 availability is 0.990711 <6936.19, 65.0316>
+Machine 2 availability is 0.989408 <6550.5, 70.1263>
+Machine 3 availability is 0.992344 <7528.4, 58.0859>
+Machine 4 availability is 0.98859 <5661.51, 65.3436>
+Machine 5 availability is 0.991447 <7271.6, 62.7296>
+Machine 6 availability is 0.990201 <7493.39, 74.1555>
+Machine 7 availability is 0.992301 <7149.98, 55.4746>
+Machine 8 availability is 0.985957 <4668.8, 66.4974>
+Machine 9 availability is 0.990832 <5611.98, 51.926>
+Placing replica 0 on node 8
+Placing replica 1 on node 4
+Operations performed 443
+Operations performed 928
+Operations performed 1358
+Total operations attempted 1651
+Total operations completed 1359
+Machine 0 availability is 0.990953 <5875.67, 53.6453>
+Machine 1 availability is 0.990711 <6936.19, 65.0316>
+Machine 2 availability is 0.989408 <6550.5, 70.1263>
+Machine 3 availability is 0.992344 <7528.4, 58.0859>
+Machine 4 availability is 0.98859 <5661.51, 65.3436>
+Machine 5 availability is 0.991447 <7271.6, 62.7296>
+Machine 6 availability is 0.990201 <7493.39, 74.1555>
+Machine 7 availability is 0.992301 <7149.98, 55.4746>
+Machine 8 availability is 0.985957 <4668.8, 66.4974>
+Machine 9 availability is 0.990832 <5611.98, 51.926>
+Placing replica 0 on node 8
+Placing replica 1 on node 4
+Placing replica 2 on node 3
+Operations performed 443
+Operations performed 930
+Operations performed 1358
+Total operations attempted 1828
+Total operations completed 1359
+Machine 0 availability is 0.990953 <5875.67, 53.6453>
+Machine 1 availability is 0.990711 <6936.19, 65.0316>
+Machine 2 availability is 0.989408 <6550.5, 70.1263>
+Machine 3 availability is 0.992344 <7528.4, 58.0859>
+Machine 4 availability is 0.98859 <5661.51, 65.3436>
+Machine 5 availability is 0.991447 <7271.6, 62.7296>
+Machine 6 availability is 0.990201 <7493.39, 74.1555>
+Machine 7 availability is 0.992301 <7149.98, 55.4746>
+Machine 8 availability is 0.985957 <4668.8, 66.4974>
+Machine 9 availability is 0.990832 <5611.98, 51.926>
+Placing replica 0 on node 8
+Placing replica 1 on node 4
+Placing replica 2 on node 3
+Placing replica 3 on node 7
+Operations performed 444
+Operations performed 930
+Operations performed 1359
+Total operations attempted 1792
+Total operations completed 1360
+Machine 0 availability is 0.990953 <5875.67, 53.6453>
+Machine 1 availability is 0.990711 <6936.19, 65.0316>
+Machine 2 availability is 0.989408 <6550.5, 70.1263>
+Machine 3 availability is 0.992344 <7528.4, 58.0859>
+Machine 4 availability is 0.98859 <5661.51, 65.3436>
+Machine 5 availability is 0.991447 <7271.6, 62.7296>
+Machine 6 availability is 0.990201 <7493.39, 74.1555>
+Machine 7 availability is 0.992301 <7149.98, 55.4746>
+Machine 8 availability is 0.985957 <4668.8, 66.4974>
+Machine 9 availability is 0.990832 <5611.98, 51.926>
+Placing replica 0 on node 8
+Placing replica 1 on node 4
+Placing replica 2 on node 3
+Placing replica 3 on node 7
+Placing replica 4 on node 9
+Operations performed 444
+Operations performed 930
+Operations performed 1359
+Total operations attempted 1916
+Total operations completed 1360
+Machine 0 availability is 0.989097 <11932.6, 131.532>
+Machine 1 availability is 0.98821 <12950.2, 154.503>
+Machine 2 availability is 0.991625 <14396.7, 121.587>
+Machine 3 availability is 0.990438 <13854, 133.744>
+Machine 4 availability is 0.989526 <13802.4, 146.092>
+Machine 5 availability is 0.990514 <12990.6, 124.405>
+Machine 6 availability is 0.991068 <11802.3, 106.365>
+Machine 7 availability is 0.991284 <13463.9, 118.382>
+Machine 8 availability is 0.988695 <13952.3, 159.53>
+Machine 9 availability is 0.986273 <10723.4, 149.251>
+Placing replica 0 on node 2
+Placing replica 1 on node 7
+Operations performed 442
+Operations performed 928
+Operations performed 1357
+Total operations attempted 1666
+Total operations completed 1358
+Machine 0 availability is 0.989097 <11932.6, 131.532>
+Machine 1 availability is 0.98821 <12950.2, 154.503>
+Machine 2 availability is 0.991625 <14396.7, 121.587>
+Machine 3 availability is 0.990438 <13854, 133.744>
+Machine 4 availability is 0.989526 <13802.4, 146.092>
+Machine 5 availability is 0.990514 <12990.6, 124.405>
+Machine 6 availability is 0.991068 <11802.3, 106.365>
+Machine 7 availability is 0.991284 <13463.9, 118.382>
+Machine 8 availability is 0.988695 <13952.3, 159.53>
+Machine 9 availability is 0.986273 <10723.4, 149.251>
+Placing replica 0 on node 8
+Operations performed 442
+Operations performed 928
+Operations performed 1357
+Total operations attempted 1554
+Total operations completed 1358
+Machine 0 availability is 0.989097 <11932.6, 131.532>
+Machine 1 availability is 0.98821 <12950.2, 154.503>
+Machine 2 availability is 0.991625 <14396.7, 121.587>
+Machine 3 availability is 0.990438 <13854, 133.744>
+Machine 4 availability is 0.989526 <13802.4, 146.092>
+Machine 5 availability is 0.990514 <12990.6, 124.405>
+Machine 6 availability is 0.991068 <11802.3, 106.365>
+Machine 7 availability is 0.991284 <13463.9, 118.382>
+Machine 8 availability is 0.988695 <13952.3, 159.53>
+Machine 9 availability is 0.986273 <10723.4, 149.251>
+Placing replica 0 on node 8
+Placing replica 1 on node 4
+Operations performed 442
+Operations performed 928
+Operations performed 1357
+Total operations attempted 1783
+Total operations completed 1358
+Machine 0 availability is 0.989097 <11932.6, 131.532>
+Machine 1 availability is 0.98821 <12950.2, 154.503>
+Machine 2 availability is 0.991625 <14396.7, 121.587>
+Machine 3 availability is 0.990438 <13854, 133.744>
+Machine 4 availability is 0.989526 <13802.4, 146.092>
+Machine 5 availability is 0.990514 <12990.6, 124.405>
+Machine 6 availability is 0.991068 <11802.3, 106.365>
+Machine 7 availability is 0.991284 <13463.9, 118.382>
+Machine 8 availability is 0.988695 <13952.3, 159.53>
+Machine 9 availability is 0.986273 <10723.4, 149.251>
+Placing replica 0 on node 8
+Placing replica 1 on node 4
+Placing replica 2 on node 3
+Operations performed 442
+Operations performed 928
+Operations performed 1357
+Total operations attempted 1901
+Total operations completed 1358
+Machine 0 availability is 0.989097 <11932.6, 131.532>
+Machine 1 availability is 0.98821 <12950.2, 154.503>
+Machine 2 availability is 0.991625 <14396.7, 121.587>
+Machine 3 availability is 0.990438 <13854, 133.744>
+Machine 4 availability is 0.989526 <13802.4, 146.092>
+Machine 5 availability is 0.990514 <12990.6, 124.405>
+Machine 6 availability is 0.991068 <11802.3, 106.365>
+Machine 7 availability is 0.991284 <13463.9, 118.382>
+Machine 8 availability is 0.988695 <13952.3, 159.53>
+Machine 9 availability is 0.986273 <10723.4, 149.251>
+Placing replica 0 on node 8
+Placing replica 1 on node 4
+Placing replica 2 on node 3
+Placing replica 3 on node 7
+Operations performed 442
+Operations performed 928
+Operations performed 1357
+Total operations attempted 2067
+Total operations completed 1358
+Machine 0 availability is 0.989097 <11932.6, 131.532>
+Machine 1 availability is 0.98821 <12950.2, 154.503>
+Machine 2 availability is 0.991625 <14396.7, 121.587>
+Machine 3 availability is 0.990438 <13854, 133.744>
+Machine 4 availability is 0.989526 <13802.4, 146.092>
+Machine 5 availability is 0.990514 <12990.6, 124.405>
+Machine 6 availability is 0.991068 <11802.3, 106.365>
+Machine 7 availability is 0.991284 <13463.9, 118.382>
+Machine 8 availability is 0.988695 <13952.3, 159.53>
+Machine 9 availability is 0.986273 <10723.4, 149.251>
+Placing replica 0 on node 8
+Placing replica 1 on node 4
+Placing replica 2 on node 3
+Placing replica 3 on node 7
+Placing replica 4 on node 9
+Operations performed 442
+Operations performed 928
+Operations performed 1358
+Total operations attempted 2297
+Total operations completed 1359
+Machine 0 availability is 0.993489 <31417.6, 205.899>
+Machine 1 availability is 0.990892 <28221.3, 259.394>
+Machine 2 availability is 0.989315 <22641.1, 244.529>
+Machine 3 availability is 0.991587 <25910, 219.828>
+Machine 4 availability is 0.990936 <26546.3, 242.808>
+Machine 5 availability is 0.989026 <24724.8, 274.347>
+Machine 6 availability is 0.992085 <28584.1, 228.055>
+Machine 7 availability is 0.990365 <26550.6, 258.304>
+Machine 8 availability is 0.989539 <21602.6, 228.366>
+Machine 9 availability is 0.991304 <32351.7, 283.803>
+Placing replica 0 on node 0
+Placing replica 1 on node 6
+Operations performed 442
+Operations performed 928
+Operations performed 1357
+Total operations attempted 1940
+Total operations completed 1358
+Machine 0 availability is 0.993489 <31417.6, 205.899>
+Machine 1 availability is 0.990892 <28221.3, 259.394>
+Machine 2 availability is 0.989315 <22641.1, 244.529>
+Machine 3 availability is 0.991587 <25910, 219.828>
+Machine 4 availability is 0.990936 <26546.3, 242.808>
+Machine 5 availability is 0.989026 <24724.8, 274.347>
+Machine 6 availability is 0.992085 <28584.1, 228.055>
+Machine 7 availability is 0.990365 <26550.6, 258.304>
+Machine 8 availability is 0.989539 <21602.6, 228.366>
+Machine 9 availability is 0.991304 <32351.7, 283.803>
+Placing replica 0 on node 8
+Operations performed 442
+Operations performed 928
+Operations performed 1357
+Total operations attempted 1684
+Total operations completed 1358
+Machine 0 availability is 0.993489 <31417.6, 205.899>
+Machine 1 availability is 0.990892 <28221.3, 259.394>
+Machine 2 availability is 0.989315 <22641.1, 244.529>
+Machine 3 availability is 0.991587 <25910, 219.828>
+Machine 4 availability is 0.990936 <26546.3, 242.808>
+Machine 5 availability is 0.989026 <24724.8, 274.347>
+Machine 6 availability is 0.992085 <28584.1, 228.055>
+Machine 7 availability is 0.990365 <26550.6, 258.304>
+Machine 8 availability is 0.989539 <21602.6, 228.366>
+Machine 9 availability is 0.991304 <32351.7, 283.803>
+Placing replica 0 on node 8
+Placing replica 1 on node 4
+Operations performed 442
+Operations performed 928
+Operations performed 1357
+Total operations attempted 1963
+Total operations completed 1358
+Machine 0 availability is 0.993489 <31417.6, 205.899>
+Machine 1 availability is 0.990892 <28221.3, 259.394>
+Machine 2 availability is 0.989315 <22641.1, 244.529>
+Machine 3 availability is 0.991587 <25910, 219.828>
+Machine 4 availability is 0.990936 <26546.3, 242.808>
+Machine 5 availability is 0.989026 <24724.8, 274.347>
+Machine 6 availability is 0.992085 <28584.1, 228.055>
+Machine 7 availability is 0.990365 <26550.6, 258.304>
+Machine 8 availability is 0.989539 <21602.6, 228.366>
+Machine 9 availability is 0.991304 <32351.7, 283.803>
+Placing replica 0 on node 8
+Placing replica 1 on node 4
+Placing replica 2 on node 3
+Operations performed 442
+Operations performed 928
+Operations performed 1357
+Total operations attempted 2029
+Total operations completed 1358
+Machine 0 availability is 0.993489 <31417.6, 205.899>
+Machine 1 availability is 0.990892 <28221.3, 259.394>
+Machine 2 availability is 0.989315 <22641.1, 244.529>
+Machine 3 availability is 0.991587 <25910, 219.828>
+Machine 4 availability is 0.990936 <26546.3, 242.808>
+Machine 5 availability is 0.989026 <24724.8, 274.347>
+Machine 6 availability is 0.992085 <28584.1, 228.055>
+Machine 7 availability is 0.990365 <26550.6, 258.304>
+Machine 8 availability is 0.989539 <21602.6, 228.366>
+Machine 9 availability is 0.991304 <32351.7, 283.803>
+Placing replica 0 on node 8
+Placing replica 1 on node 4
+Placing replica 2 on node 3
+Placing replica 3 on node 7
+Operations performed 442
+Operations performed 928
+Operations performed 1357
+Total operations attempted 2291
+Total operations completed 1358
+Machine 0 availability is 0.993489 <31417.6, 205.899>
+Machine 1 availability is 0.990892 <28221.3, 259.394>
+Machine 2 availability is 0.989315 <22641.1, 244.529>
+Machine 3 availability is 0.991587 <25910, 219.828>
+Machine 4 availability is 0.990936 <26546.3, 242.808>
+Machine 5 availability is 0.989026 <24724.8, 274.347>
+Machine 6 availability is 0.992085 <28584.1, 228.055>
+Machine 7 availability is 0.990365 <26550.6, 258.304>
+Machine 8 availability is 0.989539 <21602.6, 228.366>
+Machine 9 availability is 0.991304 <32351.7, 283.803>
+Placing replica 0 on node 8
+Placing replica 1 on node 4
+Placing replica 2 on node 3
+Placing replica 3 on node 7
+Placing replica 4 on node 9
+Operations performed 442
+Operations performed 928
+Operations performed 1357
+Total operations attempted 2734
+Total operations completed 1358
