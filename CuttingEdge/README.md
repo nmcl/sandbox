@@ -5,3 +5,7 @@ There are a number of versions here ordered roughly by the dates in which they w
 that the dates are accurate.
 
 Relevant licence files will be within specific directories.
+
+----
+
+Note, some of the source in these directories is replicated at the top-level of this repository. However, the versions here may well be different so included here for completeness.
