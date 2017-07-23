@@ -1,0 +1,7 @@
+This is just the standard GNU Threads package but with some slight modifications
+which I have had to make to get it to work with C++. These modifications are
+explicitly shown in gnulwp.h.
+
+Mark Little, June 1993.
+
+M.C.Little@ac.uk.newcastle
