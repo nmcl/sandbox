@@ -1,6 +1,0 @@
-BloomFilter.h
-Makefile
-StringBloomFilter.h
-StringHash.h
-UidBloomFilter.h
-UidHash.h
