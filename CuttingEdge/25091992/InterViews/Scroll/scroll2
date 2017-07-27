@@ -1,0 +1,195 @@
+From newcastle.ac.uk!rcx1.ssd.csd.harris.com!jason Thu Dec  5 17:56:34 1991
+Article 3413 of ncl.interviews:
+Newsgroups: ncl.interviews
+Distribution: ncl
+Path: newcastle.ac.uk!rcx1.ssd.csd.harris.com!jason
+>From jason@rcx1.ssd.csd.harris.com (Jason Baietto)
+Subject: Re: scroll only if button is released
+Message-Id: <5917@travis.csd.harris.com>
+Date: 4 Dec 91 17:15:49 GMT
+Sender: interviews-request@newcastle.ac.uk
+Approved: news@newcastle.ac.uk
+Organization: Harris Computer Systems Division, Fort Lauderdale, FL
+References: <9112041209.AA14804@concept.uucp>
+Original-Sender: owner-comp-windows-interviews@edu.stanford.shelby
+Reply-To: jason@rcx1.ssd.csd.harris.com (Jason Baietto)
+Original-Sender: daemon@edu.stanford.interviews
+X-Mailer: mail-news newcastle perl version
+
+| 
+| Is it possible to implement a scrollbar in this way, that
+| it scrolls only, if the button is released (so it won't 
+| scroll while dragging). 
+|
+
+I'm not sure if this is what you need, but I have modified a scroller
+so that it informs its adjustable when the button is released.  With
+this modification, an adjustable can choose to ignore scroll_to()
+calls and only do the actual scrolling to the final location when the
+button has been released.
+
+To do this I had to subclass scroller, hscroller, and adjustable.  The bad
+thing about having to add this myself is the fact that kit->hscroll_bar()
+can't be used with these subclassed types.  Also, any existing classes that
+are derived from Adjustable won't work with Scroller2's unless you change
+them to be derived from Adjustable2.
+
+This functionality really should have been built into the toolkit :-(
+Following is the code I use.  Hope this helps...
+
+
+----------------------------- cut here ----------------------------
+
+#include <IV-look/scroller.h>
+#include <IV-look/adjustable.h>
+#include <InterViews/coord.h>
+#include <InterViews/style.h>
+#include <InterViews/event.h>
+#include <OS/string.h>
+#include <stdio.h>
+
+class Scroller2;
+class HScroller2;
+class Adjustable2;
+
+
+
+
+//
+// Scroller2 - Just like Scroller, but adds calls to the commit()
+//             and abort() member functions of an Adjustable2.
+//
+
+class Scroller2 : public Scroller {
+public:
+   Scroller2(DimensionName, Adjustable2*, Style*);
+   virtual void release(Event&);
+   virtual void drag(Event&);
+   virtual void commit(Event&);
+   virtual void abort(Event&);
+};
+
+Scroller2::Scroller2(DimensionName d, Adjustable2 * a, Style * s) 
+: Scroller(d,a,s) {}
+
+void Scroller2::drag(Event& e) {
+   Scroller::drag(e);
+}
+
+void Scroller2::release(Event& e) {
+   Scroller::release(e);
+}
+
+void Scroller2::commit(Event& e) {
+   Scroller::commit(e);
+   ((Adjustable2 *)subject())->commit();
+}
+
+void Scroller2::abort(Event& e) {
+   Scroller::abort(e);
+   ((Adjustable2 *)subject())->abort();
+}
+
+
+
+
+//
+// HScroller2 - Just like HScroller, but based off of HScroller2.
+//              I didn't do a VScroller2, but if you need one all you
+//              have to do is copy what's in IV-look/scroller.[ch] and
+//              change it to derive from Scroller2 instead of Scroller.
+//
+
+class HScroller2 : public Scroller2 {
+public:
+    HScroller2(Adjustable2 *, Style*);
+    virtual ~HScroller2();
+protected:
+    virtual void allocate_thumb(
+	const Allocation& scroller, Allocation& thumb,
+	Coord position, Coord length
+    );
+    virtual Coord pointer(const Event&, const Allocation&) const;
+};
+
+HScroller2::HScroller2(Adjustable2* a, Style* s) : Scroller2(Dimension_X, a, s) { }
+HScroller2::~HScroller2() { }
+
+void HScroller2::allocate_thumb(
+    const Allocation& a, Allocation& thumb, Coord position, Coord length
+) {
+    Allotment ax(a.left() + position, length, 0.0);
+    Allotment ay(a.bottom(), a.allotment(Dimension_Y).span(), 0.0);
+    thumb.allot(Dimension_X, ax);
+    thumb.allot(Dimension_Y, ay);
+}
+
+Coord HScroller2::pointer(const Event& e, const Allocation& a) const {
+    return e.pointer_x() - a.left();
+}
+
+
+
+
+
+//
+// Adjustable2 - just like Adjustable, but adds commit() and abort().
+//
+
+class Adjustable2 : public Adjustable {
+public:   
+   Adjustable2();
+   virtual void commit();
+   virtual void abort();
+};
+
+Adjustable2::Adjustable2() : Adjustable() {}
+
+void Adjustable2::commit() {}
+
+void Adjustable2::abort() {}
+
+
+
+
+
+//
+// Since we can't use the kit, use the following kludge code to get
+// a nice looking scrollbar.  This always gives you the motif look.
+//
+
+Glyph * hscroller2(Adjustable2 * a, Style* style) {
+    Style* s = new Style(style);
+    s->prefix("HScrollBar");
+    s->prefix("ScrollBar");
+    Coord mover_size = 15.0;
+    s->find_attribute("mover_size", mover_size);
+    Glyph* sep = new HGlue(1.0, 0.0, 0.0);
+    return kit->inset_frame(
+	new LRBox(
+	    new HCenter(
+		new FixedSpan((Glyph *)kit->left_mover(a, s), Dimension_X, mover_size),
+		0.0
+	    ),
+	    sep,
+	    new HScroller2(a, s),
+	    sep,
+	    new FixedSpan((Glyph *)kit->right_mover(a, s), Dimension_X, mover_size)
+	),
+	s
+    );
+}
+
+
+----------------------------- cut here ----------------------------
+
+
+|===================================|===================================|
+|      Jason "Jasper" Baietto       |       otteiaB "repsaJ" nosaJ      |
+| Harris Computer Systems Division  |  noisiviD smetsyS retupmoC sirraH |
+|     Fort Lauderdale, Florida      |      adirolF ,eladreduaL troF     |
+|     jason@ssd.csd.harris.com      |      moc.sirrah.dsc.dss@nosaj     |
+|        phone: 305/973-5059        |        9505-379/503 :enohp        |
+|===================================|===================================|
+
+
