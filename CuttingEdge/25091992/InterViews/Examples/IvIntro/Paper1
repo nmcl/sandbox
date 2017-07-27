@@ -1,0 +1,185 @@
+This Chapter demonstrates and discusses some simple programs that
+construct user interfaces. There is very little, if any, behaviour
+associated with them. 
+
+CenterDemo
+==========
+      #include <InterViews/world.h>
+      #include <InterViews/window.h>
+      #include <InterViews/background.h>
+      #include <InterViews/margin.h>
+      #include <InterViews/box.h>
+      #include <InterViews/center.h>
+      #include <InterViews/border.h>
+      #include <InterViews/fixedspan.h>
+      #include <InterViews/glue.h>
+      #include <InterViews/label.h>
+      
+      #define RECTANGLE(w,h,a) \
+      (new HCenter(new Border(new FixedSpan(new FixedSpan(nil,Dimension_Y, h),\
+      				      Dimension_X, w), \
+      			      world.foreground()), a))
+      
+      main (int argc, char *argv[])
+      {
+          World world("CenterDemo", argc, argv);
+      
+          TBBox box(RECTANGLE(200.0, 25.0, 0.9),
+      	            RECTANGLE(200.0, 25.0, 0.1),
+      	            RECTANGLE(200.0, 25.0, 0.2),
+      	            RECTANGLE(200.0, 25.0, 0.8),
+      	            RECTANGLE(200.0, 25.0, 0.3),
+      	            RECTANGLE(200.0, 25.0, 0.7),
+      	            RECTANGLE(200.0, 25.0, 0.5),
+      	            RECTANGLE(200.0, 25.0, 0.6),
+      	            RECTANGLE(200.0, 25.0, 0.4));
+      		  
+          ApplicationWindow wight(new Background(new Margin(&box, 30.0),
+      					         world.background()));
+          Font* f = world.font();
+          Color* fg = world.foreground();
+          Window* linton = new TopLevelWindow(
+      	      new Background(new Margin(
+      	          new LRBox(
+      		      new VCenter(
+      		          new Label("color", f, fg),
+      		          0.5
+      		      ),
+      		      new HGlue(3.0, 0, 0),
+      		      new VCenter(
+      		          new TBBox(
+      			      new Label("red", f, fg),
+      			      new Label("green", f, fg),
+      			      new Label("blue", f, fg)
+      		         ),
+      		         0.5
+      		      )
+      	          ), 50.0),
+      	          world.background()
+      	      )
+          );
+      
+          wight.map();
+          linton->map();
+      
+          world.run();
+      }
+
+This example demonstrates how glyph alignments are used in boxes.
+Centers are used to give alignments other than the default. The
+example is really two examples in one. The first is home-brewed; the
+second posted to the InterViews mailing list by Mark Linton who heads
+the InterViews effort.
+
+In the first (the wight window) we are going to use several instances
+of an unnamed glyph that is defined by the #define statement. Working
+from the inside out, a vertical FixedSpan inside a horizontal
+FixedSpan gives the glyph a shape. At this stage it has no appearance,
+so we will stuff it inside a Border so that its perimeter will be
+outlined. The next stage is to give this object an alignment, i.e. set
+its origin. This is doing by enclosing it in an HCenter - we are only
+interested in horizontal alignment.
+
+The main program inserts nine of these unnamed glyphs, with alignments
+ranging from 0.1 to 0.9, into a TBBox. The box is enclosed in a Margin
+just to provide a bit of space around the whole which is then inserted
+into a Background in order to clear the window's canvas to the
+background colour - if this weren't done whatever is on the screen
+underneath the area occupied by the application would show through.
+
+The output is a window containing what looks like a precarious pile of
+bricks. The point nine tenths from the left of the top one is
+vertically above the point one tenth from the left of the next one
+down, and so on.
+
+The second window (linton) consists of an LRBox containing three
+components: a VCenter around a label displaying the word "color" a
+small amount of glue to separate the main components, and a VCenter
+around a TBBox of three labels displaying colour names. The VCenters
+apply vertical alignments of 0.5 to their components. So, since an
+LRBox aligns its components according to their vertical alignments,
+"color" is opposite "green", the centre of the TBBox. I added the
+Margin so that this window wasn't dwarfed by the wight one, and
+changed the window type to Toplevel instead of Application, which it
+was as a standalone program.  It is normal for an appliaction to have
+only one application window - the one that communicates with session
+managers.
+
+
+StencilDemo
+===========
+This is a very simple example, but it demonstrates a trick or two that
+might not be immediately obvious. The program takes a bitmap and
+displays normal and reverse video versions. In order to improve the
+visual attraction of the application the bitmaps are displayed against
+a gray background.
+
+      #include <InterViews/world.h>
+      #include <InterViews/window.h>
+      #include <InterViews/bitmap.h>
+      #include <InterViews/box.h>
+      #include <InterViews/background.h>
+      #include <InterViews/stencil.h>
+      #include <InterViews/monoglyph.h>
+      #include <InterViews/color.h>
+      #include <InterViews/glue.h>
+      
+      main (int argc, char*argv[])
+      {
+          const Coord FringeSize = 30.0;
+      
+          World world("StencilDemo", argc, argv);
+      
+          Bitmap *xLogo = Bitmap::open("/usr/include/X11/bitmaps/xlogo64");
+          Color *fg = world.foreground(), *bg = world.background();
+          Color midGray(0.0, 0.0, 0.0, 0.5);
+      
+          ApplicationWindow window(new Background(new Background(
+             new LRBox(new HGlue(FringeSize),
+                       new TBBox(new VGlue(FringeSize),
+      			         new Background(new Stencil(xLogo, fg), bg),
+                                 new VGlue(FringeSize),
+      			         new Background(new Stencil(xLogo, bg), fg),
+      			         new VGlue(FringeSize)),
+      		       new HGlue(FringeSize)),
+                                   &midGray), bg));
+      
+          window.map();
+      
+          world.run();
+      }
+
+The gray background is achieved by creating a Color in which a
+mid-range alpha value for blending is specified in conjuction with
+red, green, and blue intensities. Under black and white it only makes
+ense to have red, green and blue either all 0.0, or all 1.0.  When 0.0
+is used, the higher the alpha value the darker the shade of gray that
+is apparently produced. 
+
+The X Window System does not support alpha-blending so InterViews
+implements it by using a fill pattern, i.e. only some of the pixels are
+set. Hence the background of the new colour had to have a 'solid'
+background placed underneath to achieve the desired effect. Here are a
+couple of quotes from respones I received from the InterViews team when
+enquiring about this behaviour:
+
+   "3.0 downplays support for stippled fill patterns in favor of
+   a color model that supports transparency.  On color systems,
+   fill patterns are almost never used; on black-and-white
+   systems, they serve mainly as a poor-man's color substitute.
+   Most existing uses of fill patterns seem to be better served
+   by the new color model.  However, 3.0 does not currently
+   support black-and-white users well; we intend to improve that
+   situation soon.  Probably, we will map colors to (solid)
+   dithered stipples and forgo the transparency component on
+   single-plane systems."
+
+   "On bw systems, we should use FillOpaqueStippled and choose a
+   stipple pattern based on the rgb.  That is on the list of
+   things to do."
+
+Stencil always draws the '1' bits in its bitmap using the specified
+colour. The normal video version is obtained by drawing in the
+foreground colour against a background of the background colour. The
+reverse video version is achieved by drawing in the background colour
+against a background of the foreground colour.
