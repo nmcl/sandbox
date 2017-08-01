@@ -1,7 +1,0 @@
-ClientManager.h
-ClientRPC.h
-Makefile
-Manager.h
-RPC.h
-ServerManager.h
-ServerRPC.h

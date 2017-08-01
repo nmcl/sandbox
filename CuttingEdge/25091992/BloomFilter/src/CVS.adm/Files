@@ -1,6 +1,0 @@
-BloomFilter.cc
-Makefile
-StringBloomFilter.cc
-StringHash.cc
-UidBloomFilter.cc
-UidHash.cc

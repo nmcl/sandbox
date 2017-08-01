@@ -1,5 +1,0 @@
-ClientManager.cc
-ClientRPC.cc
-Makefile
-ServerManager.cc
-ServerRPC.cc
