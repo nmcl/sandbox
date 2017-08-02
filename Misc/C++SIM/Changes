@@ -1,0 +1,12 @@
+Tue Jun 28 17:29:00 EST 1994 - 
+
+Modified Files:
+        Calendar.cc 
+Log Message:
+1. Restore NewWidth() sample in reverse and using insert prior to maintain
+    original ordering.
+
+Modified Files:
+        thread.cc 
+Log Message:
+1. Speed up Thread constructor by always pushing new thread onto head of list.
