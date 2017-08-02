@@ -1,0 +1,40 @@
+COMMENT 
+COMMENT Copyright (C) 1995, 1996, 1997,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.3 1997/05/31 14:21:29 nmcl Exp $
+COMMENT
+
+SOURCES = RegistryEntry.java \
+	  RegistryList.java \
+	  MappingEntry.java \
+	  NameMapping.java \
+	  ArjunaRegistry.java \
+	  ArjunaContextRegistry.java
+	  
+OBJECTS = RegistryEntry.class \
+	  RegistryList.class \
+	  MappingEntry.class \
+	  NameMapping.class \
+	  ArjunaRegistry.class \
+	  ArjunaContextRegistry.class
+
+RMISTUBS = ArjunaRegistry_Stub.class \
+	   ArjunaRegistry_Skel.class
+
+Target($(OBJECTS) $(RMISTUBS))
+
+BuildJavaRMIStubs(ArjunaRegistry,RMISystem.rmi,NullParam)
+
+BuildJavaByteCode(ArjunaRegistry,NullParam)
+BuildJavaByteCode(ArjunaContextRegistry,NullParam)
+BuildJavaByteCode(RegistryList,NullParam)
+BuildJavaByteCode(RegistryEntry,NullParam)
+BuildJavaByteCode(NameMapping,NullParam)
+BuildJavaByteCode(MappingEntry,NullParam)
+
+Clean(*.class)

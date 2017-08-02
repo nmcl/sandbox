@@ -1,0 +1,43 @@
+COMMENT 
+COMMENT Copyright (C) 1995, 1996, 1997,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 1997/06/08 14:22:53 nmcl Exp $
+COMMENT
+
+SOURCES = NetworkInventory.java \
+	  ClassStore.java \
+	  KeyDatabase.java \
+	  ArjunaKeyDatabase.java \
+	  ArjunaInventory.java \
+	  NetworkClassLoader.java
+	  
+OBJECTS = NetworkInventory.class \
+	  ClassStore.class \
+	  KeyDatabase.class \
+	  ArjunaKeyDatabase.class \
+	  ArjunaInventory.class \
+	  NetworkClassLoader.class
+
+RMISTUBS = ArjunaInventory_Stub.class \
+	   ArjunaInventory_Skel.class \
+	   ArjunaKeyDatabase_Stub.class \
+	   ArjunaKeyDatabase_Skel.class
+
+Target($(OBJECTS) $(RMISTUBS))
+
+BuildJavaRMIStubs(ArjunaInventory,RMISystem.net,NullParam)
+BuildJavaRMIStubs(ArjunaKeyDatabase,RMISystem.net,NullParam)
+
+BuildJavaByteCode(NetworkClassLoader,NullParam)
+BuildJavaByteCode(NetworkInventory,NullParam)
+BuildJavaByteCode(ClassStore,NullParam)
+BuildJavaByteCode(ArjunaInventory,NullParam)
+BuildJavaByteCode(ArjunaKeyDatabase,NullParam)
+BuildJavaByteCode(KeyDatabase,NullParam)
+
+Clean(*.class)

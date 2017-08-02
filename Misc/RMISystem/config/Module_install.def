@@ -1,0 +1,19 @@
+/*
+ * Copyright (C) 1995, 1996
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ */
+
+/*
+ *  Module.def (install)
+ */
+
+RMISYSTEMTOPDIR=/usr/local/RMISystem1.0.0
+
+AddToIMakeFlags(-DHAS_TEMPLATE_BUG -I$(RMISYSTEMTOPDIR)/config)
+AddToCPPFlags(-DHAS_INT_WAIT)
+AddToCPPIncludes(-I$(RMISYSTEMTOPDIR)/include)

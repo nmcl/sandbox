@@ -1,0 +1,13 @@
+COMMENT 
+COMMENT Copyright (C) 1995, 1996
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 1997/06/01 14:56:23 nmcl Exp $
+COMMENT
+
+SubDirectory(net)
+SubDirectory(rmi)

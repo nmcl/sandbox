@@ -1,0 +1,20 @@
+/*
+ * Copyright (C) 1995, 1996
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ */
+
+/*
+ *  Local.def
+ */
+
+AddToIMakeFlags(-DBUILDUTILITIES -UINSTALLUTILITIES -DBUILDTESTS -UINSTALLTESTS -DVerboseMake=No -DBUILDDAEMONS -DINSTALLDAEMONS -DTopDir=/home/nmcl/Java/RMISystem -DInstallTopDir=/usr/local/RMISystem1.0.0)
+AddToCPPFlags(-I$(RMISYSTEMTOPDIR)/lib)
+
+#include "/home/nmcl/Java/RMISystem/config/Module.def"
+#include "/home/nmcl/ArjunaII/JavaHarness/config/Module.def"
+#include "/home/nmcl/ArjunaII/Gandiva/config/Module.def"
