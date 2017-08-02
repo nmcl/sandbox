@@ -1,0 +1,279 @@
+/*
+ * Copyright (C) 1997,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id$
+ */
+
+import java.io.StreamTokenizer;
+import java.io.FileReader;
+import java.util.Vector;
+import java.util.Enumeration;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+public class Parser
+{
+
+public static void main (String args[])
+    {
+	fileName = null;
+	
+	for (int i = 0; i < args.length; i++)
+	{
+	    if (args[i].compareTo("-file") == 0)
+		fileName = args[i+1];
+	    if (args[i].compareTo("-help") == 0)
+	    {
+		System.out.println("Usage: [-file <name>] [-help]");
+		System.exit(0);
+	    }
+	}
+
+	if (fileName == null)
+	{
+	    System.err.println("Error - no file name specified.");
+	    System.exit(0);
+	}
+
+	try
+	{
+	    int token;
+	    
+	    tokenizer = new StreamTokenizer(new FileReader(fileName));
+
+	    tokenizer.slashSlashComments(true);
+	    tokenizer.slashStarComments(true);
+	    tokenizer.quoteChar('"');
+	    
+	    do
+	    {
+		token = tokenizer.nextToken();
+
+		if (token != StreamTokenizer.TT_EOF)
+		{
+		    if (!parseToken())
+			System.exit(0);
+		}
+
+	    } while (token != StreamTokenizer.TT_EOF);
+
+	    Enumeration elements = methods.elements();
+
+	    while (elements.hasMoreElements())
+	    {
+		Method m = (Method) elements.nextElement();
+
+		System.err.print(m.rettype+" "+m.name+" (");
+
+		if (m.params != null)
+		{
+		    Enumeration p = m.params.elements();
+
+		    while (p.hasMoreElements())
+		    {
+			String param = (String) p.nextElement();
+			
+			System.err.print(" "+param+" ");
+		    }
+		}
+
+		System.err.print(") ");
+
+		if (m.excepts != null)
+		{
+		    System.err.print("throws ");
+		    
+		    Enumeration e = m.excepts.elements();
+
+		    while (e.hasMoreElements())
+		    {
+			String excep = (String) e.nextElement();
+
+			System.err.print(" "+excep+" ");
+		    }
+		}
+
+		System.err.println();
+	    }
+	}
+	catch (FileNotFoundException e1)
+	{
+	    System.err.println(e1);
+	}
+	catch (IOException e2)
+	{
+	    System.err.println(e2);
+	}
+    }
+
+private static boolean parseToken () throws IOException
+    {
+	boolean result = true;
+	
+	if (tokenizer.ttype == StreamTokenizer.TT_WORD)
+	{
+	    if (className == null)
+	    {
+		if (!seenInterface)
+		{
+		    if (tokenizer.sval.compareTo(Tokens.INTERFACE) == 0)
+			seenInterface = true;
+		}
+		else
+		{
+		    /*
+		     * Must have just seen interface.
+		     */
+
+		    className = tokenizer.sval;
+		    seenInterface = false;
+		    
+		    if (fileName.compareTo(className+".java") != 0)
+		    {
+			System.err.println("Error - class name "+className+" does not match file name "+fileName);
+
+			result = false;
+		    }
+		}
+	    }
+	    else
+	    {
+		if (tokenizer.sval.compareTo(Tokens.PUBLIC) == 0)
+		    result = dealWithMethod();
+		else
+		    System.out.println(tokenizer.sval);
+	    }
+	}
+	else
+	    if (tokenizer.ttype == StreamTokenizer.TT_NUMBER)
+		System.out.println(tokenizer.nval);
+	    else
+		System.out.println(((char) tokenizer.ttype));
+
+	return result;
+    }
+
+private static boolean dealWithMethod () throws IOException
+    {
+	boolean finished = false;
+	boolean error = false;
+	boolean startBrace = false;
+	boolean startExceptions = false;
+	Method currentMethod = null;
+	
+	while (!finished)
+	{
+	    if (tokenizer.nextToken() != StreamTokenizer.TT_EOF)
+	    {
+		if (tokenizer.ttype == StreamTokenizer.TT_WORD)
+		{
+		    if (!startBrace && !startExceptions)  // must be return type
+		    {
+			if (methods == null)
+			    methods = new Vector();
+
+			if (currentMethod == null)
+			    currentMethod = new Method();
+
+			if (currentMethod.rettype == null)
+			    currentMethod.rettype = tokenizer.sval;
+			else
+			    currentMethod.name = tokenizer.sval;
+
+			System.err.println("rettype "+currentMethod.rettype);
+			System.err.println("name "+currentMethod.name);
+		    }
+		    else
+		    {
+			if (startExceptions)
+			{
+			    if (currentMethod.excepts == null)
+				currentMethod.excepts = new Vector();
+			    
+			    currentMethod.excepts.addElement(tokenizer.sval);
+			}
+			else
+			{
+			    if (tokenizer.sval.compareTo(Tokens.THROWS) == 0)
+				startExceptions = true;
+			    else
+			    {
+				if (currentMethod.params == null)
+				    currentMethod.params = new Vector();
+
+				currentMethod.params.addElement(tokenizer.sval);
+			    }
+			}
+		    }
+		}
+		else
+		{
+		    switch ((char) tokenizer.ttype)
+		    {
+		    case Tokens.START_ARRAY:
+			currentMethod.rettype += Tokens.START_ARRAY;
+			break;
+		    case Tokens.END_ARRAY:
+			currentMethod.rettype += Tokens.END_ARRAY;
+			break;
+		    case Tokens.START_BRACE:
+			startBrace = true;
+			break;
+		    case Tokens.END_BRACE:
+			startBrace = false;
+			dealWithExceptions();
+			break;
+		    case Tokens.SEMI_COLON:
+			finished = true;
+			break;
+		    case Tokens.COMMA:
+			methods.addElement(currentMethod);
+			currentMethod = null;
+			break;
+		    default:
+			System.err.println("Error - unknown token "+(char) tokenizer.ttype);
+			error = true;
+			break;
+		    }
+		}
+	    }
+	}
+
+	return error;
+    }
+			
+private static String className = null;
+private static boolean seenInterface = false;
+private static String fileName = null;
+private static StreamTokenizer tokenizer = null;
+private static Vector methods = null;
+    
+};
+
+
+class Tokens
+{
+
+public static final String INTERFACE = "interface";
+public static final String THROWS = "throws";
+    
+public static final String PUBLIC = "public";
+public static final String PRIVATE = "private";
+public static final String PROTECTED = "protected";
+
+public static final char START_BRACE = '(';
+public static final char END_BRACE = ')';
+public static final char START_CLASS = '{';
+public static final char END_CLASS = '}';
+public static final char COMMA = ',';
+public static final char START_ARRAY = '[';
+public static final char END_ARRAY = ']';
+public static final char SEMI_COLON = ';';
+    
+};

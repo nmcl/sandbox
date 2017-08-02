@@ -1,0 +1,120 @@
+/*
+ * Copyright (C) 1997,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id$
+ */
+
+#include <os/stdio.h>
+#include <os/iostream.h>
+#include <os/string.h>
+#include <os/fstream.h>
+#include <os/iomanip.h>
+#include <os/unistd.h>
+
+#ifndef COMMON_BOOLEAN_H_
+#  include <Common/Boolean.h>
+#endif
+
+#ifndef EDITED_EXTENSION
+#define EDITED_EXTENSION ".ed"
+#endif
+
+const int maxLine = 2048;
+const char* text = "    // Methods from remote interfaces";
+
+void edit (ifstream& stubFile, ofstream& editedFile)
+{
+    char line[maxLine];
+    Boolean found = FALSE;
+
+    while (!found)
+    {
+	::memset(line, '\0', maxLine);
+	stubFile.getline(line, maxLine);
+
+	if (::strcmp(line, text) == 0)
+	    found = TRUE;
+	else
+	    editedFile << line << endl;
+    }
+
+    editedFile << "\n/*\n";
+    editedFile << " * Added by StubEditor for referential integrity.\n";
+    editedFile << " */\n";
+    editedFile << "\npublic void finalize ()\n";
+    editedFile << "{\n";
+    editedFile << "\ttry\n";
+    editedFile << "\t{\n";
+    editedFile << "\t\tthis.unref();\n";
+    editedFile << "\t}\n";
+    editedFile << "\tcatch (Exception e)\n";
+    editedFile << "\t{\n\t}\n";
+    editedFile << "}\n\n";
+
+    editedFile << line << endl;
+    
+    while (stubFile.peek() != EOF)
+    {
+	::memset(line, '\0', maxLine);
+	stubFile.getline(line, maxLine);	
+	editedFile << line << endl;
+    }
+}
+
+int main (int argc, char** argv)
+{
+    const char* objectClassName = NULL;
+    
+    for (int i = 0; i < argc; i++)
+    {
+	if (::strcmp(argv[i], "-help") == 0)
+	{
+	    cout << "Usage: " << argv[0] << " -name <classname> [-help]" << endl;
+	    return 0;
+	}
+	if (::strcmp(argv[i], "-name") == 0)
+	    objectClassName = argv[i+1];
+    }
+
+    if (!objectClassName)
+    {
+	cout << "Error - no file name specified." << endl;
+	return -1;
+    }
+
+    char* stubHeaderName = ::new char[::strlen(objectClassName)+::strlen(EDITED_EXTENSION)+1];
+    ::strcpy(stubHeaderName, objectClassName);
+    ::strcat(stubHeaderName, EDITED_EXTENSION);
+    
+    ifstream stubFile(objectClassName, ios::in);
+
+    if (!stubFile)
+    {
+	cerr << "Error - could not open file " << objectClassName << endl;
+	return -1;
+    }
+
+    ofstream editedFile(stubHeaderName, ios::out);
+
+    if (!editedFile)
+    {
+	cerr << "Error - could not open file " << stubHeaderName << endl;
+	::delete [] stubHeaderName;
+	return -1;
+    }
+
+    edit(stubFile, editedFile);
+
+    stubFile.close();
+    editedFile.close();
+    
+    ::rename(stubHeaderName, objectClassName);
+    ::delete [] stubHeaderName;
+    
+    return 0;
+}
