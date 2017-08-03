@@ -1,0 +1,40 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	97.06.09.19.51.54;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@initial cut
+@
+text
+@/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: m_68k.cf,v 1.3 1995/02/22 11:26:19 ngdp Exp $
+ */
+
+/*
+ * m_sparc.cf
+ */
+
+#define MACHINE_SPECIFIC_FLAGS
+#define STUBGEN_MC_FLAGS "-Dm68000 -Dmc68000"
+@

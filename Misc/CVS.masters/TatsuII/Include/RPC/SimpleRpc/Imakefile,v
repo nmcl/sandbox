@@ -1,0 +1,42 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	97.06.09.19.51.56;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@initial cut
+@
+text
+@COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1994/07/01 11:08:52 ngdp Exp $
+COMMENT
+
+CreateInstallTopDirectory(include)
+CreateInstallDirectory(include,RPC)
+CreateInstallDirectory(include/RPC,SimpleRpc)
+InstallFile(include/RPC/SimpleRpc,ClientControl.h)
+InstallFile(include/RPC/SimpleRpc,SimpleRpcClient.h)
+InstallFile(include/RPC/SimpleRpc,SimpleRpcServer.h)
+InstallFile(include/RPC/SimpleRpc,Manager_def.h)
+
+@

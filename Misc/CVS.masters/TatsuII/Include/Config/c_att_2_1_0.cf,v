@@ -1,0 +1,40 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	97.06.09.19.51.50;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@initial cut
+@
+text
+@/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: c_att_2_1_0.cf,v 1.6 1995/01/27 14:10:59 ngdp Exp $
+ */
+
+/*
+ * c_att_2_1_0.cf
+ */
+
+#define COMPILER_SPECIFIC_FLAGS -DHAS_IOSTREAM_INIT -DSTRUCT_INIT_BUG -Dsigned=
+#define STUBGEN_CC_FLAGS " "
+@

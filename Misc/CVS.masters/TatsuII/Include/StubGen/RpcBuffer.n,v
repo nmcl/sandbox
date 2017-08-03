@@ -1,0 +1,190 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	97.06.09.19.51.57;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@initial cut
+@
+text
+@/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: RpcBuffer.n,v 1.4 1994/12/09 16:15:27 ngdp Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(RPCBUFFER_CC_)
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+#ifdef HAVE_BOOLEAN_TYPE
+INLINEF RpcBuffer& RpcBuffer::operator<< (bool b )
+{
+    pack(b);
+    return *this;
+}
+#endif
+
+INLINEF RpcBuffer& RpcBuffer::operator<< (char c )
+{
+    pack(c);
+    return *this;
+}
+
+INLINEF RpcBuffer& RpcBuffer::operator<< (unsigned char u_c )
+{
+    pack(u_c);
+    return *this;
+}
+
+INLINEF RpcBuffer& RpcBuffer::operator<< (short s )
+{
+    pack(s);
+    return *this;
+}
+
+INLINEF RpcBuffer& RpcBuffer::operator<< (unsigned short u_s )
+{
+    pack(u_s);
+    return *this;
+}
+
+INLINEF RpcBuffer& RpcBuffer::operator<< (int i )
+{
+    pack(i);
+    return *this;
+}
+
+INLINEF RpcBuffer& RpcBuffer::operator<< (unsigned int u_i )
+{
+    pack(u_i);
+    return *this;
+}
+
+INLINEF RpcBuffer& RpcBuffer::operator<< (long l )
+{
+    pack(l);
+    return *this;
+}
+
+INLINEF RpcBuffer& RpcBuffer::operator<< (unsigned long u_l )
+{
+    pack(u_l);
+    return *this;
+}
+
+INLINEF RpcBuffer& RpcBuffer::operator<< (float f )
+{
+    pack(f);
+    return *this;
+}
+
+INLINEF RpcBuffer& RpcBuffer::operator<< (double d )
+{
+    pack(d);
+    return *this;
+}
+
+#ifdef HAVE_BOOLEAN_TYPE
+INLINEF RpcBuffer& RpcBuffer::operator>> ( bool& b )
+{
+    unpack(b);
+    return *this;
+}
+#endif
+
+INLINEF RpcBuffer& RpcBuffer::operator>> ( char& c )
+{
+    unpack(c);
+    return *this;
+}
+
+INLINEF RpcBuffer& RpcBuffer::operator>> ( unsigned char& u_c )
+{
+    unpack(u_c);
+    return *this;
+}
+
+INLINEF RpcBuffer& RpcBuffer::operator>> ( int& i )
+{
+    unpack(i);
+    return *this;
+}
+
+INLINEF RpcBuffer& RpcBuffer::operator>> ( unsigned int& u_i )
+{
+    unpack(u_i);
+    return *this;
+}
+
+INLINEF RpcBuffer& RpcBuffer::operator>> ( short& s )
+{
+    unpack(s);
+    return *this;
+}
+
+INLINEF RpcBuffer& RpcBuffer::operator>> ( unsigned short& u_s )
+{
+    unpack(u_s);
+    return *this;
+}
+
+INLINEF RpcBuffer& RpcBuffer::operator>> ( long& l )
+{
+    unpack(l);
+    return *this;
+}
+
+INLINEF RpcBuffer& RpcBuffer::operator>> ( unsigned long& u_l )
+{
+    unpack(u_l);
+    return *this;
+}
+
+INLINEF RpcBuffer& RpcBuffer::operator>> ( float& f )
+{
+    unpack(f);
+    return *this;
+}
+
+INLINEF RpcBuffer& RpcBuffer::operator>> ( double& d )
+{
+    unpack(d);
+    return *this;
+}
+
+INLINEF Boolean RpcBuffer::operator!= ( const RpcBuffer& rb ) const
+{
+    return (Buffer::operator==(rb) ? FALSE : TRUE);
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif
+@

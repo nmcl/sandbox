@@ -1,0 +1,84 @@
+head	1.2;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.2
+date	97.05.31.13.32.00;	author nmcl;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	97.05.30.18.26.43;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@added name mapping classes
+@
+text
+@/*
+ * Copyright (C) 1997,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: RegistryApplet.java,v 1.1 1997/05/30 18:26:43 nmcl Exp $
+ */
+
+import java.awt.*;
+import java.rmi.*;
+import java.rmi.registry.*;
+
+public class RegistryApplet extends java.applet.Applet
+{
+    
+public void init ()
+    {
+	try
+	{
+	    Registry reg = (Registry) Naming.lookup("//"+getCodeBase().getHost()+"/ArjunaRegistry");
+	    String[] contents = reg.list();
+	    Object obj = reg.lookup("HelloRegistryServer");
+	    message = "hello";
+	}
+	catch (Exception e)
+	{
+	    System.out.println("RegistryApplet exception: " + e.getMessage());
+	    e.printStackTrace();
+	}
+    }
+    
+public void paint (Graphics g)
+    {
+	g.drawString(message, 25, 50);
+    }
+
+private String message = "";
+    
+}
+@
+
+
+1.1
+log
+@initial cut
+@
+text
+@d9 1
+a9 1
+ * $Id$
+d25 1
+a25 1
+	    Object obj = reg.lookup("HelloRegistryImpl");
+@

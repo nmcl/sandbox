@@ -1,0 +1,33 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	97.05.30.18.26.42;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@initial cut
+@
+text
+@<HTML>
+<title>Hello World</title>
+<center> <h1>Hello World</h1> </center>
+
+The message from the HelloServer is:
+<p>
+<applet code="HelloApplet"
+        width=500 height=120>
+</applet>
+</HTML>
+@

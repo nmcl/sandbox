@@ -1,0 +1,42 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	97.05.30.18.26.42;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@initial cut
+@
+text
+@/*
+ * Copyright (C) 1997,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id$
+ */
+
+import java.rmi.Remote;
+
+import java.rmi.RemoteException;
+
+public interface Hello extends Remote
+{
+    String sayHello() throws RemoteException;
+};
+@

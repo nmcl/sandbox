@@ -1,0 +1,59 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	97.06.09.19.52.07;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@initial cut
+@
+text
+@/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: ADclCntxt.n,v 1.2 1994/09/13 09:23:12 ngdp Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(ADCLCNTXT_CC_)
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF ArgDeclContext::ArgDeclContext ( FctType *function,
+					 DeclContext *parent, int size )
+                                       : DeclContext(parent, size),
+					 funcArgsAreFor(function)
+{
+}
+
+INLINEF ArgDeclContext::~ArgDeclContext ()
+{
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif
+@

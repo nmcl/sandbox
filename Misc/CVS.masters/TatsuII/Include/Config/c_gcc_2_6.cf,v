@@ -1,0 +1,46 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	97.06.09.19.51.53;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@initial cut
+@
+text
+@/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: c_gcc_2_6.cf,v 1.5 1995/01/13 08:44:00 ngdp Exp $
+ */
+
+/*
+ * c_gcc_2_6.cf
+ */
+
+#ifdef MAY_NEED_GCC_PROTOTYPES
+#define COMPILER_SPECIFIC_FLAGS -DNEED_GCC_PROTOTYPES -DHAVE_BOOLEAN_TYPE -DHAVE_WCHAR_TYPE -DHAVE_LONG_LONG
+#else
+#define COMPILER_SPECIFIC_FLAGS -DHAVE_BOOLEAN_TYPE -DHAVE_WCHAR_TYPE -DHAVE_LONG_LONG
+#endif
+
+#define GCC_LINK_BUG
+#define STUBGEN_CC_FLAGS "-D__GNUG__=2 -D__GNUC__=2 -D__GNUC_MINOR__=6 -D__GCC_NEW_VARARGS__"
+@

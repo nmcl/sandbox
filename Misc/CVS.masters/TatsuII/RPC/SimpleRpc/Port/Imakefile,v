@@ -1,0 +1,57 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	97.06.09.19.52.05;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@initial cut
+@
+text
+@COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.3 1996/02/12 14:42:14 nmcl Exp $
+COMMENT
+
+SOURCES = Port.cc \
+          PortAddress.cc \
+	  RelPort.cc \
+	  SetupBuffer.cc \
+	  BufferMap.cc
+
+OBJECTS = Port.o \
+          PortAddress.o \
+	  RelPort.o \
+	  SetupBuffer.o \
+	  BufferMap.o
+
+SetLocalCppFlags(-I../include -I$(STD_INCLUDES))
+
+AllTarget($(LIBSIMPLERPC))
+
+MakeLibrary($(LIBSIMPLERPC),$(OBJECTS))
+
+MakeObjectCPLUSPLUS(Port,)
+MakeObjectCPLUSPLUS(PortAddress,)
+MakeObjectCPLUSPLUS(RelPort,)
+MakeObjectCPLUSPLUS(SetupBuffer,)
+MakeObjectCPLUSPLUS(BufferMap,)
+@

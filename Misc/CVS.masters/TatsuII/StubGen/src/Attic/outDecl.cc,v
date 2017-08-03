@@ -1,0 +1,102 @@
+head	1.2;
+access;
+symbols;
+locks; strict;
+comment	@// @;
+
+
+1.2
+date	97.06.11.20.24.57;	author nmcl;	state dead;
+branches;
+next	1.1;
+
+1.1
+date	97.06.09.19.52.25;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@not needed
+@
+text
+@9c9
+<  * $Id: outDecl.cc,v 1.1 1997/06/09 19:52:25 nmcl Exp nmcl $
+---
+>  * $Id: outDecl.cc,v 1.1 1997/06/09 19:52:25 nmcl Exp nmcl $
+24c24
+< #ifndef WIN32
+---
+> #ifndef WIN32     
+86c86
+< static const char RCSid[] = "$Id: outDecl.cc,v 1.1 1997/06/09 19:52:25 nmcl Exp nmcl $";
+---
+> static const char RCSid[] = "$Id: outDecl.cc,v 1.1 1997/06/09 19:52:25 nmcl Exp nmcl $";
+304c304
+< #endif	 	
+---
+> #endif	    
+534d533
+<     Location savedLoc = errorLocation;
+535a535,536
+>     Location savedLoc = errorLocation;
+>     
+547c548
+< 	if ((ds != IDL_DECL) && (ds != JAVA_DECL) &&
+---
+> 	if ((ds != IDL_DECL) &&
+584c585
+<     
+---
+> 
+591c592
+< 	declaratorType->printAsTypedef(s, ds);
+---
+> 	declaratorType->printAsTypedef(s,ds);
+595c596
+< 	
+---
+> 
+604c605
+< #endif	    	
+---
+> #endif	    
+609c610
+< 
+---
+>     
+688c689
+<     if (((inStyle == SHADOWS_STYLE) || (inStyle == CPLUSPLUS_STYLE) || (inStyle == JAVA_STYLE)) || (inStyle == CPLUSPLUS_AND_JAVA_STYLE) &&
+---
+>     if (((inStyle == SHADOWS_STYLE) || (inStyle == CPLUSPLUS_STYLE)) &&
+718,719c719
+< 					   Direction d, 
+< 					   const String& buffName )
+---
+> 					   Direction d, const String& buffName )
+@
+
+
+1.1
+log
+@initial cut
+@
+text
+@d2 1
+a2 1
+<  * $Id: Decl.cc,v 1.17 1995/07/03 14:29:55 ngdp Exp $
+d4 1
+a4 1
+>  * $Id: Decl.cc,v 1.18 1996/04/15 14:50:36 nmcl Exp $
+d10 1
+a10 1
+< static const char RCSid[] = "$Id: Decl.cc,v 1.17 1995/07/03 14:29:55 ngdp Exp $";
+d12 1
+a12 1
+> static const char RCSid[] = "$Id: Decl.cc,v 1.18 1996/04/15 14:50:36 nmcl Exp $";
+@

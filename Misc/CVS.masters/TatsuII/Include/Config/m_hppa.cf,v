@@ -1,0 +1,40 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	97.06.09.19.51.54;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@initial cut
+@
+text
+@/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: m_hppa.cf,v 1.5 1995/01/13 08:44:06 ngdp Exp $
+ */
+
+/*
+ * m_hppa.cf
+ */
+
+#define MACHINE_SPECIFIC_FLAGS
+#define STUBGEN_MC_FLAGS "-Dhppa -D__hppa -D__hppa__"
+@

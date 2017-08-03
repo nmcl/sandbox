@@ -1,0 +1,552 @@
+head	1.2;
+access;
+symbols;
+locks; strict;
+comment	@// @;
+
+
+1.2
+date	97.06.11.20.24.57;	author nmcl;	state dead;
+branches;
+next	1.1;
+
+1.1
+date	97.06.09.19.52.26;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@not needed
+@
+text
+@9c9
+<  * $Id: outFuncT.cc,v 1.1 1997/06/09 19:52:26 nmcl Exp nmcl $
+---
+>  * $Id: outFuncT.cc,v 1.1 1997/06/09 19:52:26 nmcl Exp nmcl $
+75c75
+< static const char RCSid[] = "$Id: outFuncT.cc,v 1.1 1997/06/09 19:52:26 nmcl Exp nmcl $";
+---
+> static const char RCSid[] = "$Id: outFuncT.cc,v 1.1 1997/06/09 19:52:26 nmcl Exp nmcl $";
+526c526
+< 	((GlobalInfo::getOutputStyle() == CPLUSPLUS_STYLE) || (GlobalInfo::getOutputStyle() == JAVA_STYLE) || (GlobalInfo::getOutputStyle() == CPLUSPLUS_AND_JAVA_STYLE)) &&
+---
+> 	(GlobalInfo::getOutputStyle() == CPLUSPLUS_STYLE) &&
+625d624
+<     case JAVA_DECL:	
+627a627
+> 
+643a644
+> 	
+661c662
+<     if ((ds != IDL_DECL) && (ds != JAVA_DECL))
+---
+>     if (ds != IDL_DECL)
+751,753d751
+<     case JAVA_DECL:
+< 	printJavaClientCode(s);
+< 	break;
+778c776
+< 
+---
+>     
+785,794d782
+<     case JAVA_DECL:
+< 	if (funcIsmemberOf)
+< 	{
+< 	    if ((ftype == NORMAL) || (ftype == CONSTRUCTOR))
+< 		printInstanceDecl(s,ds,b,noConst,doQual);
+< 
+< 	    if (ftype == DESTRUCTOR)
+< 		s << "void finalize";
+< 	}
+< 	break;
+809,810d796
+< 
+< 		printInstanceDecl(s,ds,b,noConst,doQual);
+828c814
+< 		    errorStream << "constructors ";
+---
+> 		    errorStream << "constructors, ";
+831c817
+< 		    errorStream << "destructors ";
+---
+> 		    errorStream << "destructors, ";
+834c820
+< 		    errorStream << "conversion ";
+---
+> 		    errorStream << "conversion, ";
+836c822
+< 		    errorStream << "operators ";
+---
+> 		    errorStream << "operators, ";
+839c825
+< 		    errorStream << "function overloading ";
+---
+> 		    errorStream << "function overloading, ";
+842c828
+< 		errorStream << ", changing signature of operation:\"";
+---
+> 		errorStream << "changing signature of operation:\"";
+851c837
+< 	else
+---
+> 	else 
+1015,1080d1000
+< void FctType::declareJavaClientLocals ( ostream& s )
+< {
+<     TypeDescriptor *type = 0;
+< 
+<     if (exceptionSpec || hasNonVoidResult)
+< 	s << "InputBuffer _rvBuffer_ = new InputBuffer();\n";
+<     
+<     s << "OutputBuffer _callBuffer_ = new OutputBuffer(_myHashVal);\n";
+<     s << "InputBuffer _replyBuffer_ = new InputBuffer();\n";
+<     s << "int _rpcStatus_ = RPC_Status.OPER_UNKNOWN;\n";
+<     s << "intWrapper _serverStatus_ = new intWrapper(ServerErrCode.OPER_INVOKED_OK);\n\n";
+< 
+<     /*
+<      * return type (if any). Take care - if the return type is a pointer
+<      * then it has to be dereferenced to get the actual type to declare and
+<      * then a pointer to that type returned. Such return values are
+<      * created via 'new' to ensure that the value persists after the end of
+<      * the  function
+<      */
+< 
+<     /* Cfront 2.1 can't cope with && here... */
+<     if (funcReturnType != 0)
+< 	if (funcReturnType->typeName(NORMAL_DECL) != "void")
+< 	{
+< 	    Boolean useNew = FALSE;
+< 	    Type rv_kind;
+< 	    
+< 	    type = funcReturnType;
+< 	    rv_kind = type->kind();
+< 
+< 	    /* Discard 'const' flag if present (otherwise cannot marshall) */
+< 
+< 	    if ((rv_kind == CV_TYPE) || (rv_kind == POINTER_TYPE) ||
+< 		(rv_kind == REFERENCE_TYPE))
+< 	    {
+< 		if ((rv_kind == REFERENCE_TYPE))
+< 		    useNew = TRUE;
+< 		
+< 		while ((rv_kind == REFERENCE_TYPE) ||
+< 		       (rv_kind == CV_TYPE))
+< 		{
+< 		    /* do the deref */
+< 		    type = type->deref();
+< 		    rv_kind = type->kind();
+< 		}
+< 	    }
+< 
+< 	    /* Set up the fake return type */
+< 	    funcFakeReturn = type;
+< 
+< 	    type->printInstanceOf(s, NullString, CLIENT_DECL, 0, FALSE, TRUE);
+< 
+< 	    if (useNew)
+< 	    {
+< 		s << "_returnedValue_ = new ";
+< 		s << type->typeName(CLIENT_DECL);
+< 	    }
+< 	    else
+< 		s << "_returnedValue_";
+< 
+< 	     s << type->defaultInit();
+< 
+< 	    s << ";\n";
+< 	}
+< }
+< 
+1087,1097d1006
+< void FctType::doJavaCallToServer ( ostream& s )
+< {
+<     s << "_rpcStatus_ = RPC_Status.OPER_DONE;\n";
+<     s << "try {\n";
+<     s << "_replyBuffer_ = _clientManager.call(" << funcHashval;
+<     s << ", _callBuffer_, _serverStatus_);\n";
+<     s << "} catch (IOException e) {\n";
+<     s << "_rpcStatus_ = RPC_Status.OPER_NOTDONE;\n";
+<     s << "}\n";
+< }
+< 
+1224,1225c1133,1134
+< 
+< 	if (ds == JAVA_DECL)
+---
+> 	s << "ClientRpcManager *_cRpcMan_ ";
+> 	if (!noDefault)
+1227,1234c1136
+< 	    s << "ClientRpcManager _cRpcMan_ ";
+< 	}
+< 	else
+< 	{
+< 	    s << "ClientRpcManager *_cRpcMan_ ";
+< 	    if (!noDefault)
+< 	    {
+< 		String sName = GlobalInfo::getServerName();
+---
+> 	    String sName = GlobalInfo::getServerName();
+1236,1237c1138,1139
+< 		if (sName == NullString)
+< 		    sName = funcServerName;
+---
+> 	    if (sName == NullString)
+> 		sName = funcServerName;
+1239,1241c1141,1142
+< 		s << "= ClientRpcManager::createInstance(\"";	    
+< 		s << sName << "\",1)";
+< 	    }
+---
+> 	    s << "= ClientRpcManager::createInstance(\"";	    
+> 	    s << sName << "\",1)";
+1244,1248c1145
+< 
+<     if (ds == JAVA_DECL)
+< 	s << ") throws IOException";
+<     else
+< 	s << ")";
+---
+>     s << ")";
+1250a1148
+> 
+1272,1273c1170,1171
+< 	    if (!argInfo[parnum].clientMarshallType->produceMarshallingCode(s, CLIENT_DECL, IN, decl->getName(),"_callBuffer_"))
+< 	    allOk = FALSE;
+---
+>             if (!argInfo[parnum].clientMarshallType->produceMarshallingCode(s, CLIENT_DECL, IN, decl->getName(),"_callBuffer_"))
+>                 allOk = FALSE;
+1395a1294
+> 
+1548,1783d1446
+< Boolean FctType::printJavaClientCode ( ostream& s )
+< {
+<     Boolean funcStubOk = TRUE;
+<     String className = funcIsmemberOf->typeName(IDL_DECL);
+<     TypeDescriptor *type = 0;
+<     Boolean wasVirtual = funcVirtual;
+< 
+<     /* If function is pure don't want a definition */
+< 
+<     if (funcPure)
+< 	return TRUE;
+< 
+<     /* Check that we can produce stub code for this operation */
+< 
+<     if (!remotelyCallable)
+<         return FALSE;
+< 
+<     /* OK - First produce the function header */
+< 
+<     funcVirtual = FALSE;		/* temporarily remove status */
+< 
+<     if (ftype == DESTRUCTOR)
+< 	s << "void finalize";
+<     else
+<     {
+< 	if (funcReturnType)
+< 	{
+< 	    DeclContext *context = funcReturnType->getContext();
+< 	
+< 	    if (context != 0)
+< 		s << context->getContextName(IDL_DECL);
+< 
+< 	    s << funcReturnType->preName(IDL_DECL) << " ";
+< 	}
+<     }
+< 
+<     funcVirtual = wasVirtual;		/* restore virtual status */
+< 
+<     switch (ftype)
+<     {
+<     case DESTRUCTOR:
+< 	break;
+<     case CONSTRUCTOR:
+< 	s << funcIsmemberOf->simpleTypeName(IDL_DECL);
+< 	break;
+<     default:
+< 	s << funcClientName;
+<     }
+< 
+<     printArgList(s, JAVA_DECL, FALSE, TRUE, FALSE, TRUE);	/* augmented arg list */
+< 
+<     if (funcQuals)
+<     {
+< 	s << " " << funcQuals->typeName(CLIENT_DECL);
+<     }
+< 
+<     if (exceptionSpec)
+<     {
+< 	s << " throws " << *exceptionSpec;
+<     }
+<     
+<     if (ftype == CONSTRUCTOR)
+<     {
+< 	/* Constructor - generate member init list */
+< 
+< 	BaseClass *blist = funcIsmemberOf->getVbaseList();
+< 
+< 	/* Do virtual bases first */
+< 
+< 	while (blist)
+< 	{
+< 	    ClassType *cl = blist->getClass();
+< 	    
+< 	    s << "extends " << cl->typeName(CLIENT_DECL);
+< 	    blist = blist->getNext();
+< 
+< 	    if (blist)
+< 		s << ", ";
+< 	}
+< 
+< 	/* Now non-virtual bases */
+< 
+< 	blist = funcIsmemberOf->getNVBaseList();
+< 
+< 	while (blist)
+< 	{
+< 	    ClassType *cl = blist->getClass();
+< 	    
+< 	    s << "extends " << cl->typeName(CLIENT_DECL);
+< 	    blist = blist->getNext();
+< 
+< 	    if (blist)
+< 		s << ", ";
+< 	}
+<     }
+< 
+<     /* Now produce the function body */
+< 
+<     s << "\n{\n";
+< 
+<     /* firstly class members */
+< 
+<     if (ftype == CONSTRUCTOR)
+<     {
+< 	s << "_clientManager = _cRpcMan_;\n";
+< 	s << "_myHashVal = new OutputBuffer();\n";
+< 	s << "_myHashVal.packInt(-1);\n";
+< 	s << "\n";
+<     }
+<     
+<     /* First the declarations */
+< 
+<     declareJavaClientLocals(s);
+<     
+<     if (argList->noOfEntries() != 0)     /* pack up any args */
+<     {
+<         funcStubOk = packJavaCallArgList(s);
+<     }
+< 
+<     s << "\n";
+< 
+<     doJavaCallToServer(s);
+< 
+<     /* General function processing. Unpack any return args and the */
+<     /* return type/exception if it exists */
+< 
+<     s << "if (_rpcStatus_ == RPC_Status.OPER_DONE)\n";
+<     s << "{\n";
+< 
+<     /* unpack result args first */
+<     
+<     if (hasResultArgs)
+< 	unpackJavaArgList(s);
+< 
+<     /* If oper was ok may have return value next */
+<     
+<     s << "switch (_serverStatus_.get())\n{\n";
+<     s << "case ServerErrCode.OPER_INVOKED_OK:\n";
+< 
+<     if (hasNonVoidResult)
+<     {
+< 	s << "_replyBuffer_.unpackFrom(_rvBuffer_);\n";
+< 	s << "\n";
+< 	s << funcReturnType->preName(IDL_DECL) << "Wrapper _returnedValue_0_ = new " << funcReturnType->preName(IDL_DECL) << "Wrapper();\n";
+< 
+< 	funcFakeReturn->produceMarshallingCode(s, JAVA_DECL, OUT, "_returnedValue_0_", "_rvBuffer_");
+< 
+< 	s << "_returnedValue_ = _returnedValue_0_.get();\n";
+< 	s << "\n";
+<     }
+<     s << "break;\n";
+< 
+<     /* otherwise could have an exception value */
+<     /* exceptions encoded as an int (says which exception) and a value */
+<     if (exceptionSpec)
+<     {
+< 	int exceptionCount = exceptionSpec->noOfEntries();
+< 	if (exceptionCount != 0)
+< 	{
+< 	    IntType tempInt;
+< 	
+< 	    s << "case EXCEPTION_RAISED:\n{\n";
+< 	    s << "int _exceptionNumber_ = 0;\n";
+< 	    s << "_replyBuffer_ >> _rvBuffer_;\n";
+< 	    tempInt.produceMarshallingCode(s, CLIENT_DECL,OUT, "_exceptionNumber_", "_rvBuffer_");
+< 	    s << "switch (_exceptionNumber_)\n{\n";
+<     
+< 	    /* Produce the exception cases */
+< 
+< 	    for (int i = 0; i < exceptionCount; i++)
+< 	    {
+< 		Declaration *eDecl = exceptionSpec->getOneMember(i);
+< 		TypeDescriptor *dummytype = 0;
+< 		Type argkind;
+< 
+< 		s << "case " << i << ":\n{\n";
+< 		
+< 		dummytype = eDecl->getType();
+< 		argkind = dummytype->kind();
+< 
+< 		if (argkind == TYPE_TYPE)
+< 		    argkind = dummytype->deref()->kind();
+< 		
+< 		/* references to fundamental types get sent as pointers! */
+< 
+< 		if (argkind == REFERENCE_TYPE)
+< 		{
+< 		    TypeDescriptor *t = dummytype->deref();
+< 
+< 		    if (t->isFundamental())
+< 			dummytype = new PointerType(POINTER_TYPE, t);
+< 		}
+< 	    
+< 		dummytype->printInstanceOf(s, "_eType_", SERVERIMPLEMENTATION_DECL, 0, FALSE,TRUE);
+< 		s << dummytype->defaultInit();
+< 	    
+< 		s << ";\n";
+< 	    
+< 		dummytype->produceMarshallingCode(s, CLIENT_DECL, OUT, "_eType_", "_rvBuffer_");
+< 		s << "throw ";
+< 		if (argkind == REFERENCE_TYPE)
+< 		    s << "*";
+< 		s << "_eType_;\n}\n";
+< 	    }
+< 	}
+< 	s << "}\n";
+< 	
+< 	s << "break;\n}\n";
+<     }
+<     else
+< 	if (funcIsmemberOf->membersUseExceptions())
+< 	{
+< 	    /* some other oper uses exceptions but this func has no
+< 	       signature => it can throw anything which cannot be handled */
+< 
+< 	    s << "case UNEXPECTED_EXCEPTION:\n";
+< 	    s << "_clientManager.rpcAbort(_rpcStatus_, _serverStatus_.get());\nbreak;\n";
+< 	}
+<     
+<     s << "default:\n_clientManager.rpcAbort(_rpcStatus_, _serverStatus_.get());\n";
+<     s << "}\n";
+<     
+<     s << "}\nelse\n_clientManager.rpcAbort(_rpcStatus_, _serverStatus_.get());\n\n";
+< 
+<     /* If op has return value, return it now */
+< 
+<     if (hasNonVoidResult)
+<         s << "return _returnedValue_;\n";	
+< 
+<     /* Now the operation end brace, and we're done */
+< 
+<     s << "}\n";
+< 
+<     return funcStubOk;
+< }
+< 
+2089c1752
+< 		    s << name << ";\n";
+---
+> 		    s<< name << ";\n";
+2255,2317d1917
+<         }
+<         parnum++;
+<     }
+< }
+< 
+< Boolean FctType::packJavaCallArgList ( ostream& s )
+< {
+<     Declaration *decl;
+<     int parnum = 0;
+<     Boolean allOk = TRUE;
+<     StubModifier declSm;
+< 
+<     while ((decl = argList->getOneMember(parnum)) != 0)
+<     {
+< 	declSm = decl->getTransfer();
+< 
+<         if (declSm == STUB_ARG_INOUT)
+<         {
+< 	    s << argInfo[parnum].serverDeclType->simpleTypeName(JAVA_DECL)
+< 	      << " wrapper" << decl->getName()
+< 	      << " = new " << argInfo[parnum].serverDeclType->simpleTypeName(JAVA_DECL)
+< 	      << "(" << decl->getName() << ");\n";
+< 	    s << "wrapper" << decl->getName() << ".packInto(_callBuffer_);\n";
+< 	    s << "\n";
+<         }
+< 	    
+<         if (declSm == STUB_ARG_IN)
+< 	{
+< 	    /*
+< 	     * Here we pack the read-only parameters into the buffer.
+< 	     * To saved some work we create wrapper classes for this
+< 	     * even though we won't return a value. This is because the
+< 	     * pack/unpack operations of Input/Output buffers are typed
+< 	     * and expect the type to begin with a capital.
+< 	     */
+< 	    
+< 	    s << argInfo[parnum].serverDeclType->simpleTypeName(JAVA_DECL)
+< 	      << "Wrapper wrapper" << decl->getName()
+< 	      << " = new " << argInfo[parnum].serverDeclType->simpleTypeName(JAVA_DECL)
+< 	      << "Wrapper(" << decl->getName() << ");\n";
+< 	    s << "wrapper" << decl->getName() << ".packInto(_callBuffer_);\n";
+< 	    s << "\n";
+< 	}
+< 	
+<         parnum++;
+<     }
+<     return allOk;
+< }
+< 
+< void FctType::unpackJavaArgList ( ostream& s )
+< {
+<     Declaration *decl;
+<     StubModifier declSm;
+<     int parnum = 0;
+< 
+<     while ((decl = argList->getOneMember(parnum)) != 0)
+<     {
+< 	declSm = decl->getTransfer();
+<         if ((declSm == STUB_ARG_OUT) ||
+<             (declSm == STUB_ARG_INOUT))
+<         {
+< 	    s << decl->getName() << ".unpackFrom(_replyBuffer_);\n";
+< 	    s << "\n";
+@
+
+
+1.1
+log
+@initial cut
+@
+text
+@d2 1
+a2 1
+<  * $Id: FuncT.cc,v 1.32 1996/01/10 15:10:13 ngdp Exp $
+d4 1
+a4 1
+>  * $Id: FuncT.cc,v 1.33 1996/11/08 14:27:41 ngdp Exp $
+d6 1
+a6 1
+< static const char RCSid[] = "$Id: FuncT.cc,v 1.32 1996/01/10 15:10:13 ngdp Exp $";
+d8 1
+a8 1
+> static const char RCSid[] = "$Id: FuncT.cc,v 1.33 1996/11/08 14:27:41 ngdp Exp $";
+@

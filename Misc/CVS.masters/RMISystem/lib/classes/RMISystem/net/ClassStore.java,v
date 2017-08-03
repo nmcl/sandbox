@@ -1,0 +1,71 @@
+head	1.2;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.2
+date	97.06.08.19.18.28;	author nmcl;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	97.06.01.14.56.23;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@added documentation comments
+@
+text
+@/*
+ * Copyright (C) 1997,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: ClassStore.java,v 1.1 1997/06/01 14:56:23 nmcl Exp $
+ */
+
+package RMISystem.net;
+
+class ClassStore
+{
+
+public ClassStore (byte[] theClass)
+    {
+	_theClass = theClass;
+    }
+
+public byte[] classBytes ()
+    {
+	return _theClass;
+    }
+    
+private byte[] _theClass;
+    
+};
+@
+
+
+1.1
+log
+@added remote inventories
+@
+text
+@d9 1
+a9 1
+ * $Id$
+d14 1
+a14 1
+public class ClassStore
+@

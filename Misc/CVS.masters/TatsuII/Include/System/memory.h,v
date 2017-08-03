@@ -1,0 +1,61 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@ * @;
+
+
+1.1
+date	97.06.09.19.51.59;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@initial cut
+@
+text
+@/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: memory.h,v 1.4 1996/07/31 13:26:15 nmcl Exp $
+ */
+
+#ifndef MEMORY_H_
+#define MEMORY_H_
+
+#ifdef STUB
+#  pragma @@NoRename
+#endif
+
+#ifdef MEMFNS_IN_STRING_H
+/*
+ * Some systems have the mem* functions in string.h not
+ * memory.h
+ */
+
+#  include <System/string.h>
+#else
+#  include <memory.h>
+#endif
+
+#ifdef NEED_GCC_PROTOTYPES
+extern "C"
+{
+    void* memset(void*, int, unsigned long);
+    void* memccpy(void*, void*, int, int);
+}
+#endif
+
+#endif
+@

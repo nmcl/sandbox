@@ -1,0 +1,54 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	97.06.09.19.51.49;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@initial cut
+@
+text
+@/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: ErrorList.n,v 1.1 1994/10/10 10:32:45 ngdp Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(LOCKLIST_CC_)
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF int ErrorList::entryCount () const
+{
+    return count;
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif
+@

@@ -1,0 +1,50 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	97.05.30.18.26.42;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@initial cut
+@
+text
+@#
+# Copyright (C) 1995, 1996
+#
+# Department of Computing Science,
+# University of Newcastle upon Tyne,
+# Newcastle upon Tyne,
+# UK.
+#
+
+#
+# $Id: MakefileBoot.tmpl,v 1.1 1996/06/17 10:40:00 nmcl Exp $
+#
+
+MAKE           = make
+IMAKE          = imake
+RM             = rm -f
+
+IMAKE_INCLUDE  = INCLUDES
+IMAKE_TEMPLATE = Gandiva.tmpl
+IMAKE_FLAGS    = 
+MAKEFILE_TMP   = Makefile.tmp
+
+Makefile ::
+	@@echo "Building 'Makefile.tmp'"
+	@@$(IMAKE) -T$(IMAKE_TEMPLATE) $(IMAKE_INCLUDE) $(IMAKE_FLAGS) -s $(MAKEFILE_TMP)
+	@@$(MAKE) -f $(MAKEFILE_TMP) Makefile
+	@@$(RM) $(MAKEFILE_TMP)
+@

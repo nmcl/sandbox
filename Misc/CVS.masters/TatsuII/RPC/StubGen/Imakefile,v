@@ -1,0 +1,59 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	97.06.09.19.52.06;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@initial cut
+@
+text
+@COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.4 1995/01/20 12:55:50 ngdp Exp $
+COMMENT
+
+SOURCES = RpcBuffer.cc  \ 
+          ClientRpcMan.cc \
+          ClientRpc.cc  \
+          ServerRpc.cc  \
+	  Abort.cc
+
+OBJECTS = RpcBuffer.o  \
+          ClientRpcMan.o \
+          ClientRpc.o  \
+          ServerRpc.o  \
+	  Abort.o
+
+SetLocalCppFlags(-I$(STD_INCLUDES))
+
+AllTarget($(OBJECTS) $(LIBRPC))
+
+MakeLibrary($(LIBRPC),$(OBJECTS))
+
+MakeObjectCPLUSPLUS(RpcBuffer,NOPARAM)
+MakeObjectCPLUSPLUS(ClientRpcMan,NOPARAM)
+MakeObjectCPLUSPLUS(ClientRpc,NOPARAM)
+MakeObjectCPLUSPLUS(ServerRpc,NOPARAM)
+MakeObjectCPLUSPLUS(Abort,NOPARAM)
+MakeObjectCPLUSPLUS(ServerDispatcher,NOPARAM)
+
+@

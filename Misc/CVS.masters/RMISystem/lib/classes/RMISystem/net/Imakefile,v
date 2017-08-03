@@ -1,0 +1,89 @@
+head	1.2;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.2
+date	97.06.08.14.22.53;	author nmcl;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	97.06.01.14.56.23;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@added a security key server
+@
+text
+@COMMENT 
+COMMENT Copyright (C) 1995, 1996, 1997,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1997/06/01 14:56:23 nmcl Exp $
+COMMENT
+
+SOURCES = NetworkInventory.java \
+	  ClassStore.java \
+	  KeyDatabase.java \
+	  ArjunaKeyDatabase.java \
+	  ArjunaInventory.java \
+	  NetworkClassLoader.java
+	  
+OBJECTS = NetworkInventory.class \
+	  ClassStore.class \
+	  KeyDatabase.class \
+	  ArjunaKeyDatabase.class \
+	  ArjunaInventory.class \
+	  NetworkClassLoader.class
+
+RMISTUBS = ArjunaInventory_Stub.class \
+	   ArjunaInventory_Skel.class \
+	   ArjunaKeyDatabase_Stub.class \
+	   ArjunaKeyDatabase_Skel.class
+
+Target($(OBJECTS) $(RMISTUBS))
+
+BuildJavaRMIStubs(ArjunaInventory,RMISystem.net,NullParam)
+BuildJavaRMIStubs(ArjunaKeyDatabase,RMISystem.net,NullParam)
+
+BuildJavaByteCode(NetworkClassLoader,NullParam)
+BuildJavaByteCode(NetworkInventory,NullParam)
+BuildJavaByteCode(ClassStore,NullParam)
+BuildJavaByteCode(ArjunaInventory,NullParam)
+BuildJavaByteCode(ArjunaKeyDatabase,NullParam)
+BuildJavaByteCode(KeyDatabase,NullParam)
+
+Clean(*.class)
+@
+
+
+1.1
+log
+@added remote inventories
+@
+text
+@d9 1
+a9 1
+COMMENT $Id$
+d14 2
+d21 2
+d27 3
+a29 1
+	   ArjunaInventory_Skel.class
+d34 1
+d40 2
+@

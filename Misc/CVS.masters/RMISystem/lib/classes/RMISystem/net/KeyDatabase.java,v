@@ -1,0 +1,86 @@
+head	1.2;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.2
+date	97.06.08.19.18.28;	author nmcl;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	97.06.08.14.22.53;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@added documentation comments
+@
+text
+@/*
+ * Copyright (C) 1997,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: KeyDatabase.java,v 1.1 1997/06/08 14:22:53 nmcl Exp $
+ */
+
+package RMISystem.net;
+
+import java.rmi.Remote;
+
+import java.util.NoSuchElementException;
+import java.io.IOException;
+import java.rmi.RemoteException;
+import java.rmi.AccessException;
+
+/**
+ * Instances of this class hold keys which can be used to verify the identity
+ * of another object. The key space is represented as a tuple:
+ *
+ * < object name, key >
+ *
+ */
+
+public interface KeyDatabase extends Remote
+{
+
+    /**
+     * Get the key for the specified object name.
+     */
+    
+public String getKey (String objectName) throws RemoteException, AccessException, NoSuchElementException, IOException;
+
+    /**
+     * Validate the specified key.
+     */
+
+public boolean validateKey (String key) throws RemoteException, AccessException, IOException;
+
+};
+@
+
+
+1.1
+log
+@added a security key server
+@
+text
+@d9 1
+a9 1
+ * $Id$
+d21 8
+d32 4
+d37 4
+@

@@ -1,0 +1,44 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@ * @;
+
+
+1.1
+date	97.06.09.19.51.57;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@initial cut
+@
+text
+@/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: direct.h,v 1.1 1996/04/15 14:17:57 nmcl Exp $
+ */
+
+#ifndef DIRECT_H_
+#define DIRECT_H_
+
+#ifdef STUB
+#  pragma @@NoRename
+#endif
+
+#include <direct.h>
+
+#endif
+@

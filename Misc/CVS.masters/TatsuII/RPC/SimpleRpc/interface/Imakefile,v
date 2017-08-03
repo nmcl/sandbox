@@ -1,0 +1,51 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	97.06.09.19.52.06;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@initial cut
+@
+text
+@COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 1995/01/20 12:55:48 ngdp Exp $
+COMMENT
+
+SOURCES = SimpleRpcClient.cc \
+          SimpleRpcServer.cc \
+	  ClientControl.cc
+
+OBJECTS = SimpleRpcClient.o \
+          SimpleRpcServer.o \
+	  ClientControl.o
+
+SetLocalCppFlags(-I../include -I$(STD_INCLUDES))
+
+AllTarget($(LIBSIMPLERPC))
+
+MakeLibrary($(LIBSIMPLERPC),$(OBJECTS))
+
+MakeObjectCPLUSPLUS(SimpleRpcClient,)
+MakeObjectCPLUSPLUS(SimpleRpcServer,)
+MakeObjectCPLUSPLUS(ClientControl,)
+@

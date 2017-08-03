@@ -1,0 +1,435 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@// @;
+
+
+1.1
+date	97.06.09.19.52.06;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@initial cut
+@
+text
+@/*
+ * Copyright 1990, 1991, 1992,
+ * Computing Laboratory, University of Newcastle upon Tyne, UK.
+ */
+
+/*
+ * $Id: SimpleRpcClient.cc,v 1.9 1996/04/04 08:51:49 nmcl Exp $
+ */
+
+#ifndef SYS_PARAM_H_
+#  include <System/sys/param.h>
+#endif
+
+#ifndef ERRNO_H_
+#  include <System/errno.h>
+#endif
+
+#ifndef PROTOS_H_
+#  include <System/protos.h>
+#endif
+
+#ifndef STRING_H_
+#  include <System/string.h>
+#endif
+
+#ifndef IOSTREAM_H_
+#  include <System/iostream.h>
+#endif
+
+#ifndef MEMORY_H_
+#  include <System/memory.h>
+#endif
+
+#ifndef BUFFER_H_
+#  include <Common/Buffer.h>
+#endif
+
+#ifndef MANAGER_DEF_H_
+#  include <RPC/SimpleRpc/Manager_def.h>
+#endif
+
+#ifndef SIMPLERPCCLIENT_H_
+#  include <RPC/SimpleRpc/SimpleRpcClient.h>
+#endif
+
+#ifndef PORTADDRESS_H_
+#  include "PortAddress.h"
+#endif
+
+#ifndef PORT_H_
+#  include "Port.h"
+#endif
+
+#ifndef RELPORT_H_
+#  include "RelPort.h"
+#endif
+
+SimpleRpcClient::SimpleRpcClient ( const char* serv, const char* host,
+				   ProtocolType p)
+{
+    myControl.setServiceName(serv);
+    myControl.setHost(host);
+    myControl.setProtocol(p);
+    initialise();
+}
+
+SimpleRpcClient::SimpleRpcClient (ProtocolType p)
+{
+    myControl.setProtocol(p);
+    initialise();
+}
+
+SimpleRpcClient::SimpleRpcClient ( const char* serv, ProtocolType p )
+{
+    myControl.setServiceName(serv);
+    myControl.setProtocol(p);
+    initialise();
+}
+
+SimpleRpcClient::SimpleRpcClient ( PortAddress& portAddress, ProtocolType p )
+{
+    serverAddr = new PortAddress(portAddress);
+    myControl.setProtocol(p);
+    initialise();
+}
+
+SimpleRpcClient::~SimpleRpcClient ()
+{
+    if ((status == OPERATIONAL) || (status == INOPERATIONAL))
+    {
+	terminate();
+    }
+
+    if (serverAddr)
+	delete serverAddr;
+
+    if (rPort)
+	delete rPort;
+
+    if (port)
+	delete port;
+}
+
+void SimpleRpcClient::initialise ()
+{
+    ProtocolType p = DGRAM;
+
+    port = new Port;
+    rPort = new ReliablePort;
+
+    myControl.getProtocol(p);
+    
+    if (p == DGRAM)
+    {
+	long burstSize = 0, burstTimeout = 0;
+
+	myControl.getBurstSize(burstSize);
+	myControl.getBurstTimeout(burstTimeout);
+	
+	port->setBurstSize(burstSize);
+	port->setBurstTimeout(burstTimeout);
+    }
+    
+    sequenceNumber = 0;
+    serverAddr = new PortAddress;
+    status = UNINITIATED;
+}
+
+ClientControl& SimpleRpcClient::control ()
+{
+    return myControl;
+}
+
+/*
+ * Regardless of the connection mode for RPC we use datagrams
+ * for communicating with the manager.
+ */
+
+RPC_Status SimpleRpcClient::initiate ()
+{
+#ifdef DEBUG
+    cout << "**SimpleRpcClient::initiate called" << endl;
+#endif
+    
+    /* Should do terminate if failed. */
+
+    Buffer *sendBuff[1], *recBuff[1];
+    Buffer work, result;
+    RPC_Status opcode = OPER_UNKNOWN;
+    long numberRetry = 0;
+    Boolean initiated = FALSE;
+    Uid serverID;
+    char *serviceName = 0, *hostName = 0;
+    ProtocolType protocol;
+    long it_timeout, it_retry;
+    int number = 0;
+
+    myControl.getServiceName(serviceName);
+    myControl.getHost(hostName);
+    myControl.getServerID(serverID);
+    myControl.getProtocol(protocol);
+    myControl.getInitTermTimeout(it_timeout);
+    myControl.getInitTermRetry(it_retry);
+
+    work.pack(DO_INITIATE);
+    work.packMappedString(serviceName);
+    serverID.pack(work);
+    clientID.pack(work);
+    work.pack(++sequenceNumber);
+    work.pack(protocol);
+    
+    sendBuff[0] = &work;
+    recBuff[0] = &result;
+
+    PortAddress managerGlobalAddr(hostName, MANAGER_PORT_GLOBAL), from;
+
+    do
+    {
+	if (port->sendMessage(managerGlobalAddr, sendBuff, 1) == Port::DONE)
+	{
+	    if (port->receiveMessage(from, recBuff, number, it_timeout) == Port::DONE)
+	    {
+		result.unpack(initiated);
+		
+		if (initiated)
+		{
+		    serverAddr->unpack(result);
+		    status = OPERATIONAL;
+		    opcode = OPER_DONE;
+		}
+		else
+		    opcode = OPER_NOTDONE;
+	    }
+	}
+    } while ((status != OPERATIONAL) && (numberRetry++ < it_retry));
+
+    if (opcode != OPER_DONE)
+    {
+	RPC_Status termStatus;
+
+	status = INOPERATIONAL;
+	termStatus = terminate();
+
+	status = ((termStatus == OPER_DONE) ? UNINITIATED : INOPERATIONAL);
+    }
+   
+    if (serviceName)
+	::delete [] serviceName;
+
+    if (hostName)
+	::delete [] hostName;
+
+#ifdef DEBUG
+    cout << "**SimpleRpcClient::initiate - returning " << opcode << endl;
+#endif
+    
+    return opcode;
+}
+
+RPC_Status SimpleRpcClient::terminate ()
+{
+#ifdef DEBUG
+    cout << "**SimpleRpcClient::terminate called" << endl;
+#endif
+    
+    RPC_Status outcome = OPER_NOTDONE;
+    Buffer *sendBuff[1], *recBuff[1];
+    Buffer work, result;
+    long numberRetry = 0;
+    Uid serverID;
+    char *serviceName = 0, *hostName = 0;
+    long it_timeout, it_retry;
+    int number = 0;
+
+    myControl.getServiceName(serviceName);
+    myControl.getHost(hostName);
+    myControl.getServerID(serverID);
+    myControl.getInitTermTimeout(it_timeout);
+    myControl.getInitTermRetry(it_retry);
+    
+    work.pack(DO_TERMINATE);
+    work.packMappedString(serviceName);
+    serverID.pack(work);
+    clientID.pack(work);
+    work.pack(sequenceNumber);
+
+    sendBuff[0] = &work;
+    recBuff[0] = &result;
+
+    if ((status == OPERATIONAL) || (status == INOPERATIONAL))
+    {
+	PortAddress managerGlobalAddr(hostName, MANAGER_PORT_GLOBAL), from;
+
+	do
+	{
+	    if (port->sendMessage(managerGlobalAddr, sendBuff, 1) == Port::DONE)
+	    {
+		if (port->receiveMessage(from, recBuff, number, it_timeout) == Port::DONE)
+		{
+		    status = DEAD;
+		    outcome = OPER_DONE;
+		}
+	    }
+	} while ((status != DEAD) && (numberRetry++ < it_retry));
+    }
+
+    if (serviceName)
+	::delete [] serviceName;
+
+    if (hostName)
+	::delete [] hostName;
+
+#ifdef DEBUG
+    cout << "**SimpleRpcClient::Terminate - returning " << outcome << endl;
+#endif    
+	
+    return outcome;
+}
+
+RPC_Status SimpleRpcClient::call ( Buffer* work[], int sendN,
+				   Buffer* result[], int& recN )
+{
+#ifdef DEBUG
+    cout << "**SimpleRpcClient::Call called" << endl;
+#endif
+    
+    ProtocolType protocol;
+    RPC_Status outcome = OPER_NOTDONE;
+    
+    myControl.getProtocol(protocol);
+    
+    switch (protocol)
+    {
+    case DGRAM:
+	outcome = callDGRAM(work, sendN, result, recN);
+	break;
+    case STREAM:
+	outcome =  callSTREAM(work, sendN, result, recN);
+    default:
+	break;
+    }
+
+#ifdef DEBUG
+    cout << "**SimpleRpcClient::call - returning " << outcome << endl;
+#endif
+    
+    return outcome;
+}
+
+RPC_Status SimpleRpcClient::callDGRAM ( Buffer* work[], int sendN,
+					Buffer* result[], int& recN )
+{
+    Port::POutcome outcomeP;
+    long numberRetry = 0;
+    long timeout = 0, retry = 0;
+
+    if (port->valid() && serverAddr->valid())
+    {
+	myControl.getTimeout(timeout);
+	myControl.getRetry(retry);
+	
+	do
+	{
+	    outcomeP = port->sendMessage(*serverAddr, work, sendN);
+	    if (outcomeP == Port::DONE)
+	    {
+		Boolean finished = FALSE;
+
+		while (!finished)
+		{
+		    PortAddress fromAddr;
+		    
+		    outcomeP = port->receiveMessage(fromAddr, result, recN, timeout);
+		
+		    // check received message is from correct destination
+
+		    if ((outcomeP != Port::DONE) || (fromAddr == *serverAddr))
+			finished = TRUE;
+		}
+	    }
+	    
+	} while ((outcomeP != Port::DONE) && (numberRetry++ < retry));
+
+        if (outcomeP == Port::DONE)
+            return OPER_DONE;
+        else if (outcomeP == Port::NOTDONE)
+            return OPER_NOTDONE;
+        else
+            return OPER_UNKNOWN;
+    }
+    else
+	return OPER_NOTDONE;
+}
+
+RPC_Status SimpleRpcClient::callSTREAM ( Buffer* work[], int sendN,
+					 Buffer* result[], int& recN )
+{
+    ReliablePort::RPOutcome outcomeRP;
+    
+    if (rPort->valid() && serverAddr->valid())
+    {
+	if (rPort->setupConnection(*serverAddr) == ReliablePort::DONE)
+	{
+	    outcomeRP = rPort->sendMessage(work, sendN);
+	    if (outcomeRP == ReliablePort::DONE)
+		outcomeRP = rPort->receiveMessage(result, recN);
+	    
+	    rPort->endConnection();
+	}
+	else
+	    outcomeRP = ReliablePort::UNKNOWN;
+	
+	if (outcomeRP == ReliablePort::DONE)
+	    return OPER_DONE;
+	else
+	    if (outcomeRP == ReliablePort::NOTDONE)
+		return OPER_NOTDONE;
+	else
+	    return OPER_UNKNOWN;
+    }
+    else
+	return OPER_NOTDONE;
+}
+	
+ServerStatus SimpleRpcClient::getServerStatus () const
+{
+    return status;
+}
+
+ostream& SimpleRpcClient::print( ostream& strm ) const
+{
+    char *serviceName = 0, *hostName = 0;
+    
+    myControl.getServiceName(serviceName);
+    myControl.getHost(hostName);
+    
+    strm << "<SimpleRpcClient:" << *port << ',' << *serverAddr << ',' 
+         << status << ',' << serviceName << ',' << hostName << '>';
+    
+    if (serviceName)
+	::delete [] serviceName;
+    
+    if (hostName)
+	::delete [] hostName;
+    
+    return strm;
+}
+
+ostream& operator<<( ostream& strm, const SimpleRpcClient& c )
+{
+    return c.print(strm);
+}
+@

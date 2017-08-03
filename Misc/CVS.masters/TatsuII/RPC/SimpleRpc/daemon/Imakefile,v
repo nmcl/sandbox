@@ -1,0 +1,55 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	97.06.09.19.52.05;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@initial cut
+@
+text
+@COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.4 1994/12/14 10:22:59 ngdp Exp $
+COMMENT
+
+SOURCES = Manager.cc \
+          Manager_main.cc
+
+OBJECTS = Manager.o \
+          Manager_main.o
+
+LIBRARIES = $(LIBRPC) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(STD_INCLUDES) -I../include)
+
+AllTarget(manager)
+
+CreateInstallTopDirectory(etc)
+InstallProgram(etc,manager)
+
+MakeProgramCPLUSPLUS(manager,Manager.o Manager_main.o $(LIBRARIES),)
+
+MakeObjectCPLUSPLUS(Manager,)
+MakeObjectCPLUSPLUS(Manager_main,)
+
+TidyTarget(manager)
+@

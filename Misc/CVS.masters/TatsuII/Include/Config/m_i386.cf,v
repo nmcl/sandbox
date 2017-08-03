@@ -1,0 +1,40 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	97.06.09.19.51.54;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@initial cut
+@
+text
+@/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: m_i386.cf,v 1.5 1995/01/13 08:44:07 ngdp Exp $
+ */
+
+/*
+ * m_i386.cf.cf
+ */
+
+#define MACHINE_SPECIFIC_FLAGS -DLITTLE_ENDIAN_MC
+#define STUBGEN_MC_FLAGS "-Di386 -D_I386 -DLITTLE_ENDIAN_MC"
+@

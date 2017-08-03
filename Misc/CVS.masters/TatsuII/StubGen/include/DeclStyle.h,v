@@ -1,0 +1,93 @@
+head	1.3;
+access;
+symbols;
+locks; strict;
+comment	@ * @;
+
+
+1.3
+date	97.06.12.20.06.18;	author nmcl;	state Exp;
+branches;
+next	1.2;
+
+1.2
+date	97.06.11.20.25.10;	author nmcl;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	97.06.09.19.52.12;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.3
+log
+@build basic client and server class definitions
+@
+text
+@/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: DeclStyle.h,v 1.2 1997/06/11 20:25:10 nmcl Exp $
+ */
+
+#ifndef DECLSTYLE_H_
+#define DECLSTYLE_H_
+
+/*
+ *
+ * Enums describing which particular style of type declaration to produce
+ *
+ */
+
+enum DeclStyle { CLIENT_DECL = 1, SERVER_DECL = 2, 
+		 SERVERIMPLEMENTATION_DECL = 4,
+		 NORMAL_DECL = 8, IDL_DECL = 16, SHADOWS_DECL = 32,
+                 JAVA_DECL = 64, ARJUNAII_CLIENT_DECL = 128,
+                 ARJUNAII_INTF_DECL = 256, ARJUNAII_IMPL_DECL = 512 };
+#endif
+
+
+
+
+
+
+@
+
+
+1.2
+log
+@first step
+@
+text
+@d9 1
+a9 1
+ * $Id: DeclStyle.h,v 1.1 1997/06/09 19:52:12 nmcl Exp $
+d24 2
+a25 1
+                 JAVA_DECL = 64, ARJUNAII_DECL = 128 };
+@
+
+
+1.1
+log
+@initial cut
+@
+text
+@d9 1
+a9 1
+ * $Id: DeclStyle.h,v 1.4 1994/09/14 15:05:42 ngdp Exp $
+d24 1
+a24 1
+                 JAVA_DECL = 64 };
+@

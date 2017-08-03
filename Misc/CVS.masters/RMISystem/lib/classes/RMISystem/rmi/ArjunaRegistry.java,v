@@ -1,0 +1,340 @@
+head	1.4;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.4
+date	97.06.08.19.18.28;	author nmcl;	state Exp;
+branches;
+next	1.3;
+
+1.3
+date	97.05.31.14.21.28;	author nmcl;	state Exp;
+branches;
+next	1.2;
+
+1.2
+date	97.05.31.13.32.00;	author nmcl;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	97.05.30.18.26.43;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.4
+log
+@added documentation comments
+@
+text
+@/*
+ * Copyright (C) 1997,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: ArjunaRegistry.java,v 1.3 1997/05/31 14:21:28 nmcl Exp $
+ */
+
+package RMISystem.rmi;
+
+import java.lang.Runtime;
+import java.lang.Process;
+import java.rmi.Remote;
+import java.rmi.registry.Registry;
+import java.rmi.*;
+import java.rmi.server.UnicastRemoteObject;
+
+import java.io.IOException;
+import java.lang.InterruptedException;
+import java.rmi.RemoteException;
+import java.rmi.NotBoundException;
+import java.rmi.AccessException;
+import java.rmi.AlreadyBoundException;
+
+/**
+ * This implementation of the Registry enables objects to be registered
+ * with a local naming service. Whenever a request for an object is
+ * received and a server for that object does not already exist, this
+ * Registry will determine where the server code is an start it up. The
+ * server is reference counted, and will only be terminated when all clients
+ * have indicated that they are finished with it. (Failures of clients are
+ * treated as implicit dereferences.)
+ *
+ * The mapping between object name and Java executable flexible. The
+ * executable can be located via the default CLASSPATH, or can be
+ * searched for via a search path.
+ */
+
+public class ArjunaRegistry implements Registry
+{
+
+    /**
+     * Create a registry which searches for executables only in
+     * the CLASSPATH.
+     */
+    
+public ArjunaRegistry ()
+    {
+	_searchPath = null;  // assume all objects will be accessible via CLASSPATH
+	_list = new RegistryList();
+	_nameService = new NameMapping();
+    }
+
+    /**
+     * Create a registry which searches for executables in the
+     * provided search path. It is assumed that all references
+     * found within the executable can be resolved via the
+     * CLASSPATH.
+     */
+    
+public ArjunaRegistry (String[] searchPath)
+    {
+	_searchPath = searchPath;
+	_list = new RegistryList();
+	_nameService = new NameMapping();
+    }
+
+    /**
+     * Return a reference to the specified object. If the server within which the object
+     * resides is not currently executing, then it will be found and started.
+     */
+    
+public Remote lookup (String name) throws RemoteException, NotBoundException, AccessException
+    {
+	System.out.println("lookup ( "+name+" )");
+
+	Remote ptr = _list.find(name);
+
+	if (ptr == null)
+	{
+	    /*
+	     * Not present, so create and add to list.
+	     */
+
+	    ptr = create(name);
+
+	    if (ptr == null)
+		throw(new NotBoundException("Could not find/create object."));
+	}
+	
+	return ptr;
+    }
+
+    /**
+     * Bind the object to the specified name.
+     */
+    
+public void bind (String name, Remote obj) throws RemoteException, AlreadyBoundException, AccessException
+    {
+	System.out.println("bind ( "+name+", obj )");
+
+	this.rebind(name, obj);
+    }
+
+    /**
+     * Unbind an object from the specified name.
+     */
+    
+public void unbind (String name) throws RemoteException, AccessException
+    {
+	System.out.println("unbind ( "+name+" )");
+
+	_list.unref(name);
+    }
+
+    /**
+     * Discard any previous association between object and name in favour
+     * of the one provided.
+     */
+    
+public void rebind (String name, Remote obj) throws RemoteException, AccessException
+    {
+	System.out.println("rebind ( "+name+", obj )");
+
+	_list.replace(name, obj);
+    }
+
+    /**
+     * List all of the entries in the registry. Note: this will only be
+     * those servers/objects which have been started, and not the objects
+     * registered in the (external) naming service.
+     */
+    
+public String[] list () throws RemoteException, AccessException
+    {
+	System.out.println("list ()");
+
+	return _list.list();
+    }
+
+    /**
+     * Rather than simply allow any string to be exec-ed (!) we search
+     * through our name mapping database. If the object name is present
+     * then we start up the corresponding java executable, otherwise we
+     * do nothing.
+     */
+    
+protected Remote create (String name) throws AccessException
+    {
+	String javaExec = _nameService.getJavaCodeName(name);
+
+	if (javaExec == null) // not present
+	    return null;
+	
+	try
+	{
+	    System.out.println("ArjunaRegistry.create - execing: java "+javaExec);
+	    
+	    Process proc = Runtime.getRuntime().exec("java "+javaExec);
+
+	    if (proc == null)
+		throw(new AccessException("ArjunaRegistry.create - exec of: java "+javaExec+" failed"));
+
+	    int retry = ArjunaRegistry.BIND_RETRY;
+	    Remote theObject = null;
+
+	    do
+	    {
+		try
+		{
+		    Thread.sleep(ArjunaRegistry.BIND_TIMEOUT);
+		}
+		catch (InterruptedException e)
+		{
+		}
+
+		System.out.println("ArjunaRegistry.create - searching again.");
+		
+		theObject = _list.find(name);
+
+		if (theObject != null)
+		    return theObject;
+		
+	    } while (--retry > 0);
+
+	    return null;
+	}
+	catch (IOException e)
+	{
+	    throw(new AccessException(e.toString()));
+	}
+    }
+
+protected RegistryList _list;
+protected String[] _searchPath;
+protected NameMapping _nameService;
+
+private static final int BIND_RETRY = 10;
+private static final int BIND_TIMEOUT = 10000; // milliseconds
+    
+};
+@
+
+
+1.3
+log
+@added context registry
+@
+text
+@d9 1
+a9 1
+ * $Id: ArjunaRegistry.java,v 1.2 1997/05/31 13:32:00 nmcl Exp $
+d28 14
+d45 4
+a48 2
+public static final int BIND_RETRY = 10;
+public static final int BIND_TIMEOUT = 10000; // milliseconds
+d56 7
+d71 5
+d97 4
+d108 4
+d119 3
+a121 3
+    /*
+     * Add parameter to add (or another method) which removes any previous
+     * binding.
+d131 6
+d144 1
+a144 1
+    /*
+d200 3
+@
+
+
+1.2
+log
+@added name mapping classes
+@
+text
+@d9 1
+a9 1
+ * $Id: ArjunaRegistry.java,v 1.1 1997/05/30 18:26:43 nmcl Exp $
+d109 1
+a109 1
+private Remote create (String name) throws AccessException
+d118 1
+a118 1
+	    System.out.println("Execing: java "+javaExec);
+d123 1
+a123 1
+		throw(new AccessException("Exec of: java "+javaExec+" failed"));
+d138 1
+a138 1
+		System.out.println("Searching again.");
+d155 3
+a157 3
+private RegistryList _list;
+private String[] _searchPath;
+private NameMapping _nameService;
+@
+
+
+1.1
+log
+@initial cut
+@
+text
+@d9 1
+a9 1
+ * $Id$
+d38 1
+a38 1
+	//	_nameService = new NameMapping();
+d45 1
+a45 1
+	//	_nameService = new NameMapping();
+d72 2
+d79 2
+d92 1
+a92 1
+	_list.add(name, obj);
+d98 2
+a99 2
+	
+	return null;
+d102 7
+d111 5
+d118 1
+a118 1
+	    System.out.println("execing java "+name);
+d120 1
+a120 1
+	    Process proc = Runtime.getRuntime().exec("java "+name);
+d123 1
+a123 1
+		throw(new AccessException("Exec of: java "+name+" failed"));
+a154 1
+    //private NameMapping _nameService;
+d157 1
+@

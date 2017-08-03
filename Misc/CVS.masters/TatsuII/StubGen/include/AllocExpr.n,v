@@ -1,0 +1,60 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	97.06.09.19.52.07;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@initial cut
+@
+text
+@/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: AllocExpr.n,v 1.1 1993/11/03 14:44:03 nmcl Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(ALLOCEXPR_CC_)
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF AllocExpression::AllocExpression ( const Boolean& useGlobal,
+					   Expression *e1,
+					   Expression *e2,
+					   Expression *e3 )
+                                           : Expression(),
+					     global(useGlobal),
+					     init(e3),
+					     newOn(e2),
+					     placement(e1)
+{
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif
+@

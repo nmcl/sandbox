@@ -1,0 +1,68 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	97.06.09.19.52.11;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@initial cut
+@
+text
+@/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: DclContxt.n,v 1.1 1993/11/03 14:44:29 nmcl Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(DCLCONTXT_CC_)
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF DeclContext *DeclContext::getEnclosingContext () const
+{
+    return enclosingContext;
+}
+
+INLINEF Declaration *DeclContext::getOneMember ( int memb_num ) const
+{
+    return (memb_num < maxEntries ? order[memb_num] : 0);
+}
+
+INLINEF int DeclContext::noOfEntries () const
+{
+    return entryCount;
+}
+
+INLINEF DeclarationList **DeclContext::getSymtable () const
+{
+    return symtable;
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif
+@

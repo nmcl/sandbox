@@ -1,0 +1,33 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	97.05.30.18.26.43;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@initial cut
+@
+text
+@<HTML>
+<title>Registry Test</title>
+<center> <h1>Registry Test</h1> </center>
+
+The message from the Registry is:
+<p>
+<applet code="RegistryApplet"
+        width=500 height=120>
+</applet>
+</HTML>
+@

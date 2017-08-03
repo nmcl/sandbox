@@ -1,0 +1,437 @@
+head	1.2;
+access;
+symbols;
+locks; strict;
+comment	@// @;
+
+
+1.2
+date	97.06.11.20.24.56;	author nmcl;	state dead;
+branches;
+next	1.1;
+
+1.1
+date	97.06.09.19.52.25;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@not needed
+@
+text
+@9c9
+<  * $Id: outClassT.cc,v 1.1 1997/06/09 19:52:25 nmcl Exp nmcl $
+---
+>  * $Id: outClassT.cc,v 1.1 1997/06/09 19:52:25 nmcl Exp nmcl $
+75c75
+< static const char RCSid[] = "$Id: outClassT.cc,v 1.1 1997/06/09 19:52:25 nmcl Exp nmcl $";
+---
+> static const char RCSid[] = "$Id: outClassT.cc,v 1.1 1997/06/09 19:52:25 nmcl Exp nmcl $";
+694d693
+< 	ofstream javaClientCode;
+701d699
+< 	String javaCodeSuff = GlobalInfo::getJavaCodeSuff();
+704,706c702,703
+< 	Boolean produceJavaOnly = (GlobalInfo::getOutputStyle() == JAVA_STYLE) ? TRUE : FALSE;
+< 	Boolean produceJava = (GlobalInfo::getOutputStyle() == CPLUSPLUS_AND_JAVA_STYLE) ? TRUE : FALSE;	
+< 
+---
+> 	
+> 	
+708,739c705,734
+< 	if (!produceJavaOnly)
+< 	{
+< 	    // g++ on linux does not open ofstreams correctly
+< 	    char* temp = ::new char[::strlen(className) +
+< 				   ::strlen(classHdrSuff) +1];
+< 	    ::memset(temp, '\0', ::strlen(className) + ::strlen(classHdrSuff) +1);
+< 	    ::strcpy(temp, className);
+< 	    ::strcpy(temp+::strlen(className), classHdrSuff);
+< 
+< 	    classHeader.open(temp);
+< 	    ::delete [] temp;
+< 
+< 	    char* temp1 = ::new char[::strlen(className)+::strlen(clientCodeSuff)+1];
+< 	    ::memset(temp1, '\0', ::strlen(className)+::strlen(clientCodeSuff)+1);
+< 	    ::strcpy(temp1, className);
+< 	    ::strcpy(temp1+::strlen(className), clientCodeSuff);
+< 
+< 	    clientCode.open(temp1);
+< 	    ::delete [] temp1;
+< 	
+< 	    char* temp2 = ::new char[::strlen(className)+::strlen(serverCodeSuff)+1];
+< 	    ::memset(temp2, '\0', ::strlen(className)+::strlen(serverCodeSuff)+1);
+< 	    ::strcpy(temp2, className);
+< 	    ::strcpy(temp2+::strlen(className), serverCodeSuff);
+< 	
+< 	    serverCode.open(temp2);
+< 	    ::delete [] temp2;
+< 	
+< 	    char* temp3 = ::new char[::strlen(className)+::strlen(servermCodeSuff)+1];
+< 	    ::memset(temp3, '\0', ::strlen(className)+::strlen(servermCodeSuff)+1);
+< 	    ::strcpy(temp3, className);
+< 	    ::strcpy(temp3+::strlen(className), servermCodeSuff);
+---
+> 	// g++ on linux does not open ofstreams correctly
+> 	char* temp = ::new char[::strlen(className) +
+> 				::strlen(classHdrSuff) +1];
+> 	::memset(temp, '\0', ::strlen(className) + ::strlen(classHdrSuff) +1);
+> 	::strcpy(temp, className);
+> 	::strcpy(temp+::strlen(className), classHdrSuff);
+> 
+> 	classHeader.open(temp);
+> 	::delete [] temp;
+> 
+> 	char* temp1 = ::new char[::strlen(className)+::strlen(clientCodeSuff)+1];
+> 	::memset(temp1, '\0', ::strlen(className)+::strlen(clientCodeSuff)+1);
+> 	::strcpy(temp1, className);
+> 	::strcpy(temp1+::strlen(className), clientCodeSuff);
+> 
+> 	clientCode.open(temp1);
+> 	::delete [] temp1;
+> 	
+> 	char* temp2 = ::new char[::strlen(className)+::strlen(serverCodeSuff)+1];
+> 	::memset(temp2, '\0', ::strlen(className)+::strlen(serverCodeSuff)+1);
+> 	::strcpy(temp2, className);
+> 	::strcpy(temp2+::strlen(className), serverCodeSuff);
+> 	
+> 	serverCode.open(temp2);
+> 	::delete [] temp2;
+> 	
+> 	char* temp3 = ::new char[::strlen(className)+::strlen(servermCodeSuff)+1];
+> 	::memset(temp3, '\0', ::strlen(className)+::strlen(servermCodeSuff)+1);
+> 	::strcpy(temp3, className);
+> 	::strcpy(temp3+::strlen(className), servermCodeSuff);
+741,743c736,737
+< 	    serverMain.open(temp3);
+< 	    ::delete [] temp3;
+< 	}
+---
+> 	serverMain.open(temp3);
+> 	::delete [] temp3;
+755,764c749
+< 
+< 	if (produceJava || produceJavaOnly)
+< 	{
+< 	    char* temp5 = ::new char[::strlen(className)+::strlen(javaCodeSuff)+1];
+< 	    ::strcpy(temp5, className);
+< 	    ::strcat(temp5, javaCodeSuff);
+< 
+< 	    javaClientCode.open(temp5);
+< 	    ::delete [] temp5;
+< 	}
+---
+> 	
+766,775c751,754
+< 	if (!produceJavaOnly)
+< 	{
+< 	    classHeader.open(className + classHdrSuff);
+< 	    clientCode.open(className + clientCodeSuff);
+< 	    serverCode.open(className + serverCodeSuff);
+< 	    serverMain.open(className + servermCodeSuff);
+< 
+< 	    if (doShadows)
+< 		shadowCode.open(className + shadowCodeSuff);
+< 	}
+---
+> 	classHeader.open(className + classHdrSuff);
+> 	clientCode.open(className + clientCodeSuff);
+> 	serverCode.open(className + serverCodeSuff);
+> 	serverMain.open(className + servermCodeSuff);
+777,778c756,757
+< 	if (produceJava || produceJavaOnly)
+< 	    javaClientCode.open(className + javaCodeSuff);
+---
+> 	if (doShadows)
+> 	    shadowCode.open(className + shadowCodeSuff);
+779a759,761
+> 	
+> 	masterHdr << "#include \"" << className + classHdrSuff;
+> 	masterHdr << "\"\n";
+781,786c763
+< 	if (!produceJavaOnly)
+< 	{
+< 	    masterHdr << "#include \"" << className + classHdrSuff;
+< 	    masterHdr << "\"\n";
+< 
+< 	    /* Class descriptions */
+---
+> 	/* Class descriptions */
+788c765
+< 	    GlobalInfo::stamp(classHeader);
+---
+> 	GlobalInfo::stamp(classHeader);
+790c767
+< 	    /* First print list of standard includes */
+---
+> 	/* First print list of standard includes */
+792,800c769,774
+< 	    classHeader << "#ifndef STUB\n";	
+< 	    classHeader << "#include <StubGen/RpcBuffer.h>\n";
+< 	    classHeader << "#include <StubGen/ClientRpcMan.h>\n\n";
+< 	}
+< 
+< 	if (produceJava || produceJavaOnly)
+< 	{
+< 	    produceStubCode(javaClientCode, JAVA_DECL);
+< 	}
+---
+> 	classHeader << "#ifndef STUB\n";	
+> 	classHeader << "#include <StubGen/RpcBuffer.h>\n";
+> 	classHeader << "#include <StubGen/ClientRpcMan.h>\n\n";
+> 	
+> 	printAsTypedef(classHeader, CLIENT_DECL);
+> 	classHeader << ";\n\n";
+802,805c776,777
+< 	if (!produceJavaOnly)
+< 	{
+< 	    printAsTypedef(classHeader, CLIENT_DECL);
+< 	    classHeader << ";\n\n";
+---
+> 	printAsTypedef(classHeader, SERVER_DECL);
+> 	classHeader << ";\n#endif\n\n";
+807,808c779,780
+< 	    printAsTypedef(classHeader, SERVER_DECL);
+< 	    classHeader << ";\n#endif\n\n";
+---
+> 	printAsTypedef(classHeader, SERVERIMPLEMENTATION_DECL);
+> 	classHeader << ";\n\n";
+810c782,784
+< 	    printAsTypedef(classHeader, SERVERIMPLEMENTATION_DECL);
+---
+> 	if (doShadows)
+> 	{
+> 	    printAsTypedef(classHeader, SHADOWS_DECL);
+811a786
+> 	}
+813,819c788
+< 	    if (doShadows)
+< 	    {
+< 		printAsTypedef(classHeader, SHADOWS_DECL);
+< 		classHeader << ";\n\n";
+< 	    }
+< 
+< 	    classHeader << flush;
+---
+> 	classHeader << flush;
+821c790
+< 	    /* Code Generation */
+---
+> 	/* Code Generation */
+823,827c792,796
+< 	    if (doShadows)
+< 	    {
+< 		GlobalInfo::stamp(shadowCode);
+< 		produceStubCode(shadowCode, SHADOWS_DECL);
+< 	    }
+---
+> 	if (doShadows)
+> 	{
+> 	    GlobalInfo::stamp(shadowCode);
+> 	    produceStubCode(shadowCode, SHADOWS_DECL);
+> 	}
+829,832c798,801
+< 	    GlobalInfo::stamp(clientCode);
+< 	    produceStubCode(clientCode, CLIENT_DECL);
+< 	    GlobalInfo::stamp(serverCode);
+< 	    produceStubCode(serverCode, SERVER_DECL);
+---
+> 	GlobalInfo::stamp(clientCode);
+> 	produceStubCode(clientCode, CLIENT_DECL);
+> 	GlobalInfo::stamp(serverCode);
+> 	produceStubCode(serverCode, SERVER_DECL);
+834c803
+< 	    /* Simple main program for server - may not be needed */
+---
+> 	/* Simple main program for server - may not be needed */
+836,839c805,808
+< 	    GlobalInfo::stamp(serverMain);
+< 	    serverMain << "#include \""
+< 		       << GlobalInfo::getCurrentIf()->getHeaderFname() 
+< 		       << "\"\n";
+---
+> 	GlobalInfo::stamp(serverMain);
+> 	serverMain << "#include \""
+> 		   << GlobalInfo::getCurrentIf()->getHeaderFname() 
+> 		   << "\"\n";
+841,842c810,811
+< 	    serverMain << "int " << MAINNAME 
+< 		       << " ( int argc, char **argv )\n{\n";
+---
+> 	serverMain << "int " << MAINNAME 
+> 		   << " ( int argc, char **argv )\n{\n";
+844,847c813,816
+< 	    serverMain << typeName(SERVER_DECL) << " one";
+< 	    serverMain << className << "Server;\n\n";
+< 	    serverMain << "one" << className << "Server.serve(argc, argv);\n";
+< 	    serverMain << "return 0;\n}\n";
+---
+> 	serverMain << typeName(SERVER_DECL) << " one";
+> 	serverMain << className << "Server;\n\n";
+> 	serverMain << "one" << className << "Server.serve(argc, argv);\n";
+> 	serverMain << "return 0;\n}\n";
+849,851c818,820
+< 	    clientCode << flush;
+< 	    serverCode << flush;
+< 	    serverMain << flush;
+---
+> 	clientCode << flush;
+> 	serverCode << flush;
+> 	serverMain << flush;
+853,855c822,823
+< 	    if (doShadows)
+< 		shadowCode << flush;
+< 	}
+---
+> 	if(doShadows)
+> 	    shadowCode << flush;
+862,865c830,831
+< 
+<     if (GlobalInfo::getOutputStyle() != JAVA_STYLE)
+<     {
+< 	produceMarshallDefs(masterHdr, NORMAL_DECL);
+---
+> 	
+>     produceMarshallDefs(masterHdr, NORMAL_DECL);
+867,868c833
+< 	masterHdr << flush;
+<     }
+---
+>     masterHdr << flush;
+1022,1023d986
+<     case JAVA_DECL:
+< 	produceJavaCode(s);
+1787,1878c1750
+< 
+< Boolean ClassType::produceJavaCode (ostream& codeStream)
+< {
+<     if (classFullDecl)
+< 	return classFullDecl->produceJavaCode(codeStream);
+<     else
+<     {
+< 	Boolean stubOk = FALSE;
+< 	Declaration *decl;
+< 	int i = 0;
+< 	BaseClass *bc = deriveList;
+< 	
+< 	codeStream << "import W3OTrans.RPC.ClientTCPPort;\n";
+< 	codeStream << "import W3OTrans.RPC.PortAddress;\n";
+< 	codeStream << "import W3OTrans.Common.InputBuffer;\n";
+< 	codeStream << "import W3OTrans.Common.OutputBuffer;\n";
+< 	codeStream << "import W3OTrans.StubGen.*;\n";
+< 	codeStream << "\n";
+< 	codeStream << "import java.io.*;\n";
+< 	codeStream << "\n";
+< 	codeStream << "import java.io.IOException;\n";
+<         codeStream << "\n";
+< 
+< 	codeStream << "public class " << className << "\n";
+< 	codeStream << "{\n";
+< 
+< 	/* print out full derivation info */
+< 	if (bc != 0)
+< 	    codeStream << ": ";
+< 	    
+< 	while (bc != 0)
+< 	{
+< 	    bc->printBaseClass(codeStream, JAVA_DECL);
+< 	    bc = bc->getNext();
+< 	    if (bc)
+< 		codeStream << ", ";
+< 	}
+< 	
+< 	/* Do public member functions only */
+< 	
+< 	while ((decl = classMembers->getOneMember(i++)))
+< 	{
+< 	    if (decl->isTypedef() ||
+< 		((decl->getVisibility() == CLASS_PUBLIC) &&
+< 		 (decl->getRemote() == STUB_REMOTE)))
+< 	    {
+< 		Type dkind = decl->getType()->kind();
+< 
+< 		if ((dkind == FUNCTION_TYPE) || decl->isTypedef())
+< 		{
+< 		    codeStream << "public ";
+< 		    decl->produceStubCode(codeStream, JAVA_DECL);
+< 		    codeStream << "\n";
+< 		}
+< 		else
+< 		{
+< 		    ostrstream errorStream;
+< 
+< 		    errorStream << "ignoring non-function public member ";
+< 		    errorStream << className << "::";
+< 		    errorStream << decl->getName();
+< 		    error(errorStream);
+< 		}
+< 	    }
+< 	}
+< 
+< 	codeStream << "\n";
+< 
+< 	while ((decl = classMembers->getOneMember(i++)))
+< 	{
+< 	    errorLocation = decl->getLoc();
+< 		
+< 	    if ((decl->getVisibility() == CLASS_PUBLIC) &&
+< 		(decl->getRemote() == STUB_REMOTE))
+< 	    {
+< 		if (decl->getType()->kind() == FUNCTION_TYPE)
+< 		{
+< 		    printTemplatePrefix(codeStream);
+< 		    stubOk = decl->produceStubCode(codeStream, JAVA_DECL);
+< 		}
+< 	    }
+< 	}
+< 
+< 	codeStream << "private ClientRpcManager _clientManager;\n";
+< 	codeStream << "private OutputBuffer _myHashVal;\n";
+< 	codeStream << "\n";
+< 	codeStream << "};\n";
+< 	
+< 	return stubOk;
+<     }
+< }
+< 
+---
+>  
+1897c1769
+< 	    printClientSpecials(codeStream);
+---
+> 	    printClientSpecials (codeStream);
+1974c1846
+< 
+---
+>  
+1993c1865
+< 	    printClientSpecials(codeStream);
+---
+> 	    printClientSpecials (codeStream);
+@
+
+
+1.1
+log
+@initial cut
+@
+text
+@d2 1
+a2 1
+<  * $Id: ClassT.cc,v 1.29 1995/07/12 08:55:23 ngdp Exp $
+d4 1
+a4 1
+>  * $Id: ClassT.cc,v 1.31 1996/04/16 12:09:53 nmcl Exp $
+d6 1
+a6 1
+< static const char RCSid[] = "$Id: ClassT.cc,v 1.29 1995/07/12 08:55:23 ngdp Exp $";
+d8 1
+a8 1
+> static const char RCSid[] = "$Id: ClassT.cc,v 1.31 1996/04/16 12:09:53 nmcl Exp $";
+@

@@ -1,0 +1,69 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	97.06.09.19.52.12;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@initial cut
+@
+text
+@/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: DeclListE.n,v 1.1 1993/11/03 14:44:42 nmcl Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(DECLLISTE_CC_)
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF DeclarationListEntry::DeclarationListEntry ( Declaration *d )
+                                                  : entry(d),
+						    link(0)
+{
+}
+
+INLINEF Declaration *DeclarationListEntry::getEntry () const
+{
+    return entry;
+}
+
+INLINEF DeclarationListEntry *DeclarationListEntry::getLink () const
+{
+    return link;
+}
+
+INLINEF void DeclarationListEntry::setLink ( DeclarationListEntry *nlink )
+{
+    link = nlink;
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif
+@

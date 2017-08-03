@@ -1,0 +1,37 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	97.06.08.19.18.26;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@added documentation comments
+@
+text
+@COMMENT 
+COMMENT Copyright (C) 1995, 1996
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1997/05/30 18:26:42 nmcl Exp $
+COMMENT
+
+Target(AllNames.html)
+
+GenerateJavaDocs(RMISystem.net RMISystem.rmi,NullParam)
+@

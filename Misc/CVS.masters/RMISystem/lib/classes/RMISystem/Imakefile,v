@@ -1,0 +1,53 @@
+head	1.2;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.2
+date	97.06.01.14.56.23;	author nmcl;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	97.05.30.18.26.43;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@added remote inventories
+@
+text
+@COMMENT 
+COMMENT Copyright (C) 1995, 1996
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1997/05/30 18:26:43 nmcl Exp $
+COMMENT
+
+SubDirectory(net)
+SubDirectory(rmi)
+@
+
+
+1.1
+log
+@initial cut
+@
+text
+@d9 1
+a9 1
+COMMENT $Id: Imakefile,v 1.1 1996/06/17 10:40:07 nmcl Exp $
+d12 1
+@

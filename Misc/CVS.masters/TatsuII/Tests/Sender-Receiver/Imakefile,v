@@ -1,0 +1,56 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	97.06.09.19.52.28;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@initial cut
+@
+text
+@COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.4 1994/12/14 10:23:08 ngdp Exp $
+COMMENT
+
+SOURCES	  = Sender.cc \
+	    Receiver.cc
+
+OBJECTS   = Sender.o \
+	    Receiver.o
+
+LIBRARIES = $(LIBSTUB) $(LIBRPC) $(LIBCOMMON)
+
+SetLocalCppFlags(-I../../RPC/SimpleRpc/include -I$(STD_INCLUDES))
+
+AllTarget(Sender Receiver)
+
+CreateInstallTopDirectory(servers)
+InstallProgram(servers,Receiver)
+
+MakeProgramCPLUSPLUS(Sender,Sender.o $(LIBRARIES),)
+MakeProgramCPLUSPLUS(Receiver,Receiver.o $(LIBRARIES),)
+
+MakeObjectCPLUSPLUS(Sender,)
+MakeObjectCPLUSPLUS(Receiver,)
+
+TidyTarget(Sender Receiver)
+@

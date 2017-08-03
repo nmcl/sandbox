@@ -1,0 +1,303 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@// @;
+
+
+1.1
+date	97.06.09.19.51.47;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@initial cut
+@
+text
+@/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: ProcessMutex.cc,v 1.3 1995/10/12 12:01:18 ngdp Exp $
+ */
+
+/*
+ * Basic Process level Mutex implementation.
+ * Implements recursive process mutexes using SystemV semphores.
+ *
+ * These mutexes are reference counted and shared by threads/objects
+ * within a process. We assume that an appropriate thread-level mutex
+ * has already been obtained!
+ *
+ */
+
+#ifndef DEBUG_H_
+#  include <Common/Debug.h>
+#endif
+
+#ifndef SYS_TYPES_H_
+#  include <System/sys/types.h>
+#endif
+
+#ifndef STRSTREAM_H_
+#  include <System/strstream.h>
+#endif
+
+#ifndef SEMAPHORE_H_
+#  include <Common/Semaphore.h>
+#endif
+
+#ifndef PROCESSMUTEX_H_
+#  include <Common/ProcessMutex.h>
+#endif
+
+static const char RCSid[] = "$Id: ProcessMutex.cc,v 1.3 1995/10/12 12:01:18 ngdp Exp $";
+
+class MutexList
+{
+    friend class ProcessMutex;    
+
+public:
+    MutexList (key_t);
+
+private:
+    key_t mutexKey;			/* key of this mutex */
+    int createCount;			/* number of successful creates */
+    ProcessMutex *theMutex;		/* the underlying semaphore */
+    MutexList *next;
+};
+
+static MutexList *headOfList = 0;
+
+/*
+ * Dynamic linked-list of process level mutex's
+ */
+
+MutexList::MutexList ( key_t key )
+		     : mutexKey(key),
+		       createCount(1),
+		       theMutex(new ProcessMutex(key)),
+		       next(0)
+{
+}
+
+ProcessMutex* ProcessMutex::create ( key_t key )
+{
+#ifdef DEBUG
+    debug_stream.lock();
+    
+    debug_stream << DESTRUCTORS << FAC_GENERAL << VIS_PUBLIC;
+    debug_stream << "ProcessMutex::create ( " << key << " )" << endl;
+    debug_stream.unlock();
+    
+#endif
+
+    ProcessMutex *aMutex = 0;
+    
+    MutexList* marker = headOfList;
+    
+    if (headOfList)
+    {
+	while (marker)
+	{
+	    if (marker->mutexKey == key)
+	    {
+		if (!marker->theMutex)
+		{
+		    marker->createCount = 0;
+		    marker->theMutex = new ProcessMutex(key);
+		}
+	    
+		marker->createCount++;
+		
+		return marker->theMutex;
+	    }
+	    else
+		marker = marker->next;
+	}
+
+	marker = new MutexList(key);
+	marker->next = headOfList;
+	aMutex = marker->theMutex;
+	headOfList = marker;
+    }
+    else
+    {
+	headOfList = new MutexList(key);
+	aMutex = headOfList->theMutex;
+    }
+    
+    return aMutex;
+}
+
+void ProcessMutex::destroy ( ProcessMutex*& toDelete )
+{
+#ifdef DEBUG
+    debug_stream.lock();
+    
+    debug_stream << DESTRUCTORS << FAC_GENERAL << VIS_PUBLIC;
+    debug_stream << "void ProcessMutex::destroy ( )" << endl;
+    debug_stream.unlock();
+    
+#endif
+
+    if (headOfList)
+    {
+	MutexList *marker = headOfList;
+	MutexList *prev = 0;
+
+	while (marker)
+	{
+	    if (marker->mutexKey == toDelete->mutexKey)
+	    {
+		marker->createCount--;
+		if (marker->createCount == 0)
+		{
+		    delete marker->theMutex;
+
+		    if (marker == headOfList)
+			headOfList = marker->next;
+		    else
+			prev->next = marker->next;
+		    
+		    delete marker;
+		}
+		
+		toDelete = 0;
+
+		return;
+	    }
+
+	    prev = marker;
+	    marker = marker->next;
+	}
+    }
+}
+
+
+
+/*
+ * Private constructors and destructor. Create mutex semaphore with
+ * given key.
+ */
+
+ProcessMutex::ProcessMutex ( key_t semK )
+			   : mutexKey(semK),
+			     theSem(new Semaphore(semK)),
+			     waitCount(0)
+{
+#ifdef DEBUG
+    debug_stream.lock();
+    
+    debug_stream << CONSTRUCTORS << FAC_GENERAL << VIS_PUBLIC;
+    debug_stream << "ProcessMutex::ProcessMutex(" << semK << ")" << endl;
+    debug_stream.unlock();
+    
+#endif
+}
+
+ProcessMutex::~ProcessMutex ()
+{
+#ifdef DEBUG
+    debug_stream.lock();
+    
+    debug_stream << DESTRUCTORS << FAC_GENERAL << VIS_PUBLIC;
+    debug_stream << "ProcessMutex::~ProcessMutex()" << endl;
+    debug_stream.unlock();
+    
+#endif
+
+    if (waitCount > 0)
+	theSem->signal();
+
+    if (theSem)
+	delete theSem;
+}
+
+/*
+ * Public non-virtual functions
+ */
+
+Semaphore::Status ProcessMutex::wait ()
+{
+#ifdef DEBUG
+    debug_stream.lock();
+    
+    debug_stream << FUNCTIONS << FAC_GENERAL << VIS_PUBLIC;
+    debug_stream << "ProcessMutex::wait" << endl;
+    debug_stream.unlock();
+    
+#endif
+
+    Semaphore::Status stat = Semaphore::SEM_LOCKED;
+    
+    if (waitCount == 0)
+    {
+	if ((stat = theSem->wait()) != Semaphore::SEM_LOCKED)
+	    return stat;
+    }
+
+    waitCount++;
+    
+    return stat;
+}
+
+Semaphore::Status ProcessMutex::trywait ()
+{
+#ifdef DEBUG
+    debug_stream.lock();
+    
+    debug_stream << FUNCTIONS << FAC_GENERAL << VIS_PUBLIC;
+    debug_stream << "ProcessMutex::trywait" << endl;
+    debug_stream.unlock();
+    
+#endif
+
+    Semaphore::Status stat = Semaphore::SEM_LOCKED;
+    
+    if (waitCount == 0)
+    {
+	if ((stat = theSem->trywait()) != Semaphore::SEM_LOCKED)
+	    return stat;
+    }
+
+    waitCount++;
+    
+    return stat;
+
+}
+
+Semaphore::Status ProcessMutex::signal ()
+{
+#ifdef DEBUG
+    debug_stream.lock();
+    
+    debug_stream << FUNCTIONS << FAC_GENERAL << VIS_PUBLIC;
+    debug_stream << "ProcessMutex::signal" << endl;
+    debug_stream.unlock();
+    
+#endif
+
+    Semaphore::Status stat = Semaphore::SEM_UNLOCKED;
+
+    waitCount--;
+    
+    if (waitCount == 0)
+    {
+	if ((stat = theSem->signal()) != Semaphore::SEM_UNLOCKED)
+	    return stat;
+    }
+
+    return stat;
+}
+@

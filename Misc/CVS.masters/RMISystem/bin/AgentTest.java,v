@@ -1,0 +1,102 @@
+head	1.2;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.2
+date	97.06.08.14.22.52;	author nmcl;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	97.06.01.14.56.22;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@added a security key server
+@
+text
+@/*
+ * Copyright (C) 1997,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: AgentTest.java,v 1.1 1997/06/01 14:56:22 nmcl Exp $
+ */
+
+import RMISystem.net.NetworkInventory;
+import java.rmi.Remote;
+import java.rmi.registry.Registry;
+import java.rmi.*;
+import java.rmi.server.UnicastRemoteObject;
+
+import java.lang.ClassNotFoundException;
+import java.lang.InstantiationException;
+import java.lang.IllegalAccessException;
+import java.rmi.RemoteException;
+import java.rmi.NotBoundException;
+import java.rmi.AccessException;
+import java.rmi.AlreadyBoundException;
+
+public class AgentTest
+{
+
+public static void main (String args[])
+    {
+	String hostName = "tarry-f.ncl.ac.uk";
+	String localInventoryName = "ArjunaInventory";
+	String remoteInventoryName = "ArjunaInventory2";
+	String className = "DemoClass";
+	NetworkInventory inventory = null;
+
+	try
+	{
+	    inventory = (NetworkInventory) Naming.lookup("//"+hostName+"/"+localInventoryName);	    
+	}
+	catch (Exception e)
+	{
+	    System.out.println(e.toString());
+	    System.exit(1);
+	}
+
+	try
+	{
+	    inventory.retrieveClass(className, hostName, remoteInventoryName);
+	    System.out.println("Class retrieved.");
+	}
+	catch (Exception e)
+	{
+	    System.out.println(e.toString());
+	}
+    }
+
+}
+@
+
+
+1.1
+log
+@added remote inventories
+@
+text
+@d9 1
+a9 1
+ * $Id$
+a33 1
+	String token = "foobar";
+d49 1
+a49 1
+	    inventory.retrieveClass(token, className, hostName, remoteInventoryName);
+@

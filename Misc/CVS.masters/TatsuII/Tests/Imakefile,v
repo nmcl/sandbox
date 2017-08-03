@@ -1,0 +1,58 @@
+head	1.2;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.2
+date	97.06.11.20.25.11;	author nmcl;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	97.06.09.19.52.26;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@first step
+@
+text
+@COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT 
+COMMENT $Id: Imakefile,v 1.1 1997/06/09 19:52:26 nmcl Exp $
+COMMENT
+
+#define IHaveSubDirs
+SetSubDirectorys(Buffer Sender-Receiver Raw ArjunaII)
+
+all depend install :: stubs
+TidyTarget(MakefileBoot)
+@
+
+
+1.1
+log
+@initial cut
+@
+text
+@d9 1
+a9 1
+COMMENT $Id: Imakefile,v 1.2 1994/12/15 12:26:18 ngdp Exp $
+d13 1
+a13 1
+SetSubDirectorys(Buffer Sender-Receiver Raw)
+@

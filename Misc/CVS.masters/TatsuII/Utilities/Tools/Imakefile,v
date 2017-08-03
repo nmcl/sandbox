@@ -1,0 +1,46 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	97.06.09.19.52.29;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@initial cut
+@
+text
+@COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.4 1994/12/14 14:16:19 ngdp Exp $
+COMMENT
+
+CreateInstallTopDirectory(bin)
+InstallProgram(bin,makedepend)
+InstallProgram(bin,mkmf)
+
+all.local:mkmf
+
+mkmf : mkmf.tmpl
+	@@echo Creating $@@
+	COMMAND_PREFIX(sed) -e "s;CONFIGDIRECTORY;"$(INSTALL_TOPDIR)"/include;" < mkmf.tmpl > mkmf
+	COMMAND_PREFIX(CHMOD_VAR) ug+rx mkmf
+
+TidyTarget(mkmf)
+@

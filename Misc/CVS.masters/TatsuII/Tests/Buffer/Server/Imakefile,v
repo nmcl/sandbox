@@ -1,0 +1,82 @@
+head	1.2;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.2
+date	97.06.11.20.25.11;	author nmcl;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	97.06.09.19.52.28;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@first step
+@
+text
+@COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1997/06/09 19:52:28 nmcl Exp $
+COMMENT
+
+STUBS     = BufferCheck_stub.h \
+	    BufferCheck_stubclass.h
+
+SOURCES	  = BufferCheck.cc \
+	    BufferCheck_client.cc \
+	    BufferCheck_server.cc \
+	    BufferCheck_servermain.cc \
+	    $(STUBS)
+
+OBJECTS	  = BufferCheck_server.o \
+	    BufferCheck_servermain.o \
+	    BufferCheck.o
+
+LIBRARIES =  $(LIBSTUB) $(LIBRPC) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(STD_INCLUDES))
+
+AllTarget(BufferCheck BufferCheck_client.o)
+StubTarget($(STUBS))
+CreateInstallTopDirectory(servers)
+InstallProgram(servers,BufferCheck)
+
+MakeProgramCPLUSPLUS(BufferCheck,$(OBJECTS) $(LIBRARIES),NOPARAM)
+
+MakeObjectCPLUSPLUS(BufferCheck,NOPARAM)
+
+MakeStubGen(BufferCheck,BufferCheck,BufferCheck,NOPARAM,NOPARAM)
+
+TidyTarget(BufferCheck BufferCheck_client.cc BufferCheck_server.cc BufferCheck_servermain.cc $(STUBS))
+@
+
+
+1.1
+log
+@initial cut
+@
+text
+@d9 1
+a9 1
+COMMENT $Id: Imakefile,v 1.4 1994/12/14 10:23:06 ngdp Exp $
+d38 1
+a38 1
+MakeStubGen(BufferCheck,BufferCheck,BufferCheck,NOPARAM)
+@

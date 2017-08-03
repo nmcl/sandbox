@@ -1,0 +1,49 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	97.06.09.19.51.55;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@initial cut
+@
+text
+@/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: s_hp_ux_9.cf,v 1.1 1996/01/16 14:08:56 ngdp Exp $
+ */
+
+/*
+ * s_hpux.cf
+ */
+
+#define RANLIB_PROGRAM true
+#define SYSTEM_SPECIFIC_FLAGS -DHAVE_MMAP -DSYSV -DNEED_USLEEP_PROTO -DNEED_MALLOC_T
+#define STUBGEN_OS_FLAGS "-Dunix -D__unix -D__unix__"
+
+#ifndef YACC_CPLUSPLUS_MAGIC
+#define YACC_CPLUSPLUS_MAGIC sed -e "/^   #include \<stdio\.h\>/d"
+#endif
+
+#ifndef LEX_CPLUSPLUS_MAGIC
+#define LEX_CPLUSPLUS_MAGIC sed -e "/^     extern int yyless();/d"
+#endif
+@

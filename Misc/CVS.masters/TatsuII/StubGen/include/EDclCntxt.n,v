@@ -1,0 +1,58 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	97.06.09.19.52.13;	author nmcl;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@initial cut
+@
+text
+@/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: EDclCntxt.n,v 1.1 1994/04/20 09:01:48 ngdp Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(EDCLCNTXT_CC_)
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF ExceptionDeclContext::ExceptionDeclContext ( DeclContext *parent,
+						     int size )
+						   : DeclContext(parent, size)
+{
+}
+
+INLINEF ExceptionDeclContext::~ExceptionDeclContext ()
+{
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif
+@
