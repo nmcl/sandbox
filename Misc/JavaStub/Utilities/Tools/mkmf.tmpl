@@ -1,0 +1,17 @@
+#!/bin/sh
+
+#
+# Copyright (C) 1993
+#
+# Department of Computing Science,
+# The University,
+# Newcastle upon Tyne,
+# UK.
+#
+
+IMAKE=imake
+IMAKE_INCLUDE=CONFIGDIRECTORY
+IMAKE_TEMPLATE=Config/Config.tmpl
+IMAKE_FLAGS="-DUseInstalled -DTOPDIR_DEFAULT=`pwd`"
+
+$IMAKE -T$ARJUNA_IMAKE_TEMPLATE -I$ARJUNA_IMAKE_INCLUDE $ARJUNA_IMAKE_FLAGS
