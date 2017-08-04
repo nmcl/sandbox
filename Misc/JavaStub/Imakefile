@@ -1,0 +1,40 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.6 1995/07/17 14:57:17 ngdp Exp $
+COMMENT
+
+#define IHaveSubDirs
+
+SetSubDirectorys(StubGen Common Thread RPC Utilities lib Include)
+
+PrintConfig
+
+PrintEnviron
+
+all depend install :: stubs
+stubs.local :: StubGen
+
+install.local :: INSTALL_TOPDIR_VAR
+	-CHMOD_VAR ugo+rx INSTALL_TOPDIR_VAR
+
+install.local :: INSTALL_TOPDIR_VAR/servers
+	-CHMOD_VAR ugo+rwx INSTALL_TOPDIR_VAR/servers
+
+CreateInstallTopDirectory(servers)
+CreateInstallTopDirectory(lib)
+
+MakeRelDirectoryDependency(Config)
+MakeRelDirectoryDependency(Common)
+MakeRelDirectoryDependency(RPC)
+MakeRelDirectoryDependency(StubGen)
+MakeRelDirectoryDependency(Utilities)
+MakeRelDirectoryDependency(Tests)
+MakeRelDirectoryDependency(lib)
+
+TidyTarget(Tests/MakefileBoot)
