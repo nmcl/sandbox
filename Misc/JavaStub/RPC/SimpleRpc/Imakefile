@@ -1,0 +1,15 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.3 1995/01/20 12:55:45 ngdp Exp $
+COMMENT
+
+#define IHaveSubDirs
+
+SetSubDirectorys(Port interface daemon include)
+
