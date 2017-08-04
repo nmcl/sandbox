@@ -1,0 +1,38 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: m_unknown.cf,v 1.6 1995/02/01 10:15:12 ngdp Exp $
+ */
+
+/*
+ * Machine config file
+ *
+ * Defines flags (-D, -U etc) that are applicable to a
+ * specific MACHINE ARCHITECTURE (eg sparc, alpha etc)
+ * These flags are passed on to the compiler when building Arjuna
+ *
+ * Defines preceded by STUBGEN_ are always quoted strings and are used
+ * by the stub generator IFF the header file is processed with something
+ * other than the standard C++ compiler (we assume that the standard C++
+ * compiler would set these flags itself)
+ *
+ * Examples:
+ *   #define MACHINE_SPECIFIC_FLAGS
+ *   #define STUBGEN_MC_FLAGS "-Dsparc -D__sparc__"
+ *
+ * Here the VENDOR_SPECIFIC_FLAGS are empty since we assume that flags are set
+ * by default by the compiler front end. However, the flags are present in the
+ * STUBGEN_MC_FLAGS since it may be using cpp directly
+ */
+
+/*
+ * m_unknown.cf
+ */
+
+#define MACHINE_SPECIFIC_FLAGS
+#define STUBGEN_MC_FLAGS " "

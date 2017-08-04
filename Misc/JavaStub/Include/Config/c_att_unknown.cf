@@ -1,0 +1,17 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: c_att_unknown.cf,v 1.5 1995/01/13 08:43:55 ngdp Exp $
+ */
+
+/*
+ * c_att_unknown.cf
+ */
+
+#define COMPILER_SPECIFIC_FLAGS -DHAS_IOSTREAM_INIT
+#define STUBGEN_CC_FLAGS " "
