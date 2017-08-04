@@ -1,0 +1,39 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1994/07/01 10:53:50 ngdp Exp $
+COMMENT
+
+SOURCES	  = TheatreDispatcher.cc \
+	    ServerMain.cc \
+	    Theatre.cc \
+	    TheatreDriver.cc
+
+OBJECTS   = TheatreDispatcher.o \
+	    ServerMain.o \
+	    Theatre.o \
+	    TheatreDriver.o
+
+LIBRARIES = $(LIBSTUB) $(LIBRPC) $(LIBCOMMON)
+
+SetLocalCppFlags(-I../../RPC/SimpleRpc/include -I$(STD_INCLUDES))
+
+AllTarget(TheatreDriver ServerMain)
+
+CreateInstallTopDirectory(servers)
+InstallProgram(servers,ServerMain)
+
+MakeProgramCPLUSPLUS(TheatreDriver,TheatreDriver.o $(LIBRARIES),)
+MakeProgramCPLUSPLUS(ServerMain,ServerMain.o TheatreDispatcher.o Theatre.o $(LIBRARIES),)
+
+MakeObjectCPLUSPLUS(TheatreDriver,)
+MakeObjectCPLUSPLUS(ServerMain,)
+MakeObjectCPLUSPLUS(TheatreDispatcher,)
+MakeObjectCPLUSPLUS(Theatre,)
+
+TidyTarget(TheatreDriver ServerMain)
