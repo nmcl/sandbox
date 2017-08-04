@@ -1,0 +1,27 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.4 1994/12/14 10:23:03 ngdp Exp $
+COMMENT
+
+SOURCES   = BufferCheckDriver.cc
+
+OBJECTS	  = BufferCheckDriver.o \
+	    ../Server/BufferCheck_client.o
+
+LIBRARIES = $(LIBSTUB) $(LIBRPC) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(STD_INCLUDES) -I../Server)
+
+AllTarget(BufferCheckDriver)
+
+MakeProgramCPLUSPLUS(BufferCheckDriver,$(OBJECTS) $(LIBRARIES),NOPARAM)
+
+MakeObjectCPLUSPLUS(BufferCheckDriver,NOPARAM)
+
+TidyTarget(BufferCheckDriver)
