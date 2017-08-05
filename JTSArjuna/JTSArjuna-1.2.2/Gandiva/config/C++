@@ -1,0 +1,16 @@
+#!/bin/sh
+#
+# Copyright (C) 1994, 1995, 1996, 1997,
+#
+# Department of Computing Science,
+# University of Newcastle upon Tyne,
+# Newcastle upon Tyne,
+# UK.
+#
+#
+
+#
+#  C++
+#
+
+echo GCC2.7.2

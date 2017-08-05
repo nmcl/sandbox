@@ -1,0 +1,19 @@
+/*
+ * Copyright (C) 1994, 1995, 1996, 1997,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ */
+
+/*
+ *  C++.def
+ */
+
+AddToIMakeFlags(-DCPLUSPLUSProg=g++ -DComp_Name=GNU_gcc_2.7.2 -DGCC2_7_2)
+AddToMakeDependFlags( -I/usr/include/g++)
+AddToCPPFlags(-DGCC2_7_2)
+AddToCPPIncludes( -I/usr/include/g++)
+AddToCPLUSPLUSFlags(-DHAS_ISTRSTREAM_BUG)

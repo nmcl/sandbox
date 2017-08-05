@@ -1,0 +1,15 @@
+/*
+ * Copyright (C) 1994, 1995, 1996, 1997,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ */
+
+/*
+ *  Config.def
+ */
+
+AddToIMakeFlags(-TGandiva.tmpl)
