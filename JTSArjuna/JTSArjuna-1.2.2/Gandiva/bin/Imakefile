@@ -1,0 +1,118 @@
+COMMENT
+COMMENT Copyright (C) 1994, 1995, 1996, 1997,
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.15 1997/07/01 11:57:15 nsmw Exp $
+COMMENT
+
+SOURCES                       = ArrayTest1.cc \
+				ArrayTest2.cc \
+				ClassNameTest1.cc \
+				ClassNameTest2.cc \
+				ListTest1.cc \
+				ListTest2.cc \
+				ObjectNameTest1.cc \
+				Resource1.cc \
+				ResourceListTest1.cc \
+				UidTest1.cc \
+				UidTest2.cc \
+				GandivaSetUp.cc
+
+GANDIVASETUPOBJECTS           = $(OBJ_PRIM_GANDIVADEDICATEDINVENTORYIMPLE) \
+                                $(OBJ_INIT_GANDIVADEDICATEDINVENTORYIMPLE) \
+                                $(OBJ_INIT_LINKTIMEINVENTORYIMPLE) \
+                                $(OBJ_INIT_QANBOBUFFERIMPLE) \
+                                $(OBJ_INIT_INSNAMESERVICEIMPLE) \
+                                $(OBJ_INIT_LNSNAMESERVICEIMPLE) \
+				$(OBJ_INIT_SNSNAMESERVICEIMPLE)
+
+RESOURCELISTTEST1OBJECTS      = $(OBJ_PRIM_GANDIVADEDICATEDINVENTORYIMPLE) \
+                                $(OBJ_INIT_GANDIVADEDICATEDINVENTORYIMPLE) \
+                                Resource1.o
+
+CLASSNAMETEST1OBJECTS         = $(OBJ_PRIM_GANDIVADEDICATEDINVENTORYIMPLE) \
+                                $(OBJ_INIT_GANDIVADEDICATEDINVENTORYIMPLE)
+
+CLASSNAMETEST2OBJECTS         = $(OBJ_PRIM_GANDIVADEDICATEDINVENTORYIMPLE) \
+                                $(OBJ_INIT_GANDIVADEDICATEDINVENTORYIMPLE)
+
+OBJECTNAMETEST1OBJECTS        = $(OBJ_PRIM_GANDIVADEDICATEDINVENTORYIMPLE) \
+                                $(OBJ_INIT_GANDIVADEDICATEDINVENTORYIMPLE)
+
+UIDTEST1OBJECTS               = $(OBJ_PRIM_GANDIVADEDICATEDINVENTORYIMPLE) \
+                                $(OBJ_INIT_GANDIVADEDICATEDINVENTORYIMPLE)
+
+UIDTEST2OBJECTS               = $(OBJ_PRIM_GANDIVADEDICATEDINVENTORYIMPLE) \
+                                $(OBJ_INIT_GANDIVADEDICATEDINVENTORYIMPLE)
+
+#ifdef BUILDTESTS
+Target(ArrayTest1)
+Target(ArrayTest2)
+Target(ClassNameTest1)
+Target(ClassNameTest2)
+Target(ListTest1)
+Target(ListTest2)
+Target(ObjectNameTest1)
+Target(ResourceListTest1)
+Target(UidTest1)
+Target(UidTest2)
+#endif
+#ifdef BUILDUTILITIES
+Target(GandivaSetUp)
+#endif
+
+#ifdef INSTALLTESTS
+InstallProgram(/bin,ArrayTest1)
+InstallProgram(/bin,ArrayTest2)
+InstallProgram(/bin,ClassNameTest1)
+InstallProgram(/bin,ClassNameTest2)
+InstallProgram(/bin,ObjectNameTest1)
+InstallProgram(/bin,UidTest1)
+InstallProgram(/bin,UidTest2)
+#endif
+#ifdef INSTALLUTILITIES
+InstallProgram(/bin,GandivaSetUp)
+#endif
+
+BuildProgram(GandivaSetUp,GandivaSetUp.o $(GANDIVASETUPOBJECTS),NullParam,NullParam)
+BuildProgram(ArrayTest1,ArrayTest1.o,NullParam,NullParam)
+BuildProgram(ArrayTest2,ArrayTest2.o,NullParam,NullParam)
+BuildProgram(ClassNameTest1,ClassNameTest1.o $(CLASSNAMETEST1OBJECTS),NullParam,NullParam)
+BuildProgram(ClassNameTest2,ClassNameTest2.o $(CLASSNAMETEST2OBJECTS),NullParam,NullParam)
+BuildProgram(ListTest1,ListTest1.o,NullParam,NullParam)
+BuildProgram(ListTest2,ListTest2.o,NullParam,NullParam)
+BuildProgram(ObjectNameTest1,ObjectNameTest1.o $(OBJECTNAMETEST1OBJECTS),NullParam,NullParam)
+BuildProgram(ResourceListTest1,ResourceListTest1.o $(RESOURCELISTTEST1OBJECTS),NullParam,NullParam)
+BuildProgram(UidTest1,UidTest1.o $(UIDTEST1OBJECTS),NullParam,NullParam)
+BuildProgram(UidTest2,UidTest2.o $(UIDTEST2OBJECTS),NullParam,NullParam)
+
+BuildObject(GandivaSetUp,NullParam,NullParam)
+BuildObject(ArrayTest1,NullParam,NullParam)
+BuildObject(ArrayTest2,NullParam,NullParam)
+BuildObject(ClassNameTest1,NullParam,NullParam)
+BuildObject(ClassNameTest2,NullParam,NullParam)
+BuildObject(ListTest1,NullParam,NullParam)
+BuildObject(ListTest2,NullParam,NullParam)
+BuildObject(ObjectNameTest1,NullParam,NullParam)
+BuildObject(Resource1,NullParam,NullParam)
+BuildObject(ResourceListTest1,NullParam,NullParam)
+BuildObject(UidTest1,NullParam,NullParam)
+BuildObject(UidTest2,NullParam,NullParam)
+
+Clean(GandivaSetUp)
+Clean(ArrayTest1)
+Clean(ArrayTest2)
+Clean(ClassNameTest1)
+Clean(ClassNameTest2)
+Clean(ListTest1)
+Clean(ListTest2)
+Clean(ObjectNameTest1)
+Clean(ResourceListTest1)
+Clean(UidTest1)
+Clean(UidTest2)
+
+AddDependences($(SOURCES),NullParam)
