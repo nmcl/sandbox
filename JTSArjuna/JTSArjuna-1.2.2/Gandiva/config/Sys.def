@@ -1,0 +1,18 @@
+/*
+ * Copyright (C) 1994, 1995, 1996, 1997,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ */
+
+/*
+ *  Sys.def
+ */
+
+AddToMakeFlags(--no-print-directory)
+AddToIMakeFlags(-DSys_Name=Linux -DSYSV -DLINUX -DUSE_RANLIB)
+AddToCPPFlags(-DSYSV -DLINUX -DHAS_BSD_GETTIMEOFDAY -DHAS_VOID_USLEEP -DNEED_RENAME)
+AddToLdLibraries(-lgdbm)

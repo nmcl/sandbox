@@ -1,0 +1,58 @@
+/*
+ * Copyright (C) 1994, 1995, 1996, 1997, 1998,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: Prog.def,v 1.4 1998/07/21 13:54:51 nmcl Exp $
+ */
+
+/*
+ *  Prog.def
+ */
+
+#ifndef CPLUSPLUSProg
+#define CPLUSPLUSProg CC
+#endif
+
+#ifndef MakeProg
+#define MakeProg make
+#endif
+
+#ifndef IMakeProg
+#define IMakeProg imake
+#endif
+
+#ifndef MakeDependProg
+#define MakeDependProg makedepend
+#endif
+
+#ifndef ArProg
+#define ArProg ar rv
+#endif
+
+#ifndef RanlibProg
+#define RanlibProg ranlib
+#endif
+
+#ifndef InstallProg
+#define InstallProg install
+#endif
+
+#ifndef RmProg
+#define RmProg rm -f
+#endif
+
+#ifndef RmDirProg
+#define RmDirProg rm -rf
+#endif
+
+#ifndef CpProg
+#define CpProg cp
+#endif
+
+#ifndef MvProg
+#define MvProg mv
+#endif
