@@ -1,0 +1,31 @@
+/*
+ * Copyright (C) 1994, 1995, 1996, 1997,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ */
+
+/*
+ *  Module.def (source)
+ */
+
+GANDIVATOPDIR=/home/nmcl/JTSArjuna/Gandiva
+
+AddToIMakeFlags(-I$(GANDIVATOPDIR)/config )
+AddToCPPFlags(-DHAS_MTSAFE_SELECT )
+AddToCPPIncludes(-I$(GANDIVATOPDIR)/include )
+AddToLdLibraries($(GANDIVATOPDIR)/lib/libGandiva.a )
+AddToLdLibDepends($(GANDIVATOPDIR)/lib/libGandiva.a )
+
+OBJ_INIT_QANBOBUFFERIMPLE = $(GANDIVATOPDIR)/lib/Init_QANBOBufferImple.o
+OBJ_INIT_GANDIVADEDICATEDINVENTORYIMPLE = $(GANDIVATOPDIR)/lib/Init_GandivaDedicatedInventoryImple.o
+OBJ_PRIM_GANDIVADEDICATEDINVENTORYIMPLE = $(GANDIVATOPDIR)/lib/Prim_GandivaDedicatedInventoryImple.o
+OBJ_INIT_CREATEFUNCTIONLISTINVENTORYIMPLE = $(GANDIVATOPDIR)/lib/Init_CreateFunctionListInventoryImple.o
+OBJ_PRIM_CREATEFUNCTIONLISTINVENTORYIMPLE = $(GANDIVATOPDIR)/lib/Prim_CreateFunctionListInventoryImple.o
+OBJ_INIT_INSNAMESERVICEIMPLE = $(GANDIVATOPDIR)/lib/Init_INSNameServiceImple.o
+OBJ_INIT_LNSNAMESERVICEIMPLE = $(GANDIVATOPDIR)/lib/Init_LNSNameServiceImple.o
+OBJ_INIT_SNSNAMESERVICEIMPLE = $(GANDIVATOPDIR)/lib/Init_SNSNameServiceImple.o
+
