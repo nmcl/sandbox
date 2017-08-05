@@ -1,0 +1,20 @@
+COMMENT
+COMMENT Copyright (C) 1994, 1995, 1996,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.10 1998/01/12 13:11:32 nmcl Exp $
+COMMENT
+
+CreateInstallDirectory(/include,/include/Common)
+
+SubDirectory(Thread)
+
+InstallFile(/include/Common,Boolean.h)
+InstallFile(/include/Common,ClassName.h)
+InstallFile(/include/Common,ObjectName.h)
+InstallFile(/include/Common,Uid.h)
+InstallFile(/include/Common,Utility.h)
