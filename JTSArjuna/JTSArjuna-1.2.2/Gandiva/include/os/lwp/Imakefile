@@ -1,0 +1,17 @@
+COMMENT
+COMMENT Copyright (C) 1994, 1995, 1996,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.3 1996/05/28 09:04:06 nmcl Exp $
+COMMENT
+
+CreateInstallDirectory(/include,/include/os)
+CreateInstallDirectory(/include/os,/include/os/lwp)
+
+InstallFile(/include/os/lwp,lwp.h)
+InstallFile(/include/os/lwp,lwperror.h)
+InstallFile(/include/os/lwp,stackdep.h)
