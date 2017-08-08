@@ -1,0 +1,27 @@
+COMMENT 
+COMMENT Copyright (C) 1996, 1997, 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.4 1998/07/31 15:15:25 nmcl Exp $
+COMMENT
+
+SOURCES = ThreadData.java \
+	  ThreadActionData.java \
+	  TransactionalThread.java
+
+OBJECTS = ThreadData.class \
+	  ThreadActionData.class \
+	  TransactionalThread.class
+
+Target($(OBJECTS))
+
+BuildJavaByteCode(ThreadData,NullParam)
+BuildJavaByteCode(ThreadActionData,NullParam)
+BuildJavaByteCode(TransactionalThread,NullParam)
+
+Clean(*.class)
+
