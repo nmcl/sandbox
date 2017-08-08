@@ -1,0 +1,39 @@
+COMMENT
+COMMENT Copyright (C) 1994, 1995, 1996,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.11 1998/07/21 11:07:58 nmcl Exp $
+COMMENT
+
+CreateInstallDirectory(/include,/include/Template)
+
+InstallFile(/include/Template,Array.h)
+InstallFile(/include/Template,Array.cc)
+InstallFile(/include/Template,BasicList.h)
+InstallFile(/include/Template,BasicList.cc)
+InstallFile(/include/Template,BasicListIterator.h)
+InstallFile(/include/Template,BasicListIterator.cc)
+InstallFile(/include/Template,BinSequSearchTree.h)
+InstallFile(/include/Template,BinSequSearchTree.cc)
+InstallFile(/include/Template,HashedIterator.h)
+InstallFile(/include/Template,HashedIterator.cc)
+InstallFile(/include/Template,HashedList.h)
+InstallFile(/include/Template,HashedList.cc)
+InstallFile(/include/Template,ImpleStore.h)
+InstallFile(/include/Template,ImpleStore.cc)
+InstallFile(/include/Template,List.h)
+InstallFile(/include/Template,ListGen.h)
+InstallFile(/include/Template,ListIterator.h)
+InstallFile(/include/Template,OrderedList.cc)
+InstallFile(/include/Template,OrderedList.h)
+InstallFile(/include/Template,ResourceList.h)
+InstallFile(/include/Template,Set.h)
+InstallFile(/include/Template,SetGen.h)
+InstallFile(/include/Template,SemData.h)
+InstallFile(/include/Template,SemData.cc)
+InstallFile(/include/Template,PosixSemData.h)
+InstallFile(/include/Template,PosixSemData.cc)
