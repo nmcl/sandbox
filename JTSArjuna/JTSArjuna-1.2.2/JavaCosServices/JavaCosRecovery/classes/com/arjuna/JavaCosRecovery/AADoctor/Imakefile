@@ -1,0 +1,37 @@
+COMMENT 
+COMMENT Copyright (C) 1995, 1996
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 1998/06/29 09:33:52 nmcl Exp $
+COMMENT
+
+SOURCES = AADoctor.java \
+	  AARecord.java \
+	  ServerAARecord.java \
+	  ShadowRecord.java \
+	  SAAStatus.java \
+	  ShadowStatus.java \
+	  RecoveryAction.java
+
+OBJECTS = SAAStatus.class \
+	  ShadowStatus.class \
+	  AARecord.class \
+	  ShadowRecord.class \
+	  AADoctor.class \
+	  RecoveryAction.class
+
+Target($(OBJECTS))
+
+BuildJavaByteCode(AADoctor,NullParam)
+BuildJavaByteCode(AARecord,NullParam)
+BuildJavaByteCode(ServerAARecord,NullParam)
+BuildJavaByteCode(ShadowRecord,NullParam)
+BuildJavaByteCode(SAAStatus,NullParam)
+BuildJavaByteCode(ShadowStatus,NullParam)
+BuildJavaByteCode(RecoveryAction,NullParam)
+
+Clean(*.class)
