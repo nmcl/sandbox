@@ -1,0 +1,24 @@
+COMMENT 
+COMMENT Copyright (C) 1996, 1997, 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.6 1998/06/29 09:33:50 nmcl Exp $
+COMMENT
+
+SOURCES = CrashRecoveryDriver.java \
+	  CrashRecoveryManager.java
+
+OBJECTS = CrashRecoveryDriver.class \
+	  CrashRecoveryManager.class
+
+Target($(SOURCES))
+Target($(OBJECTS))
+
+BuildJavaByteCode(CrashRecoveryDriver,NullParam)
+BuildJavaByteCode(CrashRecoveryManager,NullParam)
+
+Clean(*.class)
