@@ -1,0 +1,32 @@
+COMMENT
+COMMENT Copyright (C) 1994, 1995, 1996,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1998/01/12 13:07:19 nmcl Exp $
+COMMENT
+
+SOURCES = OrbPlus_RWLock.cc \
+	  OrbPlus_Sem.cc \
+	  OrbPlus_SpecificData.cc \
+	  OrbPlus_Thread.cc \
+	  OrbPlus_ThreadPool.cc
+
+OBJECTS = OrbPlus_RWLock.o \
+	  OrbPlus_Sem.o \
+	  OrbPlus_SpecificData.o \
+	  OrbPlus_Thread.o \
+	  OrbPlus_ThreadPool.o
+
+Target($(OBJECTS))
+
+BuildObject(OrbPlus_RWLock,NullParam,NullParam)
+BuildObject(OrbPlus_Sem,NullParam,NullParam)
+BuildObject(OrbPlus_SpecificData,NullParam,NullParam)
+BuildObject(OrbPlus_Thread,NullParam,NullParam)
+BuildObject(OrbPlus_ThreadPool,NullParam,NullParam)
+
+AddDependences($(SOURCES),NullParam)

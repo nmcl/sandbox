@@ -1,0 +1,61 @@
+COMMENT
+COMMENT Copyright (C) 1994, 1995, 1996, 1997,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1998/01/12 13:06:43 nmcl Exp $
+COMMENT
+
+SOURCES = CleanupList.cc      \
+	  InitThreads.cc      \
+          Mutex.cc            \
+          MutexSetup.cc       \
+	  PoolThread.cc       \
+	  Semaphore.cc        \
+	  SemaphoreSetup.cc   \
+	  Thread.cc           \
+	  ThreadCommon.cc     \
+	  ThreadPool.cc       \
+	  ThreadReaper.cc     \
+	  ThreadSetup.cc
+
+OBJECTS = CleanupList.o      \
+	  InitThreads.o      \
+          Mutex.o            \
+          MutexSetup.o       \
+	  PoolThread.o       \
+          Semaphore.o        \
+          SemaphoreSetup.o   \
+	  Thread.o           \
+	  ThreadCommon.o     \
+	  ThreadPool.o       \
+	  ThreadReaper.o     \
+	  ThreadSetup.o
+
+#ifndef EXTERNAL_THREADPACKAGE
+
+TMPNAME = THREADPACKAGE
+THREADNAMEBASE = $(TMPNAME)_
+
+SubDirectory($(THREADNAMEBASE)Thread)
+#endif
+
+Target($(OBJECTS))
+
+BuildObject(CleanupList,NullParam,NullParam)
+BuildObject(InitThreads,NullParam,NullParam)
+BuildObject(Mutex,NullParam,NullParam)
+BuildObject(MutexSetup,NullParam,NullParam)
+BuildObject(PoolThread,NullParam,NullParam)
+BuildObject(Semaphore,NullParam,NullParam)
+BuildObject(SemaphoreSetup,NullParam,NullParam)
+BuildObject(Thread,NullParam,NullParam)
+BuildObject(ThreadCommon,NullParam,NullParam)
+BuildObject(ThreadPool,NullParam,NullParam)
+BuildObject(ThreadReaper,NullParam,NullParam)
+BuildObject(ThreadSetup,NullParam,NullParam)
+
+AddDependences($(SOURCES),NullParam)

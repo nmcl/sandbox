@@ -1,0 +1,32 @@
+COMMENT
+COMMENT Copyright (C) 1994, 1995, 1996,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 1998/06/01 14:17:11 nmcl Exp $
+COMMENT
+
+SOURCES = Posix_Sem.cc \
+	  Posix_SpecificData.cc \
+	  Posix_Thread.cc \
+	  Posix_ThreadPool.cc \
+	  Posix_Condition.cc
+
+OBJECTS = Posix_Sem.o \
+	  Posix_SpecificData.o \
+	  Posix_Thread.o \
+	  Posix_ThreadPool.o \
+	  Posix_Condition.o
+
+Target($(OBJECTS))
+
+BuildObject(Posix_Sem,NullParam,NullParam)
+BuildObject(Posix_SpecificData,NullParam,NullParam)
+BuildObject(Posix_Thread,NullParam,NullParam)
+BuildObject(Posix_ThreadPool,NullParam,NullParam)
+BuildObject(Posix_Condition,NullParam,NullParam)
+
+AddDependences($(SOURCES),NullParam)
