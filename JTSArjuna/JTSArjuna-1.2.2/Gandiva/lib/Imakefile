@@ -1,0 +1,96 @@
+COMMENT 
+COMMENT Copyright (C) 1994, 1995, 1996,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.18 1998/01/12 13:05:07 nmcl Exp $
+COMMENT
+
+SOURCES = Gandiva.cc
+
+#ifdef EXTERNAL_THREADPACKAGE
+
+THREADOBJECTS = 
+ 
+#else
+
+TMPNAME = THREADPACKAGE
+THREADNAMEBASE = $(TMPNAME)_
+
+THREADOBJECTS = Common/Thread/$(THREADNAMEBASE)Thread/$(THREADNAMEBASE)SpecificData.o \
+                Common/Thread/$(THREADNAMEBASE)Thread/$(THREADNAMEBASE)Sem.o \
+                Common/Thread/$(THREADNAMEBASE)Thread/$(THREADNAMEBASE)Thread.o \
+                Common/Thread/$(THREADNAMEBASE)Thread/$(THREADNAMEBASE)ThreadPool.o
+#endif
+
+OBJECTS = Gandiva.o \
+          Common/Boolean.o \
+          Common/ClassName.o \
+          Common/ObjectName.o \
+          Common/Uid.o \
+	  Common/Utility.o \
+	  Common/Thread/CleanupList.o \
+	  Common/Thread/InitThreads.o \
+	  Common/Thread/Mutex.o \
+	  Common/Thread/MutexSetup.o \
+	  Common/Thread/PoolThread.o \
+	  Common/Thread/Semaphore.o \
+	  Common/Thread/SemaphoreSetup.o \
+	  Common/Thread/Thread.o \
+	  Common/Thread/ThreadCommon.o \
+	  Common/Thread/ThreadPool.o \
+	  Common/Thread/ThreadReaper.o \
+	  Common/Thread/ThreadSetup.o \
+          $(THREADOBJECTS) \
+	  Control/ThreadControl.o \
+          Core/Resource.o \
+          Implementation/Buffer/QANBO.o \
+          Implementation/Buffer.o \
+          Implementation/Inventory/GandivaDedicated.o \
+          Implementation/Inventory/CreateFunctionList.o \
+          Implementation/Inventory.o \
+          Implementation/NameService/INS.o \
+          Implementation/NameService/LNS.o \
+          Implementation/NameService/SNS.o \
+	  Implementation/NameService/SNSAttribute.o \
+	  Implementation/NameService/SNSAttributeNode.o \
+          Implementation/NameService.o \
+          Interface/Buffer.o \
+          Interface/Inventory.o \
+          Interface/NameService.o \
+          Base/Action.o \
+	  Base/ThreadCleanup.o \
+	  Base/ThreadDataImple.o \
+          Template/ListGen.o \
+          Template/SetGen.o
+
+SubDirectory(Base)
+SubDirectory(Common)
+SubDirectory(Control)
+SubDirectory(Core)
+SubDirectory(Interface)
+SubDirectory(Implementation)
+SubDirectory(Template)
+
+Target(libGandiva.a)
+
+InstallFile(/lib,Init_QANBOBufferImple.o)
+InstallFile(/lib,Init_GandivaDedicatedInventoryImple.o)
+InstallFile(/lib,Prim_GandivaDedicatedInventoryImple.o)
+InstallFile(/lib,Init_CreateFunctionListInventoryImple.o)
+InstallFile(/lib,Prim_CreateFunctionListInventoryImple.o)
+InstallFile(/lib,Init_INSNameServiceImple.o)
+InstallFile(/lib,Init_LNSNameServiceImple.o)
+InstallFile(/lib,Init_SNSNameServiceImple.o)
+InstallLibrary(/lib,libGandiva.a)
+
+BuildLibrary(libGandiva.a,$(OBJECTS))
+
+BuildObject(Gandiva,NullParam,NullParam)
+
+Clean(libGandiva.a)
+
+AddDependences($(SOURCES),NullParam)

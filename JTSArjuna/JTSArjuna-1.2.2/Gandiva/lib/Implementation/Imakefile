@@ -1,0 +1,30 @@
+COMMENT
+COMMENT Copyright (C) 1994, 1995, 1996,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 1996/01/02 13:15:44 nsmw Exp $
+COMMENT
+
+SOURCES = Buffer.cc \
+          Inventory.cc \
+          NameService.cc
+
+OBJECTS = Buffer.o \
+          Inventory.o \
+          NameService.o
+
+SubDirectory(Buffer)
+SubDirectory(Inventory)
+SubDirectory(NameService)
+
+Target($(OBJECTS))
+
+BuildObject(Buffer,NullParam,NullParam)
+BuildObject(Inventory,NullParam,NullParam)
+BuildObject(NameService,NullParam,NullParam)
+
+AddDependences($(SOURCES),NullParam)
