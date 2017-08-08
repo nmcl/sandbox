@@ -1,0 +1,89 @@
+.\"
+.\" Copyright (C) 1994, 1995, 1996,
+.\"
+.\" Department of Computing Science,
+.\" University of Newcastle upon Tyne,
+.\" Newcastle upon Tyne,
+.\" UK.
+.\"
+.\" $Id: ThreadSetup.3,v 1.3 1997/01/27 12:49:04 nsmw Exp $
+.\"
+.TH ThreadSetup 3 "23 July 1995" "Gandiva" "C++ class"
+.SH NAME
+\fBThreadSetup\fR \- used to initialise threads prior to creation
+.SH SYNOPSIS
+.B "#ifndef COMMON_THREADSETUP_H_"
+.br
+.B "#   include <Common/ThreadSetup.h>"
+.br
+.B "#endif"
+.sp
+.BI "class ThreadSetup"
+.br
+.BI "{"
+.br
+.BI "public:"
+.br
+.BI "    ThreadSetup ();"
+.br
+.BI "    ~ThreadSetup ();"
+.sp
+.BI "    Boolean       createSuspended;"
+.br
+.BI "    Boolean       createConnected;"
+.br
+.BI "    int           priority;"
+.br
+.BI "    unsigned long stackSize;"
+.br
+.BI "    Uid           threadId;"
+.br
+.BI "};"
+.SH DESCRIPTION
+Thread creation occurs through the \fBexecute\fR method of the
+\fBThread\fR class. An instance of the \fBThreadSetup\fR class
+can be passed to \fBexecute\fR to control the way in which the
+thread is created. Any of the following fields can be set:
+
+.I
+	createSuspended
+: if this field is set to \fITRUE\fR then the thread is create
+suspended (the default), otherwise it is active, and will execute
+as soon as it is granted control of the processor.
+
+.I
+	createConnected
+: if this field is set to \fITRUE\fR (the default) then the thread
+is created as a child of the creating thread, enabling the parent
+thread to later wait for the child's completion. If the thread is
+not created in a connected state then the threads may complete
+independent of each other.
+
+.I
+	priority
+: if set, i.e., positive value, then this represents the priority
+of the thread when it is created. (Currently there is no way to
+modify the priority subsequent to thread creation - this may
+change later). There is a maximum and minimum allowed thread
+priority, and attempts to set a priority beyond these limits will
+result in the maximum priority being used.
+
+.I
+	stackSize
+: if set, i.e., positive value, this respresents the stack size
+which will be allocated for the created thread. Many thread
+packages recommend a minimum stack size, and this will used
+if no stack size is specified. No attempt to enforce this limit
+will be made if the user specifies a lower value.
+
+.I
+	threadId
+: each thread is uniquely identified by an instance of the
+\fBUid\fR class. If this field is set then the value here
+is used as the thread's \fBUid\fR, rather than creating a new
+instance. This is used for transfering thread control across
+process boundaries, e.g., via RPC, to aid in debugging. (This
+option is currently not supported).
+
+.SH SEE ALSO
+Thread(3), Uid(3)

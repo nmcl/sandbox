@@ -1,0 +1,73 @@
+.\"
+.\" Copyright (C) 1994, 1995, 1996,
+.\"
+.\" Department of Computing Science,
+.\" University of Newcastle upon Tyne,
+.\" Newcastle upon Tyne,
+.\" UK.
+.\"
+.\" $Id: ClassName.3,v 1.3 1996/01/02 13:25:39 nsmw Exp $
+.\"
+.TH ClassName 3 "15 March 94" "Gandiva" "C++ class"
+.SH NAME
+\fBClassName\fR \- instances of this class represent class names, for run-time
+class identification.
+.SH SYNOPSIS
+.B "#ifndef COMMON_CLASSNAME_H_"
+.br
+.B "#   include <Common/ClassName.h>"
+.br
+.B "#endif"
+.SH DESCRIPTION
+\fBClassName\fR objects are used to represent the class names of objects. This
+allows run-time identification of the classes that objects belong to.
+.SS PUBLIC OPERATIONS
+.TP
+.B "ClassName(const char *classNameString)"
+Creates and initialises an instance of the class \fBClassName\fR, using the string 
+\fIclassNameString\fR. The \fIclassNameString\fR string can be
+deallocated after use. (Strings starting with '$' are reserved for special
+purposes.) 
+.TP
+.B "ClassName(const ClassName &className)"
+Creates and initialises an instance of the class \fBClassName\fR, using
+\fIclassName\fR.
+.TP
+.B "virtual ~ClassName()"
+.TP
+.B "ClassName &operator= (const ClassName &className)"
+Assigns \fIclassName\fR to the object that the operation is applied to.
+.TP
+.B "Boolean operator== (const ClassName &className) const"
+The value returned corresponds to the comparison for equality of \fIclassName\fR
+and the object that the operation is applied to.
+.TP
+.B "Boolean operator!= (const ClassName &className) const"
+The value returned corresponds to the comparison for inequality of \fIclassName\fR and
+the object that the operation is applied to.
+.TP
+.B "const char *stringForm() const"
+Returns a string form of the object that the operation is applied to. This string
+should be deleted when finished with.
+.TP
+.B "Boolean pack(Buffer &buffer) const"
+Packs the \fBClassName\fR object state into the \fBBuffer\fR object specified by
+\fIbuffer\fR, in a form suitable for unpacking using the \fIunpack\fR operation.
+.TP
+.B "Boolean unpack(Buffer &buffer)"
+Unpacks the \fBClassName\fR object state from the \fBBuffer\fR object specified by
+\fIbuffer\fR, which has been packed using the \fIpack\fR operation.
+.TP
+.B "void print(ostream &ostr) const"
+Prints on \fIostr\fR a representation of the object.
+.SS STATIC PUBLIC OPERATIONS
+.TP
+.B "const ClassName &invalid()"
+Returns a special \fBClassName\fR object that does not corresponds to any class.
+.SS RELATED OPERATIONS
+.TP
+.B "ostream &operator<< (ostream &ostr, const ClassName &className)"
+Prints on \fIostr\fR a representation of \fIclassName\fR.
+.SH SEE ALSO
+.BR Boolean(3),
+.BR Buffer(3).
