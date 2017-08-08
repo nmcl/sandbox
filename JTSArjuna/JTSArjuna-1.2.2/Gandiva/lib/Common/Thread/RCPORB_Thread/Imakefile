@@ -1,0 +1,32 @@
+COMMENT
+COMMENT Copyright (C) 1994, 1995, 1996,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1998/01/12 13:07:34 nmcl Exp $
+COMMENT
+
+SOURCES = RCPORB_RWLock.cc \
+	  RCPORB_Sem.cc \
+	  RCPORB_SpecificData.cc \
+	  RCPORB_Thread.cc \
+	  RCPORB_ThreadPool.cc
+
+OBJECTS = RCPORB_RWLock.o \
+	  RCPORB_Sem.o \
+	  RCPORB_SpecificData.o \
+	  RCPORB_Thread.o \
+	  RCPORB_ThreadPool.o
+
+Target($(OBJECTS))
+
+BuildObject(RCPORB_RWLock,NullParam,NullParam)
+BuildObject(RCPORB_Sem,NullParam,NullParam)
+BuildObject(RCPORB_SpecificData,NullParam,NullParam)
+BuildObject(RCPORB_Thread,NullParam,NullParam)
+BuildObject(RCPORB_ThreadPool,NullParam,NullParam)
+
+AddDependences($(SOURCES),NullParam)

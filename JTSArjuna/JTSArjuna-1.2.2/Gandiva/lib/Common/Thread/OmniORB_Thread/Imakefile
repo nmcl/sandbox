@@ -1,0 +1,35 @@
+COMMENT
+COMMENT Copyright (C) 1994, 1995, 1996,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 1998/06/01 13:59:15 nmcl Exp $
+COMMENT
+
+SOURCES = OmniORB_RWLock.cc \
+	  OmniORB_Sem.cc \
+	  OmniORB_SpecificData.cc \
+	  OmniORB_Thread.cc \
+	  OmniORB_ThreadPool.cc \
+	  OmniORB_Condition.cc
+
+OBJECTS = OmniORB_RWLock.o \
+	  OmniORB_Sem.o \
+	  OmniORB_SpecificData.o \
+	  OmniORB_Thread.o \
+	  OmniORB_ThreadPool.o \
+	  OmniORB_Condition.o
+
+Target($(OBJECTS))
+
+BuildObject(OmniORB_RWLock,NullParam,NullParam)
+BuildObject(OmniORB_Sem,NullParam,NullParam)
+BuildObject(OmniORB_SpecificData,NullParam,NullParam)
+BuildObject(OmniORB_Thread,NullParam,NullParam)
+BuildObject(OmniORB_ThreadPool,NullParam,NullParam)
+BuildObject(OmniORB_Condition,NullParam,NullParam)
+
+AddDependences($(SOURCES),NullParam)
