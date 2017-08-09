@@ -1,0 +1,32 @@
+COMMENT 
+COMMENT Copyright (C) 1996, 1997, 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1998/03/12 16:22:51 nmcl Exp $
+COMMENT
+
+AddToIdlFlags(-DDRAFT3 -I$(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+SOURCES = AtomicTransaction.java \
+	  TopLevelTransaction.java \
+	  Arjuna.java
+
+OBJECTS = AtomicTransaction.class \
+	  TopLevelTransaction.class \
+	  Arjuna.class
+
+Target($(SOURCES))
+Target($(OBJECTS))
+
+PreprocessJavaCode(AtomicTransaction,NullParam)
+PreprocessJavaCode(TopLevelTransaction,NullParam)
+
+BuildJavaByteCode(AtomicTransaction,NullParam)
+BuildJavaByteCode(TopLevelTransaction,NullParam)
+BuildJavaByteCode(Arjuna,NullParam)
+
+Clean(*.class)
