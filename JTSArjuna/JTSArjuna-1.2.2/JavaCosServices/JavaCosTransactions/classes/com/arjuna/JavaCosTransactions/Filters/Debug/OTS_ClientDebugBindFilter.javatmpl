@@ -1,0 +1,76 @@
+/*
+ * Copyright (C) 1996, 1997, 1998,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: OTS_ClientDebugBindFilter.javatmpl,v 1.2 1998/07/06 13:28:55 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+#include <CosTransactions/CosTranNames.h>
+
+package com.arjuna.JavaCosTransactions.Filters.Debug;
+
+import com.arjuna.OrbCommon.ORBInterface;
+
+import com.visigenic.vbroker.interceptor.*;
+import com.visigenic.vbroker.IOP.*;
+
+#ifndef JAR_PACKAGE_PROBLEM
+import NAMESPACE_(CORBA).*;
+#else
+import NAMESPACE_(CORBA).BOA;
+import NAMESPACE_(CORBA).CompletionStatus;
+#endif
+
+import NAMESPACE_(CORBA).SystemException;
+import NAMESPACE_(CORBA).BAD_PARAM;
+import NAMESPACE_(CORBA).UNKNOWN;
+
+public class OTS_ClientDebugBindFilter implements BindInterceptor
+{
+
+public OTS_ClientDebugBindFilter ()
+    {
+	System.out.println("OTS_ClientDebugBindFilter created.");
+    }
+	    
+public boolean bind (IORHolder ior, org.omg.CORBA.Object object, Closure closure)
+    {
+        return false;
+    }
+
+public boolean bind_failed (IORHolder ior, org.omg.CORBA.Object object, Closure closure)
+    {
+	System.out.println("OTS_ClientDebugBindFilter - bind failed.");
+	
+	return false;
+    }
+
+public void bind_succeeded (IOR ior, org.omg.CORBA.Object object, Closure closure)
+    {
+	System.out.println("OTS_ClientDebugBindFilter - bind succeeded.");
+    }
+
+public boolean rebind (IORHolder ior, org.omg.CORBA.Object object, Closure closure)
+    {
+        return false;
+    }
+
+public boolean rebind_failed (IORHolder ior, org.omg.CORBA.Object object, Closure closure)
+    {
+        return false;
+    }
+
+public void rebind_succeeded (IOR ior, org.omg.CORBA.Object object, Closure closure)
+    {
+    }
+
+public void exception_occurred (IOR ior, org.omg.CORBA.Object object, org.omg.CORBA.Environment env, Closure closure)
+    {
+    }
+    
+};
