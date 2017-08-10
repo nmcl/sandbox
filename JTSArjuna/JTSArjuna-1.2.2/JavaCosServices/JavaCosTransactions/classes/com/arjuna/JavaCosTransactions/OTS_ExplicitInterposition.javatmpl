@@ -1,0 +1,191 @@
+/*
+ * Copyright (C) 1996, 1997, 1998, 1999,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: OTS_ExplicitInterposition.javatmpl,v 1.7.2.1 1999/02/05 09:57:34 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package com.arjuna.JavaCosTransactions;
+
+import com.arjuna.JavaArjunaLite.Atomic.BasicAction;
+import com.arjuna.JavaArjunaLite.Thread.ThreadActionData;
+import org.omg.CosTransactions.*;
+import java.io.PrintStream;
+
+import org.omg.CosTransactions.InvalidControl;
+import org.omg.CosTransactions.Inactive;
+import org.omg.CosTransactions.Unavailable;
+import NAMESPACE_(CORBA).SystemException;
+
+public class OTS_ExplicitInterposition
+{
+
+public OTS_ExplicitInterposition ()
+    {
+	this(false);
+    }
+
+public OTS_ExplicitInterposition (boolean remember)
+    {
+	_remember = remember;
+	_inUse = false;
+	_oldControl = null;
+    }
+
+public OTS_ExplicitInterposition (Control action, boolean remember)
+    {
+	_remember = remember;
+	_inUse = false;
+	_oldControl = null;
+
+	registerTransaction(action);
+    }
+
+public OTS_ExplicitInterposition (PropagationContext ctx, boolean remember)
+    {
+	_remember = remember;
+	_inUse = false;
+	_oldControl = null;
+
+	registerTransaction(ctx);
+    }
+    
+public void finalize ()
+    {
+	unregisterTransaction();
+    }
+    
+public final synchronized boolean registerTransaction (Control action) throws SystemException
+    {
+	if (action == null)
+	    return true;
+
+	if (_inUse)
+	{
+	    System.err.println("Warning - OTS_ExplicitInterposition.registerTransaction called multiple times.");
+	    
+	    return false;  // set later
+	}
+	
+	boolean result = false;
+
+	try
+	{
+	    Coordinator coord = action.get_coordinator();
+
+	    if (coord != null)
+	    {
+		PropagationContext ctx = coord.get_txcontext();
+		    
+		if (ctx != null)
+		{
+		    result = registerTransaction(ctx);
+
+		    ctx = null;
+		}
+		else
+		{
+		    System.err.println("OTS_ExplicitInterposition.registerTransaction(Control) - null context!");
+		}
+
+		coord = null;
+	    }
+	}
+	catch (Exception e)
+	{
+	    System.err.println("WARNING OTS_ExplicitInterposition.registerTransaction(Control) caught exception: "+e);
+	}
+
+	return result;
+    }
+
+public final synchronized boolean registerTransaction (PropagationContext ctx)
+    {
+	if (ctx == null)
+	    return true;
+
+	if (_inUse)
+	{
+	    System.err.println("Warning - OTS_ExplicitInterposition.registerTransaction called multiple times.");
+	    
+	    return false;
+	}
+	else
+	    _inUse = true;
+	
+	boolean result = false;
+	TransactionFactory _localFactory = OTS.factory();
+
+	try
+	{
+	    Control cont = _localFactory.recreate(ctx);
+
+	    if (cont != null)
+	    {
+		OTS_Current current = OTS.current();
+		
+		/*
+		 * If this thread is associated with any transactions, then
+		 * they will be lost in favour of this new hierarchy.
+		 */
+
+		current.resume(cont);
+
+		result = true;
+
+		cont = null;
+	    }
+	    else
+	    {
+		System.err.println("OTS_ExplicitInterposition.registerTransaction(PropagationContext) - recreate failed!");
+	    }
+	}
+	catch (Exception e)
+	{
+	    System.err.println("WARNING OTS_ExplicitInterposition.registerTransaction(PropagationContext) caught exception: "+e);
+	}
+
+	return result;
+    }
+
+    /*
+     * We need this explicit method because we cannot rely upon
+     * the object "destructor" being called by the time the
+     * method which instantiated the interposition class ends!
+     */
+    
+public synchronized boolean unregisterTransaction ()
+    {
+	try
+	{
+	    Control control = OTS.current().suspend();
+
+	    control = null;
+
+	    if (_remember && (_oldControl != null))
+	    {
+		OTS.current().resume(_oldControl);
+		_oldControl = null;
+	    }
+	    
+	    return true;
+	}
+	catch (Exception e)
+	{
+	    return false;
+	}
+    }
+
+private boolean _remember;
+private boolean _inUse;
+private Control _oldControl;
+    
+};
+
+	    
