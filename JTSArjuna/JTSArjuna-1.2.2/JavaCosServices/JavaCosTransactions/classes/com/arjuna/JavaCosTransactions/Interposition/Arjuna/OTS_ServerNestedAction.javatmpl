@@ -1,0 +1,313 @@
+/*
+ * Copyright (C) 1997, 1998,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: OTS_ServerNestedAction.javatmpl,v 1.9.2.1 1999/02/05 09:57:39 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+#include <CosTransactions/CosTranNames.h>
+
+package com.arjuna.JavaCosTransactions.Interposition.Arjuna;
+
+import com.arjuna.OrbCommon.*;
+import com.arjuna.JavaArjunaLite.Thread.ThreadActionData;
+import com.arjuna.JavaGandiva.Common.Uid;
+import com.arjuna.JavaCosTransactions.*;
+import org.omg.CosTransactions.*;
+import NAMESPACE_(CORBA).CompletionStatus;
+
+import org.omg.CosTransactions.HeuristicHazard;
+import org.omg.CosTransactions.HeuristicMixed;
+import NAMESPACE_(CORBA).SystemException;
+import NAMESPACE_(CORBA).BAD_OPERATION;
+import NAMESPACE_(CORBA).UNKNOWN;
+
+#include <CosTransactions/CosTranExceptions.h>
+#include <CosTransactions/OTS_Exceptions.h>
+
+public class OTS_ServerNestedAction extends SCOPED_BOA_(org.omg.CosTransactions,SubtransactionAwareResource)
+{
+    
+    /*
+     * Create local transactions with same ids as remote.
+     */
+
+public OTS_ServerNestedAction (Coordinator coordinator, Terminator terminator,
+			       OTS_ServerControl myControl)
+    {
+	_theControl = myControl;
+	_child = null;
+	_theUid = new Uid(myControl.getImplHandle().get_uid());
+
+	_theCoordinator = coordinator;
+	_theTerminator = terminator;
+
+	READY_IMPL_(this);
+	
+	if (!registerSubTran(coordinator))
+	{
+	    System.err.println("OTS_ServerNestedAction - could not register interposed hierarchy!");
+	    
+	    /*
+	     * Failed to register, so force this hierarchy to rollback immediately.
+	     */
+
+	    if (_theControl != null)
+	    {
+		try
+		{
+		    Terminator term = _theControl.get_terminator();
+
+		    if (term != null)
+		    {
+			term.rollback();
+			term = null;
+		    }
+		}
+		catch (Exception e)
+		{
+		    System.err.println("OTS_ServerNestedAction - could not rollback local hierarchy! "+e);
+		}
+	    }
+	}
+    }
+
+public void finalize ()
+    {
+	if (_child != null)
+	{
+	    DESTROY_IMPL_(_child);
+	    _child = null;
+	}
+
+	if (_theControl != null)
+	{
+	    DESTROY_IMPL_(_theControl);
+	    _theControl = null;
+	}
+
+	_theUid = null;
+
+	_theCoordinator = null;
+	_theTerminator = null;
+    }
+
+public void commit_subtransaction (Coordinator parent) throws SystemException
+    {
+	if (_theControl == null)
+	{
+	    System.err.println("WARNING - OTS_ServerNestedAction::commit_subtransaction - attempt to commit with null control!");
+
+#ifdef ORB_OTS_SUPPORT	    
+	    throw new InvalidTransaction(0, CompletionStatus.COMPLETED_NO);
+#else
+	    throw new UNKNOWN(INACTIVE_TRANSACTION, CompletionStatus.COMPLETED_NO);
+#endif	    
+	}
+
+	OTS_ServerTransaction theTransaction = (OTS_ServerTransaction) _theControl.getImplHandle();
+	
+	ThreadActionData.pushAction(theTransaction);
+    
+	/*
+	 * Do nothing about propagation since we should already be
+	 * registered with the parent, i.e., ignore the parent
+	 * parameter.
+	 */
+
+	/*
+	 * We should not get exceptions here.
+	 */
+	
+	try
+	{
+	    theTransaction.commit(false);
+	}
+	catch (TransactionRolledBack e1)
+	{
+	}
+	catch (HeuristicMixed e2)
+	{
+	}
+	catch (HeuristicHazard e3)
+	{
+	}
+
+	ThreadActionData.popAction();
+    }
+
+public void rollback_subtransaction () throws SystemException
+    {
+	if (_theControl == null)
+	{
+	    System.err.println("WARNING - OTS_ServerNestedAction::rollback_subtransaction - attempt to commit with null control!");
+
+#ifdef ORB_OTS_SUPPORT
+	    throw new InvalidTransaction(0, CompletionStatus.COMPLETED_NO);
+#else
+	    throw new UNKNOWN(INACTIVE_TRANSACTION, CompletionStatus.COMPLETED_NO);
+#endif	    
+	}
+
+	OTS_ServerTransaction theTransaction = (OTS_ServerTransaction) _theControl.getImplHandle();
+	
+	ThreadActionData.pushAction(theTransaction);
+    
+	theTransaction.rollback();
+
+	ThreadActionData.popAction();
+	
+	/*
+	 * Can't remove from hierarchy just yet or we will
+	 * get a memory leak and may cause the "client" to crash.
+	 */
+    }
+
+    /*
+     * These methods should never be called.
+     */
+
+#if defined(CORBA_2_2) || defined(CORBA_2_1)
+public org.omg.CosTransactions.Vote prepare () throws SystemException, HeuristicMixed, HeuristicHazard
+#else
+public int prepare () throws SystemException, HeuristicMixed, HeuristicHazard
+#endif    
+    {
+	throw new BAD_OPERATION();
+
+	//	return Vote.VoteRollback;	
+    }
+
+public void rollback () throws SystemException, HeuristicCommit, HeuristicMixed, HeuristicHazard
+    {
+    }
+    
+public void commit () throws SystemException, NotPrepared, HeuristicRollback, HeuristicMixed, HeuristicHazard
+    {
+    }
+
+public void forget () throws SystemException
+    {
+    }
+
+public void commit_one_phase () throws SystemException, HeuristicHazard
+    {
+    }
+
+public synchronized Control control ()
+    {
+	return _theControl;
+    }
+
+public synchronized void add (OTS_ServerNestedAction c)
+    {
+	if (_child != null)
+	    _child.add(c);
+	else
+	    _child = c;
+    }
+ 
+public synchronized OTS_ServerNestedAction child ()
+    {
+	return _child;
+    }
+
+public synchronized void abortChild (OTS_ServerNestedAction toAbort)
+    {
+	if (_child != null)
+	{
+	    if (_child == toAbort)
+	    {
+		org.omg.CosTransactions.Status nestedStatus = _child.otsStatus();
+
+		if ((nestedStatus != org.omg.CosTransactions.Status.StatusRolledBack) &&
+		    (nestedStatus != org.omg.CosTransactions.Status.StatusCommitted) &&
+		    (nestedStatus != org.omg.CosTransactions.Status.StatusNoTransaction))
+		{
+		    _child.rollback_subtransaction();
+		}
+		
+		DESTROY_IMPL_(_child);
+		_child = null;
+	    }
+	    else
+		_child.abortChild(toAbort);
+	}
+	else
+	    System.err.println("WARNING:OTS_ServerNestedAction::abortChild - error, no child!");
+    }
+ 
+public final Uid get_uid ()
+    {
+	return _theUid;
+    }
+
+#if defined(CORBA_2_2) || defined(CORBA_2_1)
+public org.omg.CosTransactions.Status otsStatus ()
+#else
+public int otsStatus ()
+#endif    
+    {
+	try
+	{
+	    if (_theControl != null)
+		return _theControl.getImplHandle().get_status();
+	    else
+		return org.omg.CosTransactions.Status.StatusNoTransaction;
+	}
+	catch (SystemException e)
+	{
+	    return Status.StatusUnknown;
+	}
+    }
+
+protected OTS_ServerNestedAction ()
+    {
+	_theControl = null;
+	_child = null;
+	_theUid = new Uid();
+
+	_theCoordinator = null;
+	_theTerminator = null;
+    }
+ 
+protected boolean registerSubTran (Coordinator theCoordinator)
+    {
+	if (theCoordinator == null)
+	    return false;
+	
+	boolean result = false;
+
+	try
+	{
+	    theCoordinator.register_subtran_aware(this);
+	    result = true;
+	}
+	catch (Inactive e)
+	{
+	    System.err.println("OTS_ServerNestedAction::registerSubTran - Inactive exception");
+	}
+	catch (NotSubtransaction e)
+	{
+	    System.err.println("OTS_ServerNestedAction::registerSubTran - NotSubtransaction exception");
+	}
+	catch (SystemException e)
+	{
+	    System.err.println("OTS_ServerNestedAction::registerSubTran - caught unexpected exception: "+e);
+	}
+	
+	return result;
+    }
+
+protected OTS_ServerControl _theControl;
+protected OTS_ServerNestedAction _child;
+protected Uid _theUid;
+protected Coordinator _theCoordinator;
+protected Terminator _theTerminator;
+
+};
