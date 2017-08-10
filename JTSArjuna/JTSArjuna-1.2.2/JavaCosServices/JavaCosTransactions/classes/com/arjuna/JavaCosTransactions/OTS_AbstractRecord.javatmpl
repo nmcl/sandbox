@@ -1,0 +1,742 @@
+/*
+ * Copyright (C) 1996, 1997, 1998,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: OTS_AbstractRecord.javatmpl,v 1.7 1998/08/13 14:34:10 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+/*
+ * 
+ * OTS Abstract Record Class Implementation.
+ *
+ * (Extended resource functionality.)
+ *
+ */
+
+package com.arjuna.JavaCosTransactions;
+
+import com.arjuna.OrbCommon.ORBInterface;
+import org.omg.CosTransactions.*;
+import com.arjuna.ArjunaOTS.*;
+import com.arjuna.JavaArjunaLite.Atomic.*;
+import com.arjuna.JavaGandiva.Common.*;
+import java.io.PrintStream;
+
+import com.arjuna.JavaGandiva.Common.UidException;
+import NAMESPACE_(CORBA).SystemException;
+import NAMESPACE_(CORBA).BAD_PARAM;
+import NAMESPACE_(CORBA).UNKNOWN;
+
+#ifndef ORB_OTS_SUPPORT
+import org.omg.CosTransactions.TransactionRolledBack;
+#endif
+
+import org.omg.CosTransactions.NotPrepared;
+import org.omg.CosTransactions.HeuristicCommit;
+import org.omg.CosTransactions.HeuristicMixed;
+import org.omg.CosTransactions.HeuristicHazard;
+import org.omg.CosTransactions.HeuristicRollback;
+import java.io.IOException;
+
+/*
+ * This abstract record is used whenever resources are derived from the ArjunaOTS
+ * module's AbstractRecord interface. This gives users the flexibility of the
+ * original Arjuna system's AbstractRecord, and makes resources behave correctly!
+ *
+ * We know that instances of this record will only be called for instances of
+ * AbstractRecord objects.
+ */
+
+public class OTS_AbstractRecord extends com.arjuna.JavaArjunaLite.Atomic.AbstractRecord
+{
+
+/*
+ * Constructor
+ *
+ * propagate tells us whether to propagate the resource at nested commit or
+ * not.
+ * theResource is the proxy that allows us to call out to the object.
+ * myParent is the proxy for the parent coordinator needed in
+ * commit_subtransaction.
+ */
+    
+public OTS_AbstractRecord ( boolean propagate, ArjunaSubtranAwareResource theResource,
+			    Coordinator myParent, OTS_Transaction current )
+    {
+	super(new Uid(), null, ObjectType.ANDPERSISTENT);
+	
+	_parentCoordHandle = myParent;
+	_resourceHandle = theResource;
+	_currentTransaction = current;
+	_propagateRecord = propagate;
+    }
+
+public void finalize ()
+    {
+	_resourceHandle = null;
+	_parentCoordHandle = null;
+	_currentTransaction = null;
+    }
+    
+    /*
+     * Specific OTS method for getting at the value rather than
+     * using casts of void* !
+     */
+    
+public final ArjunaSubtranAwareResource resourceHandle ()
+    {
+	return _resourceHandle;
+    }
+    
+public boolean propagateOnCommit ()
+    {
+	return _propagateRecord;
+    }
+
+public int typeIs ()
+    {
+	OTSAbstractRecord resHandle = otsRecord();
+	int r = RecordType.USER_DEF_FIRST1;
+
+	try
+	{
+	    if (resHandle != null)
+		r = resHandle.type();
+	}
+	catch (Exception e)
+	{
+	    r = RecordType.USER_DEF_FIRST1;
+
+	    System.err.println("WARNING:OTS_AbstractRecord::typeIs failed. Returning default "+r);
+	}
+
+	resHandle = null;
+
+	return r;
+    }
+
+public ClassName className ()
+    {
+	return JavaCosTransactionsNames.AbstractRecord_OTS_AbstractRecord();
+    }
+    
+public Object value ()
+    {
+	return _resourceHandle;
+    }
+
+public void setValue (Object o)
+    {
+	System.err.println("OTS_AbstractRecord::set_value() called illegally");
+    }
+
+    /*
+     * General nesting rules:
+     *
+     * Only SubtransactionAware resources get registered with nested actions. 
+     * The OTS_AbstractRecord creator is assumed to ensure that plain Resources
+     * are only registered with the appropriate top level action.
+     *
+     * That said the _propagateRecord flag ensures that resources registered via
+     * register_subtran only take part in the action they where registered in
+     * after which they are dropped
+     */
+
+public int nestedAbort ()
+    {
+	/*
+	 * Must be an staResource to get here.
+	 */
+
+	try
+	{
+	    _resourceHandle.rollback_subtransaction();
+	}
+	catch (SystemException ex)
+	{
+	    return PrepareOutcome.FINISH_ERROR;
+	}
+    
+	return PrepareOutcome.FINISH_OK;
+    }
+
+public int nestedCommit ()
+    {
+	int o = PrepareOutcome.FINISH_ERROR;
+
+	try
+	{
+	    _resourceHandle.commit_subtransaction(_parentCoordHandle);
+
+	    /*
+	     * Now release the parent as it is about to be destroyed
+	     * anyway.
+	     */
+
+	    _parentCoordHandle = null;
+    
+	    if (_currentTransaction != null)
+	    {
+		/*
+		 * Now change our notion of our parent for subsequent nested
+		 * transaction commits. We were passed a reference to the current
+		 * transaction, so we can just ask it for it's parent. If it doesn't
+		 * have one, then generate an error.
+		 */
+		
+		_currentTransaction = (OTS_Transaction) _currentTransaction.parent();
+
+		Control control = _currentTransaction.getControlHandle();
+
+		if (control != null)
+		{
+		    _parentCoordHandle = control.get_coordinator();
+
+		    control = null;
+		    o = PrepareOutcome.FINISH_OK;		    
+		}
+		else
+		{
+		    System.err.println("WARNING:OTS_AbstractRecord::nestedCommit - no parent!");
+		    o = PrepareOutcome.FINISH_ERROR;
+		}
+	    }
+	    else
+		o = PrepareOutcome.FINISH_ERROR;
+	}
+	catch (Exception e)
+	{
+	    o = PrepareOutcome.FINISH_ERROR;
+	}
+
+	return o;
+    }
+
+    /*
+     * Because resource is and Arjuna AbstractRecord we can do proper nesting!
+     */
+
+public int nestedPrepare ()
+    {
+	int o = PrepareOutcome.PREP_NOTOK;
+    
+	try
+	{
+ 	    switch (ENUM_VALUE_(_resourceHandle.prepare_subtransaction()))
+	    {
+	    case ENUM_CONST_(Vote,VoteCommit):
+		o = PrepareOutcome.PREP_OK;
+		break;
+	    case ENUM_CONST_(Vote,VoteRollback):
+		o = PrepareOutcome.PREP_NOTOK;
+		break;
+	    case ENUM_CONST_(Vote,VoteReadOnly):
+		o = PrepareOutcome.READONLY;
+		break;
+	    }
+	}
+	catch (Exception e)
+	{
+	    o = PrepareOutcome.PREP_NOTOK;
+	}
+
+	return o;
+    }
+
+public int topLevelAbort ()
+    {
+	try
+	{
+	    if (_resourceHandle != null)
+	    {
+		_resourceHandle.rollback();
+	    }
+	    else
+		return PrepareOutcome.FINISH_ERROR;
+	}
+	catch (HeuristicCommit e1)
+	{
+	    return PrepareOutcome.HEURISTIC_COMMIT;
+	}
+	catch (HeuristicMixed e2)
+	{
+	    return PrepareOutcome.HEURISTIC_MIXED;
+	}
+	catch (HeuristicHazard e3)
+	{
+	    return PrepareOutcome.HEURISTIC_HAZARD;
+	}
+	catch (SystemException e4)
+	{
+	    return PrepareOutcome.FINISH_ERROR;
+	}
+	
+	return PrepareOutcome.FINISH_OK;
+    }
+
+public int topLevelCommit ()
+    {
+	try
+	{
+	    if (_resourceHandle != null)
+	    {
+		_resourceHandle.commit();
+	    }
+	    else
+		return PrepareOutcome.FINISH_ERROR;
+	}
+	catch (NotPrepared e1)
+	{
+	    return PrepareOutcome.NOT_PREPARED;
+	}
+	catch (HeuristicRollback e2)
+	{
+	    return PrepareOutcome.HEURISTIC_ROLLBACK;
+	}
+	catch (HeuristicMixed e3)
+	{
+	    return PrepareOutcome.HEURISTIC_MIXED;
+	}
+	catch(HeuristicHazard e4)
+	{
+	    return PrepareOutcome.HEURISTIC_HAZARD;
+	}
+	catch (SystemException e5)
+	{
+	    return PrepareOutcome.FINISH_ERROR;
+	}
+
+	return PrepareOutcome.FINISH_OK;
+    }
+
+public int topLevelPrepare ()
+    {
+	try
+	{
+	    if (_resourceHandle != null)
+	    {
+		switch (ENUM_VALUE_(_resourceHandle.prepare()))
+		{
+		case ENUM_CONST_(Vote,VoteCommit):
+		    return PrepareOutcome.PREP_OK;
+		case ENUM_CONST_(Vote,VoteRollback):
+		    return PrepareOutcome.PREP_NOTOK;
+		case ENUM_CONST_(Vote,VoteReadOnly):
+		    return PrepareOutcome.READONLY;
+		}
+	    }
+	    else
+		return PrepareOutcome.PREP_NOTOK;
+	}
+	catch (HeuristicMixed e1)
+	{
+	    return PrepareOutcome.HEURISTIC_MIXED;
+	}
+	catch (HeuristicHazard e2)
+	{
+	    return PrepareOutcome.HEURISTIC_HAZARD;
+	}
+	catch (Exception e)
+	{
+	    return PrepareOutcome.PREP_NOTOK;
+	}
+
+        return PrepareOutcome.PREP_NOTOK;
+    }
+
+public void forgetHeuristic ()
+    {
+	try
+	{
+	    if (_resourceHandle != null)
+		_resourceHandle.forget();
+	    else
+		System.err.println("WARNING:OTS_AbstractRecord::forgetHeuristic called without a resource!");
+	}
+	catch (Exception e)
+	{
+	    System.err.println("WARNING:OTS_AbstractRecord::forgetHeuristic caught exception");
+	}
+    }
+    
+public AbstractRecord create ()
+    {
+	return new OTS_AbstractRecord();
+    }
+
+public void remove (AbstractRecord toDelete)
+    {
+	toDelete = null;
+    }
+    
+public void print (PrintStream strm)
+    {
+	super.print(strm);
+
+	strm.println("OTS_AbstractRecord");
+	strm.println(_resourceHandle+"\t"+_parentCoordHandle+"\t"+_propagateRecord);
+    }
+
+    /*
+     * restore_state and save_state for OTS_AbstractRecords doesn't generally
+     * apply due to object pointers. However, we need to save something so we
+     * can recover failed transactions. So, rather than insist that all Resources
+     * derive from a class which we can guarantee will give us some unique id, we
+     * simply rely on string_to_object and object_to_string to be meaningful.
+     */
+
+public boolean restore_state ( InputObjectState os, int t )
+    {
+	int isString = 0;
+	boolean result = true;
+	
+	try
+	{
+	    isString = os.unpackInt();
+
+	    /*
+	     * Do we need to restore the parent coordinator handle?
+	     */
+
+	    _parentCoordHandle = null;
+    
+	    if (isString == 1)
+	    {
+		String objRef = os.unpackString();
+
+		try
+		{
+		    NAMESPACE_(CORBA).ORB theOrb = ORBInterface.orb();
+		    NAMESPACE_(CORBA).Object optr = theOrb.string_to_object(objRef);
+
+		    theOrb = null;
+		
+		    _resourceHandle = SCOPED_NARROW_(com.arjuna.ArjunaOTS,ArjunaSubtranAwareResource,optr);
+
+		    if (_resourceHandle == null)
+			throw new BAD_PARAM();
+		    else
+			optr = null;
+		}
+		catch (SystemException e)
+		{
+		    /*
+		     * Something went wrong. Either we are not
+		     * a resource (which shouldn't happen given the
+		     * type of AbstractRecord), or their was a problem
+		     * recreating the record (maybe the machine/server was
+		     * unavailable.) Try again later.
+		     */
+
+		    result = false;
+		}
+
+		objRef = null;
+	    }
+	}
+	catch (IOException e)
+	{
+	    result = false;
+	}
+
+	return result;
+    }
+
+public boolean save_state ( OutputObjectState os, int t )
+    {
+	boolean result = true;
+
+	try
+	{
+	    /*
+	     * Do we need to save the parent coordinator handle?
+	     */
+
+	    if (_resourceHandle == null)
+		os.packInt(-1);
+	    else
+	    {
+		os.packInt(1);
+
+		NAMESPACE_(CORBA).ORB theOrb = ORBInterface.orb();
+		String stringRef = theOrb.object_to_string(_resourceHandle);
+
+		theOrb = null;
+		
+		if (stringRef != null)
+		{
+		    os.packString(stringRef);
+		    stringRef = null;
+		}
+		else
+		    result = false;
+	    }
+	}
+	catch (IOException e)
+	{
+	    result = false;
+	}
+	catch (SystemException e)
+        {
+	    result = false;
+	}
+	
+	return result;
+    }
+
+public String type ()
+    {
+	return "/StateManager/AbstractRecord/OTS_AbstractRecord";
+    }
+
+public boolean doSave ()
+    {
+	return true;
+    }
+
+public void merge ( AbstractRecord absRec )
+    {
+	OTSAbstractRecord resHandle = otsRecord();
+
+	if (resHandle != null)
+	{
+	    OTSAbstractRecord rec = otsRecord(absRec);
+
+	    if (rec != null)
+	    {
+		try
+		{
+		    resHandle.merge(rec);
+		}
+		catch (Exception e)
+		{
+		    System.err.println("WARNING:OTS_AbstractRecord::merge caught exception");
+		}
+
+		rec = null;
+	    }
+	}
+
+	resHandle = null;
+    }
+
+public void alter (AbstractRecord absRec)
+    {
+	OTSAbstractRecord resHandle = otsRecord();
+
+	if (resHandle != null)
+	{
+	    OTSAbstractRecord rec = otsRecord(absRec);
+
+	    if (rec != null)
+	    {
+		try
+		{
+		    resHandle.alter(rec);
+		}
+		catch (Exception e)
+		{
+		    System.err.println("WARNING:OTS_AbstractRecord::alter caught exception");
+		}
+
+		rec = null;
+	    }
+	}
+
+	resHandle = null;
+    }
+
+public boolean shouldAdd ( AbstractRecord absRec )
+    {
+	boolean result = false;
+	OTSAbstractRecord resHandle = otsRecord();
+
+	if (resHandle != null)
+	{
+	    OTSAbstractRecord rec = otsRecord(absRec);
+
+	    if (rec != null)
+	    {
+		try
+		{
+		    result = resHandle.shouldAdd(rec);
+		}
+		catch (Exception e)
+		{
+		    System.err.println("WARNING:OTS_AbstractRecord::shouldAdd caught exception");
+		}
+
+		rec = null;
+	    }
+	}
+
+	resHandle = null;
+
+	return result;
+    }
+
+public boolean shouldAlter (AbstractRecord absRec)
+    {
+	boolean result = false;
+	OTSAbstractRecord resHandle = otsRecord();
+
+	if (resHandle != null)
+	{
+	    OTSAbstractRecord rec = otsRecord(absRec);
+
+	    if (rec != null)
+	    {
+		try
+		{
+		    result = resHandle.shouldAlter(rec);
+		}
+		catch (Exception e)
+		{
+		    System.err.println("WARNING:OTS_AbstractRecord::shouldAlter caught exception");
+		}
+
+		rec = null;
+	    }
+	}
+
+	resHandle = null;
+
+	return result;
+    }
+
+public boolean shouldMerge ( AbstractRecord absRec )
+    {
+	boolean result = false;
+	OTSAbstractRecord resHandle = otsRecord();
+
+	if (resHandle != null)
+	{
+	    OTSAbstractRecord rec = otsRecord(absRec);
+
+	    if (rec != null)
+	    {
+		try
+		{
+		    result = resHandle.shouldMerge(rec);
+		}
+		catch (Exception e)
+		{
+		    System.err.println("WARNING:OTS_AbstractRecord::shouldMerge caught exception");
+		}
+
+		rec = null;
+	    }
+	}
+
+	resHandle = null;
+
+	return result;
+    }
+
+public boolean shouldReplace ( AbstractRecord absRec )
+    {
+	boolean result = false;
+	OTSAbstractRecord resHandle = otsRecord();
+
+	if (resHandle != null)
+	{
+	    OTSAbstractRecord rec = otsRecord(absRec);
+
+	    if (rec != null)
+	    {
+		try
+		{
+		    result = resHandle.shouldReplace(rec);
+		}
+		catch (Exception e)
+		{
+		    System.err.println("WARNING:OTS_AbstractRecord::shouldReplace caught exception");
+		}
+
+		rec = null;
+	    }
+	}
+
+	resHandle = null;
+
+	return result;
+    }
+
+    /*
+     * Protected constructor used by crash recovery.
+     */
+
+protected OTS_AbstractRecord ()
+    {
+	super();
+
+	_parentCoordHandle = null;
+	_resourceHandle = null;
+	_currentTransaction = null;
+	_propagateRecord = false;
+    }
+    
+private final OTSAbstractRecord otsRecord (AbstractRecord absRec)
+    {
+	/*
+	 * Is the abstract record an OTS_AbstractRecord ?
+	 */
+    
+	OTSAbstractRecord resHandle = null;
+
+	if ((absRec != null) && (absRec instanceof OTS_AbstractRecord))
+	{
+	    if (_resourceHandle != null)
+	    {
+		try
+		{
+		    OTS_AbstractRecord theRecord = (OTS_AbstractRecord) absRec;
+		    ArjunaSubtranAwareResource theResource = theRecord.resourceHandle();
+
+		    resHandle = SCOPED_NARROW_(com.arjuna.ArjunaOTS,OTSAbstractRecord,theResource);
+
+		    theResource = null;
+		}
+		catch (Exception e)
+		{
+		    System.err.println("WARNING:OTS_AbstractRecord::otsRecord caught exception");
+		}
+	    }
+	}
+
+	return resHandle;
+    }
+
+private final OTSAbstractRecord otsRecord ()
+    {
+	OTSAbstractRecord resHandle = null;
+
+	try
+	{
+	    resHandle = SCOPED_NARROW_(com.arjuna.ArjunaOTS,OTSAbstractRecord,_resourceHandle);
+
+	    if (resHandle == null)
+		throw new BAD_PARAM();
+	}
+	catch (Exception e)
+	{
+	    // we are not an OTSAbstractRecord
+
+	    resHandle = null;
+	}
+    
+	return resHandle;  // already duplicated
+    }
+
+private Coordinator _parentCoordHandle;
+private ArjunaSubtranAwareResource _resourceHandle;
+private OTS_Transaction _currentTransaction;
+private boolean _propagateRecord;
+ 
+};

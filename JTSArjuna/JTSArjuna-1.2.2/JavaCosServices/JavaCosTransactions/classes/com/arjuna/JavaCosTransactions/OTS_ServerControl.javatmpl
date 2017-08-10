@@ -1,0 +1,81 @@
+/*
+ * Copyright (C) 1996, 1997, 1998,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: OTS_ServerControl.javatmpl,v 1.1 1998/08/14 10:30:04 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package com.arjuna.JavaCosTransactions;
+
+import com.arjuna.OrbCommon.*;
+import org.omg.CosTransactions.*;
+import com.arjuna.ArjunaOTS.*;
+import com.arjuna.JavaGandiva.Common.Uid;
+
+import NAMESPACE_(CORBA).SystemException;
+
+public class OTS_ServerControl extends OTS_Control
+{
+
+public OTS_ServerControl ( Uid actUid, Control parentCon, OTS_Transaction parentTran)
+    {
+	super();
+
+	_parentTransaction = parentTran;
+	_parentControl = parentCon;
+	_transactionHandle = new OTS_ServerTransaction(actUid, _parentControl, parentTran);
+	_theUid = new Uid(_transactionHandle.get_uid());
+
+	super.createTransactionHandle();
+	
+	super.addControl();
+    }
+
+public void finalize ()
+    {
+	if (_transactionHandle != null)
+	{
+	    try
+	    {
+		org.omg.CosTransactions.Status s = _transactionHandle.get_status();
+
+		if (s == org.omg.CosTransactions.Status.StatusActive)
+		{
+		    _transactionHandle.rollback();
+		}
+	    }
+	    catch (Exception e)
+	    {
+		System.err.println("WARNING:OTS_ServerControl - could not abort running transaction.");
+	    }
+	}
+    }
+
+    /*
+     * For a server-side transaction we can either not return a terminator,
+     * or return a reference to the actual (client-side) object. We must not
+     * be able to commit the proxy transaction while leaving the real transaction
+     * running!
+     */
+    
+public Terminator get_terminator () throws SystemException, org.omg.CosTransactions.Unavailable
+    {
+	throw new Unavailable();
+    }
+    
+public final synchronized OTS_ServerControl create_subtransaction (Uid actUid)
+    {
+	OTS_ServerControl toReturn = new OTS_ServerControl(actUid, this, _transactionHandle);
+
+	return toReturn;
+    }
+    
+private OTS_Transaction _parentTransaction;
+    
+};
