@@ -1,0 +1,146 @@
+/*
+ * Copyright (C) 1999,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: JTA_XID.javatmpl,v 1.1.2.1 1999/02/16 14:56:32 nmcl Exp $
+ */
+
+package com.arjuna.jta;
+
+import com.arjuna.JavaGandiva.Common.*;
+import com.arjuna.JavaCosTransactions.*;
+import com.arjuna.JavaCosTransactions.tx.*;
+import org.omg.CosTransactions.Control;
+import javax.transaction.xa.Xid;
+
+public class JTA_XID implements Xid
+{
+
+public JTA_XID (Control c)
+    {
+	this(c, false);
+    }
+    
+public JTA_XID (Control c, boolean branch)
+    {
+	try
+	{
+	    _theXid = OTS_Utility.getXid(c, branch);
+	    c = null;
+	}
+	catch (Exception e)
+	{
+	    _theXid = null;
+
+	    // abort or throw exception?
+	}
+    }
+
+public JTA_XID (XID x)
+    {
+	_theXid = x;
+    }    
+    
+public int getFormatId ()
+    {
+	if (_theXid != null)
+	{
+	    return _theXid.formatID;
+	}
+	else
+	    return -1;
+    }
+
+    /*
+     * These operations critically rely on the fact that we
+     * unpack the array in the order we packed it!
+     */
+    
+public byte[] getGlobalTransactionId ()
+    {
+	if (_theXid != null)
+	{
+	    byte b[] = new byte[_theXid.gtrid_length];
+
+	    for (int i = 0; i < b.length; i++)
+	    {
+		b[i] = _theXid.data[i];
+	    }
+	    
+	    return b;
+	}
+	else
+	    return null;
+    }
+    
+public byte[] getBranchQualifier ()
+    {
+	if (_theXid != null)
+	{
+	    byte b[] = new byte[_theXid.bqual_length];
+
+	    for (int i = _theXid.gtrid_length; i < b.length; i++)
+	    {
+		b[i] = _theXid.data[i];
+	    }
+	    
+	    return b;
+	}
+	else
+	    return null;
+    }
+
+public XID getXID ()
+    {
+	return _theXid;
+    }
+
+public boolean packInto (OutputObjectState os)
+    {
+	boolean result = false;
+
+	try
+	{
+	    os.packInt(_theXid.formatID);
+	    os.packInt(_theXid.gtrid_length);
+	    os.packInt(_theXid.bqual_length);
+	    os.packBytes(_theXid.data);
+
+	    result = true;
+	}
+	catch (Exception e)
+	{
+	    result = false;
+	}
+
+	return result;
+    }
+
+public boolean unpackFrom (InputObjectState os)
+    {
+	boolean result = false;
+
+	try
+	{
+	    _theXid.formatID = os.unpackInt();
+	    _theXid.gtrid_length = os.unpackInt();
+	    _theXid.bqual_length = os.unpackInt();
+	    _theXid.data = os.unpackBytes();
+
+	    result = true;
+	}
+	catch (Exception e)
+	{
+	    result = false;
+	}
+
+	return result;
+    }
+	    
+private XID _theXid;
+    
+};

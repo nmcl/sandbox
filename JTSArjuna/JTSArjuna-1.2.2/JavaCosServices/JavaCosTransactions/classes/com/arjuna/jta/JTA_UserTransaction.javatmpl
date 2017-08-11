@@ -1,0 +1,249 @@
+/*
+ * Copyright (C) 1999,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: JTA_UserTransaction.javatmpl,v 1.1.2.1 1999/02/16 14:56:29 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+#include <CosTransactions/CosTranNames.h>
+
+package com.arjuna.jta;
+
+import org.omg.CosTransactions.*;
+import com.arjuna.JavaCosTransactions.*;
+import javax.transaction.*;
+
+import javax.transaction.NotSupportedException;
+import javax.transaction.TransactionRolledbackException;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.SystemException;
+import java.lang.SecurityException;
+import java.lang.IllegalStateException;
+import org.omg.CosTransactions.SubtransactionsUnavailable;
+import org.omg.CosTransactions.NoTransaction;
+import org.omg.CosTransactions.HeuristicMixed;
+import org.omg.CosTransactions.HeuristicHazard;
+import org.omg.CosTransactions.InvalidControl;
+import NAMESPACE_(CORBA).NO_PERMISSION;
+
+#include <CosTransactions/CosTranExceptions.h>
+#include <CosTransactions/OTS_Exceptions.h>
+
+public class JTA_UserTransaction implements javax.transaction.UserTransaction
+{
+    
+public static synchronized javax.transaction.UserTransaction transactionManager ()
+    {
+	if (JTA_UserTransaction._theUserTransaction == null)
+	    JTA_UserTransaction._theUserTransaction = new JTA_UserTransaction();
+
+	return JTA_UserTransaction._theUserTransaction;
+    }
+    
+public void begin () throws java.lang.IllegalStateException, javax.transaction.SystemException
+    {
+	/*
+	 * We can supported subtransactions, so should have the option
+	 * to let programmer use them. Strict conformance will always
+	 * say no.
+	 */
+
+	try
+	{
+	    Control cont = OTS.current().get_control();
+	    Coordinator coord = cont.get_coordinator();
+
+	    if (coord != null)
+	    {
+		//		throw new NotSupportedException();
+		throw new IllegalStateException();
+	    }
+
+	    cont = null;
+	}
+	catch (NAMESPACE_(CORBA).SystemException e1)
+	{
+	    throw new javax.transaction.SystemException();
+	}
+	catch (org.omg.CosTransactions.Unavailable e2)
+	{
+	    // ok, no transaction currently associated with thread.
+	}
+
+	try
+	{
+	    OTS.current().begin();
+	}
+	catch (org.omg.CosTransactions.SubtransactionsUnavailable e3)
+	{
+	    // shouldn't happen if we get here from the previous checks!
+
+	    //	    throw new NotSupportedException();
+	    throw new IllegalStateException();
+	}
+	catch (NAMESPACE_(CORBA).SystemException e4)
+	{
+	    throw new javax.transaction.SystemException();
+	}
+    }
+
+    /*
+     * We will never throw a HeuristicRollbackException because if we
+     * get a HeuristicRollback from a resource, and can successfully
+     * rollback the other resources, this is then the same as having
+     * simply been forced to rollback the transaction during phase 1.
+     * The OTS interfaces do not allow a differentiation.
+     */
+    
+public void commit () throws javax.transaction.TransactionRolledbackException,
+	                     javax.transaction.HeuristicMixedException,
+	                     javax.transaction.HeuristicRollbackException, java.lang.SecurityException,
+                             java.lang.IllegalStateException, javax.transaction.SystemException
+    {
+	try
+	{
+	    OTS.current().commit(true);
+	}
+	catch (org.omg.CosTransactions.NoTransaction e1)
+	{
+	    throw new IllegalStateException("JTA_UserTransaction.commit - no transaction!");
+	}
+	catch (org.omg.CosTransactions.HeuristicMixed e2)
+	{
+	    throw new javax.transaction.HeuristicMixedException("JTA_HeuristicType.HEURISTIC_MIXED");
+	}
+	catch (org.omg.CosTransactions.HeuristicHazard e3)
+	{
+	    throw new javax.transaction.HeuristicMixedException("JTA_HeuristicType.HEURISTIC_HAZARD");
+	}
+	catch (TransactionRolledBack e4)
+	{
+	    throw new TransactionRolledbackException();
+	}
+	catch (NAMESPACE_(CORBA).NO_PERMISSION e5)
+	{
+	    throw new SecurityException();
+	}
+	catch (NAMESPACE_(CORBA).SystemException e6)
+	{
+	    throw new javax.transaction.SystemException();
+	}
+
+	checkTransactionState();
+    }
+
+public void rollback () throws java.lang.IllegalStateException, java.lang.SecurityException, javax.transaction.SystemException
+    {
+	try
+	{
+	    OTS.current().rollback();
+	}
+	catch (org.omg.CosTransactions.NoTransaction e1)
+	{
+	    throw new IllegalStateException();
+	}
+	catch (NAMESPACE_(CORBA).NO_PERMISSION e2)
+	{
+	    throw new SecurityException();
+	}
+	catch (NAMESPACE_(CORBA).SystemException e3)
+	{
+	    throw new javax.transaction.SystemException();
+	}
+
+	checkTransactionState();
+    }
+
+public void setRollbackOnly () throws java.lang.IllegalStateException, javax.transaction.SystemException
+    {
+	try
+	{
+	    OTS.current().rollback_only();
+	}
+	catch (org.omg.CosTransactions.NoTransaction e1)
+	{
+	    throw new IllegalStateException();
+	}
+	catch (NAMESPACE_(CORBA).SystemException e2)
+	{
+	    throw new javax.transaction.SystemException();
+	}
+    }
+
+public int getStatus () throws javax.transaction.SystemException
+    {
+	try
+	{
+	    return JTA_Utility.convertStatus(OTS.current().get_status());
+	}
+	catch (Exception e)
+	{
+	    throw new javax.transaction.SystemException();
+	}
+    }
+
+public void setTransactionTimeout (int seconds) throws javax.transaction.SystemException
+    {
+	try
+	{
+	    OTS.current().set_timeout(seconds);
+	}
+	catch (Exception e)
+	{
+	    throw new javax.transaction.SystemException();
+	}
+    }
+
+public int getTimeout () throws javax.transaction.SystemException
+    {
+	try
+	{
+	    return OTS.current().get_timeout();
+	}
+	catch (Exception e)
+	{
+	    throw new javax.transaction.SystemException();
+	}
+    }
+
+protected JTA_UserTransaction ()
+    {
+    }
+
+    /*
+     * Called when we want to make sure this thread does not
+     * already have a transaction associated with it.
+     */
+    
+private void checkTransactionState() throws javax.transaction.SystemException, IllegalStateException
+    {
+	try
+	{
+	    Control cont = OTS.current().get_control();
+	    Coordinator coord = cont.get_coordinator();
+
+	    if (coord != null)
+		throw new IllegalStateException("JTA_TransactionManager.resume - already associated with transaction.");
+	    
+	    cont = null;
+	}
+	catch (NAMESPACE_(CORBA).SystemException e1)
+	{
+	    throw new javax.transaction.SystemException();
+	}
+	catch (org.omg.CosTransactions.Unavailable e2)
+	{
+	    // ok, no transaction currently associated with thread.
+	}
+    }
+    
+private static JTA_UserTransaction _theUserTransaction = null;
+    
+};
