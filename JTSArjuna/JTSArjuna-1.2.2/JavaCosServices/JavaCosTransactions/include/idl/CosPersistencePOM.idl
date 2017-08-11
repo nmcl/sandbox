@@ -1,0 +1,31 @@
+/*
+ * Copyright (C) 1996, 1997, 1998,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: CosPersistencePOM.idl,v 1.2 1998/11/12 09:00:24 nmcl Exp $
+ */
+
+#ifndef COSPERSISTENCEPOM_IDL_
+#define COSPERSISTENCEPOM_IDL_
+
+#pragma prefix "omg.org"
+
+#include <idl/CosPersistencePDS.idl>
+
+module CosPersistencePOM
+{
+    interface POM
+    {
+	CosPersistencePDS::PDS connect (in Object obj, in CosPersistencePID::PID p);
+	void disconnect (in Object obj, in CosPersistencePID::PID p);
+	void store (in Object obj, in CosPersistencePID::PID p);
+	void restore (in Object obj, in CosPersistencePID::PID p);
+	void deleteState (in Object obj, in CosPersistencePID::PID p);
+    };
+};
+
+#endif
