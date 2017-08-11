@@ -1,0 +1,19 @@
+COMMENT 
+COMMENT Copyright (C) 1996,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1997/01/07 09:46:07 nmcl Exp $
+COMMENT
+
+InstallFile(/config,JavaHarness.tmpl)
+InstallFile(/config,JavaHarness.cf)
+InstallFile(/config,JavaHarness_Override.def)
+InstallFile(/config,JavaHarness_Prog.def)
+InstallFile(/config,JavaHarness_Rule.def)
+InstallFileAs(/config,Module_install.def,Module.def)
+
+Purge(JavaHarness.cf Local.def Module.def Module_install.def)
