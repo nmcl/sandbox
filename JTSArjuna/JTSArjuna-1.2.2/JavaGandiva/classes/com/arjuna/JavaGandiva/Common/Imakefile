@@ -1,0 +1,53 @@
+COMMENT 
+COMMENT Copyright (C) 1995, 1996-1999,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.6.2.1 1999/01/28 19:12:36 nmcl Exp $
+COMMENT
+
+SOURCES = InputBuffer.java \
+	  InputObjectState.java \
+	  OutputBuffer.java \
+	  OutputObjectState.java \
+	  Uid.java \
+	  UidException.java \
+	  FileLock.java \
+	  Utility.java \
+	  ClassName.java \
+	  ObjectName.java
+
+OBJECTS = InputBuffer.class \
+	  OutputBuffer.class \
+	  InputObjectState.class \
+	  OutputObjectState.class \
+	  Uid.class \
+	  UidException.class \
+	  FileLock.class \
+	  Utility.class \
+	  ClassName.class \
+	  ObjectName.class
+
+Target($(SOURCES))
+Target($(OBJECTS))
+
+PreprocessJavaCode(InputBuffer,NullParam)
+PreprocessJavaCode(Uid,NullParam)
+PreprocessJavaCode(Utility,NullParam)
+
+BuildJavaByteCode(InputBuffer,NullParam)
+BuildJavaByteCode(OutputBuffer,NullParam)
+BuildJavaByteCode(InputObjectState,NullParam)
+BuildJavaByteCode(OutputObjectState,NullParam)
+BuildJavaByteCode(Uid,NullParam)
+BuildJavaByteCode(UidException,NullParam)
+BuildJavaByteCode(Utility,NullParam)
+BuildJavaByteCode(FileLock,NullParam)
+BuildJavaByteCode(ClassName,NullParam)
+BuildJavaByteCode(ObjectName,NullParam)
+
+Clean(*.class)
+
