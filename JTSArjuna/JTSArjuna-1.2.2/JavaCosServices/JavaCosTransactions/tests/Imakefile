@@ -1,0 +1,32 @@
+COMMENT 
+COMMENT Copyright (C) 1995, 1996, 1997, 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.11 1998/11/12 13:31:50 nmcl Exp $
+COMMENT
+
+#ifdef BUILDTESTS
+
+SubDirectory(classes)
+SubDirectory(Servers)
+SubDirectory(Arjuna)
+SubDirectory(ArjunaNesting)
+SubDirectory(Basic)
+SubDirectory(Current)
+SubDirectory(DistributedHammer)
+SubDirectory(ExplicitInterposition)
+SubDirectory(Hammer)
+SubDirectory(Heuristics)
+SubDirectory(Implicit)
+SubDirectory(Interposition)
+SubDirectory(Local)
+SubDirectory(Nested)
+SubDirectory(Synchronizations)
+SubDirectory(Timeout)
+SubDirectory(Transactions)
+
+#endif

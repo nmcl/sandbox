@@ -1,0 +1,29 @@
+COMMENT 
+COMMENT Copyright (C) 1995, 1996, 1997, 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1998/11/12 13:32:10 nmcl Exp $
+COMMENT
+
+AddToIdlFlags(-DDRAFT3 -I$(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+SOURCES = AtomicObject1.java \
+	  AtomicObject2.java \
+	  AtomicObject3.java
+
+TESTOBJECTS = AtomicObject1.class \
+	      AtomicObject2.class \
+	      AtomicObject3.class
+
+Target($(SOURCES))
+Target($(TESTOBJECTS))
+
+BuildJavaByteCode(AtomicObject1,NullParam)
+BuildJavaByteCode(AtomicObject2,NullParam)
+BuildJavaByteCode(AtomicObject3,NullParam)
+
+Clean(*.class)

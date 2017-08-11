@@ -1,0 +1,28 @@
+COMMENT 
+COMMENT Copyright (C) 1995, 1996, 1997, 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1998/11/12 13:32:14 nmcl Exp $
+COMMENT
+
+AddToIdlFlags(-DDRAFT3 -I$(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+SOURCES = ImplicitClient.java
+
+FILTEROBJECTS = ImplicitClient.class
+
+Target($(SOURCES))
+
+#ifdef HAVE_FILTER
+Target($(FILTEROBJECTS))
+#endif
+
+PreprocessJavaCode(ImplicitClient,NullParam)
+
+BuildJavaByteCode(ImplicitClient,NullParam)
+
+Clean(*.class)
