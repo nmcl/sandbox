@@ -1,0 +1,63 @@
+COMMENT 
+COMMENT Copyright (C) 1995, 1996, 1997, 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.8 1998/07/25 17:03:10 nmcl Exp $
+COMMENT
+
+SOURCES = BasicList.java \
+	  BasicListIterator.java \
+	  KeyedList.java \
+	  UidListElement.java \
+	  UidListElementWrapper.java \
+	  SimpleUidList.java \
+	  SimpleUidListIterator.java \
+	  BasicUidList.java \
+	  BasicUidListIterator.java \
+	  HashUidList.java \
+	  HashUidListIterator.java \
+	  OrderedList.java \
+	  OrderedListIterator.java \
+	  OrderedListElement.java \
+	  OrderedListEntry.java
+
+OBJECTS = BasicList.class \
+	  BasicListIterator.class \
+	  KeyedList.class \
+	  UidListElement.class \
+	  UidListElementWrapper.class \
+	  SimpleUidList.class \
+	  SimpleUidListIterator.class \
+	  BasicUidList.class \
+	  BasicUidListIterator.class \
+	  HashUidList.class \
+	  HashUidListIterator.class \
+	  OrderedList.class \
+	  OrderedListIterator.class \
+	  OrderedListElement.class \
+	  OrderedListEntry.class
+
+Target($(OBJECTS))
+
+BuildJavaByteCode(BasicList,NullParam)
+BuildJavaByteCode(BasicListIterator,NullParam)
+BuildJavaByteCode(KeyedList,NullParam)
+BuildJavaByteCode(SimpleUidList,NullParam)
+BuildJavaByteCode(SimpleUidListIterator,NullParam)
+BuildJavaByteCode(BasicUidList,NullParam)
+BuildJavaByteCode(BasicUidListIterator,NullParam)
+BuildJavaByteCode(HashUidList,NullParam)
+BuildJavaByteCode(HashUidListIterator,NullParam)
+BuildJavaByteCode(UidListElement,NullParam)
+BuildJavaByteCode(UidListElementWrapper,NullParam)
+BuildJavaByteCode(OrderedList,NullParam)
+BuildJavaByteCode(OrderedListIterator,NullParam)
+BuildJavaByteCode(OrderedListElement,NullParam)
+BuildJavaByteCode(OrderedListEntry,NullParam)
+
+Clean(*.class)
+
