@@ -1,0 +1,8 @@
+DEMOSYNC : BEFORE_COMPLETION
+Synchronization throwing exception.
+BasicAction.End() - prepare phase of action-id -7f0f2f9a:80c98a7:36cee91a:0 failed. Action aborting.
+TRANOBJECT : ROLLBACK
+DEMOSYNC : AFTER_COMPLETION ( CosTransactions::StatusRolledBack )
+Transaction rolledback
+Final action status: CosTransactions::StatusRolledBack
+Test completed successfully.

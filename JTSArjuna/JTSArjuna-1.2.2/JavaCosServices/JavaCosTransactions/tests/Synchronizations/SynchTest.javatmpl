@@ -1,0 +1,93 @@
+/*
+ * Copyright (C) 1996, 1997, 1998, 1999,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: SynchTest.javatmpl,v 1.1 1998/11/12 13:32:32 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+import JavaCosTransactionsTests.*;
+import TestModule.*;
+import com.arjuna.OrbCommon.ORBInterface;
+import com.arjuna.JavaCosTransactions.OTS;
+import com.arjuna.JavaCosTransactions.OTS_Factory;
+import com.arjuna.JavaCosTransactions.OTS_Current;
+import org.omg.CosTransactions.*;
+
+import org.omg.CosTransactions.Unavailable;
+import NAMESPACE_(CORBA).SystemException;
+import NAMESPACE_(CORBA).UserException;
+
+#include <CosTransactions/CosTranExceptions.h>
+
+public class SynchTest
+{
+    
+public static void main (String[] args)
+    {
+#if defined(CORBA_2_2) || defined(CORBA_2_1)
+	org.omg.CosTransactions.Status status = Status.StatusUnknown;
+#else
+	int status = Status.StatusUnknown;
+#endif	
+
+	tranobject_i localObject = null;
+	Synchronization sync = null;
+	
+	try
+	{
+	    ORBInterface.initORB(args, null);
+	    ORBInterface.initBOA();
+
+	    Control myControl = null;
+	    OTS_Current current = OTS.current();
+	    Coordinator coord = null;
+
+	    sync = new demosync();
+	    localObject = new tranobject_i();
+	    
+	    current.begin();
+
+	    myControl = current.get_control();
+
+	    coord = myControl.get_coordinator();
+
+	    coord.register_resource(localObject);
+	    coord.register_synchronization(sync);
+
+	    try
+	    {
+		current.commit(true);
+	    }
+	    catch (TransactionRolledBack e1)
+	    {
+		System.out.println("Transaction rolledback");
+	    }
+
+	    status = coord.get_status();
+	}
+	catch (UserException e1)
+	{
+	    System.out.println("Caught UserException: "+e1);
+	    System.exit(0);
+	}	
+	catch (SystemException e2)
+	{
+	    System.out.println("Caught SystemException:" +e2);
+	    System.exit(0);
+	}
+	    
+	System.out.print("Final action status: ");
+	OTS.printStatus(System.out, status);
+	System.out.println("\nTest completed successfully.");
+
+	DESTROY_IMPL_(sync);
+	DESTROY_IMPL_(localObject);
+    }
+
+};

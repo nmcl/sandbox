@@ -1,0 +1,72 @@
+/*
+ * Copyright (C) 1996, 1997, 1998,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: TranGridServer.javatmpl,v 1.1 1998/11/12 13:32:29 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+import JavaCosTransactionsTests.*;
+import TestModule.*;
+import com.arjuna.OrbCommon.*;
+
+public class TranGridServer
+{
+
+public static void main (String[] args)
+    {
+	ORBInterface.initORB(args, null);
+	ORBInterface.initBOA();
+
+	String markerName = null;
+	String refFile = "/tmp/trangrid.ref";
+    
+	for (int i = 0; i < args.length; i++)
+	{
+	    if (args[i].compareTo("-marker") == 0)
+	    {
+#ifdef HAVE_MARKER_NAME		
+		markerName = args[i+1];
+#else
+		System.err.println("Error - marker name not supported.");
+		System.exit(0);
+#endif		
+	    }
+	    if (args[i].compareTo("-reffile") == 0)
+		refFile = args[i+1];
+	    if (args[i].compareTo("-help") == 0)
+	    {
+		System.out.println("Usage: TranGridServer [-marker <name>] [-reffile <file>] [-help]");
+		System.exit(0);
+	    }
+	}
+
+	trangrid_i gridI = new trangrid_i((short) 100, (short) 100, markerName);
+
+	try
+	{
+	    READY_IMPL_(gridI);
+	    
+	    ORBObject.objectToFile(gridI, refFile);
+
+	    System.out.println("**TranGrid server started**");
+
+	    ORBInterface.run();
+	}
+	catch (Exception e)
+	{
+	    System.err.println("ImplGrid server caught exception: "+e);
+	    System.exit(1);
+	}
+
+	DESTROY_IMPL_(gridI);
+    
+	System.out.println("**ImplGrid server exiting**");
+    }
+ 
+};

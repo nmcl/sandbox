@@ -1,0 +1,62 @@
+/*
+ * Copyright (C) 1997, 1998,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: StackServer.javatmpl,v 1.1 1998/11/12 13:32:28 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+import JavaCosTransactionsTests.*;
+import TestModule.*;
+import com.arjuna.OrbCommon.*;
+
+public class StackServer
+{
+    
+public static void main (String[] args)
+    {
+	ORBInterface.initORB(args, null);
+	ORBInterface.initBOA();
+    
+	String refFile = "/tmp/stack.ref";
+    
+	for (int i = 0; i < args.length; i++)
+	{
+	    if (args[i].compareTo("-reffile") == 0)
+		refFile = args[i+1];
+	    if (args[i].compareTo("-help") == 0)
+	    {
+		System.out.println("Usage: ExplicitStackServer [-reffile <file>] [-help]");
+		System.exit(0);
+	    }
+	}
+
+	stack theStack = new SCOPED_TIE_INSTANCE_(TestModule,stack)(new StackImple());
+
+	READY_IMPL_(theStack);
+
+	try
+	{
+	    ORBObject.objectToFile(theStack, refFile);
+    
+	    System.out.println("**StackServer started**");
+    
+	    ORBInterface.run();
+	}
+	catch (Exception e)
+	{
+	    System.err.println("StackServer caught exception: "+e);
+	    System.exit(1);
+	}
+
+	DESTROY_IMPL_(theStack);
+	
+	System.out.println("**StackServer exiting**");
+    }
+
+};

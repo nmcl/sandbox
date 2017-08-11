@@ -1,0 +1,32 @@
+COMMENT 
+COMMENT Copyright (C) 1995, 1996, 1997, 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1998/11/12 13:32:36 nmcl Exp $
+COMMENT
+
+AddToIdlFlags(-DDRAFT3 -I$(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+SOURCES = TransactionTest1.java \
+	  TransactionTest2.java \
+	  TransactionTest3.java
+
+TESTOBJECTS = TransactionTest1.class \
+	      TransactionTest2.class \
+	      TransactionTest3.class
+
+Target($(SOURCES))
+Target($(TESTOBJECTS))
+
+PreprocessJavaCode(TransactionTest1,NullParam)
+PreprocessJavaCode(TransactionTest2,NullParam)
+
+BuildJavaByteCode(TransactionTest1,NullParam)
+BuildJavaByteCode(TransactionTest2,NullParam)
+BuildJavaByteCode(TransactionTest3,NullParam)
+
+Clean(*.class)
