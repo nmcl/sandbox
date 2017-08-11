@@ -1,0 +1,54 @@
+/*
+ * Copyright (C) 1996, 1997, 1998,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: demosync.javatmpl,v 1.4.6.1 1999/02/16 14:56:33 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package JavaCosTransactionsTests;
+
+import com.arjuna.OrbCommon.ORBInterface;
+import com.arjuna.JavaCosTransactions.OTS_Factory;
+import com.arjuna.JavaCosTransactions.OTS;
+import org.omg.CosTransactions.*;
+
+import org.omg.CosTransactions.Unavailable;
+import NAMESPACE_(CORBA).SystemException;
+import NAMESPACE_(CORBA).UNKNOWN;
+
+public class demosync extends SCOPED_BOA_(org.omg.CosTransactions,Synchronization)
+{
+    
+public demosync ()
+    {
+	READY_IMPL_(this);
+    }
+
+public void before_completion () throws SystemException
+    {
+	System.out.println("DEMOSYNC : BEFORE_COMPLETION");
+	System.out.println("Synchronization throwing exception.");
+	
+	throw new UNKNOWN();
+    }
+
+#if defined(CORBA_2_2) || defined(CORBA_2_1)
+public void after_completion (org.omg.CosTransactions.Status status) throws SystemException
+#else
+public void after_completion (int status) throws SystemException
+#endif
+    {
+	System.out.print("DEMOSYNC : AFTER_COMPLETION ( ");
+	OTS.printStatus(System.out, status);
+	System.out.println(" )");
+
+	throw new UNKNOWN(); // should not cause any affect!
+    }
+
+};

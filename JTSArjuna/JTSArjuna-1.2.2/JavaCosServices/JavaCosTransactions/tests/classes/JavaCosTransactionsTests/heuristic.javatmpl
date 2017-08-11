@@ -1,0 +1,78 @@
+/*
+ * Copyright (C) 1996, 1997, 1998,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: heuristic.javatmpl,v 1.4 1998/08/13 14:34:34 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package JavaCosTransactionsTests;
+
+import com.arjuna.OrbCommon.ORBInterface;
+import com.arjuna.JavaCosTransactions.OTS_Factory;
+import org.omg.CosTransactions.*;
+
+import org.omg.CosTransactions.Unavailable;
+import NAMESPACE_(CORBA).SystemException;
+
+public class heuristic extends SCOPED_BOA_(org.omg.CosTransactions,Resource)
+{
+    
+public heuristic (boolean p)
+    {
+	READY_IMPL_(this);
+	
+	heuristicPrepare = p;
+    }
+
+public org.omg.CosTransactions.Vote prepare () throws HeuristicMixed, HeuristicHazard, SystemException
+    {
+	System.out.println("HEURISTIC : PREPARE");
+	
+	if (heuristicPrepare)
+	{
+	    System.out.println("HEURISTIC : throwing HeuristicHazard");
+
+	    throw new HeuristicHazard();
+	}
+
+	System.out.println("\tHEURISTIC : VoteCommit");
+    
+	return Vote.VoteCommit;
+    }
+
+public void rollback () throws SystemException, HeuristicCommit, HeuristicMixed, HeuristicHazard
+    {
+	System.out.println("HEURISTIC : ROLLBACK");
+    }
+
+public void commit () throws SystemException, NotPrepared, HeuristicRollback, HeuristicMixed, HeuristicHazard
+    {
+	System.out.println("HEURISTIC : COMMIT");
+    
+	if (!heuristicPrepare)
+	{
+	    System.out.println("HEURISTIC : throwing HeuristicRollback");
+
+	    throw new HeuristicRollback();
+	}
+    }
+
+public void forget () throws SystemException
+    {
+	System.out.println("HEURISTIC : FORGET");
+    }
+
+public void commit_one_phase () throws SystemException, HeuristicHazard
+    {
+	System.out.println("HEURISTIC : COMMIT_ONE_PHASE");
+    }
+
+private boolean heuristicPrepare;
+    
+};
