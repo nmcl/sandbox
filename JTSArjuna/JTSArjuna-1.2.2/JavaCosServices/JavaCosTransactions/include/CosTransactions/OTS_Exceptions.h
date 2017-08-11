@@ -1,0 +1,42 @@
+/*
+ * Copyright (C) 1996, 1997, 1998,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: OTS_Exceptions.h,v 1.1 1998/11/12 08:59:52 nmcl Exp $
+ */
+
+#ifndef OTS_EXCEPTIONS_H_
+#define OTS_EXCEPTIONS_H_
+
+/*
+ * The Minor version numbers for some system exceptions
+ * we may raise.
+ */
+
+/*
+ * UNKNOWN
+ */
+
+#define OTS_UNKNOWN_BASE 20000
+#define ADD_FAILED OTS_UNKNOWN_BASE+1
+#define INACTIVE_TRANSACTION OTS_UNKNOWN_BASE+2
+#define UNKNOWN_EXCEPTION OTS_UNKNOWN_BASE+3
+#define UNAVAILABLE_COORDINATOR OTS_UNKNOWN_BASE+4
+#define GETTIMEOUT_FAILED OTS_UNKNOWN_BASE+5
+
+/*
+ * BAD_OPERATION
+ */
+
+#define OTS_BAD_OPERATION_BASE 30000
+#define SERVERAA_COMMIT OTS_BAD_OPERATION_BASE+1
+#define SERVERAA_PREPARE OTS_BAD_OPERATION_BASE+2
+#define ATOMICACTION_COMMIT OTS_BAD_OPERATION_BASE+3
+#define ATOMICACTION_ROLLBACK OTS_BAD_OPERATION_BASE+4
+#define INVALID_ACTION OTS_BAD_OPERATION_BASE+5
+
+#endif
