@@ -1,0 +1,45 @@
+/*
+ * Copyright (C) 1996, 1997, 1998,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: o_visibroker_3.cf,v 1.2 1998/12/11 14:17:59 nmcl Exp $
+ */
+
+/*
+ *  VisiBroker specific rules.
+ */
+
+/*
+ * Some rules we need to override.
+ */
+
+#ifndef CorbaJavaStubsIR
+#define CorbaJavaStubsIR(file,options)					@@\
+CorbaJavaStubs(file,options)						@@\
+									@@\
+Target(TMPIR_FILE(file))						@@\
+									@@\
+TMPIR_FILE(file): IDL_SOURCE(file)					@@\
+	@echo Adding file/**/.idl to Interface Repository		@@\
+	CommandPrefix($(IDLIR)) $(IRFLAGS) options IDL_SOURCE(file)	@@\
+	@touch TMPIR_FILE(file)						@@\
+									@@\
+Clean(TMPIR_FILE(file))
+#endif
+
+#ifndef PackageRename
+#define PackageRename(name,scope)					@@\
+AddToIdlFlags(-idl2package \"::name\" scope.name)
+#endif
+
+#ifndef CorbaJavaStubsPackage
+#define CorbaJavaStubsPackage(idl,pkg,flags)			@@\
+CorbaJavaStubs(idl,-package pkg flags)
+#endif
+
+AddToCPPFlags(-DCORBA_2_1 -DVB_3 -DHAVE_MARKER_NAME -DORB_OTS_SUPPORT -DBROKEN_WRONG_TRANSACTION -DHAVE_FILTER)
+AddToIMakeFlags(-DHAVE_FILTER)

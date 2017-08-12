@@ -1,0 +1,27 @@
+COMMENT 
+COMMENT Copyright (C) 1996, 1997, 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1998/07/06 13:44:39 nmcl Exp $
+COMMENT
+
+SOURCES = DemoPostInit.java \
+	  DemoPreInit.java \
+	  InitTest.java
+
+OBJECTS = DemoPostInit.class \
+	  DemoPreInit.class \
+	  InitTest.class
+
+Target($(OBJECTS))
+
+BuildJavaByteCode(DemoPostInit,NullParam)
+BuildJavaByteCode(DemoPreInit,NullParam)
+BuildJavaByteCode(InitTest,NullParam)
+
+Clean(*.class *.prof out)
+

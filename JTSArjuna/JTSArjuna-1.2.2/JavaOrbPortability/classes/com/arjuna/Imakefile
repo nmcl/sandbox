@@ -1,0 +1,14 @@
+COMMENT 
+COMMENT Copyright (C) 1996, 1997, 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 1998/07/15 15:30:10 nmcl Exp $
+COMMENT
+
+CreateInstallDirectory(/classes/com,/classes/com/arjuna)
+
+SubDirectory(OrbCommon)

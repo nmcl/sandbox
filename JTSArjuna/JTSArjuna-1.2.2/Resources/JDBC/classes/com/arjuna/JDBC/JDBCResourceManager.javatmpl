@@ -1,0 +1,148 @@
+/*
+ * Copyright (C) 1998, 1999,
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: JDBCResourceManager.javatmpl,v 1.1.2.1 1999/02/12 09:47:05 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package com.arjuna.JDBC;
+
+import com.arjuna.OrbCommon.*;
+import com.arjuna.JavaGandiva.Common.*;
+import com.arjuna.JavaCosTransactions.OTS;
+import com.arjuna.JavaCosTransactions.OTS_Current;
+import com.arjuna.JavaCosTransactions.ArjunaOTS.AtomicTransaction;
+import com.arjuna.JavaCosTransactions.ArjunaOTS.TopLevelTransaction;
+import org.omg.CosTransactions.*;
+import java.util.*;
+import java.sql.*;
+
+import org.omg.CosTransactions.Unavailable;
+import org.omg.CosTransactions.NotPrepared;
+import org.omg.CosTransactions.HeuristicRollback;
+import org.omg.CosTransactions.HeuristicCommit;
+import org.omg.CosTransactions.HeuristicMixed;
+import org.omg.CosTransactions.HeuristicHazard;
+import org.omg.CosTransactions.SubtransactionsUnavailable;
+import org.omg.CosTransactions.NoTransaction;
+import NAMESPACE_(CORBA).SystemException;
+import java.sql.SQLException;
+
+#include <CosTransactions/CosTranExceptions.h>
+
+public class JDBCResourceManager
+{
+
+public static synchronized JDBCResourceManager resourceManager ()
+    {
+	return _resourceManager;
+    }
+
+public static synchronized JDBCResourceManager create ()
+    {
+	if (_resourceManager == null)
+	    _resourceManager = new JDBCResourceManager();
+
+	return _resourceManager;
+    }    
+
+public Connection connect (String dbURL) throws SQLException, JDBCException, SubtransactionsUnavailable, TransactionRequired
+    {
+	checkTransaction();
+
+	JDBCResource res = new JDBCResource(dbURL);
+	
+	registerDatabase(res);
+
+	return res.getConnection();
+    }
+
+public Connection connect (String dbURL, Properties props) throws SQLException, JDBCException, SubtransactionsUnavailable, TransactionRequired
+    {
+	checkTransaction();
+
+	JDBCResource res = new JDBCResource(dbURL, props);
+	
+	registerDatabase(res);
+
+	return res.getConnection();
+    }
+
+public Connection connect (String dbURL, String user, String password) throws SQLException, JDBCException, SubtransactionsUnavailable, TransactionRequired
+    {
+	checkTransaction();
+
+	JDBCResource res = new JDBCResource(dbURL, user, password);
+	
+	registerDatabase(res);
+
+	return res.getConnection();
+    }
+
+protected JDBCResourceManager ()
+    {
+    }
+    
+protected void registerDatabase (JDBCResource res) throws JDBCException, SubtransactionsUnavailable
+    {
+	if (res == null)
+	    throw new JDBCException("JDBCResourceManager - attempt to register null connection!");
+	
+	try
+	{
+	    Coordinator coord = OTS.current().get_control().get_coordinator();
+	    Resource theResource = new SCOPED_TIE_INSTANCE_(org.omg.CosTransactions,Resource)(res);
+
+	    READY_IMPL_(theResource);
+	    
+	    RecoveryCoordinator rc = coord.register_resource(theResource);
+	    
+	    res.setTransaction(coord);
+	}
+	catch (Unavailable e1)
+	{
+	    throw new JDBCException("JDBCResourceManager.registerDatabase - "+e1);
+	}
+	catch (Inactive e2)
+	{
+	    throw new JDBCException("JDBCResourceManager.registerDatabase - "+e2);
+	}
+	catch (SystemException e3)
+	{
+	    throw new JDBCException("JDBCResourceManager.registerDatabase - "+e3);
+	}
+    }
+
+private void checkTransaction () throws JDBCException, TransactionRequired, SubtransactionsUnavailable
+    {
+	try
+	{
+	    Control c = OTS.current().get_control();
+	    Coordinator coord = c.get_coordinator();
+	    
+	    if (!coord.is_top_level_transaction())
+		throw new SubtransactionsUnavailable();
+
+	    coord = null;
+	    c = null;
+	}
+	catch (Unavailable e1)
+	{
+	    throw new TransactionRequired();
+	}
+	catch (Exception e2)
+	{
+	    throw new JDBCException("Could not get transaction information");
+	}
+    }
+    
+private static JDBCResourceManager _resourceManager = null;
+    
+};
+

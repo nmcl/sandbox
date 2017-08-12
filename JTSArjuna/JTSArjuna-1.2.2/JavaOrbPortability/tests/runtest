@@ -1,0 +1,3 @@
+#!/bin/sh
+
+java -DORBPreInit1=DemoPreInit -DORBPostInit1=DemoPostInit -DORBPreInit2=DemoPreInit -DORBPostInit2=DemoPostInit $@

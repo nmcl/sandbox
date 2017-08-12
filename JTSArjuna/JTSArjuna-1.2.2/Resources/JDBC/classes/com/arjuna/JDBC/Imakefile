@@ -1,0 +1,32 @@
+COMMENT 
+COMMENT Copyright (C) 1998, 1999,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.2.1 1999/02/12 09:47:02 nmcl Exp $
+COMMENT
+
+AddToIdlFlags(-DDRAFT3)
+
+SOURCES = JDBCResource.java \
+	  JDBCResourceManager.java \
+	  JDBCException.java
+
+OBJECTS = JDBCException.class \
+	  JDBCResource.class \
+	  JDBCResourceManager.class
+
+Target($(SOURCES))
+Target($(OBJECTS))
+
+PreprocessJavaCode(JDBCResource,NullParam)
+PreprocessJavaCode(JDBCResourceManager,NullParam)
+
+BuildJavaByteCode(JDBCException,NullParam)
+BuildJavaByteCode(JDBCResource,NullParam)
+BuildJavaByteCode(JDBCResourceManager,NullParam)
+
+Clean(*.class)

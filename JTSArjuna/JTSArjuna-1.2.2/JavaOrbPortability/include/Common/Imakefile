@@ -1,0 +1,16 @@
+COMMENT
+COMMENT Copyright (C) 1996, 1997, 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.3 1998/06/30 16:34:09 nmcl Exp $
+COMMENT
+
+CreateInstallDirectory(/include,/include/Common)
+
+InstallFile(/include/Common,OrbPortability.h)
+InstallFile(/include/Common,OrbPortability_stdc.h)
+InstallFile(/include/Common,OrbPortability_krc.h)
