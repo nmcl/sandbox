@@ -1,0 +1,504 @@
+/*
+ * Copyright (C) 1997, 1998, 1999,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: ORBInterface.javatmpl,v 1.11.2.1 1999/01/28 19:13:59 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package com.arjuna.OrbCommon;
+
+import java.util.*;
+import java.applet.Applet;
+import java.io.*;
+#ifndef JAR_PACKAGE_PROBLEM
+import NAMESPACE_(CORBA.*);
+#endif
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import NAMESPACE_(CORBA.SystemException);
+import NAMESPACE_(CosNaming).NamingContextPackage.InvalidName;
+import NAMESPACE_(CosNaming).NamingContextPackage.CannotProceed;
+import NAMESPACE_(CosNaming).NamingContextPackage.NotFound;
+
+/**
+ * An attempt at some ORB portable ways of interacting with the ORB
+ * and BOA.
+ *
+ * NOTE: initORB and initBOA *must* be called if you want to use the
+ * pre- and post- initialisation mechanisms.
+ */
+
+public class ORBInterface
+{
+
+    /**
+     * Initialise the default ORB.
+     */
+    
+public static synchronized void initORB () throws SystemException
+    {
+	/*
+	 * Since an ORB can be initialised multiple times we currently
+	 * allow the initialisation code to be activated multiple times
+	 * as well. Does this make sense?
+	 */
+	
+	if (ORBInterface._orb == null)
+	{
+	    ORBPreInit preInit = new ORBPreInit();
+	    preInit = null;
+
+	    setORBInit(null, true);
+	    ORBInterface._orb = NAMESPACE_(CORBA.ORB).init();
+#ifdef ORBACUS
+	    ((com.ooc.CORBA.ORB) ORBInterface._orb).conc_model(com.ooc.CORBA.ORB.ConcModel.ConcModelThreaded);
+#endif
+	    setORBInit(null, false);
+	    
+	    ORBPostInit postInit = new ORBPostInit();
+	    postInit = null;
+	}
+    }
+
+    /**
+     * Initialise the ORB.
+     */
+    
+public static synchronized void initORB (Applet a, Properties p) throws SystemException
+    {
+#if defined(CORBA_2_2) || defined(CORBA_2_1)	
+	if (ORBInterface._orb == null)
+	{
+	    ORBPreInit preInit = new ORBPreInit();
+	    preInit = null;
+
+	    setORBInit(null, true);
+	    ORBInterface._orb = NAMESPACE_(CORBA.ORB).init(a, p);
+#ifdef ORBACUS
+	    ((com.ooc.CORBA.ORB) ORBInterface._orb).conc_model(com.ooc.CORBA.ORB.ConcModel.ConcModelThreaded);
+#endif
+	    setORBInit(null, false);
+
+	    ORBPostInit postInit = new ORBPostInit();
+	    postInit = null;
+	}
+#else
+#error "Unsupported initORB (Applet, Properties)"
+#endif
+    }
+
+    /**
+     * Initialise the ORB.
+     */
+    
+public static synchronized void initORB (String[] s, Properties p) throws SystemException
+    {
+#if defined(CORBA_2_2) || defined(CORBA_2_1)
+	if (ORBInterface._orb == null)
+	{
+	    ORBPreInit preInit = new ORBPreInit();
+	    preInit = null;
+
+	    setORBInit(s, false);
+	    ORBInterface._orb = NAMESPACE_(CORBA.ORB).init(s, p);
+#ifdef ORBACUS
+	    ((com.ooc.CORBA.ORB) ORBInterface._orb).conc_model(com.ooc.CORBA.ORB.ConcModel.ConcModelThreaded);
+#endif
+	    setORBInit(s, true);
+	    
+	    ORBPostInit postInit = new ORBPostInit();
+	    postInit = null;
+	}
+#endif
+    }    
+
+    /**
+     * Initialise the BOA.
+     */
+      
+public static synchronized void initBOA () throws SystemException
+    {
+#ifdef HAVE_BOA
+	if (ORBInterface._boa == null)
+	{
+	    if (ORBInterface._orb != null)
+	    {
+		setBOAInit(null, true);
+#ifdef VISIBROKER
+		ORBInterface._boa = _orb.BOA_init();
+#else
+		String[] args = new String[0];
+		
+	        ORBInterface._boa = _orb.BOA_init(args, new java.util.Properties());
+#endif
+#ifdef ORBACUS
+		((com.ooc.CORBA.BOA) ORBInterface._boa).conc_model(com.ooc.CORBA.BOA.ConcModel.ConcModelThreadPerRequest);
+		((com.ooc.CORBA.BOA) ORBInterface._boa).init_servers();
+#endif
+		setBOAInit(null, false);
+	    }
+	    else
+	    {
+		System.err.println("ERROR - initBOA called without initialised ORB.");
+		System.exit(0);
+	    }
+	}
+#endif
+    }
+    
+    /**
+     * Initialise the BOA.
+     */
+    
+public static synchronized void initBOA (String a, Properties p) throws SystemException
+    {
+#ifdef HAVE_BOA
+	if (ORBInterface._boa == null)
+	{
+	    if (ORBInterface._orb != null)
+	    {
+#ifdef ORBACUS
+		if (ORBDebugController.debugAllowed())
+		{
+		    System.err.println("WARNING - initBOA(String) not supported by ORB. Using initBOA(String[])");
+		}
+
+		String[] args = new String[1];
+		args[0] = a;
+
+		initBOA(args, p);
+
+		args = null;
+#else
+		setBOAInit(null, true);
+		ORBInterface._boa = _orb.BOA_init(a, p);
+		setBOAInit(null, false);
+#endif		
+	    }
+	    else
+	    {
+		System.err.println("ERROR - initBOA called without initialised ORB.");
+		System.exit(0);
+	    }
+	}
+#endif
+    }
+
+    /**
+     * Initialise the BOA.
+     */
+    
+public static synchronized void initBOA (String[] a, Properties p) throws SystemException
+    {
+#ifdef HAVE_BOA
+	if (ORBInterface._boa == null)
+	{
+	    if (ORBInterface._orb != null)
+	    {
+#ifdef VB_3
+		if (ORBDebugController.debugAllowed())
+		{
+		    System.err.println("WARNING - initBOA(String[]) not supported by ORB. Using initBOA(String)");
+		}
+
+		if (a != null)
+		    initBOA(a[0], p);
+		else
+		    initBOA((String) null, p);
+#else
+		setBOAInit(null, false);
+		ORBInterface._boa = _orb.BOA_init(a, p);
+#ifdef ORBACUS
+		((com.ooc.CORBA.BOA) ORBInterface._boa).conc_model(com.ooc.CORBA.BOA.ConcModel.ConcModelThreaded);
+		((com.ooc.CORBA.BOA) ORBInterface._boa).init_servers();
+#endif
+		setBOAInit(null, true);
+#endif
+	    }
+	    else
+	    {
+		System.err.println("ERROR - initBOA called without initialised ORB.");
+		System.exit(0);
+	    }
+	}
+#endif    
+    }    
+
+public static synchronized boolean addORBInit (ORBInit p)
+    {
+	if (_orb != null)  // orb already set up!
+	    return false;
+	
+	if (p.postORBInit())
+	    postORBInitProperty.put(p, p);
+	else
+	    preORBInitProperty.put(p, p);
+
+	return true;
+    }
+
+public static synchronized boolean addBOAInit (BOAInit p)
+    {
+#ifdef HAVE_BOA	
+	if (_boa != null)  // boa already set up!
+	    return false;
+	
+	if (p.postBOAInit())
+	    postBOAInitProperty.put(p, p);
+	else
+	    preBOAInitProperty.put(p, p);
+
+	return true;
+#else
+	return false;
+#endif	
+    }    
+
+    /**
+     * Shutdown the ORB.
+     */
+	
+public static synchronized void shutdownORB ()
+    {
+	/*
+	 * Do the cleanups first!
+	 */
+
+	if (!cleanups.isEmpty())
+	{
+	    Enumeration elements = cleanups.elements();
+
+	    while (elements.hasMoreElements())
+	    {
+		ORBCleanup c = (ORBCleanup) elements.nextElement();
+
+		if (c != null)
+		{
+		    c.cleanup();
+		    c = null;
+		}
+	    }
+
+	    cleanups.clear();
+	}
+
+	if (_orb != null)
+	{
+#ifdef VISIBROKER	    
+	    _orb.shutdown();
+#endif	    
+	    _orb = null;
+	}
+    }
+
+    /**
+     * Shutdown the BOA.
+     */
+
+public static synchronized void shutdownBOA ()
+    {
+#ifdef HAVE_BOA	
+	if (_boa != null)
+	{
+#ifdef ORBACUS
+	    _boa.deactivate_impl(null);
+#endif
+	    _boa = null;
+	}
+#endif	
+    }
+
+    /**
+     * Obtain a reference to the current ORB.
+     */
+ 
+public static synchronized NAMESPACE_(CORBA.ORB) orb ()
+    {
+	return _orb;
+    }
+
+#ifdef HAVE_BOA
+    /**
+     * Obtain a reference to the current BOA.
+     */
+  
+public static synchronized NAMESPACE_(CORBA.BOA) boa ()
+    {
+	return _boa;
+    }
+#else
+public static synchronized NAMESPACE_(CORBA.Object) boa ()
+    {
+	return null;
+    }
+#endif
+
+public static void addORBCleanup (ORBCleanup cleanup)
+    {
+	cleanups.put(cleanup, cleanup);
+    }
+ 
+    /**
+     * Dispose of the object, i.e., unregister is from the ORB.
+     */
+ 
+public static void dispose (NAMESPACE_(CORBA).Object obj)
+    {
+#ifdef CORBA_2_2
+	ORBInterface.orb().disconnect(obj);
+#else	
+#ifdef HAVE_BOA
+#ifdef VB_2_5	
+	ORBInterface.boa().dispose(obj);
+#else
+#ifdef VB_3
+	ORBInterface.boa().deactivate_obj(obj);
+#endif
+#endif
+#endif
+#endif	
+    }
+
+    /**
+     * Register the object with the ORB.
+     */
+ 
+public static boolean objectIsReady (NAMESPACE_(CORBA).Object obj)
+    {
+#ifdef CORBA_2_2
+	ORBInterface.orb().connect(obj);
+#else
+#ifdef HAVE_BOA
+#ifdef VB_2_5
+	ORBInterface.boa().object_is_ready(obj);
+#else
+#ifdef VB_3
+	ORBInterface.boa().obj_is_ready(obj);
+#endif
+#endif
+#endif
+#endif
+	return true;
+    }
+
+public static boolean objectIsReady (NAMESPACE_(CORBA).Object obj, java.lang.Object[] params)
+    {
+#ifndef ORBACUS
+	return objectIsReady(obj);
+#else
+	String name = (String) params[0];
+	
+	((com.ooc.CORBA.ORB) ORBInterface.orb()).connect(obj, name);
+	
+	return true;
+#endif	
+    }    
+
+    /**
+     * Place the server into a state where it can begin to
+     * accept requests for objects from clients.
+     */
+ 
+public static void run ()
+    {
+#ifdef SUNSJDK
+	try
+	{
+	    java.lang.Object sync = new java.lang.Object();
+
+	    synchronized (sync)
+	    {
+		sync.wait();
+	    }
+	}
+	catch (Exception e)
+	{
+	}
+#else
+#ifdef VISIBROKER
+	_boa.impl_is_ready();
+#else
+#ifdef ORBACUS
+	_boa.impl_is_ready(null);
+#else	
+#error "Run not implemented"
+#endif
+#endif
+#endif	
+    }
+	    
+protected ORBInterface ()
+    {
+    }
+
+private static void setORBInit (String[] params, boolean preInit)
+    {
+	Hashtable work = ((preInit) ? preORBInitProperty : postORBInitProperty);
+
+	if (!work.isEmpty())
+	{
+	    Enumeration elements = work.elements();
+
+	    while (elements.hasMoreElements())
+	    {
+		ORBInit p = (ORBInit) elements.nextElement();
+
+		if (p != null)
+		{
+		    p.initialise(params);
+		    p = null;
+		}
+	    }
+
+	    work.clear();
+	}
+    }
+
+private static void setBOAInit (String[] params, boolean preInit)
+    {
+	Hashtable work = ((preInit) ? preBOAInitProperty : postBOAInitProperty);
+
+	if (!work.isEmpty())
+	{
+	    Enumeration elements = work.elements();
+
+	    while (elements.hasMoreElements())
+	    {
+		BOAInit p = (BOAInit) elements.nextElement();
+
+		if (p != null)
+		{
+		    p.initialise(params);
+		    p = null;
+		}
+	    }
+
+	    work.clear();
+	}
+    }    
+    
+private static NAMESPACE_(CORBA.ORB) _orb = null;
+
+#ifdef HAVE_BOA    
+private static NAMESPACE_(CORBA.BOA) _boa = null;
+#endif
+
+private static Hashtable cleanups = new Hashtable();
+private static Hashtable preORBInitProperty = new Hashtable();
+private static Hashtable postORBInitProperty = new Hashtable();
+private static Hashtable preBOAInitProperty = new Hashtable();
+private static Hashtable postBOAInitProperty = new Hashtable();    
+
+    static
+    {
+	addORBInit(new LocalSetup());
+    }
+
+};

@@ -1,0 +1,79 @@
+COMMENT 
+COMMENT Copyright (C) 1996, 1997, 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.7 1998/11/12 08:52:33 nmcl Exp $
+COMMENT
+
+CreateInstallDirectory(/classes/com/arjuna,/classes/com/arjuna/OrbCommon)
+
+SOURCES = environment.java \
+	  ORBInterface.java \
+	  ORBInit.java \
+	  BOAInit.java \
+	  DebugLevel.java \
+	  VisibilityLevel.java \
+	  ORBDebugController.java \
+	  ORBPropertyManager.java \
+	  LocalSetup.java \
+	  ORBServices.java \
+	  ORBObject.java \
+	  ORBFilter.java \
+	  ORBFilterManager.java \
+	  ORBPreInit.java \
+	  ORBPostInit.java \
+	  ORBClassLoader.java \
+	  ORBInitLoader.java \
+	  ORBCleanup.java
+	  
+OBJECTS = environment.class \
+	  ORBInit.class \
+	  BOAInit.class \
+	  DebugLevel.class \
+	  VisibilityLevel.class \
+	  ORBDebugController.class \
+	  ORBPropertyManager.class \
+	  LocalSetup.class \
+	  ORBFilter.class \
+	  ORBFilterManager.class \
+	  ORBClassLoader.class \
+	  ORBCleanup.class \
+	  ORBInitLoader.class \
+	  ORBClassLoader.class \
+	  ORBPreInit.class \
+	  ORBPostInit.class \
+	  ORBInterface.class \
+	  ORBServices.class \
+	  ORBObject.class
+
+Target($(SOURCES))
+Target($(OBJECTS))
+
+PreprocessJavaCode(ORBInterface,NullParam)
+PreprocessJavaCode(ORBServices,NullParam)
+PreprocessJavaCode(ORBObject,NullParam)
+
+BuildJavaByteCode(ORBInterface,NullParam)
+BuildJavaByteCode(ORBServices,NullParam)
+BuildJavaByteCode(ORBObject,NullParam)
+BuildJavaByteCode(environment,NullParam)
+BuildJavaByteCode(VisibilityLevel,NullParam)
+BuildJavaByteCode(DebugLevel,NullParam)
+BuildJavaByteCode(ORBDebugController,NullParam)
+BuildJavaByteCode(ORBFilter,NullParam)
+BuildJavaByteCode(ORBFilterManager,NullParam)
+BuildJavaByteCode(ORBPreInit,NullParam)
+BuildJavaByteCode(ORBPostInit,NullParam)
+BuildJavaByteCode(ORBClassLoader,NullParam)
+BuildJavaByteCode(ORBInit,NullParam)
+BuildJavaByteCode(BOAInit,NullParam)
+BuildJavaByteCode(ORBInitLoader,NullParam)
+BuildJavaByteCode(ORBCleanup,NullParam)
+BuildJavaByteCode(ORBPropertyManager,NullParam)
+BuildJavaByteCode(LocalSetup,NullParam)
+
+Clean(*.class)
