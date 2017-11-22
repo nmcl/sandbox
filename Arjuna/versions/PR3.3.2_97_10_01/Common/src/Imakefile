@@ -1,0 +1,145 @@
+COMMENT 
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.11 1995/06/26 10:28:11 ngdp Exp $
+COMMENT
+
+STUBS = ../../Include/Common/Buffer_stub.h \
+	../../Include/Common/Uid_stub.h \
+	../../Include/Common/FacCode_stub.h \
+	../../Include/Common/Error_stub.h \
+	../../Include/Common/ErrorList_stub.h
+
+LIB1 = $(LIBARJUNA)
+LIB2 = $(LIBCOMMON)
+
+SOURCES = Buffer.cc \
+          Boolean.cc \
+	  Debug.cc \
+          Error.cc \
+          ErrorList.cc \
+	  ErrorList_marshall.cc \
+          ErrorListI.cc \
+	  ErrorSeverity_marshall.cc \
+	  FacilityCode_marshall.cc \
+	  Filtsbuf.cc \
+	  PointerMap.cc \
+	  ProcessMutex.cc \
+	  Semaphore.cc \
+          Uid.cc \
+	  Uid_marshall.cc \
+	  Utility.cc \
+	  $(STUBS)
+
+OBJECTS1= Buffer.o \
+	  Buffer_marshall.o \
+          Error.o \
+	  Error_marshall.o \
+          ErrorList.o \
+	  ErrorList_marshall.o \
+          ErrorListI.o \
+	  ErrorSeverity_marshall.o \
+	  FacilityCode_marshall.o \
+	  PointerMap.o \
+          Uid.o \
+	  Uid_marshall.o
+
+OBJECTS2 = Boolean.o \
+	   Debug.o \
+	   Filtsbuf.o \
+	   ProcessMutex.o \
+	   Semaphore.o \
+	   Utility.o
+
+OBJECTS = $(OBJECTS1) $(OBJECTS2)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+AllTarget($(STUBS) $(LIB1) $(LIB2))
+StubTarget($(STUBS))
+
+CreateInstallTopDirectory(lib)
+
+Uid.h : ../../Include/Common/Uid.h
+	@CP_VAR ../../Include/Common/Uid.h Uid.h
+
+../../Include/Common/Uid_stub.h : Uid_stub.h
+	@echo Copying Uid_stub.h
+	@sed -e "s;\"Uid_stubclass.h\";\<Common/Uid_stubclass.h\>;" Uid_stub.h > ../../Include/Common/Uid_stub.h
+
+../../Include/Common/Uid_stubclass.h : Uid_stubclass.h
+	@echo Copying Uid_stubclass.h
+	@CP_VAR Uid_stubclass.h ../../Include/Common/Uid_stubclass.h
+
+Buffer.h : ../../Include/Common/Buffer.h
+	@CP_VAR ../../Include/Common/Buffer.h Buffer.h
+
+../../Include/Common/Buffer_stub.h : Buffer_stub.h
+	@echo Copying Buffer_stub.h
+	@sed -e "s;\"Buffer_stubclass.h\";\<Common/Buffer_stubclass.h\>;" Buffer_stub.h > ../../Include/Common/Buffer_stub.h
+
+../../Include/Common/Buffer_stubclass.h : Buffer_stubclass.h
+	@echo Copying Buffer_stubclass.h
+	@CP_VAR Buffer_stubclass.h ../../Include/Common/Buffer_stubclass.h
+
+Error.h : ../../Include/Common/Error.h
+	@CP_VAR ../../Include/Common/Error.h Error.h
+
+../../Include/Common/Error_stub.h : Error_stub.h
+	@echo Copying Error_stub.h
+	@sed -e "s;\"Error_stubclass.h\";\<Common/Error_stubclass.h\>;" Error_stub.h > ../../Include/Common/Error_stub.h
+
+../../Include/Common/Error_stubclass.h : Error_stubclass.h
+	@echo Copying Error_stubclass.h
+	@CP_VAR Error_stubclass.h ../../Include/Common/Error_stubclass.h
+
+ErrorList.h : ../../Include/Common/ErrorList.h
+	@CP_VAR ../../Include/Common/ErrorList.h ErrorList.h
+
+../../Include/Common/ErrorList_stub.h : ErrorList_stub.h
+	@echo Copying ErrorList_stub.h
+	@sed -e "s;\"ErrorList_stubclass.h\";\<Common/ErrorList_stubclass.h\>;" ErrorList_stub.h > ../../Include/Common/ErrorList_stub.h
+
+../../Include/Common/ErrorList_stubclass.h : ErrorList_stubclass.h
+	@echo Copying ErrorList_stubclass.h
+	@CP_VAR ErrorList_stubclass.h ../../Include/Common/ErrorList_stubclass.h
+
+FacCode.h : ../../Include/Common/FacCode.h
+	@CP_VAR ../../Include/Common/FacCode.h FacCode.h
+
+../../Include/Common/FacCode_stub.h : FacCode_stub.h
+	@echo Copying FacCode_stub.h
+	@sed -e "s;\"FacCode_stubclass.h\";\<Common/FacCode_stubclass.h\>;" FacCode_stub.h > ../../Include/Common/FacCode_stub.h
+
+../../Include/Common/FacCode_stubclass.h : FacCode_stubclass.h
+	@echo Copying FacCode_stubclass.h
+	@CP_VAR FacCode_stubclass.h ../../Include/Common/FacCode_stubclass.h
+
+MakeLibrary($(LIB1),$(OBJECTS1))
+MakeLibrary($(LIB2),$(OBJECTS2))
+
+MakeStubGen(Uid,Uid,Uid,NOPARAM)
+MakeStubGen(Buffer,Buffer,Buffer,NOPARAM)
+MakeStubGen(Error,Error,Error,NOPARAM)
+MakeStubGen(ErrorList,ErrorList,ErrorList,NOPARAM)
+MakeStubGen(FacCode,FacilityCode,FacCode,NOPARAM)
+MakeObjectCPLUSPLUS(Buffer,NOPARAM)
+MakeObjectCPLUSPLUS(Boolean,NOPARAM)
+MakeObjectCPLUSPLUS(Debug,NOPARAM)
+MakeObjectCPLUSPLUS(Error,NOPARAM)
+MakeObjectCPLUSPLUS(ErrorList,NOPARAM)
+MakeObjectCPLUSPLUS(ErrorListI,NOPARAM)
+MakeObjectCPLUSPLUS(ErrorSeverity_marshall,NOPARAM)
+MakeObjectCPLUSPLUS(Filtsbuf,NOPARAM)
+MakeObjectCPLUSPLUS(PointerMap,NOPARAM)
+MakeObjectCPLUSPLUS(ProcessMutex,NOPARAM)
+MakeObjectCPLUSPLUS(Semaphore,NOPARAM)
+MakeObjectCPLUSPLUS(Uid,NOPARAM)
+MakeObjectCPLUSPLUS(Utility,NOPARAM)
+
+TidyTarget(Buffer.h Buffer_marshall.cc BufferState_marshall.cc Buffer_stub.h Uid.h Uid_marshall.cc Uid_stub.h Error.h Error_marshall.cc Error_stub.h ErrorList.h ErrorList_marshall.cc ErrorList_stub.h FacCode.h FacCode_stub.h FacilityCode_marshall.cc ErrorSeverity_marshall.cc)
+

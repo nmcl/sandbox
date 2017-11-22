@@ -1,0 +1,26 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.4.2.1 1996/03/06 11:39:54 ngdp Exp $
+COMMENT
+
+LIB = $(LIBARJUNA)
+
+CLOBJS = LockDaemon.o
+
+OBJECTS = $(CLOBJS)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES) -I../include -I../../../ClassLib/include)
+
+AllTarget($(LIB))
+
+MakeLibrary($(LIB),$(CLOBJS))
+
+MakeObjectCPLUSPLUS(LockDaemon,NOPARAM)
+
+TidyTarget(LockDaemonIf.h LockDaemonIf_stub.h LockDaemonIf_stubclass.h LockDaemonIf_client.cc LockDaemonIf_server.cc LockDaemonIf_servermain.cc LockDaemon BootLockDaemon)
