@@ -1,0 +1,83 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.5 1994/11/29 14:00:20 ngdp Exp $
+COMMENT
+
+LIB = $(LIBARJUNA)
+
+STUBS =   ../../Include/Arjuna/StateMan_stub.h \
+          ../../Include/Arjuna/StateManager_stubclass.h \
+          ../../Include/Arjuna/LockMan_stub.h \
+          ../../Include/Arjuna/LockManager_stubclass.h
+
+SOURCES = StateManager_server.cc \
+          StateManager_client.cc \
+          LockManager_server.cc  \
+          LockManager_client.cc \
+	  ConflictType_marshall.cc \
+	  LockResult_marshall.cc \
+	  ObjectStatus_marshall.cc \
+	  ObjectType_marshall.cc \
+	  $(STUBS)
+
+OBJECTS = StateManager_server.o  \
+          StateManager_client.o  \
+          LockManager_server.o   \
+          LockManager_client.o \
+	  ConflictType_marshall.o \
+	  LockResult_marshall.o \
+	  ObjectStatus_marshall.o \
+	  ObjectType_marshall.o
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+AllTarget($(STUBS) $(LIB))
+
+StubTarget($(STUBS))
+
+MakeLibrary($(LIB),$(OBJECTS))
+
+StateMan.h : ../../Include/Arjuna/StateMan.h
+	@CP_VAR ../../Include/Arjuna/StateMan.h StateMan.h
+
+../../Include/Arjuna/StateMan_stub.h : StateMan_stub.h
+	@echo Copying StateMan_stub.h
+	@sed -e "s;Error_stub.h;Error.h;" -e "s;\"StateManager_stubclass.h\";\<Arjuna/StateManager_stubclass.h\>;" StateMan_stub.h > ../../Include/Arjuna/StateMan_stub.h
+
+../../Include/Arjuna/StateManager_stubclass.h : StateManager_stubclass.h
+	@echo Copying StateManager_stubclass.h
+	@CP_VAR StateManager_stubclass.h ../../Include/Arjuna/StateManager_stubclass.h
+
+MakeStubGen(StateMan,StateManager,StateMan,NOPARAM)
+		
+LockMan.h : ../../Include/Arjuna/LockMan.h
+	@CP_VAR ../../Include/Arjuna/LockMan.h LockMan.h
+
+../../Include/Arjuna/LockMan_stub.h : LockMan_stub.h
+	@echo Copying LockMan_stub.h
+	@sed -e "s;\"LockManager_stubclass.h\";\<Arjuna/LockManager_stubclass.h\>;" LockMan_stub.h > ../../Include/Arjuna/LockMan_stub.h
+
+../../Include/Arjuna/LockManager_stubclass.h : LockManager_stubclass.h
+	@echo Copying LockManager_stubclass.h
+	@CP_VAR LockManager_stubclass.h ../../Include/Arjuna/LockManager_stubclass.h
+
+MakeStubGen(LockMan,LockManager,LockMan,NOPARAM)
+
+ConflictType_marshall: LockMan_stub.h
+LockResult_marshall: LockMan_stub.h
+ObjectStatus_marshall: StateMan_stub.h
+ObjectType_marshall: StateMan_stub.h
+
+MakeObjectCPLUSPLUS(ConflictType_marshall,NOPARAM)
+MakeObjectCPLUSPLUS(LockResult_marshall,NOPARAM)
+MakeObjectCPLUSPLUS(ObjectStatus_marshall,NOPARAM)
+MakeObjectCPLUSPLUS(ObjectType_marshall,NOPARAM)
+
+TidyTarget(StateMan.h StateMan.n StateMan_stub.h StateManager_client.cc StateManager_server.cc StateManager_clientmain.cc StateManager_servermain.cc StateManager_stubclass.h LockMan.h LockMan.n LockMan_stub.h LockManager_client.cc LockManager_server.cc LockManager_clientmain.cc LockManager_servermain.cc LockManager_stubclass.h ConflictType_marshall.cc LockResult_marshall.cc ObjectStatus_marshall.cc ObjectType_marshall.cc ReleaseType_marshall.cc)
+
