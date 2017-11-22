@@ -1,0 +1,35 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.6 1994/11/29 14:00:45 ngdp Exp $
+COMMENT
+COMMENT
+COMMENT Imakefile. (Basic)
+COMMENT
+
+LIBRARIES = $(LIBARJUNA) $(LIBCOMMON)
+
+SOURCES = Driver.cc \
+          Queue.cc \
+	  QueueElement.cc
+
+OBJECTS = Driver.o \
+	  Queue.o \
+	  QueueElement.o
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+AllTarget(Driver)
+
+MakeProgramCPLUSPLUS(Driver,$(OBJECTS) $(LIBRARIES),NOPARAM)
+
+MakeObjectCPLUSPLUS(Driver,NOPARAM)
+MakeObjectCPLUSPLUS(Queue,NOPARAM)
+MakeObjectCPLUSPLUS(QueueElement,NOPARAM)
+
+TidyTarget(Driver)
