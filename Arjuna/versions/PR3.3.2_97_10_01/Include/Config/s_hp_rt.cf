@@ -1,0 +1,29 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: s_hp_rt.cf,v 1.1 1996/01/16 14:08:55 ngdp Exp $
+ */
+
+/*
+ * s_hprt.cf
+ */
+
+#define RANLIB_PROGRAM true
+#define SYSTEM_SPECIFIC_FLAGS -DHAVE_MMAP -DSYSV -DHAVE_UNION_WAIT -DHAVE_SYSCONF -DNEED_FD_SET
+#define SYSTEM_SPECIFIC_LIBRARIES -lbsd
+
+#define SYSTEM_SPECIFIC_CROSS_FLAGS -DSYSV -DHAVE_MMAP 
+#define SYSTEM_SPECIFIC_CROSS_LIBRARIES
+#define LDFLAGS_CROSS_DEFAULT
+
+
+#define STUBGEN_OS_FLAGS "-Dunix -D__unix -D__unix__"
+
+#ifndef YACC_CPLUSPLUS_MAGIC
+#define YACC_CPLUSPLUS_MAGIC sed -e "/^   #include \<stdio\.h\>/d"
+#endif

@@ -1,0 +1,17 @@
+/*
+ * Copyright (C) 1996
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: c_att_hp_3_40.cf,v 1.1 1996/07/02 09:00:13 nsmw Exp $
+ */
+
+/*
+ * c_att_hp_3_40.cf
+ */
+
+#define COMPILER_SPECIFIC_FLAGS -DHAS_IOSTREAM_INIT -DSTRUCT_INIT_BUG -Dsigned=
+#define STUBGEN_CC_FLAGS " "
