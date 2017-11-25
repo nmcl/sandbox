@@ -1,0 +1,23 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.6.6.1 1996/10/10 14:16:53 ngdp Exp $
+COMMENT
+
+CreateInstallTopDirectory(include)
+CreateInstallDirectory(include,StubGen)
+InstallFile(include/StubGen,Abort.h)
+InstallFile(include/StubGen,ClientRpc.h)
+InstallFile(include/StubGen,ClientRpcMan.h)
+InstallFile(include/StubGen,ClientRpcMan.n)
+InstallFile(include/StubGen,RpcBuffer.h)
+InstallFile(include/StubGen,RpcBuffer.n)
+InstallFile(include/StubGen,ServerRpc.h)
+InstallFile(include/StubGen,SvrErrCode.h)
+InstallFile(include/StubGen,Types.h)
+
