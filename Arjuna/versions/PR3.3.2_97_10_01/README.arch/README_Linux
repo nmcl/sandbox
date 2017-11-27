@@ -1,0 +1,11 @@
+Extra notes for building Arjuna under Linux
+(please read all the other README files beforehand)
+
+The  current version  of Linux  does  not support  all of the 4.3  BSD
+communication primitives i.e., sendmsg/recvmsg - sending and receiving
+scatter/gather  buffers. It is precisely these  primitives  which  the
+Rajdoot RPC mechanism uses.
+
+Until (and  unless) these primitives are fully supported  by Linux, we
+have provided our  own  - these are necessarily above the kernel as we
+do not wish to modify Linux itself.
