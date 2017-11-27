@@ -1,0 +1,55 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.7 1994/10/11 08:35:44 ngdp Exp $
+COMMENT
+
+SOURCES   = dupserver.cc \
+            groupsrvr.cc \
+            keephouse.cc \
+            manager.cc \
+	    pingdaemon.cc
+
+OBJECTS   = dupserver.o \
+            groupsrvr.o \
+            keephouse.o\
+            manager.o \
+	    pingdaemon.o
+
+DAEMONS   = dupserver \
+            groupsrvr \
+            keephouse \
+            manager \
+	    pingdaemon
+
+LIBRARIES = $(LIBRAJDOOT) $(LIBCOMMON) $(LIBSTUB)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES) -I../include)
+
+AllTarget($(DAEMONS))
+
+CreateInstallTopDirectory(etc)
+InstallProgram(etc,dupserver)
+InstallProgram(etc,groupsrvr)
+InstallProgram(etc,keephouse)
+InstallProgram(etc,manager)
+InstallProgram(etc,pingdaemon)
+
+MakeProgramCPLUSPLUS(dupserver,dupserver.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(groupsrvr,groupsrvr.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(keephouse,keephouse.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(manager,manager.o $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(pingdaemon,pingdaemon.o $(LIBRARIES),NOPARAM)
+
+MakeObjectCPLUSPLUS(dupserver,NOPARAM)
+MakeObjectCPLUSPLUS(groupsrvr,NOPARAM)
+MakeObjectCPLUSPLUS(keephouse,NOPARAM)
+MakeObjectCPLUSPLUS(manager,NOPARAM)
+MakeObjectCPLUSPLUS(pingdaemon,NOPARAM)
+
+TidyTarget(dupserver groupsrvr keephouse manager pingdaemon)
