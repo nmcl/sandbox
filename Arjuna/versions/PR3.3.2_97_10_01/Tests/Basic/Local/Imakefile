@@ -1,0 +1,13 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.6 1995/02/24 16:02:16 ngdp Exp $
+COMMENT
+
+#define IHaveSubDirs
+SetSubDirectorys(AA+CC AtomicAction Buffer Locking NewObject UidUniqueness Performance Volatile NestedTLAA Container LockStore)
