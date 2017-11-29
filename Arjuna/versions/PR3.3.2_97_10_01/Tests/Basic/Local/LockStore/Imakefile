@@ -1,0 +1,30 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.3 1994/11/29 14:02:12 ngdp Exp $
+COMMENT
+
+LIBRARIES = $(LIBARJUNA) $(LIBCOMMON)
+
+
+SetLocalCppFlags(-I../../PUtils -I$(ARJUNA_INCLUDES))
+
+SOURCES = OperActions.cc         \
+          OperActionsDriver.cc 
+
+OAOBJ = OperActionsDriver.o OperActions.o
+
+OBJECTS = $(OAOBJ) 
+AllTarget(OperActionsDriver)
+
+MakeProgramCPLUSPLUS(OperActionsDriver,$(OAOBJ) $(LIBRARIES),NOPARAM)
+
+MakeObjectCPLUSPLUS(OperActionsDriver,NOPARAM)
+MakeObjectCPLUSPLUS(OperActions,NOPARAM)
+
+TidyTarget(OperActionsDriver)
