@@ -1,0 +1,26 @@
+COMMENT 
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.3 1995/07/31 15:09:09 ngdp Exp $
+COMMENT
+
+SOURCES = NoneMutex.cc \
+	  NoneThread.cc
+
+OBJECTS = NoneMutex.o \
+	  NoneThread.o
+
+LIB = ../../../lib/libNoneThread.a
+
+SetLocalCppFlags(-I../include -I$(ARJUNA_INCLUDES))
+
+AllTarget($(LIB))
+MakeLibObjectCPLUSPLUS($(LIB),NoneMutex,NOPARAM)
+MakeLibObjectCPLUSPLUS($(LIB),NoneThread,NOPARAM)
+
+MakeLibrary($(LIB),$(OBJECTS))
