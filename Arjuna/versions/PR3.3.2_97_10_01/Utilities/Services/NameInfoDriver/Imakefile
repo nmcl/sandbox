@@ -1,0 +1,30 @@
+COMMENT 
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.4 1994/06/01 14:39:49 ngdp Exp $
+COMMENT
+
+SOURCES   = NameInfoDriver.cc
+
+OBJECTS   = NameInfoDriver.o
+
+LIBRARIES = $(LIBARJSERVERS) $(LIBRPC) $(LIBOBJECTSTORE) $(LIBARJUNA) $(LIBCOMMON) $(LIBSTUB) $(LIBRPC)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+AllTarget(NameInfoDriver)
+
+CreateInstallTopDirectory(bin)
+InstallProgram(bin,NameInfoDriver)
+
+MakeProgramCPLUSPLUS(NameInfoDriver, $(OBJECTS) $(LIBRARIES),NOPARAM)
+
+MakeObjectCPLUSPLUS(NameInfoDriver,NOPARAM)
+
+TidyTarget(NameInfoDriver)
+
