@@ -1,0 +1,114 @@
+COMMENT 
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.7.6.1 1996/10/10 12:27:09 ngdp Exp $
+COMMENT
+
+LIBRARIES = $(LIBARJSERVERS) $(LIBSTUB) $(LIBRPC) $(LIBOBJECTSTORE) $(LIBARJUNA) $(LIBCOMMON)
+
+SetLocalCppFlags( $(IV_CPPFLAGS) -I$(ARJUNA_INCLUDES))
+SetLocalLibraries($(IV_LDFLAGS) -lIV $(X11_LDFLAGS) -lX11 -lm)
+
+STUBS = \
+                Interface_stub.h \
+                Transporter_stub.h
+
+SOURCES = \
+                AutoInterfaceDriver.cc \
+                Interface.cc \
+                InterfaceArgs.cc \
+                Interface_client.cc \
+                Interface_server.cc \
+                Interface_servermain.cc \
+                InterfaceState.cc \
+                InterfaceTextDriver.cc \
+                InterfaceWindowDriver.cc \
+                Menu.cc \
+                Message.cc \
+                Selector.cc \
+                Transporter.cc \
+                Transporter_client.cc \
+                Transporter_server.cc \
+                Transporter_servermain.cc \
+                Window.cc \
+	        Definitions.cc \
+		$(STUBS)
+
+OBJAUTOINTERFACEDRIVER = \
+                AutoInterfaceDriver.o \
+                InterfaceArgs.o \
+                Interface_client.o \
+                Transporter_client.o \
+	        Definitions.o
+
+OBJINTERFACE = \
+                Interface.o \
+                InterfaceState.o \
+                Interface_server.o \
+                Interface_servermain.o \
+	        Definitions.o
+
+OBJINTERFACETEXTDRIVER = \
+                InterfaceArgs.o \
+                InterfaceState.o \
+                InterfaceTextDriver.o \
+                Interface_client.o \
+                Transporter_client.o \
+		Definitions.o
+
+OBJINTERFACEWINDOWDRIVER = \
+                Interface_client.o \
+                InterfaceArgs.o \
+                InterfaceState.o \
+                InterfaceWindowDriver.o \
+                Menu.o \
+                Message.o \
+                Selector.o \
+                Transporter_client.o \
+                Window.o \
+	 	Definitions.o
+
+OBJTRANSPORTER = \
+                Transporter.o \
+                Transporter_server.o \
+                Transporter_servermain.o \
+		Definitions.o
+
+OBJECTS = $(OBJAUTOINTERFACEDRIVE) $(OBJINTERFACE) $(OBJINTERFACETEXTDRIVER) \
+	  $(OBJINTERFACEWINDOWDRIVER) $(OBJTRANSPORTER)
+
+AllTarget($(STUBS) AutoInterfaceDriver Interface InterfaceTextDriver InterfaceWindowDriver Transporter)
+
+CreateInstallTopDirectory(servers)
+InstallProgram(servers,Interface)
+InstallProgram(servers,Transporter)
+
+MakeProgramCPLUSPLUS(AutoInterfaceDriver,$(OBJAUTOINTERFACEDRIVER) $(LIBRARIES),)
+MakeProgramCPLUSPLUS(Interface,$(OBJINTERFACE) $(LIBRARIES),)
+MakeProgramCPLUSPLUS(InterfaceTextDriver,$(OBJINTERFACETEXTDRIVER) $(LIBRARIES),)
+MakeProgramCPLUSPLUS(InterfaceWindowDriver,$(OBJINTERFACEWINDOWDRIVER) $(LIBRARIES),)
+MakeProgramCPLUSPLUS(Transporter,$(OBJTRANSPORTER) $(LIBRARIES),)
+
+MakeStubGen(Interface,Interface,Interface,)
+MakeStubGen(Transporter,Transporter,Transporter,)
+
+MakeObjectCPLUSPLUS(AutoInterfaceDriver,)
+MakeObjectCPLUSPLUS(Interface,)
+MakeObjectCPLUSPLUS(InterfaceArgs,)
+MakeObjectCPLUSPLUS(InterfaceState,)
+MakeObjectCPLUSPLUS(InterfaceTextDriver,)
+MakeObjectCPLUSPLUS(InterfaceWindowDriver,)
+MakeObjectCPLUSPLUS(Menu,)
+MakeObjectCPLUSPLUS(Message,)
+MakeObjectCPLUSPLUS(Selector,)
+MakeObjectCPLUSPLUS(Transporter,)
+MakeObjectCPLUSPLUS(Window,)
+MakeObjectCPLUSPLUS(Definitions,)
+
+TidyTarget(AutoInterfaceDriver Interface InterfaceTextDriver InterfaceWindowDriver Transporter *_stub.h *_stubclass.h *_server.cc *_client.cc *_servermain.cc)
+
