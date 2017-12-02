@@ -1,0 +1,70 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 1994/11/29 14:00:30 ngdp Exp $
+COMMENT
+
+LIB = $(LIBARJSERVERS)
+
+SOURCES =        RPObjStore.cc          \
+                 RPObjStore_server.cc \
+                 RPObjStore_client.cc \
+		 BootRPObjStore.cc
+
+STUBS =          ../../Include/ArjServers/RPObjStore_stub.h \
+                 ../../Include/ArjServers/RPObjStore_stubclass.h
+
+#ifdef GCC_LINK_BUG
+OBJECTS_STATEDAEMOND = BootRPObjStore.o RPObjStore.o
+#else
+OBJECTS_STATEDAEMOND = BootRPObjStore.o
+#endif
+
+OBJECTS_SERVER = RPObjStore.o          \
+                 RPObjStore_server.o \
+                 RPObjStore_servermain.o
+
+#ifdef GCC_LINK_BUG
+OBJECTS_CLIENT = RPObjStore_client.o RPObjStore.o
+#else
+OBJECTS_CLIENT = RPObjStore_client.o 
+#endif
+
+OBJECTS = $(OBJECTS_STATEDAEMOND) $(OBJECTS_SERVER) $(OBJECTS_CLIENT)
+LIBRARY = $(LIBARJSERVERS) $(LIBARJUNA) $(LIBRPC) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+AllTarget($(STUBS) $(OBJECTS) $(LIB) RPObjStore BootRPObjStore)
+StubTarget($(STUBS))
+CreateInstallTopDirectory(servers)
+InstallProgram(servers,RPObjStore)
+
+CreateInstallTopDirectory(etc)
+InstallProgram(etc,BootRPObjStore)
+
+../../Include/ArjServers/RPObjStore_stub.h : RPObjStore_stub.h
+	@echo Copying RPObjStore_stub.h
+	@sed -e "s;\"RPObjStore_stubclass.h\";\<ArjServers/RPObjStore_stubclass.h\>;" RPObjStore_stub.h > ../../Include/ArjServers/RPObjStore_stub.h
+
+../../Include/ArjServers/RPObjStore_stubclass.h : RPObjStore_stubclass.h
+	@echo Copying RPObjStore_stubclass.h
+	@CP_VAR RPObjStore_stubclass.h ../../Include/ArjServers/RPObjStore_stubclass.h
+
+MakeProgramCPLUSPLUS(RPObjStore,$(OBJECTS_SERVER) $(LIBRARY),NOPARAM)
+MakeProgramCPLUSPLUS(BootRPObjStore, $(OBJECTS_STATEDAEMOND) $(LIBRARY),NOPARAM)
+
+MakeObjectCPLUSPLUS(RPObjStore,NOPARAM)
+MakeObjectCPLUSPLUS(BootRPObjStore,NOPARAM)
+
+MakeStubGen(RPObjStore,RPObjStore,RPObjStore,NOPARAM)
+
+MakeLibrary($(LIB),$(OBJECTS_CLIENT))
+
+TidyTarget(RPObjStore RPObjStore_stub.h RPObjStore_client.cc RPObjStore_server.cc RPObjStore_servermain.cc RPObjStore_stubclass.h BootRPObjStore)
+
