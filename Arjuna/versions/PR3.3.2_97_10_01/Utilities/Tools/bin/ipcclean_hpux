@@ -1,0 +1,36 @@
+#!/bin/sh
+
+#
+# Copyright (C) 1993
+#
+# Department of Computing Science,
+# The University,
+# Newcastle upon Tyne,
+# UK.
+#
+# $Id: ipcclean_hpux,v 1.1.6.1 1996/10/10 12:27:10 ngdp Exp $
+#
+
+TMPFILE=/tmp/ipcclean.$$
+
+ipcs -s | grep `whoami` | awk '{ print $1, $2 }' | awk -Fs '{ print $1, $2 }' | awk '{ print $1 }' > $TMPFILE
+cat $TMPFILE | while read id
+do
+	if test $id != IPC && test $id != T && test $id != Semaphore
+	then
+		echo "Removing semaphore : $id"
+		ipcrm -s $id
+	fi
+done
+rm -f $TMPFILE
+
+ipcs -m | grep `whoami` | awk '{ print $1, $2 }' | awk -Fm '{ print $1, $2 }' | awk '{ print $1 }' > $TMPFILE
+cat $TMPFILE | while read id
+do
+	if test $id != IPC && test $id != T && test $id != Shared
+	then
+		echo "Removing memory : $id"
+		ipcrm -m $id
+	fi
+done
+rm -f $TMPFILE
