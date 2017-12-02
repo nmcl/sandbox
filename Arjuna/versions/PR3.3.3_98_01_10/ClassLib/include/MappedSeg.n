@@ -1,0 +1,37 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: MappedSeg.n,v 1.1 1995/10/02 15:14:19 ngdp Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(MAPPEDSEG_CC_)
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+
+INLINEF Boolean MappedSegment::isValid () const
+{
+    return (segVaddr == 0 ? FALSE : TRUE);
+}
+
+INLINEF ErrorList& MappedSegment::getErrorList ()
+{
+    return lastError;
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif
