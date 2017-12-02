@@ -1,0 +1,45 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.4 1994/11/29 14:00:18 ngdp Exp $
+COMMENT
+
+LIB = $(LIBARJSERVERS)
+
+STUBS =   ../../Include/ArjServers/ArjName.h \
+	  ../../Include/ArjServers/ArjName_stub.h
+
+SOURCES = ArjName.cc \
+	  ArjunaName_marshall.cc \
+	  $(STUBS)
+
+OBJECTS = ArjName.o \
+	  ArjunaName_marshall.o
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+AllTarget($(STUBS) $(LIB))
+StubTarget($(STUBS))
+MakeLibrary($(LIB),$(OBJECTS))
+
+ArjName.h : ../../Include/ArjServers/ArjName.h
+	@CP_VAR ../../Include/ArjServers/ArjName.h ArjName.h
+
+../../Include/ArjServers/ArjName_stub.h : ArjName_stub.h
+	@echo Copying ArjName_stub.h
+	@sed -e "s;\"ArjName_stubclass.h\";\<ArjServers/ArjName_stubclass.h\>;" ArjName_stub.h > ../../Include/ArjServers/ArjName_stub.h
+
+../../Include/ArjServers/ArjName_stubclass.h : ArjName_stubclass.h
+	@echo Copying ArjName_stubclass.h
+	@CP_VAR ArjName_stubclass.h ../../Include/ArjServers/ArjName_stubclass.h
+
+MakeStubGen(ArjName,ArjunaName,ArjName,NOPARAM)
+MakeObjectCPLUSPLUS(ArjName,NOPARAM)
+
+TidyTarget(ArjName.h ArjunaName_marshall.cc ArjName_stub.h)
+
