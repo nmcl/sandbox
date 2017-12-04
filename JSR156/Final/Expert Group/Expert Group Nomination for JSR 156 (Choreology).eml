@@ -1,0 +1,127 @@
+Received: from cheviot2.ncl.ac.uk (root@cheviot2.ncl.ac.uk [128.240.229.35]) by ulgham.ncl.ac.uk with ESMTP (8.7.1/8.7.1) id PAA13325 for <mcl@ulgham.ncl.ac.uk>; Mon, 5 Nov 2001 15:20:41 GMT
+Received: from bramg1.net.external.hp.com (bramg1.net.external.hp.com [192.6.126.73])
+	by cheviot2.ncl.ac.uk (8.10.1/8.10.1) with ESMTP id fA5FHN713287
+	for <mark.little@arjuna.com>; Mon, 5 Nov 2001 15:17:23 GMT
+Received: from quasit.br.itc.hp.com (quasit.br.itc.hp.com [15.145.8.135])
+	by bramg1.net.external.hp.com (Postfix) with ESMTP id AC28AF3
+	for <mark.little@arjuna.com>; Mon,  5 Nov 2001 16:17:22 +0100 (MET)
+Received: from loddon.br.itc.hp.com (loddon.br.itc.hp.com [15.145.8.166])
+	by quasit.br.itc.hp.com (8.9.3 (PHNE_18979)/8.9.3 SMKit6.0.6 OpenMail) with SMTP id PAA08853
+	for <mark.little@arjuna.com>; Mon, 5 Nov 2001 15:17:22 GMT
+Received: from 15.145.8.166 by loddon.br.itc.hp.com (InterScan E-Mail VirusWall NT); Mon, 05 Nov 2001 15:17:22 -0000 (GMT Standard Time)
+Received: by loddon.br.itc.hp.com with Internet Mail Service (5.5.2653.19)
+	id <WJTMJAVN>; Mon, 5 Nov 2001 15:17:22 -0000
+Received: from loddon.br.itc.hp.com (localhost [127.0.0.1]) by loddon.br.itc.hp.com with SMTP (Microsoft Exchange Internet Mail Service Version 5.5.2653.13)
+	id WJTMJAVL; Mon, 5 Nov 2001 15:17:20 -0000
+Received: from 15.191.2.9 by loddon.br.itc.hp.com (InterScan E-Mail VirusWall NT); Mon, 05 Nov 2001 15:17:20 -0000 (GMT Standard Time)
+Received: from postage.hp.com (postage.hp.com [192.151.27.6])
+	by bramg1.net.external.hp.com (Postfix) with ESMTP id E647D1C7
+	for <mark_little@bra.exch.hp.com>; Mon,  5 Nov 2001 16:17:19 +0100 (MET)
+Received: from patan.sun.com (patan.Sun.COM [192.18.98.43])
+	by postage.hp.com (Postfix) with ESMTP id 0B49827266
+	for <mark_little@hp.com>; Mon,  5 Nov 2001 10:17:16 -0500 (EST)
+Received: from phys-ha1cupa.eng.sun.com ([129.144.34.10])
+	by patan.sun.com (8.9.3+Sun/8.9.3) with ESMTP id IAA07290
+	for <mark_little@hp.com>; Mon, 5 Nov 2001 08:17:00 -0700 (MST)
+Received: from nanciwi (nanciwi [129.144.56.160])
+	by phys-ha1cupa.eng.sun.com (8.8.8+Sun/8.8.8/ENSMAIL,v2.1p1) with SMTP id HAA20439;
+	Mon, 5 Nov 2001 07:17:17 -0800 (PST)
+Message-Id: <200111051517.HAA20439@phys-ha1cupa.eng.sun.com>
+Date: Mon, 5 Nov 2001 07:17:00 -0800 (PST)
+From: Nancy Williams <Nancy.Williams@Sun.COM>
+Reply-To: Nancy Williams <Nancy.Williams@Sun.COM>
+Subject: Expert Group Nomination for JSR 156
+To: mark_little@hp.com
+MIME-Version: 1.0
+Content-Type: TEXT/plain; charset=us-ascii
+Content-MD5: rQ8litbWt64LDp90G+Ao2A==
+X-Mailer: dtmail 1.3.0 @(#)CDE Version 1.4.2 SunOS 5.8 sun4u sparc 
+Sender: mark_little@hp.com
+X-ECS-MailScanner: Scanned successfully
+
+Please consider this Expert Group nomination for the JSR 156 Expert Group.
+
+     Peter Furniss  from Choreology Ltd 
+
+If you do not expect a decision on this candidate within a few days,
+please send the candidate an e-mail letting them know when they can
+expect a decision.
+
+When you do make your decision on this candidate, please communicate that
+decision to them directly.
+
+When you make your decision on the membership of the expert group as a
+whole, such that you feel you can begin work on the draft specification,
+please send that membership list to the PMO, so that we may update the JSR
+page on the JCP web site.
+
+
+Thank you,
+Nancy Williams 
+
+------------- Begin Forwarded Message -------------
+
+Date: Thu, 1 Nov 2001 16:07:48 GMT
+To: expert-nominations@jcp.org
+From: peter.furniss@choreology.com
+SUBJECT: Expert Group Nomination for JSR 156
+
+Expert Group Nomination for JSR 156
+
+
+Nominee Name:
+
+Peter Furniss
+
+
+Contact Address:
+
+13 Austin Friars
+London
+EC2N 2JX
+UK
+
+
+E-Mail Address:
+
+peter.furniss@choreology.com
+
+
+Telephone Number:
+
++44 20 7670 1783
+
+
+Fax Number:
+
++44 20 7670 1785
+
+
+Representing:
+
+Organization
+
+
+Company/Organization Name:
+
+Choreology Ltd
+
+
+Qualifications of Nominee:
+
+Co-chair of spec committee for OASIS BTP; over a decade experience in 
+transactional and other standards, including OSI TP, TIP, OTS. developer of 
+revision of recovery in java ots implementation in previous job.
+
+
+Expertise of Organization:
+
+Choreology have played a leading role in the 
+development of the OASIS Business Transaction
+Protocol as a specification and are implementing
+BTP (in Java)
+
+
+
+------------- End Forwarded Message -------------
+

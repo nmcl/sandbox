@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<jaxtx:jta_message_set
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:jaxtx="C:\temp\src\JSR156\xml\JAXTX.xsd">
+
+    <jaxtx:protocol_message>
+        <jaxtx:identification>
+	    urn:com:sun:jaxtx:transaction_models:jta:1.0.1:before_completion
+	</jaxtx:identification>
+        <jaxtx:specific_data>
+	    <xsd:element name="tranID" type="xsd:anyURI" use="required"/>
+	</jaxtx:specific_data>
+    </jaxtx:protocol_message>
+
+    <jaxtx:protocol_message>
+        <jaxtx:identification>
+	    urn:com:sun:jaxtx:transaction_models:jta:1.0.1:after_completion
+	</jaxtx:identification>
+        <jaxtx:specific_data>
+	    <xsd:element name="tranID" type="xsd:anyURI" use="required"/>
+	</jaxtx:specific_data>
+        <jaxtx:specific_data>
+	    <xsd:element name="status" type="jaxtx:status" use="required"/>
+	</jaxtx:specific_data>	
+    </jaxtx:protocol_message>
+
+    <jaxtx:protocol_message>
+        <jaxtx:identification>
+	    urn:com:sun:jaxtx:transaction_models:jta:1.0.1:commit
+	</jaxtx:identification>
+        <jaxtx:specific_data>
+	    <xsd:element name="tranID" type="xsd:anyURI" use="required"/>
+	</jaxtx:specific_data>
+        <jaxtx:specific_data>
+	    <xsd:element name="onePhase" type="xsd:boolean" use="required"/>
+	</jaxtx:specific_data>	
+    </jaxtx:protocol_message>
+
+    <jaxtx:protocol_message>
+        <jaxtx:identification>
+	    urn:com:sun:jaxtx:transaction_models:jta:1.0.1:start
+	</jaxtx:identification>
+        <jaxtx:specific_data>
+	    <xsd:element name="tranID" type="xsd:anyURI" use="required"/>
+	</jaxtx:specific_data>
+        <jaxtx:specific_data>
+	    <xsd:element name="flags" type="xsd:integer" use="required"/>
+	</jaxtx:specific_data>	
+    </jaxtx:protocol_message>
+
+    <jaxtx:protocol_message>
+        <jaxtx:identification>
+	    urn:com:sun:jaxtx:transaction_models:jta:1.0.1:end
+	</jaxtx:identification>
+        <jaxtx:specific_data>
+	    <xsd:element name="tranID" type="xsd:anyURI" use="required"/>
+	</jaxtx:specific_data>
+        <jaxtx:specific_data>
+	    <xsd:element name="flags" type="xsd:integer" use="required"/>
+	</jaxtx:specific_data>	
+    </jaxtx:protocol_message>
+
+    <jaxtx:protocol_message>
+        <jaxtx:identification>
+	    urn:com:sun:jaxtx:transaction_models:jta:1.0.1:forget
+	</jaxtx:identification>
+        <jaxtx:specific_data>
+	    <xsd:element name="tranID" type="xsd:anyURI" use="required"/>
+	</jaxtx:specific_data>
+    </jaxtx:protocol_message>
+
+    <jaxtx:protocol_message>
+        <jaxtx:identification>
+	    urn:com:sun:jaxtx:transaction_models:jta:1.0.1:isSameRM
+	</jaxtx:identification>
+        <jaxtx:specific_data>
+	    <xsd:element name="xares" type="xsd:anyURI" use="required"/>
+	</jaxtx:specific_data>
+    </jaxtx:protocol_message>
+
+    <jaxtx:protocol_message>
+        <jaxtx:identification>
+	    urn:com:sun:jaxtx:transaction_models:jta:1.0.1:isSameRM_response
+	</jaxtx:identification>
+        <jaxtx:specific_data>
+	    <xsd:element name="isSameRM" type="xsd:boolean" use="required"/>
+	</jaxtx:specific_data>
+    </jaxtx:protocol_message>
+
+    <jaxtx:protocol_message>
+        <jaxtx:identification>
+	    urn:com:sun:jaxtx:transaction_models:jta:1.0.1:prepare
+	</jaxtx:identification>
+        <jaxtx:specific_data>
+	    <xsd:element name="tranID" type="xsd:anyURI" use="required"/>
+	</jaxtx:specific_data>
+    </jaxtx:protocol_message>
+
+    <jaxtx:protocol_message>
+        <jaxtx:identification>
+	    urn:com:sun:jaxtx:transaction_models:jta:1.0.1:prepare_response
+	</jaxtx:identification>
+        <jaxtx:specific_data>
+	    <xsd:element name="prepare" type="xsd:integer" use="required"/>
+	</jaxtx:specific_data>
+    </jaxtx:protocol_message>
+
+    <jaxtx:protocol_message>
+        <jaxtx:identification>
+	    urn:com:sun:jaxtx:transaction_models:jta:1.0.1:recover
+	</jaxtx:identification>
+        <jaxtx:specific_data>
+	    <xsd:element name="flag" type="xsd:integer" use="required"/>
+	</jaxtx:specific_data>
+    </jaxtx:protocol_message>
+
+    <jaxtx:protocol_message>
+        <jaxtx:identification>
+	    urn:com:sun:jaxtx:transaction_models:jta:1.0.1:recover_response
+	</jaxtx:identification>
+        <jaxtx:specific_data>
+	    <xsd:sequence>
+	        <xsd:element name="tranID" type="xsd:anyURI" use="required"/>
+	    </xsd:sequence>
+	</jaxtx:specific_data>
+    </jaxtx:protocol_message>
+
+    <jaxtx:protocol_message>
+        <jaxtx:identification>
+	    urn:com:sun:jaxtx:transaction_models:jta:1.0.1:rollback
+	</jaxtx:identification>
+        <jaxtx:specific_data>
+	    <xsd:element name="tranID" type="xsd:anyURI" use="required"/>
+	</jaxtx:specific_data>
+    </jaxtx:protocol_message>
+
+    <jaxtx:protocol_message>
+        <jaxtx:identification>
+	    urn:com:sun:jaxtx:transaction_models:jta:1.0.1:getTransactionTimeout
+	</jaxtx:identification>
+    </jaxtx:protocol_message>
+
+    <jaxtx:protocol_message>
+        <jaxtx:identification>
+	    urn:com:sun:jaxtx:transaction_models:jta:1.0.1:getTransactionTimeout_response
+	</jaxtx:identification>
+        <jaxtx:specific_data>
+	    <xsd:element name="timeout" type="xsd:integer" use="required"/>
+	</jaxtx:specific_data>
+    </jaxtx:protocol_message>
+
+    <jaxtx:protocol_message>
+        <jaxtx:identification>
+	    urn:com:sun:jaxtx:transaction_models:jta:1.0.1:setTransactionTimeout
+	</jaxtx:identification>
+        <jaxtx:specific_data>
+	    <xsd:element name="seconds" type="xsd:integer" use="required"/>
+	</jaxtx:specific_data>
+    </jaxtx:protocol_message>
+
+    <jaxtx:protocol_message>
+        <jaxtx:identification>
+	    urn:com:sun:jaxtx:transaction_models:jta:1.0.1:setTransactionTimeout_response
+	</jaxtx:identification>
+        <jaxtx:specific_data>
+	    <xsd:element name="timeout_set" type="xsd:boolean" use="required"/>
+	</jaxtx:specific_data>
+    </jaxtx:protocol_message>
+
+</jaxtx:jta_message_set>

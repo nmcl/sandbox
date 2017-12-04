@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<jaxtx:transaction-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxtx="C:\temp\src\JSR156\xml\JAXTX.xsd">
+	<jaxtx:tx-info>
+	    <jaxtx:transaction-name>
+		urn:sun:transaction_models:btp
+	    </jaxtx:transaction-name>
+	    <jaxtx:transaction-type-specific-information>
+		Cohesion nesting supported
+	    </jaxtx:transaction-type-specific-information>
+	</jaxtx:tx-info>
+</jaxtx:transaction-config>

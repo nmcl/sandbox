@@ -1,0 +1,125 @@
+Received: from cheviot1.ncl.ac.uk (root@cheviot1.ncl.ac.uk [128.240.233.15]) by ulgham.ncl.ac.uk with ESMTP (8.7.1/8.7.1) id VAA19111 for <mcl@ulgham.ncl.ac.uk>; Wed, 24 Oct 2001 21:44:01 +0100 (BST)
+Received: from bramg1.net.external.hp.com (bramg1.net.external.hp.com [192.6.126.73])
+	by cheviot1.ncl.ac.uk (8.10.1/8.10.1) with ESMTP id f9OKhfL22585
+	for <mark.little@arjuna.com>; Wed, 24 Oct 2001 21:43:41 +0100 (BST)
+Received: from quasit.br.itc.hp.com (quasit.br.itc.hp.com [15.145.8.135])
+	by bramg1.net.external.hp.com (Postfix) with ESMTP id DF5D241
+	for <mark.little@arjuna.com>; Wed, 24 Oct 2001 22:43:40 +0200 (METDST)
+Received: from fowey.BR.ITC.HP.COM (fowey.br.itc.hp.com [15.145.8.186])
+	by quasit.br.itc.hp.com (8.9.3 (PHNE_18979)/8.9.3 SMKit6.0.6 OpenMail) with SMTP id VAA21575
+	for <mark.little@arjuna.com>; Wed, 24 Oct 2001 21:43:40 +0100 (BST)
+Received: from 15.145.8.186 by fowey.BR.ITC.HP.COM (InterScan E-Mail VirusWall NT); Wed, 24 Oct 2001 21:43:40 +0100 (GMT Daylight Time)
+Received: by fowey.br.itc.hp.com with Internet Mail Service (5.5.2653.19)
+	id <VRBRMGPX>; Wed, 24 Oct 2001 21:43:40 +0100
+Received: from fowey.BR.ITC.HP.COM (localhost [127.0.0.1]) by fowey.BR.ITC.HP.COM with SMTP (Microsoft Exchange Internet Mail Service Version 5.5.2653.13)
+	id VRBRMGPV; Wed, 24 Oct 2001 21:43:34 +0100
+Received: from 15.191.2.9 by fowey.BR.ITC.HP.COM (InterScan E-Mail VirusWall NT); Wed, 24 Oct 2001 21:43:34 +0100 (GMT Daylight Time)
+Received: from stamp.hp.com (stamp.hp.com [192.151.27.5])
+	by bramg1.net.external.hp.com (Postfix) with ESMTP id 5CC4E41
+	for <mark_little@bra.exch.hp.com>; Wed, 24 Oct 2001 22:43:33 +0200 (METDST)
+Received: from patan.sun.com (patan.Sun.COM [192.18.98.43])
+	by stamp.hp.com (Postfix) with ESMTP id BA2661F532
+	for <mark_little@hp.com>; Wed, 24 Oct 2001 16:43:31 -0400 (EDT)
+Received: from phys-ha1cupa.eng.sun.com ([129.144.34.10])
+	by patan.sun.com (8.9.3+Sun/8.9.3) with ESMTP id OAA25843
+	for <mark_little@hp.com>; Wed, 24 Oct 2001 14:43:31 -0600 (MDT)
+Received: from nanciwi (nanciwi [129.144.56.160])
+	by phys-ha1cupa.eng.sun.com (8.8.8+Sun/8.8.8/ENSMAIL,v2.1p1) with SMTP id NAA29266;
+	Wed, 24 Oct 2001 13:43:30 -0700 (PDT)
+Message-Id: <200110242043.NAA29266@phys-ha1cupa.eng.sun.com>
+Date: Wed, 24 Oct 2001 13:43:14 -0700 (PDT)
+From: Nancy Williams <Nancy.Williams@Sun.COM>
+Reply-To: Nancy Williams <Nancy.Williams@Sun.COM>
+Subject: Expert Group Nomination for JSR 156
+To: mark_little@hp.com
+MIME-Version: 1.0
+Content-Type: TEXT/plain; charset=us-ascii
+Content-MD5: Uh+eRAIgJUS6jauzizvcTA==
+X-Mailer: dtmail 1.3.0 @(#)CDE Version 1.4.2 SunOS 5.8 sun4u sparc 
+Sender: mark_little@hp.com
+X-ECS-MailScanner: Scanned successfully
+
+Please consider this Expert Group nomination for the JSR 156 Expert Group.
+
+     	Pyounguk Cho  from IONA Technologies 
+
+If you do not expect a decision on this candidate within a few days,
+please send the candidate an e-mail letting them know when they can
+expect a decision.
+
+When you do make your decision on this candidate, please communicate that
+decision to them directly.
+
+When you make your decision on the membership of the expert group as a
+whole, such that you feel you can begin work on the draft specification,
+please send that membership list to the PMO, so that we may update the JSR
+page on the JCP web site.
+
+
+Thank you,
+Nancy Williams 
+
+------------- Begin Forwarded Message -------------
+
+Date: Tue, 23 Oct 2001 21:30:38 GMT
+To: expert-nominations@jcp.org
+From: pyounguk.cho@iona.com
+SUBJECT: Expert Group Nomination for JSR 156
+
+Expert Group Nomination for JSR 156
+
+
+Nominee Name:
+
+Pyounguk Cho
+
+
+Contact Address:
+
+2350 Mission College Blvd.
+Suite 650
+Santa Clara, CA 95054
+
+
+E-Mail Address:
+
+pyounguk.cho@iona.com
+
+
+Telephone Number:
+
++1-408-350-9774
+
+
+Fax Number:
+
+
+
+
+Representing:
+
+Organization
+
+
+Company/Organization Name:
+
+IONA Technologies
+
+
+Qualifications of Nominee:
+
+- Technical staff at Mobile and Embedded products in Oracle
+- Senior Engineer at B2Bi product group in IONA.
+- Voting member of OASIS BTP committee.
+
+
+Expertise of Organization:
+
+IONA Technologies has been developing many distributed system products including 
+Orbix 2000 which is a full-fledged CORBA implementation. Distributed transaction 
+processing is one of services to be provided.
+
+
+
+------------- End Forwarded Message -------------
+

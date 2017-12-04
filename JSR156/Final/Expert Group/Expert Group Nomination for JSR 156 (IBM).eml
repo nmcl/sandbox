@@ -1,0 +1,132 @@
+Received: from cheviot2.ncl.ac.uk (root@cheviot2.ncl.ac.uk [128.240.229.35]) by ulgham.ncl.ac.uk with ESMTP (8.7.1/8.7.1) id PAA04511 for <mcl@ulgham.ncl.ac.uk>; Wed, 14 Nov 2001 15:54:10 GMT
+Received: from bramg1.net.external.hp.com (bramg1.net.external.hp.com [192.6.126.73])
+	by cheviot2.ncl.ac.uk (8.10.1/8.10.1) with ESMTP id fAEFrUL17534
+	for <mark.little@arjuna.com>; Wed, 14 Nov 2001 15:53:30 GMT
+Received: from quasit.br.itc.hp.com (quasit.br.itc.hp.com [15.145.8.135])
+	by bramg1.net.external.hp.com (Postfix) with ESMTP id 0D4ED10C
+	for <mark.little@arjuna.com>; Wed, 14 Nov 2001 16:53:29 +0100 (MET)
+Received: from fowey.BR.ITC.HP.COM (fowey.br.itc.hp.com [15.145.8.186])
+	by quasit.br.itc.hp.com (8.9.3 (PHNE_18979)/8.9.3 SMKit6.0.6 OpenMail) with SMTP id PAA05622
+	for <mark.little@arjuna.com>; Wed, 14 Nov 2001 15:53:28 GMT
+Received: from 15.145.8.186 by fowey.BR.ITC.HP.COM (InterScan E-Mail VirusWall NT); Wed, 14 Nov 2001 15:53:25 -0000 (GMT Standard Time)
+Received: by fowey.br.itc.hp.com with Internet Mail Service (5.5.2653.19)
+	id <W74QPVY9>; Wed, 14 Nov 2001 15:53:25 -0000
+Received: from loddon.br.itc.hp.com (localhost [127.0.0.1]) by loddon.br.itc.hp.com with SMTP (Microsoft Exchange Internet Mail Service Version 5.5.2653.13)
+	id WPYRL0H3; Wed, 14 Nov 2001 15:47:58 -0000
+Received: from 15.191.2.9 by loddon.br.itc.hp.com (InterScan E-Mail VirusWall NT); Wed, 14 Nov 2001 15:47:58 -0000 (GMT Standard Time)
+Received: from postage.hp.com (postage.hp.com [192.151.27.6])
+	by bramg1.net.external.hp.com (Postfix) with ESMTP id 3A38B1CB
+	for <mark_little@bra.exch.hp.com>; Wed, 14 Nov 2001 16:47:57 +0100 (MET)
+Received: from patan.sun.com (patan.Sun.COM [192.18.98.43])
+	by postage.hp.com (Postfix) with ESMTP id 544A4272EE
+	for <mark_little@hp.com>; Wed, 14 Nov 2001 10:47:53 -0500 (EST)
+Received: from phys-ha1cupa.eng.sun.com ([129.144.34.10])
+	by patan.sun.com (8.9.3+Sun/8.9.3) with ESMTP id IAA29969
+	for <mark_little@hp.com>; Wed, 14 Nov 2001 08:47:37 -0700 (MST)
+Received: from nanciwi (nanciwi [129.144.56.160])
+	by phys-ha1cupa.eng.sun.com (8.8.8+Sun/8.8.8/ENSMAIL,v2.1p1) with SMTP id HAA06441;
+	Wed, 14 Nov 2001 07:47:54 -0800 (PST)
+Message-Id: <200111141547.HAA06441@phys-ha1cupa.eng.sun.com>
+Date: Wed, 14 Nov 2001 07:47:37 -0800 (PST)
+From: Nancy Williams <Nancy.Williams@Sun.COM>
+Reply-To: Nancy Williams <Nancy.Williams@Sun.COM>
+Subject: Expert Group Nomination for JSR 156
+To: mark_little@hp.com
+MIME-Version: 1.0
+Content-Type: TEXT/plain; charset=us-ascii
+Content-MD5: TSXgc7IVCadhJRiQiEWw5Q==
+X-Mailer: dtmail 1.3.0 @(#)CDE Version 1.4.2 SunOS 5.8 sun4u sparc 
+Sender: mark_little@hp.com
+X-ECS-MailScanner: Scanned successfully
+
+Please consider this Expert Group nomination for the JSR 156 Expert Group.
+
+     Ian Robinson   from IBM  
+
+If you do not expect a decision on this candidate within a few days,
+please send the candidate an e-mail letting them know when they can
+expect a decision.
+
+When you do make your decision on this candidate, please communicate that
+decision to them directly.
+
+When you make your decision on the membership of the expert group as a
+whole, such that you feel you can begin work on the draft specification,
+please send that membership list to the PMO, so that we may update the JSR
+page on the JCP web site.
+
+
+Thank you,
+Nancy Williams 
+
+
+
+
+------------- Begin Forwarded Message -------------
+
+Date: Tue, 13 Nov 2001 15:15:22 GMT
+To: expert-nominations@jcp.org
+From: ian_robinson@uk.ibm.com
+SUBJECT: Expert Group Nomination for JSR 156
+
+Expert Group Nomination for JSR 156
+
+
+Nominee Name:
+
+Ian Robinson
+
+
+Contact Address:
+
+IBM Hursley Lab
+Hursley
+WINCHESTER
+Hant
+SO21 2JN
+UK
+
+
+E-Mail Address:
+
+ian_robinson@uk.ibm.com
+
+
+Telephone Number:
+
+01962 818626
+
+
+Fax Number:
+
+01962 818626
+
+
+Representing:
+
+Organization
+
+
+Company/Organization Name:
+
+IBM
+
+
+Qualifications of Nominee:
+
+I am IBM's representative for the work within the OMG on the CORBA Activity 
+service specification and am the spec lead on JSR95 (J2EE Activity service).
+I am the transaction architect for IBM's WebSphere Application Server.
+
+
+Expertise of Organization:
+
+IBM has many years experience is distributed transaction technologies and 
+distributed computing in general.
+IBM is one of the industry leaders in defining the direction of the emerging web 
+services technologies.
+
+
+
+------------- End Forwarded Message -------------
+

@@ -1,0 +1,120 @@
+Received: from cheviot1.ncl.ac.uk (cheviot1.ncl.ac.uk [128.240.233.15])
+	by ingram.ncl.ac.uk (8.8.8+Sun/8.8.8) with ESMTP id MAA27236
+	for <nmcl@ingram.ncl.ac.uk>; Fri, 15 Nov 2002 12:40:15 GMT
+Received: from d06lmsgate-4.uk.ibm.COM (d06lmsgate-4.uk.ibm.com [195.212.29.4])
+	by cheviot1.ncl.ac.uk (8.10.1/8.10.1) with ESMTP id gAFChDn27317
+	for <m.c.little@NCL.AC.UK>; Fri, 15 Nov 2002 12:43:13 GMT
+Received: from d06relay02.portsmouth.uk.ibm.com (d06relay02.portsmouth.uk.ibm.com [9.166.84.148])
+	by d06lmsgate-4.uk.ibm.COM (1.0.0) with ESMTP id MAA113796
+	for <m.c.little@NCL.AC.UK>; Fri, 15 Nov 2002 12:24:01 GMT
+Received: from d06ml007.portsmouth.uk.ibm.com (d06ml007_cs0 [9.180.35.36])
+	by d06relay02.portsmouth.uk.ibm.com (8.12.3/NCO/VER6.4) with ESMTP id gAFChBoM045578
+	for <m.c.little@NCL.AC.UK>; Fri, 15 Nov 2002 12:43:11 GMT
+Subject: Re: WS-Tx mapping
+To: m.c.little@ncl.ac.uk
+X-Mailer: Lotus Notes Release 5.0.7  March 21, 2001
+Message-ID: <OFFDEDCEEC.2503FA8A-ON80256C72.0042B470@portsmouth.uk.ibm.com>
+From: "Ian Robinson" <ian_robinson@uk.ibm.com>
+Date: Fri, 15 Nov 2002 12:09:31 +0000
+X-MIMETrack: Serialize by Router on d06ml007/06/M/IBM(Release 5.0.9a |January 7, 2002) at
+ 15/11/2002 12:43:11
+MIME-Version: 1.0
+Content-type: text/plain; charset=us-ascii
+X-Newcastle-MailScanner: Found to be clean (of known viruses)
+Content-Length: 4386
+
+As far as writing the draft mapping, yes - please go ahead with a first
+draft. That would be very helpful.
+
+Ian Robinson,
+Senior Technical Staff Member,
+WebSphere Transactions Architecture & Development,
+IBM Hursley Lab, UK
+Tel +44-(0)1962-818626    Tie: 724-8626
+ian_robinson@uk.ibm.com
+
+----- Forwarded by Ian Robinson/UK/IBM on 15/11/2002 12:08 -----
+|---------+---------------------------->
+|         |           Ian Robinson     |
+|         |                            |
+|         |           15/11/2002 12:07 |
+|         |                            |
+|---------+---------------------------->
+  >----------------------------------------------------------------------------------------------------------------|
+  |                                                                                                                |
+  |       To:      "Mark Little" <m.c.little@ncl.ac.uk>                                                            |
+  |       cc:                                                                                                      |
+  |       From:    Ian Robinson/UK/IBM@IBMGB                                                                       |
+  |       Subject: Re: WS-Tx mapping(Document link: Ian Robinson)                                                  |
+  |                                                                                                                |
+  |                                                                                                                |
+  |                                                                                                                |
+  |                                                                                                                |
+  |                                                                                                                |
+  >----------------------------------------------------------------------------------------------------------------|
+
+
+
+Hi Mark. The WSDL needs a major overhaul anyway to support RPC-style usage.
+To the best of my knowledge it is not generated from Java. We have versions
+of wsdl2java that accept it as valid wsdl, but modelling each 2PC request
+(in WS-Tx/AT) as  2 1-way messages is not appropriate and we're trying to
+fix it.
+
+Regards...Ian
+
+Ian Robinson,
+Senior Technical Staff Member,
+WebSphere Transactions Architecture & Development,
+IBM Hursley Lab, UK
+Tel +44-(0)1962-818626    Tie: 724-8626
+ian_robinson@uk.ibm.com
+
+
+
+|---------+---------------------------->
+|         |           "Mark Little"    |
+|         |           <m.c.little@ncl.a|
+|         |           c.uk>            |
+|         |                            |
+|         |           15/11/2002 10:12 |
+|         |                            |
+|---------+---------------------------->
+  >----------------------------------------------------------------------------------------------------------------|
+  |                                                                                                                |
+  |       To:       Ian Robinson/UK/IBM@IBMGB                                                                      |
+  |       cc:                                                                                                      |
+  |       Subject:  Re: WS-Tx mapping                                                                              |
+  |                                                                                                                |
+  |                                                                                                                |
+  >----------------------------------------------------------------------------------------------------------------|
+
+
+
+> Mark, I'd be happy to if you still want me to :-).
+
+Of course :-)
+
+> Time. however, is going
+> to be a problem. It would probably only take me a few days but its not
+> obvious where I'll find those.
+
+I understand. How about I take a first stab and then pass it to you for a
+look before we go public?
+
+> I'd like to do the Activity service piece
+> too.
+
+I think that's extremely important and only you can do it.
+
+Mark.
+
+P.S. BTW, the wscoor.wsdl and wstx.wsdl are invalid WSDL as far as being
+used in the axis wsdl2java. Have you tried them? Any chance you have the
+Java they were generated from?
+
+
+
+
+
+

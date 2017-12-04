@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="Coordinator_Service"
+  targetNamespace="http://www.coordinatorservice.com/Coordinator"
+  xmlns="http://schemas.xmlsoap.org/wsdl/"
+  xmlns:interface="http://www.coordinatorservice.com/Coordinator-interface"
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+  xmlns:types="http://www.coordinatorservice.com/Coordinator"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+<import
+    location="http://localhost:8080/wsdl/C:/temp/Coordinator_Service-interface.wsdl"
+    namespace="http://www.coordinatorservice.com/Coordinator-interface">
+</import>
+
+<service
+      name="Coordinator_Service">
+  <documentation>IBM WSTK V2.4 generated service definition file</documentation>
+  <port
+      binding="interface:Coordinator_ServiceBinding"
+        name="Coordinator_ServicePort">
+    <soap:address location="http://localhost:8080/soap/servlet/rpcrouter"/>
+  </port>
+</service>
+
+</definitions>

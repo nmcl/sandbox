@@ -1,0 +1,67 @@
+Received: from cheviot2.ncl.ac.uk (cheviot2.ncl.ac.uk [128.240.229.35])
+	by ingram.ncl.ac.uk (8.8.8+Sun/8.8.8) with ESMTP id WAA26569
+	for <nmcl@ingram.ncl.ac.uk>; Thu, 14 Nov 2002 22:04:48 GMT
+Received: from d06lmsgate-4.uk.ibm.COM (d06lmsgate-4.uk.ibm.com [195.212.29.4])
+	by cheviot2.ncl.ac.uk (8.10.1/8.10.1) with ESMTP id gAEM7TO03130
+	for <m.c.little@ncl.ac.uk>; Thu, 14 Nov 2002 22:07:29 GMT
+Received: from d06relay02.portsmouth.uk.ibm.com (d06relay02.portsmouth.uk.ibm.com [9.166.84.148])
+	by d06lmsgate-4.uk.ibm.COM (1.0.0) with ESMTP id VAA150414
+	for <m.c.little@ncl.ac.uk>; Thu, 14 Nov 2002 21:48:17 GMT
+Received: from d06ml007.portsmouth.uk.ibm.com (d06ml007_cs0 [9.180.35.36])
+	by d06relay02.portsmouth.uk.ibm.com (8.12.3/NCO/VER6.4) with ESMTP id gAEM7Q6v170144
+	for <m.c.little@ncl.ac.uk>; Thu, 14 Nov 2002 22:07:28 GMT
+Subject: Re: WS-Tx mapping
+To: "Mark Little" <m.c.little@ncl.ac.uk>
+X-Mailer: Lotus Notes Release 5.0.7  March 21, 2001
+Message-ID: <OF5DA32824.E438E6E0-ON80256C71.0079443C@portsmouth.uk.ibm.com>
+From: "Ian Robinson" <ian_robinson@uk.ibm.com>
+Date: Thu, 14 Nov 2002 22:06:27 +0000
+X-MIMETrack: Serialize by Router on d06ml007/06/M/IBM(Release 5.0.9a |January 7, 2002) at
+ 14/11/2002 22:07:27
+MIME-Version: 1.0
+Content-type: text/plain; charset=us-ascii
+X-Newcastle-MailScanner: Found to be clean (of known viruses)
+Content-Length: 1828
+
+
+Mark, I'd be happy to if you still want me to :-). Time. however, is going
+to be a problem. It would probably only take me a few days but its not
+obvious where I'll find those. I'd like to do the Activity service piece
+too.
+
+Ian Robinson,
+Senior Technical Staff Member,
+WebSphere Transactions Architecture & Development,
+IBM Hursley Lab, UK
+Tel +44-(0)1962-818626    Tie: 724-8626
+ian_robinson@uk.ibm.com
+
+
+
+|---------+---------------------------->
+|         |           "Mark Little"    |
+|         |           <m.c.little@ncl.a|
+|         |           c.uk>            |
+|         |                            |
+|         |           06/11/2002 12:04 |
+|         |                            |
+|---------+---------------------------->
+  >----------------------------------------------------------------------------------------------------------------|
+  |                                                                                                                |
+  |       To:       Ian Robinson/UK/IBM@IBMGB                                                                      |
+  |       cc:                                                                                                      |
+  |       Subject:  WS-Tx mapping                                                                                  |
+  |                                                                                                                |
+  |                                                                                                                |
+  >----------------------------------------------------------------------------------------------------------------|
+
+
+
+Ian, do you want to do the WS-Tx mapping for JAXTX? I don't mind taking a
+stab at it, but thought it more appropriate that it come from you.
+
+Mark.
+
+
+
+

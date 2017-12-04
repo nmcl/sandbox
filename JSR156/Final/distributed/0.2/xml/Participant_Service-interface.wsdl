@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="Participant_Service"
+  targetNamespace="http://www.participantservice.com/Participant-interface"
+  xmlns="http://schemas.xmlsoap.org/wsdl/"
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+  xmlns:tns="http://www.participantservice.com/Participant-interface"
+  xmlns:types="http://www.participantservice.com/Participant-interface/types/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+<message
+      name="Inprocess_messageRequest">
+  <part name="meth1_inType1"
+    type="xsd:string"/>
+</message>
+
+<message
+      name="Outprocess_messageResponse">
+  <part name="meth1_outType"
+    type="xsd:string"/>
+</message>
+
+<message
+    name="InidentityRequest"/>
+
+<message
+      name="OutidentityResponse">
+  <part name="meth2_outType"
+    type="xsd:anyURI"/>
+</message>
+
+
+<portType
+      name="Participant_Service">
+  <operation
+        name="process_message">
+    <input
+        message="tns:Inprocess_messageRequest"/>
+    <output
+      message="tns:Outprocess_messageResponse"/>
+  </operation>
+
+  <operation
+        name="identity">
+    <input
+        message="tns:InidentityRequest"/>
+    <output
+    message="tns:OutidentityResponse"/>
+  </operation>
+</portType>
+
+
+
+<binding
+    name="Participant_ServiceBinding"
+      type="tns:Participant_Service">
+  <soap:binding style="rpc"
+      transport="http://schemas.xmlsoap.org/soap/http"/>
+  <operation
+        name="process_message">
+    <soap:operation
+          soapAction="urn:participant-service"/>
+    <input>
+      <soap:body
+          encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+          namespace="urn:participant-service"
+          use="encoded"/>
+    </input>
+    <output>
+      <soap:body
+          encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+          namespace="urn:participant-service"
+      use="encoded"/>
+    </output>
+  </operation>
+  <operation
+        name="identity">
+    <soap:operation
+          soapAction="urn:participant-service"/>
+    <input>
+      <soap:body
+          encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+          namespace="urn:participant-service"
+          use="encoded"/>
+    </input>
+    <output>
+      <soap:body
+          encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+          namespace="urn:participant-service" use="encoded"/>
+    </output>
+  </operation>
+</binding>
+
+</definitions>

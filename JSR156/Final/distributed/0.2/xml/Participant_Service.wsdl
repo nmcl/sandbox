@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="Participant_Service"
+  targetNamespace="http://www.participantservice.com/Participant"
+  xmlns="http://schemas.xmlsoap.org/wsdl/"
+  xmlns:interface="http://www.participantservice.com/Participant-interface"
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+  xmlns:types="http://www.participantservice.com/Participant"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+<import
+    location="http://localhost:8080/wsdl/Participant_Service-interface.wsdl"
+    namespace="http://www.participantservice.com/Participant-interface">
+</import>
+
+<service
+      name="Participant_Service">
+  <documentation>IBM WSTK V2.4 generated service definition file</documentation>
+  <port
+      binding="interface:Participant_ServiceBinding"
+        name="Participant_ServicePort">
+    <soap:address location="http://localhost:8080/soap/servlet/rpcrouter"/>
+  </port>
+</service>
+
+</definitions>

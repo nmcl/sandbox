@@ -1,0 +1,433 @@
+Received: from cheviot2.ncl.ac.uk (cheviot2.ncl.ac.uk [128.240.229.35])
+	by ingram.ncl.ac.uk (8.8.8+Sun/8.8.8) with ESMTP id UAA29787
+	for <nmcl@ingram.ncl.ac.uk>; Mon, 18 Nov 2002 20:29:53 GMT
+Received: from swjscmail2.java.sun.com (swjscmail2.Sun.COM [192.18.99.108])
+	by cheviot2.ncl.ac.uk (8.10.1/8.10.1) with ESMTP id gAIKX6J27878
+	for <m.c.little@NCL.AC.UK>; Mon, 18 Nov 2002 20:33:06 GMT
+Received: from swjscmail1 (swjscmail1.Sun.COM [192.18.99.107])
+	by swjscmail2.java.sun.com (Postfix) with ESMTP
+	id 002D42103D; Mon, 18 Nov 2002 13:30:11 -0700 (MST)
+Received: from JAVA.SUN.COM by JAVA.SUN.COM (LISTSERV-TCP/IP release 1.8d) with
+          spool id 4246146 for JSR-156-EG@JAVA.SUN.COM; Mon, 18 Nov 2002
+          13:28:03 -0700
+Delivered-To: jsr-156-eg@jcp.org
+Received: from d06lmsgate-4.uk.ibm.COM (d06lmsgate-4.uk.ibm.com [195.212.29.4])
+          by swjscmail1.java.sun.com (Postfix) with ESMTP id 763274801 for
+          <JSR-156-EG@JCP.ORG>; Mon, 18 Nov 2002 13:28:02 -0700 (MST)
+Received: from d06relay02.portsmouth.uk.ibm.com
+          (d06relay02.portsmouth.uk.ibm.com [9.166.84.148]) by
+          d06lmsgate-4.uk.ibm.COM (1.0.0) with ESMTP id UAA191998 for
+          <JSR-156-EG@JCP.ORG>; Mon, 18 Nov 2002 20:13:42 GMT
+Received: from d06ml007.portsmouth.uk.ibm.com (d06ml007_cs0 [9.180.35.36]) by
+          d06relay02.portsmouth.uk.ibm.com (8.12.3/NCO/VER6.4) with ESMTP id
+          gAIKWunu154080 for <JSR-156-EG@JCP.ORG>; Mon, 18 Nov 2002 20:32:56 GMT
+X-Mailer: Lotus Notes Release 5.0.7  March 21, 2001
+X-MIMETrack: Serialize by Router on d06ml007/06/M/IBM(Release 5.0.9a |January
+             7, 2002) at 18/11/2002 20:32:56
+MIME-Version: 1.0
+Content-type: text/plain; charset=us-ascii
+Message-ID:  <OF4C5CD2C7.1920F910-ON80256C75.0025CB02@portsmouth.uk.ibm.com>
+Date:         Mon, 18 Nov 2002 07:03:12 +0000
+Reply-To: Java Community Process JSR #156 Expert List <JSR-156-EG@JCP.ORG>
+Sender: Java Community Process JSR #156 Expert List <JSR-156-EG@JCP.ORG>
+From: Ian Robinson <ian_robinson@UK.IBM.COM>
+Subject:      Re: Comments on JSR 156 - EG Version 0.2
+Comments: To: Java Community Process JSR #156 Expert List <JSR-156-EG@JCP.ORG>
+Comments: cc: JSR-156-EG@JCP.ORG
+To: JSR-156-EG@JCP.ORG
+X-Newcastle-MailScanner: Found to be clean (of known viruses)
+Content-Length: 14647
+
+The JSR is about the generic "client application" APIs to transaction
+protocols. Those "client applications" may run in a number of J2EE
+environments, a J2EE environment being an environment with J2EE container
+support. The J2EE specification defines 4 environments: EJB, web, applet
+and client. The model I propose the JSR follow is based on that adopted by
+J2EE for JTA support, which is not to say that JSR 156 be firmly tied in
+any way to JTA - just that it follows an established pattern. That pattern
+is to require the mandatory parts of the specification (whatever they are)
+to be mandatory only in a subset of the defined J2EE environments and
+optional in the others. The mandatory environments should be those where it
+is reasonable to expect transaction function to be supported locally - i.e.
+EJB and web. For the others (applet and client) it should be optional.
+Making function "required" in a client container is not going to be
+acceptable to J2EE vendors if this JSR becomes part of mainstream J2EE. If
+the intent of the JSR is to be stand-alone then it probably matters less.
+
+Regards...Ian
+
+Ian Robinson,
+Senior Technical Staff Member,
+WebSphere Transactions Architecture & Development,
+IBM Hursley Lab, UK
+Tel +44-(0)1962-818626    Tie: 724-8626
+ian_robinson@uk.ibm.com
+
+
+
+|---------+---------------------------->
+|         |           Mark Little      |
+|         |           <m.c.little@NCL.A|
+|         |           C.UK>            |
+|         |           Sent by: Java    |
+|         |           Community Process|
+|         |           JSR #156 Expert  |
+|         |           List             |
+|         |           <JSR-156-EG@JCP.O|
+|         |           RG>              |
+|         |                            |
+|         |                            |
+|         |           15/11/2002 20:25 |
+|         |           Please respond to|
+|         |           Java Community   |
+|         |           Process JSR #156 |
+|         |           Expert List      |
+|         |                            |
+|---------+---------------------------->
+  >----------------------------------------------------------------------------------------------------------------|
+  |                                                                                                                |
+  |       To:       JSR-156-EG@JCP.ORG                                                                             |
+  |       cc:                                                                                                      |
+  |       Subject:  Re: Comments on JSR 156 - EG Version 0.2                                                       |
+  |                                                                                                                |
+  |                                                                                                                |
+  >----------------------------------------------------------------------------------------------------------------|
+
+
+
+> Regarding support in a J2EE client environment, I'm suggesting that
+JSR156
+> should introduce no new mandatory support of anything in the J2EE client,
+> only optional support for UserXMLTransaction.
+
+The JSR is about support for Web Services transactions. If someone wants to
+layer that support under the current JTA client API (UserTransaction), for
+example, then that's their business but would not give them full compliance
+with JSR 156. Making the client-side API optional defeats the point of the
+JSR, which is (and I paraphrase): to provide a generic client-side API that
+does not expose implementation/model specific details to the client, since
+the majority of the time all clients want to do is start and end
+"transactions". The JTA API is not sufficient for this. To be compliant
+with
+JSR 156, client-side support is a fundamental requirement. I have no
+problem
+in saying that the scope of the XMLTransactionManager is down to the
+specific model implementation, but not the main client interface.
+
+>Again, this follows the J2EE
+> pattern established for JTA where JTA support is not required in the
+client
+> or applet containers - see J2EE 1.3 spec, table J2EE.6-1.
+
+This is slightly different I suspect, from what I thought we were
+discussing. Perhaps what you want is best captured in the following:
+
+supporting client-side transactions is optional, but if it is required then
+the UserXMLTransaction API must be used?
+
+I may have mis-interpreted your intentions as:
+
+supporting client-side transactions is optional, and if it is requirend the
+UserXMLTransaction API is optional too.
+
+> I think its fine for the JSR to propose thet UserXMLTransaciton (minus
+the
+> 3 operations discussed) is mandatory in the EJB and web containers (to be
+> compliant with the JSR).
+
+OK.
+
+>
+>
+> > OK. Any suggestion for the exception?
+> (InvalidTransactionDomainException?)
+> Sounds good.
+
+I'll add it.
+
+Mark.
+
+>
+> Thanks...Ian
+>
+> Ian Robinson,
+> Senior Technical Staff Member,
+> WebSphere Transactions Architecture & Development,
+> IBM Hursley Lab, UK
+> Tel +44-(0)1962-818626    Tie: 724-8626
+> ian_robinson@uk.ibm.com
+>
+>
+>
+> |---------+---------------------------->
+> |         |           Mark Little      |
+> |         |           <m.c.little@NCL.A|
+> |         |           C.UK>            |
+> |         |           Sent by: Java    |
+> |         |           Community Process|
+> |         |           JSR #156 Expert  |
+> |         |           List             |
+> |         |           <JSR-156-EG@JCP.O|
+> |         |           RG>              |
+> |         |                            |
+> |         |                            |
+> |         |           15/11/2002 10:26 |
+> |         |           Please respond to|
+> |         |           Java Community   |
+> |         |           Process JSR #156 |
+> |         |           Expert List      |
+> |         |                            |
+> |---------+---------------------------->
+>
+>
+---------------------------------------------------------------------------
+-------------------------------------|
+>   |
+|
+>   |       To:       JSR-156-EG@JCP.ORG
+|
+>   |       cc:
+|
+>   |       Subject:  Re: Comments on JSR 156 - EG Version 0.2
+|
+>   |
+|
+>   |
+|
+>
+>
+---------------------------------------------------------------------------
+-------------------------------------|
+>
+>
+>
+> > ML:
+> > I disagree with some of this. For a start, although we definitely want
+to
+> > fit into J2EE, there
+> > are deployments of web services transactions where a J2EE back-end
+server
+> > isn't going to be present. Furthermore, the locality of the transaction
+> > manager isn't (and shouldn't) be mandated by this specification, so,
+for
+> > example, it could well be residing within the client process. In this
+> > situation, as with, say, the OTS, there is a requirement for any thread
+> of
+> > control (whether client or server) to suspend its transactionality.
+> > However, I agree that providing a mapping onto existing implementations
+> > which have taken the approach you mention is important and perhaps the
+> > current interface doesn't make that as simple as it could be. But I
+don't
+> > think suspend/resume are model specific, hence I don't want to put this
+> > basic functionality in the model specific package. Perhaps there is
+room
+> > for
+> > a basic TransactionManager interface in the core, where suspend and
+> resume
+> > go and we can leave it to implementations as to whether or not an
+> > implementation of this interface is available in specific execution
+> > environments?
+> >
+> > IR:
+> > As a J2EE JSR, we have to be
+> > sensitive to the architecture already well-established in J2EE and in
+> > particular to supporting a division of responsibility between container
+> and
+> > application. Context management, within a J2EE environmant, should be
+> > factorable
+> > as an exclusively container-managed responsibility as it is in JTA. To
+> > quote the
+> > J2EE 1.3 specifcation (J2EE.6.2.1):
+> > "The J2EE programming model divides responsibilities between
+Application
+> > Component Providers and J2EE Product Providers: Application Component
+> > Providers focus on writing business logic and the J2EE Product
+Providers
+> > focus on
+> > providing a managed system infrastructure in which the application
+> > components can
+> > be deployed.
+> > This division leads to a restriction on the functionality that
+> application
+> > components can contain. If application components contain the same
+> > functionality
+> > provided by J2EE system infrastructure, there are clashes and
+> > mis-management of
+> > the functionality."
+> > There should not be any *requirement* in a J2EE environment for
+providers
+> > of
+> > transaction models to expose context management function to
+applications
+> > and we
+> > should go out of our way to ensure it is easy to isolate interfaces
+that
+> > are supposed
+> > to be application facing. If J2EE providers want to 'extend' the rules
+> then
+> > they
+> > can invent (non-portable) ways to do that (like exposing a JNDI
+location
+> to
+> > obtain the extended
+> > interface that includes suspend/resume c.f. TransactionManager). But we
+> > shouldn't
+> > encourage that.
+> > I propose, say, an XMLTransactionManager interface (cf your
+> > UserXMLTransaction interface)
+> > to which the following methods are moved:
+> > getTransactionContext, suspend, resume and perhaps globalIdentity.
+> > UserXMLTransaction should be available to applications and
+> > XMLTransactionManager to
+> > the container.
+>
+> This is pretty much what I had in mind, so I'm happy with this split.
+>
+>
+> > IR:
+> > > The javax.jaxtx package
+> > > documentation should be clear that the
+> > > UserTransaction/UserTransactionFactory/Outcome interfaces are
+> application
+> > > interfaces and TxContext/TxHandle and TxManager (the interface that
+is
+> > > split out from UserTransaction) are container-mediated SPIs.
+> >
+> > ML:
+> > Again, I don't agree with this split. What this does is a) assumes
+> > transaction coordinators reside as a separate service (probably in the
+> J2EE
+> > container the client is calling in to), b) makes it impossible for the
+> > client thread to make non-transactional invocations. Now, I can
+obviously
+> > only base my thoughts on the experiences we've had in the recent past
+on
+> > using Web Services transactions across a number of different
+applications
+> > and environments. A split as I suggested above would (hopefully)
+satisfy
+> > both points of view?
+> >
+> > IR:
+> > While a J2EE client is a valid environment that we need to think about
+> (and
+> > such an
+> > environment may still makes use of the J2EE client container for J2EE
+> > services) we shouldn't use this to define
+> > the architecture for J2EE server components. If client support for
+> > suspend/resume of a particular
+> > type of transaction context becomes a requirement for that transaction
+> > model, then it should be the job of that
+> > transaction model to define its J2EE client architecture. I would
+suggest
+> > following the existing J2EE pattern for
+> > JTA and have the JSR propose that the application subset interface
+> > (UserXMLTransaction with suspend/resume removed)
+> > be optional in a J2EE client (and the TranManager equivalent not
+present
+> at
+> > all as part of the general framework
+> > for clients specified in this JSR).
+>
+> I'm not sure I understand what your proposing: are you suggesting that
+what
+> we currently call UserTransaction (with suspend/resume removed) is
+> optional?
+> With the split of suspend/resume into another class, I can see that this
+> other class should be optional in the client architecture, but not the
+> mainline user transaction interface.
+>
+> >
+> >
+> > IR:
+> > > This
+> > > section could also have a forward reference to section 4.1.2 and
+> explain
+> > > that UserTransaction.configuration() method is the means to access
+the
+> > > metadata at runtime. Which config data exactly is mandatory and which
+> is
+> > > not? Is tx-info the only required element? Are there any predefined
+> > values
+> > > - e.g. for
+> >
+> > ML:
+> > Did you miss something out at the end of the sentence?
+> >
+> > IR: Ah. I meant  " - e.g. for transaction-name?"
+>
+> OK.
+>
+> > IR:
+> > > Section 4.2.1.4 states that "contexts may be shared across multiple
+> > > threads". Some platforms or operating systems may not be able to
+> support
+> > > this and the J2EE specifications are explicit that JTA context is not
+> > > active on multiple threads concurrently. It is concerns such as these
+> > that
+> > > make it important that the specification allow for a container to be
+> > > involved in all context-managing operations (such as suspend/resume).
+> >
+> > ML:
+> > I deliberately used the word "may" rather than "should" in order to
+allow
+> > different implementations. Perhaps something like: "it is
+implementation
+> > dependant as to whether contexts are shared across multiple threads."?
+> >
+> > IR: I don't think any statement at all about sharing contexts across
+> > threads should be made since (a) J2EE
+> > server components have no legal means to start or manage threads and
+(b)
+> I
+> > don't believe context
+> > management should be available to applications to get
+> > the contexts associated with multiple threads concurrently in the first
+> > place.
+>
+> I agree, and the original statement certainly didn't mean that.
+>
+> > Furthermore, we should consider the current restrictions on JTA
+> > transactions and
+> > not try to loosen these generally in the JSR - leave that to specific
+> > transaction models. EJB 2.0 (10.5.11) says:
+> > "Concurrent calls in the same transaction context targeted at the same
+> > entity object are illegal and may
+> > lead to unpredictable results."
+> > All in all I'd rather the JSR was silent on this topic.
+>
+> In my sugegsted modification when I said "implementation" I actually
+meant
+> "transaction implementation", so this should be consistent with what you
+> are
+> suggesting.
+>
+> >
+> >
+> > IR:
+> > >Access to the UserTransactionFactory
+> > > could be restricted to certains types of J2EE component - should
+entity
+> > > beans be able to access this, for example?
+> >
+> > ML:
+> > My personal preference here is to say yes, though I'd be interested in
+> what
+> > others have to say. What do you think?
+> >
+> > IR: It probably depends on specific transaction models. Perhaps we
+should
+> > make
+> > UserTransactionfactory universally available but define exception
+> behaviour
+> > for
+> > getTransactionType such that a TransactionType of "JTA" would result in
+> an
+> > exception
+> > if an entity bean called it.
+>
+> OK. Any suggestion for the exception?
+(InvalidTransactionDomainException?)
+>
+> Mark.
+>
