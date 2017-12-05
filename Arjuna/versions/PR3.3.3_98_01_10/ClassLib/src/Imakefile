@@ -1,0 +1,139 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.11 1995/10/02 15:14:21 ngdp Exp $
+COMMENT
+
+STUBS = ../../Include/Arjuna/ObjState_stub.h ../../Include/Arjuna/Lock_stub.h
+
+LIB = $(LIBARJUNA)
+
+SOURCES = AbstractR.cc \
+	  AbsRecList.cc \
+	  ActionH.cc \
+          ActiveR.cc \
+          AtomicA.cc \
+	  CadaverAR.cc \
+          CadaverLM.cc \
+          CadaverLR.cc \
+          CadaverR.cc \
+          Lock.cc \
+	  Lock_marshall.cc \
+          LockList.cc \
+          LockListI.cc \
+          LockMan.cc \
+          LockR.cc \
+	  LockSeg.cc \
+          LockStore.cc \
+          ObjState.cc \
+	  ObjectState_marshall.cc \
+	  LockStatus_marshall.cc \
+          PersistR.cc \
+          RecList.cc \
+          RecListI.cc \
+          RecordT.cc \
+          RecoveryR.cc \
+	  ServerAA.cc \
+	  SharedSeg.cc \
+	  MappedSeg.cc \
+          StateMan.cc \
+	  $(STUBS)
+
+OBJECTS = AbstractR.o \
+	  AbsRecList.o \
+	  ActionH.o \
+          ActiveR.o \
+          AtomicA.o \
+	  CadaverAR.o \
+          CadaverLM.o \
+          CadaverLR.o \
+          CadaverR.o \
+          Lock.o \
+	  Lock_marshall.o \
+          LockList.o \
+          LockListI.o \
+          LockMan.o \
+          LockR.o \
+	  LockSeg.o \
+          LockStore.o \
+          ObjState.o \
+	  ObjectState_marshall.o \
+	  LockStatus_marshall.o \
+          PersistR.o \
+          RecList.o \
+          RecListI.o \
+          RecordT.o \
+          RecoveryR.o \
+	  ServerAA.o \
+	  SharedSeg.o \
+	  MappedSeg.o \
+          StateMan.o
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES) -I../include)
+
+AllTarget($(STUBS) $(LIB))
+StubTarget($(STUBS))
+
+ObjState.h : ../../Include/Arjuna/ObjState.h
+	@CP_VAR ../../Include/Arjuna/ObjState.h ObjState.h
+
+../../Include/Arjuna/ObjState_stub.h : ObjState_stub.h
+	@echo Copying ObjState_stub.h
+	@sed -e "s;\"ObjectState_stubclass.h\";\<Arjuna/ObjectState_stubclass.h\>;" ObjState_stub.h > ../../Include/Arjuna/ObjState_stub.h
+
+../../Include/Arjuna/ObjectState_stubclass.h : ObjectState_stubclass.h
+	@echo Copying ObjectState_stubclass.h
+	@CP_VAR ObjectState_stubclass.h ../../Include/Arjuna/ObjectState_stubclass.h
+
+Lock.h : ../../Include/Arjuna/Lock.h
+	@CP_VAR ../../Include/Arjuna/Lock.h Lock.h
+
+../../Include/Arjuna/Lock_stub.h : Lock_stub.h
+	@echo Copying Lock_stub.h
+	@sed -e "s;\"ObjectState_stubclass.h\";\<Arjuna/ObjectState_stubclass.h\>;" Lock_stub.h > ../../Include/Arjuna/Lock_stub.h
+
+../../Include/Arjuna/Lock_stubclass.h : Lock_stubclass.h
+	@echo Copying Lock_stubclass.h
+	@CP_VAR Lock_stubclass.h ../../Include/Arjuna/Lock_stubclass.h
+
+MakeStubGen(ObjState,ObjState,ObjState,NOPARAM)
+MakeStubGen(Lock,Lock,Lock,NOPARAM)
+
+MakeLibrary($(LIB),$(OBJECTS))
+
+MakeObjectCPLUSPLUS(AbstractR,NOPARAM)
+MakeObjectCPLUSPLUS(AbsRecList,NOPARAM)
+MakeObjectCPLUSPLUS(ActionH,NOPARAM)
+MakeObjectCPLUSPLUS(ActiveR,NOPARAM)
+MakeObjectCPLUSPLUS(AtomicA,NOPARAM)
+MakeObjectCPLUSPLUS(CadaverLM,NOPARAM)
+MakeObjectCPLUSPLUS(CadaverAR,NOPARAM)
+MakeObjectCPLUSPLUS(CadaverLR,NOPARAM)
+MakeObjectCPLUSPLUS(CadaverR,NOPARAM)
+MakeObjectCPLUSPLUS(Lock,NOPARAM)
+MakeObjectCPLUSPLUS(LockList,NOPARAM)
+MakeObjectCPLUSPLUS(LockListI,NOPARAM)
+MakeObjectCPLUSPLUS(LockMan,NOPARAM)
+MakeObjectCPLUSPLUS(LockR,NOPARAM)
+MakeObjectCPLUSPLUS(LockSeg,NOPARAM)
+MakeObjectCPLUSPLUS(LockStore,NOPARAM)
+MakeObjectCPLUSPLUS(LockStatus_marshall,NOPARAM)
+MakeObjectCPLUSPLUS(ObjState,NOPARAM)
+MakeObjectCPLUSPLUS(ObjectState_marshall,NOPARAM)
+MakeObjectCPLUSPLUS(PersistR,NOPARAM)
+MakeObjectCPLUSPLUS(RecList,NOPARAM)
+MakeObjectCPLUSPLUS(RecListI,NOPARAM)
+MakeObjectCPLUSPLUS(RecordT,NOPARAM)
+MakeObjectCPLUSPLUS(RecoveryR,NOPARAM)
+MakeObjectCPLUSPLUS(ServerAA,NOPARAM)
+MakeObjectCPLUSPLUS(SharedSeg,NOPARAM)
+MakeObjectCPLUSPLUS(MappedSeg,NOPARAM)
+MakeObjectCPLUSPLUS(StateMan,NOPARAM)
+
+TidyTarget(ObjState.h ObjState_stub.h ObjectState_stubclass.h ObjectState_marshall.cc Lock.h Lock_stub.h Lock_stubclass.h Lock_marshall.cc LockStatus_marshall.cc)
+
