@@ -1,0 +1,277 @@
+<!--$Id: build.xml,v 1.7 2003/04/11 13:15:15 nmcl Exp $ -->
+<project name="Arjuna-XTS" default="build" basedir=".">
+
+	<!-- class path behaviour -->
+	<property name="build.sysclasspath" value="last"/>
+
+	<!-- Set default properties filename -->
+	<property name="com.arjuna.mw.xts.properties" value="xts.properties"/>
+
+	<!-- Load Build Properties File -->
+	<property file="${com.arjuna.mw.xts.properties}"/>
+
+	<!-- Set internal property defaults -->
+	<property name="com.arjuna.mwlabs.xts.jar.dest" value="lib"/>
+	<property name="com.arjuna.mwlabs.xts.htdocs.dest" value="htdocs"/>
+
+	<!-- Initialisation -->
+	<target name="com.arjuna.mwlabs.xts.init" depends="com.arjuna.mwlabs.xts.jboss.dir">
+		<!-- Define default build properties -->
+		<tstamp>
+		<format property="com.arjuna.mw.date" pattern="yyyy/MMM/dd HH:mm"/>
+	  	</tstamp>
+
+		<property name="com.arjuna.mw.installationdirectory" location="C:/Progra~1/ATL/axts"/>
+		<property name="com.arjuna.mw.sourceid" value="unknown"/>
+		<property name="com.arjuna.mw.version" value="unknown"/>
+
+		<property name="com.arjuna.mw.builder" value="Arjuna Technologies limited [${user.name}] (${os.name} ${os.version})"/>
+		<property name="com.arjuna.mw.notes" value=""/>
+
+		<echo message="Source ID = ${com.arjuna.mw.sourceid}"/>
+		<echo message="Version   = ${com.arjuna.mw.version}"/>
+		<echo message="Builder   = ${com.arjuna.mw.builder}"/>
+		<echo message="Date      = ${com.arjuna.mw.date}"/>
+		<echo message="Notes     = ${com.arjuna.mw.notes}"/>
+
+		<!-- Installation directory -->
+		<property name="com.arjuna.mwlabs.installationdirectory"
+		    location="${com.arjuna.mw.installationdirectory}"/>
+
+		<!-- Compile with debugging? -->
+		<condition property="com.arjuna.mwlabs.debug" value="no">
+			<equals arg1="${com.arjuna.mw.debug}" arg2="no"/>
+		</condition>
+		<property name="com.arjuna.mwlabs.debug" value="yes"/>
+
+		<!-- Compile with deprecation? -->
+		<condition property="com.arjuna.mwlabs.deprecation" value="yes">
+			<equals arg1="${com.arjuna.mw.deprecation}" arg2="yes"/>
+		</condition>
+		<property name="com.arjuna.mwlabs.deprecation" value="no"/>
+
+		<property name="com.arjuna.mwlabs.xts.htdocs.list" value="com.arjuna.mw.wst.*, com.arjuna.wsc.*, com.arjuna.wst.*"/>
+
+		<!-- Empty directories -->
+		<mkdir dir="WS-C/dev/lib"/>
+		<mkdir dir="WS-T/dev/lib"/>
+
+	</target>
+
+	<!-- Make jboss directory properties the same -->
+	<target name="com.arjuna.mwlabs.xts.jboss.dir" if="jboss.home">
+		<echo message="Setting jboss home to: ${com.arjuna.mwlabs.wscf.jboss.dir}"/>
+
+		<property name="com.arjuna.mwlabs.wscf.jboss.dir"
+		    value="${jboss.home}"/>
+	</target>
+
+	<!-- Project targets - must add all module names to each target -->
+	<target name="build" depends="com.arjuna.mwlabs.xts.init, com.arjuna.mwlabs.xts.wsas.build, com.arjuna.mwlabs.xts.ws-c.build, com.arjuna.mwlabs.xts.wscf.build, com.arjuna.mwlabs.xts.ws-t.build, com.arjuna.mwlabs.xts.wstx.build, htdocs">
+
+	</target>
+
+	<target name="com.arjuna.mwlabs.xts.dojar">
+		<taskdef name="module-to-product" classname="com.arjuna.mw.buildsystem.ant.ModuleToProduct"/>
+	</target>
+
+	<target name="htdocs" depends="com.arjuna.mwlabs.xts.init">
+		<echo message="Building htdocs "/>
+		<mkdir dir="${com.arjuna.mwlabs.xts.htdocs.dest}"/>
+
+		<path id="com.arjuna.mwlabs.xts.htdocs.path">
+			<pathelement path="WS-C/dev/src"/>
+			<pathelement path="WS-T/dev/src"/>
+			<pathelement path="WSTX/classes"/>
+		</path>
+
+		<path id="com.arjuna.mwlabs.xts.lib.classpath">
+			<fileset dir="WSAS/lib">
+				<include name="*.jar"/>
+			</fileset>
+			<fileset dir="WSAS/lib/ext">
+				<include name="*.jar"/>
+			</fileset>
+			<fileset dir="WS-C/build/dev/lib">
+				<include name="*.jar"/>
+			</fileset>
+			<fileset dir="WSCF/lib">
+				<include name="*.jar"/>
+			</fileset>
+			<fileset dir="WSCF/lib/ext">
+				<include name="*.jar"/>
+			</fileset>
+			<fileset dir="WS-T/build/dev/lib">
+				<include name="*.jar"/>
+			</fileset>
+			<fileset dir="WSTX/lib">
+				<include name="*.jar"/>
+			</fileset>
+			<fileset dir="WSTX/lib/ext">
+				<include name="*.jar"/>
+			</fileset>
+		</path>
+
+		<javadoc
+			sourcepathref="com.arjuna.mwlabs.xts.htdocs.path"
+			destdir="${com.arjuna.mwlabs.xts.htdocs.dest}"
+			packagenames="${com.arjuna.mwlabs.xts.htdocs.list}"
+		>
+			<classpath>
+				<path refid="com.arjuna.mwlabs.xts.lib.classpath"/>
+			</classpath>
+		</javadoc>
+	</target>
+
+	<target name="install" depends="build">
+
+		<echo message="Installation directory : ${com.arjuna.mwlabs.installationdirectory}"/>
+
+		<echo message="Installing jar files"/>
+		<mkdir dir="${com.arjuna.mwlabs.installationdirectory}/lib"/>
+		<copy
+			todir="${com.arjuna.mwlabs.installationdirectory}/lib"
+		>
+			<fileset dir="WSAS/lib"/>
+			<fileset dir="WS-C/build/dev/lib">
+				<include name="*.jar"/>
+				<include name="*.wsr"/>
+			</fileset>
+			<fileset dir="WSCF/lib"/>
+			<fileset dir="WS-T/build/dev/lib">
+				<include name="*.jar"/>
+				<include name="*.wsr"/>
+			</fileset>
+			<fileset dir="WSTX/lib"/>
+		</copy>
+		<mkdir dir="${com.arjuna.mwlabs.installationdirectory}/lib/ext"/>
+		<copy
+			todir="${com.arjuna.mwlabs.installationdirectory}/lib/ext"
+		>
+			<fileset dir="WSAS/lib/ext"/>
+			<fileset dir="WSCF/lib/ext"/>
+			<fileset dir="WSTX/lib/ext"/>
+		</copy>
+
+		<echo message="Installing webapps"/>
+		<mkdir dir="${com.arjuna.mwlabs.installationdirectory}/webapps"/>
+		<copy
+			todir="${com.arjuna.mwlabs.installationdirectory}/webapps"
+		>
+			<fileset dir="WS-C/build/dev/webapps"/>
+			<fileset dir="WSCF/webapps"/>
+			<fileset dir="WS-T/build/dev/webapps"/>
+			<fileset dir="WSTX/webapps"/>
+		</copy>
+
+		<echo message="Installing configuration"/>
+		<mkdir dir="${com.arjuna.mwlabs.installationdirectory}/conf"/>
+		<copy
+			todir="${com.arjuna.mwlabs.installationdirectory}/conf"
+		>
+			<fileset dir="WSCF/config"/>
+			<fileset dir="WSTX/config">
+				<include name="*.xml"/>
+			</fileset>
+		</copy>
+
+		<echo message="Installing htdocs"/>
+		<mkdir dir="${com.arjuna.mwlabs.installationdirectory}/docs/api"/>
+		<copy
+			todir="${com.arjuna.mwlabs.installationdirectory}/docs/api"
+		>
+			<fileset dir="htdocs"/>
+		</copy>
+		<copy
+			todir="${com.arjuna.mwlabs.installationdirectory}/docs"
+		>
+			<fileset dir="docs">
+				<include name="*.doc"/>
+			</fileset>
+		</copy>
+		
+		<echo message="Installing demo"/>
+		<mkdir dir="${com.arjuna.mwlabs.installationdirectory}/demo"/>
+	</target>
+
+	<target name="clean" depends="com.arjuna.mwlabs.xts.init,
+		com.arjuna.mwlabs.xts.wsas.clean,
+		com.arjuna.mwlabs.xts.ws-c.clean,
+		com.arjuna.mwlabs.xts.wscf.clean,
+		com.arjuna.mwlabs.xts.ws-t.clean,
+		com.arjuna.mwlabs.xts.wstx.clean">
+
+		<delete dir="${com.arjuna.mwlabs.xts.htdocs.dest}"/>
+
+	</target>
+
+
+	<!-- Module targets -->
+	<target name="com.arjuna.mwlabs.xts.wsas.build">
+		<ant
+			dir="WSAS"
+		/>
+	</target>
+
+	<target name="com.arjuna.mwlabs.xts.ws-c.build">
+		<ant
+			dir="WS-C"
+		/>
+	</target>
+
+	<target name="com.arjuna.mwlabs.xts.wscf.build">
+		<ant
+			dir="WSCF"
+		/>
+	</target>
+
+	<target name="com.arjuna.mwlabs.xts.ws-t.build">
+		<ant
+			dir="WS-T"
+		>
+			<property name="ws-c.home" value="../WS-C"/>
+		</ant>
+	</target>
+
+	<target name="com.arjuna.mwlabs.xts.wstx.build">
+		<ant
+			dir="WSTX"
+		/>
+	</target>
+
+	<target name="com.arjuna.mwlabs.xts.wsas.clean">
+		<ant
+			dir="WSAS"
+			target="clean"
+		/>
+	</target>
+
+	<target name="com.arjuna.mwlabs.xts.ws-c.clean">
+		<ant
+			dir="WS-C"
+			target="clean"
+		/>
+	</target>
+
+	<target name="com.arjuna.mwlabs.xts.wscf.clean">
+		<ant
+			dir="WSCF"
+			target="clean"
+		/>
+	</target>
+
+	<target name="com.arjuna.mwlabs.xts.ws-t.clean">
+		<ant
+			dir="WS-T"
+			target="clean"
+		/>
+	</target>
+
+	<target name="com.arjuna.mwlabs.xts.wstx.clean">
+		<ant
+			dir="WSTX"
+			target="clean"
+		/>
+	</target>
+
+</project>
