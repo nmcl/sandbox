@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+
+<deployment xmlns="http://xml.apache.org/axis/wsdd/" xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+    <service name="ActivationRequester" provider="java:MSG">
+        <parameter name="className" value="com.arjuna.wsc.messaging.axis.MessageListenerService"/>
+        <parameter name="allowedMethods" value="onMessage"/>
+        <parameter name="scope" value="Application"/>
+        <parameter name="MessageListenerJNDIName" value="activationrequester"/>
+    </service>
+
+    <service name="ActivationCoordinatorMSG" provider="java:MSG">
+        <parameter name="className" value="com.arjuna.wsc.messaging.axis.MessageListenerService"/>
+        <parameter name="allowedMethods" value="onMessage"/>
+        <parameter name="scope" value="Application"/>
+        <parameter name="MessageListenerJNDIName" value="activationcoordinator-msg"/>
+    </service>
+
+    <service name="ActivationCoordinatorSRV" provider="java:MSG">
+        <parameter name="className" value="com.arjuna.wsc.messaging.axis.MessageListenerService"/>
+        <parameter name="allowedMethods" value="onMessage"/>
+        <parameter name="scope" value="Application"/>
+        <parameter name="MessageListenerJNDIName" value="activationcoordinator-srv"/>
+    </service>
+
+    <service name="RegistrationRequester" provider="java:MSG">
+        <parameter name="className" value="com.arjuna.wsc.messaging.axis.MessageListenerService"/>
+        <parameter name="allowedMethods" value="onMessage"/>
+        <parameter name="scope" value="Application"/>
+        <parameter name="MessageListenerJNDIName" value="registrationrequester"/>
+    </service>
+
+    <service name="RegistrationCoordinatorMSG" provider="java:MSG">
+        <parameter name="className" value="com.arjuna.wsc.messaging.axis.MessageListenerService"/>
+        <parameter name="allowedMethods" value="onMessage"/>
+        <parameter name="scope" value="Application"/>
+        <parameter name="MessageListenerJNDIName" value="registrationcoordinator-msg"/>
+    </service>
+
+    <service name="RegistrationCoordinatorSRV" provider="java:MSG">
+        <parameter name="className" value="com.arjuna.wsc.messaging.axis.MessageListenerService"/>
+        <parameter name="allowedMethods" value="onMessage"/>
+        <parameter name="scope" value="Application"/>
+        <parameter name="MessageListenerJNDIName" value="registrationcoordinator-srv"/>
+    </service>
+</deployment>
