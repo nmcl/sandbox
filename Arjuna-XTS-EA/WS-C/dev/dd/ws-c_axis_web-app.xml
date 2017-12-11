@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/j2ee/dtds/web-app_2_3.dtd">
+
+<web-app>
+    <display-name>Arjuna Web Services Coordination</display-name>
+
+    <description>Arjuna Web Services Coordination</description>
+
+    <servlet>
+        <servlet-name>Activation Requester Deployment Servlet</servlet-name>
+        <servlet-class>com.arjuna.wsc.messaging.deploy.servlet.ActivationRequesterDeploymentServlet</servlet-class>
+        <init-param>
+            <param-name>JNDIName</param-name>
+            <param-value>activationrequester</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ServiceURI</param-name>
+            <param-value>http://localhost/jboss-net/services/ActivationRequester</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>Activation Coordinator Deployment Servlet</servlet-name>
+        <servlet-class>com.arjuna.wsc.messaging.deploy.servlet.ActivationCoordinatorDeploymentServlet</servlet-class>
+        <init-param>
+            <param-name>JNDIName</param-name>
+            <param-value>activationcoordinator</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ServiceURI</param-name>
+            <param-value>http://localhost/jboss-net/services/ActivationCoordinator</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>Context Factory Mapper Deployment Servlet</servlet-name>
+        <servlet-class>com.arjuna.wsc.deploy.servlet.ContextFactoryMapperDeploymentServlet</servlet-class>
+        <init-param>
+            <param-name>JNDIName</param-name>
+            <param-value>contextfactorymapper</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ServiceURI</param-name>
+            <param-value>http://localhost/jboss-net/services/ActivationCoordinator</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>Registration Requester Deployment Servlet</servlet-name>
+        <servlet-class>com.arjuna.wsc.messaging.deploy.servlet.RegistrationRequesterDeploymentServlet</servlet-class>
+        <init-param>
+            <param-name>JNDIName</param-name>
+            <param-value>registrationrequester</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ServiceURI</param-name>
+            <param-value>http://localhost/jboss-net/services/RegistrationRequester</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>Registration Coordinator Deployment Servlet</servlet-name>
+        <servlet-class>com.arjuna.wsc.messaging.deploy.servlet.RegistrationCoordinatorDeploymentServlet</servlet-class>
+        <init-param>
+            <param-name>JNDIName</param-name>
+            <param-value>registrationcoordinator</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ServiceURI</param-name>
+            <param-value>http://localhost/jboss-net/services/RegistrationCoordinator</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>Registrar Mapper Deployment Servlet</servlet-name>
+        <servlet-class>com.arjuna.wsc.deploy.servlet.RegistrarMapperDeploymentServlet</servlet-class>
+        <init-param>
+            <param-name>JNDIName</param-name>
+            <param-value>registrarmapper</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ServiceURI</param-name>
+            <param-value>http://localhost/jboss-net/services/RegistrationCoordinator</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>Activation Dispatcher Deployment Servlet</servlet-name>
+        <servlet-class>com.arjuna.wsc.dispatcher.deploy.servlet.ActivationDispatcherDeploymentServlet</servlet-class>
+        <init-param>
+            <param-name>ActivationCoordinatorJNDIName</param-name>
+            <param-value>activationcoordinator</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ContextFactoryMapperJNDIName</param-name>
+            <param-value>contextfactorymapper</param-value>
+        </init-param>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>Registration Dispatcher Deployment Servlet</servlet-name>
+        <servlet-class>com.arjuna.wsc.dispatcher.deploy.servlet.RegistrationDispatcherDeploymentServlet</servlet-class>
+        <init-param>
+            <param-name>RegistrationCoordinatorJNDIName</param-name>
+            <param-value>registrationcoordinator</param-value>
+        </init-param>
+        <init-param>
+            <param-name>RegistrarMapperJNDIName</param-name>
+            <param-value>registrarmapper</param-value>
+        </init-param>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Activation Requester Deployment Servlet</servlet-name>
+        <url-pattern>/dummy_ar</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Activation Coordinator Deployment Servlet</servlet-name>
+        <url-pattern>/dummy_ac</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Context Factory Mapper Deployment Servlet</servlet-name>
+        <url-pattern>/dummy-cfms</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Registration Requester Deployment Servlet</servlet-name>
+        <url-pattern>/dummy_rr</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Registration Coordinator Deployment Servlet</servlet-name>
+        <url-pattern>/dummy_rc</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Registrar Mapper Deployment Servlet</servlet-name>
+        <url-pattern>/dummy-rms</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Activation Dispatcher Deployment Servlet</servlet-name>
+        <url-pattern>/dummy-ad</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Registration Dispatcher Deployment Servlet</servlet-name>
+        <url-pattern>/dummy-rd</url-pattern>
+    </servlet-mapping>
+</web-app>

@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+
+<deployment xmlns="http://xml.apache.org/axis/wsdd/" xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+    <service name="ActivationRequester" provider="java:MSG">
+        <parameter name="className" value="com.arjuna.wsc.messaging.axis.MessageListenerService"/>
+        <parameter name="allowedMethods" value="onMessage"/>
+        <parameter name="scope" value="Application"/>
+        <parameter name="MessageListenerJNDIName" value="activationrequester"/>
+    </service>
+
+    <service name="ActivationCoordinator" provider="java:MSG">
+        <parameter name="className" value="com.arjuna.wsc.messaging.axis.MessageListenerService"/>
+        <parameter name="allowedMethods" value="onMessage"/>
+        <parameter name="scope" value="Application"/>
+        <parameter name="MessageListenerJNDIName" value="activationcoordinator"/>
+    </service>
+
+    <service name="RegistrationRequester" provider="java:MSG">
+        <parameter name="className" value="com.arjuna.wsc.messaging.axis.MessageListenerService"/>
+        <parameter name="allowedMethods" value="onMessage"/>
+        <parameter name="scope" value="Application"/>
+        <parameter name="MessageListenerJNDIName" value="registrationrequester"/>
+    </service>
+
+    <service name="RegistrationCoordinator" provider="java:MSG">
+        <parameter name="className" value="com.arjuna.wsc.messaging.axis.MessageListenerService"/>
+        <parameter name="allowedMethods" value="onMessage"/>
+        <parameter name="scope" value="Application"/>
+        <parameter name="MessageListenerJNDIName" value="registrationcoordinator"/>
+    </service>
+</deployment>
