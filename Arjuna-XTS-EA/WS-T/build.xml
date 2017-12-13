@@ -1,0 +1,273 @@
+<?xml version="1.0"?>
+
+<!-- ====================================================================== -->
+<!--                                                                        -->
+<!--           Copyright (c) 2003, Arjuna Technologies Limited.             -->
+<!--                                                                        -->
+<!--                       Web service - Transaction                        -->
+<!--                                                                        -->
+<!-- ====================================================================== -->
+
+<project name="WebServicesTransaction" default="tests-deploy" basedir=".">
+
+    <!-- ================================================================== -->
+
+    <property name="support.jaxm"            value="false"/>
+    <property name="support.axis"            value="true"/>
+
+    <property name="jwsdp.home"              value="c:/jwsdp-1.0"/>
+    <property name="jboss.home"              value="c:/progra~1/jboss-3.2.0RC1"/>
+    <property name="ws-c.home"               value="../ws-c"/>
+
+    <!-- ================================================================== -->
+
+    <property name="build.dir"               value="build"/>
+    <property name="dev.src.dir"             value="dev/src"/>
+    <property name="dev.lib.dir"             value="dev/lib"/>
+    <property name="dev.dd.dir"              value="dev/dd"/>
+    <property name="tests.src.dir"           value="tests/src"/>
+    <property name="tests.lib.dir"           value="tests/lib"/>
+    <property name="tests.dd.dir"            value="tests/dd"/>
+    <property name="build.dev.classes.dir"   value="${build.dir}/dev/classes"/>
+    <property name="build.dev.lib.dir"       value="${build.dir}/dev/lib"/>
+    <property name="build.dev.dd.dir"        value="${build.dir}/dev/dd"/>
+    <property name="build.dev.webapps.dir"   value="${build.dir}/dev/webapps"/>
+    <property name="build.tests.classes.dir" value="${build.dir}/tests/classes"/>
+    <property name="build.tests.lib.dir"     value="${build.dir}/tests/lib"/>
+    <property name="build.tests.dd.dir"      value="${build.dir}/tests/dd"/>
+    <property name="build.tests.webapps.dir" value="${build.dir}/tests/webapps"/>
+
+    <property name="javac.debug"             value="on"/>
+    <property name="javac.optimize"          value="off"/>
+
+    <property name="adminclient.class"       value="org.apache.axis.client.AdminClient"/>
+
+    <path id="jaxm.path">
+        <pathelement location="${jwsdp.home}/common/classes"/>
+        <fileset dir="${jwsdp.home}/common/lib" includes="*.jar"/>
+        <fileset dir="${jwsdp.home}/common/endorsed" includes="*.jar"/>
+    </path>
+
+    <path id="jboss.path">
+        <fileset dir="${jboss.home}/lib" includes="*.jar"/>
+        <fileset dir="${jboss.home}/server/all/lib" includes="*.jar"/>
+        <fileset dir="${jboss.home}/server/all/deploy/jboss-net.sar" includes="*.jar"/>
+    </path>
+
+    <path id="ws-c.path">
+        <pathelement location="${ws-c.home}/build/dev/classes"/>
+    </path>
+
+    <path id="dev.lib.path">
+        <fileset dir="${dev.lib.dir}" includes="*.jar"/>
+    </path>
+
+    <path id="build.dev.classes.path">
+        <pathelement location="${build.dev.classes.dir}"/>
+    </path>
+
+    <path id="tests.lib.path">
+        <fileset dir="${tests.lib.dir}" includes="*.jar"/>
+    </path>
+
+    <path id="build.tests.classes.path">
+        <pathelement location="${build.tests.classes.dir}"/>
+    </path>
+
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+        <delete>
+            <fileset dir="." includes="**/*.bak" defaultexcludes="no"/>
+            <fileset dir="." includes="**/*~"    defaultexcludes="no"/>
+            <fileset dir="." includes="**/#*#"   defaultexcludes="no"/>
+            <fileset dir="." includes="**/.#*"   defaultexcludes="no"/>
+        </delete>
+    </target>
+
+    <target name="init" depends="clean,init-properties,init-dir"/>
+
+    <target name="init-properties">
+        <condition property="build.support.jaxm">
+            <equals arg1="${support.jaxm}" arg2="true"/> <!-- istrue value="${support.jaxm}"/ Changed for compatability with ant-1.4 -->
+        </condition>
+        <condition property="build.support.axis">
+            <equals arg1="${support.axis}" arg2="true"/> <!-- istrue value="${support.axis}"/ Changed for compatability with ant-1.4 -->
+        </condition>
+    </target>
+
+    <target name="init-dir">
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${build.dev.classes.dir}"/>
+        <mkdir dir="${build.dev.lib.dir}"/>
+        <mkdir dir="${build.dev.dd.dir}"/>
+        <mkdir dir="${build.dev.webapps.dir}"/>
+        <mkdir dir="${build.tests.classes.dir}"/>
+        <mkdir dir="${build.tests.lib.dir}"/>
+        <mkdir dir="${build.tests.dd.dir}"/>
+        <mkdir dir="${build.tests.webapps.dir}"/>
+    </target>
+
+    <target name="dev-compile" depends="dev-compile-jaxm,dev-compile-axis"/>
+
+    <target name="dev-compile-jaxm" depends="init" if="build.support.jaxm">
+        <javac destdir="${build.dev.classes.dir}" debug="${javac.debug}" optimize="${javac.optimize}">
+            <classpath>
+                <path refid="jaxm.path"/>
+                <path refid="ws-c.path"/>
+                <path refid="dev.lib.path"/>
+            </classpath>
+            <src path="${dev.src.dir}"/>
+            <exclude name="com/arjuna/wst/messaging/axis/**/*.java"/>
+        </javac>
+    </target>
+
+    <target name="dev-compile-axis" depends="init" if="build.support.axis">
+        <javac destdir="${build.dev.classes.dir}" debug="${javac.debug}" optimize="${javac.optimize}">
+            <classpath>
+                <path refid="jboss.path"/>
+                <path refid="ws-c.path"/>
+                <path refid="dev.lib.path"/>
+            </classpath>
+            <src path="${dev.src.dir}"/>
+            <exclude name="com/arjuna/wst/messaging/jaxm/**/*.java"/>
+        </javac>
+    </target>
+
+    <target name="dev-jars" depends="dev-jars-jaxm,dev-jars-axis"/>
+
+    <target name="dev-jars-jaxm" depends="dev-compile" if="build.support.jaxm"/>
+
+    <target name="dev-jars-axis" depends="dev-compile" if="build.support.axis">
+        <jar jarfile="${build.dev.lib.dir}/ws-t.jar"> 
+            <fileset dir="${build.dev.classes.dir}">
+                <exclude name="com/arjuna/wst/messaging/axis/MessageListenerService.class"/>
+                <exclude name="com/arjuna/wst/messaging/deploy/servlet/**/*.class"/>
+                <exclude name="com/arjuna/wst/dispatcher/deploy/servlet/**/*.class"/>
+            </fileset>
+        </jar>
+        <copy file="${dev.dd.dir}/ws-t_axis_deployment.xml" tofile="${build.dev.dd.dir}/web-service.xml"/>
+        <jar jarfile="${build.dev.lib.dir}/ws-t.wsr"> 
+            <metainf dir="${build.dev.dd.dir}">
+                <include name="web-service.xml"/>
+            </metainf>
+            <fileset dir="${build.dev.classes.dir}">
+                <include name="com/arjuna/wst/messaging/axis/MessageListenerService.class"/>
+            </fileset>
+        </jar>
+    </target>
+
+    <target name="dev-webapps" depends="dev-webapps-jaxm,dev-webapps-axis"/>
+
+    <target name="dev-webapps-jaxm" depends="dev-jars" if="build.support.jaxm"/>
+
+    <target name="dev-webapps-axis" depends="dev-jars" if="build.support.axis">
+        <war warfile="${build.dev.webapps.dir}/ws-t.war" webxml="${dev.dd.dir}/ws-t_axis_web-app.xml">
+            <lib dir="${dev.lib.dir}" includes="*.jar"/>
+            <classes dir="${build.dev.classes.dir}">
+                <include name="com/arjuna/wst/messaging/deploy/servlet/**/*.class"/>
+                <include name="com/arjuna/wst/dispatcher/deploy/servlet/**/*.class"/>
+            </classes>
+        </war>
+    </target>
+
+    <target name="tests-compile" depends="tests-compile-jaxm,tests-compile-axis"/>
+
+    <target name="tests-compile-jaxm" depends="dev-webapps" if="build.support.jaxm">
+        <javac destdir="${build.tests.classes.dir}" debug="${javac.debug}" optimize="${javac.optimize}">
+            <classpath>
+                <path refid="jaxm.path"/>
+                <path refid="ws-c.path"/>
+                <path refid="dev.lib.path"/>
+                <path refid="build.dev.classes.path"/>
+                <path refid="tests.lib.path"/>
+            </classpath>
+            <src path="${tests.src.dir}"/>
+        </javac>
+    </target>
+
+    <target name="tests-compile-axis" depends="dev-webapps" if="build.support.axis">
+        <javac destdir="${build.tests.classes.dir}" debug="${javac.debug}" optimize="${javac.optimize}">
+            <classpath>
+                <path refid="jboss.path"/>
+                <path refid="ws-c.path"/>
+                <path refid="dev.lib.path"/>
+                <path refid="build.dev.classes.path"/>
+                <path refid="tests.lib.path"/>
+            </classpath>
+            <src path="${tests.src.dir}"/>
+        </javac>
+    </target>
+
+    <target name="tests-jars" depends="tests-jars-jaxm,tests-jars-axis"/>
+
+    <target name="tests-jars-jaxm" depends="tests-compile" if="build.support.jaxm"/>
+
+    <target name="tests-jars-axis" depends="tests-compile" if="build.support.axis">
+        <copy file="${tests.dd.dir}/ws-t-tests_axis_deployment.xml" tofile="${build.tests.dd.dir}/web-service.xml"/>
+        <jar jarfile="${build.tests.lib.dir}/ws-t-tests.wsr">
+            <metainf dir="${build.tests.dd.dir}">
+                <include name="web-service.xml"/>
+            </metainf>
+            <fileset dir="${build.dev.classes.dir}">
+                <include name="com/arjuna/wst/messaging/axis/MessageListenerService.class"/>
+                <include name="com/arjuna/wst/impl/messaging/saaj/MessageListener.class"/>
+            </fileset>
+        </jar>
+    </target>
+
+    <target name="tests-webapps" depends="tests-webapps-jaxm,tests-webapps-axis"/>
+
+    <target name="tests-webapps-jaxm" depends="tests-jars" if="build.support.jaxm">
+        <war warfile="${build.tests.webapps.dir}/ws-t-tests.war" webxml="${tests.dd.dir}/ws-t-tests_jaxm_web-app.xml">
+            <lib dir="${tests.lib.dir}" includes="*.jar"/>
+            <classes dir="${ws-c.home}/build/dev/classes"/>
+            <classes dir="${build.dev.classes.dir}"/>
+            <classes dir="${build.tests.classes.dir}"/>
+        </war>
+    </target>
+
+    <target name="tests-webapps-axis" depends="tests-jars" if="build.support.axis">
+        <war warfile="${build.tests.webapps.dir}/ws-t-tests.war" webxml="${tests.dd.dir}/ws-t-tests_axis_web-app.xml">
+            <lib dir="${tests.lib.dir}" includes="*.jar"/>
+            <classes dir="${ws-c.home}/build/dev/classes">
+                <exclude name="com/arjuna/wsc/messaging/axis/MessageListenerService.class"/>
+                <exclude name="com/arjuna/wsc/impl/messaging/saaj/MessageListener.class"/>
+            </classes>
+            <classes dir="${build.dev.classes.dir}">
+                <exclude name="com/arjuna/wst/messaging/axis/MessageListenerService.class"/>
+                <exclude name="com/arjuna/wst/impl/messaging/saaj/MessageListener.class"/>
+            </classes>
+            <classes dir="${build.tests.classes.dir}"/>
+        </war>
+        <ear earfile="${build.tests.webapps.dir}/ws-t-tests.ear" appxml="${tests.dd.dir}/ws-t-tests_axis_application.xml">
+            <fileset dir="${build.tests.lib.dir}">
+                <include name="ws-t-tests.wsr"/>
+            </fileset>
+            <fileset dir="${build.tests.webapps.dir}">
+                <include name="ws-t-tests.war"/>
+            </fileset>
+        </ear>
+    </target>
+
+    <target name="tests-deploy" depends="tests-deploy-jaxm,tests-deploy-axis"/>
+
+    <target name="tests-deploy-jaxm" depends="tests-webapps" if="build.support.jaxm">
+        <delete file="${jwsdp.home}/webapps/ws-t-tests.war"/>
+        <copy file="${build.tests.webapps.dir}/ws-t-tests.war" tofile="${jwsdp.home}/webapps/ws-t-tests.war"/>
+    </target>
+
+    <target name="tests-deploy-axis" depends="tests-webapps" if="build.support.axis">
+        <delete file="${jboss.home}/server/all/deploy/ws-t-tests.ear"/>
+        <copy file="${build.tests.webapps.dir}/ws-t-tests.ear" tofile="${jboss.home}/server/all/deploy/ws-t-tests.ear"/>
+    </target>
+
+    <target name="tests-undeploy" depends="tests-undeploy-jaxm,tests-undeploy-axis"/>
+
+    <target name="tests-undeploy-jaxm" depends="init-properties" if="build.support.jaxm">
+        <delete file="${jwsdp.home}/webapps/ws-t-tests.war"/>
+    </target>
+
+    <target name="tests-undeploy-axis" depends="init-properties" if="build.support.axis">
+        <delete file="${jboss.home}/server/all/deploy/ws-t-tests.ear"/>
+    </target>
+</project>
