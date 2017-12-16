@@ -1,0 +1,38 @@
+/*
+ * Copyright (C) 2003,
+ *
+ * Arjuna Technologies Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: WrongStateException.java,v 1.2 2003/04/11 14:47:29 nmcl Exp $
+ */
+
+package com.arjuna.wst;
+
+/**
+ * Thrown if the state of the transaction is incompatible with the
+ * operation attempted. For example, asking the transaction to rollback
+ * if it is already committing.
+ *
+ * @author Mark Little (mark.little@arjuna.com)
+ * @version $Id: WrongStateException.java,v 1.2 2003/04/11 14:47:29 nmcl Exp $
+ * @since 1.0.
+ */
+
+public class WrongStateException extends Exception
+{
+    
+    public WrongStateException ()
+    {
+	super();
+    }
+
+    public WrongStateException (String s)
+    {
+	super(s);
+    }
+ 
+}
+
