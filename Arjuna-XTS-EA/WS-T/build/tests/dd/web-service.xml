@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+
+<deployment xmlns="http://xml.apache.org/axis/wsdd/" xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+    <service name="CompletionParticipant" provider="java:MSG">
+        <parameter name="className" value="com.arjuna.wst.messaging.axis.MessageListenerService"/>
+        <parameter name="allowedMethods" value="onMessage"/>
+        <parameter name="scope" value="Application"/>
+        <parameter name="MessageListenerJNDIName" value="completionparticipant"/>
+    </service>
+
+    <service name="CompletionCoordinatorMSG" provider="java:MSG">
+        <parameter name="className" value="com.arjuna.wst.messaging.axis.MessageListenerService"/>
+        <parameter name="allowedMethods" value="onMessage"/>
+        <parameter name="scope" value="Application"/>
+        <parameter name="MessageListenerJNDIName" value="completioncoordinator-msg"/>
+    </service>
+
+    <service name="CompletionCoordinatorSRV" provider="java:MSG">
+        <parameter name="className" value="com.arjuna.wst.messaging.axis.MessageListenerService"/>
+        <parameter name="allowedMethods" value="onMessage"/>
+        <parameter name="scope" value="Application"/>
+        <parameter name="MessageListenerJNDIName" value="completioncoordinator-srv"/>
+    </service>
+
+    <service name="CompletionWithAckParticipant" provider="java:MSG">
+        <parameter name="className" value="com.arjuna.wst.messaging.axis.MessageListenerService"/>
+        <parameter name="allowedMethods" value="onMessage"/>
+        <parameter name="scope" value="Application"/>
+        <parameter name="MessageListenerJNDIName" value="completionwithackparticipant"/>
+    </service>
+
+    <service name="CompletionWithAckCoordinatorMSG" provider="java:MSG">
+        <parameter name="className" value="com.arjuna.wst.messaging.axis.MessageListenerService"/>
+        <parameter name="allowedMethods" value="onMessage"/>
+        <parameter name="scope" value="Application"/>
+        <parameter name="MessageListenerJNDIName" value="completionwithackcoordinator-msg"/>
+    </service>
+
+    <service name="CompletionWithAckCoordinatorSRV" provider="java:MSG">
+        <parameter name="className" value="com.arjuna.wst.messaging.axis.MessageListenerService"/>
+        <parameter name="allowedMethods" value="onMessage"/>
+        <parameter name="scope" value="Application"/>
+        <parameter name="MessageListenerJNDIName" value="completionwithackcoordinator-srv"/>
+    </service>
+
+    <service name="PhaseZeroParticipantMSG" provider="java:MSG">
+        <parameter name="className" value="com.arjuna.wst.messaging.axis.MessageListenerService"/>
+        <parameter name="allowedMethods" value="onMessage"/>
+        <parameter name="scope" value="Application"/>
+        <parameter name="MessageListenerJNDIName" value="phasezeroparticipant-msg"/>
+    </service>
+
+    <service name="PhaseZeroParticipantSRV" provider="java:MSG">
+        <parameter name="className" value="com.arjuna.wst.messaging.axis.MessageListenerService"/>
+        <parameter name="allowedMethods" value="onMessage"/>
+        <parameter name="scope" value="Application"/>
+        <parameter name="MessageListenerJNDIName" value="phasezeroparticipant-srv"/>
+    </service>
+
+    <service name="PhaseZeroCoordinator" provider="java:MSG">
+        <parameter name="className" value="com.arjuna.wst.messaging.axis.MessageListenerService"/>
+        <parameter name="allowedMethods" value="onMessage"/>
+        <parameter name="scope" value="Application"/>
+        <parameter name="MessageListenerJNDIName" value="phasezerocoordinator"/>
+    </service>
+
+    <service name="TwoPCParticipantMSG" provider="java:MSG">
+        <parameter name="className" value="com.arjuna.wst.messaging.axis.MessageListenerService"/>
+        <parameter name="allowedMethods" value="onMessage"/>
+        <parameter name="scope" value="Application"/>
+        <parameter name="MessageListenerJNDIName" value="twopcparticipant-msg"/>
+    </service>
+
+    <service name="TwoPCParticipantSRV" provider="java:MSG">
+        <parameter name="className" value="com.arjuna.wst.messaging.axis.MessageListenerService"/>
+        <parameter name="allowedMethods" value="onMessage"/>
+        <parameter name="scope" value="Application"/>
+        <parameter name="MessageListenerJNDIName" value="twopcparticipant-srv"/>
+    </service>
+
+    <service name="TwoPCCoordinator" provider="java:MSG">
+        <parameter name="className" value="com.arjuna.wst.messaging.axis.MessageListenerService"/>
+        <parameter name="allowedMethods" value="onMessage"/>
+        <parameter name="scope" value="Application"/>
+        <parameter name="MessageListenerJNDIName" value="twopccoordinator"/>
+    </service>
+
+    <service name="OutcomeNotificationParticipantMSG" provider="java:MSG">
+        <parameter name="className" value="com.arjuna.wst.messaging.axis.MessageListenerService"/>
+        <parameter name="allowedMethods" value="onMessage"/>
+        <parameter name="scope" value="Application"/>
+        <parameter name="MessageListenerJNDIName" value="outcomenotificationparticipant-msg"/>
+    </service>
+
+    <service name="OutcomeNotificationParticipantSRV" provider="java:MSG">
+        <parameter name="className" value="com.arjuna.wst.messaging.axis.MessageListenerService"/>
+        <parameter name="allowedMethods" value="onMessage"/>
+        <parameter name="scope" value="Application"/>
+        <parameter name="MessageListenerJNDIName" value="outcomenotificationparticipant-srv"/>
+    </service>
+
+    <service name="OutcomeNotificationCoordinator" provider="java:MSG">
+        <parameter name="className" value="com.arjuna.wst.messaging.axis.MessageListenerService"/>
+        <parameter name="allowedMethods" value="onMessage"/>
+        <parameter name="scope" value="Application"/>
+        <parameter name="MessageListenerJNDIName" value="outcomenotificationcoordinator"/>
+    </service>
+</deployment>
