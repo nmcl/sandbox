@@ -1,0 +1,110 @@
+<project name="WSAS" default="com.arjuna.mw.wsas.jar" basedir=".">
+	<!-- class path behaviour -->
+	<property name="build.sysclasspath" value="last"/>
+
+	<!-- Set module name -->
+	<property name="com.arjuna.mwlabs.ts.modulename" value="wsas"/>
+
+	<!-- Set default properties filename -->
+	<property name="com.arjuna.mw.wsas.properties" value="wsas.properties"/>
+
+	<!-- Load Build Properties File -->
+	<property file="${com.arjuna.mw.wsas.properties}"/>
+
+	<!-- Set internal property defaults -->
+	<!-- Path names -->
+	<property name="com.arjuna.mwlabs.wsas.src" value="classes"/>
+	<property name="com.arjuna.mwlabs.wsas.dest.root" value="build"/>
+	<property name="com.arjuna.mwlabs.wsas.dest" value="build/classes"/>
+	<property name="com.arjuna.mwlabs.wsas.jar.dest" value="lib"/>
+	<property name="com.arjuna.mwlabs.wsas.htdocs.dest"
+	value="htdocs"/>
+	<property name="com.arjuna.mwlabs.wsas.classpathbuilderfilename"
+	location="buildsystem.classpath"/>
+
+	<path id="com.arjuna.mwlabs.wsas.lib.classpath">
+	        <fileset dir="lib/ext">
+		    <include name="*.jar"/>
+                </fileset>
+        </path>
+
+	<!-- Initialisation -->
+	<target name="com.arjuna.mwlabs.wsas.init">
+		<!-- Define default build properties -->
+		<tstamp>
+			<format property="com.arjuna.mw.wsas.date" pattern="yyyy/mm/dd hh:mm aa"/>
+		</tstamp>
+		<!-- Make the destination directory -->
+		<mkdir dir="${com.arjuna.mwlabs.wsas.dest}"/>
+	</target>
+
+	<!-- Compilation targets -->
+	<target name="com.arjuna.mw.wsas.compile"
+	depends="com.arjuna.mwlabs.wsas.compile, com.arjuna.mw.wsas.htdocs"/>
+
+	<target name="com.arjuna.mwlabs.wsas.compile" depends="com.arjuna.mwlabs.wsas.init">
+		<echo message="Compiling module"/>
+		<javac srcdir="${com.arjuna.mwlabs.wsas.src}"
+                       destdir="${com.arjuna.mwlabs.wsas.dest}"
+                       excludes="${com.arjuna.mwlabs.wsas.compile.excludes}"
+                       debug="yes"
+	        >
+			<classpath>
+				<path refid="com.arjuna.mwlabs.wsas.lib.classpath"/>
+				<path path="${com.arjuna.mwlabs.wsas.src}"/>
+			</classpath>
+		</javac>
+
+	</target>
+
+	<!-- htdocs paths -->
+	<path id="com.arjuna.mw.wsas.htdocs.path">
+		<pathelement path="classes"/>
+	</path>
+
+	<!-- Build htdocs for just mw, or mw and mwlabs -->
+	<property name="com.arjuna.mwlabs.wsas.htdocs.list"
+	value="com.arjuna.mw.*"/>
+
+	<!-- Jar targets -->
+	<target name="com.arjuna.mw.wsas.jar" depends="com.arjuna.mw.wsas.compile">
+		<echo message="Building jar file"/>
+		<mkdir dir="${com.arjuna.mwlabs.wsas.jar.dest}"/>
+		<jar jarfile="${com.arjuna.mwlabs.wsas.jar.dest}/${com.arjuna.mwlabs.ts.modulename}.jar" basedir="${com.arjuna.mwlabs.wsas.dest}"/>
+	</target>
+
+	<target name="com.arjuna.mw.wsas.htdocs"
+				depends="com.arjuna.mwlabs.wsas.init">
+		<echo message="Building htdocs "/>
+		<mkdir dir="${com.arjuna.mwlabs.wsas.htdocs.dest}"/>
+		<path id="com.arjuna.mwlabs.wsas.htdocs.path">
+			<path refid="com.arjuna.mw.wsas.htdocs.path"/>
+		</path>
+
+		<javadoc
+			sourcepathref="com.arjuna.mwlabs.wsas.htdocs.path"
+			destdir="${com.arjuna.mwlabs.wsas.htdocs.dest}"
+			packagenames="${com.arjuna.mwlabs.wsas.htdocs.list}"
+	        >
+			<classpath>
+				<path refid="com.arjuna.mwlabs.wsas.lib.classpath"/>
+				<path path="${com.arjuna.mwlabs.wsas.src}"/>
+			</classpath>
+		</javadoc>
+	</target>
+
+	<!-- Clean targets -->
+	<target name="com.arjuna.mw.wsas.clean">
+		<echo message="Cleaning module"/>
+		<delete dir="${com.arjuna.mwlabs.wsas.dest}"/>
+		<delete dir="${com.arjuna.mwlabs.wsas.dest.root}"/>
+		<delete dir="${com.arjuna.mwlabs.wsas.htdocs.dest}"/>
+		<delete file="${com.arjuna.mwlabs.wsas.jar.dest}/${com.arjuna.mwlabs.ts.modulename}.jar"/>
+		<delete file="${com.arjuna.mwlabs.wsas.info.dest}"/>
+	</target>
+
+	<!-- Short target names -->
+	<target name="compile" depends="com.arjuna.mw.wsas.compile"/>
+	<target name="jar" depends="com.arjuna.mw.wsas.jar"/>
+	<target name="clean" depends="com.arjuna.mw.wsas.clean"/>
+</project>
