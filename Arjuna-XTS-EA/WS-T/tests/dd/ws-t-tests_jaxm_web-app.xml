@@ -1,0 +1,664 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/j2ee/dtds/web-app_2_3.dtd">
+
+<web-app>
+    <display-name>Arjuna Web Services Transaction Tests</display-name>
+
+    <description>Arjuna Web Services Transaction Tests</description>
+
+    <servlet>
+        <servlet-name>Completion Participant Deployment Servlet</servlet-name>
+        <servlet-class>com.arjuna.wst.messaging.deploy.servlet.CompletionParticipantDeploymentServlet</servlet-class>
+        <init-param>
+            <param-name>JNDIName</param-name>
+            <param-value>completionparticipant</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ServiceURI</param-name>
+            <param-value>http://localhost/ws-t-tests/completionparticipant</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>Completion Participant Listener Servlet</servlet-name>
+        <servlet-class>com.arjuna.wst.messaging.jaxm.MessageListenerServlet</servlet-class>
+        <init-param>
+            <param-name>MessageListenerJNDIName</param-name>
+            <param-value>completionparticipant</param-value>
+        </init-param>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>Message Completion Coordinator Deployment Servlet</servlet-name>
+        <servlet-class>com.arjuna.wst.messaging.deploy.servlet.CompletionCoordinatorDeploymentServlet</servlet-class>
+        <init-param>
+            <param-name>JNDIName</param-name>
+            <param-value>completioncoordinator-msg</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ServiceURI</param-name>
+            <param-value>http://localhost/ws-t-tests/completioncoordinator-msg</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>Message Completion Coordinator Listener Servlet</servlet-name>
+        <servlet-class>com.arjuna.wst.messaging.jaxm.MessageListenerServlet</servlet-class>
+        <init-param>
+            <param-name>MessageListenerJNDIName</param-name>
+            <param-value>completioncoordinator-msg</param-value>
+        </init-param>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>Service Completion Coordinator Deployment Servlet</servlet-name>
+        <servlet-class>com.arjuna.wst.messaging.deploy.servlet.CompletionCoordinatorDeploymentServlet</servlet-class>
+        <init-param>
+            <param-name>JNDIName</param-name>
+            <param-value>completioncoordinator-srv</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ServiceURI</param-name>
+            <param-value>http://localhost/ws-t-tests/completioncoordinator-srv</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>Service Completion Coordinator Listener Servlet</servlet-name>
+        <servlet-class>com.arjuna.wst.messaging.jaxm.MessageListenerServlet</servlet-class>
+        <init-param>
+            <param-name>MessageListenerJNDIName</param-name>
+            <param-value>completioncoordinator-srv</param-value>
+        </init-param>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>CompletionWithAck Participant Deployment Servlet</servlet-name>
+        <servlet-class>com.arjuna.wst.messaging.deploy.servlet.CompletionWithAckParticipantDeploymentServlet</servlet-class>
+        <init-param>
+            <param-name>JNDIName</param-name>
+            <param-value>completionwithackparticipant</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ServiceURI</param-name>
+            <param-value>http://localhost/ws-t-tests/completionwithackparticipant</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>CompletionWithAck Participant Listener Servlet</servlet-name>
+        <servlet-class>com.arjuna.wst.messaging.jaxm.MessageListenerServlet</servlet-class>
+        <init-param>
+            <param-name>MessageListenerJNDIName</param-name>
+            <param-value>completionwithackparticipant</param-value>
+        </init-param>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>Message CompletionWithAck Coordinator Deployment Servlet</servlet-name>
+        <servlet-class>com.arjuna.wst.messaging.deploy.servlet.CompletionWithAckCoordinatorDeploymentServlet</servlet-class>
+        <init-param>
+            <param-name>JNDIName</param-name>
+            <param-value>completionwithackcoordinator-msg</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ServiceURI</param-name>
+            <param-value>http://localhost/ws-t-tests/completionwithackcoordinator-msg</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>Message CompletionWithAck Coordinator Listener Servlet</servlet-name>
+        <servlet-class>com.arjuna.wst.messaging.jaxm.MessageListenerServlet</servlet-class>
+        <init-param>
+            <param-name>MessageListenerJNDIName</param-name>
+            <param-value>completionwithackcoordinator-msg</param-value>
+        </init-param>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>Service CompletionWithAck Coordinator Deployment Servlet</servlet-name>
+        <servlet-class>com.arjuna.wst.messaging.deploy.servlet.CompletionWithAckCoordinatorDeploymentServlet</servlet-class>
+        <init-param>
+            <param-name>JNDIName</param-name>
+            <param-value>completionwithackcoordinator-srv</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ServiceURI</param-name>
+            <param-value>http://localhost/ws-t-tests/completionwithackcoordinator-srv</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>Service CompletionWithAck Coordinator Listener Servlet</servlet-name>
+        <servlet-class>com.arjuna.wst.messaging.jaxm.MessageListenerServlet</servlet-class>
+        <init-param>
+            <param-name>MessageListenerJNDIName</param-name>
+            <param-value>completionwithackcoordinator-srv</param-value>
+        </init-param>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>Message PhaseZero Participant Deployment Servlet</servlet-name>
+        <servlet-class>com.arjuna.wst.messaging.deploy.servlet.PhaseZeroParticipantDeploymentServlet</servlet-class>
+        <init-param>
+            <param-name>JNDIName</param-name>
+            <param-value>phasezeroparticipant-msg</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ServiceURI</param-name>
+            <param-value>http://localhost/ws-t-tests/phasezeroparticipant-msg</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>Message PhaseZero Participant Listener Servlet</servlet-name>
+        <servlet-class>com.arjuna.wst.messaging.jaxm.MessageListenerServlet</servlet-class>
+        <init-param>
+            <param-name>MessageListenerJNDIName</param-name>
+            <param-value>phasezeroparticipant-msg</param-value>
+        </init-param>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>Service PhaseZero Participant Deployment Servlet</servlet-name>
+        <servlet-class>com.arjuna.wst.messaging.deploy.servlet.PhaseZeroParticipantDeploymentServlet</servlet-class>
+        <init-param>
+            <param-name>JNDIName</param-name>
+            <param-value>phasezeroparticipant-srv</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ServiceURI</param-name>
+            <param-value>http://localhost/ws-t-tests/phasezeroparticipant-srv</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>Service PhaseZero Participant Listener Servlet</servlet-name>
+        <servlet-class>com.arjuna.wst.messaging.jaxm.MessageListenerServlet</servlet-class>
+        <init-param>
+            <param-name>MessageListenerJNDIName</param-name>
+            <param-value>phasezeroparticipant-srv</param-value>
+        </init-param>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>PhaseZero Coordinator Deployment Servlet</servlet-name>
+        <servlet-class>com.arjuna.wst.messaging.deploy.servlet.PhaseZeroCoordinatorDeploymentServlet</servlet-class>
+        <init-param>
+            <param-name>JNDIName</param-name>
+            <param-value>phasezerocoordinator</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ServiceURI</param-name>
+            <param-value>http://localhost/ws-t-tests/phasezerocoordinator</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>PhaseZero Coordinator Listener Servlet</servlet-name>
+        <servlet-class>com.arjuna.wst.messaging.jaxm.MessageListenerServlet</servlet-class>
+        <init-param>
+            <param-name>MessageListenerJNDIName</param-name>
+            <param-value>phasezerocoordinator</param-value>
+        </init-param>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>Message TwoPC Participant Deployment Servlet</servlet-name>
+        <servlet-class>com.arjuna.wst.messaging.deploy.servlet.TwoPCParticipantDeploymentServlet</servlet-class>
+        <init-param>
+            <param-name>JNDIName</param-name>
+            <param-value>twopcparticipant-msg</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ServiceURI</param-name>
+            <param-value>http://localhost/ws-t-tests/twopcparticipant-msg</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>Message TwoPC Participant Listener Servlet</servlet-name>
+        <servlet-class>com.arjuna.wst.messaging.jaxm.MessageListenerServlet</servlet-class>
+        <init-param>
+            <param-name>MessageListenerJNDIName</param-name>
+            <param-value>twopcparticipant-msg</param-value>
+        </init-param>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>Service TwoPC Participant Deployment Servlet</servlet-name>
+        <servlet-class>com.arjuna.wst.messaging.deploy.servlet.TwoPCParticipantDeploymentServlet</servlet-class>
+        <init-param>
+            <param-name>JNDIName</param-name>
+            <param-value>twopcparticipant-srv</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ServiceURI</param-name>
+            <param-value>http://localhost/ws-t-tests/twopcparticipant-srv</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>Service TwoPC Participant Listener Servlet</servlet-name>
+        <servlet-class>com.arjuna.wst.messaging.jaxm.MessageListenerServlet</servlet-class>
+        <init-param>
+            <param-name>MessageListenerJNDIName</param-name>
+            <param-value>twopcparticipant-srv</param-value>
+        </init-param>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>TwoPC Coordinator Deployment Servlet</servlet-name>
+        <servlet-class>com.arjuna.wst.messaging.deploy.servlet.TwoPCCoordinatorDeploymentServlet</servlet-class>
+        <init-param>
+            <param-name>JNDIName</param-name>
+            <param-value>twopccoordinator</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ServiceURI</param-name>
+            <param-value>http://localhost/ws-t-tests/twopccoordinator</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>TwoPC Coordinator Listener Servlet</servlet-name>
+        <servlet-class>com.arjuna.wst.messaging.jaxm.MessageListenerServlet</servlet-class>
+        <init-param>
+            <param-name>MessageListenerJNDIName</param-name>
+            <param-value>twopccoordinator</param-value>
+        </init-param>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>Message OutcomeNotification Participant Deployment Servlet</servlet-name>
+        <servlet-class>com.arjuna.wst.messaging.deploy.servlet.OutcomeNotificationParticipantDeploymentServlet</servlet-class>
+        <init-param>
+            <param-name>JNDIName</param-name>
+            <param-value>outcomenotificationparticipant-msg</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ServiceURI</param-name>
+            <param-value>http://localhost/ws-t-tests/outcomenotificationparticipant-msg</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>Message OutcomeNotification Participant Listener Servlet</servlet-name>
+        <servlet-class>com.arjuna.wst.messaging.jaxm.MessageListenerServlet</servlet-class>
+        <init-param>
+            <param-name>MessageListenerJNDIName</param-name>
+            <param-value>outcomenotificationparticipant-msg</param-value>
+        </init-param>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>Service OutcomeNotification Participant Deployment Servlet</servlet-name>
+        <servlet-class>com.arjuna.wst.messaging.deploy.servlet.OutcomeNotificationParticipantDeploymentServlet</servlet-class>
+        <init-param>
+            <param-name>JNDIName</param-name>
+            <param-value>outcomenotificationparticipant-srv</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ServiceURI</param-name>
+            <param-value>http://localhost/ws-t-tests/outcomenotificationparticipant-srv</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>Service OutcomeNotification Participant Listener Servlet</servlet-name>
+        <servlet-class>com.arjuna.wst.messaging.jaxm.MessageListenerServlet</servlet-class>
+        <init-param>
+            <param-name>MessageListenerJNDIName</param-name>
+            <param-value>outcomenotificationparticipant-srv</param-value>
+        </init-param>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>OutcomeNotification Coordinator Deployment Servlet</servlet-name>
+        <servlet-class>com.arjuna.wst.messaging.deploy.servlet.OutcomeNotificationCoordinatorDeploymentServlet</servlet-class>
+        <init-param>
+            <param-name>JNDIName</param-name>
+            <param-value>outcomenotificationcoordinator</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ServiceURI</param-name>
+            <param-value>http://localhost/ws-t-tests/outcomenotificationcoordinator</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>OutcomeNotification Coordinator Listener Servlet</servlet-name>
+        <servlet-class>com.arjuna.wst.messaging.jaxm.MessageListenerServlet</servlet-class>
+        <init-param>
+            <param-name>MessageListenerJNDIName</param-name>
+            <param-value>outcomenotificationcoordinator</param-value>
+        </init-param>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>Completion Dispatcher Deployment Servlet</servlet-name>
+        <servlet-class>com.arjuna.wst.dispatcher.deploy.servlet.CompletionDispatcherDeploymentServlet</servlet-class>
+        <init-param>
+            <param-name>JNDIName</param-name>
+            <param-value>completiondispatcher</param-value>
+        </init-param>
+        <init-param>
+            <param-name>CompletionCoordinatorJNDIName</param-name>
+            <param-value>completioncoordinator-srv</param-value>
+        </init-param>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>CompletionWithAck Dispatcher Deployment Servlet</servlet-name>
+        <servlet-class>com.arjuna.wst.dispatcher.deploy.servlet.CompletionWithAckDispatcherDeploymentServlet</servlet-class>
+        <init-param>
+            <param-name>JNDIName</param-name>
+            <param-value>completionwithackdispatcher</param-value>
+        </init-param>
+        <init-param>
+            <param-name>CompletionWithAckCoordinatorJNDIName</param-name>
+            <param-value>completionwithackcoordinator-srv</param-value>
+        </init-param>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>PhaseZero Dispatcher Deployment Servlet</servlet-name>
+        <servlet-class>com.arjuna.wst.dispatcher.deploy.servlet.PhaseZeroDispatcherDeploymentServlet</servlet-class>
+        <init-param>
+            <param-name>JNDIName</param-name>
+            <param-value>phasezerodispatcher</param-value>
+        </init-param>
+        <init-param>
+            <param-name>PhaseZeroParticipantJNDIName</param-name>
+            <param-value>phasezeroparticipant-srv</param-value>
+        </init-param>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>TwoPC Dispatcher Deployment Servlet</servlet-name>
+        <servlet-class>com.arjuna.wst.dispatcher.deploy.servlet.TwoPCDispatcherDeploymentServlet</servlet-class>
+        <init-param>
+            <param-name>JNDIName</param-name>
+            <param-value>twopcdispatcher</param-value>
+        </init-param>
+        <init-param>
+            <param-name>TwoPCParticipantJNDIName</param-name>
+            <param-value>twopcparticipant-srv</param-value>
+        </init-param>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>OutcomeNotification Dispatcher Deployment Servlet</servlet-name>
+        <servlet-class>com.arjuna.wst.dispatcher.deploy.servlet.OutcomeNotificationDispatcherDeploymentServlet</servlet-class>
+        <init-param>
+            <param-name>JNDIName</param-name>
+            <param-value>outcomenotificationdispatcher</param-value>
+        </init-param>
+        <init-param>
+            <param-name>OutcomeNotificationParticipantJNDIName</param-name>
+            <param-value>outcomenotificationparticipant-srv</param-value>
+        </init-param>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>Test Deployment Servlet</servlet-name>
+        <servlet-class>com.arjuna.wst.tests.deploy.servlet.TestDeploymentServlet</servlet-class>
+        <init-param>
+            <param-name>CompletionDispatcherJNDIName</param-name>
+            <param-value>completiondispatcher</param-value>
+        </init-param>
+        <init-param>
+            <param-name>CompletionWithAckDispatcherJNDIName</param-name>
+            <param-value>completionwithackdispatcher</param-value>
+        </init-param>
+        <init-param>
+            <param-name>PhaseZeroDispatcherJNDIName</param-name>
+            <param-value>phasezerodispatcher</param-value>
+        </init-param>
+        <init-param>
+            <param-name>TwoPCDispatcherJNDIName</param-name>
+            <param-value>twopcdispatcher</param-value>
+        </init-param>
+        <init-param>
+            <param-name>OutcomeNotificationDispatcherJNDIName</param-name>
+            <param-value>outcomenotificationdispatcher</param-value>
+        </init-param>
+        <load-on-startup>3</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>JUnit Tests Servlet</servlet-name>
+        <servlet-class>com.arjuna.qa.junit.TestRunnerServlet</servlet-class>
+        <init-param>
+            <param-name>TestSuiteClassName</param-name>
+            <param-value>com.arjuna.wst.tests.junit.TestSuite</param-value>
+        </init-param>
+        <load-on-startup>4</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Completion Participant Deployment Servlet</servlet-name>
+        <url-pattern>/dummy_cp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Completion Participant Listener Servlet</servlet-name>
+        <url-pattern>/completionparticipant</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Message Completion Coordinator Deployment Servlet</servlet-name>
+        <url-pattern>/dummy_mcc</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Message Completion Coordinator Listener Servlet</servlet-name>
+        <url-pattern>/completioncoordinator-msg</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Service Completion Coordinator Deployment Servlet</servlet-name>
+        <url-pattern>/dummy_scc</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Service Completion Coordinator Listener Servlet</servlet-name>
+        <url-pattern>/completioncoordinator-srv</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>CompletionWithAck Participant Deployment Servlet</servlet-name>
+        <url-pattern>/dummy_cwap</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>CompletionWithAck Participant Listener Servlet</servlet-name>
+        <url-pattern>/completionwithackparticipant</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Message CompletionWithAck Coordinator Deployment Servlet</servlet-name>
+        <url-pattern>/dummy_mcwac</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Message CompletionWithAck Coordinator Listener Servlet</servlet-name>
+        <url-pattern>/completionwithackcoordinator-msg</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Service CompletionWithAck Coordinator Deployment Servlet</servlet-name>
+        <url-pattern>/dummy_scwac</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Service CompletionWithAck Coordinator Listener Servlet</servlet-name>
+        <url-pattern>/completionwithackcoordinator-srv</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Message PhaseZero Participant Deployment Servlet</servlet-name>
+        <url-pattern>/dummy_mpzp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Message PhaseZero Participant Listener Servlet</servlet-name>
+        <url-pattern>/phasezeroparticipant-msg</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Service PhaseZero Participant Deployment Servlet</servlet-name>
+        <url-pattern>/dummy_spzp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Service PhaseZero Participant Listener Servlet</servlet-name>
+        <url-pattern>/phasezeroparticipant-srv</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>PhaseZero Coordinator Deployment Servlet</servlet-name>
+        <url-pattern>/dummy_pzc</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>PhaseZero Coordinator Listener Servlet</servlet-name>
+        <url-pattern>/phasezerocoordinator</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Message TwoPC Participant Deployment Servlet</servlet-name>
+        <url-pattern>/dummy_mtpcp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Message TwoPC Participant Listener Servlet</servlet-name>
+        <url-pattern>/twopcparticipant-msg</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Service TwoPC Participant Deployment Servlet</servlet-name>
+        <url-pattern>/dummy_stpcp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Service TwoPC Participant Listener Servlet</servlet-name>
+        <url-pattern>/twopcparticipant-srv</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>TwoPC Coordinator Deployment Servlet</servlet-name>
+        <url-pattern>/dummy_tpcc</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>TwoPC Coordinator Listener Servlet</servlet-name>
+        <url-pattern>/twopccoordinator</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Message OutcomeNotification Participant Deployment Servlet</servlet-name>
+        <url-pattern>/dummy_monp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Message OutcomeNotification Participant Listener Servlet</servlet-name>
+        <url-pattern>/outcomenotificationparticipant-msg</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Service OutcomeNotification Participant Deployment Servlet</servlet-name>
+        <url-pattern>/dummy_sonp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Service OutcomeNotification Participant Listener Servlet</servlet-name>
+        <url-pattern>/outcomenotificationparticipant-srv</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>OutcomeNotification Coordinator Deployment Servlet</servlet-name>
+        <url-pattern>/dummy_onc</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>OutcomeNotification Coordinator Listener Servlet</servlet-name>
+        <url-pattern>/outcomenotificationcoordinator</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Completion Dispatcher Deployment Servlet</servlet-name>
+        <url-pattern>/dummy-cd</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>CompletionWithAck Dispatcher Deployment Servlet</servlet-name>
+        <url-pattern>/dummy-cwad</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>PhaseZero Dispatcher Deployment Servlet</servlet-name>
+        <url-pattern>/dummy-pzd</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>TwoPC Dispatcher Deployment Servlet</servlet-name>
+        <url-pattern>/dummy-tcpd</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>OutcomeNotification Dispatcher Deployment Servlet</servlet-name>
+        <url-pattern>/dummy-ond</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Test Deployment Servlet</servlet-name>
+        <url-pattern>/dummy-t</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>JUnit Tests Servlet</servlet-name>
+        <url-pattern>/index.html</url-pattern>
+    </servlet-mapping>
+
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+</web-app>
