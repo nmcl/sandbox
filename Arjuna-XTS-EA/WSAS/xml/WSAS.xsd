@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XML Spy v4.0 U (http://www.xmlspy.com) by Thomas Novellino Version 4.0 (Hewlett Packard Co.) -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xsd:element name="hls_specific_data" type="xsd:anyType"/>
+	<xsd:element name="activity_specific_data" type="xsd:anyType"/>
+	<xsd:element name="timeout" type="xsd:integer"/>
+	<xsd:element name="type" type="xsd:anyURI"/>
+	<xsd:element name="ctxId" type="xsd:anyURI"/>
+	<xsd:element name="activity-context-element">
+		<xsd:annotation>
+			<xsd:documentation>Comment describing your root element</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="ctxId"/>
+				<xsd:element ref="type" minOccurs="0"/>
+				<xsd:element ref="timeout" minOccurs="0"/>
+				<xsd:element ref="activity_specific_data" minOccurs="0"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="hls-context-element">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="type"/>
+				<xsd:element ref="hls_specific_data" minOccurs="0"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="activity_context">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="activity-context-element" maxOccurs="2"/>
+				<xsd:element ref="hls-context-element" minOccurs="0" maxOccurs="2"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

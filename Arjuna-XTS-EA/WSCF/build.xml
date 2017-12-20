@@ -1,0 +1,165 @@
+<project name="WSCF" default="com.arjuna.mw.wscf.war" basedir=".">
+	<!-- class path behaviour -->
+	<property name="build.sysclasspath" value="last"/>
+
+	<!-- build war file? -->
+	<property name="com.arjuna.mw.wscf.support.axis" value="true"/>
+
+	<!-- Set module name -->
+	<property name="com.arjuna.mwlabs.ts.modulename" value="wscf"/>
+
+	<!-- Set default properties filename -->
+	<property name="com.arjuna.mw.wscf.properties" value="wscf.properties"/>
+
+	<!-- Load Build Properties File -->
+	<property file="${com.arjuna.mw.wscf.properties}"/>
+
+	<!-- Set internal property defaults -->
+	<!-- Path names -->
+	<property name="com.arjuna.mwlabs.wscf.src" value="classes"/>
+	<property name="com.arjuna.mwlabs.wscf.dest" value="build/classes"/>
+	<property name="com.arjuna.mwlabs.wscf.jar.dest" value="lib"/>
+	<property name="com.arjuna.mwlabs.wscf.war.dest" value="webapps"/>
+	<property name="com.arjuna.mwlabs.wscf.htdocs.dest"
+	value="htdocs"/>
+	<property name="com.arjuna.mwlabs.wscf.classpathbuilderfilename"
+	location="buildsystem.classpath"/>
+
+	<!--Set external directories -->
+
+	<property name="com.arjuna.mwlabs.wscf.jboss.dir"
+	value="c:/progra~1/jboss-3.2.0RC1"/>
+	<property name="com.arjuna.mwlabs.wsas.jar.dest"
+	value="../WSAS/lib"/>
+	<property name="com.arjuna.mwlabs.wsc.jar.dest"
+	value="../WS-C/build/dev/lib"/>
+
+	<path id="com.arjuna.mwlabs.wscf.lib.classpath">
+	        <fileset dir="lib/ext">
+		    <include name="arjunacore.jar"/>
+		    <include name="common.jar"/>
+		    <include name="hplic.jar"/>
+		    <include name="mw-common.jar"/>
+                </fileset>
+	        <fileset dir="${com.arjuna.mwlabs.wsas.jar.dest}">
+		    <include name="*.jar"/>
+                </fileset>
+	        <fileset dir="${com.arjuna.mwlabs.wsc.jar.dest}">
+		    <include name="*.jar"/>
+                </fileset>
+        </path>
+
+	<path id="com.arjuna.mwlabs.wscf.jboss.lib.classpath">
+	  <fileset dir="${com.arjuna.mwlabs.wscf.jboss.dir}/lib" includes="*.jar"/>
+	  <fileset dir="${com.arjuna.mwlabs.wscf.jboss.dir}/server/all/lib" includes="*.jar"/>
+          <fileset dir="${com.arjuna.mwlabs.wscf.jboss.dir}/server/all/deploy/jboss-net.sar" includes="*.jar"/>
+	</path>
+    
+	<!-- Initialisation -->
+	<target name="com.arjuna.mwlabs.wscf.init">
+		<!-- Define default build properties -->
+		<tstamp>
+			<format property="com.arjuna.mw.wscf.date" pattern="yyyy/mm/dd hh:mm aa"/>
+		</tstamp>
+		<!-- Make the destination directory -->
+		<mkdir dir="${com.arjuna.mwlabs.wscf.dest}"/>
+		<mkdir dir="${com.arjuna.mwlabs.wscf.war.dest}"/>
+	</target>
+
+	<!-- Compilation targets -->
+	<target name="com.arjuna.mw.wscf.compile"
+	depends="com.arjuna.mwlabs.wscf.compile, com.arjuna.mw.wscf.htdocs"/>
+
+	<target name="com.arjuna.mwlabs.wscf.compile" depends="com.arjuna.mwlabs.wscf.init">
+		<echo message="Compiling module"/>
+		<javac srcdir="${com.arjuna.mwlabs.wscf.src}"
+                       destdir="${com.arjuna.mwlabs.wscf.dest}"
+                       excludes="${com.arjuna.mwlabs.wscf.compile.excludes}"
+                       debug="yes"
+	        >
+			<classpath>
+				<path refid="com.arjuna.mwlabs.wscf.lib.classpath"/>
+				<path refid="com.arjuna.mwlabs.wscf.jboss.lib.classpath"/>
+				<path path="${com.arjuna.mwlabs.wscf.src}"/>
+			</classpath>
+		</javac>
+	</target>
+
+	<!-- htdocs paths -->
+	<path id="com.arjuna.mw.wscf.htdocs.path">
+		<pathelement path="classes"/>
+	</path>
+
+	<!-- Build htdocs for just mw, or mw and mwlabs -->
+	<property name="com.arjuna.mwlabs.wscf.htdocs.list"
+	value="com.arjuna.mw.*"/>
+
+	<target name="com.arjuna.mw.wscf.war" depends="com.arjuna.mw.wscf.war.axis"/>
+
+	<target name="com.arjuna.mw.wscf.war.axis" depends="com.arjuna.mw.wscf.jar" if="com.arjuna.mw.wscf.support.axis">
+	  <war warfile="${com.arjuna.mwlabs.wscf.war.dest}/${com.arjuna.mwlabs.ts.modulename}.war" webxml="xml/wscf_axis_web-app.xml">
+            <lib dir="${com.arjuna.mwlabs.wscf.jar.dest}" includes="wscf.jar"/>
+            <lib dir="${com.arjuna.mwlabs.wscf.jar.dest}/ext"
+            includes="arjunacore.jar,common.jar,mw-common.jar"/>
+            <lib dir="${com.arjuna.mwlabs.wsas.jar.dest}"
+            includes="wsas.jar"/>
+            <lib dir="${com.arjuna.mwlabs.wsc.jar.dest}"
+            includes="ws-c.jar"/>
+            <classes dir="${com.arjuna.mwlabs.wscf.dest}">
+                <include name="com/arjuna/mw/wsc/deploy/servlet/**/*.class"/>
+	    </classes>
+          </war>
+	</target>
+
+	<!-- Jar targets -->
+	<target name="com.arjuna.mw.wscf.jar" depends="com.arjuna.mw.wscf.compile">
+		<echo message="Building jar file"/>
+		<mkdir dir="${com.arjuna.mwlabs.wscf.jar.dest}"/>
+
+		<copy file="xml/ArjunaCoreHLS.xml"
+		tofile="${com.arjuna.mwlabs.wscf.dest}/com/arjuna/mwlabs/wscf/model/as/coordinator/arjunacore/ArjunaCoreHLS.xml"/>
+		<copy file="xml/JTAHLS.xml"
+		tofile="${com.arjuna.mwlabs.wscf.dest}/com/arjuna/mwlabs/wscf/model/as/coordinator/jta/JTAHLS.xml"/>
+		<copy file="xml/TwoPhaseHLSImple.xml"
+		tofile="${com.arjuna.mwlabs.wscf.dest}/com/arjuna/mwlabs/wscf/model/twophase/arjunacore/TwoPhaseHLSImple.xml"/>
+		<copy file="xml/JTAHLSImple.xml"
+		tofile="${com.arjuna.mwlabs.wscf.dest}/com/arjuna/mwlabs/wscf/model/jta/arjunajta/JTAHLSImple.xml"/>
+
+		<jar jarfile="${com.arjuna.mwlabs.wscf.jar.dest}/${com.arjuna.mwlabs.ts.modulename}.jar" basedir="${com.arjuna.mwlabs.wscf.dest}"/>
+	</target>
+
+	<target name="com.arjuna.mw.wscf.htdocs"
+				depends="com.arjuna.mwlabs.wscf.init">
+		<echo message="Building htdocs "/>
+		<mkdir dir="${com.arjuna.mwlabs.wscf.htdocs.dest}"/>
+		<path id="com.arjuna.mwlabs.wscf.htdocs.path">
+			<path refid="com.arjuna.mw.wscf.htdocs.path"/>
+		</path>
+
+		<javadoc
+			sourcepathref="com.arjuna.mwlabs.wscf.htdocs.path"
+			destdir="${com.arjuna.mwlabs.wscf.htdocs.dest}"
+			packagenames="${com.arjuna.mwlabs.wscf.htdocs.list}"
+	        >
+			<classpath>
+				<path refid="com.arjuna.mwlabs.wscf.lib.classpath"/>
+				<path path="${com.arjuna.mwlabs.wscf.src}"/>
+			</classpath>
+		</javadoc>
+	</target>
+
+	<!-- Clean targets -->
+	<target name="com.arjuna.mw.wscf.clean">
+		<echo message="Cleaning module"/>
+		<delete dir="${com.arjuna.mwlabs.wscf.dest}"/>
+		<delete dir="${com.arjuna.mwlabs.wscf.htdocs.dest}"/>
+		<delete file="${com.arjuna.mwlabs.wscf.jar.dest}/${com.arjuna.mwlabs.ts.modulename}.jar"/>
+		<delete file="${com.arjuna.mwlabs.wscf.info.dest}"/>
+	</target>
+
+	<!-- Short target names -->
+	<target name="compile" depends="com.arjuna.mw.wscf.compile"/>
+	<target name="jar" depends="com.arjuna.mw.wscf.jar"/>
+	<target name="war" depends="com.arjuna.mw.wscf.war"/>
+	<target name="clean" depends="com.arjuna.mw.wscf.clean"/>
+</project>
