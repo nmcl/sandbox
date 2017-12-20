@@ -1,0 +1,66 @@
+/*
+ * Copyright (C) 2002,
+ *
+ * Arjuna Technologies Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: Suspend.java,v 1.1 2002/11/25 10:51:47 nmcl Exp $
+ */
+
+package com.arjuna.mwtests.wsas.basic;
+
+import com.arjuna.mw.wsas.UserActivity;
+import com.arjuna.mw.wsas.UserActivityFactory;
+
+import com.arjuna.mw.wsas.activity.ActivityHierarchy;
+
+import com.arjuna.mw.wsas.exceptions.NoActivityException;
+
+/**
+ * @author Mark Little (mark.little@arjuna.com)
+ * @version $Id: Suspend.java,v 1.1 2002/11/25 10:51:47 nmcl Exp $
+ * @since 1.0.
+ */
+
+public class Suspend
+{
+
+    public static void main (String[] args)
+    {
+	boolean passed = false;
+	
+	try
+	{
+	    UserActivity ua = UserActivityFactory.userActivity();
+	
+	    ua.start();
+	    
+	    System.out.println("Started: "+ua.activityName());
+	    
+	    ActivityHierarchy ctx = ua.suspend();
+	    
+	    System.out.println("\nSuspended: "+ctx);
+	    
+	    if (ua.currentActivity() == null)
+		passed = true;
+	    else
+		System.out.println("\nCurrent: "+ua.currentActivity());
+	}
+	catch (NoActivityException ex)
+	{
+	    passed = true;
+	}
+	catch (Exception ex)
+	{
+	    ex.printStackTrace();
+	}
+	
+	if (passed)
+	    System.out.println("\nPassed.");
+	else
+	    System.out.println("\nFailed.");
+    }
+
+}
