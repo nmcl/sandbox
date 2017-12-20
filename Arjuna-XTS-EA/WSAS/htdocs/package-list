@@ -1,0 +1,10 @@
+com.arjuna.mw.wsas
+com.arjuna.mw.wsas.activity
+com.arjuna.mw.wsas.common
+com.arjuna.mw.wsas.completionstatus
+com.arjuna.mw.wsas.context
+com.arjuna.mw.wsas.context.corba
+com.arjuna.mw.wsas.context.soap
+com.arjuna.mw.wsas.exceptions
+com.arjuna.mw.wsas.status
+com.arjuna.mw.wsas.utils
