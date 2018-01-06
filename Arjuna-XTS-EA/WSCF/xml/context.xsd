@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XML Spy v4.0 U (http://www.xmlspy.com) by Thomas Novellino Version 4.0 (Hewlett Packard Co.) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="coordinator-reference">
+		<xs:annotation>
+			<xs:documentation>the coordinator-reference; a coordinator is implicitly associated with the activity in the same point in the hierarchy unless otherwise stated. This is to allow an activity hierarchy to be propagated where only some of the activities may be coordination domains. A coordinator can only be associated with a single activity at most.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="coordinator" type="xs:anyURI" use="required"/>
+			<xs:attribute name="activity_identity" type="xs:anyURI" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="protocol-reference">
+		<xs:annotation>
+			<xs:documentation>the type of protocol supported by the coordination domain must be specified. Only one coordination protocol per context (is this too limiting?)</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="protocol_type" type="xs:anyURI" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="wscf-context">
+		<xs:annotation>
+			<xs:documentation>wscf-context represents the context hierarchy for a coordination tree.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="protocol-reference"/>
+				<xs:element ref="coordinator-reference" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XML Spy v4.0 U (http://www.xmlspy.com) by Thomas Novellino (Hewlett Packard Co.) -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xsd:element name="coordinator-name" type="xsd:anyURI">
+		<xsd:annotation>
+			<xsd:documentation>The unique name for this type of coordinator</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="response">
+		<xsd:annotation>
+			<xsd:documentation>The response that may be returned upon receipt of a specific notification</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="name" type="xsd:string" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="notification">
+		<xsd:annotation>
+			<xsd:documentation>The notification message that may be sent</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="name" type="xsd:string"/>
+				<xsd:element ref="response" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="coordination-type">
+		<xsd:annotation>
+			<xsd:documentation>The type of the coordination protocol supported</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="coordinator-name" minOccurs="0"/>
+				<xsd:element ref="notification" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element name="generic" type="xsd:boolean" minOccurs="0"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>
