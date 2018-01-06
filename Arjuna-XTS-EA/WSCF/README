@@ -1,0 +1,4 @@
+The  WSCF  layers on  the  activity  service  (WSAS) by  providing  an
+appropriate HLS.  Currently this  layering is not transparent in terms
+of  types  and exceptions  used  from the  WSAS.  We  could hide  this
+completely.
