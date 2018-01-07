@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coordination-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="C:\Documents and Settings\mlittle\Desktop\standards work\WS architecture\WSCF\0.8.2\xml\WSCF.xsd">
+<coordinator-type>http://schemas.xmlsoap.org/ws/2002/08/wstx</coordinator-type>
+</coordination-type>
