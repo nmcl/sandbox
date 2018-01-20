@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<wstx-config>
+	<properties>
+	    <property name="com.arjuna.mw.wsas.deploymentContext"
+	    value="com.arjuna.mwlabs.wst.at.context.DeploymentContextImple"/>
+	    <property name="com.arjuna.mw.wscf.protocols.twophase.context"
+	    value="com.arjuna.mwlabs.wst.at.context.ArjunaContextImple"/>
+	    <property
+	    name="com.arjuna.mw.wscf.protocolImplementation1"
+	    value="com.arjuna.mwlabs.wscf.model.twophase.arjunacore.TwoPhaseHLSImple"/>
+	    <property
+	    name="com.arjuna.mw.wscf.protocolImplementation2"
+	    value="com.arjuna.mwlabs.wst.at.ContextFactoryImple"/>
+	    <property
+	    name="ArjunaCore_LicenceKey"
+	    value="029b363e-aef4108d-ba1706e5-fa68a002-90b517fc"/>
+	    <property
+	    name="ArjunaCore_LicenceManager"
+	    value="com.hp.mwlabs.ts.arjuna.common.ArjunaLicenceControl"/>
+	    <property
+	    name="com.hp.mw.ts.arjuna.objectstore.objectStoreDir"
+	    value="C:/temp/ObjectStore"/>
+	</properties>
+</wstx-config>

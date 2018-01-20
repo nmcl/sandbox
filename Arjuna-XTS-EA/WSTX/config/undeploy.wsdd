@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- CVS Stamp -->
+<!-- $Id: undeploy.wsdd,v 1.1 2003/03/24 10:57:03 nmcl Exp $ -->
+
+<undeployment name="ArjunaXTS"
+ xmlns="http://xml.apache.org/axis/wsdd/">
+  <service name="ArjunaXTS"/>
+</undeployment>

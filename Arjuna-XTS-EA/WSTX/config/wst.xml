@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<deployment>
+	<service name="UserTransaction">
+		<parameter name="className"
+		value="com.arjuna.mwlabs.wst.at.remote.UserTransactionImple"/>
+
+		<!-- parameter name="className"
+	value="com.arjuna.mwlabs.wst.at.local.UserTransactionImple"
+	-->
+
+	</service>
+	<service name="TransactionManager">
+		<parameter name="className"
+		value="com.arjuna.mwlabs.wst.at.remote.TransactionManagerImple"/>
+		<!-- parameter name="className"
+		value="com.arjuna.mwlabs.wst.at.local.TransactionManagerImple"
+		-->
+	</service>
+</deployment>

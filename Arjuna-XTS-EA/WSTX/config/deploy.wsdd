@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- CVS Stamp -->
+<!-- $Id: deploy.wsdd,v 1.1 2003/03/24 10:57:03 nmcl Exp $ -->
+
+<deployment name="ArjunaXTS"
+ xmlns="http://xml.apache.org/axis/wsdd/"
+ xmlns:java="http://xml.apache.org/axis/wsdd/providers/java"
+ xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance">
+
+ <handler name="WSTransactionContextProcessor" type="java:com.arjuna.mw.wst.client.AxisHeaderContextProcessor"/>
+
+
+  <service name="ArjunaXTS" provider="java:RPC">
+    <requestFlow>
+      <handler type="WSTransactionContextProcessor"/>
+    </requestFlow>
+    <responseFlow>
+      <handler type="WSTransactionContextProcessor"/>
+    </responseFlow>
+  </service>
+</deployment>
