@@ -1,0 +1,14 @@
+com.arjuna.mw.wst
+com.arjuna.mw.wst.client
+com.arjuna.mw.wst.common
+com.arjuna.mw.wst.deploy.servlet
+com.arjuna.mw.wst.exceptions
+com.arjuna.mw.wst.resources
+com.arjuna.mw.wst.service
+com.arjuna.mw.wst.vote
+com.arjuna.mw.wstx
+com.arjuna.mw.wstx.common
+com.arjuna.mw.wstx.exceptions
+com.arjuna.mw.wstx.resource
+com.arjuna.mw.wstx.status
+com.arjuna.mw.wstx.transaction
