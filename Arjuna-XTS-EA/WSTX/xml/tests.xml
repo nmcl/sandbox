@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<test-definitions>
+	<test name="com.arjuna.mwtests.wst.basic.NullCommitTransaction">
+		<parameters/>
+	</test>
+	<test name="com.arjuna.mwtests.wst.basic.NullRollbackTransaction">
+		<parameters/>
+	</test>
+	<test name="com.arjuna.mwtests.wst.basic.NestedTransaction">
+		<parameters/>
+	</test>
+	<test name="com.arjuna.mwtests.wst.basic.SingleParticipant">
+		<parameters/>
+	</test>
+	<test name="com.arjuna.mwtests.wst.basic.SynchronizationTransaction">
+		<parameters/>
+	</test>
+</test-definitions>
