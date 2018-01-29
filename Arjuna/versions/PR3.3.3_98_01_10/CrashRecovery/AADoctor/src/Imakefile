@@ -1,0 +1,36 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.3 1994/11/29 14:00:38 ngdp Exp $
+COMMENT
+
+LIB = $(LIBCRASH)
+
+SOURCES = AADoctor.cc \
+          LocalAAR.cc \
+          ServerAAR.cc \
+          ShadowR.cc
+
+OBJECTS = AADoctor.o \
+          LocalAAR.o \
+          ServerAAR.o \
+          ShadowR.o
+
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES) \
+                 -I../../include \
+                 -I../include)
+
+AllTarget($(LIB))
+
+MakeLibrary($(LIB),$(OBJECTS))
+
+MakeObjectCPLUSPLUS(AADoctor,NOPARAM)
+MakeObjectCPLUSPLUS(LocalAAR,NOPARAM)
+MakeObjectCPLUSPLUS(ServerAAR,NOPARAM)
+MakeObjectCPLUSPLUS(ShadowR,NOPARAM)
