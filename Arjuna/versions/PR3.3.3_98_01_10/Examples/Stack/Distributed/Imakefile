@@ -1,0 +1,65 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.5 1994/11/29 14:00:58 ngdp Exp $
+COMMENT
+COMMENT
+COMMENT Imakefile. (Distributed)
+COMMENT
+
+LIBRARIES = $(LIBARJUNA) $(LIBCOMMON) 
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+STUB_HEADERS = Stack_stub.h Stack_stubclass.h
+
+SOURCES = Driver.cc \
+          Stack_client.cc \
+          Stack_server.cc \
+          Stack_servermain.cc \
+          stackOutcome_marshall.cc \
+          Stack.cc \
+	  $(STUB_HEADERS)
+
+#ifdef GCC_LINK_BUG
+CLIOBJS = Driver.o \
+          Stack_client.o \
+          stackOutcome_marshall.o Stack.o
+
+SEROBJS = Stack_server.o \
+          Stack_servermain.o \
+          stackOutcome_marshall.o \
+          Stack.o Stack_client.o
+#else
+CLIOBJS = Driver.o \
+          Stack_client.o \
+          stackOutcome_marshall.o
+
+SEROBJS = Stack_server.o \
+          Stack_servermain.o \
+          stackOutcome_marshall.o \
+          Stack.o
+#endif
+
+OBJECTS = $(CLIOBJS) $(SEROBJS)
+AllTarget(Driver Stack_D)
+StubTarget($(STUB_HEADERS))
+
+CreateInstallTopDirectory(servers)
+InstallProgram(servers,Stack_D)
+
+MakeProgramCPLUSPLUS(Driver,$(CLIOBJS) $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(Stack_D,$(SEROBJS) $(LIBRARIES),NOPARAM)
+
+MakeStubGen(Stack,Stack,Stack_D,NOPARAM)
+
+MakeObjectCPLUSPLUS(Driver,NOPARAM)
+MakeObjectCPLUSPLUS(Stack,NOPARAM)
+MakeObjectCPLUSPLUS(stackOutcome_marshall,NOPARAM)
+
+TidyTarget(Driver Stack_D Stack_stub.h Stack_stubclass.h Stack_client.cc Stack_server.cc Stack_servermain.cc stackOutcome_marshall.cc)
