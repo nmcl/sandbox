@@ -1,0 +1,70 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id:
+ */
+
+#if defined(NO_INLINES) && !defined(REPLICADATA_CC_)
+
+extern ostream& operator<< (ostream&, const ReplicaData&);
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+
+INLINEF void ReplicaData::setActive (Boolean value)
+{
+    active = value;
+}
+
+INLINEF const char* ReplicaData::getHost () const
+{
+    return destn_host;
+}
+
+INLINEF const char* ReplicaData::getStoreRoot () const
+{
+    return rootOfStore;
+}
+
+INLINEF const char* ReplicaData::getObjectName () const
+{
+    return objectName;
+}
+
+INLINEF const Uid& ReplicaData::getUid () const
+{
+    return *_uid;
+}
+
+INLINEF const Uid& ReplicaData::getGroupUid () const
+{
+    return *_groupUid;
+}
+
+INLINEF Boolean ReplicaData::getActive () const
+{
+    return active;
+}
+
+INLINEF ostream& operator<< (ostream& strm, const ReplicaData& rd)
+{
+    return rd.print(strm);
+}
+
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif
