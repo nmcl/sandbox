@@ -1,0 +1,17 @@
+COMMENT 
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.7.6.1 1996/10/10 12:25:40 ngdp Exp $
+COMMENT
+
+#define IHaveSubDirs
+SetSubDirectorys(ArjServers Arjuna Common Thread ObjectStore RPC StubGen System Config)
+
+CreateInstallTopDirectory(include)
+
+

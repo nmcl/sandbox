@@ -1,0 +1,35 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.3 1995/03/07 10:31:27 ngdp Exp $
+COMMENT
+
+CreateInstallTopDirectory(include)
+CreateInstallDirectory(include,Arjuna)
+
+InstallFile(include/Arjuna,AbstractR.h)
+InstallFile(include/Arjuna,ActionH.h)
+InstallFile(include/Arjuna,AtomicA.h)
+InstallFile(include/Arjuna,AtomicA.n)
+InstallFile(include/Arjuna,Lock.h)
+InstallFile(include/Arjuna,Lock.n)
+InstallFile(include/Arjuna,LockMan.h)
+InstallFile(include/Arjuna,ObjState.h)
+InstallFile(include/Arjuna,ObjState_stub.h)
+InstallFile(include/Arjuna,ObjState.n)
+InstallFile(include/Arjuna,PrepOut.h)
+InstallFile(include/Arjuna,RecordT.h)
+InstallFile(include/Arjuna,ServerAA.h)
+InstallFile(include/Arjuna,StateMan.h)
+InstallFile(include/Arjuna,StateMan_stub.h)
+InstallFile(include/Arjuna,StateManager_stubclass.h)
+InstallFile(include/Arjuna,LockMan_stub.h)
+InstallFile(include/Arjuna,LockManager_stubclass.h)
+InstallFile(include/Arjuna,Lock_stub.h)
+
+TidyTarget(ObjState_stub.h ObjectState_stubclass.h StateMan_stub.h StateManager_stubclass.h LockMan_stub.h LockManager_stubclass.h Lock_stub.h)
