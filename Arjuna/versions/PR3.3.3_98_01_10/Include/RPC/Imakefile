@@ -1,0 +1,24 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.3 1995/02/22 14:55:28 ngdp Exp $
+COMMENT
+
+#define IHaveSubDirs
+
+#if RPC_SYSTEM_TYPE == RPC_RajdootAction_
+SetSubDirectorys(Rajdoot)
+#endif
+#if RPC_SYSTEM_TYPE == RPC_Rajdoot_
+SetSubDirectorys(Rajdoot)
+#endif
+
+CreateInstallTopDirectory(include)
+CreateInstallDirectory(include,RPC)
+InstallFile(include/RPC,ClStatus.h)
+

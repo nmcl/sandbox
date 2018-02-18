@@ -1,0 +1,20 @@
+COMMENT 
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.3.6.1 1996/10/10 14:16:57 ngdp Exp $
+COMMENT
+
+CreateInstallTopDirectory(include)
+CreateInstallDirectory(include,Common)
+InstallFile(include/Common,InitThreads.h)
+InstallFile(include/Common,Thread.h)
+InstallFile(include/Common,ThreadID.h)
+InstallFile(include/Common,ThreadList.h)
+InstallFile(include/Common,ThreadListI.h)
+InstallFile(include/Common,ThreadMutex.h)
+
