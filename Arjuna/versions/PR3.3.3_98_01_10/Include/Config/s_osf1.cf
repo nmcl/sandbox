@@ -1,0 +1,20 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: s_osf1.cf,v 1.1 1995/02/01 14:56:00 ngdp Exp $
+ */
+
+/*
+ * s_OSF1.cf
+ */
+
+#define SYSTEM_SPECIFIC_FLAGS -D__OSF1__ -DNEED_USLEEP_PROTO -DNEED_SELECT_PROTO -DHAVE_SELECT_H_ -DNEED_MALLOC_T
+#define STUBGEN_OS_FLAGS "-D__OSF1__ -Dunix -D__unix -D__unix__"
+
+#define SYSTEM_SPECIFIC_LIBRARIES
+
