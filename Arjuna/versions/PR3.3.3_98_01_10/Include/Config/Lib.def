@@ -1,0 +1,30 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: Lib.def,v 1.3 1995/07/25 10:31:43 ngdp Exp $
+ */
+
+/*
+ *  Lib.def
+ */
+
+#ifndef SYSTEM_SPECIFIC_LIBRARIES
+#define SYSTEM_SPECIFIC_LIBRARIES
+#endif
+
+#ifndef SYSTEM_SPECIFIC_CROSS_LIBRARIES
+#define SYSTEM_SPECIFIC_CROSS_LIBRARIES SYSTEM_SPECIFIC_LIBRARIES
+#endif
+
+#ifndef LEX_LIBRARY
+#define LEX_LIBRARY
+#endif
+
+#ifndef YACC_LIBRARY
+#define YACC_LIBRARY
+#endif
