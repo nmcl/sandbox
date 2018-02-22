@@ -1,0 +1,38 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: FragStore.n,v 1.3 1995/02/17 13:23:43 ngdp Exp $
+ */
+
+#if defined(NO_INLINES) && !defined(FRAGSTORE_CC_)
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF FragmentedStoreSetUp::FragmentedStoreSetUp ( SetUpInfo& info ) 
+						   : ShadowingStoreSetUp(info)
+{
+    
+}
+
+INLINEF const TypeName FragmentedStore::type () const
+{
+    return FragmentedStoreType;
+}
+
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif
