@@ -1,0 +1,102 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: VolatileStore.n,v 1.5 1995/09/18 11:33:54 nmcl Exp $
+ */
+
+
+#ifndef CONFIGURE_H_
+#  include <Config/Configure.h>
+#endif
+
+
+#if defined(NO_INLINES) && !defined(VOLATILESTORE_CC_)
+
+#else
+
+#ifndef NO_INLINES
+#  define INLINEF inline
+#else
+#  define INLINEF
+#endif
+
+INLINEF size_t VolatileStore::dataSegment ()
+{
+    return sizeof(number_states) + sizeof(size_t) + (headerSize() * numberOfStates);
+}
+
+INLINEF ObjectState* VolatileStore::read_committed ( const Uid& objUid,
+						     const TypeName tn)
+{
+    return read_state(objUid, tn, ObjectStore::OS_ORIGINAL);
+}
+
+INLINEF ObjectState* VolatileStore::read_uncommitted ( const Uid& objUid,
+						       const TypeName tn)
+{
+    return read_state(objUid, tn, ObjectStore::OS_SHADOW);
+}
+
+INLINEF Boolean VolatileStore::remove_committed ( const Uid& objUid,
+						  const TypeName tn)
+{
+    return remove_state(objUid, tn, ObjectStore::OS_ORIGINAL);
+}
+
+INLINEF Boolean VolatileStore::remove_uncommitted ( const Uid& objUid,
+						    const TypeName tn)
+{
+    return remove_state(objUid, tn, ObjectStore::OS_SHADOW);
+}
+
+INLINEF Boolean VolatileStore::write_uncommitted ( const Uid& objUid,
+						   const TypeName tn,
+						   const ObjectState& state)
+{
+    return write_state(objUid, tn, state, ObjectStore::OS_SHADOW);
+}
+
+
+/* These operation does not make sense for the volatile object store. */
+
+INLINEF Boolean VolatileStore::allObjUids ( const TypeName, ObjectState&,
+					    ObjectStore::StateStatus )
+{
+    return FALSE;
+}
+
+INLINEF Boolean VolatileStore::hide_state ( const Uid&, const TypeName )
+{
+    return FALSE;
+}
+
+INLINEF Boolean VolatileStore::reveal_state ( const Uid&, const TypeName )
+{
+    return FALSE;
+}
+
+INLINEF const TypeName VolatileStore::type () const
+{
+    return VolatileStoreType;
+}
+
+INLINEF const char *VolatileStore::getStoreName () const
+{
+    return rootOfStore;
+}
+
+INLINEF Boolean VolatileStore::supressEntry ( const char * ) const
+{
+    return FALSE;
+}
+
+#ifdef INLINEF
+#  undef INLINEF
+#endif
+
+#endif
