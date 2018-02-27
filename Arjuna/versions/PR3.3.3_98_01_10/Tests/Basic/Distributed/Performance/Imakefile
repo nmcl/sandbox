@@ -1,0 +1,81 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.10 1994/11/29 14:01:56 ngdp Exp $
+COMMENT
+
+LIBRARIES = ../../PUtils/libPUtils.a $(LIBARJSERVERS) $(LIBARJUNA) $(LIBRPC) $(LIBCOMMON)
+
+
+SetLocalCppFlags(-I../../PUtils -I$(ARJUNA_INCLUDES))
+
+SOURCES = OperParamSize.cc       \
+          OperParamSizeDriver.cc \
+          OperActions.cc         \
+          OperActionsDriver.cc	\
+	  Param.cc
+
+OPSDOBJ  = OperParamSizeDriver.o OperParamSize_client.o Param.o Param_marshall.o 
+OPSSOBJ  = OperParamSize.o Param.o Param_marshall.o OperParamSize_server.o OperParamSize_servermain.o
+
+OPITDOBJ = OperInitTermDriver.o 
+
+#ifdef GCC_LINK_BUG
+OADOBJ   = OperActionsDriver.o OperActions_client.o OperActions.o
+OASOBJ   = OperActions_server.o OperActions.o OperActions_servermain.o OperActions_client.o
+#else
+OADOBJ   = OperActionsDriver.o OperActions_client.o 
+OASOBJ   = OperActions_server.o OperActions.o OperActions_servermain.o
+#endif
+
+STUBS = OperParamSize_stub.h OperActions_stub.h Param_stub.h
+
+OBJECTS = $(OPSDOBJ) $(OPSSOBJ) $(OPITDOBJ) $(OADOBJ) $(OASOBJ)
+AllTarget($(STUBS) OperParamSizeDriver OperParamSize OperInitTermDriver OperActionsDriver OperActions coretest1 coretest2 coretest3 coretest4)
+StubTarget($(STUBS))
+coretest1 : core1.SH
+	sed -e "s?{IT}?$(INSTALL_TOPDIR)?" < core1.SH > coretest1
+	chmod u+x coretest1
+
+coretest2 : core2.SH
+	sed -e "s?{IT}?$(INSTALL_TOPDIR)?" < core2.SH > coretest2
+	chmod u+x coretest2
+
+coretest3 : core3.SH
+	sed -e "s?{IT}?$(INSTALL_TOPDIR)?" < core3.SH > coretest3
+	chmod u+x coretest3
+
+coretest4 : core4.SH
+	sed -e "s?{IT}?$(INSTALL_TOPDIR)?" < core4.SH > coretest4
+	chmod u+x coretest4
+
+CreateInstallTopDirectory(servers)
+InstallProgram(servers,OperParamSize)
+InstallProgram(servers,OperActions)
+
+MakeProgramCPLUSPLUS(OperParamSizeDriver,$(OPSDOBJ) $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(OperParamSize,$(OPSSOBJ) $(LIBRARIES),NOPARAM)
+
+MakeProgramCPLUSPLUS(OperInitTermDriver,$(OPITDOBJ) $(LIBRARIES),NOPARAM)
+
+MakeProgramCPLUSPLUS(OperActionsDriver,$(OADOBJ) $(LIBRARIES),NOPARAM)
+MakeProgramCPLUSPLUS(OperActions,$(OASOBJ) $(LIBRARIES),NOPARAM)
+
+MakeStubGen(Param,Param,Param,NOPARAM)
+MakeStubGen(OperParamSize,OperParamSize,OperParamSize,NOPARAM)
+MakeStubGen(OperActions,OperActions,OperActions,NOPARAM)
+
+
+MakeObjectCPLUSPLUS(OperParamSizeDriver,NOPARAM)
+MakeObjectCPLUSPLUS(OperParamSize,NOPARAM)
+MakeObjectCPLUSPLUS(OperInitTermDriver,NOPARAM)
+MakeObjectCPLUSPLUS(OperActionsDriver,NOPARAM)
+MakeObjectCPLUSPLUS(OperActions,NOPARAM)
+MakeObjectCPLUSPLUS(Param,NOPARAM)
+
+TidyTarget(OperParamSizeDriver OperParamSize OperParamSize_stub.h OperParamSize_stubclass.h OperParamSize_client.cc OperParamSize_server.cc OperParamSize_servermain.cc OperInitTermDriver OperActionsDriver OperActions OperActions_stub.h OperActions_stubclass.h OperActions_client.cc OperActions_server.cc OperActions_servermain.cc Param_stub.h Param_marshall.cc coretest1 coretest2 coretest3 coretest4)
