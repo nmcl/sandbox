@@ -1,0 +1,49 @@
+COMMENT
+COMMENT Copyright (C) 1994
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.3 1994/09/26 09:31:32 nsmw Exp $
+COMMENT
+
+SetLocalCppFlags(-I../PUtils -I$(ARJUNA_INCLUDES))
+
+SOURCES = ActDeact.cc \
+          SetUpActDeact.cc \
+          Forker.cc \
+          Null1.cc  \
+          Null2.cc 
+
+ADOBJ   = ActDeact.o
+
+SUADOBJ = SetUpActDeact.o
+
+FPOBJ   = Forker.o
+
+NP1OBJ  = Null1.o
+
+NP2OBJ  = Null2.o
+
+OBJECTS = $(ADOBJ) $(SUADOBJ) $(FPOBJ) $(NP1OBJ) $(NP2OBJ) 
+
+AllTarget(ActDeact SetUpActDeact Forker Null1 Null2)
+
+MakeProgramCPLUSPLUS(ActDeact,$(ADOBJ) ../PUtils/libPUtils.a,NOPARAM)
+MakeProgramCPLUSPLUS(SetUpActDeact,$(SUADOBJ) ../PUtils/libPUtils.a,NOPARAM)
+MakeProgramCPLUSPLUS(Forker,$(FPOBJ) ../PUtils/libPUtils.a,NOPARAM)
+MakeProgramCPLUSPLUS(Null1,$(NP1OBJ),NOPARAM)
+MakeProgramCPLUSPLUS(Null2,$(NP2OBJ),NOPARAM)
+
+MakeObjectCPLUSPLUS(ActDeact,NOPARAM)
+MakeObjectCPLUSPLUS(SetUpActDeact,NOPARAM)
+MakeObjectCPLUSPLUS(Forker,NOPARAM)
+MakeObjectCPLUSPLUS(Null1,NOPARAM)
+MakeObjectCPLUSPLUS(Null2,NOPARAM)
+
+TidyTarget(ActDeact SetUpActDeact Forker Null1 Null2)
+
+purge.local :: 
+	@$(RM) -r perftest

@@ -1,0 +1,46 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.3 1994/06/01 14:39:39 ngdp Exp $
+COMMENT
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+STUBS   = BasicTime_stub.h \
+	  CpuTime_stub.h \
+	  ElapsedTime_stub.h \
+	  PerfVector_stub.h
+
+SOURCES = BasicTime.cc \
+	  BasicTime_umarshall.cc \
+          CpuTime.cc \
+          ElapsedTime.cc \
+	  PerfVector.cc
+
+OBJECTS = BasicTime.o CpuTime.o ElapsedTime.o PerfVector.o \
+	  BasicTime_marshall.o BasicTime_umarshall.o CpuTime_marshall.o ElapsedTime_marshall.o \
+	  PerformanceVector_marshall.o VectorIndex_marshall.o
+
+AllTarget($(STUBS) libPUtils.a)
+StubTarget($(STUBS))
+
+MakeLibrary(libPUtils.a,$(OBJECTS))
+
+MakeStubGen(BasicTime,BasicTime,BasicTime,NOPARAM)
+MakeStubGen(CpuTime,CpuTime,CpuTime,NOPARAM)
+MakeStubGen(ElapsedTime,ElapsedTime,ElapsedTime,NOPARAM)
+MakeStubGen(PerfVector,PerformanceVector,PerfVector,NOPARAM)
+
+MakeObjectCPLUSPLUS(BasicTime,NOPARAM)
+MakeObjectCPLUSPLUS(BasicTime_umarshall,NOPARAM)
+MakeObjectCPLUSPLUS(CpuTime,NOPARAM)
+MakeObjectCPLUSPLUS(ElapsedTime,NOPARAM)
+MakeObjectCPLUSPLUS(PerfVector,NOPARAM)
+MakeObjectCPLUSPLUS(VectorIndex_marshall,NOPARAM)
+
+TidyTarget($(OBJECTS) BasicTime_marshall.cc CpuTime_marshall.cc ElapsedTime_marshall.cc PerformanceVector_marshall.cc VectorIndex_marshall.cc BasicTime_stub.h CpuTime_stub.h ElapsedTime_stub.h PerfVector_stub.h libPUtils.a )
