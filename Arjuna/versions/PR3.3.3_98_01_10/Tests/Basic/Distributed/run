@@ -1,0 +1,30 @@
+#!/bin/sh
+
+echo "Testing Buffer class"
+Buffer/Client/BufferCheckDriver
+echo
+sleep 2
+
+echo "Testing atomic action and 2-phase locking"
+AA+CC/Client/ObjectDriver
+echo
+sleep 2
+
+echo "Testing persistent object creation"
+NewObject/Client/NewObject
+echo
+sleep 2
+
+echo "Testing nested top-level atomic actions"
+NestedTLAA/Client/ObjectDriver
+echo
+sleep 2
+
+echo "Running performance tests"
+Performance/OperInitTermDriver
+echo
+Performance/OperActionsDriver
+echo
+Performance/OperParamSizeDriver
+
+echo "Finished Distributed tests"

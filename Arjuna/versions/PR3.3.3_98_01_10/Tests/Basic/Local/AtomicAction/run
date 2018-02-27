@@ -1,0 +1,13 @@
+#!/bin/sh
+
+echo 'Will commit nested action and commit top-level action - this should work'
+./AtomicAction COMMIT COMMIT
+
+echo 'Will abort nested action and commit top-level action - this should work'
+./AtomicAction COMMIT ABORT
+
+echo 'Will commit nested action and abort top-level action - this should work'
+./AtomicAction ABORT COMMIT
+
+echo 'Will now try to commit out-of-sequence action - this should not work'
+./BadActionCode
