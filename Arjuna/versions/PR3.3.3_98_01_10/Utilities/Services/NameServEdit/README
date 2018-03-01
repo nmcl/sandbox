@@ -1,0 +1,13 @@
+This is a simple application to browse & edit through the contents
+of the name server object store.
+
+Usage:
+NameServEdit
+
+(a menu of available options will then be displayed)
+
+NOTE:
+	NameServEdit  will  only  display the first entry in a  server
+group,  although it will  indicate whether  there  are  more  entries.
+ServerGroupEdit should really be used wherever NameServEdit  was used.
+This will be phased out in later releases.
