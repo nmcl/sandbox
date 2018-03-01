@@ -1,0 +1,21 @@
+#!/bin/sh
+#
+# Copyright (C) 1993
+#
+# Department of Computing Science,
+# The University,
+# Newcastle upon Tyne,
+# UK.
+#
+# $Id: stripdepend,v 1.1 1993/11/03 15:07:56 nmcl Exp $
+#
+
+start_depend_string='# DO NOT DELETE'
+
+echo $start_depend_string >> Makefile
+
+sed -e "/^$start_depend_string/,\$d" < Makefile > Makefile.tmp
+
+echo $start_depend_string >> Makefile.tmp
+
+mv Makefile.tmp Makefile
