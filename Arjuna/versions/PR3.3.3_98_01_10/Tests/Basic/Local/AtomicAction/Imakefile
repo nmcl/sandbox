@@ -1,0 +1,35 @@
+COMMENT 
+COMMENT Copyright 1990, 1991, 1992,
+COMMENT Computing Laboratory, University of Newcastle upon Tyne, UK.
+COMMENT
+COMMENT Permission to use, copy, modify and distribute this program for
+COMMENT evaluation, teaching and/or research purposes only and without fee is
+COMMENT hereby granted, providing that this copyright and permission notice
+COMMENT appear on all copies and supporting documentation, and that similar
+COMMENT conditions are imposed on any individual or organization to whom the
+COMMENT program is distributed. The University of Newcastle upon Tyne makes no
+COMMENT representation about the suitability of this software for any purpose.
+COMMENT It is provided "as is" without express or implied warranty.
+COMMENT
+COMMENT $Id: Imakefile,v 1.7 1994/11/29 14:02:04 ngdp Exp $
+COMMENT
+
+SOURCES  = AtomicAction.cc \
+           BadActionCode.cc
+
+OBJECTS = AtomicAction.o \
+           BadActionCode.o
+
+LIBRARYS = $(LIBARJUNA) $(LIBCOMMON)
+
+SetLocalCppFlags(-I$(ARJUNA_INCLUDES))
+
+AllTarget(AtomicAction BadActionCode)
+
+MakeProgramCPLUSPLUS(AtomicAction,AtomicAction.o $(LIBRARYS),NOPARAM)
+MakeProgramCPLUSPLUS(BadActionCode,BadActionCode.o $(LIBRARYS),NOPARAM)
+
+MakeObjectCPLUSPLUS(AtomicAction,NOPARAM)
+MakeObjectCPLUSPLUS(BadActionCode,NOPARAM)
+
+TidyTarget(BadActionCode AtomicAction)
