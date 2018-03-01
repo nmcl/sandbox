@@ -1,0 +1,24 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ */
+
+/*
+ * $Id: VERSION,v 1.5.4.1.2.1 1996/10/10 11:01:28 ngdp Exp $
+ */
+
+Welcome to the world of   Arjuna!  This source tree contains   version
+PR3.3.2 of the system  and  fixes  numerous  bugs present  in previous
+versions.
+
+Thanks to all the people who took the  time and effort to  port Arjuna
+to systems and compilers that  we do not have access too and reporting
+the problems (and fixes) that were needed.
+
+If   you   find   bugs  or   have   problems  please  report  them  to
+arjuna@newcastle.ac.uk
+
