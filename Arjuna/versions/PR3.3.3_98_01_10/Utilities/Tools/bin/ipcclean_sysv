@@ -1,0 +1,29 @@
+#!/bin/sh
+
+#
+# Copyright (C) 1993
+#
+# Department of Computing Science,
+# The University,
+# Newcastle upon Tyne,
+# UK.
+#
+# $Id: ipcclean_sysv,v 1.1 1993/11/03 15:07:53 nmcl Exp $
+#
+
+TMPFILE=/tmp/ipcclean.$$
+
+ipcs | grep '^[ms]' | awk '{ print $1, $2 }' > $TMPFILE
+cat $TMPFILE | while read type id
+do
+	if test $type = s
+	then
+		echo "Removing semaphore : $id"
+	fi
+	if test $type = m
+	then
+		echo "Removing memory    : $id"
+	fi
+	ipcrm -$type $id
+done
+rm -f $TMPFILE
