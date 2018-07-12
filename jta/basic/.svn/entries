@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wc-entries
+   xmlns="svn:">
+<entry
+   committed-rev="7361"
+   name=""
+   committed-date="2006-11-03T11:46:47.978377Z"
+   url="https://svn.labs.jboss.com/labs/jbosstm/trunk/ArjunaJTA/jta/tests/classes/com/hp/mwtests/ts/jta/basic"
+   last-author="kevin.conner@jboss.com"
+   kind="dir"
+   uuid="c60d74c8-e8f6-0310-9e8f-d4a2fc68ab70"
+   repos="https://svn.labs.jboss.com"
+   revision="12380"/>
+<entry
+   committed-rev="7361"
+   name="JTATransactionCommitTest2.java"
+   text-time="2007-01-15T13:09:47.000000Z"
+   committed-date="2006-11-03T11:46:47.978377Z"
+   checksum="3ed4e76b45259b6e6e43a6658f40c091"
+   last-author="kevin.conner@jboss.com"
+   kind="file"
+   prop-time="2007-01-15T13:09:46.000000Z"/>
+<entry
+   committed-rev="7361"
+   name="NullResource.java"
+   text-time="2007-01-15T13:09:47.000000Z"
+   committed-date="2006-11-03T11:46:47.978377Z"
+   checksum="10cf3c1f5e80ab405401b6ee0e8d85d4"
+   last-author="kevin.conner@jboss.com"
+   kind="file"
+   prop-time="2007-01-15T13:09:47.000000Z"/>
+<entry
+   committed-rev="7361"
+   name="JTAAbort.java"
+   text-time="2007-01-15T13:09:47.000000Z"
+   committed-date="2006-11-03T11:46:47.978377Z"
+   checksum="d793065e196fd3f57fc41245d2470c3f"
+   last-author="kevin.conner@jboss.com"
+   kind="file"
+   prop-time="2007-01-15T13:09:47.000000Z"/>
+<entry
+   committed-rev="7361"
+   name="JTAOrder.java"
+   text-time="2007-01-15T13:09:47.000000Z"
+   committed-date="2006-11-03T11:46:47.978377Z"
+   checksum="2457f3120e2c2e3e174f563a6709a1a9"
+   last-author="kevin.conner@jboss.com"
+   kind="file"
+   prop-time="2007-01-15T13:09:47.000000Z"/>
+<entry
+   committed-rev="7361"
+   name="JTATransactionCommitTest.java"
+   text-time="2007-01-15T13:09:47.000000Z"
+   committed-date="2006-11-03T11:46:47.978377Z"
+   checksum="05b38ba39a384ab9f00aac5de493299b"
+   last-author="kevin.conner@jboss.com"
+   kind="file"
+   prop-time="2007-01-15T13:09:47.000000Z"/>
+<entry
+   committed-rev="7361"
+   name="JTATest.java"
+   text-time="2007-01-15T13:09:47.000000Z"
+   committed-date="2006-11-03T11:46:47.978377Z"
+   checksum="9f9b751cc61922415b84d96a14da4574"
+   last-author="kevin.conner@jboss.com"
+   kind="file"
+   prop-time="2007-01-15T13:09:47.000000Z"/>
+</wc-entries>
