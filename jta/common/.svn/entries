@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wc-entries
+   xmlns="svn:">
+<entry
+   committed-rev="7361"
+   name=""
+   committed-date="2006-11-03T11:46:47.978377Z"
+   url="https://svn.labs.jboss.com/labs/jbosstm/trunk/ArjunaJTA/jta/tests/classes/com/hp/mwtests/ts/jta/common"
+   last-author="kevin.conner@jboss.com"
+   kind="dir"
+   uuid="c60d74c8-e8f6-0310-9e8f-d4a2fc68ab70"
+   repos="https://svn.labs.jboss.com"
+   revision="12380"/>
+<entry
+   committed-rev="7361"
+   name="RecoveryXAResource.java"
+   text-time="2007-01-15T13:09:47.000000Z"
+   committed-date="2006-11-03T11:46:47.978377Z"
+   checksum="95f0a5504fd3ceb5143c8c54fe5bae4d"
+   last-author="kevin.conner@jboss.com"
+   kind="file"
+   prop-time="2007-01-15T13:09:47.000000Z"/>
+<entry
+   committed-rev="7361"
+   name="CrashXAResource.java"
+   text-time="2007-01-15T13:09:47.000000Z"
+   committed-date="2006-11-03T11:46:47.978377Z"
+   checksum="e173d9f15bd34917e4252bd065bc145c"
+   last-author="kevin.conner@jboss.com"
+   kind="file"
+   prop-time="2007-01-15T13:09:47.000000Z"/>
+<entry
+   committed-rev="7361"
+   name="Synchronization.java"
+   text-time="2007-01-15T13:09:47.000000Z"
+   committed-date="2006-11-03T11:46:47.978377Z"
+   checksum="523832a4ba747527a894b5938904ad24"
+   last-author="kevin.conner@jboss.com"
+   kind="file"
+   prop-time="2007-01-15T13:09:47.000000Z"/>
+<entry
+   committed-rev="7361"
+   name="DummyXA.java"
+   text-time="2007-01-15T13:09:47.000000Z"
+   committed-date="2006-11-03T11:46:47.978377Z"
+   checksum="5995f10088c1a9f506252122e8228e3b"
+   last-author="kevin.conner@jboss.com"
+   kind="file"
+   prop-time="2007-01-15T13:09:47.000000Z"/>
+<entry
+   committed-rev="7361"
+   name="LastXAResource.java"
+   text-time="2007-01-15T13:09:47.000000Z"
+   committed-date="2006-11-03T11:46:47.978377Z"
+   checksum="b7afe33e77a1a5852f8f77ca8fdbd81d"
+   last-author="kevin.conner@jboss.com"
+   kind="file"
+   prop-time="2007-01-15T13:09:47.000000Z"/>
+<entry
+   committed-rev="7361"
+   name="TestResource.java"
+   text-time="2007-01-15T13:09:47.000000Z"
+   committed-date="2006-11-03T11:46:47.978377Z"
+   checksum="5c88b9acf2a12f388a2c694018e98d96"
+   last-author="kevin.conner@jboss.com"
+   kind="file"
+   prop-time="2007-01-15T13:09:47.000000Z"/>
+<entry
+   committed-rev="7361"
+   name="FirstXAResource.java"
+   text-time="2007-01-15T13:09:47.000000Z"
+   committed-date="2006-11-03T11:46:47.978377Z"
+   checksum="b7471dd9cc2c6a3fd7caa5550150fb97"
+   last-author="kevin.conner@jboss.com"
+   kind="file"
+   prop-time="2007-01-15T13:09:47.000000Z"/>
+<entry
+   committed-rev="7361"
+   name="XACreator.java"
+   text-time="2007-01-15T13:09:47.000000Z"
+   committed-date="2006-11-03T11:46:47.978377Z"
+   checksum="e7bd410ac1487e7ad458c9893ec76f48"
+   last-author="kevin.conner@jboss.com"
+   kind="file"
+   prop-time="2007-01-15T13:09:47.000000Z"/>
+<entry
+   committed-rev="7361"
+   name="DummyCreator.java"
+   text-time="2007-01-15T13:09:47.000000Z"
+   committed-date="2006-11-03T11:46:47.978377Z"
+   checksum="19b3e8ade4ad29544952313b534a0cd9"
+   last-author="kevin.conner@jboss.com"
+   kind="file"
+   prop-time="2007-01-15T13:09:47.000000Z"/>
+<entry
+   committed-rev="7361"
+   name="ExampleXAResource.java"
+   text-time="2007-01-15T13:09:47.000000Z"
+   committed-date="2006-11-03T11:46:47.978377Z"
+   checksum="6a0629634c4c945c1cc50a4bbcfe2d21"
+   last-author="kevin.conner@jboss.com"
+   kind="file"
+   prop-time="2007-01-15T13:09:47.000000Z"/>
+</wc-entries>
