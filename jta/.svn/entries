@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wc-entries
+   xmlns="svn:">
+<entry
+   committed-rev="9906"
+   name=""
+   committed-date="2007-03-02T12:15:23.842024Z"
+   url="https://svn.labs.jboss.com/labs/jbosstm/trunk/ArjunaJTA/jta/tests/classes/com/hp/mwtests/ts/jta"
+   last-author="kevin.conner@jboss.com"
+   kind="dir"
+   uuid="c60d74c8-e8f6-0310-9e8f-d4a2fc68ab70"
+   repos="https://svn.labs.jboss.com"
+   revision="12380"/>
+<entry
+   name="basic"
+   kind="dir"/>
+<entry
+   name="nested"
+   kind="dir"/>
+<entry
+   name="timeout"
+   kind="dir"/>
+<entry
+   name="common"
+   kind="dir"/>
+<entry
+   name="hammer"
+   kind="dir"/>
+<entry
+   name="twophase"
+   kind="dir"/>
+<entry
+   name="lastresource"
+   kind="dir"/>
+<entry
+   name="recovery"
+   kind="dir"/>
+</wc-entries>
