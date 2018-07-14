@@ -1,0 +1,38 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: v_unknown.cf,v 1.1 1995/02/01 10:14:48 ngdp Exp $
+ */
+
+/*
+ * Vendor config file
+ *
+ * Defines flags (-D, -U etc) that are applicable to a
+ * specific VENDOR (eg sun, dec, hp etc)
+ * These flags are passed on to the compiler when building Arjuna
+ *
+ * Defines preceded by STUBGEN_ are always quoted strings and are used
+ * by the stub generator IFF the header file is processed with something
+ * other than the standard C++ compiler (we assume that the standard C++
+ * compiler would set these flags itself)
+ *
+ * Examples:
+ *   #define VENDOR_SPECIFIC_FLAGS
+ *   #define STUBGEN_VEND_FLAGS "-Dsun"
+ *
+ * Here the VENDOR_SPECIFIC_FLAGS are empty since we assume that -Dsun is set
+ * by default by the compiler front end. However, the flag is present in the
+ * STUBGEN_VEND_FLAGS since it may be using cpp directly
+ */
+
+/*
+ * Vendor config file : v_unknown.cf
+ */
+
+#define VENDOR_SPECIFIC_FLAGS 
+#define STUBGEN_VEND_FLAGS " "
