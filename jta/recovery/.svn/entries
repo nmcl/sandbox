@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wc-entries
+   xmlns="svn:">
+<entry
+   committed-rev="7361"
+   name=""
+   committed-date="2006-11-03T11:46:47.978377Z"
+   url="https://svn.labs.jboss.com/labs/jbosstm/trunk/ArjunaJTA/jta/tests/classes/com/hp/mwtests/ts/jta/recovery"
+   last-author="kevin.conner@jboss.com"
+   kind="dir"
+   uuid="c60d74c8-e8f6-0310-9e8f-d4a2fc68ab70"
+   repos="https://svn.labs.jboss.com"
+   revision="12380"/>
+<entry
+   committed-rev="7361"
+   name="CrashRecovery.java"
+   text-time="2007-01-15T13:09:48.000000Z"
+   committed-date="2006-11-03T11:46:47.978377Z"
+   checksum="4010e39d740c4e118e5b0b6af3d626c1"
+   last-author="kevin.conner@jboss.com"
+   kind="file"
+   prop-time="2007-01-15T13:09:48.000000Z"/>
+<entry
+   committed-rev="7361"
+   name="RecoveryManagerTest.java"
+   text-time="2007-01-15T13:09:48.000000Z"
+   committed-date="2006-11-03T11:46:47.978377Z"
+   checksum="7cf230ea50046a7679c62abe33c7dcca"
+   last-author="kevin.conner@jboss.com"
+   kind="file"
+   prop-time="2007-01-15T13:09:48.000000Z"/>
+<entry
+   committed-rev="7361"
+   name="DummyXARecoveryResource.java"
+   text-time="2007-01-15T13:09:48.000000Z"
+   committed-date="2006-11-03T11:46:47.978377Z"
+   checksum="fd570d9500a0358a2f423fb4de14cb55"
+   last-author="kevin.conner@jboss.com"
+   kind="file"
+   prop-time="2007-01-15T13:09:48.000000Z"/>
+<entry
+   committed-rev="7361"
+   name="RecoveryTest.java"
+   text-time="2007-01-15T13:09:48.000000Z"
+   committed-date="2006-11-03T11:46:47.978377Z"
+   checksum="b9c412dd5406dcd558eb9fd65949743e"
+   last-author="kevin.conner@jboss.com"
+   kind="file"
+   prop-time="2007-01-15T13:09:48.000000Z"/>
+</wc-entries>
