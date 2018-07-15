@@ -1,0 +1,16 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.4 1994/07/05 08:05:12 ngdp Exp $
+COMMENT
+
+CreateInstallTopDirectory(include)
+CreateInstallDirectory(include,Dispatcher)
+InstallFile(include/Dispatcher,Dispatcher.h)
+InstallFile(include/Dispatcher,MultiDispatcher.h)
+
