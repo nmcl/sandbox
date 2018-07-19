@@ -1,0 +1,22 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT 
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.4 1994/12/14 10:23:06 ngdp Exp $
+COMMENT
+
+STUBS     = Bank.java
+
+SOURCES	  = Bank.h
+
+SetLocalCppFlags(-I$(STD_INCLUDES))
+
+AllTarget(Bank.class)
+
+MakeJavaStubGen(Bank,Bank,Bank,+javaonly)
+
+TidyTarget($(STUBS) Bank_stub.h Bank_stubclass.h Bank_server* Bank_client*)
