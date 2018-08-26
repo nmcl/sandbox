@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://www.webservicestransactions.org/schemas/wsas/2003/03" xmlns:tns="http://www.webservicestransactions.org/schemas/wsas/2003/03" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:complexType name="ActivityListType">
+		<xs:sequence>
+			<xs:element name="service" type="xs:anyURI" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ContextType">
+		<xs:sequence>
+			<xs:element name="context-identifier" type="xs:anyURI" minOccurs="1" maxOccurs="1"/>		
+			<xs:element name="activity-service" type="xs:anyURI" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="type" type="xs:anyURI" minOccurs="0"/>
+			<xs:element name="activity-list" type="tns:ActivityListType" minOccurs="0"/>
+			<xs:element name="als-context" type="tns:ALSContextType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="child-contexts" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="child-context" type="tns:ContextType" minOccurs="1" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:any namespace="##other" processContents="lax" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="timeout" type="xs:positiveInteger" use="optional"/>
+	</xs:complexType>
+	<xs:element name="context" type="tns:ContextType"/>
+	<xs:complexType name="ALSContextType">
+		<xs:sequence>
+			<xs:element name="type" type="xs:anyURI"/>
+			<xs:any namespace="##other" processContents="lax" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="mustUnderstand" type="xs:boolean" use="optional" default="false"/>
+		<xs:attribute name="mustPropagate" type="xs:boolean" use="optional" default="false"/>
+	</xs:complexType>
+	<xs:complexType name="OutcomeType">
+		<xs:sequence>
+			<xs:element name="completion-status" type="tns:CompletionStatusType"/>
+			<xs:any namespace="##other" processContents="lax" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:anyURI" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="StatusType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ACTIVE"/>
+			<xs:enumeration value="COMPLETING"/>
+			<xs:enumeration value="COMPLETED"/>
+			<xs:enumeration value="NO_ACTIVITY"/>
+			<xs:enumeration value="UNKNOWN"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="CompletionStatusType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="SUCCESS"/>
+			<xs:enumeration value="FAIL"/>
+			<xs:enumeration value="FAIL_ONLY"/>
+			<xs:enumeration value="UNKNOWN"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>
+
+<!-- <xs:schema targetNamespace="http://www.webservicestransactions.org/schemas/wsas/2003/03" xmlns:tns="http://www.webservicestransactions.org/schemas/wsas/2003/03" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:complexType name="ActivityListType" abstract="true">
+		<xs:sequence>
+			<xs:element name="service" type="xs:anyURI" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ActivityContextType">
+		<xs:sequence>
+			<xs:element name="activity-service" type="xs:anyURI" minOccurs="0"/>
+			<xs:element name="activity-identifier" type="xs:anyURI" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="type" type="xs:anyURI" minOccurs="0"/>
+			<xs:element name="activity-list" type="tns:ActivityListType" minOccurs="0"/>
+			<xs:any namespace="##other" processContents="lax" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="timeout" type="xs:positiveInteger" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="ALSContextType">
+		<xs:sequence>
+			<xs:element name="type" type="xs:anyURI"/>
+			<xs:any namespace="##other" processContents="lax" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="mustUnderstand" type="xs:boolean" use="optional" default="false"/>
+		<xs:attribute name="mustPropagate" type="xs:boolean" use="optional" default="false"/>
+	</xs:complexType>
+	<xs:complexType name="ContextType">
+		<xs:sequence>
+			<xs:element name="context-identifier" type="xs:anyURI" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="activity-context" type="tns:ActivityContextType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="als-context" type="tns:ALSContextType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="OutcomeType">
+		<xs:sequence>
+			<xs:element name="completion-status" type="tns:CompletionStatusType"/>
+			<xs:any namespace="##other" processContents="lax" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:anyURI" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="StatusType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ACTIVE"/>
+			<xs:enumeration value="COMPLETING"/>
+			<xs:enumeration value="COMPLETED"/>
+			<xs:enumeration value="NO_ACTIVITY"/>
+			<xs:enumeration value="UNKNOWN"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="CompletionStatusType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="SUCCESS"/>
+			<xs:enumeration value="FAIL"/>
+			<xs:enumeration value="FAIL_ONLY"/>
+			<xs:enumeration value="UNKNOWN"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>
+-->

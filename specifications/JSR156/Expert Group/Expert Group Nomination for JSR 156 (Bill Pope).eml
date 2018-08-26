@@ -1,0 +1,143 @@
+Received: from cheviot1.ncl.ac.uk (root@cheviot1.ncl.ac.uk [128.240.233.15]) by ulgham.ncl.ac.uk with ESMTP (8.7.1/8.7.1) id WAA14868 for <mcl@ulgham.ncl.ac.uk>; Mon, 5 Nov 2001 22:52:13 GMT
+Received: from bramg1.net.external.hp.com (bramg1.net.external.hp.com [192.6.126.73])
+	by cheviot1.ncl.ac.uk (8.10.1/8.10.1) with ESMTP id fA5Mpsp17989
+	for <mark.little@arjuna.com>; Mon, 5 Nov 2001 22:51:54 GMT
+Received: from quasit.br.itc.hp.com (quasit.br.itc.hp.com [15.145.8.135])
+	by bramg1.net.external.hp.com (Postfix) with ESMTP id 6B4E715
+	for <mark.little@arjuna.com>; Mon,  5 Nov 2001 23:51:54 +0100 (MET)
+Received: from loddon.br.itc.hp.com (loddon.br.itc.hp.com [15.145.8.166])
+	by quasit.br.itc.hp.com (8.9.3 (PHNE_18979)/8.9.3 SMKit6.0.6 OpenMail) with SMTP id WAA20649
+	for <mark.little@arjuna.com>; Mon, 5 Nov 2001 22:51:53 GMT
+Received: from 15.145.8.166 by loddon.br.itc.hp.com (InterScan E-Mail VirusWall NT); Mon, 05 Nov 2001 22:51:53 -0000 (GMT Standard Time)
+Received: by loddon.br.itc.hp.com with Internet Mail Service (5.5.2653.19)
+	id <WJTMJJ83>; Mon, 5 Nov 2001 22:51:53 -0000
+Received: from fowey.BR.ITC.HP.COM (localhost [127.0.0.1]) by fowey.BR.ITC.HP.COM with SMTP (Microsoft Exchange Internet Mail Service Version 5.5.2653.13)
+	id V6H9FFWX; Mon, 5 Nov 2001 22:51:48 -0000
+Received: from 15.191.2.9 by fowey.BR.ITC.HP.COM (InterScan E-Mail VirusWall NT); Mon, 05 Nov 2001 22:51:48 -0000 (GMT Standard Time)
+Received: from stamp.hp.com (stamp.hp.com [192.151.27.5])
+	by bramg1.net.external.hp.com (Postfix) with ESMTP id B75EE15
+	for <mark_little@bra.exch.hp.com>; Mon,  5 Nov 2001 23:51:47 +0100 (MET)
+Received: from mercury.Sun.COM (mercury.Sun.COM [192.9.25.1])
+	by stamp.hp.com (Postfix) with ESMTP id 765611F53B
+	for <mark_little@hp.com>; Mon,  5 Nov 2001 17:51:46 -0500 (EST)
+Received: from phys-ha1cupa.eng.sun.com ([129.144.34.10])
+	by mercury.Sun.COM (8.9.3+Sun/8.9.3) with ESMTP id OAA23419
+	for <mark_little@hp.com>; Mon, 5 Nov 2001 14:51:32 -0800 (PST)
+Received: from nanciwi (nanciwi [129.144.56.160])
+	by phys-ha1cupa.eng.sun.com (8.8.8+Sun/8.8.8/ENSMAIL,v2.1p1) with SMTP id OAA07859;
+	Mon, 5 Nov 2001 14:51:17 -0800 (PST)
+Message-Id: <200111052251.OAA07859@phys-ha1cupa.eng.sun.com>
+Date: Mon, 5 Nov 2001 14:51:01 -0800 (PST)
+From: Nancy Williams <Nancy.Williams@Sun.COM>
+Reply-To: Nancy Williams <Nancy.Williams@Sun.COM>
+Subject: Expert Group Nomination for JSR 156
+To: mark_little@hp.com
+MIME-Version: 1.0
+Content-Type: TEXT/plain; charset=us-ascii
+Content-MD5: LPDJMv+dqk6RMYYO8KEeKg==
+X-Mailer: dtmail 1.3.0 @(#)CDE Version 1.4.2 SunOS 5.8 sun4u sparc 
+Sender: mark_little@hp.com
+X-ECS-MailScanner: Scanned successfully
+
+Please consider this Expert Group nomination for the JSR 156 Expert Group.
+
+     	Bill Pope  
+
+This nominee has not yet signed a JSPA or IEPA, which would be required prior
+to admission to your expert group.  If you determine that they would be a
+valuable contributor, the PMO will work with you and the nominee to
+address the lack of the necessary legal agreement.
+
+If you do not expect a decision on this candidate within a few days,
+please send the candidate an e-mail letting them know when they can
+expect a decision.
+
+When you do make your decision on this candidate, please communicate that
+decision to them directly.
+
+When you make your decision on the membership of the expert group as a
+whole, such that you feel you can begin work on the draft specification,
+please send that membership list to the PMO, so that we may update the JSR
+page on the JCP web site.
+
+
+Thank you,
+Nancy Williams 
+
+------------- Begin Forwarded Message -------------
+
+Date: Fri, 2 Nov 2001 21:22:26 GMT
+To: expert-nominations@jcp.org
+From: zpope@pobox.com
+SUBJECT: Expert Group Nomination for JSR 156
+
+Expert Group Nomination for JSR 156
+
+
+Nominee Name:
+
+Bill Pope
+
+
+Contact Address:
+
+PO Box 6698
+Portsmouth NH 03801
+USA
+
+
+E-Mail Address:
+
+zpope@pobox.com
+
+
+Telephone Number:
+
+603 431 1542
+
+
+Fax Number:
+
+
+
+
+Representing:
+
+Individual
+
+
+Company/Organization Name:
+
+
+
+
+Qualifications of Nominee:
+
+- Active in OASIS Business Transaction Protocol definition.
+- Founder of XAML
+- Participating in OASIS XACML
+- Participating in OASIS security service 
+- Worked at Bowstreet on web services definition and deployment.
+  Worked on definition and impelementation of distributed business
+  architecture for web services.  
+- Contributed to CORBA resource access decision spec
+- Contributed to CORBA security spec
+- Worked at DASCOM on authentication and authorization architecture.
+- Did DCE work at HP.
+- Did CORBA architect work at OSF.
+- Did DCE architecture at OSF.
+- Worked on DME at OSF.
+- Worked at Apollo on communications and directory services. 
+- Implemented various communications protocols.
+- Just a guy in New Hampshire.
+- 18 years of development experience, C, C++, Java.
+
+
+Expertise of Organization:
+
+
+
+
+
+------------- End Forwarded Message -------------
+

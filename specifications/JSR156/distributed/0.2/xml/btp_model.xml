@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<jaxtx:transaction-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxtx="C:\temp\src\JSR156\xml\JAXTX.xsd">
+	<jaxtx:tx-info>
+	    <jaxtx:transaction-name>
+		urn:com:sun:jaxtx:transaction_models:btp:1.0
+	    </jaxtx:transaction-name>
+	</jaxtx:tx-info>
+</jaxtx:transaction-config>

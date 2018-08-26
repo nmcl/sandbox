@@ -1,0 +1,23 @@
+agenda:
+	publication date
+	schedule
+		where?
+	who to talk to
+	which specs.
+
+What's important to Oracle?
+	what tx spec? txn?
+	don't mandate all models (e.g., 2PC)
+	no cohesions!
+
+need to make txn more concrete.
+
+strengthen atomic transaction requirement.
+
+2pc not primary focus.
+
+long running compensating transactions.
+
+tom rutt at fujitsu
+sonic
+sap?

@@ -1,0 +1,135 @@
+Received: from cheviot1.ncl.ac.uk (root@cheviot1.ncl.ac.uk [128.240.233.15]) by ulgham.ncl.ac.uk with ESMTP (8.7.1/8.7.1) id SAA13898 for <mcl@ulgham.ncl.ac.uk>; Fri, 2 Nov 2001 18:08:30 GMT
+Received: from bramg1.net.external.hp.com (bramg1.net.external.hp.com [192.6.126.73])
+	by cheviot1.ncl.ac.uk (8.10.1/8.10.1) with ESMTP id fA2I80R15698
+	for <mark.little@arjuna.com>; Fri, 2 Nov 2001 18:08:01 GMT
+Received: from quasit.br.itc.hp.com (quasit.br.itc.hp.com [15.145.8.135])
+	by bramg1.net.external.hp.com (Postfix) with ESMTP id 85ADF1A1
+	for <mark.little@arjuna.com>; Fri,  2 Nov 2001 19:08:00 +0100 (MET)
+Received: from fowey.BR.ITC.HP.COM (fowey.br.itc.hp.com [15.145.8.186])
+	by quasit.br.itc.hp.com (8.9.3 (PHNE_18979)/8.9.3 SMKit6.0.6 OpenMail) with SMTP id SAA19396
+	for <mark.little@arjuna.com>; Fri, 2 Nov 2001 18:08:00 GMT
+Received: from 15.145.8.186 by fowey.BR.ITC.HP.COM (InterScan E-Mail VirusWall NT); Fri, 02 Nov 2001 18:07:59 -0000 (GMT Standard Time)
+Received: by fowey.br.itc.hp.com with Internet Mail Service (5.5.2653.19)
+	id <V6H9DF21>; Fri, 2 Nov 2001 18:07:59 -0000
+Received: from fowey.BR.ITC.HP.COM (localhost [127.0.0.1]) by fowey.BR.ITC.HP.COM with SMTP (Microsoft Exchange Internet Mail Service Version 5.5.2653.13)
+	id V6H9DF2A; Fri, 2 Nov 2001 18:07:54 -0000
+Received: from 15.191.2.9 by fowey.BR.ITC.HP.COM (InterScan E-Mail VirusWall NT); Fri, 02 Nov 2001 18:07:53 -0000 (GMT Standard Time)
+Received: from postage.hp.com (postage.hp.com [192.151.27.6])
+	by bramg1.net.external.hp.com (Postfix) with ESMTP id 1AB961E5
+	for <mark_little@bra.exch.hp.com>; Fri,  2 Nov 2001 19:07:53 +0100 (MET)
+Received: from mercury.Sun.COM (mercury.Sun.COM [192.9.25.1])
+	by postage.hp.com (Postfix) with ESMTP id E2B2F27253
+	for <mark_little@hp.com>; Fri,  2 Nov 2001 13:07:48 -0500 (EST)
+Received: from phys-ha1cupa.eng.sun.com ([129.144.34.10])
+	by mercury.Sun.COM (8.9.3+Sun/8.9.3) with ESMTP id KAA01259
+	for <mark_little@hp.com>; Fri, 2 Nov 2001 10:07:51 -0800 (PST)
+Received: from nanciwi (nanciwi [129.144.56.160])
+	by phys-ha1cupa.eng.sun.com (8.8.8+Sun/8.8.8/ENSMAIL,v2.1p1) with SMTP id KAA10236;
+	Fri, 2 Nov 2001 10:07:50 -0800 (PST)
+Message-Id: <200111021807.KAA10236@phys-ha1cupa.eng.sun.com>
+Date: Fri, 2 Nov 2001 10:07:33 -0800 (PST)
+From: Nancy Williams <Nancy.Williams@Sun.COM>
+Reply-To: Nancy Williams <Nancy.Williams@Sun.COM>
+Subject: RE: Expert Group Nomination for JSR 156
+To: mark_little@hp.com
+MIME-Version: 1.0
+Content-Type: TEXT/plain; charset=us-ascii
+Content-MD5: ZV6vmcHhAwVHe53Mu4wDsA==
+X-Mailer: dtmail 1.3.0 @(#)CDE Version 1.4.2 SunOS 5.8 sun4u sparc 
+Sender: mark_little@hp.com
+X-ECS-MailScanner: Scanned successfully
+
+Please consider this Expert Group nomination for the JSR 156 Expert Group.
+
+     Anne Thomas Manes  from Indoox 
+
+If you do not expect a decision on this candidate within a few days,
+please send the candidate an e-mail letting them know when they can
+expect a decision.
+
+When you do make your decision on this candidate, please communicate that
+decision to them directly.
+
+When you make your decision on the membership of the expert group as a
+whole, such that you feel you can begin work on the draft specification,
+please send that membership list to the PMO, so that we may update the JSR
+page on the JCP web site.
+
+
+Thank you,
+Nancy Williams 
+
+
+
+> 
+> 
+> > Date: Mon, 29 Oct 2001 23:32:46 GMT
+> > To: expert-nominations@jcp.org
+> > From: atm@systinet.com
+> > SUBJECT: Expert Group Nomination for JSR 156
+> > 
+> > Expert Group Nomination for JSR 156
+> > 
+> > 
+> > Nominee Name:
+> > 
+> > Anne Thomas Manes
+> > 
+> > 
+> > Contact Address:
+> > 
+> > 1 Broadway
+> > 14th Floor
+> > Cambridge, MA 02142
+> > 
+> > 
+> > E-Mail Address:
+> > 
+> > atm@systinet.com
+> > 
+> > 
+> > Telephone Number:
+> > 
+> > 1-617-475-1543
+> > 
+> > 
+> > Fax Number:
+> > 
+> > 
+> > 
+> > 
+> > Representing:
+> > 
+> > Organization
+> > 
+> > 
+> > Company/Organization Name:
+> > 
+> > Indoox
+> > 
+> > 
+> > Qualifications of Nominee:
+> > 
+> > Anne Thomas Manes has been involved in distributed computing 
+> since 1986, and 
+> has worked with distributed transactions starting with XA, then Corba 
+> transactions, then JTS/JTA. Recently Anne has been focused on Web 
+> Services, 
+> participating in W3C, UDDI, and ebXML efforts. Now, as CTO at 
+> Systinet, Anne is 
+> turning her attention to loosely coupled transactions.
+> > 
+> > 
+> > Expertise of Organization:
+> > 
+> > Systinet (formally known as Idoox) has a comprehensive Web 
+> Services platform, 
+> which supports JTS/JTA. Our goal is to develop a loosely coupled 
+> transaction 
+> environment based on BTP.
+> > 
+> > 
+> 
+
+------------- End Forwarded Message -------------
+

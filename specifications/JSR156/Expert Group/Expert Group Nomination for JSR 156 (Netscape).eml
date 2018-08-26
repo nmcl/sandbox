@@ -1,0 +1,130 @@
+Received: from cheviot1.ncl.ac.uk (root@cheviot1.ncl.ac.uk [128.240.233.15]) by ulgham.ncl.ac.uk with ESMTP (8.7.1/8.7.1) id WAA19264 for <mcl@ulgham.ncl.ac.uk>; Wed, 24 Oct 2001 22:19:34 +0100 (BST)
+Received: from bramg1.net.external.hp.com (bramg1.net.external.hp.com [192.6.126.73])
+	by cheviot1.ncl.ac.uk (8.10.1/8.10.1) with ESMTP id f9OLJJL27780
+	for <mark.little@arjuna.com>; Wed, 24 Oct 2001 22:19:19 +0100 (BST)
+Received: from quasit.br.itc.hp.com (quasit.br.itc.hp.com [15.145.8.135])
+	by bramg1.net.external.hp.com (Postfix) with ESMTP id 9D63C41
+	for <mark.little@arjuna.com>; Wed, 24 Oct 2001 23:19:18 +0200 (METDST)
+Received: from loddon.br.itc.hp.com (loddon.br.itc.hp.com [15.145.8.166])
+	by quasit.br.itc.hp.com (8.9.3 (PHNE_18979)/8.9.3 SMKit6.0.6 OpenMail) with SMTP id WAA24798
+	for <mark.little@arjuna.com>; Wed, 24 Oct 2001 22:19:18 +0100 (BST)
+Received: from 15.145.8.166 by loddon.br.itc.hp.com (InterScan E-Mail VirusWall NT); Wed, 24 Oct 2001 22:19:17 +0100 (GMT Daylight Time)
+Received: by loddon.br.itc.hp.com with Internet Mail Service (5.5.2653.19)
+	id <VRBGVJ4M>; Wed, 24 Oct 2001 22:19:17 +0100
+Received: from loddon.br.itc.hp.com (localhost [127.0.0.1]) by loddon.br.itc.hp.com with SMTP (Microsoft Exchange Internet Mail Service Version 5.5.2653.13)
+	id VRBGVJ4L; Wed, 24 Oct 2001 22:19:16 +0100
+Received: from 15.191.2.9 by loddon.br.itc.hp.com (InterScan E-Mail VirusWall NT); Wed, 24 Oct 2001 22:19:16 +0100 (GMT Daylight Time)
+Received: from letter.hp.com (letter.hp.com [192.151.27.3])
+	by bramg1.net.external.hp.com (Postfix) with ESMTP id B576341
+	for <mark_little@bra.exch.hp.com>; Wed, 24 Oct 2001 23:19:12 +0200 (METDST)
+Received: from mercury.Sun.COM (mercury.Sun.COM [192.9.25.1])
+	by letter.hp.com (Postfix) with ESMTP id EC73E1AEA
+	for <mark_little@hp.com>; Wed, 24 Oct 2001 17:19:10 -0400 (EDT)
+Received: from phys-ha1cupa.eng.sun.com ([129.144.34.10])
+	by mercury.Sun.COM (8.9.3+Sun/8.9.3) with ESMTP id OAA00352
+	for <mark_little@hp.com>; Wed, 24 Oct 2001 14:19:10 -0700 (PDT)
+Received: from nanciwi (nanciwi [129.144.56.160])
+	by phys-ha1cupa.eng.sun.com (8.8.8+Sun/8.8.8/ENSMAIL,v2.1p1) with SMTP id OAA08357;
+	Wed, 24 Oct 2001 14:19:09 -0700 (PDT)
+Message-Id: <200110242119.OAA08357@phys-ha1cupa.eng.sun.com>
+Date: Wed, 24 Oct 2001 14:18:53 -0700 (PDT)
+From: Nancy Williams <Nancy.Williams@Sun.COM>
+Reply-To: Nancy Williams <Nancy.Williams@Sun.COM>
+Subject: Expert Group Nomination for JSR 156
+To: mark_little@hp.com
+MIME-Version: 1.0
+Content-Type: TEXT/plain; charset=us-ascii
+Content-MD5: +Cww8Qd0yqF7sNUtrLduHA==
+X-Mailer: dtmail 1.3.0 @(#)CDE Version 1.4.2 SunOS 5.8 sun4u sparc 
+Sender: mark_little@hp.com
+X-ECS-MailScanner: Scanned successfully
+
+Please consider this Expert Group nomination for the JSR 156 Expert Group.
+
+     Rahul Bhargava   from  Netscape 
+
+If you do not expect a decision on this candidate within a few days,
+please send the candidate an e-mail letting them know when they can
+expect a decision.
+
+When you do make your decision on this candidate, please communicate that
+decision to them directly.
+
+When you make your decision on the membership of the expert group as a
+whole, such that you feel you can begin work on the draft specification,
+please send that membership list to the PMO, so that we may update the JSR
+page on the JCP web site.
+
+
+Thank you,
+Nancy Williams 
+
+
+
+
+------------- Begin Forwarded Message -------------
+
+Date: Tue, 23 Oct 2001 22:06:52 GMT
+To: expert-nominations@jcp.org
+From: rahul_technical@yahoo.com
+SUBJECT: Expert Group Nomination for JSR 156
+
+Expert Group Nomination for JSR 156
+
+
+Nominee Name:
+
+Rahul Bhargava
+
+
+Contact Address:
+
+Netscape Communications
+MS MV-015
+465 Ellis Street
+Mtn View, CA 94043
+
+
+E-Mail Address:
+
+rahul_technical@yahoo.com
+
+
+Telephone Number:
+
+650 937 3872
+
+
+Fax Number:
+
+
+
+
+Representing:
+
+Organization
+
+
+Company/Organization Name:
+
+Netscape
+
+
+Qualifications of Nominee:
+
+Rahul Bhargava represents Netscape on the J2EE expert group. While at iPlanet 
+(Sun/Netscape alliance) he was the lead architect for the iPlanet Application 
+Server.
+He has represented Netscape at OMG. Rahul was a co-author of OMG's IIOP/Firewall
+specification.
+
+
+Expertise of Organization:
+
+Netscape, now AOL, is a leading provider of services to consumers as well as 
+enterprise software.
+
+
+
+------------- End Forwarded Message -------------
+

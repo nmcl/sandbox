@@ -1,0 +1,787 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://www.webservicestransactions.org/wsdl/wsas/2003/03" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://www.webservicestransactions.org/wsdl/wsas/2003/03" xmlns:wsas="http://www.webservicestransactions.org/schemas/wsas/2003/03" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<wsdl:import location="http://www.webservicestransactions.org/schemas/wsas/2003/03" namespace="http://www.webservicestransactions.org/schemas/wsas/2003/03"/>
+	<wsdl:message name="BeginMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="timeout" type="xs:positiveInteger"/>
+	</wsdl:message>
+	<wsdl:message name="CompleteMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+	</wsdl:message>
+	<wsdl:message name="CompleteWithStatusMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="completion-status" type="wsas:CompletionStatusType"/>
+	</wsdl:message>
+	<wsdl:message name="SetCompletionStatusMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="completion-status" type="wsas:CompletionStatusType"/>
+	</wsdl:message>
+	<wsdl:message name="GetCompletionStatusMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+	</wsdl:message>
+	<wsdl:message name="GetStatusMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+	</wsdl:message>
+	<wsdl:message name="GetActivityNameMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+	</wsdl:message>
+	<wsdl:message name="GetContextMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+	</wsdl:message>
+	<wsdl:message name="GetTimeoutMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+	</wsdl:message>
+	<wsdl:message name="SetTimeoutMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="timeout" type="xs:int"/>
+	</wsdl:message>
+	<wsdl:message name="BegunMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+	</wsdl:message>
+	<wsdl:message name="CompletedWithStatusMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="completion-status" type="wsas:CompletionStatusType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+	</wsdl:message>
+	<wsdl:message name="CompletedMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+	</wsdl:message>
+	<wsdl:message name="GeneralFaultMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="error-code" type="xs:string"/>
+		<wsdl:part name="description" type="xs:string"/>
+	</wsdl:message>
+	<wsdl:message name="InvalidALSFaultMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="invalid-als-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+	</wsdl:message>
+	<wsdl:message name="ALSBeginMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+	</wsdl:message>
+	<wsdl:message name="CompletionStatusMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="completion-status" type="wsas:CompletionStatusType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+	</wsdl:message>
+	<wsdl:message name="StatusMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="status" type="wsas:StatusType"/>
+	</wsdl:message>
+	<wsdl:message name="ActivityNameMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="activity-name" type="xs:string"/>
+	</wsdl:message>
+	<wsdl:message name="ContextMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="context" type="wsas:ActivityContextType"/>
+	</wsdl:message>
+	<wsdl:message name="TimeoutSetMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="timeout" type="xs:positiveInteger"/>
+	</wsdl:message>
+	<wsdl:message name="TimeoutMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="timeout" type="xs:positiveInteger"/>
+	</wsdl:message>
+	<wsdl:message name="InvalidStateFaultMessage">
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="originator" type="xs:anyURI"/>
+	</wsdl:message>
+	<wsdl:message name="InvalidActivityFaultMessage">
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="originator" type="xs:anyURI"/>
+	</wsdl:message>
+	<wsdl:message name="TimoutOutOfRangeMessage">
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="max-timeout" type="xs:positiveInteger"/>
+		<wsdl:part name="specified-timeout" type="xs:positiveInteger"/>
+	</wsdl:message>
+	<wsdl:message name="ChildActivityPendingFaultMessage">
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="originator" type="xs:anyURI"/>
+	</wsdl:message>
+	<wsdl:message name="NoActivityFaultMessage">
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="originator" type="xs:anyURI"/>
+	</wsdl:message>
+	<wsdl:message name="NoPermissionFaultMessage">
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="originator" type="xs:anyURI"/>
+	</wsdl:message>
+	<wsdl:message name="ValidContextExpectedFaultMessage">
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="originator" type="xs:anyURI"/>
+	</wsdl:message>
+	<wsdl:message name="EnlistALSMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="als" type="xs:anyURI"/>
+	</wsdl:message>
+	<wsdl:message name="ALSEnlistedMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="als" type="xs:anyURI"/>
+	</wsdl:message>
+	<wsdl:message name="DelistALSMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="als" type="xs:anyURI"/>
+	</wsdl:message>
+	<wsdl:message name="ALSDelistedMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="als" type="xs:anyURI"/>
+	</wsdl:message>
+	<wsdl:message name="GetContentsMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+	</wsdl:message>
+	<wsdl:message name="SetContentsMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="context" type="wsas:ContextType"/>
+	</wsdl:message>
+	<wsdl:message name="ContentsMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="context" type="wsas:ContextType"/>
+	</wsdl:message>
+	<wsdl:message name="ContentsSetMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+	</wsdl:message>
+	<wsdl:message name="UnknownContextFaultMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="context-identifier" type="xs:anyURI"/>
+	</wsdl:message>
+	<wsdl:portType name="ContextManagerPortType">
+		<wsdl:operation name="getContents">
+			<wsdl:input message="tns:GetContentsMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="setContents">
+			<wsdl:input message="tns:SetContentsMessage"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:portType name="ContextRespondandtPortType">
+		<wsdl:operation name="contents">
+			<wsdl:input message="tns:ContentsMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="contentsSet">
+			<wsdl:input message="tns:ContentsSetMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="unknownContextFault">
+			<wsdl:input message="tns:UnknownContextFaultMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="generalFault">
+			<wsdl:input message="tns:GeneralFaultMessage"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:portType name="ActivityServicePortType">
+		<wsdl:operation name="begin">
+			<wsdl:input message="tns:BeginMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="complete">
+			<wsdl:input message="tns:CompleteMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="completeWithStatus">
+			<wsdl:input message="tns:CompleteWithStatusMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="setCompletionStatus">
+			<wsdl:input message="tns:SetCompletionStatusMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="getCompletionStatus">
+			<wsdl:input message="tns:GetCompletionStatusMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="getStatus">
+			<wsdl:input message="tns:GetStatusMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="getActivityName">
+			<wsdl:input message="tns:GetActivityNameMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="getContext">
+			<wsdl:input message="tns:GetContextMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="setTimeout">
+			<wsdl:input message="tns:SetTimeoutMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="getTimeout">
+			<wsdl:input message="tns:GetTimeoutMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="begun">
+			<wsdl:input message="tns:BegunMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="completedWithStatus">
+			<wsdl:input message="tns:CompletedWithStatusMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="completed">
+			<wsdl:input message="tns:CompletedMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="generalFault">
+			<wsdl:input message="tns:GeneralFaultMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="invalidALSFault">
+			<wsdl:input message="tns:InvalidALSFaultMessage"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:portType name="UserActivityServicePortType">
+		<wsdl:operation name="begun">
+			<wsdl:input message="tns:BegunMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="completed">
+			<wsdl:input message="tns:CompletedMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="completedWithStatus">
+			<wsdl:input message="tns:CompletedWithStatusMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="completionStatusSet">
+			<wsdl:input message="tns:CompletionStatusSetMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="completionStatus">
+			<wsdl:input message="tns:CompletedWithStatusMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="completionStatus">
+			<wsdl:input message="tns:CompletedWithStatusMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="status">
+			<wsdl:input message="tns:StatusMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="activityName">
+			<wsdl:input message="tns:ActivityNameMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="context">
+			<wsdl:input message="tns:ContextMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="timeoutSet">
+			<wsdl:input message="tns:TimeoutSetMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="timeout">
+			<wsdl:input message="tns:TimeoutMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="invalidStateFault">
+			<wsdl:input message="tns:InvalidStateFaultMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="invalidActivityFault">
+			<wsdl:input message="tns:InvalidActivityFaultMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="timeoutOutOfRange">
+			<wsdl:input message="tns:TimeoutOutOfRangeFaultMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="childActivityPendingFault">
+			<wsdl:input message="tns:ChildActivityPendingFaultMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="noActivityFault">
+			<wsdl:input message="tns:NoActivityFaultMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="noPermissionFault">
+			<wsdl:input message="tns:NoPermissionFaultMessage"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:portType name="ALSPortType">
+		<wsdl:operation name="begin">
+			<wsdl:input message="tns:ALSBeginMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="completeWithStatus">
+			<wsdl:input message="tns:CompleteWithStatustMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="complete">
+			<wsdl:input message="tns:CompleteMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="validContextExpectedFault">
+			<wsdl:input message="tns:ValidContextExpectedFaultMessage"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:portType name="ALSRespondantPortType">
+		<wsdl:operation name="begun">
+			<wsdl:input message="tns:BegunMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="completedWithStatus">
+			<wsdl:input message="tns:CompletedWithStatusMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="completed">
+			<wsdl:input message="tns:CompletedMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="invalidALSFault">
+			<wsdl:input message="tns:InvalidALSFaultMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="validContextExpectedFault">
+			<wsdl:input message="tns:ValidContextExpectedFaultMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="generalFault">
+			<wsdl:input message="tns:GeneralFaultMessage"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:portType name="ALSRegistrarPortType">
+		<wsdl:operation name="enlistALS">
+			<wsdl:input message="tns:EnlistALSMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="delistALS">
+			<wsdl:input message="tns:DelistALSMessage"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:portType name="ALSRegistrantPortType">
+		<wsdl:operation name="enlistedALS">
+			<wsdl:input message="tns:ALSEnlistedMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="delistedALS">
+			<wsdl:input message="tns:ALSDelistedMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="invalidALSFault">
+			<wsdl:input message="tns:InvalidALSFaultMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="generalFault">
+			<wsdl:input message="tns:GeneralFaultMessage"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<!-- SOAP 1.1 over HTTP bindings -->
+	<wsdl:binding name="ContextManagerPortTypeSOAPBinding" type="ContextManagerPortTypeSOAPBinding">
+		<soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+		<wsdl:operation name="getContents">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/getContents" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="setContents">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/setContents" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+		</wsdl:operation>		
+	</wsdl:binding>
+	<wsdl:binding name="ContextRespondandtPortTypeSOAPBinding" type="ContextRespondandtPortTypeSOAPBinding">
+		<soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+		<wsdl:operation name="contents">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/contents" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="contentsSet">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/contentsSet" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="unknownContextFault">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/unknownContextFault" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="unknownContextFault">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/unknownContextFault" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+		</wsdl:operation>		
+	</wsdl:binding>	
+	<wsdl:binding name="ActivityServicePortTypeSOAPBinding" type="ActivityServicePortTypeSOAPBinding">
+		<soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+		<wsdl:operation name="begin">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/begin" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="complete">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/complete" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="completeWithStatus">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/completeWithStatus" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="setCompletionStatus">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/setCompletionStatus" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="getCompletionStatus">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/getCompletionStatus" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="getStatus">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/getStatus" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="getActivityName">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/getActivityName" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="getContext">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/getContext" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="setTimeout">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/setTimeout" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="getTimeout">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/getTimeout" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="begun">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/begun" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="completedWithStatus">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/completedWithStatus" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="completed">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/completed" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="generalFault">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/generalFault" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="invalidALSFault">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/invalidALSFault" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding name="UserActivityServicePortTypeSOAPBinding" type="UserActivityServicePortTypeSOAPBinding">
+		<soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+		<wsdl:operation name="begun">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/begun" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="completed">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/completed" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="completedWithStatus">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/completedWithStatus" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="completionStatusSet">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/completedWithStatus" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="completionStatus">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/completionStatus" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="completionStatus">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/completionStatus" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="status">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/status" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="activityName">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/activityName" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="context">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/context" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="timeoutSet">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/timeoutSet" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="timeout">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/timeout" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="invalidStateFault">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/invalidStateFault" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="invalidActivityFault">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/invalidActivityFault" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="timeoutOutOfRange">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/timeoutOutOfRange" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="childActivityPendingFault">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/childActivityPendingFault" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="noActivityFault">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/noActivityFault" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="noPermissionFault">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/noPermissionFault" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding name="ALSRegistrarPortTypeSOAPBinding" type="ALSRegistrarPortTypeSOAPBinding">
+		<soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+		<wsdl:operation name="enlistALS">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/enlistALS" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="delistALS">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/delistALS" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding name="ALSRegistrantPortTypeSOAPBinding" type="ALSRegistrantPortTypeSOAPBinding">
+		<soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+		<wsdl:operation name="enlistedALS">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/enlistedALS" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="delistedALS">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/delistedALS" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="invalidALSFault">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/invalidALSFault" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="generalFault">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/generalFault" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding name="ALSPortTypeSOAPBinding" type="ALSPortTypeSOAPBinding">
+		<soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+		<wsdl:operation name="begin">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/begin" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="completeWithStatus">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/completeWithStatus" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="validContextExpectedFault">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/validContextExpectedFault" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="complete">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/complete" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding name="ALSRespondantPortTypeSOAPBinding" type="ALSRespondantPortTypeSOAPBinding">
+		<soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+		<wsdl:operation name="begun">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/begun" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="completedWithStatus">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/completedWithStatus" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="completed">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/completed" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="invalidALSFault">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/invalidALSFault" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="validContextExpectedFault">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/validContextExpectedFault" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="generalFault">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wsas/2003/03/generalFault" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="tns:ContextMessage" part="context"/>
+			</wsdl:input>
+		</wsdl:operation>
+	</wsdl:binding>
+</wsdl:definitions>

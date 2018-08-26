@@ -1,0 +1,667 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions targetNamespace="http://www.webservicestransactions.org/wsdl/wscf/2003/03" xmlns:tns="http://www.webservicestransactions.org/wsdl/wscf/2003/03" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsas="http://www.webservicestransactions.org/schemas/wsas/2003/03" xmlns:asw="http://www.webservicestransactions.org/wsdl/wsas/2003/03" xmlns:wscf="http://www.webservicestransactions.org/schemas/wscf/message/2003/03" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<wsdl:import namespace="http://www.webservicestransactions.org/schemas/wscf/2003/03" location="http://www.webservicestransactions.org/schemas/wscf/2003/03"/>
+	<wsdl:import namespace="http://www.webservicestransactions.org/schemas/wsas/2003/03" location="http://www.webservicestransactions.org/schemas/wsas/2003/03"/>
+	<wsdl:import namespace="http://www.webservicestransactions.org/wsdl/wsas/2003/03" location="http://www.webservicestransactions.org/wsdl/wsas/2003/03"/>
+	<wsdl:message name="SolicitOutcomeMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="coordinator-participant" type="xs:anyURI"/>
+		<wsdl:part name="completion-status" type="wsas:CompletionStatusType"/>
+		<wsdl:part name="solicit-outcome-extension" type="wscf:AdditionalInformationType"/>
+	</wsdl:message>
+	<wsdl:message name="OutcomeMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="outcome" type="wsas:OutcomeType"/>
+		<wsdl:part name="outcome-extension" type="wscf:AdditionalInformationType"/>
+	</wsdl:message>
+	<wsdl:message name="GetIdentityMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+	</wsdl:message>
+	<wsdl:message name="IdentityMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="participant-id" type="xs:anyURI"/>
+	</wsdl:message>
+	<wsdl:message name="SetResponseMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="participant-id" type="xs:anyURI"/>
+		<wsdl:part name="message" type="wscf:MessageType"/>
+		<wsdl:part name="response" type="wsas:Outcome"/>
+		<wsdl:part name="qualifiers" type="wscf:QualifiersType"/>
+		<wsdl:part name="assumed-message" type="xs:QName"/>
+	</wsdl:message>
+	<wsdl:message name="ResponseSetMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+	</wsdl:message>
+	<wsdl:message name="RecoverMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="old-participant" type="xs:anyURI"/>
+	</wsdl:message>
+	<wsdl:message name="RecoveredMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="status" type="wsas:StatusType"/>
+	</wsdl:message>
+	<wsdl:message name="AddParticipantMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="participant" type="xs:anyURI"/>
+		<wsdl:part name="priority" type="xs:positiveInteger"/>
+		<wsdl:part name="protocol" type="xs:anyURI"/>
+		<wsdl:part name="qualifiers" type="wscf:QualifiersType"/>
+	</wsdl:message>
+	<wsdl:message name="ParticipantAddedMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="participant" type="xs:anyURI"/>
+	</wsdl:message>
+	<wsdl:message name="ParticipantRemovedMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="participant" type="xs:anyURI"/>
+	</wsdl:message>
+	<wsdl:message name="RemoveParticipantMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="participant" type="xs:anyURI"/>
+		<wsdl:part name="protocol" type="xs:anyURI"/>		
+		<wsdl:part name="qualifiers" type="wscf:QualifiersType"/>
+	</wsdl:message>
+	<wsdl:message name="GetQualifiersMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+	</wsdl:message>
+	<wsdl:message name="QualifiersMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="qualifiers" type="wscf:QualifiersType"/>
+	</wsdl:message>
+	<wsdl:message name="GetParentCoordinatorMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+	</wsdl:message>
+	<wsdl:message name="ParentCoordinatorMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="parent-coordinator" type="xs:anyURI"/>
+	</wsdl:message>
+	<wsdl:message name="GetStatusMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+	</wsdl:message>
+	<wsdl:message name="CoordinateMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="sub-protocol" type="xs:anyURI"/>
+		<wsdl:part name="completion-status" type="wsas:CompletionStatusType"/>
+	</wsdl:message>
+	<wsdl:message name="CoordinatedMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="outcome" type="wsas:OutcomeType"/>
+	</wsdl:message>
+	<wsdl:message name="StatusMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="status" type="wsas:StatusType"/>
+	</wsdl:message>
+	<wsdl:message name="UnknownCoordinatorFaultMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+	</wsdl:message>
+	<wsdl:message name="DuplicateParticipantFaultMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="duplicate-participant" type="xs:anyURI"/>
+		<wsdl:part name="faultcode" type="xs:anyURI"/>
+		<wsdl:part name="faultstring" type="xs:string"/>
+	</wsdl:message>
+	<wsdl:message name="ParticipantNotFoundFaultMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="participant" type="xs:anyURI"/>
+		<wsdl:part name="faultcode" type="xs:anyURI"/>
+		<wsdl:part name="faultstring" type="xs:string"/>
+	</wsdl:message>
+	<wsdl:message name="InvalidParticipantFaultMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="participant" type="xs:anyURI"/>
+		<wsdl:part name="faultcode" type="xs:anyURI"/>
+		<wsdl:part name="faultstring" type="xs:string"/>
+	</wsdl:message>
+	<wsdl:message name="InvalidProtocolFaultMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="protocol-uri" type="xs:anyURI"/>
+	</wsdl:message>
+	<wsdl:message name="GeneralFaultMessage">
+		<wsdl:part name="sender-address" type="wsas:AddressType"/>
+		<wsdl:part name="recipient-address" type="wsas:AddressType"/>
+		<wsdl:part name="correlation-id" type="xs:string"/>
+		<wsdl:part name="faulting-actor" type="xs:anyURI"/>
+		<wsdl:part name="faultcode" type="xs:anyURI"/>
+		<wsdl:part name="faultstring" type="xs:string"/>
+	</wsdl:message>
+	<wsdl:portType name="ParticipantPortType">
+		<wsdl:operation name="solicitOutcome">
+			<wsdl:input message="tns:SolicitOutcomeMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="getIdentity">
+			<wsdl:input message="tns:GetIdentityMessage"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:portType name="CoordinatorParticipantPortType">
+		<wsdl:operation name="outcome">
+			<wsdl:input message="tns:OutcomeMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="Identity">
+			<wsdl:input message="tns:IdentityMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="wrongState">
+			<wsdl:input message="asw:WrongStateFaultMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="generalFault">
+			<wsdl:input message="tns:GeneralFaultMessage"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:portType name="ParticipantCoordinatorPortType">
+		<wsdl:operation name="setResponse">
+			<wsdl:input message="tns:SetResponseMessage"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:portType name="ParticipantRespondantPortType">
+		<wsdl:operation name="responseSet">
+			<wsdl:input message="tns:ResponseSetMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="unknownCoordinator">
+			<wsdl:input message="tns:UnknownCoordinatorFaultMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="generalFault">
+			<wsdl:input message="tns:GeneralFaultMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="protocolViolation">
+			<wsdl:input message="asw:ProtocolViolationFaultMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="wrongState">
+			<wsdl:input message="asw:WrongStateFaultMessage"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:portType name="ServiceCoordinatorPortType">
+		<wsdl:operation name="addParticipant">
+			<wsdl:input message="tns:AddParticipantMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="removeParticipant">
+			<wsdl:input message="tns:RemoveParticipantMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="getQualifiers">
+			<wsdl:input message="tns:GetQualifiersMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="getParentCoordinator">
+			<wsdl:input message="tns:GetParentCoordinatorMessage"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:portType name="ServiceRespondantPortType">
+		<wsdl:operation name="participantAdded">
+			<wsdl:input message="tns:ParticipantAddedMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="participantRemoved">
+			<wsdl:input message="tns:ParticipantRemovedMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="qualifiers">
+			<wsdl:input message="tns:QualifiersMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="parentCoordinator">
+			<wsdl:input message="tns:ParentCoordinatorMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="generalFault">
+			<wsdl:input message="tns:GeneralFaultMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="unknownCoordinator">
+			<wsdl:input message="tns:UnknownCoordinatorFaultMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="wrongState">
+			<wsdl:input message="asw:WrongStateFaultMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="duplicateParticipant">
+			<wsdl:input message="tns:DuplicateParticipantFaultMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="invalidProtocol">
+			<wsdl:input message="tns:InvalidProtocolFaultMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="invalidParticipant">
+			<wsdl:input message="tns:InvalidParticipantMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="participantNotFound">
+			<wsdl:input message="tns:ParticipantNotFoundFaultMessage"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:portType name="ClientCoordinatorPortType">
+		<wsdl:operation name="coordinate">
+			<wsdl:input message="tns:CoordinateMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="getStatus">
+			<wsdl:input message="tns:GetStatusMessage"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:portType name="ClientRespondantPortType">
+		<wsdl:operation name="status">
+			<wsdl:input message="tns:StatusMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="coordinated">
+			<wsdl:input message="tns:CoordinatedMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="notCoordinated">
+			<wsdl:input message="tns:NotCoordinatedMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="wrongState">
+			<wsdl:input message="asw:WrongStateFaultMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="protocolViolation">
+			<wsdl:input message="asw:ProtocolViolationFaultMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="invalidCoordinator">
+			<wsdl:input message="tns:InvalidCoordinatorFaultMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="invalidActivity">
+			<wsdl:input message="tns:InvalidActivityFaultMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="generalFault">
+			<wsdl:input message="tns:GeneralFaultMessage"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:portType name="RecoveryCoordinatorPortType">
+		<wsdl:operation name="recover">
+			<wsdl:input message="tns:RecoverMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="getStatus">
+			<wsdl:input message="tns:GetStatusMessage"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:portType name="RecoveryParticipantPortType">
+		<wsdl:operation name="recovered">
+			<wsdl:input message="tns:RecoveredMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="status">
+			<wsdl:input message="tns:StatusMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="unknownCoordinator">
+			<wsdl:input message="tns:UnknownCoordinatorFaultMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="wrongState">
+			<wsdl:input message="asw:WrongStateFaultMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="generalFault">
+			<wsdl:input message="tns:GeneralFaultMessage"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="ParticipantPortTypeSOAPBinding" type="ParticipantPortTypeSOAPBinding">
+		<soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+		<wsdl:operation name="solicitOutcome">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/solicitOutcome" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="getIdentity">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/getIdentity" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding name="CoordinatorParticipantPortTypeSOAPBinding" type="CoordinatorParticipantPortTypeSOAPBinding">
+		<soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+		<wsdl:operation name="outcome">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/outcome" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="Identity">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/Identity" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="wrongState">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/wrongState" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="generalFault">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/generalFault" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding name="ParticipantCoordinatorPortTypeSOAPBinding" type="ParticipantCoordinatorPortTypeSOAPBinding">
+		<soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+		<wsdl:operation name="setResponse">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/setResponse" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding name="ParticipantRespondantPortTypeSOAPBinding" type="ParticipantRespondantPortTypeSOAPBinding">
+		<soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+		<wsdl:operation name="responseSet">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/responseSet" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="unknownCoordinator">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/unknownCoordinator" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="generalFault">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/generalFault" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="protocolViolation">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/protocolViolation" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="wrongState">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/wrongState" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding name="ServiceCoordinatorPortTypeSOAPBinding" type="ServiceCoordinatorPortTypeSOAPBinding">
+		<soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+		<wsdl:operation name="addParticipant">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/addParticipant" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="removeParticipant">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/removeParticipant" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="getQualifiers">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/getQualifiers" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="getParentCoordinator">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/getParentCoordinator" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding name="ServiceRespondantPortTypeSOAPBinding" type="ServiceRespondantPortTypeSOAPBinding">
+		<soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+		<wsdl:operation name="participantAdded">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/participantAdded" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="participantRemoved">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/participantRemoved" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="qualifiers">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/qualifiers" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="parentCoordinator">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/parentCoordinator" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="generalFault">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/generalFault" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="unknownCoordinator">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/unknownCoordinator" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="wrongState">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/wrongState" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="duplicateParticipant">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/duplicateParticipant" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="invalidProtocol">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/invalidProtocol" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="invalidParticipant">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/invalidParticipant" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="participantNotFound">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/participantNotFound" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding name="ClientCoordinatorPortTypeSOAPBinding" type="ClientCoordinatorPortTypeSOAPBinding">
+		<soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+		<wsdl:operation name="coordinate">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/coordinate" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="getStatus">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/getStatus" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding name="ClientRespondantPortTypeSOAPBinding" type="ClientRespondantPortTypeSOAPBinding">
+		<soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+		<wsdl:operation name="status">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/status" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="coordinated">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/coordinated" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="notCoordinated">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/notCoordinated" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="wrongState">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/wrongState" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="protocolViolation">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/protocolViolation" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="invalidCoordinator">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/invalidCoordinator" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="invalidActivity">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/invalidActivity" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="generalFault">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/generalFault" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding name="RecoveryCoordinatorPortTypeSOAPBinding" type="RecoveryCoordinatorPortTypeSOAPBinding">
+		<soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+		<wsdl:operation name="recover">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/recover" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="getStatus">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/getStatus" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding name="RecoveryParticipantPortTypeSOAPBinding" type="RecoveryParticipantPortTypeSOAPBinding">
+		<soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+		<wsdl:operation name="recovered">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/recovered" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="status">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/status" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="unknownCoordinator">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/unknownCoordinator" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="wrongState">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/wrongState" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="generalFault">
+			<soap:operation soapAction="http://www.webservicestransactions.org/wsdl/wscf/2003/03/generalFault" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header use="literal" message="wsas:ContextMessage" part=""/>
+			</wsdl:input>
+		</wsdl:operation>
+	</wsdl:binding>
+</wsdl:definitions>

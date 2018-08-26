@@ -1,0 +1,68 @@
+Received: from cheviot1.ncl.ac.uk (cheviot1.ncl.ac.uk [128.240.233.15])
+	by ingram.ncl.ac.uk (8.8.8+Sun/8.8.8) with ESMTP id PAA16722
+	for <nmcl@ingram.ncl.ac.uk>; Tue, 5 Nov 2002 15:01:01 GMT
+Received: from swjscmail2.java.sun.com (swjscmail2.Sun.COM [192.18.99.108])
+	by cheviot1.ncl.ac.uk (8.10.1/8.10.1) with ESMTP id gA5F3i010679
+	for <m.c.little@NCL.AC.UK>; Tue, 5 Nov 2002 15:03:45 GMT
+Received: from swjscmail1 (swjscmail1.Sun.COM [192.18.99.107])
+	by swjscmail2.java.sun.com (Postfix) with ESMTP
+	id 2DF0221D8E; Tue,  5 Nov 2002 08:00:55 -0700 (MST)
+Received: from JAVA.SUN.COM by JAVA.SUN.COM (LISTSERV-TCP/IP release 1.8d) with
+          spool id 4025980 for JSR-156-EG@JAVA.SUN.COM; Tue, 5 Nov 2002
+          07:58:49 -0700
+Delivered-To: jsr-156-eg@jcp.org
+Received: from smtpde02.sap-ag.de (smtpde02.sap-ag.de [155.56.68.170]) by
+          swjscmail1.java.sun.com (Postfix) with ESMTP id 58A674851 for
+          <JSR-156-EG@jcp.org>; Tue,  5 Nov 2002 07:48:48 -0700 (MST)
+Received: from sap-ag.de (smtpde02) by smtpde02.sap-ag.de (out) with ESMTP id
+          PAA15155 for <JSR-156-EG@jcp.org>; Tue, 5 Nov 2002 15:53:41 +0100
+          (MEZ)
+MIME-Version: 1.0
+X-Mailer: Internet Mail Service (5.5.2656.59)
+Content-Type: text/plain; charset="iso-8859-1"
+X-SAP: out
+Message-ID:  <296F641B696C7F4793FF7A0835D6C89D664CD9@dewdfx15>
+Date:         Tue, 5 Nov 2002 15:53:17 +0100
+Reply-To: Java Community Process JSR #156 Expert List <JSR-156-EG@JCP.ORG>
+Sender: Java Community Process JSR #156 Expert List <JSR-156-EG@JCP.ORG>
+From: "Liebig, Christoph" <christoph.liebig@SAP.COM>
+Subject:      comments on 0.2
+Comments: To: "JSR-156-EG@jcp.org" <JSR-156-EG@jcp.org>
+To: JSR-156-EG@JCP.ORG
+X-Newcastle-MailScanner: Found to be clean (of known viruses)
+Content-Length: 1637
+
+hi Mark,
+
+just a few comments on the 0.2 spec of JAXTX:
+
+4.2.1.2.
+
+the names of the CompletionStatus implementing classes seems misspelled ( CompletionStatusCancelOnly instead of CancelOnlyCompletionStatus etc.)
+
+i think it would be helpful to have both status diagrams (figure 9 and figure 10) related.
+
+Figure 10: i would have expected that there is no direct transition form CompletingConfirm to CompletedCancelled,
+               but indirect through CompletingCancel. my understanding is, that due to errors or VoteCancel, the prepare process
+               will have to decide for cancellation and also communicate the cancel decision in CompletingCancel.
+
+
+4.2.1.4.
+
+there is no explanation / motivation for TxHandle. you mention a "token" but do not explain (suppose something about
+TxHandle got lost here).
+
+should i be able to suspend/resume on the basis of TxHandle, or TxContext only (currently, UserTransaction suspend/resume requires TxContext) ?
+
+
+4.2.1.5
+
+(if and where) should JAXTX  say something about nesting component transactions (e.g. SAGA, nestedSAGA) ?
+say, i want to have open nested transactions, where the component transactions are realized by JTA transactions.
+in how far would JAXTX provide support for doing so ?
+in particular, is calling a component transaction (.e.g. in the implementation of a Participant) mapped to nesting ? how could i then distinguish the coupling between the parent and child (component) transaction (close nested, versus open ), given that i cannot pass any qualifiers to UserTransaction.start() ?
+
+4.4.4
+do we want to add a mapping to WS-T ? yes, at least discuss one.
+
+--chris

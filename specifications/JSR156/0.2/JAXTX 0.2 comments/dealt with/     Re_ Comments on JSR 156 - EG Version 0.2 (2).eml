@@ -1,0 +1,423 @@
+Received: from cheviot1.ncl.ac.uk (cheviot1.ncl.ac.uk [128.240.233.15])
+	by ingram.ncl.ac.uk (8.8.8+Sun/8.8.8) with ESMTP id XAA26614
+	for <nmcl@ingram.ncl.ac.uk>; Thu, 14 Nov 2002 23:45:18 GMT
+Received: from swjscmail2.java.sun.com (swjscmail2.Sun.COM [192.18.99.108])
+	by cheviot1.ncl.ac.uk (8.10.1/8.10.1) with ESMTP id gAENmHR07159
+	for <m.c.little@NCL.AC.UK>; Thu, 14 Nov 2002 23:48:17 GMT
+Received: from swjscmail1 (swjscmail1.Sun.COM [192.18.99.107])
+	by swjscmail2.java.sun.com (Postfix) with ESMTP
+	id 09B1521429; Thu, 14 Nov 2002 16:45:26 -0700 (MST)
+Received: from JAVA.SUN.COM by JAVA.SUN.COM (LISTSERV-TCP/IP release 1.8d) with
+          spool id 4191819 for JSR-156-EG@JAVA.SUN.COM; Thu, 14 Nov 2002
+          16:43:16 -0700
+Delivered-To: jsr-156-eg@jcp.org
+Received: from d06lmsgate-4.uk.ibm.COM (d06lmsgate-4.uk.ibm.com [195.212.29.4])
+          by swjscmail1.java.sun.com (Postfix) with ESMTP id 1A3AD486E for
+          <JSR-156-EG@JCP.ORG>; Thu, 14 Nov 2002 16:43:15 -0700 (MST)
+Received: from d06relay02.portsmouth.uk.ibm.com
+          (d06relay02.portsmouth.uk.ibm.com [9.166.84.148]) by
+          d06lmsgate-4.uk.ibm.COM (1.0.0) with ESMTP id XAA165958 for
+          <JSR-156-EG@JCP.ORG>; Thu, 14 Nov 2002 23:28:57 GMT
+Received: from d06ml007.portsmouth.uk.ibm.com (d06ml007_cs0 [9.180.35.36]) by
+          d06relay02.portsmouth.uk.ibm.com (8.12.3/NCO/VER6.4) with ESMTP id
+          gAENm76u150462 for <JSR-156-EG@JCP.ORG>; Thu, 14 Nov 2002 23:48:07 GMT
+X-Mailer: Lotus Notes Release 5.0.7  March 21, 2001
+X-MIMETrack: Serialize by Router on d06ml007/06/M/IBM(Release 5.0.9a |January
+             7, 2002) at 14/11/2002 23:48:07
+MIME-Version: 1.0
+Content-type: text/plain; charset=us-ascii
+Message-ID:  <OF50681B0F.F99F2587-ON80256C71.00798410@portsmouth.uk.ibm.com>
+Date:         Thu, 14 Nov 2002 23:44:41 +0000
+Reply-To: Java Community Process JSR #156 Expert List <JSR-156-EG@JCP.ORG>
+Sender: Java Community Process JSR #156 Expert List <JSR-156-EG@JCP.ORG>
+From: Ian Robinson <ian_robinson@UK.IBM.COM>
+Subject:      Re: Comments on JSR 156 - EG Version 0.2
+Comments: To: Java Community Process JSR #156 Expert List <JSR-156-EG@JCP.ORG>
+Comments: cc: JSR-156-EG@JCP.ORG
+To: JSR-156-EG@JCP.ORG
+X-Newcastle-MailScanner: Found to be clean (of known viruses)
+Content-Length: 16691
+
+Hi Mark. Comments on your comment.
+
+IR:
+> On the subject of modelling the JTA UserTransaction interface, there's
+one
+> aspect that of the modelling that needs to go further. The javadoc for
+> UserTransaction says "The transaction interface is split into two: (i)
+the
+> client component, which is typically only interested in starting and
+ending
+> a transaction session. (ii) the participant component, which is typically
+> only interested in registering a participant with the transaction. " This
+> illustrates a problem which is that, like JTA javax.transaction, this
+> interface should be partitioned into 2 separate interfaces one of which
+is
+> an API (like javax.transaction.UserTransaction) and one of which is an
+SPI
+> (like javax.transaction.TransactionManager). Context management (other
+than
+> begin/end) should be isolated on the latter. Suspend/resume is the domain
+> of the container or a container-extension that supports the desired
+> transaction model; it is not the domain of the application.
+
+ML:
+I disagree with some of this. For a start, although we definitely want to
+fit into J2EE, there
+are deployments of web services transactions where a J2EE back-end server
+isn't going to be present. Furthermore, the locality of the transaction
+manager isn't (and shouldn't) be mandated by this specification, so, for
+example, it could well be residing within the client process. In this
+situation, as with, say, the OTS, there is a requirement for any thread of
+control (whether client or server) to suspend its transactionality.
+However, I agree that providing a mapping onto existing implementations
+which have taken the approach you mention is important and perhaps the
+current interface doesn't make that as simple as it could be. But I don't
+think suspend/resume are model specific, hence I don't want to put this
+basic functionality in the model specific package. Perhaps there is room
+for
+a basic TransactionManager interface in the core, where suspend and resume
+go and we can leave it to implementations as to whether or not an
+implementation of this interface is available in specific execution
+environments?
+
+IR:
+As a J2EE JSR, we have to be
+sensitive to the architecture already well-established in J2EE and in
+particular to supporting a division of responsibility between container and
+application. Context management, within a J2EE environmant, should be
+factorable
+as an exclusively container-managed responsibility as it is in JTA. To
+quote the
+J2EE 1.3 specifcation (J2EE.6.2.1):
+"The J2EE programming model divides responsibilities between Application
+Component Providers and J2EE Product Providers: Application Component
+Providers focus on writing business logic and the J2EE Product Providers
+focus on
+providing a managed system infrastructure in which the application
+components can
+be deployed.
+This division leads to a restriction on the functionality that application
+components can contain. If application components contain the same
+functionality
+provided by J2EE system infrastructure, there are clashes and
+mis-management of
+the functionality."
+There should not be any *requirement* in a J2EE environment for providers
+of
+transaction models to expose context management function to applications
+and we
+should go out of our way to ensure it is easy to isolate interfaces that
+are supposed
+to be application facing. If J2EE providers want to 'extend' the rules then
+they
+can invent (non-portable) ways to do that (like exposing a JNDI location to
+obtain the extended
+interface that includes suspend/resume c.f. TransactionManager). But we
+shouldn't
+encourage that.
+I propose, say, an XMLTransactionManager interface (cf your
+UserXMLTransaction interface)
+to which the following methods are moved:
+getTransactionContext, suspend, resume and perhaps globalIdentity.
+UserXMLTransaction should be available to applications and
+XMLTransactionManager to
+the container.
+
+
+IR:
+> The javax.jaxtx package
+> documentation should be clear that the
+> UserTransaction/UserTransactionFactory/Outcome interfaces are application
+> interfaces and TxContext/TxHandle and TxManager (the interface that is
+> split out from UserTransaction) are container-mediated SPIs.
+
+ML:
+Again, I don't agree with this split. What this does is a) assumes
+transaction coordinators reside as a separate service (probably in the J2EE
+container the client is calling in to), b) makes it impossible for the
+client thread to make non-transactional invocations. Now, I can obviously
+only base my thoughts on the experiences we've had in the recent past on
+using Web Services transactions across a number of different applications
+and environments. A split as I suggested above would (hopefully) satisfy
+both points of view?
+
+IR:
+While a J2EE client is a valid environment that we need to think about (and
+such an
+environment may still makes use of the J2EE client container for J2EE
+services) we shouldn't use this to define
+the architecture for J2EE server components. If client support for
+suspend/resume of a particular
+type of transaction context becomes a requirement for that transaction
+model, then it should be the job of that
+transaction model to define its J2EE client architecture. I would suggest
+following the existing J2EE pattern for
+JTA and have the JSR propose that the application subset interface
+(UserXMLTransaction with suspend/resume removed)
+be optional in a J2EE client (and the TranManager equivalent not present at
+all as part of the general framework
+for clients specified in this JSR).
+
+
+IR:
+> This
+> section could also have a forward reference to section 4.1.2 and explain
+> that UserTransaction.configuration() method is the means to access the
+> metadata at runtime. Which config data exactly is mandatory and which is
+> not? Is tx-info the only required element? Are there any predefined
+values
+> - e.g. for
+
+ML:
+Did you miss something out at the end of the sentence?
+
+IR: Ah. I meant  " - e.g. for transaction-name?"
+
+
+IR:
+> Section 4.2.1.4 states that "contexts may be shared across multiple
+> threads". Some platforms or operating systems may not be able to support
+> this and the J2EE specifications are explicit that JTA context is not
+> active on multiple threads concurrently. It is concerns such as these
+that
+> make it important that the specification allow for a container to be
+> involved in all context-managing operations (such as suspend/resume).
+
+ML:
+I deliberately used the word "may" rather than "should" in order to allow
+different implementations. Perhaps something like: "it is implementation
+dependant as to whether contexts are shared across multiple threads."?
+
+IR: I don't think any statement at all about sharing contexts across
+threads should be made since (a) J2EE
+server components have no legal means to start or manage threads and (b) I
+don't believe context
+management should be available to applications to get
+the contexts associated with multiple threads concurrently in the first
+place.
+Furthermore, we should consider the current restrictions on JTA
+transactions and
+not try to loosen these generally in the JSR - leave that to specific
+transaction models. EJB 2.0 (10.5.11) says:
+"Concurrent calls in the same transaction context targeted at the same
+entity object are illegal and may
+lead to unpredictable results."
+All in all I'd rather the JSR was silent on this topic.
+
+
+IR:
+>Access to the UserTransactionFactory
+> could be restricted to certains types of J2EE component - should entity
+> beans be able to access this, for example?
+
+ML:
+My personal preference here is to say yes, though I'd be interested in what
+others have to say. What do you think?
+
+IR: It probably depends on specific transaction models. Perhaps we should
+make
+UserTransactionfactory universally available but define exception behaviour
+for
+getTransactionType such that a TransactionType of "JTA" would result in an
+exception
+if an entity bean called it.
+
+
+Ian
+
+Ian Robinson,
+ian_robinson@uk.ibm.com
+
+
+
+|---------+---------------------------->
+|         |           Mark Little      |
+|         |           <m.c.little@NCL.A|
+|         |           C.UK>            |
+|         |           Sent by: Java    |
+|         |           Community Process|
+|         |           JSR #156 Expert  |
+|         |           List             |
+|         |           <JSR-156-EG@JCP.O|
+|         |           RG>              |
+|         |                            |
+|         |                            |
+|         |           01/11/2002 18:20 |
+|         |           Please respond to|
+|         |           Java Community   |
+|         |           Process JSR #156 |
+|         |           Expert List      |
+|         |                            |
+|---------+---------------------------->
+  >----------------------------------------------------------------------------------------------------------------|
+  |                                                                                                                |
+  |       To:       JSR-156-EG@JCP.ORG                                                                             |
+  |       cc:                                                                                                      |
+  |       Subject:  Re: Comments on JSR 156 - EG Version 0.2                                                       |
+  |                                                                                                                |
+  |                                                                                                                |
+  >----------------------------------------------------------------------------------------------------------------|
+
+
+
+> Firstly, I agree with the split between the required/optional parts of
+the
+> specification and the focus on the required client interface. The
+optional
+> server interfaces and context schema provide good models for new services
+> but quite rightly should not be imposed on existing transaction models.
+> The required javax.jaxtx interfaces mirror a subset of the
+> javax.transaction package interfaces which is good from the perspective
+of
+> familiarity. I think it would be better, however, not to reuse the
+> interface name "UserTransaction" as this might lead to confusion with JTA
+> UserTransaction. Why not call it something slightly different, like
+> "UserTx"?
+
+I don't have a preference on this at all, but prefer something less
+abrreviated.  How about UserXMLTransaction?
+
+> On the subject of modelling the JTA UserTransaction interface, there's
+one
+> aspect that of the modelling that needs to go further. The javadoc for
+> UserTransaction says "The transaction interface is split into two: (i)
+the
+> client component, which is typically only interested in starting and
+ending
+> a transaction session. (ii) the participant component, which is typically
+> only interested in registering a participant with the transaction. " This
+> illustrates a problem which is that, like JTA javax.transaction, this
+> interface should be partitioned into 2 separate interfaces one of which
+is
+> an API (like javax.transaction.UserTransaction) and one of which is an
+SPI
+> (like javax.transaction.TransactionManager). Context management (other
+than
+> begin/end) should be isolated on the latter. Suspend/resume is the domain
+> of the container or a container-extension that supports the desired
+> transaction model; it is not the domain of the application.
+
+I disagree with some of this. For a start, although we definitely want to
+fit into J2EE, there
+are deployments of web services transactions where a J2EE back-end server
+isn't going to be present. Furthermore, the locality of the transaction
+manager isn't (and shouldn't) be mandated by this specification, so, for
+example, it could well be residing within the client process. In this
+situation, as with, say, the OTS, there is a requirement for any thread of
+control (whether client or server) to suspend its transactionality.
+
+However, I agree that providing a mapping onto existing implementations
+which have taken the approach you mention is important and perhaps the
+current interface doesn't make that as simple as it could be. But I don't
+think suspend/resume are model specific, hence I don't want to put this
+basic functionality in the model specific package. Perhaps there is room
+for
+a basic TransactionManager interface in the core, where suspend and resume
+go and we can leave it to implementations as to whether or not an
+implementation of this interface is available in specific execution
+environments?
+
+> The EJB
+> specification is very clear about this distinction for JTA transactions
+and
+> JAXTX should not dilute that distinction.
+
+It's certainly not the intention to dilute anything. However, we're not
+looking for a 1-to-1 mapping to JTA in this specification. For a start, JTA
+is not a Web Services transaction (WS Tx for shorthand) protocol. Secondly,
+the deployment characteristics and useage patterns of a WS Tx are going to
+be different than a traditional tp environment. Web services are being
+pushed as the "great integration" strategy, so we should be thinking about
+how we can integrate with other environments.
+
+> The javax.jaxtx package
+> documentation should be clear that the
+> UserTransaction/UserTransactionFactory/Outcome interfaces are application
+> interfaces and TxContext/TxHandle and TxManager (the interface that is
+> split out from UserTransaction) are container-mediated SPIs.
+
+Again, I don't agree with this split. What this does is a) assumes
+transaction coordinators reside as a separate service (probably in the J2EE
+container the client is calling in to), b) makes it impossible for the
+client thread to make non-transactional invocations. Now, I can obviously
+only base my thoughts on the experiences we've had in the recent past on
+using Web Services transactions across a number of different applications
+and environments. A split as I suggested above would (hopefully) satisfy
+both points of view?
+
+>
+> I had difficulty understanding section 3.4 - XML configuration; I think a
+> usage scenario with some (java) code snippets of application and/or
+service
+> code consuming attributes described in the schema would be helpful.
+
+OK, that make sense.
+
+> This
+> section could also have a forward reference to section 4.1.2 and explain
+> that UserTransaction.configuration() method is the means to access the
+> metadata at runtime. Which config data exactly is mandatory and which is
+> not? Is tx-info the only required element? Are there any predefined
+values
+> - e.g. for
+
+Did you miss something out at the end of the sentence?
+
+> Section 4.2.1.4 states that "contexts may be shared across multiple
+> threads". Some platforms or operating systems may not be able to support
+> this and the J2EE specifications are explicit that JTA context is not
+> active on multiple threads concurrently. It is concerns such as these
+that
+> make it important that the specification allow for a container to be
+> involved in all context-managing operations (such as suspend/resume).
+
+I deliberately used the word "may" rather than "should" in order to allow
+different implementations. Perhaps something like: "it is implementation
+dependant as to whether contexts are shared across multiple threads."?
+
+> No reference in the specification is made to any distinction between bean
+> and container-managed transactions - I think this is deliberate and it
+> should be left to individual transaction models to define such semantics
+> but it would be worth stating as much.
+
+Agreed.
+
+>Access to the UserTransactionFactory
+> could be restricted to certains types of J2EE component - should entity
+> beans be able to access this, for example?
+
+My personal preference here is to say yes, though I'd be interested in what
+others have to say. What do you think?
+
+>
+> I don't really see the value in the interfaces of the
+> javax.jaxtx.model.jta.opt package. Synchronization, Transaction and
+> XAResource appear to be identical to the equivalent javax.transaction
+> interfaces. Perhaps an example end-to-end flow would help.
+
+At the end of the day, it's the XML on the wire that's important so we may
+be able to remove these.
+
+>
+> Section 4.4.1.3 says "only XAResources may be removed from a
+transaction".
+> XAResources cannot be removed from a transaction, once enlisted, so I
+don't
+> understand this statement. 'delist' does not remove an XAResource from a
+> transaction.
+
+This is definitely a mistake.
+
+>
+> I can write the details of section 4.4.3 once JSR95 is in community
+review,
+> if you want.
+
+Yes, that would be great thanks.
+
+Thanks for the feedback. I'm hoping to have another version out as soon as
+I
+see if there's any further feedback.
+
+Mark.

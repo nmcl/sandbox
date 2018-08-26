@@ -1,0 +1,502 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="Coordinator_Service"
+  targetNamespace="http://www.coordinatorservice.com/Coordinator-interface"
+  xmlns="http://schemas.xmlsoap.org/wsdl/"
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+  xmlns:tns="http://www.coordinatorservice.com/Coordinator-interface"
+  xmlns:types="http://www.coordinatorservice.com/Coordinator-interface/types/"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:jaxtx="C:\temp\src\JSR156\xml\JAXTX.xsd">
+
+<types>
+  <xsd:schema
+      targetNamespace="http://www.coordinatorservice.com/Coordinator-interface/types/"
+        xmlns="http://www.w3.org/2001/XMLSchema/">
+    <xsd:complexType
+        name="Coordinator"><xsd:sequence/>
+    </xsd:complexType>
+
+    <xsd:complexType
+    name="Participant"><xsd:sequence/>
+    </xsd:complexType>
+
+  </xsd:schema>
+</types>
+
+<message
+      name="Incomplete_transactionRequest">
+  <part name="meth1_inType1"
+    type="jaxtx:completionstatus"/>
+</message>
+
+<message
+      name="Outcomplete_transactionResponse">
+  <part
+      name="meth1_outType" type="xsd:string"/>
+</message>
+
+<message
+      name="IncoordinateRequest">
+  <part name="meth2_inType1"
+    type="jaxtx:completionstatus"/>
+</message>
+
+<message
+      name="OutcoordinateResponse">
+  <part
+      name="meth1_outType" type="xsd:string"/>
+</message>
+
+<message
+      name="Insend_outcomeRequest">
+  <part name="meth3_inType1"
+    type="xsd:string"/>
+</message>
+
+<message
+    name="Outsend_outcomeResponse">
+</message>
+
+<message
+    name="Inget_outcomeRequest"/>
+
+<message
+      name="Outget_outcomeResponse">
+  <part name="meth4_outType"
+    type="xsd:string"/>
+</message>
+
+<message
+      name="Inadd_participantRequest">
+  <part name="meth5_inType1"
+      type="types:Participant"/>
+  <part name="meth5_inType2"
+    type="xsd:int"/>
+</message>
+
+<message
+      name="Outadd_participantResponse">
+  <part name="meth5_outType"
+    type="xsd:int"/>
+</message>
+
+<message
+      name="Inremove_participantRequest">
+  <part name="meth6_inType1"
+    type="types:Participant"/>
+</message>
+
+<message
+    name="Outremove_participantResponse">
+</message>
+
+<message
+      name="Inset_responseRequest">
+  <part name="meth7_inType1"
+      type="xsd:string"/>
+  <part name="meth7_inType2"
+    type="xsd:string"/>
+</message>
+
+<message
+      name="Outset_responseResponse">
+  <part name="meth7_outType"
+    type="xsd:int"/>
+</message>
+
+<message
+    name="Inget_parent_coordinatorRequest"/>
+
+<message
+      name="Outget_parent_coordinatorResponse">
+  <part
+      name="meth8_outType"
+    type="types:Coordinator"/>
+</message>
+
+<message
+    name="Inget_transaction_idRequest"/>
+
+<message
+      name="Outget_transaction_idResponse">
+  <part name="meth9_outType"
+    type="xsd:anyURI"/>
+</message>
+
+<message
+    name="Inget_statusRequest"/>
+
+<message
+      name="Outget_statusResponse">
+  <part name="meth10_outType"
+    type="jaxtx:status"/>
+</message>
+
+<message
+    name="Inget_parent_statusRequest"/>
+
+<message
+      name="Outget_parent_statusResponse">
+  <part name="meth11_outType"
+    type="jaxtx:status"/>
+</message>
+
+<message
+    name="Inget_transaction_nameRequest"/>
+
+<message
+      name="Outget_transaction_nameResponse">
+  <part
+      name="meth12_outType" type="xsd:string"/>
+</message>
+
+<message
+      name="Inis_same_transactionRequest">
+  <part name="meth13_inType1"
+    type="types:Coordinator"/>
+</message>
+
+<message
+      name="Outis_same_transactionResponse">
+  <part
+      name="meth13_outType" type="xsd:boolean"/>
+</message>
+
+
+<portType
+      name="Coordinator_Service">
+  <operation
+        name="complete_transaction">
+    <input
+        message="tns:Incomplete_transactionRequest"/>
+    <output
+      message="tns:Outcomplete_transactionResponse"/>
+  </operation>
+
+  <operation
+        name="send_message">
+    <input
+        message="tns:Insend_messageRequest"/>
+    <output
+      message="tns:Outsend_messageResponse"/>
+  </operation>
+
+  <operation
+        name="send_outcome">
+    <input
+        message="tns:Insend_outcomeRequest"/>
+    <output
+      message="tns:Outsend_outcomeResponse"/>
+  </operation>
+
+  <operation
+        name="get_outcome">
+    <input
+        message="tns:Inget_outcomeRequest"/>
+    <output
+      message="tns:Outget_outcomeResponse"/>
+  </operation>
+
+  <operation
+        name="add_participant">
+    <input
+        message="tns:Inadd_participantRequest"/>
+    <output
+      message="tns:Outadd_participantResponse"/>
+  </operation>
+
+  <operation
+        name="remove_participant">
+    <input
+        message="tns:Inremove_participantRequest"/>
+    <output
+      message="tns:Outremove_participantResponse"/>
+  </operation>
+
+  <operation
+        name="set_response">
+    <input
+        message="tns:Inset_responseRequest"/>
+    <output
+      message="tns:Outset_responseResponse"/>
+  </operation>
+
+  <operation
+        name="get_parent_coordinator">
+    <input
+        message="tns:Inget_parent_coordinatorRequest"/>
+    <output
+      message="tns:Outget_parent_coordinatorResponse"/>
+  </operation>
+
+  <operation
+        name="get_transaction_id">
+    <input
+        message="tns:Inget_transaction_idRequest"/>
+    <output
+      message="tns:Outget_transaction_idResponse"/>
+  </operation>
+
+  <operation
+        name="get_status">
+    <input
+        message="tns:Inget_statusRequest"/>
+    <output
+      message="tns:Outget_statusResponse"/>
+  </operation>
+
+  <operation
+        name="get_parent_status">
+    <input
+        message="tns:Inget_parent_statusRequest"/>
+    <output
+      message="tns:Outget_parent_statusResponse"/>
+  </operation>
+
+  <operation
+        name="get_transaction_name">
+    <input
+        message="tns:Inget_transaction_nameRequest"/>
+    <output
+      message="tns:Outget_transaction_nameResponse"/>
+  </operation>
+
+  <operation
+        name="is_same_transaction">
+    <input
+        message="tns:Inis_same_transactionRequest"/>
+    <output
+    message="tns:Outis_same_transactionResponse"/>
+  </operation>
+</portType>
+
+
+
+<binding
+    name="Coordinator_ServiceBinding"
+      type="tns:Coordinator_Service">
+  <soap:binding style="rpc"
+      transport="http://schemas.xmlsoap.org/soap/http"/>
+  <operation
+        name="complete_transaction">
+    <soap:operation
+          soapAction="urn:coordinator-service"/>
+    <input>
+      <soap:body
+          encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+          namespace="urn:coordinator-service"
+          use="encoded"/>
+    </input>
+    <output>
+      <soap:body
+          encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+          namespace="urn:coordinator-service"
+      use="encoded"/>
+    </output>
+  </operation>
+  <operation
+        name="send_message">
+    <soap:operation
+          soapAction="urn:coordinator-service"/>
+    <input>
+      <soap:body
+          encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+          namespace="urn:coordinator-service"
+          use="encoded"/>
+    </input>
+    <output>
+      <soap:body
+          encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+          namespace="urn:coordinator-service"
+      use="encoded"/>
+    </output>
+  </operation>
+  <operation
+        name="send_outcome">
+    <soap:operation
+          soapAction="urn:coordinator-service"/>
+    <input>
+      <soap:body
+          encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+          namespace="urn:coordinator-service"
+          use="encoded"/>
+    </input>
+    <output>
+      <soap:body
+          encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+          namespace="urn:coordinator-service"
+      use="encoded"/>
+    </output>
+  </operation>
+  <operation
+        name="get_outcome">
+    <soap:operation
+          soapAction="urn:coordinator-service"/>
+    <input>
+      <soap:body
+          encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+          namespace="urn:coordinator-service"
+          use="encoded"/>
+    </input>
+    <output>
+      <soap:body
+          encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+          namespace="urn:coordinator-service"
+      use="encoded"/>
+    </output>
+  </operation>
+  <operation
+        name="add_participant">
+    <soap:operation
+          soapAction="urn:coordinator-service"/>
+    <input>
+      <soap:body
+          encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+          namespace="urn:coordinator-service"
+          use="encoded"/>
+    </input>
+    <output>
+      <soap:body
+          encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+          namespace="urn:coordinator-service"
+      use="encoded"/>
+    </output>
+  </operation>
+  <operation
+        name="remove_participant">
+    <soap:operation
+          soapAction="urn:coordinator-service"/>
+    <input>
+      <soap:body
+          encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+          namespace="urn:coordinator-service"
+          use="encoded"/>
+    </input>
+    <output>
+      <soap:body
+          encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+          namespace="urn:coordinator-service"
+      use="encoded"/>
+    </output>
+  </operation>
+  <operation
+        name="set_response">
+    <soap:operation
+          soapAction="urn:coordinator-service"/>
+    <input>
+      <soap:body
+          encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+          namespace="urn:coordinator-service"
+          use="encoded"/>
+    </input>
+    <output>
+      <soap:body
+          encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+          namespace="urn:coordinator-service"
+      use="encoded"/>
+    </output>
+  </operation>
+  <operation
+        name="get_parent_coordinator">
+    <soap:operation
+          soapAction="urn:coordinator-service"/>
+    <input>
+      <soap:body
+          encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+          namespace="urn:coordinator-service"
+          use="encoded"/>
+    </input>
+    <output>
+      <soap:body
+          encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+          namespace="urn:coordinator-service"
+      use="encoded"/>
+    </output>
+  </operation>
+  <operation
+        name="get_transaction_id">
+    <soap:operation
+          soapAction="urn:coordinator-service"/>
+    <input>
+      <soap:body
+          encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+          namespace="urn:coordinator-service"
+          use="encoded"/>
+    </input>
+    <output>
+      <soap:body
+          encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+          namespace="urn:coordinator-service"
+      use="encoded"/>
+    </output>
+  </operation>
+  <operation
+        name="get_status">
+    <soap:operation
+          soapAction="urn:coordinator-service"/>
+    <input>
+      <soap:body
+          encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+          namespace="urn:coordinator-service"
+          use="encoded"/>
+    </input>
+    <output>
+      <soap:body
+          encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+          namespace="urn:coordinator-service"
+      use="encoded"/>
+    </output>
+  </operation>
+  <operation
+        name="get_parent_status">
+    <soap:operation
+          soapAction="urn:coordinator-service"/>
+    <input>
+      <soap:body
+          encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+          namespace="urn:coordinator-service"
+          use="encoded"/>
+    </input>
+    <output>
+      <soap:body
+          encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+          namespace="urn:coordinator-service"
+      use="encoded"/>
+    </output>
+  </operation>
+  <operation
+        name="get_transaction_name">
+    <soap:operation
+          soapAction="urn:coordinator-service"/>
+    <input>
+      <soap:body
+          encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+          namespace="urn:coordinator-service"
+          use="encoded"/>
+    </input>
+    <output>
+      <soap:body
+          encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+          namespace="urn:coordinator-service"
+      use="encoded"/>
+    </output>
+  </operation>
+  <operation
+        name="is_same_transaction">
+    <soap:operation
+          soapAction="urn:coordinator-service"/>
+    <input>
+      <soap:body
+          encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+          namespace="urn:coordinator-service"
+          use="encoded"/>
+    </input>
+    <output>
+      <soap:body
+          encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+          namespace="urn:coordinator-service" use="encoded"/>
+    </output>
+  </operation>
+</binding>
+
+</definitions>

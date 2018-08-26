@@ -1,0 +1,76 @@
+Received: from cheviot2.ncl.ac.uk (cheviot2.ncl.ac.uk [128.240.229.35])
+	by ingram.ncl.ac.uk (8.8.8+Sun/8.8.8) with ESMTP id PAA13376
+	for <nmcl@ingram.ncl.ac.uk>; Fri, 1 Nov 2002 15:04:04 GMT
+Received: from d06lmsgate-6.uk.ibm.com (d06lmsgate-6.uk.ibm.com [194.196.100.252])
+	by cheviot2.ncl.ac.uk (8.10.1/8.10.1) with ESMTP id gA1F7EO17784
+	for <m.c.little@ncl.ac.uk>; Fri, 1 Nov 2002 15:07:14 GMT
+Received: from d06relay02.portsmouth.uk.ibm.com (d06relay02.portsmouth.uk.ibm.com [9.166.84.148])
+	by d06lmsgate-6.uk.ibm.com (1.0.0) with ESMTP id PAA89998
+	for <m.c.little@ncl.ac.uk>; Fri, 1 Nov 2002 15:06:20 GMT
+Received: from d06ml007.portsmouth.uk.ibm.com (d06ml007_cs0 [9.180.35.36])
+	by d06relay02.portsmouth.uk.ibm.com (8.12.3/NCO/VER6.4) with ESMTP id gA1F713a086188
+	for <m.c.little@ncl.ac.uk>; Fri, 1 Nov 2002 15:07:01 GMT
+Subject: Re: WS-T/C
+To: "Mark Little" <m.c.little@ncl.ac.uk>
+Cc: "Tom Freund" <TJFREUND@uk.ibm.com>
+X-Mailer: Lotus Notes Release 5.0.7  March 21, 2001
+Message-ID: <OF27AA685C.AF828FD8-ON80256C64.00507305@portsmouth.uk.ibm.com>
+From: "Ian Robinson" <ian_robinson@uk.ibm.com>
+Date: Fri, 1 Nov 2002 14:57:54 +0000
+X-MIMETrack: Serialize by Router on d06ml007/06/M/IBM(Release 5.0.9a |January 7, 2002) at
+ 01/11/2002 15:07:01
+MIME-Version: 1.0
+Content-type: text/plain; charset=us-ascii
+X-Newcastle-MailScanner: Found to be clean (of known viruses)
+Content-Length: 2344
+
+
+
+Mark - WS-Tx is, for the most part, consumed by middleware and need not be
+visible to application-level components. If a J2EE application component
+wishes to manage its transaction demarcation (rather than defer to the
+container) and is developed independently of the underlying transaction
+protocol, that it should use the JSR 156 client API for the demarcation and
+a WS-Tx coordination service should be pluggable beneath this. The Java
+SPIs for the Coordinator/Participant services described in WS-Tx/Acid will
+be generated from the WSDL definitions and I don't think any model jaxtx
+packages need to be defined for these, although you may have scenarios that
+you can describe to show how this might be useful.  Is this along the lines
+you are thinking?
+
+Ian Robinson,
+Senior Technical Staff Member,
+WebSphere Transactions Architecture & Development,
+IBM Hursley Lab, UK
+Tel +44-(0)1962-818626    Tie: 724-8626
+ian_robinson@uk.ibm.com
+
+
+
+|---------+---------------------------->
+|         |           "Mark Little"    |
+|         |           <m.c.little@ncl.a|
+|         |           c.uk>            |
+|         |                            |
+|         |           01/11/2002 14:06 |
+|         |                            |
+|---------+---------------------------->
+  >----------------------------------------------------------------------------------------------------------------|
+  |                                                                                                                |
+  |       To:       Ian Robinson/UK/IBM@IBMGB                                                                      |
+  |       cc:                                                                                                      |
+  |       Subject:  WS-T/C                                                                                         |
+  |                                                                                                                |
+  |                                                                                                                |
+  >----------------------------------------------------------------------------------------------------------------|
+
+
+
+BTW Ian, I'm hoping that the optional protocol definition in JSR 156 will
+support WS-Tx, so we should keep an eye on that.
+
+Mark.
+
+
+
+
