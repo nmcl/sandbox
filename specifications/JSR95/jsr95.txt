@@ -1,0 +1,2 @@
+intellio - bpms business process management system.
+eric - b2b manager (v.i. in a.s.)
