@@ -9,4 +9,4 @@ Relevant licence files will be within specific directories.
 
 ----
 
-Note, some of the source in these directories is replicated at the top-level of this repository. However, the versions here may well be different so included here for completeness.
+Note, some of the source in these directories are replicated at the top-level of this repository. However, the versions here may well be different so included here for completeness.
