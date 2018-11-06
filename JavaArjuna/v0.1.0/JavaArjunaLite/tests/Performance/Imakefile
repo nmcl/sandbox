@@ -1,0 +1,30 @@
+COMMENT 
+COMMENT Copyright (C) 1996, 1997, 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1998/11/12 09:39:21 nmcl Exp $
+COMMENT
+
+SOURCES = PerformanceTest1.java \
+	  PerformanceTest2.java \
+	  PerformanceTest3.java \
+	  PerformanceTest4.java
+
+OBJECTS = PerformanceTest1.class \
+	  PerformanceTest2.class \
+	  PerformanceTest3.class \
+	  PerformanceTest4.class
+
+Target($(OBJECTS))
+
+BuildJavaByteCode(PerformanceTest1,NullParam)
+BuildJavaByteCode(PerformanceTest2,NullParam)
+BuildJavaByteCode(PerformanceTest3,NullParam)
+BuildJavaByteCode(PerformanceTest4,NullParam)
+
+Clean(*.class *.prof out)
+

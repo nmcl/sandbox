@@ -1,0 +1,125 @@
+COMMENT 
+COMMENT Copyright (C) 1996, 1997, 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.6 1998/06/24 15:07:15 nmcl Exp $
+COMMENT
+
+SOURCES = ActionHierarchy.java \
+	  ActionInfo.java \
+	  ActionStatus.java \
+	  CheckedAction.java \
+	  BasicAction.java \
+	  AtomicAction.java \
+	  Lock.java \
+	  LockManager.java \
+	  LockMode.java \
+	  LockStatus.java \
+	  LockList.java \
+	  LockListIterator.java \
+	  ObjectStatus.java \
+	  ObjectType.java \
+	  PrepareOutcome.java \
+	  RecordList.java \
+	  RecordListIterator.java \
+	  StateManager.java \
+	  TopLevelAction.java \
+	  AbstractRecord.java \
+	  ActivationRecord.java \
+	  CadaverActivationRecord.java \
+	  CadaverLockManager.java \
+	  CadaverLockRecord.java \
+	  CadaverRecord.java \
+	  LockRecord.java \
+	  PersistenceRecord.java \
+	  RecoveryRecord.java \
+	  RecordType.java \
+	  LockResult.java \
+	  ConflictType.java \
+	  ActionList.java \
+	  ObjectModel.java \
+	  StateManagerAttribute.java \
+	  LockManagerAttribute.java
+	  
+OBJECTS = ActionStatus.class \
+	  PrepareOutcome.class \
+	  RecordType.class \
+	  ConflictType.class \
+	  CheckedAction.class \
+	  BasicAction.class \
+	  AtomicAction.class \
+	  TopLevelAction.class \
+	  ActionList.class \
+	  ActionInfo.class \
+	  ActionHierarchy.class \
+	  StateManager.class \
+	  LockResult.class \
+	  Lock.class \
+	  LockMode.class \
+	  LockStatus.class \
+	  LockManager.class \
+	  LockList.class \
+	  LockListIterator.class \
+	  ObjectStatus.class \
+	  ObjectType.class \
+	  RecordList.class \
+	  RecordListIterator.class \
+	  AbstractRecord.class \
+	  ActivationRecord.class \
+	  CadaverActivationRecord.class \
+	  CadaverLockManager.class \
+	  CadaverLockRecord.class \
+	  CadaverRecord.class \
+	  LockRecord.class \
+	  PersistenceRecord.class \
+	  RecoveryRecord.class \
+	  ObjectModel.class \
+	  StateManagerAttribute.class \
+	  LockManagerAttribute.class
+
+Target($(SOURCE))
+Target($(OBJECTS))
+
+PreprocessJavaCode(AbstractRecord,NullParam)
+
+BuildJavaByteCode(BasicAction,NullParam)
+BuildJavaByteCode(AtomicAction,NullParam)
+BuildJavaByteCode(ActionHierarchy,NullParam)
+BuildJavaByteCode(ActionInfo,NullParam)
+BuildJavaByteCode(CheckedAction,NullParam)
+BuildJavaByteCode(ActionStatus,NullParam)
+BuildJavaByteCode(Lock,NullParam)
+BuildJavaByteCode(LockMode,NullParam)
+BuildJavaByteCode(LockStatus,NullParam)
+BuildJavaByteCode(LockManager,NullParam)
+BuildJavaByteCode(LockList,NullParam)
+BuildJavaByteCode(LockListIterator,NullParam)
+BuildJavaByteCode(ObjectStatus,NullParam)
+BuildJavaByteCode(ObjectType,NullParam)
+BuildJavaByteCode(PrepareOutcome,NullParam)
+BuildJavaByteCode(RecordList,NullParam)
+BuildJavaByteCode(RecordListIterator,NullParam)
+BuildJavaByteCode(StateManager,NullParam)
+BuildJavaByteCode(TopLevelAction,NullParam)
+BuildJavaByteCode(AbstractRecord,NullParam)
+BuildJavaByteCode(ActivationRecord,NullParam)
+BuildJavaByteCode(CadaverActivationRecord,NullParam)
+BuildJavaByteCode(CadaverLockManager,NullParam)
+BuildJavaByteCode(CadaverLockRecord,NullParam)
+BuildJavaByteCode(CadaverRecord,NullParam)
+BuildJavaByteCode(LockRecord,NullParam)
+BuildJavaByteCode(PersistenceRecord,NullParam)
+BuildJavaByteCode(RecoveryRecord,NullParam)
+BuildJavaByteCode(RecordType,NullParam)
+BuildJavaByteCode(LockResult,NullParam)
+BuildJavaByteCode(ConflictType,NullParam)
+BuildJavaByteCode(ActionList,NullParam)
+BuildJavaByteCode(ObjectModel,NullParam)
+BuildJavaByteCode(StateManagerAttribute,NullParam)
+BuildJavaByteCode(LockManagerAttribute,NullParam)
+
+Clean(*.class)
