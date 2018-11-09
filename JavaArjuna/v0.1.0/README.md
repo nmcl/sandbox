@@ -10,4 +10,4 @@ Differences to the original:
 - Some of rhe code was updated with bug fixes, new features etc.
 
 - The package names are going to be closer to JTSArjuna than they were
-  in the original code simply because I can't recall what I used oriignally.
+  in the original code simply because I can't recall what I used orignally.
