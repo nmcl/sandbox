@@ -46,7 +46,7 @@ if test "$CONFIGFILE" != ""
 then
 	if test -f $CONFIGFILE
 	then
-		if test "`head -11 $CONFIGFILE | tail -1`" != "# JavaStubGenerator configure file"
+		if test "`head -11 $CONFIGFILE | tail -1`" != "# JavaArjuna configure file"
 		then
 			echo $0": configuration file \""$CONFIGFILE"\" is invalid/corrupt"
 			exit 1
@@ -68,18 +68,18 @@ else
 fi
 
 echo "+-----------------------------------+"
-echo "|  JavaStubGenerator version 1.0.0  |"
+echo "|  JavaArjuna version 0.1.0  |"
 echo "+-----------------------------------+"
 
 if test "$CONFIGFILE" = ""
 then
 	TOPDIR=`pwd`
-	INSTALLTOPDIR=/usr/local/JavaStubGenerator1.0.0
+	INSTALLTOPDIR=/usr/local/JavaArjuna0.1.0
 	GANDIVATOPDIR=/home/nmcl/ArjunaII/Gandiva
 	JAVAHARNESSTOPDIR=/home/nmcl/ArjunaII/JavaHarness
 
 	echo
-	echo $PRE_ECHO "Root of directory of JavaStubGenerator installation ["$INSTALLTOPDIR"] : " $POST_ECHO
+	echo $PRE_ECHO "Root of directory of JavaArjuna installation ["$INSTALLTOPDIR"] : " $POST_ECHO
 	read INPUT
 	if test "'x$INPUT'" != "'x'"
 	then
@@ -147,7 +147,7 @@ then
 	LOCAL_MAKEFLAGS=""
 	LOCAL_IMAKEFLAGS="-DVerboseMake=No -DTopDir="$TOPDIR" -DInstallTopDir="$INSTALLTOPDIR
 	LOCAL_MAKEDEPENDFLAGS=""
-	LOCAL_CPPFLAGS="-I\$(JAVASTUBGENERATORTOPDIR)/lib"
+	LOCAL_CPPFLAGS="-I\$(JAVAARJUNATOPDIR)/lib"
 	LOCAL_CPPINCLUDES=""
 	LOCAL_CPLUSPLUSFLAGS=""
 	LOCAL_LDFLAGS=""
@@ -205,9 +205,9 @@ then
 	fi
 
 	MODULE_MAKEFLAGS=""
-	MODULE_IMAKEFLAGS="-I\$(JAVASTUBGENERATORTOPDIR)/config -DJavaStubGenProg=StubGenerator"
+	MODULE_IMAKEFLAGS="-I\$(JAVAARJUNATOPDIR)/config -DJavaStubGenProg=Arjuna"
 	MODULE_MAKEDEPENDFLAGS=""
-	MODULE_CPPINCLUDES="-I\$(JAVASTUBGENERATORTOPDIR)/include"
+	MODULE_CPPINCLUDES="-I\$(JAVAARJUNATOPDIR)/include"
 	MODULE_CPLUSPLUSFLAGS=""
 	MODULE_LDFLAGS=""
 	MODULE_LDLIBRARIES=""
@@ -220,12 +220,12 @@ then
 	
 	if test $COMP = "CC3.0.1" -o $COMP = "SUNCC2.0.1" -o $COMP = "HPCC3.5"
 	then
-		MODULE_CPLUSPLUSFLAGS="-ptr\$(JAVASTUBGENERATORTOPDIR)/Templates.DB -I\$(JAVASTUBGENERATORTOPDIR)/include "$MODULE_CPLUSPLUSFLAGS
-		MODULE_LDFLAGS="-ptr\$(JAVASTUBGENERATORTOPDIR)/Templates.DB -I\$(JAVASTUBGENERATORTOPDIR)/include "$MODULE_LDFLAGS
+		MODULE_CPLUSPLUSFLAGS="-ptr\$(JAVAARJUNATOPDIR)/Templates.DB -I\$(JAVAARJUNATOPDIR)/include "$MODULE_CPLUSPLUSFLAGS
+		MODULE_LDFLAGS="-ptr\$(JAVAARJUNATOPDIR)/Templates.DB -I\$(JAVAARJUNATOPDIR)/include "$MODULE_LDFLAGS
 	elif test $COMP = "SUNCC3.0" -o $COMP = "SUNCC3.0.1"
 	then
-		MODULE_CPLUSPLUSFLAGS="-ptr\$(JAVASTUBGENERATORTOPDIR) -pti\$(JAVASTUBGENERATORTOPDIR)/include "$MODULE_CPLUSPLUSFLAGS
-		MODULE_LDFLAGS="-ptr\$(JAVASTUBGENERATORTOPDIR) -pti\$(JAVASTUBGENERATORTOPDIR)/include "$MODULE_LDFLAGS
+		MODULE_CPLUSPLUSFLAGS="-ptr\$(JAVAARJUNATOPDIR) -pti\$(JAVAARJUNATOPDIR)/include "$MODULE_CPLUSPLUSFLAGS
+		MODULE_LDFLAGS="-ptr\$(JAVAARJUNATOPDIR) -pti\$(JAVAARJUNATOPDIR)/include "$MODULE_LDFLAGS
 	fi
 
 else
@@ -375,7 +375,7 @@ echo "# Newcastle upon Tyne,"
 echo "# UK."
 echo "#"
 echo ""
-echo "# JavaStubGenerator configure file"
+echo "# JavaArjuna configure file"
 echo ""
 echo "INSTALLTOPDIR="$INSTALLTOPDIR
 echo "JAVAHARNESSTOPDIR="$JAVAHARNESSTOPDIR
@@ -400,8 +400,8 @@ echo "MODULE_CPLUSPLUSFLAGS='"$MODULE_CPLUSPLUSFLAGS"'"
 echo "MODULE_LDFLAGS='"$MODULE_LDFLAGS"'"
 echo "MODULE_LDLIBRARIES='"$MODULE_LDLIBRARIES"'"
 echo "MODULE_LDLIBDEPENDS='"$MODULE_LDLIBDEPENDS"'"
-) > config/JavaStubGenerator.cf
-chmod a+rx config/JavaStubGenerator.cf
+) > config/JavaArjuna.cf
+chmod a+rx config/JavaArjuna.cf
 
 (
 echo "/*"
@@ -476,7 +476,7 @@ echo "/*"
 echo " *  Module.def (source)"
 echo " */"
 echo
-echo "JAVASTUBGENERATORTOPDIR="$TOPDIR
+echo "JAVAARJUNATOPDIR="$TOPDIR
 echo
 if test "'x$MODULE_MAKEFLAGS'" != "'x'"
 then
@@ -515,7 +515,7 @@ then
 	echo "AddToLdLibDepends("$MODULE_LDLIBDEPENDS")"
 fi
 echo
-echo "#include \""$TOPDIR"/config/JavaStubGenerator.tmpl\""
+echo "#include \""$TOPDIR"/config/JavaArjuna.tmpl\""
 ) > config/Module.def
 chmod a+r config/Module.def
 
@@ -534,7 +534,7 @@ echo "/*"
 echo " *  Module.def (install)"
 echo " */"
 echo
-echo "JAVASTUBGENERATORTOPDIR="$INSTALLTOPDIR
+echo "JAVAARJUNATOPDIR="$INSTALLTOPDIR
 echo
 if test "'x$MODULE_MAKEFLAGS'" != "'x'"
 then
@@ -573,6 +573,6 @@ then
 	echo "AddToLdLibDepends("$MODULE_LDLIBDEPENDS")"
 fi
 echo
-echo "#include \""$INSTALLTOPDIR"/config/JavaStubGenerator.tmpl\""
+echo "#include \""$INSTALLTOPDIR"/config/JavaArjuna.tmpl\""
 ) > config/Module_install.def
 chmod a+r config/Module_install.def
