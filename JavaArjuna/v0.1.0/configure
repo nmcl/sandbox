@@ -67,7 +67,7 @@ else
 	POST_ECHO=""
 fi
 
-ARJUNA_VERSION="2.2.4"
+ARJUNA_VERSION="0.1.0"
 
 echo "+------------------------------+"
 echo "| JavaArjuna version "$ARJUNA_VERSION" |"
@@ -76,7 +76,7 @@ echo "+------------------------------+"
 if test "$CONFIGFILE" = ""
 then
 	TOPDIR=`pwd`
-	INSTALLTOPDIR=/usr/local/JTSArjuna/JavaArjuna$ARJUNA_VERSION
+	INSTALLTOPDIR=/usr/local/JavaArjuna$ARJUNA_VERSION
 
 	echo
 	echo $PRE_ECHO "Root of directory of JavaArjuna installation ["$INSTALLTOPDIR"] : " $POST_ECHO
@@ -134,43 +134,6 @@ then
 		fi
 	else
 		LOCAL_IMAKEFLAGS="-UBUILDTESTS -UINSTALLTESTS "$LOCAL_IMAKEFLAGS
-	fi
-
-	echo
-	INPUT=""
-	while test "'x$INPUT'" != "'xy'" -a "'x$INPUT'" != "'xn'"
-	do
-		echo $PRE_ECHO "Build utility programs (y/n) : " $POST_ECHO
-		read INPUT
-	done
-	if test "'x$INPUT'" = "'xy'"
-	then
-		INPUT=""
-		while test "'x$INPUT'" != "'xy'" -a "'x$INPUT'" != "'xn'"
-		do
-			echo $PRE_ECHO "Install utility programs (y/n) : " $POST_ECHO
-			read INPUT
-		done
-		if test "'x$INPUT'" = "'xy'"
-		then	
-			LOCAL_IMAKEFLAGS="-DBUILDUTILITIES -DINSTALLUTILITIES "$LOCAL_IMAKEFLAGS
-		else
-			LOCAL_IMAKEFLAGS="-DBUILDUTILITIES -UINSTALLUTILITIES "$LOCAL_IMAKEFLAGS
-		fi
-
-		echo
-		INPUT=""
-		while test "'x$INPUT'" != "'xy'" -a "'x$INPUT'" != "'xn'"
-		do
-		    echo $PRE_ECHO "Is Swing available (y/n) : " $POST_ECHO
-		    read INPUT
-		done
-		if test "'x$INPUT'" = "'xy'"
-		then
-		    LOCAL_IMAKEFLAGS="-DHAVE_SWING "$LOCAL_IMAKEFLAGS
-		fi
-	else
-		LOCAL_IMAKEFLAGS="-UBUILDUTILITIES -UINSTALLUTILITIES "$LOCAL_IMAKEFLAGS
 	fi
 
 	echo
