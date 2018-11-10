@@ -1,18 +1,40 @@
-COMMENT 
-COMMENT Copyright (C) 1996, 1997, 1998,
+COMMENT
+COMMENT Copyright (C) 1993
 COMMENT
 COMMENT Department of Computing Science,
-COMMENT University of Newcastle upon Tyne,
+COMMENT The University,
 COMMENT Newcastle upon Tyne,
 COMMENT UK.
 COMMENT
-COMMENT $Id: Imakefile,v 1.4 1998/07/25 17:08:46 nmcl Exp $
+COMMENT $Id: Imakefile,v 1.6 1995/07/17 14:57:17 ngdp Exp $
 COMMENT
 
-SubDirectory(config)
-SubDirectory(classes)
-SubDirectory(bin)
-SubDirectory(tests)
-SubDirectory(htdocs)
+#define IHaveSubDirs
 
-Purge(MakefileBoot)
+SetSubDirectorys(StubGen Common Thread RPC Utilities lib Include)
+
+PrintConfig
+
+PrintEnviron
+
+all depend install :: stubs
+stubs.local :: StubGen
+
+install.local :: INSTALL_TOPDIR_VAR
+	-CHMOD_VAR ugo+rx INSTALL_TOPDIR_VAR
+
+install.local :: INSTALL_TOPDIR_VAR/servers
+	-CHMOD_VAR ugo+rwx INSTALL_TOPDIR_VAR/servers
+
+CreateInstallTopDirectory(servers)
+CreateInstallTopDirectory(lib)
+
+MakeRelDirectoryDependency(Config)
+MakeRelDirectoryDependency(Common)
+MakeRelDirectoryDependency(RPC)
+MakeRelDirectoryDependency(StubGen)
+MakeRelDirectoryDependency(Utilities)
+MakeRelDirectoryDependency(Tests)
+MakeRelDirectoryDependency(lib)
+
+TidyTarget(Tests/MakefileBoot)

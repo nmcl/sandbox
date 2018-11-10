@@ -1,0 +1,18 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: s_aix.cf,v 1.2 1996/01/10 15:08:40 ngdp Exp $
+ */
+
+/*
+ * s_aix.cf
+ */
+
+#define RANLIB_PROGRAM true
+#define SYSTEM_SPECIFIC_FLAGS -DSYSV -DNEED_USLEEP_PROTO -DINT_YYLESS
+#define STUBGEN_OS_FLAGS "-Dunix -D__unix -D__unix__ -Daix -D_AIX"

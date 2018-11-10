@@ -1,0 +1,17 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: m_sparc.cf,v 1.7 1995/02/01 10:15:11 ngdp Exp $
+ */
+
+/*
+ * m_sparc.cf
+ */
+
+#define MACHINE_SPECIFIC_FLAGS
+#define STUBGEN_MC_FLAGS "-Dsparc -D__sparc -D__sparc__"
