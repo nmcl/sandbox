@@ -46,7 +46,7 @@ if test "$CONFIGFILE" != ""
 then
 	if test -f $CONFIGFILE
 	then
-		if test "`head -11 $CONFIGFILE | tail -1`" != "# JavaArjunaLite configure file"
+		if test "`head -11 $CONFIGFILE | tail -1`" != "# JavaArjuna configure file"
 		then
 			echo $0": configuration file \""$CONFIGFILE"\" is invalid/corrupt"
 			exit 1
@@ -70,65 +70,20 @@ fi
 ARJUNA_VERSION="2.2.4"
 
 echo "+------------------------------+"
-echo "| JavaArjunaLite version "$ARJUNA_VERSION" |"
+echo "| JavaArjuna version "$ARJUNA_VERSION" |"
 echo "+------------------------------+"
 
 if test "$CONFIGFILE" = ""
 then
 	TOPDIR=`pwd`
-	INSTALLTOPDIR=/usr/local/JTSArjuna/JavaArjunaLite$ARJUNA_VERSION
-	GANDIVATOPDIR=`dirname $TOPDIR`/Gandiva
+	INSTALLTOPDIR=/usr/local/JTSArjuna/JavaArjuna$ARJUNA_VERSION
 
 	echo
-	echo $PRE_ECHO "Root of directory of JavaArjunaLite installation ["$INSTALLTOPDIR"] : " $POST_ECHO
+	echo $PRE_ECHO "Root of directory of JavaArjuna installation ["$INSTALLTOPDIR"] : " $POST_ECHO
 	read INPUT
 	if test "'x$INPUT'" != "'x'"
 	then
 		INSTALLTOPDIR=$INPUT
-	fi
-
-	JAVAHARNESSTOPDIR=`dirname $TOPDIR`/JavaHarness
-	echo
-	echo $PRE_ECHO "Root of directory of JavaHarness ["$JAVAHARNESSTOPDIR"] : " $POST_ECHO
-	read INPUT
-	if test "'x$INPUT'" != "'x'"
-	then
-		JAVAHARNESSTOPDIR=$INPUT
-	fi
-
-	echo
-	echo $PRE_ECHO "Root of directory of Gandiva ["$GANDIVATOPDIR"] : " $POST_ECHO
-	read INPUT
-	if test "'x$INPUT'" != "'x'"
-	then
-		GANDIVATOPDIR=$INPUT
-	fi
-
-	if test -x $GANDIVATOPDIR/config/Sys
-	then
-		SYS=`$GANDIVATOPDIR/config/Sys`
-	else
-		echo
-		echo "Error: "$GANDIVATOPDIR/config/Sys": was not found or would not run."
-		exit 1
-	fi
-
-	if test -x $GANDIVATOPDIR/config/Sys_Version
-	then
-		SYS_VERSION=`$GANDIVATOPDIR/config/Sys_Version`
-	else
-		echo
-		echo "Error: "$GANDIVATOPDIR/config/Sys_Version": was not found or would not run."
-		exit 1
-	fi
-
-	if test -x $GANDIVATOPDIR/config/C++
-	then
-		COMP=`$GANDIVATOPDIR/config/C++`
-	else
-		echo
-		echo "Error: "$GANDIVATOPDIR/config/C++": was not found or would not run."
-		exit 1
 	fi
 
 	case $SYS in
@@ -144,12 +99,12 @@ then
 		;;
 	esac
 
-	sed -e "s;INCLUDES;-Iconfig  -I$JAVAHARNESSTOPDIR/config -I$GANDIVATOPDIR/config;" < MakefileBoot.tmpl > MakefileBoot
+	sed -e "s;INCLUDES;-Iconfig;" < MakefileBoot.tmpl > MakefileBoot
 
 	LOCAL_MAKEFLAGS=""
 	LOCAL_IMAKEFLAGS="-DVerboseMake=No -DBUILDDAEMONS -DINSTALLDAEMONS -DTopDir="$TOPDIR" -DInstallTopDir="$INSTALLTOPDIR
 	LOCAL_MAKEDEPENDFLAGS=""
-	LOCAL_CPPFLAGS="-I\$(JAVAARJUNALITETOPDIR)/lib -DDEFAULT_OS_ROOT=\\\"\$(INSTALLTOPDIR)/ObjectStore\\\" -DDEFAULT_LS_ROOT=\\\"\$(INSTALLTOPDIR)/LockStore\\\""
+	LOCAL_CPPFLAGS="-I\$(JAVAARJUNATOPDIR)/lib -DDEFAULT_OS_ROOT=\\\"\$(INSTALLTOPDIR)/ObjectStore\\\" -DDEFAULT_LS_ROOT=\\\"\$(INSTALLTOPDIR)/LockStore\\\""
 	LOCAL_CPPINCLUDES=""
 	LOCAL_CPLUSPLUSFLAGS=""
 	LOCAL_LDFLAGS=""
@@ -231,9 +186,9 @@ then
 	fi
 
 	MODULE_MAKEFLAGS=""
-	MODULE_IMAKEFLAGS="-I\$(JAVAARJUNALITETOPDIR)/config"
+	MODULE_IMAKEFLAGS="-I\$(JAVAARJUNATOPDIR)/config"
 	MODULE_MAKEDEPENDFLAGS=""
-	MODULE_CPPINCLUDES="-I\$(JAVAARJUNALITETOPDIR)/include"
+	MODULE_CPPINCLUDES="-I\$(JAVAARJUNATOPDIR)/include"
 	MODULE_CPLUSPLUSFLAGS=""
 	MODULE_LDFLAGS=""
 	MODULE_LDLIBRARIES=""
@@ -246,12 +201,12 @@ then
 	
 	if test $COMP = "CC3.0.1" -o $COMP = "SUNCC2.0.1" -o $COMP = "HPCC3.5"
 	then
-		MODULE_CPLUSPLUSFLAGS="-ptr\$(JAVAARJUNALITETOPDIR)/Templates.DB -I\$(JAVAARJUNALITETOPDIR)/include "$MODULE_CPLUSPLUSFLAGS
-		MODULE_LDFLAGS="-ptr\$(JAVAARJUNALITETOPDIR)/Templates.DB -I\$(JAVAARJUNALITETOPDIR)/include "$MODULE_LDFLAGS
+		MODULE_CPLUSPLUSFLAGS="-ptr\$(JAVAARJUNATOPDIR)/Templates.DB -I\$(JAVAARJUNATOPDIR)/include "$MODULE_CPLUSPLUSFLAGS
+		MODULE_LDFLAGS="-ptr\$(JAVAARJUNATOPDIR)/Templates.DB -I\$(JAVAARJUNATOPDIR)/include "$MODULE_LDFLAGS
 	elif test $COMP = "SUNCC3.0" -o $COMP = "SUNCC3.0.1"
 	then
-		MODULE_CPLUSPLUSFLAGS="-ptr\$(JAVAARJUNALITETOPDIR) -pti\$(JAVAARJUNALITETOPDIR)/include "$MODULE_CPLUSPLUSFLAGS
-		MODULE_LDFLAGS="-ptr\$(JAVAARJUNALITETOPDIR) -pti\$(JAVAARJUNALITETOPDIR)/include "$MODULE_LDFLAGS
+		MODULE_CPLUSPLUSFLAGS="-ptr\$(JAVAARJUNATOPDIR) -pti\$(JAVAARJUNATOPDIR)/include "$MODULE_CPLUSPLUSFLAGS
+		MODULE_LDFLAGS="-ptr\$(JAVAARJUNATOPDIR) -pti\$(JAVAARJUNATOPDIR)/include "$MODULE_LDFLAGS
 	fi
 
 else
@@ -401,11 +356,9 @@ echo "# Newcastle upon Tyne,"
 echo "# UK."
 echo "#"
 echo ""
-echo "# JavaArjunaLite configure file"
+echo "# JavaArjuna configure file"
 echo ""
 echo "INSTALLTOPDIR="$INSTALLTOPDIR
-echo "JAVAHARNESSTOPDIR="$JAVAHARNESSTOPDIR
-echo "GANDIVATOPDIR="$GANDIVATOPDIR
 echo ""
 echo "LOCAL_MAKEFLAGS='"$LOCAL_MAKEFLAGS"'"
 echo "LOCAL_IMAKEFLAGS='"$LOCAL_IMAKEFLAGS"'"
@@ -426,8 +379,8 @@ echo "MODULE_CPLUSPLUSFLAGS='"$MODULE_CPLUSPLUSFLAGS"'"
 echo "MODULE_LDFLAGS='"$MODULE_LDFLAGS"'"
 echo "MODULE_LDLIBRARIES='"$MODULE_LDLIBRARIES"'"
 echo "MODULE_LDLIBDEPENDS='"$MODULE_LDLIBDEPENDS"'"
-) > config/JavaArjunaLite.cf
-chmod a+rx config/JavaArjunaLite.cf
+) > config/JavaArjuna.cf
+chmod a+rx config/JavaArjuna.cf
 
 (
 echo "/*"
@@ -482,8 +435,6 @@ then
 fi
 echo
 echo "#include \""$TOPDIR"/config/Module.def\""
-echo "#include \""$JAVAHARNESSTOPDIR"/config/Module.def\""
-echo "#include \""$GANDIVATOPDIR"/config/Module.def\""
 ) > config/Local.def
 chmod a+r config/Local.def
 
@@ -502,7 +453,7 @@ echo "/*"
 echo " *  Module.def (source)"
 echo " */"
 echo
-echo "JAVAARJUNALITETOPDIR="$TOPDIR
+echo "JAVAARJUNATOPDIR="$TOPDIR
 echo
 if test "'x$MODULE_MAKEFLAGS'" != "'x'"
 then
@@ -560,7 +511,7 @@ echo "/*"
 echo " *  Module.def (install)"
 echo " */"
 echo
-echo "JAVAARJUNALITETOPDIR="$INSTALLTOPDIR
+echo "JAVAARJUNATOPDIR="$INSTALLTOPDIR
 echo
 if test "'x$MODULE_MAKEFLAGS'" != "'x'"
 then
@@ -604,5 +555,5 @@ echo "AddToCPPFlags(-DARJUNA_VERSION=\\\"$ARJUNA_VERSION\\\")"
 chmod a+r config/Module_install.def
 
 (
-echo "JavaArjunaLite version $ARJUNA_VERSION"
+echo "JavaArjuna version $ARJUNA_VERSION"
 ) > config/Version.def
