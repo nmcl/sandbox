@@ -75,8 +75,6 @@ if test "$CONFIGFILE" = ""
 then
 	TOPDIR=`pwd`
 	INSTALLTOPDIR=/usr/local/JavaArjuna0.1.0
-	GANDIVATOPDIR=/home/nmcl/ArjunaII/Gandiva
-	JAVAHARNESSTOPDIR=/home/nmcl/ArjunaII/JavaHarness
 
 	echo
 	echo $PRE_ECHO "Root of directory of JavaArjuna installation ["$INSTALLTOPDIR"] : " $POST_ECHO
@@ -84,49 +82,6 @@ then
 	if test "'x$INPUT'" != "'x'"
 	then
 		INSTALLTOPDIR=$INPUT
-	fi
-
-	echo
-	echo $PRE_ECHO "Root of directory of JavaHarness ["$JAVAHARNESSTOPDIR"] : " $POST_ECHO
-	read INPUT
-	if test "'x$INPUT'" != "'x'"
-	then
-		JAVAHARNESSTOPDIR=$INPUT
-	fi
-
-	echo
-	echo $PRE_ECHO "Root of directory of Gandiva ["$GANDIVATOPDIR"] : " $POST_ECHO
-	read INPUT
-	if test "'x$INPUT'" != "'x'"
-	then
-		GANDIVATOPDIR=$INPUT
-	fi
-
-	if test -x $GANDIVATOPDIR/config/Sys
-	then
-		SYS=`$GANDIVATOPDIR/config/Sys`
-	else
-		echo
-		echo "Error: "$GANDIVATOPDIR/config/Sys": was not found or would not run."
-		exit 1
-	fi
-
-	if test -x $GANDIVATOPDIR/config/Sys_Version
-	then
-		SYS_VERSION=`$GANDIVATOPDIR/config/Sys_Version`
-	else
-		echo
-		echo "Error: "$GANDIVATOPDIR/config/Sys_Version": was not found or would not run."
-		exit 1
-	fi
-
-	if test -x $GANDIVATOPDIR/config/C++
-	then
-		COMP=`$GANDIVATOPDIR/config/C++`
-	else
-		echo
-		echo "Error: "$GANDIVATOPDIR/config/C++": was not found or would not run."
-		exit 1
 	fi
 
 	case $SYS in
@@ -142,7 +97,7 @@ then
 		;;
 	esac
 
-	sed -e "s;INCLUDES;-Iconfig -I$JAVAHARNESSTOPDIR/config -I$GANDIVATOPDIR/config;" < MakefileBoot.tmpl > MakefileBoot
+	sed -e "s;INCLUDES;-Iconfig;" < MakefileBoot.tmpl > MakefileBoot
 
 	LOCAL_MAKEFLAGS=""
 	LOCAL_IMAKEFLAGS="-DVerboseMake=No -DTopDir="$TOPDIR" -DInstallTopDir="$INSTALLTOPDIR
@@ -378,8 +333,6 @@ echo ""
 echo "# JavaArjuna configure file"
 echo ""
 echo "INSTALLTOPDIR="$INSTALLTOPDIR
-echo "JAVAHARNESSTOPDIR="$JAVAHARNESSTOPDIR
-echo "GANDIVATOPDIR="$GANDIVATOPDIR
 echo ""
 echo "LOCAL_MAKEFLAGS='"$LOCAL_MAKEFLAGS"'"
 echo "LOCAL_IMAKEFLAGS='"$LOCAL_IMAKEFLAGS"'"
@@ -456,8 +409,6 @@ then
 fi
 echo
 echo "#include \""$TOPDIR"/config/Module.def\""
-echo "#include \""$JAVAHARNESSTOPDIR"/config/Module.def\""
-echo "#include \""$GANDIVATOPDIR"/config/Module.def\""
 ) > config/Local.def
 chmod a+r config/Local.def
 
