@@ -15,3 +15,5 @@ Differences to the original:
 - The build system is just enough to create the necessary components but may be closer
 to JavaArjunaLite than the original. Is currently based on the W3OTrans JavaStubGen
 repository as that's the oldest non-Gandiva Java build system I can find.
+
+- This is build with the latest version of Java and there may be differences between that and Oak, which was the version used originally. Where possible I've tried not to use more advanced language features but I may have missed some opportunities.
