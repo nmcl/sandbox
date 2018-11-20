@@ -5,7 +5,7 @@ version of JTSArjuna I could find, which is also in the repository elsewhere.
 Differences to the original:
 
 - The build system is not going to be exactly the same as I had in the
-1995/1996 build but that was never the importsant part of the system.
+1995/1996 build but that was never the important part of the system.
 
 - Some of the code was updated with bug fixes, new features etc.
 
