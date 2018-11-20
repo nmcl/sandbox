@@ -1,6 +1,6 @@
 This is not the original JavaArjuna but something I tried to recreate
 from current sources and memory. The baseline source is the earliest
-version of JTSArjuna I could find.
+version of JTSArjuna I could find, which is also in the repository elsewhere.
 
 Differences to the original:
 
