@@ -6,7 +6,7 @@
  * Newcastle upon Tyne,
  * UK.
  *
- * $Id: c_unknown.cf,v 1.5 1995/02/01 10:15:08 ngdp Exp $
+ * $Id$
  */
 
 /*
@@ -28,8 +28,5 @@
  */
 
 /*
- * c_unknown.cf
+ * j_unknown.cf
  */
-
-#define COMPILER_SPECIFIC_FLAGS 
-#define STUBGEN_CC_FLAGS " "
