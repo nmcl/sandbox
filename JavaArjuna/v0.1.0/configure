@@ -50,9 +50,7 @@ VERBOSE_MAKE=NO
 TOPDIR_DEFAULT=`pwd`
 RPC_SYSTEM_TYPE_DEFAULT=RajdootAction
 JAVA_PROGRAM=javac
-CPLUSPLUS_NATIVE_COMPILER=
-CPPFLAGS_DEFAULT=
-CPLUSPLUSFLAGS_DEFAULT=
+JAVAFLAGS_DEFAULT=
 LIBRARIES_DEFAULT=
 LDFLAGS_DEFAULT=
 LEX_PROGRAM="lex"
@@ -157,10 +155,8 @@ SunOS|Solaris)
 	esac
 	;;
 HP-RT)	LDFLAGS_DEFAULT="+A"
-	CPLUSPLUS_NATIVE_COMPILER=CC
 	;;
-Linux)	CPLUSPLUS_NATIVE_COMPILER=g++
-	YACCFLAGS_DEFAULT=-y
+Linux)	YACCFLAGS_DEFAULT=-y
 	if test "$SUPPORT_THREADS" = "YES"
 	then
 		DEFAULT_THREAD_SYS="PosixThread"
@@ -168,12 +164,6 @@ Linux)	CPLUSPLUS_NATIVE_COMPILER=g++
 		LD_THREAD_OPT="-L/usr/local/pthreads/lib"
 		LD_THREAD_LIBS="-lpthread -lm"
 	fi
-	;;
-AIX)	CPLUSPLUS_NATIVE_COMPILER=xlC
-	;;
-OSF1)	CPLUSPLUS_NATIVE_COMPILER=cxx
-	;;
-ULTRIX)	CPLUSPLUS_NATIVE_COMPILER=cxx
 	;;
 esac
 
@@ -241,13 +231,6 @@ then
 		JAVA_PROGRAM=$TEMPVAR
 	fi
 
-	grep -s " CPPFLAGS_DEFAULT " $CACHED_SETUP > /dev/null 2>&1	
-	if test $? -eq 0
-	then
-		TEMPVAR=`awk '/ CPPFLAGS_DEFAULT / {for (i = 3; i <= NF; i++) print $i}' $CACHED_SETUP`
-		CPPFLAGS_DEFAULT=$TEMPVAR
-	fi
-	
 	grep -s " THREAD_CPPFLAGS_DEFAULT " $CACHED_SETUP > /dev/null 2>&1	
 	if test $? -eq 0
 	then
@@ -255,11 +238,11 @@ then
 		THREAD_CPPFLAGS=$TEMPVAR
 	fi
 	
-	grep -s " CPLUSPLUSFLAGS_DEFAULT " $CACHED_SETUP > /dev/null 2>&1	
+	grep -s " JAVAFLAGS_DEFAULT " $CACHED_SETUP > /dev/null 2>&1	
 	if test $? -eq 0
 	then
-		TEMPVAR=`awk '/ CPLUSPLUSFLAGS_DEFAULT / {for (i = 3; i <= NF; i++) print $i}' $CACHED_SETUP`
-		CPLUSPLUSFLAGS_DEFAULT=$TEMPVAR
+		TEMPVAR=`awk '/ JAVAFLAGS_DEFAULT / {for (i = 3; i <= NF; i++) print $i}' $CACHED_SETUP`
+		JAVAFLAGS_DEFAULT=$TEMPVAR
 	fi
 	
 	grep -s " COMPILER_THREAD_FLAGS_DEFAULT " $CACHED_SETUP > /dev/null 2>&1	
@@ -354,39 +337,6 @@ then
 	fi
 fi
 
-if test $NATIVE_OS != $OS -o $NATIVE_MACHINE != $MACHINE -o $NATIVE_RELEASE != $RELEASE
-then
-	echo "You appear to be cross-compiling..."
-	echo "Arjuna needs to compile its stub generation system for BOTH targets"
-	echo
-	CROSS_COMPILE="#define CROSS_COMPILE"
-	echo 'main(){}' > configtest.C
-	while true
-	do
-		echo $PRE_ECHO "$NATIVE_OS C++ compiler ["$CPLUSPLUS_NATIVE_COMPILER"] : " $POST_ECHO
-		read INPUT
-		echo
-		if test "'x$INPUT'" != "'x'"
-		then
-			CPLUSPLUS_NATIVE_COMPILER=$INPUT
-		fi
-		echo $PRE_ECHO "Checking for" $CPLUSPLUS_NATIVE_COMPILER "... " $POST_ECHO
-		($CPLUSPLUS_NATIVE_COMPILER -c configtest.C) > /dev/null 2>&1
-		if [ $? -ne 0 ]
-		then
-			echo done
-			echo I cannot find $CPLUSPLUS_NATIVE_COMPILER
-			echo
-			CPLUSPLUS_NATIVE_COMPILER=""
-		else
-			echo done
-			break
-		fi
-	done
-	echo
-	rm -f configtest.*
-fi
-
 echo 'public class test { public static void main (String[] args) {} }' > test.java
 while true
 do
@@ -418,85 +368,32 @@ rm -f test.*
 
 echo $PRE_ECHO "Determining java version ... " $POST_ECHO
 case "$JAVA_PROGRAM" in
-*gcc*|*g++*) version="`$JAVA_PROGRAM -v 2>&1 | grep version | sed 's/^[^0-9]*\([0-9.]*\).*/\1/'`"
+*javac*) version="`$JAVA_PROGRAM -version 2>&1 | grep javac | sed 's/^[^0-9]*\([0-9.]*\).*/\1/'`"
 	echo "done (version is" $version ")"
-	CPLUSPLUS_NAME="c_gcc"
-
-	case "$version" in
-	2.5*)	echo "WARNING gcc-2.5 has bugs that affect the linking of Arjuna applications."
-		echo "See README-GCC for details"
-		;;
-	2.6*)	echo "WARNING gcc-2.6 has bugs that affect the linking of Arjuna applications."
-		echo "See README-GCC for details"
-		;;
-	esac
-	LEX_PROGRAM=flex
-	YACC_PROGRAM=bison
-	if test "'x$COMPILER_THREAD_OPT'" = "'x-mt'"
-	then
-		COMPILER_THREAD_OPT=
-		LD_THREAD_OPT=
-		DEFAULT_THREAD_SYS=NoneThread
-	fi
+	JAVA_NAME="j"
 	;;
-*CC*)	echo 'int x;' > configtest.C 
-	CPLUSPLUS_NAME="c_att"
-	fullversion="`$JAVA_PROGRAM -V 2>&1| grep -v 'warning' | grep '^CC:'`"
-	if [ -z "$fullversion" ]
-	then
-		fullversion="`$JAVA_PROGRAM -F configtest.C 2>/dev/null| grep '<<' | sed -e 's|.*\(<<.*>>\).*|\1|'`"
-	fi
-	rm -f configtest.C
-
-	case "$fullversion" in
-	*SC*)version="`echo $fullversion | sed -e 's|.*\(SC[0-9.]*\).*|\1|'`";;
-	*AT*)version="`echo $fullversion | sed -e 's|<<[^0-9]*\([0-9.]*\).*>>|\1|'`" ;;
-	*Sun*)version="`echo $fullversion | sed -e 's|<<[^0-9]*\([0-9.]*\).*>>|\1|'`" ;;
-	*HP*)version="`echo $fullversion | sed -e 's|<<.*A\.\([0-9.]*\).*>>|A.\1|'`" ;;
-	*) version=unknown
-	esac
-
-	echo "done (version is" $fullversion ")"
-	case "$version" in
-	A.*)	CPLUSPLUS_NAME="c_att_hp" 
-		version=`echo $version | sed -e 's|A\.||'`
-		;;
-	SC3*)	CPLUSPLUS_NAME="c_sc"
-		version=`echo $version | sed -e 's|SC||'`
-		;;
-	esac
-	;;
-*cxx*)	echo 'int x;' > configtest.C 
-	fullversion="`$JAVA_PROGRAM -V 2>&1| grep '^[ 	]*DEC'`"
-	rm -f configtest.C
-
-	version="`echo $fullversion | sed -e 's|<<.*\([0-9.]*\).*|\1|'`" 
-
-	echo "done (version is" $fullversion ")"
-	CPLUSPLUS_NAME="c_cxx"
-	;;
-*)	CPLUSPLUS_NAME="c"
+*)	JAVA_NAME="j"
 	echo "done (version unknown)" 
 	;;
 esac
 
-CPLUSPLUS_MAJOR=`echo $version | sed 's|[^0-9]*\([0-9]*\).*|\1|'`
-CPLUSPLUS_MINOR=`echo $version | sed 's|[^0-9]*[0-9]*\.\([0-9]*\).*|\1|'`
-CPLUSPLUS_MINORMINOR=`echo $version | sed 's|[^0-9]*[0-9]*\.[0-0]*\.\([0-9]*\).*|\1|'`
+JAVA_MAJOR=`echo $version | sed 's|[^0-9]*\([0-9]*\).*|\1|'`
+JAVA_MINOR=`echo $version | sed 's|[^0-9]*[0-9]*\.\([0-9]*\).*|\1|'`
+JAVA_MINORMINOR=`echo $version | sed 's|[^0-9]*[0-9]*\.[0-0]*\.\([0-9]*\).*|\1|'`
 
-C_CONFIG=${CPLUSPLUS_NAME}_${CPLUSPLUS_MAJOR}_${CPLUSPLUS_MINOR}_${CPLUSPLUS_MINORMINOR}.cf
+C_CONFIG=${JAVA_NAME}_${JAVA_MAJOR}_${JAVA_MINOR}_${JAVA_MINORMINOR}.cf
 if [ -f $CONFIGDIR/$C_CONFIG ]; then
 	:
 else
-	C_CONFIG=${CPLUSPLUS_NAME}_${CPLUSPLUS_MAJOR}_${CPLUSPLUS_MINOR}.cf
+	C_CONFIG=${JAVA_NAME}_${JAVA_MAJOR}_${JAVA_MINOR}.cf
 	if [ -f $CONFIGDIR/$C_CONFIG ]; then
 		:
 	else
-		C_CONFIG=$CPLUSPLUS_NAME_${CPLUSPLUS_MAJOR}.cf
+		C_CONFIG=$JAVA_NAME_${JAVA_MAJOR}.cf
 		if [ -f $CONFIGDIR/$C_CONFIG ]; then
 			:
 		else
-			C_CONFIG=${CPLUSPLUS_NAME}_unknown.cf
+			C_CONFIG=${JAVA_NAME}_unknown.cf
 			echo "WARNING no compiler specific config file for this compiler!"
 		fi
 	fi
@@ -509,20 +406,6 @@ echo
 #
 # locate standard include directory via compiler
 #
-
-echo $PRE_ECHO "Finding standard C++ include directory ..." $POST_ECHO
-echo '#include <iostream.h>' > configtest.C
-CPLUSPLUS_INCLUDE_DEFAULT=`$JAVA_PROGRAM -E configtest.C | grep "/iostream.h" | head -1 |sed -e 's|[^"]*"\([^"]*\).*|\1|' -e 's|/iostream.h||'`
-rm -f configtest.C
-echo "done"
-echo
-echo $PRE_ECHO "C++ include directory ["$CPLUSPLUS_INCLUDE_DEFAULT"] : " $POST_ECHO
-read INPUT
-echo
-if test "'x$INPUT'" != "'x'"
-then  
-	CPLUSPLUS_INCLUDE_DEFAULT=$INPUT
-fi
 
 echo $PRE_ECHO "Which version of lex (lex/lex++/flex) ["$LEX_PROGRAM"] : " $POST_ECHO
 read INPUT
@@ -607,40 +490,6 @@ then
 	fi
 fi
 
-echo "Flags governing compilation:"
-echo "-DDEBUG                  Output various debugging information"
-echo "-DNO_INLINES             Disable inlining"
-echo "-DUSE_PURIFY             Enable purify checking (if available)"
-echo
-echo $PRE_ECHO "Additional CppFlags ["$CPPFLAGS_DEFAULT"] : " $POST_ECHO
-read INPUT
-echo
-if test "'x$INPUT'" != "'x'"
-then  
-	if test "'x$INPUT'" != "'xnone'"
-	then
-		CPPFLAGS_DEFAULT=$INPUT
-	else
-		CPPFLAGS_DEFAULT=
-	fi
-fi
-
-echo $CPPFLAGS_DEFAULT | grep -s PURIFY > /dev/null 2>&1
-if test $? -eq 0
-then
-	CPLUSPLUSFLAGS_DEFAULT=-g
-	LDFLAGS_DEFAULT=-g
-	echo $PRE_ECHO "purify program ["$PURIFY_PROGRAM"] : " $POST_ECHO
-	read INPUT
-	echo
-	if test "'x$INPUT'" != "'x'"
-	then  
-		PURIFY_PROGRAM=$INPUT
-	fi
-else
-	PURIFY_PROGRAM="exec"
-fi
-
 if test "$SUPPORT_THREADS" = "YES"
 then
 	echo $PRE_ECHO "Pre-Processor flags for thread support ["$THREAD_CPPFLAGS"] : " $POST_ECHO
@@ -709,16 +558,16 @@ then
 	fi
 fi
 
-echo $PRE_ECHO "Additional compilation flags for optimisation and/or debugging ["$CPLUSPLUSFLAGS_DEFAULT"] : " $POST_ECHO
+echo $PRE_ECHO "Additional compilation flags for optimisation and/or debugging ["$JAVAFLAGS_DEFAULT"] : " $POST_ECHO
 read INPUT
 echo
 if test "'x$INPUT'" != "'x'"
 then  
 	if test "'x$INPUT'" != "'xnone'"
 	then
-		CPLUSPLUSFLAGS_DEFAULT=$INPUT
+		JAVAFLAGS_DEFAULT=$INPUT
 	else
-		CPLUSPLUSFLAGS_DEFAULT=
+		JAVAFLAGS_DEFAULT=
 	fi
 fi
 
@@ -788,9 +637,6 @@ echo "#define OSMAJOR" $OSMAJOR
 echo "#define OSMINOR" $OSMINOR
 echo "#define MACHINE_HW" \"$MACHINE\"
 echo
-echo $CROSS_COMPILE
-echo "#define CPLUSPLUS_CROSS_PROGRAM" \"$CPLUSPLUS_NATIVE_COMPILER\"
-echo
 echo "#ifndef YES"
 echo "#define YES 1"
 echo "#endif"
@@ -839,16 +685,8 @@ echo "#ifndef JAVA_PROGRAM"
 echo "#define JAVA_PROGRAM " \"$JAVA_PROGRAM\"
 echo "#endif"
 echo
-echo "#ifndef CPLUSPLUS_INCLUDE_DEFAULT"
-echo "#define CPLUSPLUS_INCLUDE_DEFAULT "$CPLUSPLUS_INCLUDE_DEFAULT
-echo "#endif"
-echo
-echo "#ifndef CPPFLAGS_DEFAULT"
-echo "#define CPPFLAGS_DEFAULT "$CPPFLAGS_DEFAULT
-echo "#endif"
-echo
-echo "#ifndef CPLUSPLUSFLAGS_DEFAULT"
-echo "#define CPLUSPLUSFLAGS_DEFAULT "$CPLUSPLUSFLAGS_DEFAULT
+echo "#ifndef JAVAFLAGS_DEFAULT"
+echo "#define JAVAFLAGS_DEFAULT "$JAVAFLAGS_DEFAULT
 echo "#endif"
 echo
 echo "#ifndef LDFLAGS_DEFAULT"
