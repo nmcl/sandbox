@@ -53,13 +53,7 @@ JAVA_PROGRAM=javac
 JAVAFLAGS_DEFAULT=
 LIBRARIES_DEFAULT=
 LDFLAGS_DEFAULT=
-LEX_PROGRAM="lex"
-LEX_LIB=
-LEXFLAGS_DEFAULT=
 PURIFY_PROGRAM="purify"
-YACC_PROGRAM="yacc"
-YACCFLAGS_DEFAULT=
-YACC_LIB=
 ID_PROGRAM=id
 INSTALL_TOPDIR_DEFAULT=/usr/local/JavaArjuna
 HAVE_INTERVIEWS=NO
@@ -156,8 +150,7 @@ SunOS|Solaris)
 	;;
 HP-RT)	LDFLAGS_DEFAULT="+A"
 	;;
-Linux)	YACCFLAGS_DEFAULT=-y
-	if test "$SUPPORT_THREADS" = "YES"
+Linux)	if test "$SUPPORT_THREADS" = "YES"
 	then
 		DEFAULT_THREAD_SYS="PosixThread"
 		THREAD_CPPFLAGS="-I/usr/local/pthreads/include -DHAVE_POSIX_THREADS"
@@ -280,20 +273,6 @@ then
 		LIBRARIES_DEFAULT=$TEMPVAR
 	fi
 	
-	grep -s " LEX_LIBRARY " $CACHED_SETUP > /dev/null 2>&1	
-	if test $? -eq 0
-	then
-		TEMPVAR=`awk '/ LEX_LIBRARY / {print $3}' $CACHED_SETUP`
-		LEX_LIB=$TEMPVAR
-	fi
-	
-	grep -s " YACC_LIBRARY " $CACHED_SETUP > /dev/null 2>&1	
-	if test $? -eq 0
-	then
-		TEMPVAR=`awk '/ YACC_LIBRARY / {print $3}' $CACHED_SETUP`
-		YACC_LIB=$TEMPVAR
-	fi
-	
 	grep -s " THREAD_LDLIBS_DEFAULT " $CACHED_SETUP > /dev/null 2>&1	
 	if test $? -eq 0
 	then
@@ -301,34 +280,6 @@ then
 		LD_THREAD_LIBS=$TEMPVAR
 	fi
 	
-	grep -s " LEX_PROGRAM " $CACHED_SETUP > /dev/null 2>&1	
-	if test $? -eq 0
-	then
-		TEMPVAR=`awk -F\" '/LEX_PROGRAM / {print $2}' $CACHED_SETUP`
-		LEX_PROGRAM=$TEMPVAR
-	fi
-	
-	grep -s " LEXFLAGS_DEFAULT " $CACHED_SETUP > /dev/null 2>&1	
-	if test $? -eq 0
-	then
-		TEMPVAR=`awk '/ LEXFLAGS_DEFAULT / {for (i = 3; i <= NF; i++) print $i}' $CACHED_SETUP`
-		LEXFLAGS_DEFAULT=$TEMPVAR
-	fi
-	
-	grep -s " YACC_PROGRAM " $CACHED_SETUP > /dev/null 2>&1	
-	if test $? -eq 0
-	then
-		TEMPVAR=`awk -F\" '/YACC_PROGRAM / {print $2}' $CACHED_SETUP`
-		YACC_PROGRAM=$TEMPVAR
-	fi
-	
-	grep -s " YACCFLAGS_DEFAULT " $CACHED_SETUP > /dev/null 2>&1	
-	if test $? -eq 0
-	then
-		TEMPVAR=`awk '/ YACCFLAGS_DEFAULT / {for (i = 3; i <= NF; i++) print $i}' $CACHED_SETUP`
-		YACCFLAGS_DEFAULT=$TEMPVAR
-	fi
-
 	grep -s " HAVE_INTERVIEWS " $CACHED_SETUP > /dev/null 2>&1
 	if test $? -eq 0
 	then
@@ -402,93 +353,6 @@ fi
 echo
 echo "Using compiler config file " $C_CONFIG
 echo
-
-#
-# locate standard include directory via compiler
-#
-
-echo $PRE_ECHO "Which version of lex (lex/lex++/flex) ["$LEX_PROGRAM"] : " $POST_ECHO
-read INPUT
-echo
-if test "'x$INPUT'" != "'x'"
-then  
-	LEX_PROGRAM=$INPUT
-fi
-
-if test `basename "$LEX_PROGRAM"` = "flex"
-then
-	LEX_LIB=
-	YACC_PROGRAM=bison
-else
-	LEX_LIB=-ll
-fi
-
-echo $PRE_ECHO "lex flags ["$LEXFLAGS_DEFAULT"] : " $POST_ECHO
-read INPUT
-echo
-if test "'x$INPUT'" != "'x'"
-then  
-	if test "'x$INPUT'" != "'xnone'"
-	then
-		LEXFLAGS_DEFAULT=$INPUT
-	else
-		LEXFLAGS_DEFAULT=
-	fi
-fi
-
-echo $PRE_ECHO "lex library ["$LEX_LIB"] : " $POST_ECHO
-read INPUT
-echo
-if test "'x$INPUT'" != "'x'"
-then  
-	if test "'x$INPUT'" != "'xnone'"
-	then
-		LEX_LIB=$INPUT
-	else
-		LEX_LIB=
-	fi
-fi
-
-echo $PRE_ECHO "Which version of yacc (yacc/yacc++/bison) ["$YACC_PROGRAM"] : " $POST_ECHO
-read INPUT
-echo
-if test "'x$INPUT'" != "'x'"
-then  
-	YACC_PROGRAM=$INPUT
-fi
-
-if test `basename "$YACC_PROGRAM"` != "bison"
-then
-	YACC_LIB=-ly
-else
-	YACCFLAGS_DEFAULT=-y
-fi
-
-echo $PRE_ECHO "yacc flags ["$YACCFLAGS_DEFAULT"] : " $POST_ECHO
-read INPUT
-echo
-if test "'x$INPUT'" != "'x'"
-then  
-	if test "'x$INPUT'" != "'xnone'"
-	then
-		YACCFLAGS_DEFAULT=$INPUT
-	else
-		YACCFLAGS_DEFAULT=
-	fi
-fi
-
-echo $PRE_ECHO "yacc library ["$YACC_LIB"] : " $POST_ECHO
-read INPUT
-echo
-if test "'x$INPUT'" != "'x'"
-then  
-	if test "'x$INPUT'" != "'xnone'"
-	then
-		YACC_LIB=$INPUT
-	else
-		YACC_LIB=
-	fi
-fi
 
 if test "$SUPPORT_THREADS" = "YES"
 then
@@ -655,30 +519,6 @@ echo "#endif"
 echo
 echo "#ifndef PURIFY_PROGRAM"
 echo "#define PURIFY_PROGRAM " \"$PURIFY_PROGRAM\"
-echo "#endif"
-echo
-echo "#ifndef LEX_PROGRAM"
-echo "#define LEX_PROGRAM " \"$LEX_PROGRAM\"
-echo "#endif"
-echo
-echo "#ifndef LEXFLAGS_DEFAULT"
-echo "#define LEXFLAGS_DEFAULT "$LEXFLAGS_DEFAULT
-echo "#endif"
-echo
-echo "#ifndef LEX_LIBRARY"
-echo "#define LEX_LIBRARY "$LEX_LIB
-echo "#endif"
-echo
-echo "#ifndef YACC_PROGRAM"
-echo "#define YACC_PROGRAM " \"$YACC_PROGRAM\"
-echo "#endif"
-echo
-echo "#ifndef YACCFLAGS_DEFAULT"
-echo "#define YACCFLAGS_DEFAULT "$YACCFLAGS_DEFAULT
-echo "#endif"
-echo
-echo "#ifndef YACC_LIBRARY"
-echo "#define YACC_LIBRARY "$YACC_LIB
 echo "#endif"
 echo
 echo "#ifndef JAVA_PROGRAM"
