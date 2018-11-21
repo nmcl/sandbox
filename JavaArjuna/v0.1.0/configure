@@ -464,10 +464,7 @@ fi
 PATH_SIZE=10
 BROADCAST_NET="localnet"
 SERVER_LOCATION=$INSTALL_TOPDIR_DEFAULT"/servers"
-(
-echo "Creating Tests/MakefileBoot"
-sed -e "s;CONFIGDIRECTORY;$INSTALL_TOPDIR_DEFAULT/include;" < Tests/MakefileBoot.tmpl > Tests/MakefileBoot
-)
+
 (
 echo "/*"
 echo " * Copyright (C) 1993"
