@@ -17,8 +17,8 @@
 
 MAKE                  = make
 IMAKE                 = imake
-ARJUNA_IMAKE_INCLUDE  = Config
-ARJUNA_IMAKE_TEMPLATE = Arjuna.tmpl
+ARJUNA_IMAKE_INCLUDE  = Include
+ARJUNA_IMAKE_TEMPLATE = Config/Arjuna.tmpl
 
 ARJUNA_IMAKE_FLAGS    = 
 # ARJUNA_IMAKE_FLAGS  = "-DUseInstalled -DTOPDIR_DEFAULT=`pwd`"
