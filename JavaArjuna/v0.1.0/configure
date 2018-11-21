@@ -49,7 +49,7 @@ DEFAULT_THREAD_SYS=NoneThread
 VERBOSE_MAKE=NO
 TOPDIR_DEFAULT=`pwd`
 RPC_SYSTEM_TYPE_DEFAULT=RajdootAction
-CPLUSPLUS_PROGRAM=CC
+JAVA_PROGRAM=javac
 CPLUSPLUS_NATIVE_COMPILER=
 CPPFLAGS_DEFAULT=
 CPLUSPLUSFLAGS_DEFAULT=
@@ -157,11 +157,9 @@ SunOS|Solaris)
 	esac
 	;;
 HP-RT)	LDFLAGS_DEFAULT="+A"
-	CPLUSPLUS_PROGRAM=CCrt
 	CPLUSPLUS_NATIVE_COMPILER=CC
 	;;
-Linux)	CPLUSPLUS_PROGRAM=g++
-	CPLUSPLUS_NATIVE_COMPILER=g++
+Linux)	CPLUSPLUS_NATIVE_COMPILER=g++
 	YACCFLAGS_DEFAULT=-y
 	if test "$SUPPORT_THREADS" = "YES"
 	then
@@ -171,14 +169,11 @@ Linux)	CPLUSPLUS_PROGRAM=g++
 		LD_THREAD_LIBS="-lpthread -lm"
 	fi
 	;;
-AIX)	CPLUSPLUS_PROGRAM=xlC
-	CPLUSPLUS_NATIVE_COMPILER=xlC
+AIX)	CPLUSPLUS_NATIVE_COMPILER=xlC
 	;;
-OSF1)	CPLUSPLUS_PROGRAM=cxx
-	CPLUSPLUS_NATIVE_COMPILER=cxx
+OSF1)	CPLUSPLUS_NATIVE_COMPILER=cxx
 	;;
-ULTRIX)	CPLUSPLUS_PROGRAM=cxx
-	CPLUSPLUS_NATIVE_COMPILER=cxx
+ULTRIX)	CPLUSPLUS_NATIVE_COMPILER=cxx
 	;;
 esac
 
@@ -239,11 +234,11 @@ fi
 if test -n "$CACHED_SETUP"
 then
 	echo Using default answers from $CACHED_SETUP
-	grep -s " CPLUSPLUS_PROGRAM " $CACHED_SETUP > /dev/null 2>&1
+	grep -s " JAVA_PROGRAM " $CACHED_SETUP > /dev/null 2>&1
 	if test $? -eq 0
 	then
-		TEMPVAR=`awk -F\" '/CPLUSPLUS_PROGRAM / {print $2}' $CACHED_SETUP`
-		CPLUSPLUS_PROGRAM=$TEMPVAR
+		TEMPVAR=`awk -F\" '/JAVA_PROGRAM / {print $2}' $CACHED_SETUP`
+		JAVA_PROGRAM=$TEMPVAR
 	fi
 
 	grep -s " CPPFLAGS_DEFAULT " $CACHED_SETUP > /dev/null 2>&1	
@@ -392,38 +387,38 @@ then
 	rm -f configtest.*
 fi
 
-echo 'main(){}' > configtest.C
+echo 'public class test { public static void main (String[] args) {} }' > test.java
 while true
 do
-	echo $PRE_ECHO "$OS C++ compiler ["$CPLUSPLUS_PROGRAM"] : " $POST_ECHO
+	echo $PRE_ECHO "$OS javac ["$JAVA_PROGRAM"] : " $POST_ECHO
 	read INPUT
 	echo
 	if test "'x$INPUT'" != "'x'"
 	then  
-		CPLUSPLUS_PROGRAM=$INPUT
+		JAVA_PROGRAM=$INPUT
 	fi
-	echo $PRE_ECHO "Checking for" $CPLUSPLUS_PROGRAM "... " $POST_ECHO
-	($CPLUSPLUS_PROGRAM -c configtest.C) > /dev/null 2>&1
+	echo $PRE_ECHO "Checking for" $JAVA_PROGRAM "... " $POST_ECHO
+	($JAVA_PROGRAM test.java) > /dev/null 2>&1
 	if [ $? -ne 0 ]
 	then
 		echo done
-		echo I cannot find $CPLUSPLUS_PROGRAM
+		echo I cannot find $JAVA_PROGRAM
 		echo
-		CPLUSPLUS_PROGRAM=""
+		JAVA_PROGRAM=""
 	else
 		echo done
 		break
 	fi
 done
-rm -f configtest.*
+rm -f test.*
 
 #
 # Compiler version
 # 
 
-echo $PRE_ECHO "Determining C++ compiler version ... " $POST_ECHO
-case "$CPLUSPLUS_PROGRAM" in
-*gcc*|*g++*) version="`$CPLUSPLUS_PROGRAM -v 2>&1 | grep version | sed 's/^[^0-9]*\([0-9.]*\).*/\1/'`"
+echo $PRE_ECHO "Determining java version ... " $POST_ECHO
+case "$JAVA_PROGRAM" in
+*gcc*|*g++*) version="`$JAVA_PROGRAM -v 2>&1 | grep version | sed 's/^[^0-9]*\([0-9.]*\).*/\1/'`"
 	echo "done (version is" $version ")"
 	CPLUSPLUS_NAME="c_gcc"
 
@@ -446,10 +441,10 @@ case "$CPLUSPLUS_PROGRAM" in
 	;;
 *CC*)	echo 'int x;' > configtest.C 
 	CPLUSPLUS_NAME="c_att"
-	fullversion="`$CPLUSPLUS_PROGRAM -V 2>&1| grep -v 'warning' | grep '^CC:'`"
+	fullversion="`$JAVA_PROGRAM -V 2>&1| grep -v 'warning' | grep '^CC:'`"
 	if [ -z "$fullversion" ]
 	then
-		fullversion="`$CPLUSPLUS_PROGRAM -F configtest.C 2>/dev/null| grep '<<' | sed -e 's|.*\(<<.*>>\).*|\1|'`"
+		fullversion="`$JAVA_PROGRAM -F configtest.C 2>/dev/null| grep '<<' | sed -e 's|.*\(<<.*>>\).*|\1|'`"
 	fi
 	rm -f configtest.C
 
@@ -472,7 +467,7 @@ case "$CPLUSPLUS_PROGRAM" in
 	esac
 	;;
 *cxx*)	echo 'int x;' > configtest.C 
-	fullversion="`$CPLUSPLUS_PROGRAM -V 2>&1| grep '^[ 	]*DEC'`"
+	fullversion="`$JAVA_PROGRAM -V 2>&1| grep '^[ 	]*DEC'`"
 	rm -f configtest.C
 
 	version="`echo $fullversion | sed -e 's|<<.*\([0-9.]*\).*|\1|'`" 
@@ -517,7 +512,7 @@ echo
 
 echo $PRE_ECHO "Finding standard C++ include directory ..." $POST_ECHO
 echo '#include <iostream.h>' > configtest.C
-CPLUSPLUS_INCLUDE_DEFAULT=`$CPLUSPLUS_PROGRAM -E configtest.C | grep "/iostream.h" | head -1 |sed -e 's|[^"]*"\([^"]*\).*|\1|' -e 's|/iostream.h||'`
+CPLUSPLUS_INCLUDE_DEFAULT=`$JAVA_PROGRAM -E configtest.C | grep "/iostream.h" | head -1 |sed -e 's|[^"]*"\([^"]*\).*|\1|' -e 's|/iostream.h||'`
 rm -f configtest.C
 echo "done"
 echo
@@ -840,8 +835,8 @@ echo "#ifndef YACC_LIBRARY"
 echo "#define YACC_LIBRARY "$YACC_LIB
 echo "#endif"
 echo
-echo "#ifndef CPLUSPLUS_PROGRAM"
-echo "#define CPLUSPLUS_PROGRAM " \"$CPLUSPLUS_PROGRAM\"
+echo "#ifndef JAVA_PROGRAM"
+echo "#define JAVA_PROGRAM " \"$JAVA_PROGRAM\"
 echo "#endif"
 echo
 echo "#ifndef CPLUSPLUS_INCLUDE_DEFAULT"
