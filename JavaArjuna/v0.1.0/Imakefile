@@ -26,15 +26,10 @@ install.local :: INSTALL_TOPDIR_VAR
 install.local :: INSTALL_TOPDIR_VAR/servers
 	-CHMOD_VAR ugo+rwx INSTALL_TOPDIR_VAR/servers
 
-CreateInstallTopDirectory(servers)
 CreateInstallTopDirectory(lib)
 
-MakeRelDirectoryDependency(Config)
-MakeRelDirectoryDependency(Common)
-MakeRelDirectoryDependency(RPC)
-MakeRelDirectoryDependency(StubGen)
-MakeRelDirectoryDependency(Utilities)
-MakeRelDirectoryDependency(Tests)
+MakeRelDirectoryDependency(Include)
+MakeRelDirectoryDependency(classes)
+MakeRelDirectoryDependency(htdocs)
 MakeRelDirectoryDependency(lib)
-
-TidyTarget(Tests/MakefileBoot)
+MakeRelDirectoryDependency(tests)
