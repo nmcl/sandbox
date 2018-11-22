@@ -9,4 +9,5 @@ COMMENT
 COMMENT $Id: Imakefile,v 1.9.2.1 1999/01/28 19:00:16 nmcl Exp $
 COMMENT
 
+#define IHaveSubDirs
 SetSubDirectorys(ClassLib Common ObjectStore Thread)
