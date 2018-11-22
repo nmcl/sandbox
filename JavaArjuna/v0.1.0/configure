@@ -170,7 +170,7 @@ sun4*)
 sun3*)  M_CONFIG="m_68k.cf" 	
 	V_CONFIG="v_sun.cf" ;;
 alpha*)	M_CONFIG="m_alpha.cf" ;;
-i386*|i486*)
+i386*|i486*|x86*)
 	M_CONFIG="m_i386.cf" ;;
 RISC)	if [ $OS = "ULTRIX" ] 
 	then
