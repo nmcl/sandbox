@@ -24,7 +24,7 @@ InstallFile(include/Config,Rule.def)
 InstallFile(include/Config,StdParam.def)
 
 InstallFile(include/Config,j_11_0.cf)
-InstallFile(include/Config,j_1_8_0_66.cf)
+InstallFile(include/Config,j_1_8.cf)
 InstallFile(include/Config,j_unknown.cf)
 
 InstallFile(include/Config,m_alpha.cf)
