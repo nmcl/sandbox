@@ -85,6 +85,7 @@ Target($(SOURCE))
 Target($(OBJECTS))
 
 PreprocessJavaCode(AbstractRecord,NullParam)
+PreprocessJavaCode(BasicPersistentLockStore,NullParam)
 
 BuildJavaByteCode(BasicAction,NullParam)
 BuildJavaByteCode(AtomicAction,NullParam)

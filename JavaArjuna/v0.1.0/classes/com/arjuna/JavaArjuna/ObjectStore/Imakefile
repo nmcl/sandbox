@@ -32,6 +32,7 @@ OBJECTS = ObjectStoreSetup.class \
 Target($(SOURCES))
 Target($(OBJECTS))
 
+PreprocessJavaCode(ObjectStoreImple,NullParam)
 PreprocessJavaCode(ShadowingStore,NullParam)
 
 BuildJavaByteCode(ObjectStoreSetup,NullParam)

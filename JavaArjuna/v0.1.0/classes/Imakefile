@@ -9,10 +9,4 @@ COMMENT
 COMMENT $Id: Imakefile,v 1.4 1998/11/12 08:55:59 nmcl Exp $
 COMMENT
 
-SubDirectory(com)
-
-Target(JavaArjunaLite.jar)
-
-CreateJavaLibrary(JavaArjunaLite,com)
-
-InstallJavaLibrary(/lib,JavaArjunaLite)
+SetSubDirectorys(com)

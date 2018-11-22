@@ -9,28 +9,4 @@ COMMENT
 COMMENT $Id: Imakefile,v 1.9.2.1 1999/01/28 19:00:16 nmcl Exp $
 COMMENT
 
-SOURCES = JavaArjunaLiteNames.java \
-	  Atomic/AbstractRecord.java \
-	  Implementation/ObjectStore/ShadowingStore.java \
-	  Implementation/ObjectStoreImple.java \
-	  Implementation/LockStore/BasicPersistentLockStore.java
-
-OBJECTS = JavaArjunaLiteNames.class
-
-Target($(SOURCES))
-Target($(OBJECTS))
-
-SubDirectory(Thread)
-SubDirectory(Interface)
-SubDirectory(Common)
-SubDirectory(Atomic)
-SubDirectory(Implementation)
-
-PreprocessJavaCodeDir(Atomic,AbstractRecord,NullParam)
-PreprocessJavaCodeDir(Implementation,ObjectStoreImple,NullParam)
-PreprocessJavaCodeDir(Implementation/ObjectStore,ShadowingStore,NullParam)
-PreprocessJavaCodeDir(Implementation/LockStore,BasicPersistentLockStore,NullParam)
-
-BuildJavaByteCode(JavaArjunaLiteNames,NullParam)
-
-Clean(*.class)
+SetSubDirectorys(ClassLib Common ObjectStore Thread)
