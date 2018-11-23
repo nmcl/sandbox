@@ -10,6 +10,7 @@ COMMENT $Id: Imakefile,v 1.3 1998/02/23 13:48:03 nmcl Exp $
 COMMENT
 
 SOURCES = ObjectStoreSetup.java \
+	  ObjectStoreImple.java \
 	  StoreList.java \
 	  FileSystemStore.java \
 	  ActionStore.java \
@@ -17,9 +18,11 @@ SOURCES = ObjectStoreSetup.java \
 	  ShadowingStoreSetup.java \
 	  ActionStoreSetup.java \
 	  ShadowNoFileLockStore.java \
+	  ShadowingStore.java \
 	  ShadowNoFileLockStoreSetup.java
 
 OBJECTS = ObjectStoreSetup.class \
+	  ObjectStoreImple.class \
 	  FileSystemStore.class \
 	  ShadowingStore.class \
 	  ActionStore.class \
@@ -27,6 +30,7 @@ OBJECTS = ObjectStoreSetup.class \
 	  ShadowingStoreSetup.class \
 	  ActionStoreSetup.class \
 	  ShadowNoFileLockStore.class \
+	  ShadowingStore.class \
 	  ShadowNoFileLockStoreSetup.class
 
 AllTarget($(SOURCES) $(OBJECTS))

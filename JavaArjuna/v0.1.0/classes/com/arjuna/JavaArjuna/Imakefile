@@ -11,3 +11,9 @@ COMMENT
 
 #define IHaveSubDirs
 SetSubDirectorys(Common ClassLib ObjectStore Thread)
+
+SOURCES = ObjectStore/ObjectStoreImple.java
+
+AllTarget($(SOURCES))
+
+PreprocessJavaCode(ObjectStore/ObjectStoreImple,NOPARAM)

@@ -88,17 +88,32 @@ AllNames.html:		               			@@\
  *  Pre-process source for different versions of the jdk.
  */
 
+#ifndef PreprocessJavaCodeDir
+#define PreprocessJavaCodeDir(dir,file,flags)						@@\
+										@@\
+JAVA_SOURCE(dir/file): JAVATMPL_SOURCE(dir/file)					@@\
+	@echo Generating $@ from JAVATMPL_SOURCE(dir/file)        		        @@\
+	COMMAND_PREFIX(ln -s) JAVATMPL_SOURCE(file) CPLUSPLUS_SOURCE(file)	@@\
+	COMMAND_PREFIX(exec $(CPP)) -C -P $(CPPINCLUDES) $(CPPFLAGS) CPLUSPLUS_SOURCE(file) > JAVA_SOURCE(file)	@@\
+	COMMAND_PREFIX($(RM)) CPLUSPLUS_SOURCE(file)				@@\
+										@@\
+TidyTarget(file/**/.JAVA_SUFF CPLUSPLUS_SOURCE(file))
+#endif
+
+/*
+ *  Pre-process source for different versions of the jdk.
+ */
+
 #ifndef PreprocessJavaCode
 #define PreprocessJavaCode(file,flags)						@@\
 										@@\
 JAVA_SOURCE(file): JAVATMPL_SOURCE(file)					@@\
 	@echo Generating $@ from JAVATMPL_SOURCE(file)        		        @@\
-	COMMAND_PREFIX($(RM)) CPLUSPLUS_SOURCE(file)				@@\
 	COMMAND_PREFIX(ln -s) JAVATMPL_SOURCE(file) CPLUSPLUS_SOURCE(file)	@@\
 	COMMAND_PREFIX(exec $(CPP)) -C -P $(CPPINCLUDES) $(CPPFLAGS) CPLUSPLUS_SOURCE(file) > JAVA_SOURCE(file)	@@\
 	COMMAND_PREFIX($(RM)) CPLUSPLUS_SOURCE(file)				@@\
 										@@\
-TidyTarget(file/**/.JAVA_SUFF)
+TidyTarget(file/**/.JAVA_SUFF CPLUSPLUS_SOURCE(file))
 #endif
 
 /*

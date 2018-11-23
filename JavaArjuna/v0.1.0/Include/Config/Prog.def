@@ -29,6 +29,10 @@
 #define JAVAC_PROGRAM javac
 #endif
 
+#ifndef CPP_PROGRAM
+#define CPP_PROGRAM cpp
+#endif
+
 #ifndef MAKEDEPEND_PROGRAM
 #ifdef UseInstalled
 #define MAKEDEPEND_PROGRAM INSTALL_TOPDIR_VAR/bin/makedepend
