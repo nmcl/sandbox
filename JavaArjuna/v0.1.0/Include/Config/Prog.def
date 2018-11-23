@@ -25,6 +25,10 @@
 #define PURIFY_PROGRAM purify
 #endif
 
+#ifndef JAVAC_PROGRAM
+#define JAVAC_PROGRAM javac
+#endif
+
 #ifndef MAKEDEPEND_PROGRAM
 #ifdef UseInstalled
 #define MAKEDEPEND_PROGRAM INSTALL_TOPDIR_VAR/bin/makedepend

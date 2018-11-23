@@ -70,7 +70,7 @@ LOCAL_LEXFLAGS_DEFINE = flags
 #define BuildJavaByteCode(file,flags)                                 @@\
 Concat(file,.class): Concat(file,.java)                               @@\
 	@echo Generating Java bytecode Concat(file,.class)                 @@\
-	COMMAND_PREFIX($(JAVAC)) flags file.java
+	COMMAND_PREFIX($(JAVAC_DEFINE)) flags file.java
 #endif
 
 /*
