@@ -9,12 +9,12 @@
  * $Id: ObjectStoreIterator.java,v 1.4 1998/07/06 13:26:36 nmcl Exp $
  */
 
-package com.arjuna.JavaArjunaLite.Common;
+package com.arjuna.JavaArjuna.Common;
 
-import com.arjuna.JavaArjunaLite.Interface.ObjectStore;
+import com.arjuna.JavaArjuna.Interface.ObjectStore;
 import com.arjuna.JavaGandiva.Common.*;
 
-import com.arjuna.JavaArjunaLite.Common.ObjectStoreException;
+import com.arjuna.JavaArjuna.Common.ObjectStoreException;
 import java.io.IOException;
 
 public class ObjectStoreIterator

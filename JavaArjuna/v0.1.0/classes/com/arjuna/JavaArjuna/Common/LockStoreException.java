@@ -9,7 +9,7 @@
  * $Id: LockStoreException.java,v 1.3 1998/07/06 13:26:34 nmcl Exp $
  */
 
-package com.arjuna.JavaArjunaLite.Common;
+package com.arjuna.JavaArjuna.Common;
 
 import java.lang.Exception;
 
