@@ -1,0 +1,87 @@
+/*
+ * Copyright (C) 1996, 1997, 1998, 1999,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: Utility.javatmpl,v 1.2.2.1 1999/01/28 19:12:37 nmcl Exp $
+ */
+
+package com.arjuna.JavaGandiva.Common;
+
+import java.util.Properties;
+import java.io.*;
+
+import java.lang.NumberFormatException;
+import java.lang.StringIndexOutOfBoundsException;
+import java.io.IOException;
+import java.io.FileNotFoundException;
+
+/*
+ * Default visibility.
+ */
+
+public class Utility
+{
+
+    /*
+     * Read in the properties file, if present.
+     */
+
+public static synchronized void loadProperties ()
+    {
+	if (!loaded)
+	{
+	    String properties = System.getProperty("PROPERTIES_FILE", PROPERTIES_FILE);
+	    Properties props = new Properties(System.getProperties());
+	    
+	    try
+	    {
+		props.load(new BufferedInputStream(new FileInputStream(properties)));
+
+		System.setProperties(props);
+	    }
+	    catch (FileNotFoundException e1)
+	    {
+	    }
+	    catch (IOException e2)
+	    {
+	    }
+
+	    loaded = true;
+	}
+    }
+    
+    /*
+     * Convert integer to hex String.
+     */
+    
+public static String intToHexString (int number) throws NumberFormatException
+    {
+	return Integer.toString(number, 16);
+    }
+
+public static int hexStringToInt (String s) throws NumberFormatException
+    {
+	Integer i = Integer.valueOf(s, 16);
+
+	return i.intValue();
+    }
+
+public static String longToHexString (long number) throws NumberFormatException
+    {
+	return Long.toString(number, 16);
+    }
+
+public static long hexStringToLong (String s) throws NumberFormatException
+    {
+	Long i = Long.valueOf(s, 16);
+
+	return i.longValue();
+    }    
+
+private static boolean loaded = false;
+    
+}
