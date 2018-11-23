@@ -9,16 +9,12 @@
  * $Id: ObjectStore.java,v 1.7 1998/07/06 13:26:52 nmcl Exp $
  */
 
-package com.arjuna.JavaArjunaLite.Interface;
+package com.arjuna.JavaArjuna.ObjectStore;
 
-import com.arjuna.JavaArjunaLite.Implementation.ObjectStoreImple;
-import com.arjuna.JavaArjunaLite.Implementation.Implementations;
-import com.arjuna.JavaGandiva.Interface.Inventory;
-import com.arjuna.JavaGandiva.Common.*;
-import com.arjuna.JavaArjunaLite.JavaArjunaLiteNames;
+import com.arjuna.JavaArjuna.Common.*;
 import java.io.PrintStream;
 
-import com.arjuna.JavaArjunaLite.Common.ObjectStoreException;
+import com.arjuna.JavaArjuna.Common.ObjectStoreException;
 import java.io.IOException;
 
 public class ObjectStore
@@ -52,8 +48,11 @@ public ObjectStore (String location)
 	 * attribute of the object, or derived from the object's name.
 	 */
 
+	/*
+	 * https://github.com/nmcl/sandbox/issues/66
+
 	if (objectStoreType == null)
-	    objectStoreType = new ClassName(System.getProperty(JavaArjunaLiteNames.Interface_ObjectStore_storeType(), JavaArjunaLiteNames.Implementation_ObjectStore_defaultStore().stringForm()));
+	    objectStoreType = System.getProperty(JavaArjunaNames.Interface_ObjectStore_storeType(), JavaArjunaNames.Implementation_ObjectStore_defaultStore().stringForm());
 
 	Object[] param = new Object[1];
 	param[0] = location;
@@ -66,20 +65,13 @@ public ObjectStore (String location)
 	    _imple = (ObjectStoreImple) ptr;
 	else
 	    _imple = null;
+	*/
     }
     
-public ObjectStore (ClassName typeName)
+public ObjectStore (String typeName, String location)
     {
-	Object ptr = Inventory.inventory().createVoid(typeName);
-
-	if (ptr instanceof ObjectStoreImple)
-	    _imple = (ObjectStoreImple) ptr;
-	else
-	    _imple = null;
-    }
-    
-public ObjectStore (ClassName typeName, String location)
-    {
+	/*
+	 * https://github.com/nmcl/sandbox/issues/66
 	Object[] param = new Object[1];
 	param[0] = location;
 	
@@ -91,6 +83,7 @@ public ObjectStore (ClassName typeName, String location)
 	    _imple = (ObjectStoreImple) ptr;
 	else
 	    _imple = null;
+	*/
     }
 
 public void finalize ()
@@ -168,9 +161,9 @@ public synchronized boolean write_uncommitted (Uid u, String tn, OutputObjectSta
 	return ((_imple != null) ? _imple.write_uncommitted(u, tn, buff) : false);
     }
     
-public ClassName className ()
+public String className ()
     {
-	return ((_imple != null) ? _imple.className() : ClassName.invalid());
+	return ((_imple != null) ? _imple.className() : String.invalid());
     }
 
 public String locateStore (String location) throws ObjectStoreException
@@ -255,13 +248,6 @@ public static void printState (PrintStream strm, int res)
 
 private ObjectStoreImple _imple;
 
-private static ClassName objectStoreType = null;
-    
-    static 
-    {
-	if (!Implementations.added())
-	    Implementations.initialise();
-    }
+private static String objectStoreType = null;
     
 }
-

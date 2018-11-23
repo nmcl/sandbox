@@ -9,13 +9,13 @@
  * $Id: ObjectStoreImple.javatmpl,v 1.2 1998/08/13 14:31:37 nmcl Exp $
  */
 
-package com.arjuna.JavaArjunaLite.Implementation;
+package com.arjuna.JavaArjuna.Implementation;
 
-import com.arjuna.JavaArjunaLite.JavaArjunaLiteNames;
+import com.arjuna.JavaArjuna.JavaArjunaNames;
 import com.arjuna.JavaGandiva.Common.*;
 import java.io.File;
 
-import com.arjuna.JavaArjunaLite.Common.ObjectStoreException;
+import com.arjuna.JavaArjuna.Common.ObjectStoreException;
 import java.io.IOException;
 
 /*
@@ -52,11 +52,11 @@ public abstract boolean write_uncommitted (Uid u, String tn, OutputObjectState b
 
 public String locateStore (String location) throws ObjectStoreException
     {
-	String objectStoreRoot = System.getProperty(JavaArjunaLiteNames.Implementation_ObjectStore_storeRoot());
-	String finalLocation = System.getProperty(JavaArjunaLiteNames.Implementation_ObjectStore_storeDir(), DEFAULT_OS_ROOT);
+	String objectStoreRoot = System.getProperty(JavaArjunaNames.Implementation_ObjectStore_storeRoot());
+	String finalLocation = System.getProperty(JavaArjunaNames.Implementation_ObjectStore_storeDir(), DEFAULT_OS_ROOT);
 
 	if (finalLocation == null)
-	    throw new ObjectStoreException(JavaArjunaLiteNames.Implementation_ObjectStore_storeDir()+" not set.");
+	    throw new ObjectStoreException(JavaArjunaNames.Implementation_ObjectStore_storeDir()+" not set.");
 	
 	int len = finalLocation.length();
     
