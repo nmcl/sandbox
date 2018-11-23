@@ -44,4 +44,4 @@ BuildJavaByteCode(ActionStoreSetup,NOPARAM)
 BuildJavaByteCode(ShadowNoFileLockStore,NOPARAM)
 BuildJavaByteCode(ShadowNoFileLockStoreSetup,NOPARAM)
 
-Clean(*.class)
+TidyTarget(*.class)

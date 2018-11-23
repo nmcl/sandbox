@@ -90,7 +90,6 @@ AllNames.html:		               			@@\
 
 #ifndef PreprocessJavaCode
 #define PreprocessJavaCode(file,flags)						@@\
-Target(file/**/.JAVATMPL_SUFF)							@@\
 										@@\
 JAVA_SOURCE(file): JAVATMPL_SOURCE(file)					@@\
 	@echo Generating $@ from JAVATMPL_SOURCE(file)        		        @@\
@@ -99,8 +98,7 @@ JAVA_SOURCE(file): JAVATMPL_SOURCE(file)					@@\
 	COMMAND_PREFIX(exec $(CPP)) -C -P $(CPPINCLUDES) $(CPPFLAGS) CPLUSPLUS_SOURCE(file) > JAVA_SOURCE(file)	@@\
 	COMMAND_PREFIX($(RM)) CPLUSPLUS_SOURCE(file)				@@\
 										@@\
-Clean(file/**/.JAVA_SUFF)							@@\
-Clean(file/**/.cc)
+TidyTarget(file/**/.JAVA_SUFF)
 #endif
 
 /*
@@ -112,7 +110,7 @@ Clean(file/**/.cc)
 JAR_FILE(jarname): names							@@\
 	@echo Generating JAR_FILE(jarname) from names				@@\
 	COMMAND_PREFIX($(JAR)) -cf JAR_FILE(jarname) names			@@\
-Clean(JAR_FILE(jarname))
+TidyTarget(JAR_FILE(jarname))
 #endif
 
 #ifndef CreateJavaLibrary
@@ -121,7 +119,7 @@ JAR_FILE(jarname):								@@\
 	@echo Creating JAR_FILE(jarname)					@@\
 	COMMAND_PREFIX($(JAR)) -cvf JAR_FILE(jarname) `find dir -name "*.class" -print`	@@\
 										@@\
-Clean(JAR_FILE(jarname))
+TidyTarget(JAR_FILE(jarname))
 #endif
 
 /*

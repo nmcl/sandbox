@@ -23,4 +23,4 @@ BuildJavaByteCode(ObjectStoreIterator,NOPARAM)
 BuildJavaByteCode(LockStoreException,NOPARAM)
 BuildJavaByteCode(ObjectStoreException,NOPARAM)
 
-Clean(*.class)
+TidyTarget(*.class)

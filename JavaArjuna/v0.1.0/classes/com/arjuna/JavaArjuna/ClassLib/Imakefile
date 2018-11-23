@@ -122,4 +122,4 @@ BuildJavaByteCode(ObjectModel,NOPARAM)
 BuildJavaByteCode(StateManagerAttribute,NOPARAM)
 BuildJavaByteCode(LockManagerAttribute,NOPARAM)
 
-Clean(*.class)
+TidyTarget(*.class)

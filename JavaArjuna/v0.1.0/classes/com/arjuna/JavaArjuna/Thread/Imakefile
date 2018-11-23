@@ -23,5 +23,5 @@ BuildJavaByteCode(ThreadData,NOPARAM)
 BuildJavaByteCode(ThreadActionData,NOPARAM)
 BuildJavaByteCode(TransactionalThread,NOPARAM)
 
-Clean(*.class)
+TidyTarget(*.class)
 
