@@ -9,7 +9,7 @@
  * $Id: FileLock.java,v 1.2 1998/07/06 13:30:45 nmcl Exp $
  */
 
-package com.arjuna.JavaGandiva.Common;
+package com.arjuna.JavaArjuna.Common;
 
 import java.io.*;
 

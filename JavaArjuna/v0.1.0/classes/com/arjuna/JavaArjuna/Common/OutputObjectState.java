@@ -9,7 +9,7 @@
  * $Id: OutputObjectState.java,v 1.4 1998/07/15 15:31:24 nmcl Exp $
  */
 
-package com.arjuna.JavaGandiva.Common;
+package com.arjuna.JavaArjuna.Common;
 
 import java.io.PrintStream;
 

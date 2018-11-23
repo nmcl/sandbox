@@ -9,7 +9,7 @@
  * $Id: OutputBuffer.java,v 1.7.2.1 1999/02/17 15:19:52 nmcl Exp $
  */
 
-package com.arjuna.JavaGandiva.Common;
+package com.arjuna.JavaArjuna.Common;
 
 import java.io.*;
 

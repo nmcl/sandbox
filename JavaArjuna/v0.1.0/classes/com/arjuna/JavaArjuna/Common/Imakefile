@@ -11,16 +11,44 @@ COMMENT
 
 SOURCES = ObjectStoreIterator.java \
 	  ObjectStoreException.java \
-	  LockStoreException.java
+	  LockStoreException.java \
+	  FileLock.java \
+	  InputBuffer.java \
+	  InputObjectState.java \
+	  OutputBuffer.java \
+	  OutputObjectState.java \
+	  Uid.java \
+	  UidException.java \
+	  Utility.java
 
 OBJECTS = ObjectStoreIterator.class \
 	  ObjectStoreException.class \
-	  LockStoreException.class
+	  LockStoreException.class \
+	  FileLock.class \
+	  InputBuffer.class \
+	  InputObjectState.class \
+	  OutputBuffer.class \
+	  OutputObjectState.class \
+	  Uid.class \
+	  UidException.class \
+	  Utility.class
 
-AllTarget($(OBJECTS))
+AllTarget($(SOURCES) $(OBJECTS))
+
+PreprocessJavaCode(InputBuffer,NOPARAM)
+PreprocessJavaCode(Uid,NOPARAM)
+PreprocessJavaCode(Utility,NOPARAM)
 
 BuildJavaByteCode(ObjectStoreIterator,NOPARAM)
 BuildJavaByteCode(LockStoreException,NOPARAM)
 BuildJavaByteCode(ObjectStoreException,NOPARAM)
+BuildJavaByteCode(FileLock,NOPARAM)
+BuildJavaByteCode(InputBuffer,NOPARAM)
+BuildJavaByteCode(InputObjectState,NOPARAM)
+BuildJavaByteCode(OutputBuffer,NOPARAM)
+BuildJavaByteCode(OutputObjectState,NOPARAM)
+BuildJavaByteCode(Uid,NOPARAM)
+BuildJavaByteCode(UidException,NOPARAM)
+BuildJavaByteCode(Utility,NOPARAM)
 
 TidyTarget(*.class)

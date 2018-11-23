@@ -9,7 +9,7 @@
  * $Id: Uid.javatmpl,v 1.11.2.1 1999/02/17 15:19:53 nmcl Exp $
  */
 
-package com.arjuna.JavaGandiva.Common;
+package com.arjuna.JavaArjuna.Common;
 
 import java.net.InetAddress;
 import java.lang.Math;

@@ -9,7 +9,7 @@
  * $Id: InputBuffer.javatmpl,v 1.6 1998/07/31 15:13:37 nmcl Exp $
  */
 
-package com.arjuna.JavaGandiva.Common;
+package com.arjuna.JavaArjuna.Common;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;

@@ -9,7 +9,7 @@
  * $Id: Utility.javatmpl,v 1.2.2.1 1999/01/28 19:12:37 nmcl Exp $
  */
 
-package com.arjuna.JavaGandiva.Common;
+package com.arjuna.JavaArjuna.Common;
 
 import java.util.Properties;
 import java.io.*;

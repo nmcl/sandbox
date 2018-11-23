@@ -11,7 +11,7 @@
 
 package com.arjuna.JavaArjuna.Common;
 
-import com.arjuna.JavaArjuna.Interface.ObjectStore;
+import com.arjuna.JavaArjuna.ObjectStore.ObjectStore;
 import com.arjuna.JavaGandiva.Common.*;
 
 import com.arjuna.JavaArjuna.Common.ObjectStoreException;
