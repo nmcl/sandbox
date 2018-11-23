@@ -63,6 +63,68 @@ LOCAL_LEXFLAGS_DEFINE = flags
 #endif
 
 /*
+ *  Generate Java byte-code
+ */
+
+#ifndef BuildJavaByteCode
+#define BuildJavaByteCode(file,flags)                                 @@\
+Concat(file,.class): Concat(file,.java)                               @@\
+	@echo Generating Java bytecode Concat(file,.class)                 @@\
+	COMMAND_PREFIX($(JAVAC)) flags file.java
+#endif
+
+/*
+ * Create java documentation.
+ */
+
+#ifndef GenerateJavaDocs
+#define GenerateJavaDocs(package,flags)  	        @@\
+AllNames.html:		               			@@\
+	@echo Generating Java documentation for package	@@\
+	COMMAND_PREFIX($(JAVADOC)) flags package
+#endif
+
+/*
+ *  Pre-process source for different versions of the jdk.
+ */
+
+#ifndef PreprocessJavaCode
+#define PreprocessJavaCode(file,flags)						@@\
+Target(file/**/.JAVATMPL_SUFF)							@@\
+										@@\
+JAVA_SOURCE(file): JAVATMPL_SOURCE(file)					@@\
+	@echo Generating $@ from JAVATMPL_SOURCE(file)        		        @@\
+	COMMAND_PREFIX($(RM)) CPLUSPLUS_SOURCE(file)				@@\
+	COMMAND_PREFIX(ln -s) JAVATMPL_SOURCE(file) CPLUSPLUS_SOURCE(file)	@@\
+	COMMAND_PREFIX(exec $(CPP)) -C -P $(CPPINCLUDES) $(CPPFLAGS) CPLUSPLUS_SOURCE(file) > JAVA_SOURCE(file)	@@\
+	COMMAND_PREFIX($(RM)) CPLUSPLUS_SOURCE(file)				@@\
+										@@\
+Clean(file/**/.JAVA_SUFF)							@@\
+Clean(file/**/.cc)
+#endif
+
+/*
+ *  Create a jar archive.
+ */
+
+#ifndef CreateJar
+#define CreateJar(jarname,names)						@@\
+JAR_FILE(jarname): names							@@\
+	@echo Generating JAR_FILE(jarname) from names				@@\
+	COMMAND_PREFIX($(JAR)) -cf JAR_FILE(jarname) names			@@\
+Clean(JAR_FILE(jarname))
+#endif
+
+#ifndef CreateJavaLibrary
+#define CreateJavaLibrary(jarname,dir)						@@\
+JAR_FILE(jarname):								@@\
+	@echo Creating JAR_FILE(jarname)					@@\
+	COMMAND_PREFIX($(JAR)) -cvf JAR_FILE(jarname) `find dir -name "*.class" -print`	@@\
+										@@\
+Clean(JAR_FILE(jarname))
+#endif
+
+/*
  *
  */
 

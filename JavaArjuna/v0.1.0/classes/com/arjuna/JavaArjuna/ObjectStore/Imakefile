@@ -29,20 +29,19 @@ OBJECTS = ObjectStoreSetup.class \
 	  ShadowNoFileLockStore.class \
 	  ShadowNoFileLockStoreSetup.class
 
-Target($(SOURCES))
-Target($(OBJECTS))
+AllTarget($(SOURCES) $(OBJECTS))
 
-PreprocessJavaCode(ObjectStoreImple,NullParam)
-PreprocessJavaCode(ShadowingStore,NullParam)
+PreprocessJavaCode(ObjectStoreImple,NOPARAM)
+PreprocessJavaCode(ShadowingStore,NOPARAM)
 
-BuildJavaByteCode(ObjectStoreSetup,NullParam)
-BuildJavaByteCode(StoreList,NullParam)
-BuildJavaByteCode(FileSystemStore,NullParam)
-BuildJavaByteCode(ActionStore,NullParam)
-BuildJavaByteCode(ShadowingStore,NullParam)
-BuildJavaByteCode(ShadowingStoreSetup,NullParam)
-BuildJavaByteCode(ActionStoreSetup,NullParam)
-BuildJavaByteCode(ShadowNoFileLockStore,NullParam)
-BuildJavaByteCode(ShadowNoFileLockStoreSetup,NullParam)
+BuildJavaByteCode(ObjectStoreSetup,NOPARAM)
+BuildJavaByteCode(StoreList,NOPARAM)
+BuildJavaByteCode(FileSystemStore,NOPARAM)
+BuildJavaByteCode(ActionStore,NOPARAM)
+BuildJavaByteCode(ShadowingStore,NOPARAM)
+BuildJavaByteCode(ShadowingStoreSetup,NOPARAM)
+BuildJavaByteCode(ActionStoreSetup,NOPARAM)
+BuildJavaByteCode(ShadowNoFileLockStore,NOPARAM)
+BuildJavaByteCode(ShadowNoFileLockStoreSetup,NOPARAM)
 
 Clean(*.class)

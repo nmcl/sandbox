@@ -17,11 +17,11 @@ OBJECTS = ThreadData.class \
 	  ThreadActionData.class \
 	  TransactionalThread.class
 
-Target($(OBJECTS))
+AllTarget($(OBJECTS))
 
-BuildJavaByteCode(ThreadData,NullParam)
-BuildJavaByteCode(ThreadActionData,NullParam)
-BuildJavaByteCode(TransactionalThread,NullParam)
+BuildJavaByteCode(ThreadData,NOPARAM)
+BuildJavaByteCode(ThreadActionData,NOPARAM)
+BuildJavaByteCode(TransactionalThread,NOPARAM)
 
 Clean(*.class)
 

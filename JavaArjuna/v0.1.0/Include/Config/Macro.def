@@ -36,4 +36,36 @@
 #define NOPARAM
 #endif
 
+#ifndef JAVA_SUFF
+#  define JAVA_SUFF java
+#endif
+
+#ifndef CLASS_SUFF
+#  define CLASS_SUFF class
+#endif
+
+#ifndef JAVATMPL_SUFF
+#  define JAVATMPL_SUFF javatmpl
+#endif
+
+#ifndef JAR_SUFF
+#  define JAR_SUFF jar
+#endif
+
+#ifndef JAVA_SOURCE
+#  define JAVA_SOURCE(file) Concat(file,.java)
+#endif
+
+#ifndef JAVA_CLASS
+#  define JAVA_CLASS(file) Concat(file,.class)
+#endif
+
+#ifndef JAVATMPL_SOURCE
+#  define JAVATMPL_SOURCE(root) Concat(root,.JAVATMPL_SUFF)
+#endif
+
+#ifndef JAR_FILE
+#  define JAR_FILE(root) Concat(root,.JAR_SUFF)
+#endif
+
 #endif
