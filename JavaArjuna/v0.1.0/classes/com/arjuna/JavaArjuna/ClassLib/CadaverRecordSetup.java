@@ -9,13 +9,7 @@
  * $Id: CadaverRecordSetup.java,v 1.3 1998/07/06 13:26:39 nmcl Exp $
  */
 
-package com.arjuna.JavaArjunaLite.Implementation.AbstractRecord;
-
-import com.arjuna.JavaArjunaLite.JavaArjunaLiteNames;
-import com.arjuna.JavaArjunaLite.Atomic.CadaverRecord;
-import com.arjuna.JavaGandiva.Common.ClassName;
-import com.arjuna.JavaGandiva.Common.ObjectName;
-import com.arjuna.JavaGandiva.Base.InventoryElement;
+package com.arjuna.JavaArjunaLite.ClassLib;
 
 public class CadaverRecordSetup implements InventoryElement
 {

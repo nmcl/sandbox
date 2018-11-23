@@ -9,14 +9,13 @@
  * $Id: AtomicAction.java,v 1.13 1998/08/13 14:31:33 nmcl Exp $
  */
 
-package com.arjuna.JavaArjunaLite.Atomic;
+package com.arjuna.JavaArjuna.Atomic;
 
-import com.arjuna.JavaArjunaLite.Interface.ObjectStore;
-import com.arjuna.JavaArjunaLite.Thread.*;
-import com.arjuna.JavaGandiva.Interface.Inventory;
-import com.arjuna.JavaGandiva.Common.*;
+import com.arjuna.JavaArjuna.ObjectStore.ObjectStore;
+import com.arjuna.JavaArjuna.Thread.*;
+import com.arjuna.JavaArjuna.Common.*;
 
-import com.arjuna.JavaArjunaLite.Common.ObjectStoreException;
+import com.arjuna.JavaArjuna.Common.ObjectStoreException;
 import java.lang.NumberFormatException;
 import java.lang.InterruptedException;
 import java.io.IOException;

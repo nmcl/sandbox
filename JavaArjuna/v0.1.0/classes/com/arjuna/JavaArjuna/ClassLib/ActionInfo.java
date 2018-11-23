@@ -9,9 +9,9 @@
  * $Id: ActionInfo.java,v 1.6 1998/07/06 13:26:11 nmcl Exp $
  */
 
-package com.arjuna.JavaArjunaLite.Atomic;
+package com.arjuna.JavaArjuna.ClassLib;
 
-import com.arjuna.JavaGandiva.Common.Uid;
+import com.arjuna.JavaArjuna.Common.Uid;
 
 /*
  * Default visibility.

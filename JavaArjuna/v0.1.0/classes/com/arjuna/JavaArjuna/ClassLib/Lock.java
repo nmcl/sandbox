@@ -9,9 +9,9 @@
  * $Id: Lock.java,v 1.9.2.1 1999/02/05 09:52:38 nmcl Exp $
  */
 
-package com.arjuna.JavaArjunaLite.Atomic;
+package com.arjuna.JavaArjuna.ClassLib;
 
-import com.arjuna.JavaGandiva.Common.*;
+import com.arjuna.JavaArjuna.Common.*;
 import java.io.PrintStream;
 
 import java.io.IOException;

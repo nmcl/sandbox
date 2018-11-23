@@ -9,15 +9,14 @@
  * $Id: BasicPersistentLockStore.javatmpl,v 1.1 1998/08/13 14:31:37 nmcl Exp $
  */
 
-package com.arjuna.JavaArjunaLite.Implementation.LockStore;
+package com.arjuna.JavaArjuna.ClassLib;
 
-import com.arjuna.JavaArjunaLite.JavaArjunaLiteNames;
-import com.arjuna.JavaArjunaLite.Implementation.LockStoreImple;
-import com.arjuna.JavaArjunaLite.Interface.ObjectStore;
-import com.arjuna.JavaGandiva.Common.*;
+import com.arjuna.JavaArjuna.ClassLib.LockStoreImple;
+import com.arjuna.JavaArjuna.ObjectStore.ObjectStore;
+import com.arjuna.JavaArjuna.Common.*;
 
-import com.arjuna.JavaArjunaLite.Common.ObjectStoreException;
-import com.arjuna.JavaArjunaLite.Common.LockStoreException;
+import com.arjuna.JavaArjuna.Common.ObjectStoreException;
+import com.arjuna.JavaArjuna.Common.LockStoreException;
 
 public class BasicPersistentLockStore extends LockStoreImple
 {
@@ -30,7 +29,7 @@ public class BasicPersistentLockStore extends LockStoreImple
 public BasicPersistentLockStore (String key)
     {
 	if (lockStoreLocation == null)
-	    lockStoreLocation = System.getProperty(JavaArjunaLiteNames.Implementation_LockStore_storeDir(), DEFAULT_LS_ROOT);
+	    lockStoreLocation = System.getProperty(JavaArjunaNames.Implementation_LockStore_storeDir(), DEFAULT_LS_ROOT);
 	
 	_key = lockStoreLocation;
 
@@ -40,7 +39,7 @@ public BasicPersistentLockStore (String key)
 	 * entirely by the object.
 	 */
 	
-	_lockStore = new ObjectStore(JavaArjunaLiteNames.Implementation_ObjectStore_ShadowingStore(), _key);
+	_lockStore = new ObjectStore(JavaArjunaNames.Implementation_ObjectStore_ShadowingStore(), _key);
     }
 
 public InputObjectState read_state (Uid u, String tName) throws LockStoreException
@@ -81,12 +80,12 @@ public boolean write_committed (Uid u, String tName, OutputObjectState state)
 
 public ClassName className ()
     {
-	return JavaArjunaLiteNames.Implementation_LockStore_BasicPersistentLockStore();
+	return JavaArjunaNames.Implementation_LockStore_BasicPersistentLockStore();
     }
 
 public static ClassName name ()
     {
-	return JavaArjunaLiteNames.Implementation_LockStore_BasicPersistentLockStore();
+	return JavaArjunaNames.Implementation_LockStore_BasicPersistentLockStore();
     }    
 
 public static final BasicPersistentLockStore create (Object[] param)
