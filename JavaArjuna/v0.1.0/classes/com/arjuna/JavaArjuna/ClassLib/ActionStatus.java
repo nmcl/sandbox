@@ -9,7 +9,7 @@
  * $Id: ActionStatus.java,v 1.5 1998/07/15 15:34:12 nmcl Exp $
  */
 
-package com.arjuna.JavaArjunaLite.Atomic;
+package com.arjuna.JavaArjuna.Atomic;
 
 import java.io.PrintStream;
 
