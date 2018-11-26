@@ -16,4 +16,4 @@ SOURCES = ObjectStore/ObjectStoreImple.java
 
 AllTarget($(SOURCES))
 
-PreprocessJavaCode(ObjectStore/ObjectStoreImple,NOPARAM)
+PreprocessJavaCodeDir(ObjectStore,ObjectStoreImple,NOPARAM)
