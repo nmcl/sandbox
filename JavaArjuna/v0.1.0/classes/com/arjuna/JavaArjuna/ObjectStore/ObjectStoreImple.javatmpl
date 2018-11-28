@@ -71,8 +71,11 @@ public String locateStore (String location) throws ObjectStoreException
 	 * We use the classname of the object store implementation to locate
 	 * specify the directory for the object store.
 	 */
-	
+
+	 /*
+	 * https://github.com/nmcl/sandbox/issues/66
 	finalLocation = finalLocation + className().stringForm();
+	*/
 	
 	if ((location == null) || (location.length() == 0))
 	{
