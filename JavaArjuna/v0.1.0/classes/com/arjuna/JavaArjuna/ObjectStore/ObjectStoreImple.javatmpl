@@ -9,10 +9,9 @@
  * $Id: ObjectStoreImple.javatmpl,v 1.2 1998/08/13 14:31:37 nmcl Exp $
  */
 
-package com.arjuna.JavaArjuna.Implementation;
+package com.arjuna.JavaArjuna.ObjectStore;
 
-import com.arjuna.JavaArjuna.JavaArjunaNames;
-import com.arjuna.JavaGandiva.Common.*;
+import com.arjuna.JavaArjuna.Common.*;
 import java.io.File;
 
 import com.arjuna.JavaArjuna.Common.ObjectStoreException;
@@ -136,22 +135,10 @@ public void unpack (InputBuffer buff) throws IOException
     {
     }
 
-public ClassName className ()
-    {
-	return ObjectStoreImple._className;
-    }
-
-public static ClassName name ()
-    {
-	return ObjectStoreImple._className;
-    }
-    
 protected ObjectStoreImple ()
     {
     }
 
 protected abstract boolean supressEntry (String name);
 
-private static final ClassName _className = new ClassName("ObjectStoreImple");
-    
 }
