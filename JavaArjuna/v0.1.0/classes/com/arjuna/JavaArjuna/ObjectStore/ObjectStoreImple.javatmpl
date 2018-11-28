@@ -51,11 +51,16 @@ public abstract boolean write_uncommitted (Uid u, String tn, OutputObjectState b
 
 public String locateStore (String location) throws ObjectStoreException
     {
-	String objectStoreRoot = System.getProperty(JavaArjunaNames.Implementation_ObjectStore_storeRoot());
-	String finalLocation = System.getProperty(JavaArjunaNames.Implementation_ObjectStore_storeDir(), DEFAULT_OS_ROOT);
+	String objectStoreRoot = null; 	/*
+	 * https://github.com/nmcl/sandbox/issues/66 System.getProperty(JavaArjunaNames.Implementation_ObjectStore_storeRoot());*/
+	String finalLocation = null; 	/*
+	 * https://github.com/nmcl/sandbox/issues/66 System.getProperty(JavaArjunaNames.Implementation_ObjectStore_storeDir(), DEFAULT_OS_ROOT);*/
 
+	/*
+	 * https://github.com/nmcl/sandbox/issues/66
 	if (finalLocation == null)
 	    throw new ObjectStoreException(JavaArjunaNames.Implementation_ObjectStore_storeDir()+" not set.");
+	*/
 	
 	int len = finalLocation.length();
     
