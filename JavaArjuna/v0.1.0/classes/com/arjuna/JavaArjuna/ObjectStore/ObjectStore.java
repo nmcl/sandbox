@@ -161,11 +161,6 @@ public synchronized boolean write_uncommitted (Uid u, String tn, OutputObjectSta
 	return ((_imple != null) ? _imple.write_uncommitted(u, tn, buff) : false);
     }
     
-public String className ()
-    {
-	return ((_imple != null) ? _imple.className() : String.invalid());
-    }
-
 public String locateStore (String location) throws ObjectStoreException
     {
 	return ((_imple != null) ? _imple.locateStore(location) : null);
