@@ -56,6 +56,7 @@ LDFLAGS_DEFAULT=
 PURIFY_PROGRAM="purify"
 ID_PROGRAM=id
 INSTALL_TOPDIR_DEFAULT=/usr/local/JavaArjuna
+PROPERTIES_FILE_DEFAULT=/usr/local/JavaArjuna/javaarjuna-properties
 HAVE_INTERVIEWS=NO
 
 CONFIGDIR=Include/Config
@@ -198,6 +199,14 @@ echo
 if test "'x$INPUT'" != "'x'"
 then  
 	INSTALL_TOPDIR_DEFAULT=$INPUT
+fi
+
+echo $PRE_ECHO "Property file location ["$INSTALL_TOPDIR_DEFAULT"/javaarjuna-properties] : " $POST_ECHO
+read INPUT
+echo
+if test "'x$INPUT'" != "'x'"
+then  
+	PROPERTIES_FILE_DEFAULT=$INPUT
 fi
 
 #
@@ -568,6 +577,10 @@ echo " */"
 echo
 echo "#ifndef INSTALL_TOPDIR_DEFAULT"
 echo "#define INSTALL_TOPDIR_DEFAULT "$INSTALL_TOPDIR_DEFAULT
+echo "#endif"
+echo
+echo "#ifndef PROPERTIES_FILE"
+echo "#define PROPERTIES_FILE "$PROPERTIES_FILE_DEFAULT
 echo "#endif"
 echo
 echo "/*"
