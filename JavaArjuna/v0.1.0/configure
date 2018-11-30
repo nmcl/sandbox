@@ -528,8 +528,8 @@ echo "#ifndef PURIFY_PROGRAM"
 echo "#define PURIFY_PROGRAM " \"$PURIFY_PROGRAM\"
 echo "#endif"
 echo
-echo "#ifndef PROPERTY_FILE"
-echo "#define PROPERTY_FILE "\"$PROPERTIES_FILE_DEFAULT\"
+echo "#ifndef PROPERTIES_FILE"
+echo "#define PROPERTIES_FILE "\"$PROPERTIES_FILE_DEFAULT\"
 echo "#endif"
 echo
 echo "#ifndef JAVAC_PROGRAM"
