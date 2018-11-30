@@ -42,6 +42,7 @@ NATIVE_RELEASE=$RELEASE
 CROSS_COMPILE=
 SUPPORT_THREADS=
 THREAD_CPPFLAGS=
+CPPFLAGS=
 COMPILER_THREAD_OPT=
 LD_THREAD_OPT=
 LD_THREAD_LIBS=
@@ -527,6 +528,10 @@ echo "#ifndef PURIFY_PROGRAM"
 echo "#define PURIFY_PROGRAM " \"$PURIFY_PROGRAM\"
 echo "#endif"
 echo
+echo "#ifndef PROPERTY_FILE"
+echo "#define PROPERTY_FILE "\"$PROPERTIES_FILE_DEFAULT\"
+echo "#endif"
+echo
 echo "#ifndef JAVAC_PROGRAM"
 echo "#define JAVAC_PROGRAM " \"$JAVAC_PROGRAM\"
 echo "#endif"
@@ -577,10 +582,6 @@ echo " */"
 echo
 echo "#ifndef INSTALL_TOPDIR_DEFAULT"
 echo "#define INSTALL_TOPDIR_DEFAULT "$INSTALL_TOPDIR_DEFAULT
-echo "#endif"
-echo
-echo "#ifndef PROPERTIES_FILE"
-echo "#define PROPERTIES_FILE "$PROPERTIES_FILE_DEFAULT
 echo "#endif"
 echo
 echo "/*"
