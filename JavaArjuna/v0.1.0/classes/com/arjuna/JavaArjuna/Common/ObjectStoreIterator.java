@@ -12,9 +12,7 @@
 package com.arjuna.JavaArjuna.Common;
 
 import com.arjuna.JavaArjuna.ObjectStore.ObjectStore;
-import com.arjuna.JavaArjuna.Common.*;
 
-import com.arjuna.JavaArjuna.Common.ObjectStoreException;
 import java.io.IOException;
 
 public class ObjectStoreIterator
