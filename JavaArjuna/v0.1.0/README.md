@@ -2,6 +2,9 @@ This is not the original JavaArjuna but something I tried to recreate
 from current sources and memory. The baseline source is the earliest
 version of JTSArjuna I could find, which is also in the repository elsewhere.
 
+This is hear not for future development (for that, find a version of Narayana) but
+so that we don't lose a point in time which is important from a historical perspective.
+
 Differences to the original:
 
 - The build system is not going to be exactly the same as I had in the
