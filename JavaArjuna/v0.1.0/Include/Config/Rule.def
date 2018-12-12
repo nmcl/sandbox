@@ -93,11 +93,7 @@ AllNames.html:		               			@@\
 										@@\
 JAVA_SOURCE(dir/file): JAVATMPL_SOURCE(dir/file)					@@\
 	@echo Generating $@ from JAVATMPL_SOURCE(dir/file)        		        @@\
-	@(cd dir; ln -s JAVATMPL_SOURCE(file) CPLUSPLUS_SOURCE(file))	@@\
-	@(cd dir; exec $(CPP) -C -P $(CPPINCLUDES) $(CPPFLAGS) CPLUSPLUS_SOURCE(file) > JAVA_SOURCE(file))	@@\
-	@(cd dir; $(RM) CPLUSPLUS_SOURCE(file))				@@\
-										@@\
-TidyTarget(file/**/.JAVA_SUFF CPLUSPLUS_SOURCE(file))
+	@(cd dir; make JAVA_SOURCE(file))
 #endif
 	
 /*
