@@ -8,7 +8,10 @@ so that we don't lose a point in time which is important from a historical persp
 Differences to the original:
 
 - The build system is not going to be exactly the same as I had in the
-1995/1996 build but that was never the important part of the system.
+1995/1996 build but that was never the important part of the system. It's also
+possible that I'll hack a pre-existing build system just to get the code to
+build rather than spend a lot of time (initially or at all) to make the build
+system the way it was and extensible.
 
 - Some of the code was updated with bug fixes, new features etc.
 
