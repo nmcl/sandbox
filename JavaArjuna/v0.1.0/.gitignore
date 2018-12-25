@@ -10,3 +10,7 @@ Makefile
 *.class
 Configure.h
 MachineRules.h
+InputBuffer.java
+Uid.java
+Utility.java
+ObjectStoreImple.java
