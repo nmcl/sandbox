@@ -25,3 +25,7 @@ repository as that's the oldest non-Gandiva Java build system I can find. Gandiv
 - This is built with the latest version of Java and there may be differences between that and Oak, which was the version used originally. Where possible I've tried not to use more advanced language features but I may have missed some opportunities.
 
 - Some classes may be in different packages to where they were originally. Sometimes it was personal preference at the time.
+
+----
+
+When building make sure to install imake and set CLASSPATH to classes directory.
