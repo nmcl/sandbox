@@ -9,13 +9,9 @@
  * $Id: ActionStoreSetup.java,v 1.6 1998/07/06 13:26:43 nmcl Exp $
  */
 
-package com.arjuna.JavaArjunaLite.Implementation.ObjectStore;
+package com.arjuna.JavaArjuna.ObjectStore;
 
-import com.arjuna.JavaArjunaLite.JavaArjunaLiteNames;
-import com.arjuna.JavaArjunaLite.Implementation.ObjectStoreImple;
-import com.arjuna.JavaGandiva.Common.ClassName;
-import com.arjuna.JavaGandiva.Common.ObjectName;
-import com.arjuna.JavaGandiva.Base.InventoryElement;
+import com.arjuna.JavaArjuna.Common.*;
 
 public class ActionStoreSetup implements InventoryElement
 {
