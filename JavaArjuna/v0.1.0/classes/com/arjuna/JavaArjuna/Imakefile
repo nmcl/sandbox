@@ -10,7 +10,7 @@ COMMENT $Id: Imakefile,v 1.9.2.1 1999/01/28 19:00:16 nmcl Exp $
 COMMENT
 
 #define IHaveSubDirs
-SetSubDirectorys(Common ClassLib ObjectStore Thread)
+SetSubDirectorys(Common ClassLib ObjectStore Thread Template)
 
 SOURCES = ObjectStore/ObjectStoreImple.java \
 	  Common/Utility.java

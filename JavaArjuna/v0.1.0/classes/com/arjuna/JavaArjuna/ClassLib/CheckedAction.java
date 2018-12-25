@@ -9,10 +9,10 @@
  * $Id: CheckedAction.java,v 1.10 1998/07/06 13:26:18 nmcl Exp $
  */
 
-package com.arjuna.JavaArjunaLite.Atomic;
+package com.arjuna.JavaArjuna.ClassLib;
 
-import com.arjuna.JavaGandiva.Common.Uid;
-import com.arjuna.JavaGandiva.Template.BasicList;
+import com.arjuna.JavaArjuna.Common.Uid;
+import com.arjuna.JavaArjuna.Template.BasicList;
 
 /**
  * If an action attempts to terminate with threads still active we
