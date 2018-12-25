@@ -9,16 +9,15 @@
  * $Id: BasicAction.java,v 1.14 1998/08/13 14:31:34 nmcl Exp $
  */
 
-package com.arjuna.JavaArjunaLite.Atomic;
+package com.arjuna.JavaArjuna.ClassLib;
 
-import com.arjuna.JavaArjunaLite.JavaArjunaLiteNames;
-import com.arjuna.JavaArjunaLite.Interface.ObjectStore;
-import com.arjuna.JavaArjunaLite.Thread.*;
-import com.arjuna.JavaArjunaLite.Interface.RecoveryAbstractRecord;
-import com.arjuna.JavaGandiva.Common.*;
-import com.arjuna.JavaGandiva.Template.*;
+import com.arjuna.JavaArjuna.ObjectStore.ObjectStore;
+import com.arjuna.JavaArjuna.Thread.*;
+import com.arjuna.JavaArjuna.ClassLib.RecoveryAbstractRecord;
+import com.arjuna.JavaArjuna.Common.*;
+import com.arjuna.JavaArjuna.Template.*;
 
-import com.arjuna.JavaArjunaLite.Common.ObjectStoreException;
+import com.arjuna.JavaArjuna.Common.ObjectStoreException;
 import java.lang.NumberFormatException;
 import java.lang.InterruptedException;
 import java.io.IOException;

@@ -9,13 +9,10 @@
  * $Id: RecoveryAbstractRecord.java,v 1.3 1998/07/06 13:26:53 nmcl Exp $
  */
 
-package com.arjuna.JavaArjunaLite.Interface;
+package com.arjuna.JavaArjuna.ClassLib;
 
-import com.arjuna.JavaArjunaLite.Atomic.*;
-import com.arjuna.JavaArjunaLite.Common.LockStoreException;
-import com.arjuna.JavaArjunaLite.Implementation.Implementations;
-import com.arjuna.JavaGandiva.Interface.Inventory;
-import com.arjuna.JavaGandiva.Common.*;
+import com.arjuna.JavaArjuna.Common.LockStoreException;
+import com.arjuna.JavaArjuna.Common.*;
 import java.io.PrintStream;
 
 import java.io.IOException;
