@@ -9,15 +9,11 @@
  * $Id: FileSystemStore.java,v 1.10 1999/02/17 09:40:26 nmcl Exp $
  */
 
-package com.arjuna.JavaArjunaLite.Implementation.ObjectStore;
+package com.arjuna.JavaArjuna.ObjectStore;
 
-import com.arjuna.JavaArjunaLite.JavaArjunaLiteNames;
-import com.arjuna.JavaArjunaLite.Interface.ObjectStore;
-import com.arjuna.JavaArjunaLite.Implementation.ObjectStoreImple;
-import com.arjuna.JavaGandiva.Common.*;
+import com.arjuna.JavaArjuna.Common.*;
 import java.io.*;
 
-import com.arjuna.JavaArjunaLite.Common.ObjectStoreException;
 import java.lang.NumberFormatException;
 import java.io.IOException;
 import java.io.FileNotFoundException;

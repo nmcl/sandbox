@@ -9,15 +9,12 @@
  * $Id: ActionStore.java,v 1.5 1998/07/06 13:26:43 nmcl Exp $
  */
 
-package com.arjuna.JavaArjunaLite.Implementation.ObjectStore;
+package com.arjuna.JavaArjuna.ObjectStore;
 
-import com.arjuna.JavaArjunaLite.JavaArjunaLiteNames;
-import com.arjuna.JavaArjunaLite.Atomic.*;
-import com.arjuna.JavaArjunaLite.Interface.ObjectStore;
-import com.arjuna.JavaGandiva.Common.*;
+import com.arjuna.JavaArjuna.ClassLib.*;
+import com.arjuna.JavaArjuna.Common.*;
 import java.io.File;
 
-import com.arjuna.JavaArjunaLite.Common.ObjectStoreException;
 import java.io.IOException;
 
 public class ActionStore extends ShadowingStore

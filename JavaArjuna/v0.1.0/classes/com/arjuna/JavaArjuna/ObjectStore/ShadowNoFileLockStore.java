@@ -9,10 +9,8 @@
  * $Id: ShadowNoFileLockStore.java,v 1.5 1998/07/06 13:26:46 nmcl Exp $
  */
 
-package com.arjuna.JavaArjunaLite.Implementation.ObjectStore;
+package com.arjuna.JavaArjuna.ObjectStore;
 
-import com.arjuna.JavaArjunaLite.JavaArjunaLiteNames;
-import com.arjuna.JavaGandiva.Common.ClassName;
 import java.io.File;
 
 /*

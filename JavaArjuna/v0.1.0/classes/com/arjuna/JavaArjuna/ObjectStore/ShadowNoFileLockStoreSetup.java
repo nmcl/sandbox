@@ -9,12 +9,9 @@
  * $Id: ShadowNoFileLockStoreSetup.java,v 1.6 1998/07/06 13:26:46 nmcl Exp $
  */
 
-package com.arjuna.JavaArjunaLite.Implementation.ObjectStore;
+package com.arjuna.JavaArjuna.ObjectStore;
 
-import com.arjuna.JavaArjunaLite.JavaArjunaLiteNames;
-import com.arjuna.JavaArjunaLite.Implementation.ObjectStoreImple;
-import com.arjuna.JavaGandiva.Common.*;
-import com.arjuna.JavaGandiva.Base.InventoryElement;
+import com.arjuna.JavaArjuna.Common.*;
 
 public class ShadowNoFileLockStoreSetup implements InventoryElement
 {
