@@ -9,9 +9,7 @@
  * $Id: StoreList.java,v 1.3 1998/07/06 13:26:48 nmcl Exp $
  */
 
-package com.arjuna.JavaArjunaLite.Implementation.ObjectStore;
-
-import com.arjuna.JavaArjunaLite.Implementation.ObjectStoreImple;
+package com.arjuna.JavaArjuna.ObjectStore;
 
 /*
  * Default visibility.

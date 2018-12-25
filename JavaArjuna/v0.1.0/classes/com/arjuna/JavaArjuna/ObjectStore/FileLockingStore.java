@@ -9,14 +9,11 @@
  * $Id: FileLockingStore.java,v 1.4 1998/07/06 13:26:44 nmcl Exp $
  */
 
-package com.arjuna.JavaArjunaLite.Implementation.ObjectStore;
+package com.arjuna.JavaArjuna.ObjectStore;
 
-import com.arjuna.JavaArjunaLite.Interface.ObjectStore;
-import com.arjuna.JavaArjunaLite.Implementation.ObjectStoreImple;
-import com.arjuna.JavaGandiva.Common.*;
+import com.arjuna.JavaArjuna.Common.*;
 import java.io.*;
 
-import com.arjuna.JavaArjunaLite.Common.ObjectStoreException;
 import java.lang.NumberFormatException;
 import java.io.IOException;
 import java.io.FileNotFoundException;

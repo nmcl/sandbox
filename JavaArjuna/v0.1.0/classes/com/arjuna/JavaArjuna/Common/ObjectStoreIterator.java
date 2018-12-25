@@ -11,14 +11,12 @@
 
 package com.arjuna.JavaArjuna.Common;
 
-import com.arjuna.JavaArjuna.ObjectStore.ObjectStore;
-
 import java.io.IOException;
 
 public class ObjectStoreIterator
 {
 
-public ObjectStoreIterator (ObjectStore store, String tName)
+public ObjectStoreIterator (com.arjuna.JavaArjuna.ObjectStore.ObjectStore store, String tName)
     {
 	try
 	{
