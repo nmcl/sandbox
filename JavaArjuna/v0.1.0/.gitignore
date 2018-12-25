@@ -8,3 +8,5 @@ target
 *~*
 Makefile
 *.class
+Configure.h
+MachineRules.h
