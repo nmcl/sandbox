@@ -881,8 +881,8 @@ private void parseObjectName ()
 		// assume not present.
 	    }
 	}
-    */
     }
+    */
     
 protected StateManagerAttribute smAttributes;
 /*
