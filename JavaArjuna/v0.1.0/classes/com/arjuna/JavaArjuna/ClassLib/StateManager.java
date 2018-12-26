@@ -377,16 +377,21 @@ protected StateManager (Uid objUid)
 	this(objUid, ObjectType.ANDPERSISTENT, null);
     }
 
+    /*
+     * https://github.com/nmcl/sandbox/issues/66
 protected StateManager (Uid objUid, ObjectName attr)
     {
 	this(objUid, ObjectType.ANDPERSISTENT, attr);
     }
+    */
     
 protected StateManager (Uid objUid, int ot)
     {
 	this(objUid, ot, null);
     }
 
+    /*
+     * https://github.com/nmcl/sandbox/issues/66
 protected StateManager (Uid objUid, int ot, ObjectName objName)
     {
 	objectName = objName;
@@ -405,7 +410,8 @@ protected StateManager (Uid objUid, int ot, ObjectName objName)
 	
 	modifyingActions = new ActionList();
 	usingActions = new ActionList();
-    }    
+    }
+    */
 
 protected StateManager ()
     {
@@ -417,6 +423,8 @@ protected StateManager (int ot)
 	this(ot, null);
     }
 
+    /*
+     * https://github.com/nmcl/sandbox/issues/66
 protected StateManager (int ot, ObjectName objName)
     {
 	objectName = objName;
@@ -436,6 +444,7 @@ protected StateManager (int ot, ObjectName objName)
 	modifyingActions = new ActionList();
 	usingActions = new ActionList();
     }
+    */
     
     /*
      * Protected non-virtual functions.
@@ -792,6 +801,8 @@ protected final synchronized boolean rememberAction (BasicAction action, int rec
 	return result;
     }
 
+    /*
+     * https://github.com/nmcl/sandbox/issues/66
 private void parseObjectName ()
     {
 	smAttributes = new StateManagerAttribute();
@@ -839,9 +850,9 @@ private void parseObjectName ()
 		{
 		    smAttributes.storeLocations = new String[numberOfStores];
 
-		    /*
+		    /'*
 		     * Locations of stores given attribute names as stringified numbers.
-		     */
+		     *'/
 
 		    try
 		    {
@@ -870,10 +881,14 @@ private void parseObjectName ()
 		// assume not present.
 	    }
 	}
+    */
     }
     
 protected StateManagerAttribute smAttributes;
+/*
+ * https://github.com/nmcl/sandbox/issues/66
 protected ObjectName objectName;
+*/
 
 private boolean activated;
 private boolean currentlyActivated;
