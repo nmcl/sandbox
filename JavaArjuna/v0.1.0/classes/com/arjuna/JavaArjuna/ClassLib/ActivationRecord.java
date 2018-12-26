@@ -9,10 +9,9 @@
  * $Id: ActivationRecord.java,v 1.9 1998/07/06 13:26:13 nmcl Exp $
  */
 
-package com.arjuna.JavaArjunaLite.Atomic;
+package com.arjuna.JavaArjuna.ClassLib;
 
-import com.arjuna.JavaArjunaLite.JavaArjunaLiteNames;
-import com.arjuna.JavaGandiva.Common.*;
+import com.arjuna.JavaArjuna.Common.*;
 import java.io.PrintStream;
 
 /*
