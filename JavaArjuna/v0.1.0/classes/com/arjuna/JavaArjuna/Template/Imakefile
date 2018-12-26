@@ -14,16 +14,14 @@ SOURCES = BasicList.java \
 	  UidListElement.java \
 	  HashUidList.java \
 	  BasicUidList.java \
-	  SimpleUidList.java \
-	  ActionList.java
+	  SimpleUidList.java
 
 OBJECTS = BasicList.class \
 	  ObjectElement.class \
 	  UidListElement.class \
 	  HashUidList.class \
 	  BasicUidList.class \
-	  SimpleUidList.class \
-	  ActionList.class
+	  SimpleUidList.class
 
 AllTarget($(SOURCES) $(OBJECTS))
 
@@ -33,6 +31,5 @@ BuildJavaByteCode(UidListElement,NOPARAM)
 BuildJavaByteCode(HashUidList,NOPARAM)
 BuildJavaByteCode(BasicUidList,NOPARAM)
 BuildJavaByteCode(SimpleUidList,NOPARAM)
-BuildJavaByteCode(ActionList,NOPARAM)
 
 TidyTarget(*.class)
