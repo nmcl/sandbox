@@ -9,11 +9,11 @@
  * $Id: ActionHierarchy.java,v 1.7 1998/07/06 13:26:10 nmcl Exp $
  */
 
-package com.arjuna.JavaArjunaLite.Atomic;
+package com.arjuna.JavaArjuna.ClassLib;
 
-import com.arjuna.JavaGandiva.Common.Uid;
-import com.arjuna.JavaGandiva.Common.InputBuffer;
-import com.arjuna.JavaGandiva.Common.OutputBuffer;
+import com.arjuna.JavaArjuna.Common.Uid;
+import com.arjuna.JavaArjuna.Common.InputBuffer;
+import com.arjuna.JavaArjuna.Common.OutputBuffer;
 
 import java.io.PrintStream;
 import java.io.IOException;
