@@ -11,16 +11,19 @@ COMMENT
 
 SOURCES = BasicList.java \
 	  ObjectElement.java \
-	  UidListElement
+	  UidListElement.java \
+	  HashUidList.java
 
 OBJECTS = BasicList.class \
 	  ObjectElement.class \
-	  UidListElement.class
+	  UidListElement.class \
+	  HashUidList.class
 
 AllTarget($(SOURCES) $(OBJECTS))
 
 BuildJavaByteCode(BasicList,NOPARAM)
 BuildJavaByteCode(ObjectElement,NOPARAM)
 BuildJavaByteCode(UidListElement,NOPARAM)
+BuildJavaByteCode(HashUidList,NOPARAM)
 
 TidyTarget(*.class)
