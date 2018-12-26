@@ -371,11 +371,16 @@ public final synchronized ObjectStore store ()
 	     * parameter is the default value, which is returned if no
 	     * other value is specified.
 	     */
-	    
+
+	    	    /*
+
 	    if (actionStoreType == null)
-		actionStoreType = new ClassName(System.getProperty(JavaArjunaLiteNames.BasicAction_actionStore(), JavaArjunaLiteNames.Implementation_ObjectStore_defaultActionStore().stringForm()));
-	    
+	     * https://github.com/nmcl/sandbox/issues/66
+	     * actionStoreType = new ClassName(System.getProperty(JavaArjunaLiteNames.BasicAction_actionStore(), JavaArjunaLiteNames.Implementation_ObjectStore_defaultActionStore().stringForm()));
+
 	    currentStore = new ObjectStore(actionStoreType);
+	     */
+
 	}
 
 	return currentStore;
@@ -811,6 +816,9 @@ public boolean restore_state (InputObjectState os, int ot)
     
 	while ((res) && (record_type != RecordType.NONE_RECORD))
 	{
+	    /*
+	     *
+	     * https://github.com/nmcl/sandbox/issues/66
 	    ClassName cName = new ClassName();
 
 	    try
@@ -831,10 +839,11 @@ public boolean restore_state (InputObjectState os, int ot)
 		       preparedList.insert(record));
 	    }
 
-	    /* Tidy up before we leave. */
+	    /'* Tidy up before we leave. *'/
 
 	    cName = null;
-
+*/
+		
 	    if (res)
 	    {
 		try
@@ -870,6 +879,9 @@ public boolean restore_state (InputObjectState os, int ot)
 	{
 	    while ((res) && (record_type != RecordType.NONE_RECORD))
 	    {
+		/*
+		 *
+		 * https://github.com/nmcl/sandbox/issues/66
 		ClassName cName = new ClassName();
 
 		try
@@ -890,9 +902,10 @@ public boolean restore_state (InputObjectState os, int ot)
 			   heuristicList.insert(record));
 		}
 
-		/* Tidy up before we leave. */
+		/'* Tidy up before we leave. *'/
 
 		cName = null;
+		*/
 
 		if (res)
 		{
@@ -2081,6 +2094,9 @@ private CheckedAction _checkedAction;  // control what happens if threads active
 private BasicList _childThreads;
 private BasicList _childActions;
 
+    /*
+     * https://github.com/nmcl/sandbox/issues/66
 private static ClassName actionStoreType = null;
+    */
 
 };
