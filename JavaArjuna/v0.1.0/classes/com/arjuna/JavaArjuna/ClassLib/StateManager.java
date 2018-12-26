@@ -56,7 +56,10 @@ public void finalize ()
 	}
 
 	smAttributes = null;
+	/*
+	 * https://github.com/nmcl/sandbox/issues/66
 	objectName = null;
+	*/
 	
 	objectStore = null;
 	storeRoot = null;
