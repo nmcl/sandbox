@@ -10,14 +10,17 @@ COMMENT $Id: Imakefile,v 1.1 1997/06/30 09:05:36 nmcl Exp $
 COMMENT
 
 SOURCES = BasicList.java \
-	  ObjectElement.java
+	  ObjectElement.java \
+	  UidListElement
 
 OBJECTS = BasicList.class \
-	  ObjectElement.class
+	  ObjectElement.class \
+	  UidListElement.class
 
 AllTarget($(SOURCES) $(OBJECTS))
 
 BuildJavaByteCode(BasicList,NOPARAM)
 BuildJavaByteCode(ObjectElement,NOPARAM)
+BuildJavaByteCode(UidListElement,NOPARAM)
 
 TidyTarget(*.class)
