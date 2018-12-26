@@ -56,10 +56,13 @@ public abstract void setValue (Object o);
 
 /* Only used for crash recovery, so most records don't need it. */
 
+/*
+ * https://github.com/nmcl/sandbox/issues/66
 public ClassName className ()
     {
 	return new ClassName(""+typeIs());
     }
+    */
 
 /* atomic action interface - one operation per two-phase commit state */
 
@@ -244,6 +247,8 @@ public void forgetHeuristic ()
  * recovery purposes we may not need such flexibility.
  */
 
+/*
+* https://github.com/nmcl/sandbox/issues/66
 public static AbstractRecord create (ClassName cName)
     {
 	Object ptr = Inventory.inventory().createVoid(cName);
@@ -256,6 +261,7 @@ public static AbstractRecord create (ClassName cName)
 
 	return record;
     }
+    */
 
 /*
  * We would like these to be protected, but the
