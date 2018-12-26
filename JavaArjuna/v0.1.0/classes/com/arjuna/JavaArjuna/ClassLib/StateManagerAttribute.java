@@ -9,9 +9,9 @@
  * $Id: StateManagerAttribute.java,v 1.3 1998/07/06 13:26:33 nmcl Exp $
  */
 
-package com.arjuna.JavaArjunaLite.Atomic;
+package com.arjuna.JavaArjuna.ClassLib;
 
-import com.arjuna.JavaArjunaLite.Atomic.ObjectModel;
+import com.arjuna.JavaArjuna.ClassLib.ObjectModel;
 
 public class StateManagerAttribute
 {
