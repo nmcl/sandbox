@@ -671,7 +671,10 @@ public boolean save_state (OutputObjectState os, int ot)
 
 		    os.packInt(temp.typeIs());
 
+		    /*
+		     * https://github.com/nmcl/sandbox/issues/66
 		    temp.className().pack(os);
+		    */
 		    
 		    res = temp.save_state(os, ot);
 		}
@@ -733,7 +736,10 @@ public boolean save_state (OutputObjectState os, int ot)
 			try
 			{
 			    os.packInt(temp.typeIs());
+			    /*
+			     * https://github.com/nmcl/sandbox/issues/66
 			    temp.className().pack(os);
+			    */
 			    
 			    res = temp.save_state(os, ot);
 			}

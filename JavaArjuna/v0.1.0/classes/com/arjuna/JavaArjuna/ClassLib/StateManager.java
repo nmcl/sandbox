@@ -688,7 +688,10 @@ protected synchronized void setupStore (String rootName)
 	     * library.
 	     */
 
+	    /*
+	     * https://github.com/nmcl/sandbox/issues/66				   
 	    objectStore = new ObjectStore(JavaArjunaLiteNames.Implementation_ObjectStore_ReplicatedStore(), storeRoot);
+	    */
 	    objectStore.storeLocation(smAttributes.storeLocations);
 	    objectStore.useStoreLocation(smAttributes.useStoreLocation);
 
@@ -717,8 +720,11 @@ protected synchronized void setupStore (String rootName)
 
 		System.err.println("Error - attempt to use volatile store.");
 		System.exit(0);
-		
+
+		/*
+		 * https://github.com/nmcl/sandbox/issues/66
 		objectStore = new ObjectStore(JavaArjunaLiteNames.Implementation_ObjectStore_VolatileStore(), storeRoot);
+		*/
 	    }
 	}
 

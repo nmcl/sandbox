@@ -9,14 +9,13 @@
  * $Id: CadaverRecord.java,v 1.7 1998/07/06 13:26:18 nmcl Exp $
  */
 
-package com.arjuna.JavaArjunaLite.Atomic;
+package com.arjuna.JavaArjuna.ClassLib;
 
-import com.arjuna.JavaArjunaLite.JavaArjunaLiteNames;
-import com.arjuna.JavaArjunaLite.Interface.ObjectStore;
-import com.arjuna.JavaGandiva.Common.*;
+import com.arjuna.JavaArjuna.ObjectStore.ObjectStore;
+import com.arjuna.JavaArjuna.Common.*;
 import java.io.PrintStream;
 
-import com.arjuna.JavaArjunaLite.Common.ObjectStoreException;
+import com.arjuna.JavaArjuna.Common.ObjectStoreException;
 
 /*
  * Cadaver records are created whenever a persistent object is deleted while
@@ -70,11 +69,6 @@ public boolean propagateOnAbort ()
 public int typeIs ()
     {
 	return RecordType.PERSISTENCE;
-    }
-
-public ClassName className ()
-    {
-	return JavaArjunaLiteNames.Implementation_AbstractRecord_CadaverRecord();
     }
 
 public int nestedAbort ()
