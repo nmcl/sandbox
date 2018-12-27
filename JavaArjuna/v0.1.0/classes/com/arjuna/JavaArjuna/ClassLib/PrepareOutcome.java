@@ -9,7 +9,7 @@
  * $Id: PrepareOutcome.java,v 1.5 1998/08/13 14:31:36 nmcl Exp $
  */
 
-package com.arjuna.JavaArjunaLite.Atomic;
+package com.arjuna.JavaArjuna.ClassLib;
 
 import java.io.PrintStream;
 
