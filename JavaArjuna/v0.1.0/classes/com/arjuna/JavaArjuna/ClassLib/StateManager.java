@@ -377,7 +377,11 @@ protected void terminate ()
 
 protected StateManager (Uid objUid)
     {
+	/*
+	 * https://github.com/nmcl/sandbox/issues/66
 	this(objUid, ObjectType.ANDPERSISTENT, null);
+	*/
+	this(objUid, ObjectType.ANDPERSISTENT);
     }
 
     /*
@@ -390,7 +394,12 @@ protected StateManager (Uid objUid, ObjectName attr)
     
 protected StateManager (Uid objUid, int ot)
     {
+	/*
+	 * https://github.com/nmcl/sandbox/issues/66
 	this(objUid, ot, null);
+	*/
+
+	// definitely won't work now!!
     }
 
     /*
@@ -418,12 +427,21 @@ protected StateManager (Uid objUid, int ot, ObjectName objName)
 
 protected StateManager ()
     {
+	/*
+	 * https://github.com/nmcl/sandbox/issues/66
 	this(ObjectType.RECOVERABLE, null);
+	*/
+	this(ObjectType.RECOVERABLE);
     }
     
 protected StateManager (int ot)
     {
+	/*
+	 * https://github.com/nmcl/sandbox/issues/66
 	this(ot, null);
+	*/
+
+	// definitely broken now!!
     }
 
     /*
