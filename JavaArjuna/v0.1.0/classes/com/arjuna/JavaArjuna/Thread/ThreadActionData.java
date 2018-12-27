@@ -9,9 +9,9 @@
  * $Id: ThreadActionData.java,v 1.8 1998/07/06 13:26:54 nmcl Exp $
  */
 
-package com.arjuna.JavaArjunaLite.Thread;
+package com.arjuna.JavaArjuna.Thread;
 
-import com.arjuna.JavaArjunaLite.Atomic.BasicAction;
+import com.arjuna.JavaArjuna.ClassLib.BasicAction;
 import java.lang.Thread;
 
 import java.util.NoSuchElementException;

@@ -9,12 +9,11 @@
  * $Id: RecoveryRecord.java,v 1.8 1998/07/06 13:26:31 nmcl Exp $
  */
 
-package com.arjuna.JavaArjunaLite.Atomic;
+package com.arjuna.JavaArjuna.ClassLib;
 
-import com.arjuna.JavaArjunaLite.JavaArjunaLiteNames;
-import com.arjuna.JavaArjunaLite.Interface.ObjectStore;
-import com.arjuna.JavaArjunaLite.Thread.ThreadActionData;
-import com.arjuna.JavaGandiva.Common.*;
+import com.arjuna.JavaArjuna.ObjectStore.ObjectStore;
+import com.arjuna.JavaArjuna.Thread.ThreadActionData;
+import com.arjuna.JavaArjuna.Common.*;
 import java.io.PrintStream;
 
 class RecoveryRecord extends AbstractRecord

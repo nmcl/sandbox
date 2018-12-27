@@ -9,10 +9,10 @@
  * $Id: ThreadData.java,v 1.5 1998/07/06 13:26:55 nmcl Exp $
  */
 
-package com.arjuna.JavaArjunaLite.Thread;
+package com.arjuna.JavaArjuna.Thread;
 
-import com.arjuna.JavaArjunaLite.Atomic.BasicAction;
-import com.arjuna.JavaGandiva.Template.BasicList;
+import com.arjuna.JavaArjuna.ClassLib.BasicAction;
+import com.arjuna.JavaArjuna.Template.BasicList;
 import java.lang.Thread;
 
 /*
