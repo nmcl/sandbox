@@ -9,7 +9,7 @@
  * $Id: AtomicAction.java,v 1.13 1998/08/13 14:31:33 nmcl Exp $
  */
 
-package com.arjuna.JavaArjuna.Atomic;
+package com.arjuna.JavaArjuna.ClassLib;
 
 import com.arjuna.JavaArjuna.ObjectStore.ObjectStore;
 import com.arjuna.JavaArjuna.Thread.*;
