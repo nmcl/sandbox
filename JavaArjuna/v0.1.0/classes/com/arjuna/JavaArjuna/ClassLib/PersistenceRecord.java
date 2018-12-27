@@ -9,14 +9,13 @@
  * $Id: PersistenceRecord.java,v 1.11 1998/12/11 14:24:23 nmcl Exp $
  */
 
-package com.arjuna.JavaArjunaLite.Atomic;
+package com.arjuna.JavaArjuna.ClassLib;
 
-import com.arjuna.JavaArjunaLite.JavaArjunaLiteNames;
-import com.arjuna.JavaArjunaLite.Interface.ObjectStore;
-import com.arjuna.JavaGandiva.Common.*;
+import com.arjuna.JavaArjuna.ObjectStore.ObjectStore;
+import com.arjuna.JavaArjuna.Common.*;
 import java.io.PrintStream;
 
-import com.arjuna.JavaArjunaLite.Common.ObjectStoreException;
+import com.arjuna.JavaArjuna.Common.ObjectStoreException;
 import java.io.IOException;
 
 public class PersistenceRecord extends RecoveryRecord
@@ -52,11 +51,6 @@ public int typeIs ()
 	return RecordType.PERSISTENCE;
     }
 
-public ClassName className ()
-    {
-	return JavaArjunaLiteNames.Implementation_AbstractRecord_PersistenceRecord();
-    }
-    
     /*
      * topLevelAbort may have to remove the persistent state that was written
      * into the object store during the processing of topLevelPrepare.
@@ -209,7 +203,10 @@ public boolean restore_state (InputObjectState os, int ot)
 	    {
 		/* discard old store before creating new */
 
+		/*
+		 * https://github.com/nmcl/sandbox/issues/66
 		store = new ObjectStore(new ClassName(objStoreType));
+		*/
 
 		store.unpack(os);
 		shadowMade = os.unpackBoolean();
