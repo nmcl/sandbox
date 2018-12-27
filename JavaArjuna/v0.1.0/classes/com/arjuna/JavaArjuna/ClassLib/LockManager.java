@@ -9,15 +9,14 @@
  * $Id: LockManager.java,v 1.12.2.1 1999/02/05 09:52:38 nmcl Exp $
  */
 
-package com.arjuna.JavaArjunaLite.Atomic;
+package com.arjuna.JavaArjuna.ClassLib;
 
-import com.arjuna.JavaArjunaLite.JavaArjunaLiteNames;
-import com.arjuna.JavaArjunaLite.Interface.LockStore;
-import com.arjuna.JavaArjunaLite.Interface.Semaphore;
+import com.arjuna.JavaArjuna.ClassLib.LockStore;
+import com.arjuna.JavaArjuna.ClassLib.Semaphore;
 import com.arjuna.JavaGandiva.Common.*;
 import java.io.PrintStream;
 
-import com.arjuna.JavaArjunaLite.Common.LockStoreException;
+import com.arjuna.JavaArjuna.Common.LockStoreException;
 import java.lang.InterruptedException;
 import java.io.IOException;
 
