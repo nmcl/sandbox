@@ -9,9 +9,9 @@
  * $Id: TransactionalThread.java,v 1.1 1998/07/31 15:18:15 nmcl Exp $
  */
 
-package com.arjuna.JavaArjunaLite.Thread;
+package com.arjuna.JavaArjuna.Thread;
 
-import com.arjuna.JavaArjunaLite.Atomic.*;
+import com.arjuna.JavaArjuna.ClassLib.*;
 import java.lang.Thread;
 
 import java.lang.IllegalArgumentException;
