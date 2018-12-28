@@ -13,7 +13,7 @@ package com.arjuna.JavaArjuna.ClassLib;
 
 import com.arjuna.JavaArjuna.ClassLib.LockStore;
 import com.arjuna.JavaArjuna.ClassLib.Semaphore;
-import com.arjuna.JavaGandiva.Common.*;
+import com.arjuna.JavaArjuna.Common.*;
 import java.io.PrintStream;
 
 import com.arjuna.JavaArjuna.Common.LockStoreException;
@@ -392,16 +392,21 @@ protected LockManager (Uid storeUid)
 	this(storeUid, ObjectType.ANDPERSISTENT, null);
     }
 
+    /*
+     * https://github.com/nmcl/sandbox/issues/66
 protected LockManager (Uid storeUid, ObjectName attr)
     {
 	this(storeUid, ObjectType.ANDPERSISTENT, attr);
-    }    
+    }
+    */
     
 protected LockManager (Uid storeUid, int ot)
     {
 	this(storeUid, ot, null);
     }
 
+    /*
+     * https://github.com/nmcl/sandbox/issues/66
 protected LockManager (Uid storeUid, int ot, ObjectName attr)
     {
 	super(storeUid, ot, attr);
@@ -415,7 +420,8 @@ protected LockManager (Uid storeUid, int ot, ObjectName attr)
 	hasBeenLocked = false;
 	objectLocked = false;
 	mutex = null;
-    }    
+    }
+    */
 
     /*
      * Constructor: Same restrictions apply as documented above.
@@ -431,6 +437,8 @@ protected LockManager (int ot)
 	this(ot, null);
     }
 
+    /*
+     * https://github.com/nmcl/sandbox/issues/66
 protected LockManager (int ot, ObjectName attr)
     {
 	super(ot, attr);
@@ -445,6 +453,7 @@ protected LockManager (int ot, ObjectName attr)
 	objectLocked = false;
 	mutex = null;
     }
+    */
     
 protected void terminate ()
     {
@@ -903,6 +912,8 @@ private final boolean unloadState ()
 	return unloadOk;
     }
 
+    /*
+     * https://github.com/nmcl/sandbox/issues/66
 private void parseObjectName ()
     {
 	lmAttributes = new LockManagerAttribute();
@@ -921,6 +932,7 @@ private void parseObjectName ()
 	    // if present should now look for locations as with StateManager
 	}
     }
+    */
 
 public static final int defaultRetry = 100;
 public static final int defaultSleepTime = 250000;
