@@ -9,14 +9,12 @@
  * $Id: ShadowingStoreSetup.java,v 1.6 1998/07/06 13:26:48 nmcl Exp $
  */
 
-package com.arjuna.JavaArjunaLite.Implementation.ObjectStore;
+package com.arjuna.JavaArjuna.ObjectStore;
 
-import com.arjuna.JavaArjunaLite.JavaArjunaLiteNames;
-import com.arjuna.JavaArjunaLite.Implementation.ObjectStoreImple;
-import com.arjuna.JavaGandiva.Common.*;
-import com.arjuna.JavaGandiva.Base.InventoryElement;
+import com.arjuna.JavaArjuna.ObjectStore.ObjectStoreImple;
+import com.arjuna.JavaArjuna.Common.*;
 
-public class ShadowingStoreSetup implements InventoryElement
+public class ShadowingStoreSetup
 {
 
 public ShadowingStoreSetup ()
@@ -32,7 +30,9 @@ public synchronized Object createResources (Object[] param)
     {
 	return ShadowingStore.create(param);
     }
-    
+
+    /*
+     * https://github.com/nmcl/sandbox/issues/66
 public synchronized Object createClassName (ClassName className)
     {
 	return null;
@@ -57,5 +57,5 @@ public ClassName className ()
     {
 	return JavaArjunaLiteNames.Implementation_ObjectStore_ShadowingStore();
     }
-
+    */
 }

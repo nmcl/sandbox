@@ -13,7 +13,7 @@ package com.arjuna.JavaArjuna.ObjectStore;
 
 import com.arjuna.JavaArjuna.Common.*;
 
-public class ActionStoreSetup implements InventoryElement
+public class ActionStoreSetup
 {
 
 public ActionStoreSetup ()
@@ -30,6 +30,8 @@ public synchronized Object createResources (Object[] param)
 	return (ActionStore) ActionStore.create(param);
     }
 
+    /*
+     * https://github.com/nmcl/sandbox/issues/66
 public synchronized Object createClassName (ClassName className)
     {
 	return null;
@@ -54,5 +56,5 @@ public ClassName className ()
     {
 	return JavaArjunaLiteNames.Implementation_ObjectStore_ActionStore();
     }
-    
+    */    
 }

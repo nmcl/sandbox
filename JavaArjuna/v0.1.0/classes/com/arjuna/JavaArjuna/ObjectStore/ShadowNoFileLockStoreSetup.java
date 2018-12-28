@@ -13,7 +13,7 @@ package com.arjuna.JavaArjuna.ObjectStore;
 
 import com.arjuna.JavaArjuna.Common.*;
 
-public class ShadowNoFileLockStoreSetup implements InventoryElement
+public class ShadowNoFileLockStoreSetup
 {
 
 public ShadowNoFileLockStoreSetup ()
@@ -29,7 +29,9 @@ public synchronized Object createResources (Object[] param)
     {
 	return (ShadowNoFileLockStore) ShadowNoFileLockStore.create(param);
     }
-    
+
+    /*
+     * https://github.com/nmcl/sandbox/issues/66
 public synchronized Object createClassName (ClassName className)
     {
 	return null;
@@ -54,5 +56,5 @@ public ClassName className ()
     {
 	return JavaArjunaLiteNames.Implementation_ObjectStore_ShadowNoFileLockStore();
     }
-    
+    */    
 }

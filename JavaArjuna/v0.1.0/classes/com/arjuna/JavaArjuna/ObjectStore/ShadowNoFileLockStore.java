@@ -23,6 +23,8 @@ import java.io.File;
 public class ShadowNoFileLockStore extends ShadowingStore
 {
 
+    /*
+     * https://github.com/nmcl/sandbox/issues/66
 public ClassName className ()
     {
 	return JavaArjunaLiteNames.Implementation_ObjectStore_ShadowNoFileLockStore();
@@ -31,8 +33,9 @@ public ClassName className ()
 public static ClassName name ()
     {
 	return JavaArjunaLiteNames.Implementation_ObjectStore_ShadowNoFileLockStore();
-    }    
-
+    }
+    */
+    
     /*
      * Have to return as a ShadowingStore because of
      * inheritence.

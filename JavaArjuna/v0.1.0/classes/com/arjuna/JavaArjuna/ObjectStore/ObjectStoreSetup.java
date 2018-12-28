@@ -9,11 +9,9 @@
  * $Id: ObjectStoreSetup.java,v 1.4 1998/07/06 13:26:45 nmcl Exp $
  */
 
-package com.arjuna.JavaArjunaLite.Implementation.ObjectStore;
+package com.arjuna.JavaArjuna.ObjectStore;
 
-import com.arjuna.JavaArjunaLite.Implementation.ObjectStoreImple;
-import com.arjuna.JavaGandiva.Common.*;
-import com.arjuna.JavaGandiva.Base.InventoryElement;
+import com.arjuna.JavaArjuna.Common.*;
 
 /*
  * The base class for all object store setups. Make sure we only
@@ -24,7 +22,7 @@ import com.arjuna.JavaGandiva.Base.InventoryElement;
  * Not currently used!
  */
 
-public abstract class ObjectStoreSetup implements InventoryElement
+public abstract class ObjectStoreSetup
 {
 
 protected abstract ObjectStoreImple create (String location);
