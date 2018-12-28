@@ -22,6 +22,8 @@ public abstract InputObjectState read_state (Uid u, String tName) throws LockSto
 public abstract boolean remove_state (Uid u, String tname);
 public abstract boolean write_committed (Uid u, String tName, OutputObjectState state);
 
+    /*
+     * https://github.com/nmcl/sandbox/issues/66
 public ClassName className ()
     {
 	return LockStoreImple._className;
@@ -33,5 +35,5 @@ public static ClassName name ()
     }    
 
 private static final ClassName _className = new ClassName("LockStoreImple");
-    
+    */
 };

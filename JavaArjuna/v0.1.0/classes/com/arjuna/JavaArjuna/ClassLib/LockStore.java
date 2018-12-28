@@ -28,6 +28,8 @@ public LockStore (String param)
 	Object[] resources = new Object[1];
 	resources[0] = param;
 
+	/*
+	 * https://github.com/nmcl/sandbox/issues/66
 	if (!singleCheck)
 	{
 	    singleLockStoreType = new ClassName(System.getProperty(JavaArjunaLiteNames.Interface_LockStore_singleStoreType(),
@@ -36,13 +38,16 @@ public LockStore (String param)
 	}
 
 	Object ptr = Inventory.inventory().createResources(singleLockStoreType, resources);
-
+	
 	if (ptr instanceof LockStoreImple)
 	    _imple = (LockStoreImple) ptr;
 	else
 	    _imple = null;
+	*/
     }
 
+    /*
+     * https://github.com/nmcl/sandbox/issues/66
 public LockStore (ClassName typeName, String param)
     {
 	Object[] resources = new Object[1];
@@ -55,12 +60,17 @@ public LockStore (ClassName typeName, String param)
 	else
 	    _imple = null;
     }
+    */
 
 public LockStore (Object[] param)
     {
 	if (param.length == 3)
 	{
+	    /*
+	     * https://github.com/nmcl/sandbox/issues/66
 	    ClassName typeName = (ClassName) param[0];
+	    */
+
 	    int modelType = ((Integer) param[1]).intValue();
 	    Object[] resources = new Object[1];
 
@@ -80,8 +90,11 @@ public LockStore (Object[] param)
 		    type = System.getProperty(JavaArjunaLiteNames.Interface_LockStore_singleStoreType(), null);
 		    singleCheck = true;
 
+		    /*
+		     * https://github.com/nmcl/sandbox/issues/66
 		    if (type != null)
 			singleLockStoreType = new ClassName(type);
+		    */
 		}
 
 		if (singleLockStoreType != null)
@@ -94,8 +107,11 @@ public LockStore (Object[] param)
 		    type = System.getProperty(JavaArjunaLiteNames.Interface_LockStore_multipleStoreType(), null);
 		    multipleCheck = true;
 
+		    /*
+		     * https://github.com/nmcl/sandbox/issues/66
 		    if (type != null)
 			multipleLockStoreType = new ClassName(type);
+		    */
 		}
 
 		if (multipleLockStoreType != null)
@@ -134,15 +150,21 @@ public boolean write_committed (Uid u, String tName, OutputObjectState state)
 	return ((_imple != null) ? _imple.write_committed(u, tName, state) : false);
     }
 
+    /*
+     * https://github.com/nmcl/sandbox/issues/66
 public ClassName className ()
     {
 	return ((_imple != null) ? _imple.className() : ClassName.invalid());
     }
+    */
     
 private LockStoreImple _imple;
 
+    /*
+     * https://github.com/nmcl/sandbox/issues/66
 private static ClassName singleLockStoreType = null;
 private static ClassName multipleLockStoreType = null;
+    */
 private static boolean singleCheck = false;
 private static boolean multipleCheck = false;
  

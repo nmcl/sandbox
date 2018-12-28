@@ -41,7 +41,9 @@ public Semaphore (String key)
 	else
 	    _imple = null;
     }
-    
+
+    /*
+     * https://github.com/nmcl/sandbox/issues/66
 public Semaphore (ClassName type)
     {
 	Object ptr = Inventory.inventory().createVoid(type);
@@ -72,7 +74,8 @@ public Semaphore (ObjectName objName)
 	    {
 	    }
 	}
-    }    
+    }
+    */
 
 public void finalize ()
     {
@@ -93,11 +96,14 @@ public int tryLock ()
     {
 	return ((_imple != null) ? _imple.tryLock() : Semaphore.SM_ERROR);
     }
-    
+
+    /*
+     * https://github.com/nmcl/sandbox/issues/66
 public ClassName className ()
     {
 	return ((_imple != null) ? _imple.className() : ClassName.invalid());
     }
+    */
     
 private SemaphoreImple _imple;
 
