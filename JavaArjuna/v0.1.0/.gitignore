@@ -15,4 +15,5 @@ Uid.java
 Utility.java
 ObjectStoreImple.java
 AbstractRecord.java
+ShadowingStore.java
 out
