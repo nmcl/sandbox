@@ -9,7 +9,7 @@
  * $Id: LockList.java,v 1.3 1998/07/06 13:26:20 nmcl Exp $
  */
 
-package com.arjuna.JavaArjunaLite.Atomic;
+package com.arjuna.JavaArjuna.ClassLib;
 
 /*
  * Default visibility.
