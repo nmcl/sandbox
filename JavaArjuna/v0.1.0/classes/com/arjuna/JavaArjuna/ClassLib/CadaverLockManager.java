@@ -9,9 +9,9 @@
  * $Id: CadaverLockManager.java,v 1.3 1998/07/06 13:26:16 nmcl Exp $
  */
 
-package com.arjuna.JavaArjunaLite.Atomic;
+package com.arjuna.JavaArjuna.ClassLib;
 
-import com.arjuna.JavaGandiva.Common.*;
+import com.arjuna.JavaArjuna.Common.*;
 
 /*
  *

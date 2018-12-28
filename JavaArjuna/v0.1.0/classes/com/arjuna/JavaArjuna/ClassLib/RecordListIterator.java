@@ -9,7 +9,7 @@
  * $Id: RecordListIterator.java,v 1.3 1998/07/06 13:26:30 nmcl Exp $
  */
 
-package com.arjuna.JavaArjunaLite.Atomic;
+package com.arjuna.JavaArjuna.ClassLib;
 
 class RecordListIterator
 {
