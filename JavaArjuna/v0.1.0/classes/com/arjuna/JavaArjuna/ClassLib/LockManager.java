@@ -389,7 +389,12 @@ public String type ()
 
 protected LockManager (Uid storeUid)
     {
+	/*
+	 * https://github.com/nmcl/sandbox/issues/66
 	this(storeUid, ObjectType.ANDPERSISTENT, null);
+	*/
+
+	this(storeUid, ObjectType.ANDPERSISTENT);
     }
 
     /*
@@ -402,7 +407,10 @@ protected LockManager (Uid storeUid, ObjectName attr)
     
 protected LockManager (Uid storeUid, int ot)
     {
+	/*
+	 * https://github.com/nmcl/sandbox/issues/66
 	this(storeUid, ot, null);
+	*/
     }
 
     /*
@@ -429,12 +437,18 @@ protected LockManager (Uid storeUid, int ot, ObjectName attr)
 
 protected LockManager ()
     {
+	/*
+	 * https://github.com/nmcl/sandbox/issues/66
 	this(ObjectType.RECOVERABLE, null);
+	*/
     }
 
 protected LockManager (int ot)
     {
+		/*
+	 * https://github.com/nmcl/sandbox/issues/66
 	this(ot, null);
+		*/
     }
 
     /*
