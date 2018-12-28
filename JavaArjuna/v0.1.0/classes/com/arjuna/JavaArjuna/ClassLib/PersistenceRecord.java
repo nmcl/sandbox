@@ -240,6 +240,8 @@ public boolean save_state (OutputObjectState os, int ot)
 
 	if (store != null)
 	{
+	    /*
+	     * https://github.com/nmcl/sandbox/issues/66
 	    if ((store.className() == null) || (store.className().equals("")))
 	    {
 		System.err.println("Type of store is unknown");
@@ -271,6 +273,7 @@ public boolean save_state (OutputObjectState os, int ot)
 		    System.err.println("PersistenceRecord save_state failed.");
 		}
 	    }
+	    */
 	}
 	else
 	{

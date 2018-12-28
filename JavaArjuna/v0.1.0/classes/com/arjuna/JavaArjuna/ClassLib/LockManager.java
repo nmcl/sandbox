@@ -650,8 +650,11 @@ private final boolean initialise ()
 		if (lockStore == null)
 		{
 		    Object[] param = new Object[3];
-		
+
+		    /*
+		     * https://github.com/nmcl/sandbox/issues/66
 		    param[0] = JavaArjunaLiteNames.Implementation_LockStore_BasicLockStore();
+		    */
 		    param[1] = new Integer(ObjectModel.SINGLE);
 		    param[2] = systemKey;
 		    
@@ -674,8 +677,11 @@ private final boolean initialise ()
 			if (lockStore == null)
 			{
 			    Object[] param = new Object[3];
-		
+
+			    /*
+			     * https://github.com/nmcl/sandbox/issues/66
 			    param[0] = JavaArjunaLiteNames.Implementation_LockStore_BasicPersistentLockStore();
+			    */
 			    param[1] = new Integer(ObjectModel.MULTIPLE);
 			    param[2] = systemKey;
 			    

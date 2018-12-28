@@ -87,7 +87,10 @@ public LockStore (Object[] param)
 	    {
 		if (!singleCheck)
 		{
+		    /*
+		     *  https://github.com/nmcl/sandbox/issues/66
 		    type = System.getProperty(JavaArjunaLiteNames.Interface_LockStore_singleStoreType(), null);
+		    */
 		    singleCheck = true;
 
 		    /*
@@ -97,14 +100,20 @@ public LockStore (Object[] param)
 		    */
 		}
 
+		/*
+		 *  https://github.com/nmcl/sandbox/issues/66
 		if (singleLockStoreType != null)
 		    typeName = singleLockStoreType;
+		*/
 	    }
 	    else
 	    {
 		if (!multipleCheck)
 		{
+		    /*
+		     *  https://github.com/nmcl/sandbox/issues/66
 		    type = System.getProperty(JavaArjunaLiteNames.Interface_LockStore_multipleStoreType(), null);
+		    */
 		    multipleCheck = true;
 
 		    /*
