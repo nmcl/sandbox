@@ -9,9 +9,9 @@
  * $Id: CadaverLockRecord.java,v 1.6 1998/07/06 13:26:17 nmcl Exp $
  */
 
-package com.arjuna.JavaArjunaLite.Atomic;
+package com.arjuna.JavaArjuna.ClassLib;
 
-import com.arjuna.JavaArjunaLite.Interface.LockStore;
+import com.arjuna.JavaArjuna.ClassLib.LockStore;
 import java.io.PrintStream;
 
 /*
