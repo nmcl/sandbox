@@ -86,10 +86,13 @@ public ObjectStore (String typeName, String location)
 	*/
     }
 
+    /*
+     * https://github.com/nmcl/sandbox/issues/75
 public void finalize ()
     {
 	_imple = null;
     }
+    */
 
 public synchronized boolean allObjUids (String s, InputObjectState buff, int m) throws ObjectStoreException
     {
