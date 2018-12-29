@@ -20,10 +20,13 @@ public SimpleUidList ()
 	entryCount = 0;
     }
 
+    /*
+     * https://github.com/nmcl/sandbox/issues/75
 public void finalize ()
     {
 	empty();
     }
+    */
 
 public synchronized void empty ()
     {

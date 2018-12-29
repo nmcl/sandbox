@@ -25,12 +25,15 @@ public HashUidList (int hashBucket)
 	    buckets[i] = null;
     }
 
+    /*
+     * https://github.com/nmcl/sandbox/issues/75
 public void finalize ()
     {
 	empty();
 
 	buckets = null;
     }
+    */
 
 public synchronized void empty ()
     {
