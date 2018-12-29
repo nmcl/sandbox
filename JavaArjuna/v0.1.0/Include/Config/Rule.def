@@ -165,7 +165,7 @@ ltar :: deps                                                                    
 #ifndef AllTarget
 #define AllTarget(deps)                                                                            @@\
 all :: all.local                                                                                   @@\
-all.local : stubs deps                                                                                   @@\
+all.local : deps                                                                                   @@\
 	@echo Made $? [in CURDIR_VAR ] as $@
 #endif
 
@@ -552,7 +552,6 @@ Makefiles ::
 #ifndef SubdirCommon
 #define SubdirCommon                                                                               @@\
 MakeInSubdir(all,all,all.local,SUBDIRS_VAR)                                                        @@\
-MakeInSubdir(stubs,stubs,stubs.local,SUBDIRS_VAR)                                                  @@\
 MakeInSubdir(depend,depend,depend.local,SUBDIRS_VAR)                                               @@\
 SubdirMakefiles                                                                                    @@\
 SubdirInstall                                                                                      @@\
