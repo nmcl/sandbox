@@ -19,6 +19,12 @@ import java.lang.IllegalArgumentException;
 public class TransactionalThread extends Thread
 {
 
+    /*
+     * https://github.com/nmcl/sandbox/issues/72
+     *
+     * This was never guaranteed to work in the first place. Eventually we pushed this
+     * responsibility on to the application developer anyway.
+     *
 public void finalize ()
     {
 	BasicAction currentAction = BasicAction.Current();
@@ -29,6 +35,7 @@ public void finalize ()
 	    currentAction = null;
 	}
     }
+    */
 
 public static Object create (Object thread) throws IllegalArgumentException
     {
