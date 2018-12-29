@@ -23,11 +23,14 @@ public LockListIterator (LockList L)
 	currentList = L;
 	next = L.head;
     }
-    
+
+    /*
+     * https://github.com/nmcl/sandbox/issues/74
 public void finalize ()
     {
 	next = null;
     }
+    */
 
 public final synchronized Lock iterate ()
     {
