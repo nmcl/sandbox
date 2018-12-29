@@ -269,6 +269,7 @@ public synchronized String unpackString () throws IOException
 
 	realign(length);
 
+// https://github.com/nmcl/sandbox/issues/68
 #ifndef JDK_1_0
 	return new String(b);
 #else
