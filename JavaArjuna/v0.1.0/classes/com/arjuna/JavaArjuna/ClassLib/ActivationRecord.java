@@ -41,7 +41,7 @@ public int typeIs ()
 
 public Object value ()
     {
-	return (Object) new Integer(state);
+	return (Object) state; // https://github.com/nmcl/sandbox/issues/71
     }
 
 public void setValue (Object v)
