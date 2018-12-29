@@ -26,6 +26,8 @@ repository as that's the oldest non-Gandiva Java build system I can find. Gandiv
 
 - Some classes may be in different packages to where they were originally. Sometimes it was personal preference at the time.
 
+- Use JAVAARJUNA_HOME to locate property file. https://github.com/nmcl/sandbox/issues/73
+
 ----
 
 When building make sure to install imake and set CLASSPATH to classes directory.
