@@ -77,10 +77,13 @@ public Semaphore (ObjectName objName)
     }
     */
 
+    /*
+     * https://github.com/nmcl/sandbox/issues/75
 public void finalize ()
     {
 	_imple = null;
     }
+    */
 
 public int lock ()
     {

@@ -22,9 +22,12 @@ public BasicSemaphoreSetup ()
     {
     }
 
+    /*
+     * https://github.com/nmcl/sandbox/issues/75
 public void finalize ()
     {
     }
+    */
 
 public synchronized Object createVoid ()
     {

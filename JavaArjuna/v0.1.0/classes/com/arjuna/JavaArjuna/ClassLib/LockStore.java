@@ -138,11 +138,14 @@ public LockStore (Object[] param)
 	else
 	    _imple = null;
     }
-	    
+
+    /*
+     * https://github.com/nmcl/sandbox/issues/75
 public void finalize ()
     {
 	_imple = null;
     }
+    */
     
 public InputObjectState read_state (Uid u, String tName) throws LockStoreException
     {

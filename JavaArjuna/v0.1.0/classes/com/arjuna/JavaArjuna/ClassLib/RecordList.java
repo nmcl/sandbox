@@ -42,7 +42,8 @@ public RecordList ()
 	noEntries = 0;
     }
 
-
+    /*
+     * https://github.com/nmcl/sandbox/issues/75
 public void finalize ()
     {
 	AbstractRecord temp;
@@ -54,6 +55,7 @@ public void finalize ()
 	    temp = null;
 	}
     }
+    */
 
     /* 
      * remove and return the element at the front of the list

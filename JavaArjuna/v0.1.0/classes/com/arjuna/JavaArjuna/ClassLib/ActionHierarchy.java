@@ -56,11 +56,14 @@ public ActionHierarchy (ActionHierarchy theCopy)
 	}
     }
 
+    /*
+     * https://github.com/nmcl/sandbox/issues/75
 public void finalize ()
     {
 	if (hierarchy != null)
 	    hierarchy = null;
     }
+    */
 
 public void print (PrintStream strm)
     {

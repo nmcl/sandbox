@@ -24,6 +24,8 @@ public LockList ()
 	head = null;
     }
 
+    /*
+     * https://github.com/nmcl/sandbox/issues/75
 public void finalize ()
     {
 	Lock temp = null;
@@ -31,6 +33,7 @@ public void finalize ()
 	while ((temp = pop()) != null)
 	    temp = null;  // temp.finalize() ?
     }
+    */
 
     /*
      * Insert a new Lock. This returns TRUE if the insertion occurred, false

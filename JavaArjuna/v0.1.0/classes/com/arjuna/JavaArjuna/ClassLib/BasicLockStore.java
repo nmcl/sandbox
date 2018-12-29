@@ -77,10 +77,13 @@ public LockStoreSegment ()
 	headOfList = null;
     }
 
+    /*
+     * https://github.com/nmcl/sandbox/issues/75
 public void finalize ()
     {
 	headOfList = null;
     }
+    */
 
 public synchronized boolean write_committed (Uid u, String tName, OutputObjectState state)
     {

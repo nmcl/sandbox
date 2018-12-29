@@ -19,10 +19,13 @@ public SemaphoreList ()
 	_head = null;
     }
 
+    /*
+     * https://github.com/nmcl/sandbox/issues/75
 public void finalize ()
     {
 	_head = null;
     }
+    */
 
 }
 
