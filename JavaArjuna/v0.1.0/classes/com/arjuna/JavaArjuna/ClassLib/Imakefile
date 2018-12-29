@@ -43,7 +43,9 @@ SOURCES = ActionHierarchy.java \
 	  ActionList.java \
 	  ObjectModel.java \
 	  StateManagerAttribute.java \
-	  LockManagerAttribute.java
+	  LockManagerAttribute.java \
+	  BasicLockStore.java \
+	  BasicSemaphore.java
 	  
 OBJECTS = ActionStatus.class \
 	  PrepareOutcome.class \
@@ -79,7 +81,9 @@ OBJECTS = ActionStatus.class \
 	  RecoveryRecord.class \
 	  ObjectModel.class \
 	  StateManagerAttribute.class \
-	  LockManagerAttribute.class
+	  LockManagerAttribute.class \
+	  BasicLockStore.class \
+	  BasicSemaphore.class
 
 AllTarget($(SOURCE) $(OBJECTS))
 
@@ -87,6 +91,8 @@ PreprocessJavaCode(AbstractRecord,NOPARAM)
 PreprocessJavaCode(BasicPersistentLockStore,NOPARAM)
 
 BuildJavaByteCode(BasicAction,NOPARAM)
+BuildJavaByteCode(BasicLockStore,NOPARAM)
+BuildJavaByteCode(BasicSemaphore,NOPARAM)
 BuildJavaByteCode(AtomicAction,NOPARAM)
 BuildJavaByteCode(ActionHierarchy,NOPARAM)
 BuildJavaByteCode(ActionInfo,NOPARAM)
