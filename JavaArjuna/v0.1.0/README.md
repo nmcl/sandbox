@@ -28,6 +28,8 @@ repository as that's the oldest non-Gandiva Java build system I can find. Gandiv
 
 - Use JAVAARJUNA_HOME to locate property file. https://github.com/nmcl/sandbox/issues/73
 
+- Some tidying up, specifically around deprecated features and warnings, e.g., finalize usage. Some of these are commented out, some deleted.
+
 ----
 
 When building make sure to install imake and set CLASSPATH to classes directory. Also make sure to set JAVAARJUNA_HOME to the installation directory where the build artefacts will eventually go.
