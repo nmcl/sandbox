@@ -57,7 +57,7 @@ LDFLAGS_DEFAULT=
 PURIFY_PROGRAM="purify"
 ID_PROGRAM=id
 INSTALL_TOPDIR_DEFAULT=/usr/local/JavaArjuna
-PROPERTIES_FILE_DEFAULT=/usr/local/JavaArjuna/javaarjuna-properties
+PROPERTIES_FILE_DEFAULT=$JAVAARJUNA_HOME/etc/javaarjuna-properties
 HAVE_INTERVIEWS=NO
 
 CONFIGDIR=Include/Config

@@ -14,10 +14,17 @@ SetSubDirectorys(Common ClassLib ObjectStore Thread Template)
 
 SOURCES = ObjectStore/ObjectStoreImple.java \
 	  Common/Utility.java \
-	  ClassLib/AbstractRecord.java
+	  ClassLib/AbstractRecord.java \
+	  Environment.java
+
+OBJECTS = Environment.class
 
 AllTarget($(SOURCES))
 
 PreprocessJavaCodeDir(ObjectStore,ObjectStoreImple,NOPARAM)
 PreprocessJavaCodeDir(Common,Utility,NOPARAM)
 PreprocessJavaCodeDir(ClassLib,AbstractRecord,NOPARAM)
+
+BuildJavaByteCode(Environment,NOPARAM)
+
+TidyTarget(*.class)

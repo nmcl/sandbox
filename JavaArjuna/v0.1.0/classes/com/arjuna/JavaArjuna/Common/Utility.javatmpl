@@ -11,6 +11,8 @@
 
 package com.arjuna.JavaArjuna.Common;
 
+import com.arjuna.JavaArjuna.Environment;
+
 import java.util.Properties;
 import java.io.*;
 
@@ -34,7 +36,11 @@ public static synchronized void loadProperties ()
     {
 	if (!loaded)
 	{
-	    String properties = System.getProperty("PROPERTIES_FILE", PROPERTIES_FILE);
+	    String properties = System.getProperty("PROPERTIES_FILE", Environment.PROPERTY_FILE_NAME);
+
+	    if (properties == null)
+	       properties = System.getenv(Environment.JAVAARJUNA_HOME);
+	       
 	    Properties props = new Properties(System.getProperties());
 	    
 	    try
