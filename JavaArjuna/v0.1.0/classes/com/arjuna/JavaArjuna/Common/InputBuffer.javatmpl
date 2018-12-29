@@ -269,9 +269,9 @@ public synchronized String unpackString () throws IOException
 
 	realign(length);
 
-#if defined(JDK_1_1) || defined(JDK_1_2)
+#ifndef JDK_1_0
 	return new String(b);
-#else
+#else  // for very early versions of Java
 	return new String(b, 0);
 #endif	
     }
