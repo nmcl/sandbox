@@ -253,12 +253,14 @@ public boolean shouldReplace (AbstractRecord a)
 
 private AbstractRecord _imple;
 
+    /*
+     * https://github.com/nmcl/sandbox/issues/66
     static 
     {
 	if (!Implementations.added())
 	    Implementations.initialise();
     }
-
+    */
 };
 
 
