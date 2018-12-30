@@ -28,6 +28,13 @@ public abstract class LockManager extends StateManager
      * the lock store to ensure the store is deleted cleanly
      */
 
+    /*
+     * Leaving this here because, as with StateManager, changing it will make
+     * the code less like the original JavaArjuna.
+     *
+     * https://github.com/nmcl/sandbox/issues/78
+     */
+    
 public void finalize ()
     {
 	boolean doSignal = false;
