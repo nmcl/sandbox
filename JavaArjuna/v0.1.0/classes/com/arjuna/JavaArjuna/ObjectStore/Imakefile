@@ -11,8 +11,11 @@ COMMENT
 
 SOURCES = ObjectStoreSetup.java \
 	  ObjectStoreImple.java \
+	  ObjectStore.java \
+	  ObjectStoreImple.java \
 	  StoreList.java \
 	  FileSystemStore.java \
+	  FileLockingStore.java \
 	  ActionStore.java \
 	  ShadowingStore.java \
 	  ShadowingStoreSetup.java \
@@ -23,7 +26,10 @@ SOURCES = ObjectStoreSetup.java \
 
 OBJECTS = ObjectStoreSetup.class \
 	  ObjectStoreImple.class \
+	  ObjectStore.class \
+	  ObjectStoreImple.class \
 	  FileSystemStore.class \
+	  FileLockingStore.class \
 	  ShadowingStore.class \
 	  ActionStore.class \
 	  StoreList.class \
@@ -39,8 +45,11 @@ PreprocessJavaCode(ObjectStoreImple,NOPARAM)
 PreprocessJavaCode(ShadowingStore,NOPARAM)
 
 BuildJavaByteCode(ObjectStoreSetup,NOPARAM)
+BuildJavaByteCode(ObjectStore,NOPARAM)
+BuildJavaByteCode(ObjectStoreImple,NOPARAM)
 BuildJavaByteCode(StoreList,NOPARAM)
 BuildJavaByteCode(FileSystemStore,NOPARAM)
+BuildJavaByteCode(FileLockingStore,NOPARAM)
 BuildJavaByteCode(ActionStore,NOPARAM)
 BuildJavaByteCode(ShadowingStore,NOPARAM)
 BuildJavaByteCode(ShadowingStoreSetup,NOPARAM)
