@@ -42,6 +42,12 @@ public abstract boolean save_state (OutputObjectState os, int ot);
      * Destructor.
      */
 
+    /*
+     * This generates a deprecation warning these days but to remove it would
+     * require too much re-architecture of the code and hence take it away from what
+     * JavaArjuna looked like originally.
+     */
+    
 public void finalize ()
     {
 	BasicAction action = BasicAction.Current();

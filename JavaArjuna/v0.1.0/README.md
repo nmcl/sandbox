@@ -13,10 +13,10 @@ possible that I'll hack a pre-existing build system just to get the code to
 build rather than spend a lot of time (initially or at all) to make the build
 system the way it was and extensible.
 
-- Some of the code was updated with bug fixes, new features etc.
+- Some of the code taken as the basis of this work was updated with bug fixes, new features etc.
 
 - The package names are going to be closer to JTSArjuna than they were
-  in the original code simply because I can't recall what I used orignally.
+  in the original code simply because I can't recall what I used in 1995.
 
 - The build system is just enough to create the necessary components but may be closer
 to JavaArjunaLite than the original. It is currently based on the W3OTrans JavaStubGen
@@ -28,7 +28,7 @@ repository as that's the oldest non-Gandiva Java build system I can find. Gandiv
 
 - Use JAVAARJUNA_HOME to locate property file. https://github.com/nmcl/sandbox/issues/73
 
-- Some tidying up, specifically around deprecated features and warnings, e.g., finalize usage. Some of these are commented out, some deleted.
+- Some tidying up, specifically around deprecated features and warnings, e.g., finalize usage. Some of these are commented out, some deleted. Some I didn't change at all because it would affect the rest of the code too much and take it much further away from what JavaArjuna looked like at the start. Arguably none of these changes should have been made and the warnings continue so the code is as close as possible.
 
 ----
 
