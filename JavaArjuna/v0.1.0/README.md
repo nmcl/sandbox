@@ -32,6 +32,8 @@ repository as that's the oldest non-Gandiva Java build system I can find. Gandiv
 
 - In fact upon reflection I decided not to change any further deprecated code to try to keep the code as pure to the original as possible. Rather than revert the current list of deprecated code, I decided to leave as is because it's just various finalize and minor code changes. Most (all?) of those changes have a suitable comment next to them anyway so people can see what was there originally if needed.
 
+- Gandiva took on the role of dynamic interface/implementation separation and binding but initially the types were fairly statically maintained, as they were in the original Arjuna. This was probably defined within the various implementations themselves but for this re-write I'll use something more structured and referenced with https://github.com/nmcl/sandbox/issues/79
+
 ----
 
 When building make sure to install imake and set CLASSPATH to classes directory. Also make sure to set JAVAARJUNA_HOME to the installation directory where the build artefacts will eventually go.
