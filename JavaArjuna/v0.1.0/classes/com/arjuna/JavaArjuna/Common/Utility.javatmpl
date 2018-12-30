@@ -36,11 +36,17 @@ public static synchronized void loadProperties ()
     {
 	if (!loaded)
 	{
-	    String properties = System.getProperty("PROPERTIES_FILE", Environment.PROPERTY_FILE_NAME);
+	    String homeDir = System.getenv(Environment.JAVAARJUNA_HOME);
 
-	    if (properties == null)
-	       properties = System.getenv(Environment.JAVAARJUNA_HOME);
-	       
+	    if (homeDir == null)
+	    {
+		System.err.println("JAVAARJUNA_HOME environment variable not set!");
+		System.exit(-1);
+	    }
+
+	    // Has user defined a specific properties file?
+	    
+	    String properties = System.getProperty("PROPERTIES_FILE", homeDir+"/"+Environment.PROPERTIES_FILE_DIR+"/"+Environment.PROPERTIES_FILE_NAME);
 	    Properties props = new Properties(System.getProperties());
 	    
 	    try
