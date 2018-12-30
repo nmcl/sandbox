@@ -28,7 +28,7 @@ repository as that's the oldest non-Gandiva Java build system I can find. Gandiv
 
 - Use JAVAARJUNA_HOME to locate property file. https://github.com/nmcl/sandbox/issues/73
 
-- Some tidying up, specifically around deprecated features and warnings, e.g., finalize usage. Some of these are commented out, some deleted. Some I didn't change at all because it would affect the rest of the code too much and take it much further away from what JavaArjuna looked like at the start. Arguably none of these changes should have been made and the warnings continue so the code is as close as possible.
+- Some tidying up, specifically around deprecated features and warnings, e.g., finalize usage. Some of these are commented out, some deleted. Some I didn't change at all because it would affect the rest of the code too much and take it much further away from what JavaArjuna looked like at the start. Arguably none of these changes should have been made and the warnings continue so the code is as close as possible. In fact upon reflection I decided not to change any further deprecated code to try to keep the code as pure to the original as possible.
 
 ----
 
