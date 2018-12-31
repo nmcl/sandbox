@@ -21,18 +21,15 @@ public abstract int lock ();
 public abstract int unlock ();
 public abstract int tryLock ();
 
-    /*
-     * https://github.com/nmcl/sandbox/issues/66
-public ClassName className ()
+public String className ()
     {
 	return SemaphoreImple._className;
     }
 
-public static ClassName name ()
+public static String name ()
     {
 	return SemaphoreImple._className;
     }
 
-private static final ClassName _className = new ClassName("SemaphoreImple");
-    */
+private static final String _className = "SemaphoreImple";
 }

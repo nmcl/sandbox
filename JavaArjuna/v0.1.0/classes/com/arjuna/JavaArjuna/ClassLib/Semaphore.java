@@ -30,52 +30,12 @@ public static final int SM_ERROR = 3;
     
 public Semaphore (String key)
     {
-	Object[] param = new Object[1];
+	/*
+	 * In the original JavaArjuna there was only one Semaphore implementation.
+	 */
 
-	param[0] = key;
-	
-	Object ptr = Inventory.inventory().createResources(JavaArjunaLiteNames.Implementation_Semaphore_BasicSemaphore(), param);
-
-	if (ptr instanceof SemaphoreImple)
-	    _imple = (SemaphoreImple) ptr;
-	else
-	    _imple = null;
+	_imple = new BasicSemaphore(key);
     }
-
-    /*
-     * https://github.com/nmcl/sandbox/issues/66
-public Semaphore (ClassName type)
-    {
-	Object ptr = Inventory.inventory().createVoid(type);
-
-	if (ptr instanceof SemaphoreImple)
-	    _imple = (SemaphoreImple) ptr;
-	else
-	    _imple = null;
-    }
-
-public Semaphore (ObjectName objName)
-    {
-	_imple = null;
-	
-	if (objName != null)
-	{
-	    try
-	    {
-		ClassName semaphoreType = objName.getClassNameAttribute("SemaphoreType");
-		ObjectName semaphoreName = objName.getObjectNameAttribute("SemaphoreName");
-		
-		Object ptr = Inventory.inventory().createObjectName(semaphoreType, semaphoreName);
-
-		if (ptr instanceof SemaphoreImple)
-		    _imple = (SemaphoreImple) ptr;
-	    }
-	    catch (IOException e)
-	    {
-	    }
-	}
-    }
-    */
 
     /*
      * https://github.com/nmcl/sandbox/issues/75
@@ -100,21 +60,12 @@ public int tryLock ()
 	return ((_imple != null) ? _imple.tryLock() : Semaphore.SM_ERROR);
     }
 
-    /*
-     * https://github.com/nmcl/sandbox/issues/66
-public ClassName className ()
+public String className ()
     {
-	return ((_imple != null) ? _imple.className() : ClassName.invalid());
+	return ((_imple != null) ? _imple.className() : null);
     }
-    */
     
 private SemaphoreImple _imple;
-
-    static 
-    {
-	if (!Implementations.added())
-	    Implementations.initialise();
-    }
     
 };
 
