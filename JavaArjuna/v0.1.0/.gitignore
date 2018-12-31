@@ -16,4 +16,5 @@ Utility.java
 ObjectStoreImple.java
 AbstractRecord.java
 ShadowingStore.java
+BasicPersistentLockStore.java
 out
