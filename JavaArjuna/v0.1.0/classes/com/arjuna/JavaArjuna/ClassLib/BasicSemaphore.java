@@ -9,14 +9,11 @@
  * $Id: BasicSemaphore.java,v 1.6 1998/07/06 13:26:49 nmcl Exp $
  */
 
-package com.arjuna.JavaArjunaLite.Implementation.Semaphore;
+package com.arjuna.JavaArjuna.ClassLib;
 
-import com.arjuna.JavaArjunaLite.JavaArjunaLiteNames;
-import com.arjuna.JavaArjunaLite.Implementation.SemaphoreImple;
-import com.arjuna.JavaArjunaLite.Interface.Semaphore;
-import com.arjuna.JavaGandiva.Template.BasicList;
-import com.arjuna.JavaGandiva.Template.KeyedList;
-import com.arjuna.JavaGandiva.Common.*;
+import com.arjuna.JavaArjuna.Template.BasicList;
+import com.arjuna.JavaArjuna.Template.KeyedList;
+import com.arjuna.JavaArjuna.Common.*;
 
 import java.lang.InterruptedException;
 
