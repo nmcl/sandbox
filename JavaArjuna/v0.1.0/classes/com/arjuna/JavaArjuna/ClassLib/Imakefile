@@ -48,7 +48,6 @@ SOURCES = ActionHierarchy.java \
 	  BasicLockStore.java \
 	  BasicSemaphore.java \
 	  Semaphore.java \
-	  SemaphoreList.java \
 	  SemaphoreImple.java \
 	  BasicPersistentLockStore.java \
 	  LockStore.java \
@@ -95,7 +94,6 @@ OBJECTS = ActionStatus.class \
 	  BasicLockStore.class \
 	  BasicSemaphore.class \
 	  Semaphore.class \
-	  SemaphoreList.class \
 	  SemaphoreImple.class \
 	  BasicPersistentLockStore.class \
 	  LockStore.class \
@@ -115,7 +113,6 @@ BuildJavaByteCode(LockStoreImple,NOPARAM)
 BuildJavaByteCode(BasicLockStore,NOPARAM)
 BuildJavaByteCode(BasicSemaphore,NOPARAM)
 BuildJavaByteCode(Semaphore,NOPARAM)
-BuildJavaByteCode(SemaphoreList,NOPARAM)
 BuildJavaByteCode(SemaphoreImple,NOPARAM)
 BuildJavaByteCode(AtomicAction,NOPARAM)
 BuildJavaByteCode(ActionHierarchy,NOPARAM)
