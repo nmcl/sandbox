@@ -65,7 +65,7 @@ public static synchronized void loadProperties ()
 	    loaded = true;
 	}
     }
-    
+
     /*
      * Convert integer to hex String.
      */
@@ -95,5 +95,5 @@ public static long hexStringToLong (String s) throws NumberFormatException
     }    
 
 private static boolean loaded = false;
-    
+
 }
