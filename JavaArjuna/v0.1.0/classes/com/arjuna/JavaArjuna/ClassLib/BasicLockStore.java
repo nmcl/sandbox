@@ -9,13 +9,11 @@
  * $Id: BasicLockStore.java,v 1.4 1998/07/06 13:26:40 nmcl Exp $
  */
 
-package com.arjuna.JavaArjunaLite.Implementation.LockStore;
+package com.arjuna.JavaArjuna.ClassLib;
 
-import com.arjuna.JavaArjunaLite.JavaArjunaLiteNames;
-import com.arjuna.JavaArjunaLite.Implementation.LockStoreImple;
-import com.arjuna.JavaGandiva.Common.*;
+import com.arjuna.JavaArjuna.Common.*;
 
-import com.arjuna.JavaArjunaLite.Common.LockStoreException;
+import com.arjuna.JavaArjuna.Common.LockStoreException;
 
 public class BasicLockStore extends LockStoreImple
 {
@@ -44,14 +42,14 @@ public boolean write_committed (Uid u, String tName, OutputObjectState state)
 	return segmentStore.write_committed(u, tName, state);
     }
 
-public ClassName className ()
+public String className ()
     {
-	return JavaArjunaLiteNames.Implementation_LockStore_BasicLockStore();
+	return LockStoreType.BASIC_LOCK_STORE;
     }
 
-public static ClassName name ()
+public static String name ()
     {
-	return JavaArjunaLiteNames.Implementation_LockStore_BasicLockStore();
+	return LockStoreType.BASIC_LOCK_STORE;
     }
 
 public static final BasicLockStore create (Object[] param)

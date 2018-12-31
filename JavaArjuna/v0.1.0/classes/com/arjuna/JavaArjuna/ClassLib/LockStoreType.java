@@ -17,4 +17,5 @@ package com.arjuna.JavaArjuna.ClassLib;
 
 public class LockStoreType
 {
+    public static String BASIC_LOCK_STORE = "BasicLockStore";
 };
