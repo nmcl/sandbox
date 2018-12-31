@@ -53,7 +53,8 @@ SOURCES = ActionHierarchy.java \
 	  BasicPersistentLockStore.java \
 	  LockStore.java \
 	  LockStoreImple.java \
-	  LockStoreType.java
+	  LockStoreType.java \
+	  SemaphoreType.java
 
 OBJECTS = ActionStatus.class \
 	  PrepareOutcome.class \
@@ -99,7 +100,8 @@ OBJECTS = ActionStatus.class \
 	  BasicPersistentLockStore.class \
 	  LockStore.class \
 	  LockStoreImple.class \
-	  LockStoreType.class
+	  LockStoreType.class \
+	  SemaphoreType.class
 
 AllTarget($(SOURCE) $(OBJECTS))
 
@@ -150,6 +152,7 @@ BuildJavaByteCode(ActionList,NOPARAM)
 BuildJavaByteCode(ObjectModel,NOPARAM)
 BuildJavaByteCode(StateManagerAttribute,NOPARAM)
 BuildJavaByteCode(LockManagerAttribute,NOPARAM)
-BuildJavaByteCode(LockStoreTye,NOPARAM)
+BuildJavaByteCode(LockStoreType,NOPARAM)
+BuildJavaByteCode(SemaphoreType,NOPARAM)
 
 TidyTarget(*.class)

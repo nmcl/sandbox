@@ -112,14 +112,14 @@ public synchronized int tryLock ()
 	    return Semaphore.SM_WOULD_BLOCK;
     }
 
-public ClassName className ()
+public String className ()
     {
-	return JavaArjunaLiteNames.Implementation_Semaphore_BasicSemaphore();
+	return SemaphoreType.BASIC_SEMAPHORE;
     }
     
-public static ClassName name ()
+public static String name ()
     {
-	return JavaArjunaLiteNames.Implementation_Semaphore_BasicSemaphore();	
+	return SemaphoreType.BASIC_SEMAPHORE;
     }
     
     /*
