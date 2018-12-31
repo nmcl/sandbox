@@ -16,7 +16,8 @@ SOURCES = BasicList.java \
 	  BasicUidList.java \
 	  SimpleUidList.java \
 	  BasicListIterator.java \
-	  SimpleUidListIterator.java
+	  SimpleUidListIterator.java \
+	  KeyedList.java
 
 OBJECTS = BasicList.class \
 	  ObjectElement.class \
@@ -25,7 +26,8 @@ OBJECTS = BasicList.class \
 	  BasicUidList.class \
 	  SimpleUidList.class \
 	  BasicListIterator.class \
-	  SimpleUidListIterator.class
+	  SimpleUidListIterator.class \
+	  KeyedList.class
 
 AllTarget($(SOURCES) $(OBJECTS))
 
@@ -37,5 +39,6 @@ BuildJavaByteCode(BasicUidList,NOPARAM)
 BuildJavaByteCode(SimpleUidList,NOPARAM)
 BuildJavaByteCode(BasicListIterator,NOPARAM)
 BuildJavaByteCode(SimpleUidListIterator,NOPARAM)
+BuildJavaByteCode(KeyedList,NOPARAM)
 
 TidyTarget(*.class)
