@@ -22,9 +22,6 @@ all depend install ::
 install.local :: INSTALL_TOPDIR_VAR
 	-CHMOD_VAR ugo+rx INSTALL_TOPDIR_VAR
 
-install.local :: INSTALL_TOPDIR_VAR/servers
-	-CHMOD_VAR ugo+rwx INSTALL_TOPDIR_VAR/servers
-
 MakeRelDirectoryDependency(Include)
 MakeRelDirectoryDependency(classes)
 MakeRelDirectoryDependency(htdocs)
