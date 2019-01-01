@@ -36,6 +36,33 @@ public static synchronized void loadProperties ()
     {
 	if (!loaded)
 	{
+	    String properties = System.getProperty("PROPERTIES_FILE", PROPERTIES_FILE);
+	    Properties props = new Properties(System.getProperties());
+	    
+	    try
+	    {
+		props.load(new BufferedInputStream(new FileInputStream(properties)));
+
+		System.setProperties(props);
+	    }
+	    catch (FileNotFoundException e1)
+	    {
+	    }
+	    catch (IOException e2)
+	    {
+	    }
+
+	    loaded = true;
+	}
+    }
+    
+/*
+ * New version uses install directory but isn't what JavaArjuna did.
+ *
+public static synchronized void loadProperties ()
+    {
+	if (!loaded)
+	{
 	    String homeDir = System.getenv(Environment.JAVAARJUNA_HOME);
 
 	    if (homeDir == null)
@@ -65,6 +92,7 @@ public static synchronized void loadProperties ()
 	    loaded = true;
 	}
     }
+*/
 
     /*
      * Convert integer to hex String.

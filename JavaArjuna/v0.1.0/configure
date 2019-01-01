@@ -529,7 +529,7 @@ echo "#define PURIFY_PROGRAM " \"$PURIFY_PROGRAM\"
 echo "#endif"
 echo
 echo "#ifndef PROPERTIES_FILE"
-echo "#define PROPERTIES_FILE \\\"$PROPERTIES_FILE_DEFAULT\\\""
+echo "#define PROPERTIES_FILE "$PROPERTIES_FILE_DEFAULT
 echo "#endif"
 echo
 echo "#ifndef JAVAC_PROGRAM"
@@ -549,7 +549,7 @@ echo "#define xLIBRARIES_DEFAULT " $LIBRARIES_DEFAULT
 echo "#endif"
 echo
 echo "#ifndef CPPFLAGS_DEFAULT"
-echo "#define CPPFLAGS_DEFAULT -DPROPERTIES_FILE=\\\"$PROPERTIES_FILE_DEFAULT\\\""
+echo "#define CPPFLAGS_DEFAULT -DPROPERTIES_FILE="$PROPERTIES_FILE_DEFAULT
 echo "#endif"
 echo
 if test "$SUPPORT_THREADS" = "YES"
