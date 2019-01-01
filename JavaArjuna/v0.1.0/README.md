@@ -20,7 +20,6 @@ were fairly statically maintained, as they were in the original Arjuna. This was
 themselves but for this re-write I'll use something more structured and referenced with https://github.com/nmcl/sandbox/issues/79 And in
 some cases it may still look closer to Gandiva than the original JavaArjuna.
 
-
 - The package names are going to be closer to JTSArjuna than they were
   in the original code simply because I can't recall what I used in 1995.
 
@@ -48,3 +47,7 @@ Most (all?) of those changes have a suitable comment next to them anyway so peop
 When building make sure to install imake and set CLASSPATH to classes directory.
 
 Also make sure to set the shell environment variable JAVAARJUNA_HOME to the installation directory where the build artefacts will eventually go.
+
+Note, on the Mac there's some weirdness with the Xcode version of cpp and string substitutions during pre-processing (even the standard # doesn't
+seem to work). So added the ability to override cpp during configure and use the official gcc version (gcc-8 in my current build) and
+that works fine. See https://github.com/nmcl/sandbox/issues/80
