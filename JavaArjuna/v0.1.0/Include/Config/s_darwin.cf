@@ -35,3 +35,4 @@
 
 #define SYSTEM_SPECIFIC_FLAGS 
 #define STUBGEN_OS_FLAGS " "
+#define CPP_PROGRAM cpp-8

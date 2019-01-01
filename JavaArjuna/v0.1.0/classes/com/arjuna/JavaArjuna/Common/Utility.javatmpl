@@ -9,6 +9,9 @@
  * $Id: Utility.javatmpl,v 1.2.2.1 1999/01/28 19:12:37 nmcl Exp $
  */
 
+#define STR(x)   #x
+#define XSTR(x)  STR(x)
+
 package com.arjuna.JavaArjuna.Common;
 
 import com.arjuna.JavaArjuna.Environment;
@@ -36,7 +39,7 @@ public static synchronized void loadProperties ()
     {
 	if (!loaded)
 	{
-	    String properties = System.getProperty("PROPERTIES_FILE", PROPERTIES_FILE);
+	    String properties = System.getProperty("PROPERTIES_FILE", XSTR(PROPERTIES_FILE));
 	    Properties props = new Properties(System.getProperties());
 	    
 	    try
