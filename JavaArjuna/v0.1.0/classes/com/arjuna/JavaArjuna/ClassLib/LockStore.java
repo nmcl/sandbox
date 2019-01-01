@@ -11,6 +11,7 @@
 
 package com.arjuna.JavaArjuna.ClassLib;
 
+import com.arjuna.JavaArjuna.Environment;
 import com.arjuna.JavaArjuna.ClassLib.ObjectModel;
 import com.arjuna.JavaArjuna.Common.LockStoreException;
 import com.arjuna.JavaArjuna.ClassLib.LockStoreImple;
@@ -22,54 +23,50 @@ public class LockStore
     /*
      * Default for single lock store type.
      */
+
+    /*
+     * This dynamic binding is probably still more than was there in the original
+     * version of JavaArjuna but I can't recall how it looked so anything that
+     * wipes this out and starts from scratch is likely to be different anyway so
+     * easier (quicker) to stay with something close to the earliest version of
+     * JTSArjuna.
+     */
     
 public LockStore (String param)
     {
 	Object[] resources = new Object[1];
 	resources[0] = param;
 
-	/*
-	 * https://github.com/nmcl/sandbox/issues/66
 	if (!singleCheck)
 	{
-	    singleLockStoreType = new ClassName(System.getProperty(JavaArjunaLiteNames.Interface_LockStore_singleStoreType(),
-								   JavaArjunaLiteNames.Implementation_LockStore_defaultStore().stringForm()));
+	    singleLockStoreType = System.getProperty(Environment.SINGLE_LOCKSTORE_TYPEStoreType(), LockStoreType.BASIC_LOCK_STORE);
 	    singleCheck = true;
 	}
 
-	Object ptr = Inventory.inventory().createResources(singleLockStoreType, resources);
-	
-	if (ptr instanceof LockStoreImple)
-	    _imple = (LockStoreImple) ptr;
-	else
-	    _imple = null;
-	*/
+	_imple = new BasicLockStore(resources);
     }
 
-    /*
-     * https://github.com/nmcl/sandbox/issues/66
-public LockStore (ClassName typeName, String param)
+public LockStore (String typeName, String param)
     {
 	Object[] resources = new Object[1];
 	resources[0] = param;
-	
-	Object ptr = Inventory.inventory().createResources(typeName, resources);
 
-	if (ptr instanceof LockStoreImple)
-	    _imple = (LockStoreImple) ptr;
+	if (LockStoreType.BASIC_LOCK_STORE.equals(typeName))
+	    _imple = new BasicLockStore(resources);
 	else
-	    _imple = null;
+	{
+	    if (LockStoreType.BASIC_PERSISTENT_LOCK_STORE.equals(typeName))
+		_imple = new BasicPersistentLockStore(resources);
+	    else
+		_imple = null;
+	}
     }
-    */
 
 public LockStore (Object[] param)
     {
 	if (param.length == 3)
 	{
-	    /*
-	     * https://github.com/nmcl/sandbox/issues/66
-	    ClassName typeName = (ClassName) param[0];
-	    */
+	    String typeName = (String) param[0];
 
 	    int modelType = ((Integer) param[1]).intValue();
 	    Object[] resources = new Object[1];
@@ -87,53 +84,42 @@ public LockStore (Object[] param)
 	    {
 		if (!singleCheck)
 		{
-		    /*
-		     *  https://github.com/nmcl/sandbox/issues/66
-		    type = System.getProperty(JavaArjunaLiteNames.Interface_LockStore_singleStoreType(), null);
-		    */
+		    type = System.getProperty(Environment.SINGLE_LOCKSTORE_TYPE, null);
 		    singleCheck = true;
 
-		    /*
-		     * https://github.com/nmcl/sandbox/issues/66
 		    if (type != null)
-			singleLockStoreType = new ClassName(type);
-		    */
+			singleLockStoreType = type;
 		}
 
-		/*
-		 *  https://github.com/nmcl/sandbox/issues/66
 		if (singleLockStoreType != null)
+		{
 		    typeName = singleLockStoreType;
-		*/
+
+		    // just use the only implementation we have anyway!
+
+		    _imple = new BasicLockStore(resources);
+		}
 	    }
 	    else
 	    {
 		if (!multipleCheck)
 		{
-		    /*
-		     *  https://github.com/nmcl/sandbox/issues/66
-		    type = System.getProperty(JavaArjunaLiteNames.Interface_LockStore_multipleStoreType(), null);
-		    */
+		    type = System.getProperty(Environment.MULTIPLE_LOCKSTORE_TYPE, null);
 		    multipleCheck = true;
 
-		    /*
-		     * https://github.com/nmcl/sandbox/issues/66
 		    if (type != null)
-			multipleLockStoreType = new ClassName(type);
-		    */
+			multipleLockStoreType = type;
 		}
 
 		if (multipleLockStoreType != null)
+		{
 		    typeName = multipleLockStoreType;
+
+		    // just use the only implementation we have anyway!
+
+		    _imple = new BasicPersistentLockStore(resources);
+		}
 	    }
-
-	    Object ptr = Inventory.inventory().createResources(typeName, resources);
-
-	    if (ptr instanceof LockStoreImple)
-		_imple = (LockStoreImple) ptr;
-	    else
-		_imple = null;
-	    
 	}
 	else
 	    _imple = null;
@@ -162,29 +148,24 @@ public boolean write_committed (Uid u, String tName, OutputObjectState state)
 	return ((_imple != null) ? _imple.write_committed(u, tName, state) : false);
     }
 
-    /*
-     * https://github.com/nmcl/sandbox/issues/66
-public ClassName className ()
+public String className ()
     {
-	return ((_imple != null) ? _imple.className() : ClassName.invalid());
+	return ((_imple != null) ? _imple.className() : null);
     }
-    */
     
 private LockStoreImple _imple;
 
     /*
-     * https://github.com/nmcl/sandbox/issues/66
-private static ClassName singleLockStoreType = null;
-private static ClassName multipleLockStoreType = null;
-    */
+     * Not a typical way of doing this since LockStoreType has the values
+     * but trying not to modify the code too much from the original. The
+     * introduction of LockStoreType is already a deviation from the original.
+     */
+    
+private static String singleLockStoreType = LockStoreType.BASIC_LOCK_STORE;
+private static String multipleLockStoreType = LockStoreType.BASIC_PERSISTENT_LOCK_STORE;
+
 private static boolean singleCheck = false;
 private static boolean multipleCheck = false;
- 
-    static 
-    {
-	if (!Implementations.added())
-	    Implementations.initialise();
-    }
     
 }
 

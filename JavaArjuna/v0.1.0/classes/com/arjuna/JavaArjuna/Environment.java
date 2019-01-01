@@ -16,5 +16,7 @@ public class Environment
     public static String JAVAARJUNA_HOME = "JAVAARJUNA_HOME";
     public static String PROPERTIES_FILE_NAME = "properties.txt";
     public static String PROPERTIES_FILE_DIR = "etc";  // default will be $JAVAARJUNA_HOME/etc
+    public static String SINGLE_LOCKSTORE_TYPE = "SINGLE_LOCKSTORE_TYPE";
+    public static String MULTIPLE_LOCKSTORE_TYPE = "MULTIPLE_LOCKSTORE_TYPE";
 }
 
