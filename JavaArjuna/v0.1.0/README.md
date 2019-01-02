@@ -44,9 +44,13 @@ Most (all?) of those changes have a suitable comment next to them anyway so peop
 
 ----
 
-When building make sure to install imake and set CLASSPATH to classes directory.
+When building make sure to install imake and set CLASSPATH to classes directory. Also make sure to set the shell environment\
+variable JAVAARJUNA_HOME to the installation directory where the build artefacts will eventually go.
 
-Also make sure to set the shell environment variable JAVAARJUNA_HOME to the installation directory where the build artefacts will eventually go.
+You may see some instances of the following warning message, which you can safely ignore.
+
+"Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details."
 
 Note, on the Mac there's some weirdness with the Xcode version of cpp and string substitutions during pre-processing (even the standard # doesn't
 seem to work). So added the ability to override cpp during configure and use the official gcc version (gcc-8 in my current build) and
