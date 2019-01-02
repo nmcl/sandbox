@@ -14,6 +14,7 @@
 
 package com.arjuna.JavaArjuna.ClassLib;
 
+import com.arjuna.JavaArjuna.Environment;
 import com.arjuna.JavaArjuna.ClassLib.LockStoreImple;
 import com.arjuna.JavaArjuna.ObjectStore.ObjectStore;
 import com.arjuna.JavaArjuna.Common.*;
@@ -32,7 +33,7 @@ public class BasicPersistentLockStore extends LockStoreImple
 public BasicPersistentLockStore (String key)
     {
 	if (lockStoreLocation == null)
-	    lockStoreLocation = System.getProperty(JavaArjunaNames.Implementation_LockStore_storeDir(), XSTR(DEFAULT_LS_ROOT));
+	    lockStoreLocation = System.getProperty(Environment.LOCKSTORE_DIR, XSTR(DEFAULT_LS_ROOT));
 	
 	_key = lockStoreLocation;
 

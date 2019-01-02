@@ -63,9 +63,7 @@ public LockStore (Object[] param)
 	    String typeName = (String) param[0];
 
 	    int modelType = ((Integer) param[1]).intValue();
-	    Object[] resources = new Object[1];
-
-	    resources[0] = param[2];
+	    String key = (String) param[2];
 
 	    /*
 	     * Assume anything in the property field overrides anything given
@@ -91,7 +89,7 @@ public LockStore (Object[] param)
 
 		    // just use the only implementation we have anyway!
 
-		    _imple = new BasicLockStore(resources);
+		    _imple = new BasicLockStore(key);
 		}
 	    }
 	    else
@@ -111,7 +109,7 @@ public LockStore (Object[] param)
 
 		    // just use the only implementation we have anyway!
 
-		    _imple = new BasicPersistentLockStore(resources);
+		    _imple = new BasicPersistentLockStore(key);
 		}
 	    }
 	}
