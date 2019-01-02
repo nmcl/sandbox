@@ -15,7 +15,7 @@ package com.arjuna.JavaArjuna.ObjectStore;
  * Maintain the types of ObjectStore implementations.
  */
 
-public class LockStoreType
+public class ObjectStoreType
 {
     public static String SHADOWING_STORE = "ShadowingStore";
 };
