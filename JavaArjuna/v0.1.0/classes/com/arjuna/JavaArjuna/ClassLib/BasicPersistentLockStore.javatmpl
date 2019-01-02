@@ -88,16 +88,6 @@ public static String name ()
     	return LockStoreTypes.BASIC_PERSISTENT_LOCK_STORE;
     }    
 
-public static final BasicPersistentLockStore create (Object[] param)
-    {
-	if (param == null)
-	    return null;
-	
-	String key = (String) param[0];
-
-	return new BasicPersistentLockStore(key);
-    }
-    
 private String _key;
 private ObjectStore _lockStore;
 

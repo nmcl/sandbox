@@ -34,29 +34,23 @@ public class LockStore
     
 public LockStore (String param)
     {
-	Object[] resources = new Object[1];
-	resources[0] = param;
-
 	if (!singleCheck)
 	{
 	    singleLockStoreType = System.getProperty(Environment.SINGLE_LOCKSTORE_TYPE, LockStoreType.BASIC_LOCK_STORE);
 	    singleCheck = true;
 	}
 
-	_imple = new BasicLockStore(resources);
+	_imple = new BasicLockStore(param);
     }
 
 public LockStore (String typeName, String param)
     {
-	Object[] resources = new Object[1];
-	resources[0] = param;
-
 	if (LockStoreType.BASIC_LOCK_STORE.equals(typeName))
-	    _imple = new BasicLockStore(resources);
+	    _imple = new BasicLockStore(param);
 	else
 	{
 	    if (LockStoreType.BASIC_PERSISTENT_LOCK_STORE.equals(typeName))
-		_imple = new BasicPersistentLockStore(resources);
+		_imple = new BasicPersistentLockStore(param);
 	    else
 		_imple = null;
 	}

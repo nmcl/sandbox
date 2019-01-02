@@ -52,16 +52,6 @@ public static String name ()
 	return LockStoreType.BASIC_LOCK_STORE;
     }
 
-public static final BasicLockStore create (Object[] param)
-    {
-	if (param == null)
-	    return null;
-	
-	String key = (String) param[0];
-
-	return new BasicLockStore(key);
-    }
-    
 private static LockStoreSegment segmentStore = new LockStoreSegment();
     
 };
