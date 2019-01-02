@@ -6,7 +6,7 @@
  * Newcastle upon Tyne,
  * UK.
  *
- * $Id: RecordType.java,v 1.4 1998/07/06 13:26:30 nmcl Exp $
+ * $Id$
  */
 
 package com.arjuna.JavaArjuna.ClassLib;
