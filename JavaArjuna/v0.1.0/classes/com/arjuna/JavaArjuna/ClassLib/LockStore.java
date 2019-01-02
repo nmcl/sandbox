@@ -39,7 +39,7 @@ public LockStore (String param)
 
 	if (!singleCheck)
 	{
-	    singleLockStoreType = System.getProperty(Environment.SINGLE_LOCKSTORE_TYPEStoreType(), LockStoreType.BASIC_LOCK_STORE);
+	    singleLockStoreType = System.getProperty(Environment.SINGLE_LOCKSTORE_TYPE, LockStoreType.BASIC_LOCK_STORE);
 	    singleCheck = true;
 	}
 
