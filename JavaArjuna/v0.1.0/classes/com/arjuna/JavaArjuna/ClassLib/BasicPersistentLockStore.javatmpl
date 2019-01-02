@@ -9,6 +9,9 @@
  * $Id: BasicPersistentLockStore.javatmpl,v 1.1 1998/08/13 14:31:37 nmcl Exp $
  */
 
+#define STR(x)   #x
+#define XSTR(x)  STR(x)
+
 package com.arjuna.JavaArjuna.ClassLib;
 
 import com.arjuna.JavaArjuna.ClassLib.LockStoreImple;
@@ -29,7 +32,7 @@ public class BasicPersistentLockStore extends LockStoreImple
 public BasicPersistentLockStore (String key)
     {
 	if (lockStoreLocation == null)
-	    lockStoreLocation = System.getProperty(JavaArjunaNames.Implementation_LockStore_storeDir(), DEFAULT_LS_ROOT);
+	    lockStoreLocation = System.getProperty(JavaArjunaNames.Implementation_LockStore_storeDir(), XSTR(DEFAULT_LS_ROOT));
 	
 	_key = lockStoreLocation;
 

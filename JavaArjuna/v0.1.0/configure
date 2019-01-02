@@ -59,6 +59,7 @@ PURIFY_PROGRAM="purify"
 ID_PROGRAM=id
 INSTALL_TOPDIR_DEFAULT=/usr/local/JavaArjuna
 PROPERTIES_FILE_DEFAULT=$JAVAARJUNA_HOME/etc/javaarjuna-properties
+LOCKSTORE_ROOT=$JAVAARJUNA_HOME/LockStore
 HAVE_INTERVIEWS=NO
 
 CONFIGDIR=Include/Config
@@ -541,6 +542,10 @@ echo "#ifndef PROPERTIES_FILE"
 echo "#define PROPERTIES_FILE "$PROPERTIES_FILE_DEFAULT
 echo "#endif"
 echo
+echo "#ifndef LOCKSTORE_ROOT"
+echo "#define LOCKSTORE_ROOT "$LOCKSTORE_ROOT
+echo "#endif"
+echo
 echo "#ifndef CPP_PROGRAM"
 echo "#define CPP_PROGRAM " \"$CPP_PROGRAM\"
 echo "#endif"
@@ -562,7 +567,7 @@ echo "#define xLIBRARIES_DEFAULT " $LIBRARIES_DEFAULT
 echo "#endif"
 echo
 echo "#ifndef CPPFLAGS_DEFAULT"
-echo "#define CPPFLAGS_DEFAULT -DPROPERTIES_FILE="$PROPERTIES_FILE_DEFAULT
+echo "#define CPPFLAGS_DEFAULT -DPROPERTIES_FILE="$PROPERTIES_FILE_DEFAULT" -DDEFAULT_LS_ROOT="$LOCKSTORE_ROOT
 echo "#endif"
 echo
 if test "$SUPPORT_THREADS" = "YES"
