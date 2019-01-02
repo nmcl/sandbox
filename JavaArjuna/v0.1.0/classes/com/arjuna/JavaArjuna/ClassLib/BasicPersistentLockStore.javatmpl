@@ -17,6 +17,7 @@ package com.arjuna.JavaArjuna.ClassLib;
 import com.arjuna.JavaArjuna.Environment;
 import com.arjuna.JavaArjuna.ClassLib.LockStoreImple;
 import com.arjuna.JavaArjuna.ObjectStore.ObjectStore;
+import com.arjuna.JavaArjuna.ObjectStore.ObjectStoreType;
 import com.arjuna.JavaArjuna.Common.*;
 
 import com.arjuna.JavaArjuna.Common.ObjectStoreException;
@@ -43,7 +44,7 @@ public BasicPersistentLockStore (String key)
 	 * entirely by the object.
 	 */
 	
-	_lockStore = new ObjectStore(JavaArjunaNames.Implementation_ObjectStore_ShadowingStore(), _key);
+	_lockStore = new ObjectStore(ObjectStoreType.SHADOWING_STORE, _key);
     }
 
 public InputObjectState read_state (Uid u, String tName) throws LockStoreException
@@ -84,12 +85,12 @@ public boolean write_committed (Uid u, String tName, OutputObjectState state)
 
 public String className ()
     {
-	return LockStoreTypes.BASIC_PERSISTENT_LOCK_STORE;
+	return LockStoreType.BASIC_PERSISTENT_LOCK_STORE;
     }
 
 public static String name ()
     {
-    	return LockStoreTypes.BASIC_PERSISTENT_LOCK_STORE;
+    	return LockStoreType.BASIC_PERSISTENT_LOCK_STORE;
     }    
 
 private String _key;
