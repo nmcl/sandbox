@@ -19,7 +19,8 @@ SOURCES = ObjectStoreSetup.java \
 	  ActionStore.java \
 	  ShadowingStore.java \
 	  ShadowNoFileLockStore.java \
-	  ShadowingStore.java
+	  ShadowingStore.java \
+	  ObjectStoreType.java
 
 OBJECTS = ObjectStoreSetup.class \
 	  ObjectStoreImple.class \
@@ -31,7 +32,8 @@ OBJECTS = ObjectStoreSetup.class \
 	  ActionStore.class \
 	  StoreList.class \
 	  ShadowNoFileLockStore.class \
-	  ShadowingStore.class
+	  ShadowingStore.class \
+	  ObjectStoreType.class
 
 AllTarget($(SOURCES) $(OBJECTS))
 
@@ -47,5 +49,6 @@ BuildJavaByteCode(FileLockingStore,NOPARAM)
 BuildJavaByteCode(ActionStore,NOPARAM)
 BuildJavaByteCode(ShadowingStore,NOPARAM)
 BuildJavaByteCode(ShadowNoFileLockStore,NOPARAM)
+BuildJavaByteCode(ObjectStoreType,NOPARAM)
 
 TidyTarget(*.class)
