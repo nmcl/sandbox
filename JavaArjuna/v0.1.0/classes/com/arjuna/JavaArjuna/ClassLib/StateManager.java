@@ -62,10 +62,7 @@ public void finalize ()
 	}
 
 	smAttributes = null;
-	/*
-	 * https://github.com/nmcl/sandbox/issues/66
 	objectName = null;
-	*/
 	
 	objectStore = null;
 	storeRoot = null;
@@ -383,33 +380,19 @@ protected void terminate ()
 
 protected StateManager (Uid objUid)
     {
-	/*
-	 * https://github.com/nmcl/sandbox/issues/66
 	this(objUid, ObjectType.ANDPERSISTENT, null);
-	*/
-	this(objUid, ObjectType.ANDPERSISTENT);
     }
 
-    /*
-     * https://github.com/nmcl/sandbox/issues/66
 protected StateManager (Uid objUid, ObjectName attr)
     {
 	this(objUid, ObjectType.ANDPERSISTENT, attr);
     }
-    */
     
 protected StateManager (Uid objUid, int ot)
     {
-	/*
-	 * https://github.com/nmcl/sandbox/issues/66
 	this(objUid, ot, null);
-	*/
-
-	// definitely won't work now!!
     }
 
-    /*
-     * https://github.com/nmcl/sandbox/issues/66
 protected StateManager (Uid objUid, int ot, ObjectName objName)
     {
 	objectName = objName;
@@ -429,29 +412,17 @@ protected StateManager (Uid objUid, int ot, ObjectName objName)
 	modifyingActions = new ActionList();
 	usingActions = new ActionList();
     }
-    */
 
 protected StateManager ()
     {
-	/*
-	 * https://github.com/nmcl/sandbox/issues/66
 	this(ObjectType.RECOVERABLE, null);
-	*/
-	this(ObjectType.RECOVERABLE);
     }
     
 protected StateManager (int ot)
     {
-	/*
-	 * https://github.com/nmcl/sandbox/issues/66
 	this(ot, null);
-	*/
-
-	// definitely broken now!!
     }
 
-    /*
-     * https://github.com/nmcl/sandbox/issues/66
 protected StateManager (int ot, ObjectName objName)
     {
 	objectName = objName;
@@ -471,7 +442,6 @@ protected StateManager (int ot, ObjectName objName)
 	modifyingActions = new ActionList();
 	usingActions = new ActionList();
     }
-    */
     
     /*
      * Protected non-virtual functions.
@@ -694,10 +664,7 @@ protected synchronized void setupStore (String rootName)
 	     * library.
 	     */
 
-	    /*
-	     * https://github.com/nmcl/sandbox/issues/66				   
 	    objectStore = new ObjectStore(JavaArjunaLiteNames.Implementation_ObjectStore_ReplicatedStore(), storeRoot);
-	    */
 	    objectStore.storeLocation(smAttributes.storeLocations);
 	    objectStore.useStoreLocation(smAttributes.useStoreLocation);
 
@@ -727,10 +694,7 @@ protected synchronized void setupStore (String rootName)
 		System.err.println("Error - attempt to use volatile store.");
 		System.exit(0);
 
-		/*
-		 * https://github.com/nmcl/sandbox/issues/66
 		objectStore = new ObjectStore(JavaArjunaLiteNames.Implementation_ObjectStore_VolatileStore(), storeRoot);
-		*/
 	    }
 	}
 
@@ -834,8 +798,6 @@ protected final synchronized boolean rememberAction (BasicAction action, int rec
 	return result;
     }
 
-    /*
-     * https://github.com/nmcl/sandbox/issues/66
 private void parseObjectName ()
     {
 	smAttributes = new StateManagerAttribute();
@@ -915,13 +877,9 @@ private void parseObjectName ()
 	    }
 	}
     }
-    */
     
 protected StateManagerAttribute smAttributes;
-/*
- * https://github.com/nmcl/sandbox/issues/66
 protected ObjectName objectName;
-*/
 
 private boolean activated;
 private boolean currentlyActivated;

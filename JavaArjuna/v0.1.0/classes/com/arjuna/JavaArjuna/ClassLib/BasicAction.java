@@ -372,15 +372,10 @@ public final synchronized ObjectStore store ()
 	     * other value is specified.
 	     */
 
-	    	    /*
-
 	    if (actionStoreType == null)
-	     * https://github.com/nmcl/sandbox/issues/66
-	     * actionStoreType = new ClassName(System.getProperty(JavaArjunaLiteNames.BasicAction_actionStore(), JavaArjunaLiteNames.Implementation_ObjectStore_defaultActionStore().stringForm()));
+		actionStoreType = new ClassName(System.getProperty(JavaArjunaLiteNames.BasicAction_actionStore(), JavaArjunaLiteNames.Implementation_ObjectStore_defaultActionStore().stringForm()));
 
 	    currentStore = new ObjectStore(actionStoreType);
-	     */
-
 	}
 
 	return currentStore;
@@ -671,10 +666,7 @@ public boolean save_state (OutputObjectState os, int ot)
 
 		    os.packInt(temp.typeIs());
 
-		    /*
-		     * https://github.com/nmcl/sandbox/issues/66
 		    temp.className().pack(os);
-		    */
 		    
 		    res = temp.save_state(os, ot);
 		}
@@ -736,10 +728,7 @@ public boolean save_state (OutputObjectState os, int ot)
 			try
 			{
 			    os.packInt(temp.typeIs());
-			    /*
-			     * https://github.com/nmcl/sandbox/issues/66
 			    temp.className().pack(os);
-			    */
 			    
 			    res = temp.save_state(os, ot);
 			}
@@ -822,9 +811,6 @@ public boolean restore_state (InputObjectState os, int ot)
     
 	while ((res) && (record_type != RecordType.NONE_RECORD))
 	{
-	    /*
-	     *
-	     * https://github.com/nmcl/sandbox/issues/66
 	    ClassName cName = new ClassName();
 
 	    try
@@ -848,7 +834,6 @@ public boolean restore_state (InputObjectState os, int ot)
 	    /'* Tidy up before we leave. *'/
 
 	    cName = null;
-*/
 		
 	    if (res)
 	    {
@@ -885,9 +870,6 @@ public boolean restore_state (InputObjectState os, int ot)
 	{
 	    while ((res) && (record_type != RecordType.NONE_RECORD))
 	    {
-		/*
-		 *
-		 * https://github.com/nmcl/sandbox/issues/66
 		ClassName cName = new ClassName();
 
 		try
@@ -911,7 +893,6 @@ public boolean restore_state (InputObjectState os, int ot)
 		/'* Tidy up before we leave. *'/
 
 		cName = null;
-		*/
 
 		if (res)
 		{
@@ -2100,9 +2081,6 @@ private CheckedAction _checkedAction;  // control what happens if threads active
 private BasicList _childThreads;
 private BasicList _childActions;
 
-    /*
-     * https://github.com/nmcl/sandbox/issues/66
 private static ClassName actionStoreType = null;
-    */
 
 };

@@ -102,18 +102,15 @@ public boolean write_uncommitted (Uid u, String tn, OutputObjectState s) throws 
 	return false;
     }
 
-    /*
-     * https://github.com/nmcl/sandbox/issues/66
-public ClassName className ()
+public String className ()
     {
 	return JavaArjunaLiteNames.Implementation_ObjectStore_ActionStore();
     }
 
-public static ClassName name ()
+public static String name ()
     {
 	return JavaArjunaLiteNames.Implementation_ObjectStore_ActionStore();	
     }
-    */
     
     /*
      * Have to return as a ShadowingStore because of

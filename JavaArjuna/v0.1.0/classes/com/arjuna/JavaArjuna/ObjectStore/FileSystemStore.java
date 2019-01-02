@@ -228,18 +228,15 @@ public synchronized void unpackFrom (InputBuffer buff) throws IOException
 	}
     }
 
-    /*
-     * https://github.com/nmcl/sandbox/issues/66
-public ClassName className ()
+public String className ()
     {
 	return JavaArjunaLiteNames.Implementation_ObjectStore_FileSystemStore();
     }
 
-public static ClassName name ()
+public static String name ()
     {
 	return JavaArjunaLiteNames.Implementation_ObjectStore_FileSystemStore();	
     }
-    */
     
 protected abstract InputObjectState read_state (Uid u, String tn, int s) throws ObjectStoreException;
 protected abstract boolean remove_state (Uid u, String tn, int s) throws ObjectStoreException;
@@ -478,11 +475,7 @@ private static boolean rewriteSeparator = false;
 
     static
     {
-	/*
-	 * https://github.com/nmcl/sandbox/issues/66
 	String syncOpt = System.getProperty(JavaArjunaLiteNames.Implementation_ObjectStore_doSync());
-	*/
-	String syncOpt = null;
 
 	if (syncOpt != null)
 	{

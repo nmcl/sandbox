@@ -396,32 +396,19 @@ public String type ()
 
 protected LockManager (Uid storeUid)
     {
-	/*
-	 * https://github.com/nmcl/sandbox/issues/66
 	this(storeUid, ObjectType.ANDPERSISTENT, null);
-	*/
-
-	this(storeUid, ObjectType.ANDPERSISTENT);
     }
 
-    /*
-     * https://github.com/nmcl/sandbox/issues/66
 protected LockManager (Uid storeUid, ObjectName attr)
     {
 	this(storeUid, ObjectType.ANDPERSISTENT, attr);
     }
-    */
     
 protected LockManager (Uid storeUid, int ot)
     {
-	/*
-	 * https://github.com/nmcl/sandbox/issues/66
 	this(storeUid, ot, null);
-	*/
     }
 
-    /*
-     * https://github.com/nmcl/sandbox/issues/66
 protected LockManager (Uid storeUid, int ot, ObjectName attr)
     {
 	super(storeUid, ot, attr);
@@ -436,7 +423,6 @@ protected LockManager (Uid storeUid, int ot, ObjectName attr)
 	objectLocked = false;
 	mutex = null;
     }
-    */
 
     /*
      * Constructor: Same restrictions apply as documented above.
@@ -444,22 +430,14 @@ protected LockManager (Uid storeUid, int ot, ObjectName attr)
 
 protected LockManager ()
     {
-	/*
-	 * https://github.com/nmcl/sandbox/issues/66
 	this(ObjectType.RECOVERABLE, null);
-	*/
     }
 
 protected LockManager (int ot)
     {
-		/*
-	 * https://github.com/nmcl/sandbox/issues/66
 	this(ot, null);
-		*/
     }
 
-    /*
-     * https://github.com/nmcl/sandbox/issues/66
 protected LockManager (int ot, ObjectName attr)
     {
 	super(ot, attr);
@@ -474,7 +452,6 @@ protected LockManager (int ot, ObjectName attr)
 	objectLocked = false;
 	mutex = null;
     }
-    */
     
 protected void terminate ()
     {
@@ -658,10 +635,7 @@ private final boolean initialise ()
 		{
 		    Object[] param = new Object[3];
 
-		    /*
-		     * https://github.com/nmcl/sandbox/issues/66
 		    param[0] = JavaArjunaLiteNames.Implementation_LockStore_BasicLockStore();
-		    */
 		    param[1] = new Integer(ObjectModel.SINGLE);
 		    param[2] = systemKey;
 		    
@@ -685,10 +659,7 @@ private final boolean initialise ()
 			{
 			    Object[] param = new Object[3];
 
-			    /*
-			     * https://github.com/nmcl/sandbox/issues/66
 			    param[0] = JavaArjunaLiteNames.Implementation_LockStore_BasicPersistentLockStore();
-			    */
 			    param[1] = new Integer(ObjectModel.MULTIPLE);
 			    param[2] = systemKey;
 			    
@@ -939,8 +910,6 @@ private final boolean unloadState ()
 	return unloadOk;
     }
 
-    /*
-     * https://github.com/nmcl/sandbox/issues/66
 private void parseObjectName ()
     {
 	lmAttributes = new LockManagerAttribute();
@@ -959,7 +928,6 @@ private void parseObjectName ()
 	    // if present should now look for locations as with StateManager
 	}
     }
-    */
 
 public static final int defaultRetry = 100;
 public static final int defaultSleepTime = 250000;

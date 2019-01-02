@@ -31,8 +31,6 @@ import java.io.IOException;
 
 public class RecoveryAbstractRecord extends AbstractRecord
 {
-    /*
-     * https://github.com/nmcl/sandbox/issues/66
 
 public RecoveryAbstractRecord (ClassName cName)
     {
@@ -43,7 +41,6 @@ public RecoveryAbstractRecord (ClassName cName)
 	else
 	    _imple = null;
     }
-    */
     
 public void finalize ()
     {
@@ -55,13 +52,10 @@ public int typeIs ()
 	return ((_imple == null) ? RecordType.NONE_RECORD : _imple.typeIs());
     }
     
-    /*
-     * https://github.com/nmcl/sandbox/issues/66
-public ClassName className ()
+public String className ()
     {
-	return ((_imple == null) ? ClassName.invalid() : _imple.className());
+	return ((_imple == null) ? null : _imple.className());
     }
-    */
     
 public Object value ()
     {
@@ -253,14 +247,6 @@ public boolean shouldReplace (AbstractRecord a)
 
 private AbstractRecord _imple;
 
-    /*
-     * https://github.com/nmcl/sandbox/issues/66
-    static 
-    {
-	if (!Implementations.added())
-	    Implementations.initialise();
-    }
-    */
 };
 
 

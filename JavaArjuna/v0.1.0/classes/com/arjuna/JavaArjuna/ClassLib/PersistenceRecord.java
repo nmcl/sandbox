@@ -203,10 +203,7 @@ public boolean restore_state (InputObjectState os, int ot)
 	    {
 		/* discard old store before creating new */
 
-		/*
-		 * https://github.com/nmcl/sandbox/issues/66
 		store = new ObjectStore(new ClassName(objStoreType));
-		*/
 
 		store.unpack(os);
 		shadowMade = os.unpackBoolean();
@@ -240,8 +237,6 @@ public boolean save_state (OutputObjectState os, int ot)
 
 	if (store != null)
 	{
-	    /*
-	     * https://github.com/nmcl/sandbox/issues/66
 	    if ((store.className() == null) || (store.className().equals("")))
 	    {
 		System.err.println("Type of store is unknown");
@@ -273,7 +268,6 @@ public boolean save_state (OutputObjectState os, int ot)
 		    System.err.println("PersistenceRecord save_state failed.");
 		}
 	    }
-	    */
 	}
 	else
 	{

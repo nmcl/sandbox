@@ -48,9 +48,6 @@ public ObjectStore (String location)
 	 * attribute of the object, or derived from the object's name.
 	 */
 
-	/*
-	 * https://github.com/nmcl/sandbox/issues/66
-
 	if (objectStoreType == null)
 	    objectStoreType = System.getProperty(JavaArjunaNames.Interface_ObjectStore_storeType(), JavaArjunaNames.Implementation_ObjectStore_defaultStore().stringForm());
 
@@ -65,13 +62,10 @@ public ObjectStore (String location)
 	    _imple = (ObjectStoreImple) ptr;
 	else
 	    _imple = null;
-	*/
     }
     
 public ObjectStore (String typeName, String location)
     {
-	/*
-	 * https://github.com/nmcl/sandbox/issues/66
 	Object[] param = new Object[1];
 	param[0] = location;
 	
@@ -83,7 +77,6 @@ public ObjectStore (String typeName, String location)
 	    _imple = (ObjectStoreImple) ptr;
 	else
 	    _imple = null;
-	*/
     }
 
     /*
