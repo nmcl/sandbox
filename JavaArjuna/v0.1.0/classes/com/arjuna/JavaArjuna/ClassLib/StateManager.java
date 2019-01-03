@@ -845,9 +845,9 @@ private void parseObjectName ()
 		{
 		    smAttributes.storeLocations = new String[numberOfStores];
 
-		    /'*
+		    /*
 		     * Locations of stores given attribute names as stringified numbers.
-		     *'/
+		     */
 
 		    try
 		    {
