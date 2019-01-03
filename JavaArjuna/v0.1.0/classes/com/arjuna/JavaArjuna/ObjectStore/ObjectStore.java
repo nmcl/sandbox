@@ -11,6 +11,8 @@
 
 package com.arjuna.JavaArjuna.ObjectStore;
 
+import com.arjuna.JavaArjuna.Environment;
+import com.arjuna.JavaArjuna.ObjectStore.ObjectStoreType;
 import com.arjuna.JavaArjuna.Common.*;
 import java.io.PrintStream;
 
@@ -49,7 +51,7 @@ public ObjectStore (String location)
 	 */
 
 	if (objectStoreType == null)
-	    objectStoreType = System.getProperty(JavaArjunaNames.Interface_ObjectStore_storeType(), JavaArjunaNames.Implementation_ObjectStore_defaultStore().stringForm());
+	    objectStoreType = System.getProperty(Environment.OBJECTSTORE_TYPE, ObjectStoreType.DEFAULT_STORE); // https://github.com/nmcl/sandbox/issues/83
 
 	Object[] param = new Object[1];
 	param[0] = location;

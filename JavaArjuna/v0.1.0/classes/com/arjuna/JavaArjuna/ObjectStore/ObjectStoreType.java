@@ -18,4 +18,7 @@ package com.arjuna.JavaArjuna.ObjectStore;
 public class ObjectStoreType
 {
     public static String SHADOWING_STORE = "ShadowingStore";
+    public static String SHADOWNOFILELOCK_STORE = "ShadowNoFileLockStore";
+
+    public static String DEFAULT_STORE = SHADOWNOFILELOCK_STORE;
 };
