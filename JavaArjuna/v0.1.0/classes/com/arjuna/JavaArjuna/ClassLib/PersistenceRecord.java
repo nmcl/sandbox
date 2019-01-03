@@ -203,7 +203,7 @@ public boolean restore_state (InputObjectState os, int ot)
 	    {
 		/* discard old store before creating new */
 
-		store = new ObjectStore(new ClassName(objStoreType));
+		store = new ObjectStore(null, objStoreType);
 
 		store.unpack(os);
 		shadowMade = os.unpackBoolean();
