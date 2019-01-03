@@ -238,26 +238,6 @@ public void forgetHeuristic ()
     }
 
 /*
- * This could be done through interface/implementation
- * separation for AbstractRecords. However, since we
- * only need to dynamically create records for crash
- * recovery purposes we may not need such flexibility.
- */
-
-public static AbstractRecord create (ClassName cName)
-    {
-	Object ptr = Inventory.inventory().createVoid(cName);
-	AbstractRecord record = null;
-		
-	if (ptr instanceof AbstractRecord)
-	    record = (AbstractRecord) ptr;
-	else
-	    record = null;
-
-	return record;
-    }
-
-/*
  * We would like these to be protected, but the
  * requirement for a RecoveryAbstractRecord interface
  * which is in a different package prevents this.
