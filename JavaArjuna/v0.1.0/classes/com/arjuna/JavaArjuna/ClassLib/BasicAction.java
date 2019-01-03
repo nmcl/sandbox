@@ -831,7 +831,7 @@ public boolean restore_state (InputObjectState os, int ot)
 		       preparedList.insert(record));
 	    }
 
-	    /'* Tidy up before we leave. *'/
+	    /* Tidy up before we leave. */
 
 	    cName = null;
 		
@@ -890,7 +890,7 @@ public boolean restore_state (InputObjectState os, int ot)
 			   heuristicList.insert(record));
 		}
 
-		/'* Tidy up before we leave. *'/
+		/* Tidy up before we leave. */
 
 		cName = null;
 
