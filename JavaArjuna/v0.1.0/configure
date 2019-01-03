@@ -300,6 +300,11 @@ then
 	fi
 fi
 
+case "$OS" in
+    *Darwin*) CPP_PROGRAM=cpp-8
+	      ;;
+esac
+	      
 echo 'public class test { public static void main (String[] args) {} }' > test.java
 while true
 do
