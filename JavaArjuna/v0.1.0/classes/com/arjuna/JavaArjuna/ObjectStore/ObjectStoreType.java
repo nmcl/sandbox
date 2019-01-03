@@ -19,6 +19,8 @@ public class ObjectStoreType
 {
     public static String SHADOWING_STORE = "ShadowingStore";
     public static String SHADOWNOFILELOCK_STORE = "ShadowNoFileLockStore";
+    public static String ACTION_STORE = "ActionStore";
 
     public static String DEFAULT_STORE = SHADOWNOFILELOCK_STORE;
+    public static String DEFAULT_ACTIONSTORE_TYPE = ACTION_STORE;
 };

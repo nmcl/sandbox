@@ -373,7 +373,7 @@ public final synchronized ObjectStore store ()
 	     */
 
 	    if (actionStoreType == null)
-		actionStoreType = new ClassName(System.getProperty(JavaArjunaLiteNames.BasicAction_actionStore(), JavaArjunaLiteNames.Implementation_ObjectStore_defaultActionStore().stringForm()));
+		actionStoreType = System.getProperty(Environment.ACTIONSTORE_TYPE, ObjectStoreType.DEFAULT_ACTIONSTORE_TYPE); // https://github.com/nmcl/sandbox/issues/83
 
 	    currentStore = new ObjectStore(actionStoreType);
 	}
@@ -2081,6 +2081,6 @@ private CheckedAction _checkedAction;  // control what happens if threads active
 private BasicList _childThreads;
 private BasicList _childActions;
 
-private static ClassName actionStoreType = null;
+private static String actionStoreType = null;
 
 };
