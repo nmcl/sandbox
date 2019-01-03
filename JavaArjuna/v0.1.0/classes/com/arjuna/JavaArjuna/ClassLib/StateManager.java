@@ -383,7 +383,7 @@ protected StateManager (Uid objUid)
 	this(objUid, ObjectType.ANDPERSISTENT, null);
     }
 
-protected StateManager (Uid objUid, ObjectName attr)
+protected StateManager (Uid objUid, StateManagerAttribute attr)
     {
 	this(objUid, ObjectType.ANDPERSISTENT, attr);
     }
@@ -393,11 +393,9 @@ protected StateManager (Uid objUid, int ot)
 	this(objUid, ot, null);
     }
 
-protected StateManager (Uid objUid, int ot, ObjectName objName)
+protected StateManager (Uid objUid, int ot, StateManagerAttribute sm)
     {
-	objectName = objName;
-	
-	parseObjectName();
+	smAttributes = sm;
 	
 	activated = false;
 	currentlyActivated = false;
@@ -423,12 +421,10 @@ protected StateManager (int ot)
 	this(ot, null);
     }
 
-protected StateManager (int ot, ObjectName objName)
+protected StateManager (int ot, StateManagerAttribute sm)
     {
-	objectName = objName;
+	smAttributes = sm;
 	
-	parseObjectName();	
-
 	activated = false;
 	currentlyActivated = false;
 	currentStatus = (((smAttributes.objectModel == ObjectModel.SINGLE) && (ot == ObjectType.RECOVERABLE)) ? ObjectStatus.ACTIVE : ObjectStatus.PASSIVE_NEW);
@@ -798,88 +794,7 @@ protected final synchronized boolean rememberAction (BasicAction action, int rec
 	return result;
     }
 
-private void parseObjectName ()
-    {
-	smAttributes = new StateManagerAttribute();
-
-	if (objectName != null)
-	{
-	    try
-	    {
-		smAttributes.remoteState = ((objectName.getLongAttribute(JavaArjunaLiteNames.StateManager_remoteState()) == 0) ? false : true);
-	    }
-	    catch (Exception e)
-	    {
-		// assume not present.
-	    }
-
-	    try
-	    {
-		smAttributes.useStoreLocation = ((objectName.getLongAttribute(JavaArjunaLiteNames.StateManager_useStoreLocation()) == 0) ? false : true);
-	    }
-	    catch (Exception e)
-	    {
-		// assume not present.
-	    }		
-
-	    if (smAttributes.useStoreLocation)
-	    {
-		int numberOfStores = 0;
-		
-		try
-		{
-		    numberOfStores = (int) objectName.getLongAttribute(JavaArjunaLiteNames.StateManager_numberOfStores());
-		}
-		catch (Exception e)
-		{
-		    // error - should have some locations!
-
-		    System.err.println("StateManager objectName error - no number of stores specified.");
-		    // safest to ignore.
-		    
-		    smAttributes.useStoreLocation = false;
-		    numberOfStores = 0;
-		}
-
-		if (numberOfStores > 0)
-		{
-		    smAttributes.storeLocations = new String[numberOfStores];
-
-		    /*
-		     * Locations of stores given attribute names as stringified numbers.
-		     */
-
-		    try
-		    {
-			for (int i = 0; i < numberOfStores; i++)
-			    smAttributes.storeLocations[i] = objectName.getStringAttribute(new String("STORE"+i));
-		    }
-		    catch (Exception e)
-		    {
-			// error - should have some locations!
-
-			System.err.println("StateManager objectName error - insufficient store names specified.");
-
-			// safest to ignore.
-		    
-			smAttributes.useStoreLocation = false;
-		    }
-		}
-	    }
-
-	    try
-	    {
-		smAttributes.objectModel = (int) objectName.getLongAttribute(JavaArjunaLiteNames.StateManager_objectModel());
-	    }
-	    catch (Exception e)
-	    {
-		// assume not present.
-	    }
-	}
-    }
-    
 protected StateManagerAttribute smAttributes;
-protected ObjectName objectName;
 
 private boolean activated;
 private boolean currentlyActivated;
