@@ -52,6 +52,7 @@ You may see some instances of the following warning message, which you can safel
 "Note: Some input files use or override a deprecated API.
 Note: Recompile with -Xlint:deprecation for details."
 
-Note, on the Mac there's some weirdness with the Xcode version of cpp and string substitutions during pre-processing (even the standard # doesn't
-seem to work). So added the ability to override cpp during configure and use the official gcc version (gcc-8 in my current build) and
-that works fine. See https://github.com/nmcl/sandbox/issues/80
+Note, on the Mac there's some weirdness with the Xcode version of cpp and string substitutions during pre-processing (even the
+standard # doesn't seem to work). So added the ability to override cpp during configure and use the official gcc version (gcc-8
+in my current build) and that works fine. See https://github.com/nmcl/sandbox/issues/80 Running the configure script should now
+auto-detect the fact that gcc-8 should be used on Mac OS X but you can override this during the configuration execution.
