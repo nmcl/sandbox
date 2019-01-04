@@ -53,32 +53,12 @@ public ObjectStore (String location)
 	if (objectStoreType == null)
 	    objectStoreType = System.getProperty(Environment.OBJECTSTORE_TYPE, ObjectStoreType.DEFAULT_STORE); // https://github.com/nmcl/sandbox/issues/83
 
-	Object[] param = new Object[1];
-	param[0] = location;
-	
-	Object ptr = Inventory.inventory().createResources(objectStoreType, param);
-
-	param = null;
-	
-	if (ptr instanceof ObjectStoreImple)
-	    _imple = (ObjectStoreImple) ptr;
-	else
-	    _imple = null;
+	_imple = ObjectStoreType.create(objectStoreType, location);
     }
     
 public ObjectStore (String typeName, String location)
     {
-	Object[] param = new Object[1];
-	param[0] = location;
-	
-	Object ptr = Inventory.inventory().createResources(typeName, param);
-
-	param = null;
-	
-	if (ptr instanceof ObjectStoreImple)
-	    _imple = (ObjectStoreImple) ptr;
-	else
-	    _imple = null;
+	_imple = ObjectStoreType.create(typeName, location);
     }
 
     /*

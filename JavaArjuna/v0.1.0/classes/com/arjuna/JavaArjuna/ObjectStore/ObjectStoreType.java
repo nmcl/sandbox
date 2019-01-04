@@ -23,4 +23,26 @@ public class ObjectStoreType
 
     public static String DEFAULT_STORE = SHADOWNOFILELOCK_STORE;
     public static String DEFAULT_ACTIONSTORE_TYPE = ACTION_STORE;
+
+    public static final ObjectStoreImple create (String type, String location)
+    {
+	if (SHADOWING_STORE.equals(type))
+	    return new ShadowingStore(location);
+	else
+	{
+	    if (SHADOWNOFILELOCK_STORE.equals(type))
+		return new ShadowNoFileLockStore(location);
+	    else
+	    {
+		if (ACTION_STORE.equals(type))
+		    return new ActionStore(location);
+		else
+		{
+		    System.err.println("ERROR - unknown ObjectStore type: "+type);
+		    
+		    return null;
+		}
+	    }
+	}
+    }
 };
