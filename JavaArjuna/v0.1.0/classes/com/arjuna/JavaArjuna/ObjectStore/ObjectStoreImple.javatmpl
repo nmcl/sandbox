@@ -71,7 +71,7 @@ public String locateStore (String location) throws ObjectStoreException
 	 * specify the directory for the object store.
 	 */
 
-	finalLocation = finalLocation + className().stringForm();
+	finalLocation = finalLocation + className();
 	
 	if ((location == null) || (location.length() == 0))
 	{
