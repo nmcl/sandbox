@@ -13,6 +13,7 @@ COMMENT
 SetSubDirectorys(Common ClassLib ObjectStore Thread Template)
 
 SOURCES = ObjectStore/ObjectStoreImple.java \
+	  ObjectStore/ShadowingStore.java \
 	  Common/Utility.java \
 	  ClassLib/AbstractRecord.java \
 	  ClassLib/BasicPersistentLockStore.java \
@@ -20,9 +21,10 @@ SOURCES = ObjectStore/ObjectStoreImple.java \
 
 OBJECTS = Environment.class
 
-AllTarget($(SOURCES))
+AllTarget($(OBJECTS) $(SOURCES))
 
 PreprocessJavaCodeDir(ObjectStore,ObjectStoreImple,NOPARAM)
+PreprocessJavaCodeDir(ObjectStore,ShadowingStore,NOPARAM)
 PreprocessJavaCodeDir(Common,Utility,NOPARAM)
 PreprocessJavaCodeDir(ClassLib,AbstractRecord,NOPARAM)
 PreprocessJavaCodeDir(ClassLib,BasicPersistentLockStore,NOPARAM)
