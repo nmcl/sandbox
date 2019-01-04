@@ -20,6 +20,8 @@ public class Environment
     public static String MULTIPLE_LOCKSTORE_TYPE = "MULTIPLE_LOCKSTORE_TYPE";
     public static String LOCKSTORE_DIR = "LOCKSTORE_DIR";
     public static String OBJECTSTORE_TYPE = "OBJECTSTORE_TYPE";
+    public static String OBJECTSTORE_ROOT = "OBJECTSTORE_ROOT";
+    public static String OBJECTSTORE_DIR = "OBJECTSTORE_DIR";
     public static String ACTIONSTORE_TYPE = "ACTIONSTORE_TYPE";
 }
 
