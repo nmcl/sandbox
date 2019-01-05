@@ -104,12 +104,12 @@ public boolean write_uncommitted (Uid u, String tn, OutputObjectState s) throws 
 
 public String className ()
     {
-	return JavaArjunaLiteNames.Implementation_ObjectStore_ActionStore();
+	return ObjectStoreType.ACTION_STORE;
     }
 
 public static String name ()
     {
-	return JavaArjunaLiteNames.Implementation_ObjectStore_ActionStore();	
+	return ObjectStoreType.ACTION_STORE;
     }
     
     /*
