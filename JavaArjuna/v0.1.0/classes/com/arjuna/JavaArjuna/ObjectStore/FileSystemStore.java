@@ -230,12 +230,12 @@ public synchronized void unpackFrom (InputBuffer buff) throws IOException
 
 public String className ()
     {
-	return JavaArjunaLiteNames.Implementation_ObjectStore_FileSystemStore();
+	return ObjectStoreType.FILESYSTEM_STORE;
     }
 
 public static String name ()
     {
-	return JavaArjunaLiteNames.Implementation_ObjectStore_FileSystemStore();	
+	return ObjectStoreType.FILESYSTEM_STORE;
     }
     
 protected abstract InputObjectState read_state (Uid u, String tn, int s) throws ObjectStoreException;

@@ -20,6 +20,7 @@ public class ObjectStoreType
     public static String SHADOWING_STORE = "ShadowingStore";
     public static String SHADOWNOFILELOCK_STORE = "ShadowNoFileLockStore";
     public static String ACTION_STORE = "ActionStore";
+    public static String FILESYSTEM_STORE = "FileSystemStore";
 
     public static String DEFAULT_STORE = SHADOWNOFILELOCK_STORE;
     public static String DEFAULT_ACTIONSTORE_TYPE = ACTION_STORE;
@@ -38,9 +39,14 @@ public class ObjectStoreType
 		    return new ActionStore(location);
 		else
 		{
-		    System.err.println("ERROR - unknown ObjectStore type: "+type);
+		    if (FILESYSTEM_STORE.equals(type))
+			return new FileSystemStore(location);
+		    else
+		    {
+			System.err.println("ERROR - unknown ObjectStore type: "+type);
 		    
-		    return null;
+			return null;
+		    }
 		}
 	    }
 	}
