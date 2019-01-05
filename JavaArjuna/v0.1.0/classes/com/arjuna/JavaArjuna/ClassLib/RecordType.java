@@ -205,4 +205,16 @@ public static void print (PrintStream strm, int rt)
 	 }
     }
 
+    public static AbstractRecord create (int type)
+    {
+	if (type == RecordType.PERSISTENCE)
+	    return new PersistenceRecord();
+	else
+	{
+	    System.err.println("ERROR - could not find AbstractRecord type "+type);
+
+	    return null;
+	}
+    }
+    
 };
