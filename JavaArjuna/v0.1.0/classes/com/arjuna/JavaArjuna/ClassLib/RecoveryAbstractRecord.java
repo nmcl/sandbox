@@ -32,14 +32,9 @@ import java.io.IOException;
 public class RecoveryAbstractRecord extends AbstractRecord
 {
 
-public RecoveryAbstractRecord (ClassName cName)
+public RecoveryAbstractRecord (int type)
     {
-	Object ptr = Inventory.inventory().createVoid(cName);
-		
-	if (ptr instanceof AbstractRecord)
-	    _imple = (AbstractRecord) ptr;
-	else
-	    _imple = null;
+	_imple = RecordType.create(type);
     }
     
 public void finalize ()
