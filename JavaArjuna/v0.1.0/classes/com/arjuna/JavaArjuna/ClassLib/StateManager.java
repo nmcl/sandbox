@@ -62,7 +62,6 @@ public void finalize ()
 	}
 
 	smAttributes = null;
-	objectName = null;
 	
 	objectStore = null;
 	storeRoot = null;
