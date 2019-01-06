@@ -475,7 +475,7 @@ private static boolean rewriteSeparator = false;
 
     static
     {
-	String syncOpt = System.getProperty(JavaArjunaLiteNames.Implementation_ObjectStore_doSync());
+	String syncOpt = System.getProperty(Environment.OBJECTSTORE_SYNC);
 
 	if (syncOpt != null)
 	{

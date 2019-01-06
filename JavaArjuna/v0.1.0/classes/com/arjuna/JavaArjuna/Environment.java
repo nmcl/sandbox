@@ -23,5 +23,6 @@ public class Environment
     public static String OBJECTSTORE_ROOT = "OBJECTSTORE_ROOT";
     public static String OBJECTSTORE_DIR = "OBJECTSTORE_DIR";
     public static String ACTIONSTORE_TYPE = "ACTIONSTORE_TYPE";
+    public static String OBJECTSTORE_SYNC = "OBJECTSTORE_SYNC";
 }
 
