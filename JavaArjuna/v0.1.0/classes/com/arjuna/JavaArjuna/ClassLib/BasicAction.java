@@ -11,7 +11,9 @@
 
 package com.arjuna.JavaArjuna.ClassLib;
 
+import com.arjuna.JavaArjuna.Environment;
 import com.arjuna.JavaArjuna.ObjectStore.ObjectStore;
+import com.arjuna.JavaArjuna.ObjectStore.ObjectStoreType;
 import com.arjuna.JavaArjuna.Thread.*;
 import com.arjuna.JavaArjuna.ClassLib.RecoveryAbstractRecord;
 import com.arjuna.JavaArjuna.Common.*;

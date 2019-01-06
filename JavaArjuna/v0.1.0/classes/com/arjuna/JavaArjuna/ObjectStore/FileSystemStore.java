@@ -11,6 +11,7 @@
 
 package com.arjuna.JavaArjuna.ObjectStore;
 
+import com.arjuna.JavaArjuna.Environment;
 import com.arjuna.JavaArjuna.Common.*;
 import java.io.*;
 

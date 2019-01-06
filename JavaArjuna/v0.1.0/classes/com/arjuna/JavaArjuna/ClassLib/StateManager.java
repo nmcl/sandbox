@@ -12,6 +12,7 @@
 package com.arjuna.JavaArjuna.ClassLib;
 
 import com.arjuna.JavaArjuna.ObjectStore.ObjectStore;
+import com.arjuna.JavaArjuna.ObjectStore.ObjectStoreType;
 import com.arjuna.JavaArjuna.Common.*;
 import java.io.PrintStream;
 
@@ -689,7 +690,7 @@ protected synchronized void setupStore (String rootName)
 		System.err.println("Error - attempt to use volatile store.");
 		System.exit(0);
 
-		objectStore = new ObjectStore(JavaArjunaLiteNames.Implementation_ObjectStore_VolatileStore(), storeRoot);
+		objectStore = new ObjectStore(ObjectStoreType.VOLATILE_STORE);
 	    }
 	}
 

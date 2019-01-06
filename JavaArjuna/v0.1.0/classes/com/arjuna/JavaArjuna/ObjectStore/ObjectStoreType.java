@@ -21,6 +21,7 @@ public class ObjectStoreType
     public static String SHADOWNOFILELOCK_STORE = "ShadowNoFileLockStore";
     public static String ACTION_STORE = "ActionStore";
     public static String FILESYSTEM_STORE = "FileSystemStore";
+    public static String VOLATILE_STORE = "VolatileStore";
 
     public static String DEFAULT_STORE = SHADOWNOFILELOCK_STORE;
     public static String DEFAULT_ACTIONSTORE_TYPE = ACTION_STORE;
