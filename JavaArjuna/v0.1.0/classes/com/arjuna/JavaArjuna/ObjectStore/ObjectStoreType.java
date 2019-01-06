@@ -41,7 +41,11 @@ public class ObjectStoreType
 		else
 		{
 		    if (FILESYSTEM_STORE.equals(type))
-			return new FileSystemStore(location);
+		    {
+			System.err.println("ERROR - attempt to create raw FileSystemStore!");
+
+			return null;
+		    }
 		    else
 		    {
 			System.err.println("ERROR - unknown ObjectStore type: "+type);
