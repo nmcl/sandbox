@@ -25,12 +25,12 @@ public class ShadowNoFileLockStore extends ShadowingStore
 
 public String className ()
     {
-	return JavaArjunaLiteNames.Implementation_ObjectStore_ShadowNoFileLockStore();
+	return ObjectStoreType.SHADOWNOFILELOCK_STORE;
     }
 
 public static String name ()
     {
-	return JavaArjunaLiteNames.Implementation_ObjectStore_ShadowNoFileLockStore();
+	return ObjectStoreType.SHADOWNOFILELOCK_STORE;
     }
     
     /*
