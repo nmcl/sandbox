@@ -61,6 +61,11 @@ public ObjectStore (String typeName, String location)
 	_imple = ObjectStoreType.create(typeName, location);
     }
 
+    public String className ()
+    {
+	return ((_imple != null) ? _imple.className() : null);
+    }
+    
     /*
      * https://github.com/nmcl/sandbox/issues/75
 public void finalize ()

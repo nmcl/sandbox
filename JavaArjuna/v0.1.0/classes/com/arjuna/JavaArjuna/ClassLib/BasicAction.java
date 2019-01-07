@@ -667,8 +667,7 @@ public boolean save_state (OutputObjectState os, int ot)
 		     */
 
 		    os.packInt(temp.typeIs());
-
-		    temp.className().pack(os);
+		    os.packString(temp.className());
 		    
 		    res = temp.save_state(os, ot);
 		}
@@ -730,7 +729,7 @@ public boolean save_state (OutputObjectState os, int ot)
 			try
 			{
 			    os.packInt(temp.typeIs());
-			    temp.className().pack(os);
+			    os.packString(temp.className());
 			    
 			    res = temp.save_state(os, ot);
 			}
@@ -813,11 +812,11 @@ public boolean restore_state (InputObjectState os, int ot)
     
 	while ((res) && (record_type != RecordType.NONE_RECORD))
 	{
-	    ClassName cName = new ClassName();
+	    String cName = null;
 
 	    try
 	    {
-		cName.unpack(os);
+		cName = os.unpackString();
 	    }
 	    catch (IOException e)
 	    {
@@ -827,7 +826,7 @@ public boolean restore_state (InputObjectState os, int ot)
 	    
 	    if (res)
 	    {
-		RecoveryAbstractRecord record = new RecoveryAbstractRecord(cName);
+		RecoveryAbstractRecord record = new RecoveryAbstractRecord(record_type);
 
 		res = (record.restore_state(os, ot) &&
 		       preparedList.insert(record));
@@ -872,11 +871,11 @@ public boolean restore_state (InputObjectState os, int ot)
 	{
 	    while ((res) && (record_type != RecordType.NONE_RECORD))
 	    {
-		ClassName cName = new ClassName();
+		String cName = null;
 
 		try
 		{
-		    cName.unpack(os);
+		    cName = os.unpackString();
 		}
 		catch (IOException e)
 		{
@@ -886,7 +885,7 @@ public boolean restore_state (InputObjectState os, int ot)
 	    
 		if (res)
 		{
-		    RecoveryAbstractRecord record = new RecoveryAbstractRecord(cName);
+		    RecoveryAbstractRecord record = new RecoveryAbstractRecord(record_type);
 
 		    res = (record.restore_state(os, ot) &&
 			   heuristicList.insert(record));

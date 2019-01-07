@@ -399,7 +399,7 @@ protected LockManager (Uid storeUid)
 	this(storeUid, ObjectType.ANDPERSISTENT, null);
     }
 
-protected LockManager (Uid storeUid, ObjectName attr)
+protected LockManager (Uid storeUid, LockManagerAttribute attr)
     {
 	this(storeUid, ObjectType.ANDPERSISTENT, attr);
     }
@@ -409,11 +409,11 @@ protected LockManager (Uid storeUid, int ot)
 	this(storeUid, ot, null);
     }
 
-protected LockManager (Uid storeUid, int ot, ObjectName attr)
+protected LockManager (Uid storeUid, int ot, LockManagerAttribute attr)
     {
 	super(storeUid, ot, attr);
 
-	parseObjectName();
+	lmAttributes = attr;
 	
 	systemKey = null;
 	locksHeld = new LockList();
@@ -438,11 +438,11 @@ protected LockManager (int ot)
 	this(ot, null);
     }
 
-protected LockManager (int ot, ObjectName attr)
+protected LockManager (int ot, LockManagerAttribute attr)
     {
 	super(ot, attr);
 
-	parseObjectName();	
+	lmAttributes = attr;
 	
 	systemKey = null;
 	locksHeld = new LockList();
@@ -908,25 +908,6 @@ private final boolean unloadState ()
 	}
 
 	return unloadOk;
-    }
-
-private void parseObjectName ()
-    {
-	lmAttributes = new LockManagerAttribute();
-	
-	if (super.objectName != null)
-	{
-	    try
-	    {
-		lmAttributes.remoteLockStore = ((super.objectName.getLongAttribute(JavaArjunaLiteNames.LockManager_remoteManager()) == 0) ? false : true);
-	    }
-	    catch (Exception e)
-	    {
-		// assume not present.
-	    }
-
-	    // if present should now look for locations as with StateManager
-	}
     }
 
 public static final int defaultRetry = 100;

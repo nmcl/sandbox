@@ -245,7 +245,7 @@ public boolean save_state (OutputObjectState os, int ot)
 	    {
 		try
 		{
-		    os.packString(store.className().stringForm());
+		    os.packString(store.className());
 		    store.pack(os);
 		    os.packBoolean(shadowMade);
 		    

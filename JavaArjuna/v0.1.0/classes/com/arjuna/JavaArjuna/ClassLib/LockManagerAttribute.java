@@ -11,7 +11,7 @@
 
 package com.arjuna.JavaArjuna.ClassLib;
 
-public class LockManagerAttribute
+public class LockManagerAttribute extends StateManagerAttribute
 {
 
 public LockManagerAttribute ()
