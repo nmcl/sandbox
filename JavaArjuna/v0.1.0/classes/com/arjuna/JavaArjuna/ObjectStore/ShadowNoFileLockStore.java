@@ -32,26 +32,6 @@ public static String name ()
     {
 	return ObjectStoreType.SHADOWNOFILELOCK_STORE;
     }
-    
-    /*
-     * Have to return as a ShadowingStore because of
-     * inheritence.
-     */
-    
-public static ShadowingStore create ()
-    {
-	return new ShadowNoFileLockStore("");
-    }
-
-public static ShadowingStore create (Object[] param)
-    {
-	if (param == null)
-	    return null;
-
-	String location = (String) param[0];
-
-	return new ShadowNoFileLockStore(location);
-    }
 	    
 protected ShadowNoFileLockStore (String locationOfStore)
     {

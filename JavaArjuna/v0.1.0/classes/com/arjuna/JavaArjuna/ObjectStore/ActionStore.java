@@ -113,26 +113,6 @@ public static String name ()
     }
     
     /*
-     * Have to return as a ShadowingStore because of
-     * inheritence.
-     */
-    
-public static ShadowingStore create ()
-    {
-	return new ActionStore("");
-    }
-
-public static ShadowingStore create (Object[] param)
-    {
-	if (param == null)
-	    return null;
-
-	String location = (String) param[0];
-
-	return new ActionStore(location);
-    }
-
-    /*
      * Override the default lock/unlock implementations to do nothing.
      * This is ok since only a single user (the coordinator) can ever be
      * manipulating the action's state.

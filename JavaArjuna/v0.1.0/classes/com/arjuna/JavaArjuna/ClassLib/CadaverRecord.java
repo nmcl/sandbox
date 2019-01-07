@@ -202,16 +202,6 @@ public boolean doSave ()
     }
 
     /*
-     * Have to return as a AbstractStore because of
-     * inheritence.
-     */
-    
-public static AbstractRecord create ()
-    {
-	return new CadaverRecord();
-    }
-    
-    /*
      * merge takes the information from the incoming PersistenceRecord and
      * uses it to initialise the oldState information. This is required
      * for processing of action aborts since CadaverRecords maintain the
