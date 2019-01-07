@@ -15,8 +15,8 @@ MAKE           = make
 IMAKE          = imake
 RM             = rm -f
 
-IMAKE_INCLUDE  = INCLUDES
-IMAKE_TEMPLATE = Arjuna.tmpl
+IMAKE_INCLUDE  = ../Include
+IMAKE_TEMPLATE = Config/Arjuna.tmpl
 IMAKE_FLAGS    = 
 MAKEFILE_TMP   = Makefile.tmp
 
