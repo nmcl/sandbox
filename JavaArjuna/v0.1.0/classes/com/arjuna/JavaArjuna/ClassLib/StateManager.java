@@ -660,7 +660,7 @@ protected synchronized void setupStore (String rootName)
 	     * library.
 	     */
 
-	    objectStore = new ObjectStore(JavaArjunaLiteNames.Implementation_ObjectStore_ReplicatedStore(), storeRoot);  // https://github.com/nmcl/sandbox/issues/86
+	    objectStore = new ObjectStore(ObjectStoreType.REPLICATED_STORE, storeRoot);  // https://github.com/nmcl/sandbox/issues/86
 	    objectStore.storeLocation(smAttributes.storeLocations);
 	    objectStore.useStoreLocation(smAttributes.useStoreLocation);
 

@@ -22,6 +22,7 @@ public class ObjectStoreType
     public static String ACTION_STORE = "ActionStore";
     public static String FILESYSTEM_STORE = "FileSystemStore";
     public static String VOLATILE_STORE = "VolatileStore";
+    public static String REPLICATED_STORE = "ReplicatedStore";
 
     public static String DEFAULT_STORE = SHADOWNOFILELOCK_STORE;
     public static String DEFAULT_ACTIONSTORE_TYPE = ACTION_STORE;
@@ -48,9 +49,18 @@ public class ObjectStoreType
 		    }
 		    else
 		    {
-			System.err.println("ERROR - unknown ObjectStore type: "+type);
+			if (REPLICATED_STORE.equals(type))
+			{
+			    System.err.println("ERROR - attempt to create replicated object stores, which aren't supported yet!");
+
+			    return null;
+			}
+			else
+			{
+			    System.err.println("ERROR - unknown ObjectStore type: "+type);
 		    
-			return null;
+			    return null;
+			}
 		    }
 		}
 	    }
