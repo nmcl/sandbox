@@ -635,7 +635,7 @@ private final boolean initialise ()
 		{
 		    Object[] param = new Object[3];
 
-		    param[0] = JavaArjunaLiteNames.Implementation_LockStore_BasicLockStore();
+		    param[0] = LockStoreType.BASIC_LOCKSTORE;
 		    param[1] = new Integer(ObjectModel.SINGLE);
 		    param[2] = systemKey;
 		    
@@ -659,7 +659,7 @@ private final boolean initialise ()
 			{
 			    Object[] param = new Object[3];
 
-			    param[0] = JavaArjunaLiteNames.Implementation_LockStore_BasicPersistentLockStore();
+			    param[0] = LockStoreType.BASICPERSISTENT_LOCKSTORE;
 			    param[1] = new Integer(ObjectModel.MULTIPLE);
 			    param[2] = systemKey;
 			    

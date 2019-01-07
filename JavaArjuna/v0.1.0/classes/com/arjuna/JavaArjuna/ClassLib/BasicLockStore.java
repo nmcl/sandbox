@@ -44,12 +44,12 @@ public boolean write_committed (Uid u, String tName, OutputObjectState state)
 
 public String className ()
     {
-	return LockStoreType.BASIC_LOCK_STORE;
+	return LockStoreType.BASIC_LOCKSTORE;
     }
 
 public static String name ()
     {
-	return LockStoreType.BASIC_LOCK_STORE;
+	return LockStoreType.BASIC_LOCKSTORE;
     }
 
 private static LockStoreSegment segmentStore = new LockStoreSegment();

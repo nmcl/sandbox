@@ -36,7 +36,7 @@ public LockStore (String param)
     {
 	if (!singleCheck)
 	{
-	    singleLockStoreType = System.getProperty(Environment.SINGLE_LOCKSTORE_TYPE, LockStoreType.BASIC_LOCK_STORE);
+	    singleLockStoreType = System.getProperty(Environment.SINGLE_LOCKSTORE_TYPE, LockStoreType.BASIC_LOCKSTORE);
 	    singleCheck = true;
 	}
 
@@ -45,11 +45,11 @@ public LockStore (String param)
 
 public LockStore (String typeName, String param)
     {
-	if (LockStoreType.BASIC_LOCK_STORE.equals(typeName))
+	if (LockStoreType.BASIC_LOCKSTORE.equals(typeName))
 	    _imple = new BasicLockStore(param);
 	else
 	{
-	    if (LockStoreType.BASIC_PERSISTENT_LOCK_STORE.equals(typeName))
+	    if (LockStoreType.BASICPERSISTENT_LOCKSTORE.equals(typeName))
 		_imple = new BasicPersistentLockStore(param);
 	    else
 		_imple = null;
@@ -153,8 +153,8 @@ private LockStoreImple _imple;
      * introduction of LockStoreType is already a deviation from the original.
      */
     
-private static String singleLockStoreType = LockStoreType.BASIC_LOCK_STORE;
-private static String multipleLockStoreType = LockStoreType.BASIC_PERSISTENT_LOCK_STORE;
+private static String singleLockStoreType = LockStoreType.BASIC_LOCKSTORE;
+private static String multipleLockStoreType = LockStoreType.BASICPERSISTENT_LOCKSTORE;
 
 private static boolean singleCheck = false;
 private static boolean multipleCheck = false;
