@@ -58,7 +58,7 @@ public abstract void setValue (Object o);
 
 public String className ()
     {
-	return typeIs();
+	return new String(""+typeIs());
     }
 
 /* atomic action interface - one operation per two-phase commit state */
