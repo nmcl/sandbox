@@ -9,9 +9,11 @@
  * $Id: PerformanceTest3.java,v 1.1 1998/11/12 09:39:24 nmcl Exp $
  */
 
-import JavaArjunaLiteTests.*;
+import JavaArjunaTests.*;
+import com.arjuna.JavaArjuna.ClassLib.*;
+import com.arjuna.JavaArjuna.Common.*;
 
-import JavaArjunaLiteTests.TestException;
+import JavaArjunaTests.TestException;
 import java.lang.NumberFormatException;
 
 public class PerformanceTest3
