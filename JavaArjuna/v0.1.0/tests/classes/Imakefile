@@ -9,4 +9,5 @@ COMMENT
 COMMENT $Id: Imakefile,v 1.1 1998/06/26 10:34:13 nmcl Exp $
 COMMENT
 
-SubDirectory(JavaArjunaLiteTests)
+#define IHaveSubDirs
+SetSubDirectorys(JavaArjunaTests)
