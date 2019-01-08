@@ -9,13 +9,13 @@
  * $Id: AtomicObjectTest2.java,v 1.1 1998/11/12 09:39:15 nmcl Exp $
  */
 
-import JavaArjunaLiteTests.AtomicObject;
-import com.arjuna.JavaArjunaLite.Atomic.*;
+import JavaArjunaTests.AtomicObject;
+import com.arjuna.JavaArjuna.ClassLib.*;
 import java.lang.Thread;
 import java.lang.Math;
 import java.util.Random;
 
-import JavaArjunaLiteTests.TestException;
+import JavaArjunaTests.TestException;
 import java.lang.InterruptedException;
 
 class ThreadObject1 extends Thread

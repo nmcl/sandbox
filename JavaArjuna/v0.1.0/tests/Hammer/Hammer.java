@@ -9,15 +9,15 @@
  * $Id: Hammer.java,v 1.1 1998/11/12 09:39:17 nmcl Exp $
  */
 
-import JavaArjunaLiteTests.AtomicObject;
-import JavaArjunaLiteTests.HammerThreadedObject;
-import com.arjuna.JavaArjunaLite.Atomic.*;
-import com.arjuna.JavaGandiva.Common.*;
+import JavaArjunaTests.AtomicObject;
+import JavaArjunaTests.HammerThreadedObject;
+import com.arjuna.JavaArjuna.ClassLib.*;
+import com.arjuna.JavaArjuna.Common.*;
 import java.lang.Thread;
 import java.util.Random;
 
-import JavaArjunaLiteTests.TestException;
-import com.arjuna.JavaGandiva.Common.UidException;
+import JavaArjunaTests.TestException;
+import com.arjuna.JavaArjuna.Common.UidException;
 import java.lang.InterruptedException;
 
     

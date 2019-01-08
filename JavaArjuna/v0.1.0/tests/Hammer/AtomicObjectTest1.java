@@ -9,12 +9,12 @@
  * $Id: AtomicObjectTest1.java,v 1.1 1998/11/12 09:39:14 nmcl Exp $
  */
 
-import JavaArjunaLiteTests.AtomicObject;
-import com.arjuna.JavaArjunaLite.Atomic.*;
+import JavaArjunaTests.AtomicObject;
+import com.arjuna.JavaArjuna.ClassLib.*;
 import java.util.Random;
 import java.lang.Math;
 
-import JavaArjunaLiteTests.TestException;
+import JavaArjunaTests.TestException;
 
 public class AtomicObjectTest1
 {
