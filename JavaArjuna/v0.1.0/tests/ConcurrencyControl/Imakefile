@@ -13,9 +13,9 @@ SOURCES = ConcurrencyTest.java
 
 OBJECTS = ConcurrencyTest.class
 
-Target($(OBJECTS))
+AllTarget($(OBJECTS))
 
-BuildJavaByteCode(ConcurrencyTest,NullParam)
+BuildJavaByteCode(ConcurrencyTest,NOPARAM)
 
-Clean(*.class *.prof out)
+TidyTarget(*.class *.prof out)
 

@@ -19,12 +19,12 @@ OBJECTS = PerformanceTest1.class \
 	  PerformanceTest3.class \
 	  PerformanceTest4.class
 
-Target($(OBJECTS))
+AllTarget($(OBJECTS))
 
-BuildJavaByteCode(PerformanceTest1,NullParam)
-BuildJavaByteCode(PerformanceTest2,NullParam)
-BuildJavaByteCode(PerformanceTest3,NullParam)
-BuildJavaByteCode(PerformanceTest4,NullParam)
+BuildJavaByteCode(PerformanceTest1,NOPARAM)
+BuildJavaByteCode(PerformanceTest2,NOPARAM)
+BuildJavaByteCode(PerformanceTest3,NOPARAM)
+BuildJavaByteCode(PerformanceTest4,NOPARAM)
 
-Clean(*.class *.prof out)
+TidyTarget(*.class *.prof out)
 

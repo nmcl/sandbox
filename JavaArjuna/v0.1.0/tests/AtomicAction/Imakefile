@@ -17,11 +17,11 @@ OBJECTS = BadAction.class \
 	  NestedTopLevelAction.class \
 	  ActionScope.class
 
-Target($(OBJECTS))
+AllTarget($(OBJECTS))
 
-BuildJavaByteCode(BadAction,NullParam)
-BuildJavaByteCode(NestedTopLevelAction,NullParam)
-BuildJavaByteCode(ActionScope,NullParam)
+BuildJavaByteCode(BadAction,NOPARAM)
+BuildJavaByteCode(NestedTopLevelAction,NOPARAM)
+BuildJavaByteCode(ActionScope,NOPARAM)
 
-Clean(*.class *.prof out)
+TidyTarget(*.class *.prof out)
 

@@ -13,9 +13,9 @@ SOURCES = ThreadActionTest.java
 
 OBJECTS = ThreadActionTest.class
 
-Target($(OBJECTS))
+AllTarget($(OBJECTS))
 
-BuildJavaByteCode(ThreadActionTest,NullParam)
+BuildJavaByteCode(ThreadActionTest,NOPARAM)
 
-Clean(*.class *.prof out)
+TidyTarget(*.class *.prof out)
 

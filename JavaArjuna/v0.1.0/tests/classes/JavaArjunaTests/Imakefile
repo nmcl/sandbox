@@ -23,13 +23,13 @@ OBJECTS = RecoverableObject.class \
 	  HammerThreadedObject.class \
 	  BasicThreadedObject.class
 
-Target($(OBJECTS))
+AllTarget($(OBJECTS))
 
-BuildJavaByteCode(AtomicObject,NullParam)
-BuildJavaByteCode(RecoverableObject,NullParam)
-BuildJavaByteCode(SimpleObject,NullParam)
-BuildJavaByteCode(TestException,NullParam)
-BuildJavaByteCode(HammerThreadedObject,NullParam)
-BuildJavaByteCode(BasicThreadedObject,NullParam)
+BuildJavaByteCode(AtomicObject,NOPARAM)
+BuildJavaByteCode(RecoverableObject,NOPARAM)
+BuildJavaByteCode(SimpleObject,NOPARAM)
+BuildJavaByteCode(TestException,NOPARAM)
+BuildJavaByteCode(HammerThreadedObject,NOPARAM)
+BuildJavaByteCode(BasicThreadedObject,NOPARAM)
 
-Clean(*.class)
+TidyTarget(*.class)

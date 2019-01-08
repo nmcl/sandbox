@@ -19,12 +19,12 @@ OBJECTS = Hammer.class \
 	  AtomicObjectTest2.class \
 	  AtomicObjectTest3.class
 
-Target($(OBJECTS))
+AllTarget($(OBJECTS))
 
-BuildJavaByteCode(Hammer,NullParam)
-BuildJavaByteCode(AtomicObjectTest1,NullParam)
-BuildJavaByteCode(AtomicObjectTest2,NullParam)
-BuildJavaByteCode(AtomicObjectTest3,NullParam)
+BuildJavaByteCode(Hammer,NOPARAM)
+BuildJavaByteCode(AtomicObjectTest1,NOPARAM)
+BuildJavaByteCode(AtomicObjectTest2,NOPARAM)
+BuildJavaByteCode(AtomicObjectTest3,NOPARAM)
 
-Clean(*.class *.prof out)
+TidyTarget(*.class *.prof out)
 

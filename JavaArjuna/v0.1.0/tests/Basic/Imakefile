@@ -19,12 +19,12 @@ OBJECTS = PersistenceTest.class \
 	  RecoverableTest.class \
 	  BasicActionTest.class
 
-Target($(OBJECTS))
+AllTarget($(OBJECTS))
 
-BuildJavaByteCode(PersistenceTest,NullParam)
-BuildJavaByteCode(AtomicTest,NullParam)
-BuildJavaByteCode(RecoverableTest,NullParam)
-BuildJavaByteCode(BasicActionTest,NullParam)
+BuildJavaByteCode(PersistenceTest,NOPARAM)
+BuildJavaByteCode(AtomicTest,NOPARAM)
+BuildJavaByteCode(RecoverableTest,NOPARAM)
+BuildJavaByteCode(BasicActionTest,NOPARAM)
 
-Clean(*.class *.prof out)
+TidyTarget(*.class *.prof out)
 

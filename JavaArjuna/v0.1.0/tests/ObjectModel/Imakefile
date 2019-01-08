@@ -13,9 +13,9 @@ SOURCES = ObjectModelTest.java
 
 OBJECTS = ObjectModelTest.class
 
-Target($(OBJECTS))
+AllTarget($(OBJECTS))
 
-BuildJavaByteCode(ObjectModelTest,NullParam)
+BuildJavaByteCode(ObjectModelTest,NOPARAM)
 
-Clean(*.class *.prof out)
+TidyTarget(*.class *.prof out)
 
