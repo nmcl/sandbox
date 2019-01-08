@@ -9,11 +9,11 @@
  * $Id: ConcurrencyTest.java,v 1.1 1998/11/12 09:39:12 nmcl Exp $
  */
 
-import JavaArjunaLiteTests.AtomicObject;
-import com.arjuna.JavaArjunaLite.Atomic.*;
-import com.arjuna.JavaGandiva.Common.*;
+import JavaArjunaTests.AtomicObject;
+import com.arjuna.JavaArjuna.ClassLib.*;
+import com.arjuna.JavaArjuna.Common.*;
 
-import JavaArjunaLiteTests.TestException;
+import JavaArjunaTests.TestException;
 
 public class ConcurrencyTest
 {
