@@ -1,23 +1,14 @@
-COMMENT 
-COMMENT Copyright (C) 1996, 1997, 1998,
+COMMENT
+COMMENT Copyright (C) 1993
 COMMENT
 COMMENT Department of Computing Science,
-COMMENT University of Newcastle upon Tyne,
+COMMENT The University,
 COMMENT Newcastle upon Tyne,
 COMMENT UK.
 COMMENT
-COMMENT $Id: Imakefile,v 1.3 1998/11/12 09:39:01 nmcl Exp $
+COMMENT $Id: Imakefile,v 1.6 1995/07/17 14:57:17 ngdp Exp $
 COMMENT
 
-#ifdef BUILDTESTS
+#define IHaveSubDirs
 
-SubDirectory(classes)
-SubDirectory(AtomicAction)
-SubDirectory(Basic)
-SubDirectory(ConcurrencyControl)
-SubDirectory(Hammer)
-SubDirectory(ObjectModel)
-SubDirectory(Performance)
-SubDirectory(ThreadAction)
-
-#endif
+SetSubDirectorys(classes AtomicAction Basic ConcurrencyControl ObjectModel Performance ThreadAction)
