@@ -9,15 +9,16 @@
  * $Id: BasicThreadedObject.java,v 1.2 1998/07/06 13:27:08 nmcl Exp $
  */
 
-package JavaArjunaLiteTests;
+package JavaArjunaTests;
 
-import com.arjuna.JavaArjunaLite.Atomic.*;
-import com.arjuna.JavaGandiva.Common.*;
+import com.arjuna.JavaArjuna.ClassLib.*;
+import com.arjuna.JavaArjuna.Common.*;
+
 import java.lang.Thread;
 import java.lang.Math;
 import java.util.Random;
 
-import JavaArjunaLiteTests.TestException;
+import JavaArjunaTests.TestException;
 import java.lang.InterruptedException;
 
 public class BasicThreadedObject extends Thread

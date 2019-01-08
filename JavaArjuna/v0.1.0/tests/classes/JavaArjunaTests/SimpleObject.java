@@ -9,7 +9,7 @@
  * $Id: SimpleObject.java,v 1.1 1998/06/24 15:07:56 nmcl Exp $
  */
 
-package JavaArjunaLiteTests;
+package JavaArjunaTests;
 
 public class SimpleObject
 {

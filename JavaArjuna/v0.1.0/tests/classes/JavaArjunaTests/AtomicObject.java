@@ -9,10 +9,10 @@
  * $Id: AtomicObject.java,v 1.5 1998/07/20 09:10:07 nmcl Exp $
  */
 
-package JavaArjunaLiteTests;
+package JavaArjunaTests;
 
-import com.arjuna.JavaArjunaLite.Atomic.*;
-import com.arjuna.JavaGandiva.Common.*;
+import com.arjuna.JavaArjuna.ClassLib.*;
+import com.arjuna.JavaArjuna.Common.*;
 import java.io.*;
 
 import java.io.IOException;
@@ -22,12 +22,7 @@ public class AtomicObject extends LockManager
 
 public AtomicObject ()
     {
-	this((ObjectName) null);
-    }
-    
-public AtomicObject (ObjectName objName)
-    {
-	super(ObjectType.ANDPERSISTENT, objName);
+	super(ObjectType.ANDPERSISTENT);
 
 	state = 0;
 
@@ -57,12 +52,7 @@ public AtomicObject (ObjectName objName)
 
 public AtomicObject (Uid u)
     {
-	this(u, (ObjectName) null);
-    }
-    
-public AtomicObject (Uid u, ObjectName objName)
-    {
-	super(u, objName);
+	super(u);
 
 	state = -1;
 

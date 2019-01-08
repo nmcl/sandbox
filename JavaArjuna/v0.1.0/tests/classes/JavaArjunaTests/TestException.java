@@ -9,7 +9,7 @@
  * $Id: TestException.java,v 1.1 1998/06/24 15:07:57 nmcl Exp $
  */
 
-package JavaArjunaLiteTests;
+package JavaArjunaTests;
 
 import java.lang.Exception;
 

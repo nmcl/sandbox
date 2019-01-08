@@ -9,10 +9,10 @@
  * $Id: RecoverableObject.java,v 1.2 1998/07/06 13:27:09 nmcl Exp $
  */
 
-package JavaArjunaLiteTests;
+package JavaArjunaTests;
 
-import com.arjuna.JavaArjunaLite.Atomic.*;
-import com.arjuna.JavaGandiva.Common.*;
+import com.arjuna.JavaArjuna.ClassLib.*;
+import com.arjuna.JavaArjuna.Common.*;
 
 import java.io.IOException;
 
