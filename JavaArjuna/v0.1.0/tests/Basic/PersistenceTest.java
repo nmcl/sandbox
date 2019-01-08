@@ -9,13 +9,13 @@
  * $Id: PersistenceTest.java,v 1.1 1998/11/12 09:39:09 nmcl Exp $
  */
 
-import com.arjuna.JavaArjunaLite.JavaArjunaLiteNames;
-import com.arjuna.JavaArjunaLite.Interface.ObjectStore;
-import com.arjuna.JavaGandiva.Common.*;
+import com.arjuna.JavaArjuna.ObjectStore.ObjectStore;
+import com.arjuna.JavaArjuna.ObjectStore.ObjectStoreType;
+import com.arjuna.JavaArjuna.Common.*;
 import java.io.*;
 
-import com.arjuna.JavaArjunaLite.Common.ObjectStoreException;
-import com.arjuna.JavaGandiva.Common.UidException;
+import com.arjuna.JavaArjuna.Common.ObjectStoreException;
+import com.arjuna.JavaArjuna.Common.UidException;
 
 public class PersistenceTest
 {
@@ -24,7 +24,7 @@ public static void main (String[] args)
     {
 	try
 	{
-	    ObjectStore store = new ObjectStore(JavaArjunaLiteNames.Implementation_ObjectStore_ShadowingStore());
+	    ObjectStore store = new ObjectStore(ObjectStoreType.SHADOWING_STORE);
 	    OutputObjectState state = new OutputObjectState();
 	    Uid u = new Uid();
 
