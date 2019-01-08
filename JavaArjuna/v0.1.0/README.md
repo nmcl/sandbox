@@ -25,7 +25,9 @@ some cases it may still look closer to Gandiva than the original JavaArjuna.
 
 - The build system is just enough to create the necessary components but may be closer
 to JavaArjunaLite than the original. It is currently based on the W3OTrans JavaStubGen
-repository as that's the oldest non-Gandiva Java build system I can find. Gandiva came in later.
+repository as that's the oldest non-Gandiva Java build system I can find. Gandiva came in later. Furthermore, some of the rules used
+by the Imakefiles make be closer to JTSArjuna than JavaArjuna given the strong JavaGandiva influence on the initial
+codebase used here.
 
 - This is built with the latest version of Java and there may be differences between that and Oak, which was the version used originally.
 Where possible I've tried not to use more advanced language features but I may have missed some opportunities.
