@@ -9,8 +9,8 @@
  * $Id: BadAction.java,v 1.1 1998/11/12 09:39:04 nmcl Exp $
  */
 
-import com.arjuna.JavaArjunaLite.Atomic.*;
-import com.arjuna.JavaGandiva.Common.*;
+import com.arjuna.JavaArjuna.ClassLib.*;
+import com.arjuna.JavaArjuna.Common.*;
 
 public class BadAction
 {
