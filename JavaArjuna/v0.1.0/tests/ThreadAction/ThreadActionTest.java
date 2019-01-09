@@ -9,14 +9,14 @@
  * $Id: ThreadActionTest.java,v 1.1 1998/11/12 09:39:27 nmcl Exp $
  */
 
-import JavaArjunaLiteTests.AtomicObject;
-import JavaArjunaLiteTests.BasicThreadedObject;
-import com.arjuna.JavaGandiva.Common.*;
-import com.arjuna.JavaArjunaLite.Atomic.*;
+import JavaArjunaTests.AtomicObject;
+import JavaArjunaTests.BasicThreadedObject;
+import com.arjuna.JavaArjuna.Common.*;
+import com.arjuna.JavaArjuna.ClassLib.*;
 import java.lang.Thread;
 
-import JavaArjunaLiteTests.TestException;
-import com.arjuna.JavaGandiva.Common.UidException;
+import JavaArjunaTests.TestException;
+import com.arjuna.JavaArjuna.Common.UidException;
 import java.lang.InterruptedException;
 
     

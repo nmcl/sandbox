@@ -80,6 +80,33 @@ public AtomicObject ()
 	    printDebug = true;
     }
 
+    public AtomicObject (Uid u)
+    {
+	super(u);
+
+	state = -1;
+
+	AtomicAction A = new AtomicAction();
+
+	A.begin();
+
+	if (setlock(new Lock(LockMode.READ), 0) == LockResult.GRANTED)
+	{
+	    System.out.println("Recreated object "+u);
+	    A.commit();
+	}
+	else
+	{
+	    System.out.println("Error recreating object "+u);
+	    A.abort();
+	}
+
+	String debug = System.getProperty("DEBUG", null);
+
+	if (debug != null)
+	    printDebug = true;	
+    }
+
     public AtomicObject (Uid u, LockManagerAttribute lmAttributes)
     {
 	super(u, lmAttributes);
