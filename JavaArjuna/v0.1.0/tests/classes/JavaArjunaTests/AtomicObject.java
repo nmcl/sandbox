@@ -50,9 +50,39 @@ public AtomicObject ()
 	    printDebug = true;
     }
 
-public AtomicObject (Uid u)
+    public AtomicObject (LockManagerAttribute lmAttributes)
     {
-	super(u);
+	super(ObjectType.ANDPERSISTENT, lmAttributes);
+
+	state = 0;
+
+	AtomicAction A = new AtomicAction();
+
+	A.begin();
+
+	if (setlock(new Lock(LockMode.WRITE), 0) == LockResult.GRANTED)
+	{
+	    if (A.commit() == ActionStatus.COMMITTED)
+		System.out.println("Created persistent object " + get_uid());
+	    else
+		System.out.println("Action.commit error.");
+	}
+	else
+	{
+	    A.abort();
+	    
+	    System.out.println("setlock error.");
+	}
+
+	String debug = System.getProperty("DEBUG", null);
+
+	if (debug != null)
+	    printDebug = true;
+    }
+
+    public AtomicObject (Uid u, LockManagerAttribute lmAttributes)
+    {
+	super(u, lmAttributes);
 
 	state = -1;
 

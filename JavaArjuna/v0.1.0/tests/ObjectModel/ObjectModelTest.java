@@ -18,10 +18,10 @@ public class ObjectModelTest
     
 public static void main (String[] args)
     {
-	ObjectName objName = null;
+	LockManagerAttribute lmAttributes = new LockManagerAttribute();
 	boolean write = false;
 	String uid = null;
-	long objectModel = ObjectModel.SINGLE;
+	int objectModel = ObjectModel.SINGLE;
 	
 	for (int i = 0; i < args.length; i++)
 	{
@@ -40,18 +40,7 @@ public static void main (String[] args)
 	    }
 	}
 
-	try
-	{
-	    objName = ObjectName.uniqueObjectName("PNS");	    
-	    objName.setLongAttribute(JavaArjunaLiteNames.StateManager_objectModel(), objectModel);
-
-	    System.out.println("ObjectName: "+objName);
-	}
-	catch (Exception e)
-	{
-	    System.err.println(e);
-	    System.exit(-1);
-	}
+	lmAttributes.objectModel = objectModel;
 
 	try
 	{
@@ -61,10 +50,10 @@ public static void main (String[] args)
 	    {
 		Uid u = new Uid(uid);
 	
-		obj = new AtomicObject(u, objName);
+		obj = new AtomicObject(u, lmAttributes);
 	    }
 	    else
-		obj = new AtomicObject(objName);
+		obj = new AtomicObject(lmAttributes);
 
 	    AtomicAction A = new AtomicAction();
 
