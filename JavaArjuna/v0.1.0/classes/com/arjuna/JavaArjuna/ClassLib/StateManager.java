@@ -390,7 +390,7 @@ protected StateManager (Uid objUid, StateManagerAttribute attr)
     
 protected StateManager (Uid objUid, int ot)
     {
-	this(objUid, ot, null);
+	this(objUid, ot, new StateManagerAttribute());
     }
 
 protected StateManager (Uid objUid, int ot, StateManagerAttribute sm)
@@ -418,7 +418,7 @@ protected StateManager ()
     
 protected StateManager (int ot)
     {
-	this(ot, null);
+	this(ot, new StateManagerAttribute());
     }
 
 protected StateManager (int ot, StateManagerAttribute sm)

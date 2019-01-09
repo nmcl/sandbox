@@ -396,7 +396,7 @@ public String type ()
 
 protected LockManager (Uid storeUid)
     {
-	this(storeUid, ObjectType.ANDPERSISTENT, null);
+	this(storeUid, ObjectType.ANDPERSISTENT, new LockManagerAttribute());
     }
 
 protected LockManager (Uid storeUid, LockManagerAttribute attr)
@@ -406,7 +406,7 @@ protected LockManager (Uid storeUid, LockManagerAttribute attr)
     
 protected LockManager (Uid storeUid, int ot)
     {
-	this(storeUid, ot, null);
+	this(storeUid, ot, new LockManagerAttribute());
     }
 
 protected LockManager (Uid storeUid, int ot, LockManagerAttribute attr)
@@ -430,12 +430,12 @@ protected LockManager (Uid storeUid, int ot, LockManagerAttribute attr)
 
 protected LockManager ()
     {
-	this(ObjectType.RECOVERABLE, null);
+	this(ObjectType.RECOVERABLE, new LockManagerAttribute());
     }
 
 protected LockManager (int ot)
     {
-	this(ot, null);
+	this(ot, new LockManagerAttribute());
     }
 
 protected LockManager (int ot, LockManagerAttribute attr)
