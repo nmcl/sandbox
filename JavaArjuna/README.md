@@ -8,3 +8,5 @@ installation of the 1.0.0 release which was based on some ArjunaII
 work, specifically Gandiva.
 
 See specific READMEs in the sub-directories for further information.
+
+JavaArjuna referenced in http://www.cs.ncl.ac.uk/research/pubs/trs/papers/651.pdf
