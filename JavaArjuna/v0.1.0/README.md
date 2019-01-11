@@ -44,7 +44,10 @@ like at the start. Arguably none of these changes should have been made and the 
 Rather than revert the current list of deprecated code, I decided to leave as is because it's just various finalize and minor code changes.
 Most (all?) of those changes have a suitable comment next to them anyway so people can see what was there originally if needed.
 
-- Some of the property names may be different initially but I will try to fix them later. https://github.com/nmcl/sandbox/issues/83
+- Some of the property names may be different initially but I will try to fix them later. https://github.com/nmcl/sandbox/issues/83 and https://github.com/nmcl/sandbox/issues/93
+
+- The JavaArjuna licence is disabled by default (-DDISABLE_LICENCE) but this was likely not even implemented in the first version
+anyway and is a carry-over from the later code.
 
 ----
 
