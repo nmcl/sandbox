@@ -1,16 +1,11 @@
-#
-# These options are described in the JTSArjuna manual.
-# Defaults are provided here for convenience only.
-#
-
 # Licence string for Java Arjuna
 # JAVA_ARJUNA_LICENCE=01234567-89abcdef-01234567-89abcdef
 
 # Licence string for Java AIT
 # JAVA_AIT_LICENCE=00112233-44556677-8899aabb-ccddeeff
 
-# (default is /usr/local/JTSArjuna/etc)
-# PROPERTIES_FILE=/usr/local/JTSArjuna/etc
+# (default is /usr/local/JavaArjuna/etc)
+# PROPERTIES_FILE=/usr/local/JavaArjuna/etc
 
 # (default is false)
 # DEBUG_ENABLED=false
@@ -39,13 +34,13 @@
 # (default is defaultStore)
 # LOCALOSROOT=defaultStore
 
-# (default is /usr/local/JTSArjuna/LockStore)
-# LOCKSTORE_DIR=/usr/local/JTSArjuna/LockStore
+# (default is /usr/local/JavaArjuna/LockStore)
+# LOCKSTORE_DIR=/usr/local/JavaArjuna/LockStore
 
 # (default is BasicLockStore)
 # LOCKSTORE_TYPE=BasicLockStore
 
-# Location of Object Store (default is /usr/local/JTSArjuna/ObjectStore)
+# Location of Object Store (default is /usr/local/JavaArjuna/ObjectStore)
 # OBJECTSTORE_DIR=/tmp/JTS_ObjectStore
 
 # (default is ON)
@@ -60,8 +55,8 @@
 # (default is ON)
 # TRANSACTION_SYNC=ON
 
-# (default is /usr/local/JTSArjuna)
-# INITIAL_REFERENCES_ROOT=/usr/local/JTSArjuna
+# (default is /usr/local/JavaArjuna)
+# INITIAL_REFERENCES_ROOT=/usr/local/JavaArjuna
 
 # (default is CosServices.cfg)
 # INITIAL_REFERENCES_FILE=CosServices.cfg
