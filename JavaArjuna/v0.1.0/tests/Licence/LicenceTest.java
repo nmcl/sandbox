@@ -9,7 +9,7 @@
  * $Id: LicenceTest.java,v 1.1.2.1 2000/08/29 09:00:38 nmcl Exp $
  */
 
-import com.arjuna.ArjunaCommon.Common.*;
+import com.arjuna.JavaArjuna.Common.*;
 
 public class LicenceTest
 {
@@ -29,8 +29,10 @@ public static void main (String[] args)
 	    }
 	}
 
+	Utility.loadProperties();
+	
 	if (licence == null)
-	    licence = PropertyManager.getProperty("JAVA_ARJUNA_LICENCE");
+	    licence = System.getProperty("JAVA_ARJUNA_LICENCE");
 	
 	if (licence == null)
 	{
@@ -40,7 +42,14 @@ public static void main (String[] args)
 	
 	Uid u = new Uid();  // make sure licence lets us get this far!
 
+	/*
+	 * LicenceType existed in later versions because the licence became capable of
+	 * enabling or disabling certain features such as 2PC. In the earlier versions
+	 * it was simply a binary choice, i.e., if you had a licence you could use JavaArjuna and
+	 * if there was no such licence then you couldn't.
+
 	System.out.println("Licence "+licence+" enables: "+com.arjuna.ArjunaCommon.Core.LicenceType.checkAll());
+	*/
     }
     
 };
