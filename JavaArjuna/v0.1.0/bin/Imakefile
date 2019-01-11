@@ -15,9 +15,9 @@ SOURCES = licence.java \
 OBJECTS = licence.class \
 	  licencemanager.class
 
-Target($(OBJECTS))
+AllTarget($(OBJECTS))
 
-BuildJavaByteCode(licence,NullParam)
-BuildJavaByteCode(licencemanager,NullParam)
+BuildJavaByteCode(licence,NOPARAM)
+BuildJavaByteCode(licencemanager,NOPARAM)
 
-Clean(*.class *.prof out)
+TidyTarget(*.class *.prof out)
