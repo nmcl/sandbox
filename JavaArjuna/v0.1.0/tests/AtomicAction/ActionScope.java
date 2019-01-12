@@ -22,6 +22,8 @@ public static void main (String[] args)
 	System.gc();
 	
 	System.runFinalization();
+
+	System.out.println("Ending without explicitly terminating transaction - watch for warnings!");
     }
 
 public static void test ()
