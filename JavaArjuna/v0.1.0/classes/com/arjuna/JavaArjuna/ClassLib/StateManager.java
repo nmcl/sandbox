@@ -606,6 +606,8 @@ protected final void setupStore ()
     
 protected synchronized void setupStore (String rootName)
     {
+	Thread.dumpStack();
+	
 	/*
 	 * Already setup?
 	 * Assume type will not change once object is created.
@@ -709,10 +711,10 @@ protected synchronized void setupStore (String rootName)
 
     /* do we need to load the object's state? */
     
-private final boolean loadObjectState ()
+protected final boolean loadObjectState ()
     {
 	boolean load = (smAttributes.objectModel != ObjectModel.SINGLE);
-    
+
 	/*
 	 * MULTIPLE object model requires loading of state every
 	 * time, even if we are RECOVERABLE - we use the volatile

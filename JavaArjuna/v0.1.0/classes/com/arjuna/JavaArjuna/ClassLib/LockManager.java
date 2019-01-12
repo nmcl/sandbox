@@ -221,7 +221,8 @@ public final synchronized int setlock (Lock toSet, int retry, int sleepTime)
 	{
 	    conflict = ConflictType.CONFLICT;
 
-	    super.setupStore();
+	    if (super.loadObjectState())
+		super.setupStore();
 	    
 	    if (loadState())
 	    {
