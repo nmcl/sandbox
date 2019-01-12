@@ -606,8 +606,6 @@ protected final void setupStore ()
     
 protected synchronized void setupStore (String rootName)
     {
-	Thread.dumpStack();
-	
 	/*
 	 * Already setup?
 	 * Assume type will not change once object is created.
