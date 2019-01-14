@@ -11,7 +11,7 @@ COMMENT
 
 #define IHaveSubDirs
 
-SetSubDirectorys(classes htdocs lib Include bin)
+SetSubDirectorys(classes htdocs lib bin Include)
 
 PrintConfig
 
@@ -22,9 +22,9 @@ all depend install ::
 install.local :: INSTALL_TOPDIR_VAR
 	-CHMOD_VAR ugo+rx INSTALL_TOPDIR_VAR
 
-MakeRelDirectoryDependency(Include)
 MakeRelDirectoryDependency(classes)
 MakeRelDirectoryDependency(htdocs)
 MakeRelDirectoryDependency(lib)
 MakeRelDirectoryDependency(tests)
 MakeRelDirectoryDependency(bin)
+MakeRelDirectoryDependency(Include)
