@@ -269,6 +269,22 @@ INSTALL_TOPDIR_VAR/dir/file : file                                              
  *
  */
 
+#ifndef InstallJar
+#define InstallJar(dir,file)                                                                      @@\
+install.local :: INSTALL_TOPDIR_VAR/dir INSTALL_TOPDIR_VAR/dir/JAR_FILE(file)                                @@\
+                                                                                                   @@\
+CreateInstallTopDirectory(dir)                                                                     @@\
+                                                                                                   @@\
+INSTALL_TOPDIR_VAR/dir/JAR_FILE(file) : JAR_FILE(file)                                                                 @@\
+	@echo Copying file to INSTALL_TOPDIR_VAR/dir/JAR_FILE(file)                                          @@\
+	COMMAND_PREFIX(CP_VAR) JAR_FILE(file) INSTALL_TOPDIR_VAR/dir/JAR_FILE(file)                                    @@\
+	COMMAND_PREFIX(CHMOD_VAR) u=rw,g=r,o=r INSTALL_TOPDIR_VAR/dir/JAR_FILE(file)
+#endif
+
+/*
+ *
+ */
+
 #ifndef InstallProgram
 #define InstallProgram(dir,prog)                                                                   @@\
 install.local :: INSTALL_TOPDIR_VAR/dir INSTALL_TOPDIR_VAR/dir/prog                                @@\

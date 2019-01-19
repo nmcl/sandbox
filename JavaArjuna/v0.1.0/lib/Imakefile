@@ -8,3 +8,7 @@ COMMENT UK.
 COMMENT
 COMMENT $Id: Imakefile,v 1.2 1998/07/06 13:26:56 nmcl Exp $
 COMMENT
+
+CreateJavaLibrary(JavaArjuna,../classes)
+
+InstallFile(lib,JavaArjuna)
