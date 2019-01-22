@@ -9,12 +9,8 @@ COMMENT
 COMMENT $Id: Imakefile,v 1.2 1998/07/28 08:56:52 nmcl Exp $
 COMMENT
 
-#ifdef BUILDHTDOCS
+AllTarget(AllNames.html)
 
-Target(AllNames.html)
+GenerateJavaDocs(com.arjuna.JavaArjuna com.arjuna.JavaArjuna.ClassLib com.arjuna.JavaArjuna.Common com.arjuna.JavaArjuna.ObjectStore com.arjuna.JavaArjuna.Template com.arjuna.JavaArjuna.Thread,NOPARAM)
 
-GenerateJavaDocs(com.arjuna.JavaArjunaLite com.arjuna.JavaArjunaLite.Atomic com.arjuna.JavaArjunaLite.Common com.arjuna.JavaArjunaLite.Implementation com.arjuna.JavaArjunaLite.Interface com.arjuna.JavaArjunaLite.Thread,NullParam)
-
-Clean(*.html)
-
-#endif
+TidyTarget(*.html)
