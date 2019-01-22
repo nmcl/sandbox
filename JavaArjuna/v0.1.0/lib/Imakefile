@@ -11,4 +11,4 @@ COMMENT
 
 CreateJavaLibrary(JavaArjuna,../classes)
 
-InstallFile(lib,JavaArjuna)
+InstallJar(lib,JavaArjuna)
