@@ -253,6 +253,23 @@ printenv ::                                                                     
  *
  */
 
+#ifndef InstallHtdocs
+#define InstallHtdocs(dir)                                                                      @@\
+install.local :: INSTALL_TOPDIR_VAR/dir                                @@\
+                                                                                                   @@\
+CreateInstallTopDirectory(dir)                                                                     @@\
+                                                                                                   @@\
+INSTALL_TOPDIR_VAR/dir/index.html : index.html                                                                @@\
+	@echo Copying htdocs to INSTALL_TOPDIR_VAR/dir                                          @@\
+	COMMAND_PREFIX(CP_VAR) -r . INSTALL_TOPDIR_VAR/dir                                    @@\
+	COMMAND_PREFIX(RM) Imakefile Makefile                                    @@\
+	COMMAND_PREFIX(CHMOD_VAR) -r u=rw,g=r,o=r INSTALL_TOPDIR_VAR/dir
+#endif
+
+/*
+ *
+ */
+
 #ifndef InstallFile
 #define InstallFile(dir,file)                                                                      @@\
 install.local :: INSTALL_TOPDIR_VAR/dir INSTALL_TOPDIR_VAR/dir/file                                @@\
@@ -587,19 +604,19 @@ MakeInSubdir(purge,purge,purge.local,SUBDIRS_VAR)
 tidy :: tidy.local                                                                                 @@\
                                                                                                    @@\
 tidy.local ::                                                                                      @@\
-	COMMAND_PREFIX(RM_VAR) core *~ \#*\# *.bak *.BAK *\%                                       @@\
+	COMMAND_PREFIX(RM_VAR) -r core *~ \#*\# *.bak *.BAK *\%                                       @@\
                                                                                                    @@\
                                                                                                    @@\
 clean :: clean.local                                                                               @@\
                                                                                                    @@\
 clean.local :: tidy.local                                                                          @@\
-	COMMAND_PREFIX(RM_VAR) -f .dummy $(OBJECTS)                                                @@\
+	COMMAND_PREFIX(RM_VAR) -rf .dummy $(OBJECTS)                                                @@\
                                                                                                    @@\
                                                                                                    @@\
 purge :: purge.local                                                                               @@\
                                                                                                    @@\
 purge.local :: clean.local                                                                         @@\
-	COMMAND_PREFIX(RM_VAR) -f Makefile files *.stamp
+	COMMAND_PREFIX(RM_VAR) -rf Makefile files *.stamp
 
 #endif
 

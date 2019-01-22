@@ -13,4 +13,6 @@ AllTarget(AllNames.html)
 
 GenerateJavaDocs(com.arjuna.JavaArjuna com.arjuna.JavaArjuna.ClassLib com.arjuna.JavaArjuna.Common com.arjuna.JavaArjuna.ObjectStore com.arjuna.JavaArjuna.Template com.arjuna.JavaArjuna.Thread,NOPARAM)
 
-TidyTarget(*.html)
+InstallHtdocs(htdocs)
+
+TidyTarget(*.html *.zip *.js *.css com jquery resources element-list)
