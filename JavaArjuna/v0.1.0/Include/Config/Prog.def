@@ -29,6 +29,10 @@
 #define JAVAC_PROGRAM javac
 #endif
 
+#ifndef JAR_PROGRAM
+#define JAR_PROGRAM jar
+#endif
+
 #ifndef CPP_PROGRAM
 #define CPP_PROGRAM cpp
 #endif

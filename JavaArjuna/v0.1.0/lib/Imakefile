@@ -9,6 +9,8 @@ COMMENT
 COMMENT $Id: Imakefile,v 1.2 1998/07/06 13:26:56 nmcl Exp $
 COMMENT
 
+AllTarget(JavaArjuna.jar)
+
 CreateJavaLibrary(JavaArjuna,../classes)
 
 InstallJar(lib,JavaArjuna)
