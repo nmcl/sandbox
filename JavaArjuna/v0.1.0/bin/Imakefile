@@ -20,4 +20,7 @@ AllTarget($(OBJECTS))
 BuildJavaByteCode(licence,NOPARAM)
 BuildJavaByteCode(licencemanager,NOPARAM)
 
+InstallFile(bin,licence.class)
+InstallFile(bin,licencemanager.class)
+
 TidyTarget(*.class *.prof out)
