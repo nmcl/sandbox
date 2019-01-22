@@ -18,4 +18,5 @@ ObjectStoreImple.java
 AbstractRecord.java
 ShadowingStore.java
 BasicPersistentLockStore.java
+JavaArjuna.jar
 out
