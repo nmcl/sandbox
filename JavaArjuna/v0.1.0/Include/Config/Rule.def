@@ -262,7 +262,7 @@ CreateInstallTopDirectory(dir)                                                  
 INSTALL_TOPDIR_VAR/dir/index.html : index.html                                                                @@\
 	@echo Copying htdocs to INSTALL_TOPDIR_VAR/dir                                          @@\
 	COMMAND_PREFIX(CP_VAR) -r . INSTALL_TOPDIR_VAR/dir                                    @@\
-	COMMAND_PREFIX(RM) INSTALL_TOPDIR_VAR/Imakefile INSTALL_TOPDIR_VAR/Makefile                                    
+	COMMAND_PREFIX(RM) INSTALL_TOPDIR_VAR/dir/Imakefile INSTALL_TOPDIR_VAR/dir/Makefile                                    
 #endif
 
 /*
