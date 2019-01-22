@@ -33,6 +33,10 @@
 #define JAR_PROGRAM jar
 #endif
 
+#ifndef JAVADOC_PROGRAM
+#define JAVADOC_PROGRAM javadoc
+#endif
+
 #ifndef CPP_PROGRAM
 #define CPP_PROGRAM cpp
 #endif
