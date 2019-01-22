@@ -28,3 +28,7 @@ MakeRelDirectoryDependency(lib)
 MakeRelDirectoryDependency(tests)
 MakeRelDirectoryDependency(bin)
 MakeRelDirectoryDependency(Include)
+
+InstallFile(.,Copyright)
+InstallFile(.,Licence.txt)
+InstallFile(.,README.md)
