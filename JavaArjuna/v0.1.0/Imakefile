@@ -11,7 +11,7 @@ COMMENT
 
 #define IHaveSubDirs
 
-SetSubDirectorys(classes htdocs lib bin Include)
+SetSubDirectorys(classes htdocs lib bin etc Include)
 
 PrintConfig
 
