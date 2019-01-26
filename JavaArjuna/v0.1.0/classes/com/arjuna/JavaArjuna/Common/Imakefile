@@ -19,7 +19,11 @@ SOURCES = ObjectStoreIterator.java \
 	  OutputObjectState.java \
 	  Uid.java \
 	  UidException.java \
-	  Utility.java
+	  Utility.java \
+	  DebugController.java \
+	  DebugLevel.java \
+	  ErrorStream.java \
+	  FatalError.java
 
 OBJECTS = ObjectStoreIterator.class \
 	  ObjectStoreException.class \
@@ -31,7 +35,11 @@ OBJECTS = ObjectStoreIterator.class \
 	  OutputObjectState.class \
 	  Uid.class \
 	  UidException.class \
-	  Utility.class
+	  Utility.class \
+	  DebugController.class \
+	  DebugLevel.class \
+	  ErrorStream.class \
+	  FatalError.class
 
 AllTarget($(SOURCES) $(OBJECTS))
 
@@ -50,5 +58,9 @@ BuildJavaByteCode(OutputObjectState,NOPARAM)
 BuildJavaByteCode(Uid,NOPARAM)
 BuildJavaByteCode(UidException,NOPARAM)
 BuildJavaByteCode(Utility,NOPARAM)
+BuildJavaByteCode(DebugController,NOPARAM)
+BuildJavaByteCode(DebugLevel,NOPARAM)
+BuildJavaByteCode(ErrorStream,NOPARAM)
+BuildJavaByteCode(FatalError,NOPARAM)
 
 TidyTarget(*.class)
