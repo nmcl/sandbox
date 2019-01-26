@@ -49,6 +49,10 @@ Most (all?) of those changes have a suitable comment next to them anyway so peop
 - The JavaArjuna licence is disabled by default (-DDISABLE_LICENCE) but this was likely not even implemented in the first version
 anyway and is a carry-over from the later code.
 
+- Debug and Error streams were a key part of the original Arjuna code and probably part of the original JavaArjuna. However, looking at
+the code for JTSArjuna it seems that they were added later in that codebase. I'm adding them here anyway because I feel sure there were there
+initially but perhaps got pulled in the move to JTSArjuna and only later returned.
+
 ----
 
 When building make sure to install imake and set CLASSPATH to classes directory. Also make sure to set the shell environment\
