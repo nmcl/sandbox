@@ -11,7 +11,7 @@
 
 package com.arjuna.JavaArjuna.ClassLib;
 
-import com.arjuna.JavaArjuna.ClassLib.LockStore;
+import com.arjuna.JavaArjuna.LockStore.LockStore;
 import java.io.PrintStream;
 
 /*

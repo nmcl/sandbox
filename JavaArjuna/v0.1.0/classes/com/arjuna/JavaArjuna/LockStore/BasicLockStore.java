@@ -9,7 +9,7 @@
  * $Id: BasicLockStore.java,v 1.4 1998/07/06 13:26:40 nmcl Exp $
  */
 
-package com.arjuna.JavaArjuna.ClassLib;
+package com.arjuna.JavaArjuna.LockStore;
 
 import com.arjuna.JavaArjuna.Common.*;
 

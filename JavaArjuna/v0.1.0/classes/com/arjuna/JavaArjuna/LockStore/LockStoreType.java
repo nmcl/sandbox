@@ -9,7 +9,7 @@
  * $Id$
  */
 
-package com.arjuna.JavaArjuna.ClassLib;
+package com.arjuna.JavaArjuna.LockStore;
 
 /*
  * Maintain the types of LockStore implementations.
