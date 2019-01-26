@@ -12,6 +12,7 @@
 package com.arjuna.JavaArjuna.ClassLib;
 
 import com.arjuna.JavaArjuna.LockStore.LockStore;
+import com.arjuna.JavaArjuna.LockStore.LockStoreType;
 import com.arjuna.JavaArjuna.ClassLib.Semaphore;
 import com.arjuna.JavaArjuna.Common.*;
 import java.io.PrintStream;

@@ -9,12 +9,11 @@
  * $Id: LockStore.java,v 1.6 1998/07/06 13:26:51 nmcl Exp $
  */
 
-package com.arjuna.JavaArjuna.ClassLib;
+package com.arjuna.JavaArjuna.LockStore;
 
 import com.arjuna.JavaArjuna.Environment;
 import com.arjuna.JavaArjuna.ClassLib.ObjectModel;
 import com.arjuna.JavaArjuna.Common.LockStoreException;
-import com.arjuna.JavaArjuna.ClassLib.LockStoreImple;
 import com.arjuna.JavaArjuna.Common.*;
 
 public class LockStore

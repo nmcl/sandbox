@@ -15,7 +15,6 @@
 package com.arjuna.JavaArjuna.LockStore;
 
 import com.arjuna.JavaArjuna.Environment;
-import com.arjuna.JavaArjuna.ClassLib.LockStoreImple;
 import com.arjuna.JavaArjuna.ObjectStore.ObjectStore;
 import com.arjuna.JavaArjuna.ObjectStore.ObjectStoreType;
 import com.arjuna.JavaArjuna.Common.*;
