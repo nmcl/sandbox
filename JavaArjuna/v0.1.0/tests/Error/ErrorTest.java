@@ -9,7 +9,6 @@
  * $Id: ErrorTest.java,v 1.1.2.1.24.1 2000/11/21 11:47:54 nmcl Exp $
  */
 
-import com.arjuna.ArjunaCommon.Common.*;
 
 public class ErrorTest
 {
