@@ -9,7 +9,7 @@
  * $Id: ErrorStream.java,v 1.1.2.3.2.1.6.2.20.1.2.1.2.3 2001/01/11 14:02:06 nmcl Exp $
  */
 
-package com.arjuna.ArjunaCommon.Common;
+package com.arjuna.JavaArjuna.Common;
 
 import java.io.PrintWriter;
 import java.io.OutputStream;

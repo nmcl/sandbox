@@ -9,7 +9,7 @@
  * $Id: DebugController.java,v 1.2.4.1 2000/04/25 08:35:54 nmcl Exp $
  */
 
-package com.arjuna.ArjunaCommon.Common;
+package com.arjuna.JavaArjuna.Common;
 
 import java.io.PrintWriter;
 import java.io.OutputStream;

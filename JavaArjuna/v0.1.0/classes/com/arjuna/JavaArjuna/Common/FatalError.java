@@ -9,7 +9,7 @@
  * $Id: FatalError.java,v 1.1.2.1.4.1 2000/12/21 11:20:49 nmcl Exp $
  */
 
-package com.arjuna.ArjunaCommon.Common;
+package com.arjuna.JavaArjuna.Common;
 
 import java.lang.Error;
 

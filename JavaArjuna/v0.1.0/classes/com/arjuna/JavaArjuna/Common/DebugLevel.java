@@ -9,7 +9,7 @@
  * $Id: DebugLevel.java,v 1.2 2000/03/27 14:23:20 nmcl Exp $
  */
 
-package com.arjuna.ArjunaCommon.Common;
+package com.arjuna.JavaArjuna.Common;
 
 public class DebugLevel
 {
