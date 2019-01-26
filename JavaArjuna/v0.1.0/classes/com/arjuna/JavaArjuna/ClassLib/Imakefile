@@ -45,14 +45,9 @@ SOURCES = ActionHierarchy.java \
 	  ObjectModel.java \
 	  StateManagerAttribute.java \
 	  LockManagerAttribute.java \
-	  BasicLockStore.java \
 	  BasicSemaphore.java \
 	  Semaphore.java \
 	  SemaphoreImple.java \
-	  BasicPersistentLockStore.java \
-	  LockStore.java \
-	  LockStoreImple.java \
-	  LockStoreType.java \
 	  SemaphoreType.java
 
 OBJECTS = ActionStatus.class \
@@ -91,26 +86,16 @@ OBJECTS = ActionStatus.class \
 	  ObjectModel.class \
 	  StateManagerAttribute.class \
 	  LockManagerAttribute.class \
-	  BasicLockStore.class \
 	  BasicSemaphore.class \
 	  Semaphore.class \
 	  SemaphoreImple.class \
-	  BasicPersistentLockStore.class \
-	  LockStore.class \
-	  LockStoreImple.class \
-	  LockStoreType.class \
 	  SemaphoreType.class
 
 AllTarget($(SOURCE) $(OBJECTS))
 
 PreprocessJavaCode(AbstractRecord,NOPARAM)
-PreprocessJavaCode(BasicPersistentLockStore,NOPARAM)
 
 BuildJavaByteCode(BasicAction,NOPARAM)
-BuildJavaByteCode(BasicPersistentLockStore,NOPARAM)
-BuildJavaByteCode(LockStore,NOPARAM)
-BuildJavaByteCode(LockStoreImple,NOPARAM)
-BuildJavaByteCode(BasicLockStore,NOPARAM)
 BuildJavaByteCode(BasicSemaphore,NOPARAM)
 BuildJavaByteCode(Semaphore,NOPARAM)
 BuildJavaByteCode(SemaphoreImple,NOPARAM)
@@ -149,7 +134,6 @@ BuildJavaByteCode(ActionList,NOPARAM)
 BuildJavaByteCode(ObjectModel,NOPARAM)
 BuildJavaByteCode(StateManagerAttribute,NOPARAM)
 BuildJavaByteCode(LockManagerAttribute,NOPARAM)
-BuildJavaByteCode(LockStoreType,NOPARAM)
 BuildJavaByteCode(SemaphoreType,NOPARAM)
 
 TidyTarget(*.class)

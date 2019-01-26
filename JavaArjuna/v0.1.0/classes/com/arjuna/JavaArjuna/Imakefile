@@ -10,13 +10,13 @@ COMMENT $Id: Imakefile,v 1.9.2.1 1999/01/28 19:00:16 nmcl Exp $
 COMMENT
 
 #define IHaveSubDirs
-SetSubDirectorys(Common ClassLib ObjectStore Thread Template)
+SetSubDirectorys(Common ClassLib ObjectStore LockStore Thread Template)
 
 SOURCES = ObjectStore/ObjectStoreImple.java \
 	  ObjectStore/ShadowingStore.java \
 	  Common/Utility.java \
 	  ClassLib/AbstractRecord.java \
-	  ClassLib/BasicPersistentLockStore.java \
+	  LockStore/BasicPersistentLockStore.java \
 	  Environment.java
 
 OBJECTS = Environment.class
@@ -27,7 +27,7 @@ PreprocessJavaCodeDir(ObjectStore,ObjectStoreImple,NOPARAM)
 PreprocessJavaCodeDir(ObjectStore,ShadowingStore,NOPARAM)
 PreprocessJavaCodeDir(Common,Utility,NOPARAM)
 PreprocessJavaCodeDir(ClassLib,AbstractRecord,NOPARAM)
-PreprocessJavaCodeDir(ClassLib,BasicPersistentLockStore,NOPARAM)
+PreprocessJavaCodeDir(LockStore,BasicPersistentLockStore,NOPARAM)
 
 BuildJavaByteCode(Environment,NOPARAM)
 
