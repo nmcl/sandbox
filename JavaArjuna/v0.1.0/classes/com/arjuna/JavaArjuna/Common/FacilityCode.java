@@ -9,7 +9,7 @@
  * $Id: FacilityCode.java,v 1.1 2000/03/27 14:27:22 nmcl Exp $
  */
 
-package com.arjuna.ArjunaCommon.Common;
+package com.arjuna.JavaArjuna.Common;
 
 /* 
  * Enumerated types for FacilityCodes

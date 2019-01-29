@@ -24,5 +24,11 @@ public class Environment
     public static String OBJECTSTORE_DIR = "OBJECTSTORE_DIR";
     public static String ACTIONSTORE_TYPE = "ACTIONSTORE_TYPE";
     public static String OBJECTSTORE_SYNC = "OBJECTSTORE_SYNC";
+    public static String DEBUG_ENABLED = "DEBUG_ENABLED";
+    public static String DEBUG_LEVEL = "DEBUG_LEVEL";
+    public static String FAC_LEVEL = "FAC_LEVEL";
+    public static String VIS_LEVEL = "VIS_LEVEL";
+    public static String DEBUG_STREAM = "DEBUG_STREAM";
+    public static String ERROR_STREAM = "ERROR_STREAM";
 }
 

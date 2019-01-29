@@ -11,6 +11,8 @@
 
 package com.arjuna.JavaArjuna.Common;
 
+import com.arjuna.JavaArjuna.Environment;
+
 import java.io.PrintWriter;
 import java.io.OutputStream;
 
@@ -165,7 +167,7 @@ private static boolean _enabled = false;
     {
 	_theController = new DebugController();
 
-	String enabled = PropertyManager.getProperty(Environment.DEBUG_ENABLED);
+	String enabled = System.getProperty(Environment.DEBUG_ENABLED);
 	
 	if (enabled != null)
 	{
@@ -173,7 +175,7 @@ private static boolean _enabled = false;
 		_enabled = true;
 	}
 	
-	String dLevel = PropertyManager.getProperty(Environment.DEBUG_LEVEL);
+	String dLevel = System.getProperty(Environment.DEBUG_LEVEL);
 
 	if (dLevel != null)
 	{
@@ -189,7 +191,7 @@ private static boolean _enabled = false;
 	else
 	    _debugLevel = DebugLevel.NO_DEBUGGING;
 
-	String vLevel = PropertyManager.getProperty(Environment.VIS_LEVEL);
+	String vLevel = System.getProperty(Environment.VIS_LEVEL);
 	
 	if (vLevel != null)
 	{
@@ -205,7 +207,7 @@ private static boolean _enabled = false;
 	else
 	    _visLevel = VisibilityLevel.VIS_PUBLIC;
 
-	String fLevel = PropertyManager.getProperty(Environment.FAC_LEVEL);
+	String fLevel = System.getProperty(Environment.FAC_LEVEL);
 	
 	if (fLevel != null)
 	{
@@ -221,7 +223,7 @@ private static boolean _enabled = false;
 	else
 	    _facLevel = FacilityCode.FAC_ALL;
 
-	String stream = PropertyManager.getProperty(Environment.DEBUG_STREAM);
+	String stream = System.getProperty(Environment.DEBUG_STREAM);
 	
 	if (stream != null)
 	{

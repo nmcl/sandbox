@@ -11,6 +11,8 @@
 
 package com.arjuna.JavaArjuna.Common;
 
+import com.arjuna.JavaArjuna.Environment;
+
 import java.io.PrintWriter;
 import java.io.OutputStream;
 import java.util.Date;
@@ -113,7 +115,7 @@ private static PrintWriter _theStream = null;
     
     static
     {
-	String stream = PropertyManager.getProperty(Environment.ERROR_STREAM);
+	String stream = System.getProperty(Environment.ERROR_STREAM);
 	
 	if (stream != null)
 	{

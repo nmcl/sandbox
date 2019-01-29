@@ -9,7 +9,7 @@
  * $Id: VisibilityLevel.java,v 1.2.4.1 2000/04/25 08:35:56 nmcl Exp $
  */
 
-package com.arjuna.ArjunaCommon.Common;
+package com.arjuna.JavaArjuna.Common;
 
 public class VisibilityLevel
 {
