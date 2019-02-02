@@ -53,6 +53,8 @@ anyway and is a carry-over from the later code.
 the code for JTSArjuna it seems that they were added later in that codebase. I'm adding them here anyway because I feel sure there were there
 initially but perhaps got pulled in the move to JTSArjuna and only later returned.
 
+- Some property names/environment variables are defined in the code but not used.
+
 ----
 
 When building make sure to install imake and set CLASSPATH to classes directory. Also make sure to set the shell environment\

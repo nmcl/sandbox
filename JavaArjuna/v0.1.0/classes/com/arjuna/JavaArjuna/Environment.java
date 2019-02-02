@@ -16,8 +16,6 @@ public class Environment
     public static final String JAVAARJUNA_HOME = "JAVAARJUNA_HOME";
     public static final String PROPERTIES_FILE_NAME = "properties.txt";
     public static final String PROPERTIES_FILE_DIR = "etc";  // default will be $JAVAARJUNA_HOME/etc
-    public static final String SINGLE_LOCKSTORE_TYPE = "SINGLE_LOCKSTORE_TYPE";
-    public static final String MULTIPLE_LOCKSTORE_TYPE = "MULTIPLE_LOCKSTORE_TYPE";
     public static final String LOCKSTORE_DIR = "LOCKSTORE_DIR";
     public static final String LOCKSTORE_TYPE = "LOCKSTORE_TYPE";
     public static final String OBJECTSTORE_TYPE = "OBJECTSTORE_TYPE";
@@ -41,4 +39,3 @@ public class Environment
     public static final String TRANSACTION_SYNC = "TRANSACTION_SYNC";
     
 }
-
