@@ -9,9 +9,9 @@
  * $Id: Semaphore.java,v 1.5 1998/07/06 13:26:53 nmcl Exp $
  */
 
-package com.arjuna.JavaArjuna.ClassLib;
+package com.arjuna.JavaArjuna.Semaphore;
 
-import com.arjuna.JavaArjuna.ClassLib.SemaphoreImple;
+import com.arjuna.JavaArjuna.Semaphore.SemaphoreImple;
 import com.arjuna.JavaArjuna.Common.*;
 
 import java.io.IOException;

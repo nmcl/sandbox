@@ -9,7 +9,7 @@
  * $Id: BasicSemaphore.java,v 1.6 1998/07/06 13:26:49 nmcl Exp $
  */
 
-package com.arjuna.JavaArjuna.ClassLib;
+package com.arjuna.JavaArjuna.Semaphore;
 
 import com.arjuna.JavaArjuna.Template.BasicList;
 import com.arjuna.JavaArjuna.Template.KeyedList;

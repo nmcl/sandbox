@@ -9,7 +9,7 @@
  * $Id: RecordType.java,v 1.4 1998/07/06 13:26:30 nmcl Exp $
  */
 
-package com.arjuna.JavaArjuna.ClassLib;
+package com.arjuna.JavaArjuna.Semaphore;
 
 /*
  * Maintain the types of Semaphore implementations. Pre-Gandiva.
