@@ -71,3 +71,15 @@ in my current build) and that works fine. See https://github.com/nmcl/sandbox/is
 auto-detect the fact that gcc-8 should be used on Mac OS X but you can override this during the configuration execution.
 
 When cleaning up a buid by running 'make purge' make sure to do this in the tests directory first.
+
+----
+
+JavaArjuna requires a  minimum object store to save/load  the states of
+transaction  logs and persistent  created objects.  The default  location for
+this  is the  root  of  the JavaArjuna  installation  (the system  will
+automatically  create  an   ObjectStore  subdirectory).   For  further
+details, see the documentation.
+
+If you want to override the location of the object store, then use the
+OBJECTSTORE_DIR property  variable, either on the command  line, or in
+the properties file.
