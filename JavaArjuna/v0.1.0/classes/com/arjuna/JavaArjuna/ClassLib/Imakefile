@@ -44,11 +44,7 @@ SOURCES = ActionHierarchy.java \
 	  ActionList.java \
 	  ObjectModel.java \
 	  StateManagerAttribute.java \
-	  LockManagerAttribute.java \
-	  BasicSemaphore.java \
-	  Semaphore.java \
-	  SemaphoreImple.java \
-	  SemaphoreType.java
+	  LockManagerAttribute.java
 
 OBJECTS = ActionStatus.class \
 	  PrepareOutcome.class \
@@ -85,20 +81,13 @@ OBJECTS = ActionStatus.class \
 	  RecoveryAbstractRecord.class \
 	  ObjectModel.class \
 	  StateManagerAttribute.class \
-	  LockManagerAttribute.class \
-	  BasicSemaphore.class \
-	  Semaphore.class \
-	  SemaphoreImple.class \
-	  SemaphoreType.class
+	  LockManagerAttribute.class
 
 AllTarget($(SOURCE) $(OBJECTS))
 
 PreprocessJavaCode(AbstractRecord,NOPARAM)
 
 BuildJavaByteCode(BasicAction,NOPARAM)
-BuildJavaByteCode(BasicSemaphore,NOPARAM)
-BuildJavaByteCode(Semaphore,NOPARAM)
-BuildJavaByteCode(SemaphoreImple,NOPARAM)
 BuildJavaByteCode(AtomicAction,NOPARAM)
 BuildJavaByteCode(ActionHierarchy,NOPARAM)
 BuildJavaByteCode(ActionInfo,NOPARAM)
@@ -134,6 +123,5 @@ BuildJavaByteCode(ActionList,NOPARAM)
 BuildJavaByteCode(ObjectModel,NOPARAM)
 BuildJavaByteCode(StateManagerAttribute,NOPARAM)
 BuildJavaByteCode(LockManagerAttribute,NOPARAM)
-BuildJavaByteCode(SemaphoreType,NOPARAM)
 
 TidyTarget(*.class)
