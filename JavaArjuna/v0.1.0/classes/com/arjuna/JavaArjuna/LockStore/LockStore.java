@@ -35,7 +35,7 @@ public LockStore (String param)
     {
 	if (!singleCheck)
 	{
-	    singleLockStoreType = System.getProperty(Environment.SINGLE_LOCKSTORE_TYPE, LockStoreType.BASIC_LOCKSTORE);
+	    singleLockStoreType = System.getProperty(Environment.LOCKSTORE_TYPE, LockStoreType.BASIC_LOCKSTORE);
 	    singleCheck = true;
 	}
 
@@ -75,7 +75,7 @@ public LockStore (Object[] param)
 	    {
 		if (!singleCheck)
 		{
-		    type = System.getProperty(Environment.SINGLE_LOCKSTORE_TYPE, null);
+		    type = System.getProperty(Environment.LOCKSTORE_TYPE, null);
 		    singleCheck = true;
 
 		    if (type != null)
@@ -95,7 +95,7 @@ public LockStore (Object[] param)
 	    {
 		if (!multipleCheck)
 		{
-		    type = System.getProperty(Environment.MULTIPLE_LOCKSTORE_TYPE, null);
+		    type = System.getProperty(Environment.LOCKSTORE_TYPE, null);
 		    multipleCheck = true;
 
 		    if (type != null)
