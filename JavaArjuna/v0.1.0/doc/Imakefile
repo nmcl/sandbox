@@ -9,4 +9,4 @@ COMMENT
 COMMENT $Id: Imakefile,v 1.5.2.1 1999/01/28 19:12:33 nmcl Exp $
 COMMENT
 
-InstallFileAs(doc,UserManual.pdf)
+InstallFile(doc,UserManual.pdf)
