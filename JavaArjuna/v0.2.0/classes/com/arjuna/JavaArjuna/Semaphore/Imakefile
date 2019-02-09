@@ -1,0 +1,29 @@
+COMMENT 
+COMMENT Copyright (C) 1996, 1997, 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.6 1998/06/24 15:07:15 nmcl Exp $
+COMMENT
+
+SOURCES = BasicSemaphore.java \
+	  Semaphore.java \
+	  SemaphoreImple.java \
+	  SemaphoreType.java
+
+OBJECTS = BasicSemaphore.class \
+	  Semaphore.class \
+	  SemaphoreImple.class \
+	  SemaphoreType.class
+
+AllTarget($(SOURCE) $(OBJECTS))
+
+BuildJavaByteCode(BasicSemaphore,NOPARAM)
+BuildJavaByteCode(Semaphore,NOPARAM)
+BuildJavaByteCode(SemaphoreImple,NOPARAM)
+BuildJavaByteCode(SemaphoreType,NOPARAM)
+
+TidyTarget(*.class)

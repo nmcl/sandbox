@@ -1,0 +1,38 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id$
+ */
+
+/*
+ * Operating system config file
+ *
+ * Defines flags, libraries etc. that are applicable to a
+ * specific OPERATING SYSTEM (eg Solaris, HPUX etc)
+ * These flags are passed on to the compiler when building Arjuna
+ *
+ * Defines preceded by STUBGEN_ are always quoted strings and are used
+ * by the stub generator IFF the header file is processed with something
+ * other than the standard C++ compiler (we assume that the standard C++
+ * compiler would set these flags itself)
+ *
+ * Examples:
+ *   #define SYSTEM_SPECIFIC_FLAGS -DSYSV 
+ *   #define STUBGEN_OS_FLAGS "-DSYSV"
+ *   #define SYSTEM_SPECIFIC_LIBRARIES -lsocket -lnsl
+ *
+ */
+
+/*
+ * s_darwin.cf
+ */
+
+
+#define SYSTEM_SPECIFIC_FLAGS 
+#define STUBGEN_OS_FLAGS " "
+#define CPP_PROGRAM cpp-8

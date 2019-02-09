@@ -1,0 +1,34 @@
+COMMENT 
+COMMENT Copyright (C) 1996, 1997, 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.6 1998/06/24 15:07:15 nmcl Exp $
+COMMENT
+
+SOURCES = BasicLockStore.java \
+	  BasicPersistentLockStore.java \
+	  LockStore.java \
+	  LockStoreImple.java \
+	  LockStoreType.java
+
+OBJECTS = BasicLockStore.class \
+	  BasicPersistentLockStore.class \
+	  LockStore.class \
+	  LockStoreImple.class \
+	  LockStoreType.class
+
+AllTarget($(SOURCE) $(OBJECTS))
+
+PreprocessJavaCode(BasicPersistentLockStore,NOPARAM)
+
+BuildJavaByteCode(LockStore,NOPARAM)
+BuildJavaByteCode(LockStoreImple,NOPARAM)
+BuildJavaByteCode(BasicLockStore,NOPARAM)
+BuildJavaByteCode(LockStoreType,NOPARAM)
+BuildJavaByteCode(BasicPersistentLockStore,NOPARAM)
+
+TidyTarget(*.class)

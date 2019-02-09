@@ -1,0 +1,32 @@
+/*
+ * Copyright (C) 1993
+ *
+ * Department of Computing Science,
+ * The University,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id$
+ */
+
+/*
+ * Compiler config file
+ *
+ * Defines flags (-D, -U etc) that are applicable to a
+ * specific COMPILER (eg Cfront, gcc etc)
+ * These flags are passed on to the compiler when building Arjuna
+ *
+ * Defines preceded by STUBGEN_ are always quoted strings and are used
+ * by the stub generator IFF the header file is processed with something
+ * other than the standard C++ compiler (we assume that the standard C++
+ * compiler would set these flags itself)
+ *
+ * Examples:
+ *   #define COMPILER_SPECIFIC_FLAGS -DHAVE_LONG_LONG
+ *   #define STUBGEN_CC_FLAGS "-DHAVE_LONG_LONG"
+ *
+ */
+
+/*
+ * j_unknown.cf
+ */

@@ -1,0 +1,53 @@
+# Licence string for Java Arjuna
+# JAVA_ARJUNA_LICENCE=01234567-89abcdef-01234567-89abcdef
+
+# (default is /usr/local/JavaArjuna/etc)
+# PROPERTIES_FILE=/usr/local/JavaArjuna/etc
+
+# (default is false)
+# DEBUG_ENABLED=false
+
+# (default is 0x0)
+# DEBUG_LEVEL=0x0
+
+# (default is 0x0004)
+# VIS_LEVEL=0x0004
+
+# (default is 0xffff)
+# FAC_LEVEL=0xffff
+
+# The java.io.Writer stream that any debugging information should be output to)
+# DEBUG_STREAM=System.out
+
+# (default is NO)
+# ASYNC_COMMIT=NO
+
+# (default is NO)
+# ASYNC_PREPARE=NO
+
+# (default is YES)
+# COMMIT_ONE_PHASE=YES
+
+# (default is defaultStore)
+# LOCALOSROOT=defaultStore
+
+# (default is /usr/local/JavaArjuna/LockStore)
+# LOCKSTORE_DIR=/usr/local/JavaArjuna/LockStore
+
+# (default is BasicLockStore)
+# LOCKSTORE_TYPE=BasicLockStore
+
+# Location of Object Store (default is /usr/local/JavaArjuna/ObjectStore)
+# OBJECTSTORE_DIR=/tmp/JTS_ObjectStore
+
+# (default is ON)
+# OBJECTSTORE_SYNC=ON
+
+# (default is ShadowStore)
+# OBJECTSTORE_TYPE=ShadowNoFileLock
+
+# (default is )
+# HASHED_DIRECTORIES=255
+
+# (default is ON)
+# TRANSACTION_SYNC=ON

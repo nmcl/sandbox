@@ -1,0 +1,34 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.6 1995/07/17 14:57:17 ngdp Exp $
+COMMENT
+
+#define IHaveSubDirs
+
+SetSubDirectorys(classes htdocs lib bin etc doc Include)
+
+PrintConfig
+
+PrintEnviron
+
+all depend install ::
+
+install.local :: INSTALL_TOPDIR_VAR
+	-CHMOD_VAR ugo+rx INSTALL_TOPDIR_VAR
+
+MakeRelDirectoryDependency(classes)
+MakeRelDirectoryDependency(htdocs)
+MakeRelDirectoryDependency(lib)
+MakeRelDirectoryDependency(tests)
+MakeRelDirectoryDependency(bin)
+MakeRelDirectoryDependency(Include)
+
+InstallFile(.,Copyright)
+InstallFile(.,Licence.txt)
+InstallFile(.,README.md)

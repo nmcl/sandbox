@@ -1,0 +1,30 @@
+COMMENT 
+COMMENT Copyright (C) 1996, 1997, 1998,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1998/11/12 09:39:17 nmcl Exp $
+COMMENT
+
+SOURCES = Hammer.java \
+	  AtomicObjectTest1.java \
+	  AtomicObjectTest2.java \
+	  AtomicObjectTest3.java
+
+OBJECTS = Hammer.class \
+	  AtomicObjectTest1.class \
+	  AtomicObjectTest2.class \
+	  AtomicObjectTest3.class
+
+AllTarget($(OBJECTS))
+
+BuildJavaByteCode(Hammer,NOPARAM)
+BuildJavaByteCode(AtomicObjectTest1,NOPARAM)
+BuildJavaByteCode(AtomicObjectTest2,NOPARAM)
+BuildJavaByteCode(AtomicObjectTest3,NOPARAM)
+
+TidyTarget(*.class *.prof out)
+
