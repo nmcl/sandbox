@@ -57,7 +57,7 @@ included here anyway because it's simpler than stripping it out for now.
 
 ----
 
-When building make sure to install imake and set CLASSPATH to classes directory. Also make sure to set the shell environment\
+When building make sure to install imake and set CLASSPATH to classes directory. Also make sure to set the shell environment
 variable JAVAARJUNA_HOME to the installation directory where the build artefacts will eventually go.
 
 You may see some instances of the following warning message, which you can safely ignore.
