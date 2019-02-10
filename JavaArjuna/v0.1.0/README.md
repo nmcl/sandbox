@@ -34,8 +34,6 @@ Where possible I've tried not to use more advanced language features but I may h
 
 - Some classes may be in different packages to where they were originally. Sometimes it was personal preference at the time.
 
-- Use JAVAARJUNA_HOME to locate property file. https://github.com/nmcl/sandbox/issues/73
-
 - Some tidying up, specifically around deprecated features and warnings, e.g., finalize usage. Some of these are commented out, some deleted.
 Some I didn't change at all because it would affect the rest of the code too much and take it much further away from what JavaArjuna looked
 like at the start. Arguably none of these changes should have been made and the warnings continue so the code is as close as possible.
@@ -57,10 +55,7 @@ included here anyway because it's simpler than stripping it out for now.
 
 ----
 
-When building make sure to install imake and set CLASSPATH to classes directory. Also make sure to set the shell environment\
-variable JAVAARJUNA_HOME to the installation directory where the build artefacts will eventually go.
-
-You may see some instances of the following warning message, which you can safely ignore.
+When building make sure to install imake and set CLASSPATH to classes directory. You may see some instances of the following warning message, which you can safely ignore.
 
 "Note: Some input files use or override a deprecated API.
 Note: Recompile with -Xlint:deprecation for details."
