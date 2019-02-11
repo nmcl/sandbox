@@ -11,7 +11,7 @@ COMMENT
 
 #define IHaveSubDirs
 
-SetSubDirectorys(classes htdocs lib bin etc doc Include)
+SetSubDirectorys(classes htdocs lib etc doc Include)
 
 PrintConfig
 
@@ -26,7 +26,6 @@ MakeRelDirectoryDependency(classes)
 MakeRelDirectoryDependency(htdocs)
 MakeRelDirectoryDependency(lib)
 MakeRelDirectoryDependency(tests)
-MakeRelDirectoryDependency(bin)
 MakeRelDirectoryDependency(Include)
 
 InstallFile(.,Copyright)
