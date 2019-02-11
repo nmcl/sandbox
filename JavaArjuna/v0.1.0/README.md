@@ -42,9 +42,6 @@ like at the start. Arguably none of these changes should have been made and the 
 Rather than revert the current list of deprecated code, I decided to leave as is because it's just various finalize and minor code changes.
 Most (all?) of those changes have a suitable comment next to them anyway so people can see what was there originally if needed.
 
-- The JavaArjuna licence is disabled by default (-DDISABLE_LICENCE) but this was likely not even implemented in the first version
-anyway and is a carry-over from the later code.
-
 - Debug and Error streams were a key part of the original Arjuna code and probably part of the original JavaArjuna. However, looking at
 the code for JTSArjuna it seems that they were added later in that codebase. I'm adding them here anyway because I feel sure there were there
 initially but perhaps got pulled in the move to JTSArjuna and only later returned.
