@@ -20,12 +20,6 @@ public class Environment
     public static final String OBJECTSTORE_DIR = "OBJECTSTORE_DIR";
     public static final String ACTIONSTORE_TYPE = "ACTIONSTORE_TYPE";
     public static final String OBJECTSTORE_SYNC = "OBJECTSTORE_SYNC";
-    public static final String DEBUG_ENABLED = "DEBUG_ENABLED";
-    public static final String DEBUG_LEVEL = "DEBUG_LEVEL";
-    public static final String FAC_LEVEL = "FAC_LEVEL";
-    public static final String VIS_LEVEL = "VIS_LEVEL";
-    public static final String DEBUG_STREAM = "DEBUG_STREAM";
-    public static final String ERROR_STREAM = "ERROR_STREAM";
 
     public static final String PROPERTIES_FILE = "PROPERTIES_FILE";
     public static final String ASYNC_COMMIT = "ASYNC_COMMIT";
@@ -34,5 +28,4 @@ public class Environment
     public static final String LOCALOSROOT = "LOCALOSROOT";
     public static final String HASHED_DIRECTORIES = "HASHED_DIRECTORIES";
     public static final String TRANSACTION_SYNC = "TRANSACTION_SYNC";
-    
 }
