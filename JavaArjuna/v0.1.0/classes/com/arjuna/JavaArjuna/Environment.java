@@ -22,8 +22,6 @@ public class Environment
     public static final String OBJECTSTORE_SYNC = "OBJECTSTORE_SYNC";
 
     public static final String PROPERTIES_FILE = "PROPERTIES_FILE";
-    public static final String ASYNC_COMMIT = "ASYNC_COMMIT";
-    public static final String ASYNC_PREPARE = "ASYNC_PREPARE";
     public static final String COMMIT_ONE_PHASE = "COMMIT_ONE_PHASE";
     public static final String LOCALOSROOT = "LOCALOSROOT";
     public static final String HASHED_DIRECTORIES = "HASHED_DIRECTORIES";
