@@ -42,10 +42,6 @@ like at the start. Arguably none of these changes should have been made and the 
 Rather than revert the current list of deprecated code, I decided to leave as is because it's just various finalize and minor code changes.
 Most (all?) of those changes have a suitable comment next to them anyway so people can see what was there originally if needed.
 
-- Some property names/environment variables are defined in the code but not used. For instance, HashedObjectStore and friends is
-mentioned but wasn't actually implemented in the original version of Arjuna on which JavaArjuna was based. It came later but
-included here anyway because it's simpler than stripping it out for now.
-
 ----
 
 When building make sure to install imake and set CLASSPATH to classes directory. You may see some instances of the following warning message, which you can safely ignore.
