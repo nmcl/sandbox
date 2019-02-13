@@ -20,7 +20,6 @@ public class Environment
     public static final String OBJECTSTORE_DIR = "OBJECTSTORE_DIR";
     public static final String ACTIONSTORE_TYPE = "ACTIONSTORE_TYPE";
     public static final String OBJECTSTORE_SYNC = "OBJECTSTORE_SYNC";
-
     public static final String PROPERTIES_FILE = "PROPERTIES_FILE";
     public static final String LOCALOSROOT = "LOCALOSROOT";
 }
