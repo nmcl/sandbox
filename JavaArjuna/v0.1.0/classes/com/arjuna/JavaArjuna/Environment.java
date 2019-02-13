@@ -24,5 +24,4 @@ public class Environment
     public static final String PROPERTIES_FILE = "PROPERTIES_FILE";
     public static final String COMMIT_ONE_PHASE = "COMMIT_ONE_PHASE";
     public static final String LOCALOSROOT = "LOCALOSROOT";
-    public static final String TRANSACTION_SYNC = "TRANSACTION_SYNC";
 }
