@@ -26,7 +26,7 @@ some cases it may still look closer to Gandiva than the original JavaArjuna.
 - The build system is just enough to create the necessary components but may be closer
 to JavaArjunaLite than the original. It is currently based on the W3OTrans JavaStubGen
 repository as that's the oldest non-Gandiva Java build system I can find. Gandiva came in later. Furthermore, some of the rules used
-by the Imakefiles make be closer to JTSArjuna than JavaArjuna given the strong JavaGandiva influence on the initial
+by the Imakefiles may be closer to JTSArjuna than JavaArjuna given the strong JavaGandiva influence on the initial
 codebase used here.
 
 - This is built with the latest version of Java and there may be differences between that and Oak, which was the version used originally.
@@ -36,11 +36,7 @@ Where possible I've tried not to use more advanced language features but I may h
 
 - Some tidying up, specifically around deprecated features and warnings, e.g., finalize usage. Some of these are commented out, some deleted.
 Some I didn't change at all because it would affect the rest of the code too much and take it much further away from what JavaArjuna looked
-like at the start. Arguably none of these changes should have been made and the warnings continue so the code is as close as possible.
-
-- In fact upon reflection I decided not to change any further deprecated code to try to keep the code as pure to the original as possible.
-Rather than revert the current list of deprecated code, I decided to leave as is because it's just various finalize and minor code changes.
-Most (all?) of those changes have a suitable comment next to them anyway so people can see what was there originally if needed.
+like at the start. Arguably none of these changes should have been made and the warnings continue so the code is as close as possible. In fact upon reflection I decided not to change any further deprecated code to try to keep the code as pure to the original as possible. Rather than revert the current list of deprecated code, I decided to leave as is because it's just various finalize and minor code changes. Most (all?) of those changes have a suitable comment next to them anyway so people can see what was there originally if needed.
 
 ----
 
