@@ -1,0 +1,100 @@
+/*
+ * Copyright (C) 1996, 1997, 1998,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: BasicPersistentLockStore.javatmpl,v 1.1 1998/08/13 14:31:37 nmcl Exp $
+ */
+
+#define STR(x)   #x
+#define XSTR(x)  STR(x)
+
+package com.arjuna.JavaArjuna.LockStore;
+
+import com.arjuna.JavaArjuna.Environment;
+import com.arjuna.JavaArjuna.ObjectStore.ObjectStore;
+import com.arjuna.JavaArjuna.ObjectStore.ObjectStoreType;
+import com.arjuna.JavaArjuna.Common.*;
+
+import com.arjuna.JavaArjuna.Common.ObjectStoreException;
+import com.arjuna.JavaArjuna.Common.LockStoreException;
+
+public class BasicPersistentLockStore extends LockStoreImple
+{
+
+    /*
+     * Ignore key as we can make use of the basic type information for
+     * this type of store. Really only need it for shared memory.
+     */
+    
+public BasicPersistentLockStore (String key)
+    {
+	if (lockStoreLocation == null)
+	    lockStoreLocation = System.getProperty(Environment.LOCKSTORE_DIR, XSTR(DEFAULT_LS_ROOT));
+	
+	_key = lockStoreLocation;
+
+	/*
+	 * Use the ShadowingStore since it has file-level locking which
+	 * we require. The default object store assumes locking is provided
+	 * entirely by the object.
+	 */
+	
+	_lockStore = new ObjectStore(ObjectStoreType.SHADOWING_STORE, _key);
+    }
+
+public InputObjectState read_state (Uid u, String tName) throws LockStoreException
+    {
+	try
+	{
+	    return _lockStore.read_committed(u, tName);
+	}
+	catch (ObjectStoreException e)
+	{
+	    throw(new LockStoreException("Persistent store error."));
+	}
+    }
+    
+public boolean remove_state (Uid u, String tName)
+    {
+	try
+	{
+	    return _lockStore.remove_committed(u, tName);
+	}
+	catch (ObjectStoreException e)
+	{
+	    return false;
+	}
+    }
+    
+public boolean write_committed (Uid u, String tName, OutputObjectState state)
+    {
+	try
+	{
+	    return _lockStore.write_committed(u, tName, state);
+	}
+	catch (ObjectStoreException e)
+	{
+	    return false;
+	}
+    }
+
+public String className ()
+    {
+	return LockStoreType.BASICPERSISTENT_LOCKSTORE;
+    }
+
+public static String name ()
+    {
+    	return LockStoreType.BASICPERSISTENT_LOCKSTORE;
+    }    
+
+private String _key;
+private ObjectStore _lockStore;
+
+private static String lockStoreLocation = null;
+    
+};

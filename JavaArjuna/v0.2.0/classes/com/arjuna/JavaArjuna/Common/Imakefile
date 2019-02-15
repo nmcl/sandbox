@@ -1,0 +1,66 @@
+COMMENT 
+COMMENT Copyright (C) 1995, 1996, 1997,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1997/06/30 09:05:36 nmcl Exp $
+COMMENT
+
+SOURCES = ObjectStoreIterator.java \
+	  ObjectStoreException.java \
+	  LockStoreException.java \
+	  FileLock.java \
+	  InputBuffer.java \
+	  InputObjectState.java \
+	  OutputBuffer.java \
+	  OutputObjectState.java \
+	  Uid.java \
+	  UidException.java \
+	  Utility.java \
+	  DebugController.java \
+	  DebugLevel.java \
+	  ErrorStream.java \
+	  FatalError.java
+
+OBJECTS = ObjectStoreIterator.class \
+	  ObjectStoreException.class \
+	  LockStoreException.class \
+	  FileLock.class \
+	  InputBuffer.class \
+	  InputObjectState.class \
+	  OutputBuffer.class \
+	  OutputObjectState.class \
+	  Uid.class \
+	  UidException.class \
+	  Utility.class \
+	  DebugController.class \
+	  DebugLevel.class \
+	  ErrorStream.class \
+	  FatalError.class
+
+AllTarget($(SOURCES) $(OBJECTS))
+
+PreprocessJavaCode(InputBuffer,NOPARAM)
+PreprocessJavaCode(Uid,NOPARAM)
+PreprocessJavaCode(Utility,NOPARAM)
+
+BuildJavaByteCode(ObjectStoreIterator,NOPARAM)
+BuildJavaByteCode(LockStoreException,NOPARAM)
+BuildJavaByteCode(ObjectStoreException,NOPARAM)
+BuildJavaByteCode(FileLock,NOPARAM)
+BuildJavaByteCode(InputBuffer,NOPARAM)
+BuildJavaByteCode(InputObjectState,NOPARAM)
+BuildJavaByteCode(OutputBuffer,NOPARAM)
+BuildJavaByteCode(OutputObjectState,NOPARAM)
+BuildJavaByteCode(Uid,NOPARAM)
+BuildJavaByteCode(UidException,NOPARAM)
+BuildJavaByteCode(Utility,NOPARAM)
+BuildJavaByteCode(DebugController,NOPARAM)
+BuildJavaByteCode(DebugLevel,NOPARAM)
+BuildJavaByteCode(ErrorStream,NOPARAM)
+BuildJavaByteCode(FatalError,NOPARAM)
+
+TidyTarget(*.class)

@@ -59,44 +59,6 @@ public static synchronized void loadProperties ()
 	}
     }
     
-/*
- * New version uses install directory but isn't what JavaArjuna did.
- *
-public static synchronized void loadProperties ()
-    {
-	if (!loaded)
-	{
-	    String homeDir = System.getenv(Environment.JAVAARJUNA_HOME);
-
-	    if (homeDir == null)
-	    {
-		System.err.println("JAVAARJUNA_HOME environment variable not set!");
-		System.exit(-1);
-	    }
-
-	    // Has user defined a specific properties file?
-	    
-	    String properties = System.getProperty("PROPERTIES_FILE", homeDir+"/"+Environment.PROPERTIES_FILE_DIR+"/"+Environment.PROPERTIES_FILE_NAME);
-	    Properties props = new Properties(System.getProperties());
-	    
-	    try
-	    {
-		props.load(new BufferedInputStream(new FileInputStream(properties)));
-
-		System.setProperties(props);
-	    }
-	    catch (FileNotFoundException e1)
-	    {
-	    }
-	    catch (IOException e2)
-	    {
-	    }
-
-	    loaded = true;
-	}
-    }
-*/
-
     /*
      * Convert integer to hex String.
      */

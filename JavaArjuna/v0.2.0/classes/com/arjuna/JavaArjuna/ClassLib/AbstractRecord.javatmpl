@@ -1,0 +1,318 @@
+/*
+ * Copyright (C) 1996, 1997, 1998,
+ *
+ * Department of Computing Science,
+ * University of Newcastle upon Tyne,
+ * Newcastle upon Tyne,
+ * UK.
+ *
+ * $Id: AbstractRecord.javatmpl,v 1.4 1998/07/06 13:26:10 nmcl Exp $
+ */
+
+package com.arjuna.JavaArjuna.ClassLib;
+
+import com.arjuna.JavaArjuna.Common.*;
+import java.io.PrintStream;
+
+import java.io.IOException;
+
+/*
+ * Abstract Record Class
+ * This class provides an abstract template that defines the interface
+ * that the atomic action system uses to notify objects that various
+ * state transitions have occurred as the 2PC protocol executes.
+ * Record types derived from this class manage certain properties
+ * of objects such as recovery information, concurrency control
+ * information etc, and all must redifine the operations defined
+ * here as abstract to take appropriate action.
+ *
+ * Many functions are declared pure virtual to force a definition to occur
+ * in any derived class. These are currently all functions dealing with 
+ * atomic action coordination as well as the following list management 
+ * functions:
+ *     typeIs:   returns the record type of the instance. This is one of
+ *               the values of the enumerated type Record_type
+ *     value:    Some arbitrary value associated with the record instance
+ *     merge:    Used when two records need to merge togethor. Currently
+ *               this is only used by CadaverRecords to merge information
+ *               from PersistenceRecords
+ *     shouldAdd:
+ *               returns TRUE is the record should be added to the list
+ *               FALSE if it should be discarded
+ *     shouldMerge:
+ *               returns TRUE is the two records should be merged into a
+ *               single record, FALSE if it should be discarded
+ *     shouldReplace:
+ *               returns TRUE if the record should replace an existing
+ *               one, FALSE otherwise.
+ */
+
+public abstract class AbstractRecord extends StateManager
+{
+
+public abstract int typeIs ();
+public abstract Object value ();
+public abstract void setValue (Object o);
+
+/* Only used for crash recovery, so most records don't need it. */
+
+public String className ()
+    {
+	return new String(""+typeIs());
+    }
+
+/* atomic action interface - one operation per two-phase commit state */
+
+public abstract int nestedAbort ();
+public abstract int nestedCommit ();
+public abstract int nestedPrepare ();
+public abstract int topLevelAbort ();
+public abstract int topLevelCommit ();
+public abstract int topLevelPrepare ();
+
+public Uid order ()
+    {
+	return uidOfObject;
+    }
+
+public String getTypeOfObject ()
+    {
+	return typeOfObject;
+    }
+
+    /*
+     * Determine if records are discarded on action abort or must be
+     * propagated to parents
+     */
+
+public boolean propagateOnAbort ()
+    {
+	return false;
+    }
+
+    /*
+     * Determine if records are discarded on action commit or must be
+     * propagated to parents
+     */
+
+public boolean propagateOnCommit ()
+    {
+	return true;
+    }
+    
+    /*
+     * Operators for comparing and sequencing instances of classes derived
+     * from AbstractRecords.
+     * Records are ordered primarily based upon the value of 'order',
+     * followed by 'typeIs'.
+     */
+
+    /*
+     * Determine if two records are equal in that both are the same type
+     * and have the same order value (determined via 'order()').
+     */
+    
+#ifdef USE_ALTERNATIVE_ABSTRACT_RECORD_ORDERING
+    
+/*
+ * ensure records of the same type are grouped together
+ * in the list, rather than grouping them by object (i.e. uid)
+ */
+    
+public boolean equals (AbstractRecord ar)
+{
+    return ((typeIs() == ar.typeIs()) &&
+	    (order().equals(ar.order())));
+}
+
+public boolean lessThan (AbstractRecord ar)
+{
+    return ((typeIs() < ar.typeIs()) ||
+	     ((typeIs() == ar.typeIs()) &&
+	      (order().lessThan(ar.order()))));
+}
+
+public boolean greaterThan (AbstractRecord ar)
+{
+    return ((typeIs() > ar.typeIs()) ||
+	     ((typeIs() == ar.typeIs()) &&
+	      (order().greaterThan(ar.order()))));
+}
+#else
+public boolean equals (AbstractRecord ar)
+    {
+	return ((order().equals(ar.order())) &&
+		(typeIs() == ar.typeIs()));
+    }
+
+public boolean lessThan (AbstractRecord ar)
+    {
+	return ((order().lessThan(ar.order())) ||
+		((order().equals(ar.order())) &&
+		 (typeIs() < ar.typeIs())));
+    }
+
+public boolean greaterThan (AbstractRecord ar)
+    {
+	return ((order().greaterThan(ar.order())) ||
+		((order().equals(ar.order())) &&
+		 (typeIs() > ar.typeIs())));
+    }
+#endif
+
+/*
+ * Cleanup is called if a top-level action is detected to be an orphan
+ * NOTE nested actions are never orphans since their parents would
+ * be aborted we may as well abort them as well
+ */
+
+public int topLevelCleanup ()
+    {
+	return topLevelAbort();
+    }
+
+public boolean doSave ()
+    {
+	return false;
+    }
+
+/*
+ * Re-Implementation of virtual functions inherited from base class
+ */
+
+public String type ()
+    {
+	return "/StateManager/AbstractRecord";
+    }
+
+public void print (PrintStream strm)
+    {
+	strm.println("Uid of Managed Object: "+uidOfObject);
+	strm.println("Type of Managed Object: "+typeOfObject);
+	super.print(strm);
+    }
+
+/*
+ * save_state and restore_state here are used by the corresponding operations
+ * of persistence records for crash recovery purposes.
+ */
+
+public boolean restore_state (InputObjectState os, int i)
+    {
+	typeOfObject = null;
+	
+	try
+	{
+	    uidOfObject.unpack(os);
+	    typeOfObject = os.unpackString();
+
+	    return true;
+	}
+	catch (IOException e)
+	{
+	    return false;
+	}
+    }
+
+public boolean save_state (OutputObjectState os, int i)
+    {
+	try
+	{
+	    uidOfObject.pack(os);
+	    os.packString(typeOfObject);
+
+	    return true;
+	}
+	catch (IOException e)
+	{
+	    return false;
+	}
+    }
+    
+    /*
+     * OTS specific methods which we cannot hide!
+     */
+    
+public void forgetHeuristic ()
+    {
+    }
+
+/*
+ * We would like these to be protected, but the
+ * requirement for a RecoveryAbstractRecord interface
+ * which is in a different package prevents this.
+ */
+
+public abstract void merge (AbstractRecord a);
+public abstract void alter (AbstractRecord a);
+
+public abstract boolean shouldAdd (AbstractRecord a);
+public abstract boolean shouldAlter (AbstractRecord a);
+public abstract boolean shouldMerge (AbstractRecord a);
+public abstract boolean shouldReplace (AbstractRecord a);
+
+/*
+ * These few functions are link manipulation primitives used by the
+ * RecordList processing software to chain instances together.
+ */
+
+protected AbstractRecord getPrevious ()
+    {
+	return previous;
+    }
+
+protected AbstractRecord getNext ()
+    {
+	return next;
+    }
+
+protected void setPrevious (AbstractRecord ar)
+    {
+	previous = ar;
+    }
+
+protected void setNext (AbstractRecord ar)
+    {
+	next = ar;
+    }
+
+protected AbstractRecord (Uid storeUid, String objType, int otype)
+    {
+	super(otype);
+	next = null;
+	previous = null;
+	typeOfObject = objType;
+	uidOfObject = new Uid(storeUid);
+    }
+
+protected AbstractRecord (Uid storeUid)
+    {
+	super(storeUid);
+	next = null;
+	previous = null;
+	typeOfObject = null;
+	uidOfObject = new Uid(Uid.nullUid());
+    }
+
+/*
+ * Creates a 'blank' abstract record. This is used during crash recovery
+ * when recreating the prepared list of a server atomic action.
+ */
+
+protected AbstractRecord ()
+    {
+	super(Uid.nullUid());
+	next = null;
+	previous = null;
+	typeOfObject = null;
+
+	uidOfObject = new Uid(Uid.nullUid());
+    }
+
+private AbstractRecord next;
+private AbstractRecord previous;
+private Uid uidOfObject;
+private String typeOfObject;
+    
+}
+

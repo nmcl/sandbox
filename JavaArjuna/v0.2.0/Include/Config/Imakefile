@@ -1,0 +1,52 @@
+COMMENT 
+COMMENT Copyright (C) 1993, 1994, 1995
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.9 1995/07/17 14:05:57 ngdp Exp $
+COMMENT
+
+CreateInstallTopDirectory(include)
+CreateInstallTopDirectory(include/Config)
+
+InstallFile(include/Config,Config.tmpl)
+InstallFile(include/Config,Configure.h)
+InstallFile(include/Config,Flag.def)
+InstallFile(include/Config,Lib.def)
+InstallFile(include/Config,Macro.def)
+InstallFile(include/Config,MachineRules.h)
+InstallFile(include/Config,Make.def)
+InstallFile(include/Config,Prog.def)
+InstallFile(include/Config,Rule.def)
+InstallFile(include/Config,StdParam.def)
+
+InstallFile(include/Config,j_11_0.cf)
+InstallFile(include/Config,j_1_8.cf)
+InstallFile(include/Config,j_unknown.cf)
+
+InstallFile(include/Config,m_alpha.cf)
+InstallFile(include/Config,m_hppa.cf)
+InstallFile(include/Config,m_i386.cf)
+InstallFile(include/Config,m_mips.cf)
+InstallFile(include/Config,m_68k.cf)
+InstallFile(include/Config,m_sparc.cf)
+InstallFile(include/Config,m_unknown.cf)
+
+InstallFile(include/Config,s_aix.cf)
+InstallFile(include/Config,s_hp_ux.cf)
+InstallFile(include/Config,s_hp_rt.cf)
+InstallFile(include/Config,s_linux.cf)
+InstallFile(include/Config,s_osf1.cf)
+InstallFile(include/Config,s_sunos_4.cf)
+InstallFile(include/Config,s_sunos_5.cf)
+InstallFile(include/Config,s_sunos_5_5.cf)
+InstallFile(include/Config,s_ultrix.cf)
+InstallFile(include/Config,s_unknown.cf)
+
+InstallFile(include/Config,v_sun.cf)
+InstallFile(include/Config,v_unknown.cf)
+
+TidyTarget(Configure.h MachineRules.h Makefile)

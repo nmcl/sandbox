@@ -1,0 +1,44 @@
+COMMENT 
+COMMENT Copyright (C) 1995, 1996, 1997,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 1997/06/30 09:05:36 nmcl Exp $
+COMMENT
+
+SOURCES = BasicList.java \
+	  ObjectElement.java \
+	  UidListElement.java \
+	  HashUidList.java \
+	  BasicUidList.java \
+	  SimpleUidList.java \
+	  BasicListIterator.java \
+	  SimpleUidListIterator.java \
+	  KeyedList.java
+
+OBJECTS = BasicList.class \
+	  ObjectElement.class \
+	  UidListElement.class \
+	  HashUidList.class \
+	  BasicUidList.class \
+	  SimpleUidList.class \
+	  BasicListIterator.class \
+	  SimpleUidListIterator.class \
+	  KeyedList.class
+
+AllTarget($(SOURCES) $(OBJECTS))
+
+BuildJavaByteCode(BasicList,NOPARAM)
+BuildJavaByteCode(ObjectElement,NOPARAM)
+BuildJavaByteCode(UidListElement,NOPARAM)
+BuildJavaByteCode(HashUidList,NOPARAM)
+BuildJavaByteCode(BasicUidList,NOPARAM)
+BuildJavaByteCode(SimpleUidList,NOPARAM)
+BuildJavaByteCode(BasicListIterator,NOPARAM)
+BuildJavaByteCode(SimpleUidListIterator,NOPARAM)
+BuildJavaByteCode(KeyedList,NOPARAM)
+
+TidyTarget(*.class)

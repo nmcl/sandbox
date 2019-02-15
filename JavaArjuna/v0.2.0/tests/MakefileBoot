@@ -1,0 +1,59 @@
+#
+# Copyright (C) 1993
+#
+# Department of Computing Science,
+# The University,
+# Newcastle upon Tyne,
+# UK.
+#
+
+#
+# Makefile for creating the top-level Makefile.
+#
+
+#
+# $Id: MakefileBoot,v 1.8 1993/03/18 14:19:42 nmcl Exp $
+#
+
+MAKE                  = make
+IMAKE                 = imake
+ARJUNA_IMAKE_INCLUDE  = ../Include
+ARJUNA_IMAKE_TEMPLATE = Config/Arjuna.tmpl
+MV		      = mv
+SED		      = sed
+RM		      = rm -f
+
+ARJUNA_IMAKE_FLAGS    = 
+# ARJUNA_IMAKE_FLAGS  = "-DUseInstalled -DTOPDIR_DEFAULT=`pwd`"
+
+Makefile ::
+	@echo
+	@echo "You have run 'configure'. Haven't you?"
+	@echo
+	@echo "## Building root 'Makefile' ##"
+	@$(IMAKE) -T$(ARJUNA_IMAKE_TEMPLATE) -I$(ARJUNA_IMAKE_INCLUDE) $(ARJUNA_IMAKE_FLAGS);$(MV) Makefile Makefile.sed;$(SED) -e '/^COMMENT$$/s//#/' -e '/^COMMENT /s//# /' < Makefile.sed > Makefile;$(RM) Makefile.sed
+	@echo
+
+Makefiles :: Makefile
+	@echo
+	@echo "## Building 'Makefiles' ##"
+	@$(MAKE) Makefiles
+	@echo
+
+depend :: Makefiles
+	@echo
+	@echo "## Building 'depend' ##"
+	@$(MAKE) depend
+	@echo
+
+all :: depend
+	@echo
+	@echo "## Building 'all' ##"
+	@$(MAKE) all
+	@echo
+
+install :: all
+	@echo
+	@echo "## Building 'install' ##"
+	@$(MAKE) install
+	@echo

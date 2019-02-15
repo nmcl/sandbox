@@ -4,21 +4,6 @@
 # (default is /usr/local/JavaArjuna/etc)
 # PROPERTIES_FILE=/usr/local/JavaArjuna/etc
 
-# (default is false)
-# DEBUG_ENABLED=false
-
-# (default is 0x0)
-# DEBUG_LEVEL=0x0
-
-# (default is 0x0004)
-# VIS_LEVEL=0x0004
-
-# (default is 0xffff)
-# FAC_LEVEL=0xffff
-
-# The java.io.Writer stream that any debugging information should be output to)
-# DEBUG_STREAM=System.out
-
 # (default is NO)
 # ASYNC_COMMIT=NO
 

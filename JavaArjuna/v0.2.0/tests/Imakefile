@@ -1,0 +1,14 @@
+COMMENT
+COMMENT Copyright (C) 1993
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT The University,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.6 1995/07/17 14:57:17 ngdp Exp $
+COMMENT
+
+#define IHaveSubDirs
+
+SetSubDirectorys(classes AtomicAction Basic ConcurrencyControl Hammer ObjectModel Performance ThreadAction Licence Error)
