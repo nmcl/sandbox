@@ -4,6 +4,9 @@ far as I can recall), I haven't gone down that route. Does include some
 extensions that were not present in the real version and I may remove
 them later. https://github.com/nmcl/sandbox/issues/113
 
+v0.2.0 builds on 0.1.0 and adds a few more classes and other code that
+was probably not in the original but could have been.
+
 v1.0.0.version is not the original source or binary but some partial
 installation of the 1.0.0 release which was based on some ArjunaII
 work, specifically Gandiva.
