@@ -1,3 +1,6 @@
+JavaArjuna was the very first pure Java transaction implementation. It predates JTA, JTS and was available
+soon after the first version of Java (aka Oak) was released.
+
 v0.1.0 version is an attempt to recreate the original from current
 sources. Since the original JavaArjuna was not based on Gandiva (as
 far as I can recall), I haven't gone down that route. Does include some
