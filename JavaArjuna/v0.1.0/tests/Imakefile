@@ -11,4 +11,4 @@ COMMENT
 
 #define IHaveSubDirs
 
-SetSubDirectorys(classes AtomicAction Basic ConcurrencyControl Hammer ObjectModel Performance ThreadAction)
+SetSubDirectorys(classes AtomicAction Basic ConcurrencyControl Hammer ObjectModel Performance ThreadAction PropertyFile)
