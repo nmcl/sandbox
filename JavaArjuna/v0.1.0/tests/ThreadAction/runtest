@@ -1,3 +1,3 @@
 #!/bin/sh
 
-java -DOBJECTSTORE_DIR=/tmp/ObjectStore $@
+java -DOBJECTSTORE_DIR=/tmp/ObjectStore ThreadActionTest
