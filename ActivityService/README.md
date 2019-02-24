@@ -1,4 +1,4 @@
-The CORBA Activity Service.
+The CORBA Activity Service (aka Additional Structuring Mechanisms for the OTS).
 
 http://www.cs.ncl.ac.uk/publications/articles/papers/563.pdf
 
