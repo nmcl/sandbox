@@ -1,4 +1,4 @@
-Some of the BloomFilter work we did back in 2000.
+Around 2000 we did some work based on the concepts of using BloomFilters as the basis of distributed naming service implememenations. A few papers were published and example code was developed.
 
 http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.103.5615&rep=rep1&type=pdf
 
