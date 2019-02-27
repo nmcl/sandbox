@@ -1,1 +1,1 @@
-Very early work around Arjuna and JTA/J(2)EE.
+Very early work around Java version of Arjuna and JTA/J(2)EE.
