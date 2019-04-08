@@ -1,0 +1,1111 @@
+/*
+ * Copyright (C) 2000, 2001,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: ActivityCoordinatorImple.javatmpl,v 1.1 2001/07/23 13:44:53 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package com.arjuna.Activity.ActivityCoordinator;
+
+import com.arjuna.ArjunaCommon.Common.Uid;
+import com.arjuna.OrbCommon.*;
+import com.arjuna.Activity.Signals.*;
+import com.arjuna.Activity.SignalSets.*;
+import com.arjuna.CosTransactions.OTS;
+import com.arjuna.CosTransactions.OTS_Current;
+import com.arjuna.CosTransactions.OTS_ControlWrapper;
+import org.omg.CosTransactions.*;
+import org.omg.CosActivity.CompletionStatus;
+import org.omg.CosActivity.*;
+import org.omg.CORBA.*;
+import java.util.*;
+
+import org.omg.CosActivity.SignalSetUnknown;
+import org.omg.CosActivity.SignalSetAlreadyRegistered;
+import org.omg.CosActivity.ActionNotFound;
+import org.omg.CORBA.SystemException;
+import org.omg.CORBA.BAD_PARAM;
+import org.omg.CORBA.BAD_OPERATION;
+import org.omg.CORBA.NO_PERMISSION;
+
+/*
+ * For each enclosing and enclosed transaction we need to register
+ * a resource/subtransaction aware resource such that we can prevent
+ * a transaction from committing if we are still active (force a
+ * rollback).
+ */
+
+public class ActivityCoordinatorImple extends SCOPED_SKEL_(org.omg.CosActivity,ActivityCoordinator)
+{
+
+    /*
+     * Interposition ensures that we can never create a coordinator
+     * with a remote parent. The "remote" parent will be wrapped by
+     * a global Action.
+     */
+
+public ActivityCoordinatorImple (ActivityCoordinatorImple parent)
+    {
+	this(new Uid(), parent);
+    }
+ 
+public ActivityCoordinatorImple (Uid uid, ActivityCoordinatorImple parent)
+    {
+	_actionList = null;
+	_signalSetList = new SignalSetList(uid);
+	_reference = null;
+	_parent = parent;
+	_destroyed = false;
+	_destroyOnly = null;  // not actually used properly yet (destroy not sent)!
+	_theUid = uid;
+	_theStatus = org.omg.CosActivity.Status.StatusActive;
+	_activityData = new ActivityCompletionData();
+	_synchronization = null;
+	_childActivities = null;
+	_activeThreads = null;
+	_enclosedTransactions = null;
+	_enclosingTransaction = null;
+	_theOutcome = null;
+	
+	if (_parent != null)
+	    _parent.addChildActivity(this);
+
+	recordTransactionHierarchy();
+    }
+
+public ActivityCoordinatorImple (ActivityCoordinatorImple parent, Control ctx)
+    {
+	this(new Uid(), parent, ctx);
+    }
+
+public ActivityCoordinatorImple (Uid uid, ActivityCoordinatorImple parent,
+				 Control ctx)
+    {
+	_actionList = null;
+	_signalSetList = new SignalSetList(uid);
+	_reference = null;
+	_parent = parent;
+	_destroyed = false;
+	_destroyOnly = null;  // not actually used properly yet (destroy not sent)!
+	_theUid = uid;
+	_theStatus = org.omg.CosActivity.Status.StatusActive;
+	_activityData = new ActivityCompletionData();
+	_synchronization = null;
+	_childActivities = null;
+	_activeThreads = null;
+	_enclosedTransactions = null;
+	_enclosingTransaction = null;
+	_theOutcome = null;
+	
+	if (_parent != null)
+	    _parent.addChildActivity(this);
+
+	/*
+ 	 * Enclosed transaction should not be the same as the
+	 * parent activity's.
+	 */
+
+	if ((_parent != null) && (ctx != null))
+	{
+	    try
+	    {
+		Control cont = _parent.getEnclosingTransaction();
+
+		if (cont != null)
+		{
+		    Coordinator coord1 = cont.get_coordinator();
+		    Coordinator coord2 = ctx.get_coordinator();
+
+		    if (!coord1.is_same_transaction(coord2))
+			_enclosingTransaction = ctx;
+		}
+		else
+		    _enclosingTransaction = ctx;
+	    }
+	    catch (Exception e)
+	    {
+	    }
+	}
+	else
+	    _enclosingTransaction = ctx;
+    }
+
+public final ActivityCoordinator getReference ()
+    {
+	if (_reference == null)
+	{
+	    READY_IMPL_(this);
+	    
+	    _reference = CORBA_REF_(this,org.omg.CosActivity.ActivityCoordinator);
+
+	    _activityCoordinators.put(_reference, this);
+	}
+	
+	return _reference;
+    }
+
+public final Uid get_uid ()
+    {
+	return _theUid;
+    }
+
+public synchronized Outcome complete_activity (String signal_set_name, CompletionStatus cs) throws ActivityPending, ChildContextPending, SignalSetUnknown, SystemException
+    {
+	if (signal_set_name != null)
+	{
+	    if (SystemDefined.member(signal_set_name))
+		throw new BAD_OPERATION();
+	    else
+	    {
+		if (!_signalSetList.haveSignalSet(signal_set_name))
+		    throw new SignalSetUnknown();
+	    }
+	}
+
+	if (_theStatus != org.omg.CosActivity.Status.StatusActive)
+	    throw new BAD_OPERATION(); // should be INVALID_ACTIVITY
+
+	try
+	{
+	    setCompletionStatus(cs);
+	}
+	catch (Exception ex)
+	{
+	    // do what?!
+	}
+	
+	checkThreads();
+
+	checkActivities(cs);
+
+	/*
+	 * If we are completing then do Synchronization.
+	 */
+
+	_theStatus = org.omg.CosActivity.Status.StatusCompleting;
+	    
+	doPreCompletion();
+
+	SignalSetUnknown ex1 = null;
+	SystemException ex2 = null;
+
+	if (signal_set_name != null)
+	{
+	    try
+	    {
+		_theOutcome = processSignalSet(signal_set_name, org.omg.CosActivity.Status.StatusCompleting);
+	    }
+	    catch (SignalSetUnknown e1)
+	    {
+		// shouldn't happen!
+
+		ex1 = e1;
+	    }
+	    catch (SystemException e2)
+	    {
+		ex2 = e2;
+	    }
+	}
+	
+	doPostCompletion();
+
+	_theStatus = org.omg.CosActivity.Status.StatusCompleted;
+
+	if (_parent != null)
+	    _parent.removeChildActivity(this);
+
+	if (ex1 != null)
+	    throw ex1;
+	else
+	{
+	    if (ex2 != null)
+		throw ex2;
+	    else
+		return _theOutcome;
+	}
+    }
+
+/*
+ * Only used for general signal processing, and *not* for activity
+ * completion. Therefore does not do pre/post completion Synchronization
+ * signalling.
+ */
+ 
+public synchronized Outcome process_signal_set (String signal_set_name, CompletionStatus cs) throws SignalSetUnknown, SystemException
+    {
+	try
+	{
+	    setCompletionStatus(cs);
+	}
+	catch (Exception ex)
+	{
+	    // ??!! warning
+
+	    cs = CompletionStatus.CompletionStatusFailOnly;
+	}
+	
+	return processSignalSet(signal_set_name, org.omg.CosActivity.Status.StatusActive);
+    }
+
+public synchronized void add_signal_set (SignalSet signal_set) throws SignalSetAlreadyRegistered, SystemException
+    {
+	if (_theStatus != org.omg.CosActivity.Status.StatusActive)
+	    throw new BAD_OPERATION(); // should be INVALID_ACTIVITY
+
+	_signalSetList.addSignalSet(signal_set);
+    }
+
+public synchronized void remove_signal_set (String signal_set_name) throws SignalSetUnknown, SystemException
+    {
+	if (_theStatus == org.omg.CosActivity.Status.StatusActive)
+	    throw new BAD_OPERATION(); // should be INVALID_ACTIVITY
+
+	if (_signalSetList != null)
+	    _signalSetList.removeSignalSet(signal_set_name);
+	else
+	    throw new SignalSetUnknown();
+    }
+
+/*
+ * The caller must ensure that the action is not registered
+ * more than once.
+ */
+ 
+public synchronized void add_action (Action act, String signal_set_name,
+				     int priority) throws SignalSetUnknown, SystemException
+    {
+	if (_theStatus != org.omg.CosActivity.Status.StatusActive)
+	    throw new BAD_OPERATION(); // should be INVALID_ACTIVITY
+
+	if (_actionList == null)
+	    _actionList = new ActionList();
+	
+	_actionList.addAction(act, signal_set_name, priority);
+    }
+ 
+public synchronized void remove_action (Action act) throws ActionNotFound, SystemException
+    {
+	if (_theStatus == org.omg.CosActivity.Status.StatusActive)
+	    throw new BAD_OPERATION(); // should be INVALID_ACTIVITY
+
+	if (_actionList != null)
+	    _actionList.removeAction(act);
+	else
+	    throw new ActionNotFound();
+    }
+ 
+public synchronized void add_actions (Action[] acts, String signal_set_name,
+				      int priority) throws SignalSetUnknown, SystemException
+    {
+	if (_theStatus != org.omg.CosActivity.Status.StatusActive)
+	    throw new BAD_OPERATION(); // should be INVALID_ACTIVITY
+
+	if (_actionList == null)
+	    _actionList = new ActionList();
+	
+	_actionList.addActions(acts, signal_set_name, priority);
+    }
+ 
+public Action[] remove_actions (Action[] acts) throws SystemException
+    {
+	if (_theStatus == org.omg.CosActivity.Status.StatusActive)
+	    throw new BAD_OPERATION(); // should be INVALID_ACTIVITY
+
+	if (_actionList != null)
+	    return _actionList.removeActions(acts);
+	else
+	    return acts;
+    }
+
+public synchronized void add_global_action (Action act, int priority) throws SystemException
+    {
+	if (_theStatus != org.omg.CosActivity.Status.StatusActive)
+	    throw new BAD_OPERATION(); // should be INVALID_ACTIVITY
+
+	if (_actionList == null)
+	    _actionList = new ActionList();
+	
+	_actionList.addGlobalAction(act, priority);
+    }
+ 
+public synchronized void remove_global_action (Action act) throws ActionNotFound, SystemException
+    {
+	if (_theStatus == org.omg.CosActivity.Status.StatusActive)
+	    throw new BAD_OPERATION(); // should be INVALID_ACTIVITY
+
+	if (_actionList != null)
+	    _actionList.removeGlobalAction(act);
+	else
+	    throw new ActionNotFound();
+    }
+ 
+public synchronized int get_number_registered_actions (String signal_set_name) throws SignalSetUnknown, SystemException
+    {
+	if (!_signalSetList.haveSignalSet(signal_set_name))
+	    throw new SignalSetUnknown();
+	
+	if (_actionList != null)
+	    return _actionList.getNumberRegisteredActions(signal_set_name);
+	else
+	    return 0;
+    }
+ 
+public synchronized Action[] get_actions (String signal_set_name) throws SignalSetUnknown, SystemException
+    {
+	if (!_signalSetList.haveSignalSet(signal_set_name))
+	    throw new SignalSetUnknown();
+
+	return ((_actionList != null) ? _actionList.get_actions(signal_set_name) : null);
+    }
+
+public ActivityCoordinator get_parent_coordinator () throws SystemException
+    {
+	return _parent.getReference();
+    }
+
+public byte[] get_global_id () throws SystemException
+    {
+	return _theUid.stringForm().getBytes();
+    }
+ 
+public synchronized org.omg.CosActivity.Status get_status () throws SystemException
+    {
+	return _theStatus;
+    }
+ 
+public org.omg.CosActivity.Status get_parent_status () throws SystemException
+    {
+	if (_parent == null)
+	    return get_status();
+	else
+	    return _parent.get_status();
+    }
+ 
+public String get_activity_name () throws SystemException
+    {
+	return _theUid.stringForm();
+    }
+
+public boolean is_same_activity (ActivityCoordinator ac) throws SystemException
+    {
+	if (ac == null)
+	    throw new BAD_PARAM();
+	else
+	{
+	    if (ac == _reference)
+		return true;
+	    else
+	    {
+		if (ac.get_activity_name().equals(get_activity_name()))
+		    return true;
+	    }
+	}
+
+	return false;
+    }
+
+public int hash_activity () throws SystemException
+    {
+	return _theUid.hashCode();
+    }
+
+public synchronized void destroy () throws AlreadyDestroyed
+    {
+	if (!_destroyed)
+	{
+	    _destroyed = true;
+
+	    if (_reference != null)
+	    {
+		_activityCoordinators.remove(_reference);
+
+		_reference = null;
+		DESTROY_IMPL_(this);
+	    }
+	}
+	else
+	    throw new AlreadyDestroyed();
+    }
+
+/*
+ * We need these methods so an activity can keep track of the
+ * transactions that have been created within it. It is the
+ * responsibility of the transaction service implementation to
+ * call these methods whenever a transaction is begun and ended
+ * within the scope of an activity.
+ */
+
+public final synchronized void addTransaction (OTS_ControlWrapper tx) throws SystemException
+    {
+	if (tx == null)
+	    throw new BAD_PARAM();
+	else
+	{
+	    if (_enclosedTransactions == null)
+		_enclosedTransactions = new Vector();
+	    
+	    _enclosedTransactions.addElement(tx);
+	}
+    }
+
+public final synchronized void removeTransaction (OTS_ControlWrapper tx) throws SystemException
+    {
+	int tranSize = ((_enclosedTransactions != null) ? _enclosedTransactions.size() : 0);
+
+	if ((tx == null) || (tranSize == 0))
+	    throw new BAD_PARAM();
+	else
+	{
+	    for (int i = 0; i < _enclosedTransactions.size(); i++)
+	    {
+		OTS_ControlWrapper w = (OTS_ControlWrapper) _enclosedTransactions.elementAt(i);
+		
+		if (w.equals(tx))
+		    _enclosedTransactions.removeElement(w);
+	    }
+	}
+    }
+
+    /*
+     * Should probably use is_equivalent.
+     */
+
+public static final ActivityCoordinatorImple getActivityCoordinatorImple (ActivityCoordinator act)
+    {
+	if (act != null)
+	    return (ActivityCoordinatorImple) ActivityCoordinatorImple._activityCoordinators.get(act);
+	else
+	    return null;
+    }
+
+protected final Outcome processSignalSet (String signal_set_name,
+					  org.omg.CosActivity.Status status) throws SignalSetUnknown, SystemException
+    {
+	SignalSet applicationSignalSet = null;
+
+	if (_theStatus != status)
+	    throw new BAD_OPERATION(); // should be INVALID_ACTIVITY
+
+	if (signal_set_name != null)
+	{
+	    if (SystemDefined.member(signal_set_name))
+		throw new BAD_OPERATION();
+	    else
+	    {
+		applicationSignalSet = _signalSetList.getSignalSet(signal_set_name, null);
+
+		if (applicationSignalSet == null)
+		    throw new SignalSetUnknown();
+	    }
+	}
+
+	if (applicationSignalSet != null)
+	{
+	    Vector theActions = ((_actionList != null) ? _actionList.getActions(signal_set_name) : null);
+
+	    if (theActions != null)
+	    {
+		/*
+		 * At this point we have sent preCompletion signals (if
+		 * necessary) and the completion state of the Activity may
+		 * have been changed. Now do the application signal set.
+		 */
+
+		boolean problem = false;
+		CompletionStatus cs = _activityData.getCompletionStatus();
+		
+		try
+		{
+		    /*
+		     * First pass a reference to this coordinator through to
+		     * the SignalSet.
+		     *
+		     * We don't do this for system SignalSets since they
+		     * never need to see the coordinator, and can get access
+		     * to it anyway via Current.
+		     */
+		
+		    applicationSignalSet.set_activity_coordinator(getReference());
+
+		    applicationSignalSet.set_completion_status(cs);
+		}
+		catch (Exception e)
+		{
+		    _activityData.setCompletionStatus(CompletionStatus.CompletionStatusFailOnly);
+		    problem = true;
+		}
+		
+		driveSignalSet(applicationSignalSet, theActions, _actionList.getGlobalActions(), true);
+	    }
+	}
+
+	try
+	{
+	    if (applicationSignalSet != null)
+	    {
+		return applicationSignalSet.get_outcome();
+	    }
+	    else
+		return null;
+	}
+	catch (SignalSetActive ex)
+	{
+	    throw new BAD_OPERATION(ex.toString());
+	}
+	catch (Throwable e)
+	{
+	    //	    e.printStackTrace();
+	    
+	    /*
+	     * Should not get here!
+	     */
+
+	    throw new BAD_OPERATION(e.toString());
+	}
+    }
+ 
+/**
+ * The system defined SignalSets are slightly different for processing
+ * since we don't want to use all of their signals in one go. For
+ * example, Synchronization preCompletion goes before the application
+ * signal set, and postCompletion goes after.
+ */
+
+protected final boolean driveSignalSet (SignalSet ss, Vector actions,
+					Vector gActions, boolean iterate)
+    {
+	boolean haveWork = (((actions != null) && (actions.size() > 0)) ||
+			    ((gActions != null) && (gActions.size() > 0)));
+	
+	if (haveWork)
+	{
+	    BooleanHolder lastSignal = new BooleanHolder(false);
+	    Signal sig = null;
+	    
+	    try
+	    {
+		sig = ss.get_signal(lastSignal);
+	    }
+	    catch (SystemException e)
+	    {
+		e.printStackTrace();
+		
+		return false;
+	    }
+
+	    while (sig != null)
+	    {
+		int result = processSignal(ss, sig, actions);
+
+		/*
+		 * If we successfully used this signal, or had an error which
+		 * we are told we can ignore, then move on to the global
+		 * actions list. Otherwise we may need to get a new signal and
+		 * start from the head of the original list again!
+		 */
+
+		if (result == SPOutcome.SP_OK)
+		{
+		    result = processSignal(ss, sig, gActions);
+		}
+
+		switch (result)
+		{
+		case SPOutcome.SP_NEXTSIGNAL:
+		case SPOutcome.SP_NOTOK:
+		    return false;
+		case SPOutcome.SP_OK:
+		    break;
+		default:
+		    return false;
+		}
+
+		if (iterate && !lastSignal.value)
+		{
+		    try
+		    {
+			sig = ss.get_signal(lastSignal);
+		    }
+		    catch (SystemException e)
+		    {
+			return false;
+		    }
+		}
+
+		if (!iterate || lastSignal.value)
+		    return true;
+	    }
+	}
+
+	return true;
+    }
+
+protected final int processSignal (SignalSet ss, Signal sig, Vector actions)
+    {
+	BooleanHolder nextSignal = new BooleanHolder(false);
+	int size = ((actions == null) ? 0 : actions.size());
+	
+	for (int i = 0; (i < size) && !nextSignal.value; i++)
+	{
+	    Action act = (Action) actions.elementAt(i);
+			
+	    if (_destroyOnly == null)
+		_destroyOnly = new Vector();
+
+	    if ((act != null) && !_destroyOnly.contains(act))
+	    {
+		try
+		{
+		    try
+		    {
+			_theOutcome = act.process_signal(sig);
+		    }
+		    catch (ActionError e1)
+		    {
+			_theOutcome = com.arjuna.Activity.Outcomes.ActionError.getOutcome(null);
+		    }
+		    catch (SystemException e2)
+		    {
+			_theOutcome = com.arjuna.Activity.Outcomes.ActionError.getOutcome(e2);
+		    }
+		    
+		    if (!ss.set_response(_theOutcome, nextSignal))
+			_destroyOnly.insertElementAt(act, 0);
+		}
+		catch (SignalSetInactive e1)
+		{
+		    // shouldn't happen!!
+
+		    return SPOutcome.SP_NOTOK;
+		}
+		catch (SystemException e2)
+		{
+		    return SPOutcome.SP_NOTOK;
+		}
+	    }
+	}
+
+	if (nextSignal.value)
+	    return SPOutcome.SP_NEXTSIGNAL;
+	else
+	    return SPOutcome.SP_OK;
+    }
+
+/*
+ * Implementation specific methods.
+ */
+
+protected final ActivityCoordinatorImple getParentCoordinator () throws SystemException
+    {
+	return _parent;
+    }
+ 
+protected final CompletionStatus getCompletionStatus ()
+    {
+	return _activityData.getCompletionStatus();
+    }
+
+protected void setCompletionStatus (CompletionStatus cs) throws SystemException
+    {
+	if (_theStatus != org.omg.CosActivity.Status.StatusActive)
+	    throw new BAD_OPERATION(); // should be INVALID_ACTIVITY
+		
+	_activityData.setCompletionStatus(cs);
+    }
+
+protected final String getCompletionSignalSet ()
+    {
+	return _activityData.getCompletionSignalSet();
+    }
+
+protected final void setCompletionSignalSet (String ss) throws SystemException
+    {
+	if (_theStatus != org.omg.CosActivity.Status.StatusActive)
+	    throw new BAD_OPERATION(); // should be INVALID_ACTIVITY
+		
+	_activityData.setCompletionSignalSet(ss);
+    }
+
+/*
+ * Since the coordinator remembers its completion status and the signal set
+ * this is a convenient way of completing. Otherwise we would have to store
+ * this information in Current and call complete_activity.
+ */
+
+protected final Outcome complete () throws ActivityPending, ChildContextPending, SignalSetUnknown, SystemException
+    {
+	String ss = _activityData.getCompletionSignalSet();
+
+	/*
+	 * A null SignalSet name is valid. It just means we call destroy
+	 * on all registered actions and send no Signals except for
+	 * System Signals.
+	 */
+
+	if (ss != null)
+	{
+	    if (!_signalSetList.haveSignalSet(ss))
+		throw new SignalSetUnknown();
+	}
+
+	/*
+	 * ChildCompletion signalling happens in the wrapper.
+	 */
+
+	return complete_activity(ss, _activityData.getCompletionStatus());
+    }
+
+final synchronized void addChildActivity (ActivityCoordinatorImple coord)
+     {
+	 if (_childActivities == null)
+	     _childActivities = new Hashtable();
+	 
+	 _childActivities.put(coord, coord);
+     }
+
+final synchronized void removeChildActivity (ActivityCoordinatorImple coord)
+     {
+	 if (_childActivities != null)
+	     _childActivities.remove(coord);
+     }
+
+final synchronized void addThread (Thread ct)
+    {
+	if (_activeThreads == null)
+	    _activeThreads = new Hashtable();
+	 
+	_activeThreads.put(ct, ct);
+    }
+
+final synchronized void removeThread (Thread ct)
+     {
+	 if (_activeThreads != null)
+	     _activeThreads.remove(ct);
+     }
+ 
+final Vector getEnclosedTransactions ()
+    {
+	return _enclosedTransactions;
+    }
+
+final Control getEnclosingTransaction ()
+    {
+	return _enclosingTransaction;
+    }
+
+final Outcome get_outcome ()
+    {
+	return _theOutcome;
+    }
+ 
+/*
+ * Get the hierarchy of any transactions that may be running when we
+ * were created. Only do this if we are a top-level activity, since
+ * otherwise the parent activity should have a list of active
+ * transactions.
+ */
+
+private final void recordTransactionHierarchy ()
+    {
+	/*
+	 * Get OTS current and see if there are any transactions running!
+	 * If we fail, set our status to FailOnly.
+	 */
+
+	OTS_Current current = OTS.current();
+	boolean problem = false;
+	
+	if (current != null)
+	{
+	    try
+	    {
+		if (current.get_status() == org.omg.CosTransactions.Status.StatusActive)
+		{
+		    _enclosingTransaction = current.get_control();
+
+		    if (_parent != null)
+		    {
+	    	        try
+	    	        {
+			    Control cont = _parent.getEnclosingTransaction();
+
+			    if (cont != null)
+			    {
+		    	        Coordinator coord1 = cont.get_coordinator();
+		    	        Coordinator coord2 = _enclosingTransaction.get_coordinator();
+
+			        if (coord1.is_same_transaction(coord2))
+				    _enclosingTransaction = null;
+			    }
+		        }
+		        catch (Exception e)
+		        {
+		        }
+		    }
+	        }
+	    }
+	    catch (SystemException e)
+	    {
+		problem = true;
+	    }
+	}
+
+	if (problem)
+	    setCompletionStatus(CompletionStatus.CompletionStatusFailOnly);
+    }
+ 
+private final synchronized void checkActivities (CompletionStatus cs) throws ChildContextPending, SystemException
+    {
+	/*
+	 * Do activities before transactions.
+	 */
+
+	if ((_childActivities != null) && (_childActivities.size() > 0))
+	{
+	    Enumeration e = _childActivities.elements();
+		    
+	    while (e.hasMoreElements())
+	    {
+		ActivityCoordinatorImple c = (ActivityCoordinatorImple) e.nextElement();
+		org.omg.CosActivity.Status st = org.omg.CosActivity.Status.StatusUnknown;
+			
+		try
+		{
+		    st = c.get_status();
+		}
+		catch (Exception ex)
+		{
+		}
+			
+		if ((st == org.omg.CosActivity.Status.StatusActive) || (st == org.omg.CosActivity.Status.StatusUnknown))
+		{
+		    if (cs == CompletionStatus.CompletionStatusSuccess)
+			throw new ChildContextPending();
+		    else
+		    {
+			/*
+			 * Must mark as fail only for consistency.
+			 */
+
+			try
+			{
+			    c.setCompletionStatus(CompletionStatus.CompletionStatusFailOnly);
+			}
+			catch (Exception ex)
+			{
+			    throw new UNKNOWN(ex.toString());
+			}
+		    }
+		}
+	    }
+	}
+		
+	/*
+	 * Now deal with transactions.
+	 */
+		    
+	Control cont = null;
+	int tranSize = ((_enclosedTransactions != null) ? _enclosedTransactions.size() : 0);
+	
+	for (int i = 0; i < tranSize; i++)
+	{
+	    cont = (Control) _enclosedTransactions.elementAt(i);
+
+	    if (cont != null)
+	    {
+		Coordinator coord = null;
+		    
+		try
+		{
+		    coord = cont.get_coordinator();
+		
+		    if (coord != null)
+		    {
+			if (coord.get_status() == org.omg.CosTransactions.Status.StatusActive)
+			{
+			    if (cs == CompletionStatus.CompletionStatusSuccess)
+			    {
+				throw new ChildContextPending();
+			    }
+			    else
+				coord.rollback_only();
+			}
+		    }
+		}
+		catch (ChildContextPending e1)
+		{
+		    throw e1;
+		}
+		catch (SystemException e2)
+		{
+		    e2.printStackTrace();
+		    
+		    throw new UNKNOWN(e2.toString());
+		}
+		catch (UserException e3)
+		{
+		    e3.printStackTrace();
+		    
+		    throw new UNKNOWN(e3.toString());
+		}
+	    }
+	}
+    }
+
+private final synchronized void checkThreads () throws ActivityPending, SystemException
+    {
+	int numberOfThreads = ((_activeThreads != null) ? _activeThreads.size() : 0);
+		
+	switch (numberOfThreads)
+	{
+	case 0:
+	    throw new BAD_OPERATION();
+	case 1:
+	    {
+		/*
+		 * Is this thread the only one active?
+		 */
+
+		if (_activeThreads.get(Thread.currentThread()) == null)
+		    throw new NO_PERMISSION();
+	    }
+	    break;
+	default: // assume more than one!
+	    throw new ActivityPending();
+	}
+    }
+
+private final synchronized void doPreCompletion () throws SignalSetUnknown, SystemException
+    {
+	if (_actionList == null)
+	    return;
+	
+	Vector v = ((_actionList != null) ? _actionList.getActions(com.arjuna.Activity.SignalSets.SystemDefined.Synchronization) : null);
+	
+	java.lang.Object[] param = new java.lang.Object[1];
+	
+	param[0] = _theUid;
+	
+	_synchronization = _signalSetList.getSignalSet(com.arjuna.Activity.SignalSets.SystemDefined.Synchronization, param);
+
+	if (_synchronization == null) // shouldn't happen!!
+	    throw new BAD_OPERATION();
+	else
+	{
+	    CompletionStatus cs = _activityData.getCompletionStatus();
+
+	    try
+	    {
+		_synchronization.set_completion_status(cs);
+	    }
+	    catch (Exception e)
+	    {
+		_activityData.setCompletionStatus(CompletionStatus.CompletionStatusFailOnly);
+		return;
+	    }
+		
+	    /*
+	     * If status is success then do preCompletion.
+	     * Otherwise we have just set the SignalSet into
+	     * a mode from which it will only generate the postCompletion
+	     * Signal.
+	     */
+
+	    if (cs == CompletionStatus.CompletionStatusSuccess)
+	    {
+		boolean result = false;
+
+		try
+		{
+		    if (_actionList != null)
+			result = driveSignalSet(_synchronization, v, ((_actionList != null) ? _actionList.getGlobalActions() : null), false);
+		}
+		catch (Exception e)
+		{
+		    result = false;
+		}
+
+		if (!result)
+		    _activityData.setCompletionStatus(CompletionStatus.CompletionStatusFailOnly);
+	    }
+	}
+    }
+
+private final synchronized void doPostCompletion () throws SignalSetUnknown, SystemException
+    {
+	if (_actionList == null)
+	    return;
+	
+	Vector v = _actionList.getActions(com.arjuna.Activity.SignalSets.SystemDefined.Synchronization);
+
+	if (_synchronization == null)
+	{
+	    java.lang.Object[] param = new java.lang.Object[1];
+	
+	    param[0] = _theUid;
+
+	    _synchronization = _signalSetList.getSignalSet(com.arjuna.Activity.SignalSets.SystemDefined.Synchronization, param);
+	}
+
+	if (_synchronization == null) // shouldn't happen!!
+	    throw new BAD_OPERATION();
+	else
+	{
+	    CompletionStatus cs = _activityData.getCompletionStatus();
+	    
+	    try
+	    {
+		_synchronization.set_completion_status(cs);
+	    }
+	    catch (Exception e)
+	    {
+		e.printStackTrace();
+		
+		return;
+	    }
+		
+	    /*
+	     * If status is success then do preCompletion.
+	     * Otherwise we have just set the SignalSet into
+	     * a mode from which it will only generate the postCompletion
+	     * Signal.
+	     */
+
+	    try
+	    {
+		if (_actionList != null)
+		    driveSignalSet(_synchronization, v, ((_actionList != null) ? _actionList.getGlobalActions() : null), true);
+	    }
+	    catch (Exception e)
+	    {
+		e.printStackTrace();
+	    }
+	}
+    }
+
+protected ActionList    _actionList;
+protected SignalSetList _signalSetList;
+ 
+private static Hashtable _activityCoordinators = new Hashtable();
+
+private ActivityCoordinator        _reference;
+private ActivityCoordinatorImple   _parent;
+private boolean                    _destroyed;
+private Vector                     _destroyOnly;
+private Uid                        _theUid;
+private org.omg.CosActivity.Status _theStatus;
+private ActivityCompletionData     _activityData;
+private SignalSet                  _synchronization;
+private Hashtable                  _childActivities;
+private Hashtable                  _activeThreads;
+private Vector                     _enclosedTransactions;
+private Control                    _enclosingTransaction;
+private Outcome                    _theOutcome;
+ 
+};
