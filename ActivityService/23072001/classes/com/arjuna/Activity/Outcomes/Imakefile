@@ -1,0 +1,21 @@
+COMMENT 
+COMMENT Copyright (C) 2000,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 2001/07/23 13:44:55 nmcl Exp $
+COMMENT
+
+SOURCES = ActionError.java
+
+OBJECTS = ActionError.class
+
+Target($(OBJECTS))
+
+BuildJavaByteCode(ActionError,NullParam)
+
+Clean(*.class)
+
