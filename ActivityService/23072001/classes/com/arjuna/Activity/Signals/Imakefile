@@ -1,0 +1,27 @@
+COMMENT 
+COMMENT Copyright (C) 2000,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 2001/07/23 13:44:57 nmcl Exp $
+COMMENT
+
+SOURCES = PreCompletion.java \
+	  PostCompletion.java \
+	  ChildLifetimeBegin.java
+
+OBJECTS = PreCompletion.class \
+	  PostCompletion.class \
+	  ChildLifetimeBegin.class
+
+Target($(OBJECTS))
+
+BuildJavaByteCode(PreCompletion,NullParam)
+BuildJavaByteCode(PostCompletion,NullParam)
+BuildJavaByteCode(ChildLifetimeBegin,NullParam)
+
+Clean(*.class)
+

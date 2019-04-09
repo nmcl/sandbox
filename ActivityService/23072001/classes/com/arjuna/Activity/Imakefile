@@ -1,0 +1,84 @@
+COMMENT 
+COMMENT Copyright (C) 2000,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 2001/07/23 13:44:51 nmcl Exp $
+COMMENT
+
+SOURCES = Info.java \
+	  Utility.java \
+	  Environment.java \
+	  ActivityTokenImple.java \
+	  Defaults.java \
+	  ActivityHierarchy.java \
+	  CosActivityCurrentImple.java \
+	  CosActivityAdministrationCurrentImple.java \
+	  CosActivityCoordinationCurrentImple.java \
+	  ActivityContextElement.java \
+	  ActivityContextStructure.java \
+	  ActivityReaper.java \
+	  CosActivity.java \
+	  ActivityCoordinator/ActivityCoordinatorImple.java \
+	  ActivityCoordinator/ActivityCompletionData.java \
+	  SignalSets/Synchronization.java \
+	  SignalSets/ChildLifetime.java
+
+OBJECTS = Info.class \
+	  Utility.class \
+	  Environment.class \
+	  Defaults.class \
+	  ActivityContextElement.class \
+	  ActivityContextStructure.class \
+	  ActivityHierarchy.class \
+	  ActivityTokenImple.class \
+	  ActivityReaper.class \
+	  CosActivityCurrentImple.class \
+	  CosActivityAdministrationCurrentImple.class \
+	  CosActivityCoordinationCurrentImple.class \
+	  CosActivity.class
+
+Target($(SOURCES))
+
+SubDirectory(Outcomes)
+SubDirectory(Signals)
+SubDirectory(SignalSets)
+SubDirectory(ActivityCoordinator)
+
+Target($(OBJECTS))
+
+SubDirectory(Actions)
+SubDirectory(ArjunaOTS)
+/*SubDirectory(Interposition)*/
+
+PreprocessJavaCode(Info,NullParam)
+PreprocessJavaCode(Utility,NullParam)
+PreprocessJavaCode(CosActivityCurrentImple,NullParam)
+PreprocessJavaCode(CosActivityAdministrationCurrentImple,NullParam)
+PreprocessJavaCode(CosActivityCoordinationCurrentImple,NullParam)
+PreprocessJavaCode(ActivityTokenImple,NullParam)
+PreprocessJavaCode(CosActivity,NullParam)
+PreprocessJavaCodeDir(ActivityCoordinator,ActivityCoordinatorImple,NullParam)
+PreprocessJavaCodeDir(ActivityCoordinator,ActivityCompletionData,NullParam)
+PreprocessJavaCodeDir(SignalSets,Synchronization,NullParam)
+PreprocessJavaCodeDir(SignalSets,ChildLifetime,NullParam)
+
+BuildJavaByteCode(Info,NullParam)
+BuildJavaByteCode(Utility,NullParam)
+BuildJavaByteCode(Environment,NullParam)
+BuildJavaByteCode(ActivityTokenImple,NullParam)
+BuildJavaByteCode(CosActivityCurrentImple,NullParam)
+BuildJavaByteCode(CosActivityAdministrationCurrentImple,NullParam)
+BuildJavaByteCode(CosActivityCoordinationCurrentImple,NullParam)
+BuildJavaByteCode(Defaults,NullParam)
+BuildJavaByteCode(ActivityContextElement,NullParam)
+BuildJavaByteCode(ActivityContextStructure,NullParam)
+BuildJavaByteCode(ActivityHierarchy,NullParam)
+BuildJavaByteCode(ActivityReaper,NullParam)
+BuildJavaByteCode(CosActivity,NullParam)
+
+Clean(*.class)
+

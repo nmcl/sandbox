@@ -1,0 +1,43 @@
+COMMENT 
+COMMENT Copyright (C) 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 2001/07/23 13:44:48 nmcl Exp $
+COMMENT
+
+Target(CosActivity.idl)
+
+AddToIdlIncludeFlags($(JAVACOSTRANSACTIONSTOPDIR)/include)
+AddToIRIncludeFlags($(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+RetrieveIDLFile(CosActivity,$(XOTSTOPDIR)/include/idl/CosActivity)
+
+#ifndef SUPPORT_IDL_PREFIX
+LocalPackageRename(CosActivity,org.omg,XOTS_IDL)
+
+CorbaJavaStubsPackage(CosActivity,org.omg,NullParam)
+#else
+CorbaJavaStubsPrefix(CosActivity,NullParam)
+#endif
+
+CopyIDL(CosActivity,org/omg/CosActivity)
+CopyIDL(CosActivity,org/omg/CosActivityAdministration)
+CopyIDL(CosActivity,org/omg/CosActivityCoordination)
+
+SubDirectory(org)
+SubDirectory(com)
+
+Target(ArjunaActivity.jar)
+Target(CosActivity.jar)
+
+CreateJavaLibrary(ArjunaActivity,com)
+CreateJavaLibrary(CosActivity,org)
+
+InstallJavaLibrary(/lib,ArjunaActivity)
+InstallJavaLibrary(/lib,CosActivity)
+
+Clean(*.class *.jar CosActivity.idl)
