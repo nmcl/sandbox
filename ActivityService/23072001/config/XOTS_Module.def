@@ -1,0 +1,15 @@
+/*
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ */
+
+/*
+ *  XOTS_Module.def (source)
+ */
+
+XOTSTOPDIR=C:/temp/src/ActivityService
+
+AddToIMakeFlags(-I$(XOTSTOPDIR)/config)
+AddToCPPFlags(-I$(XOTSTOPDIR)/config )

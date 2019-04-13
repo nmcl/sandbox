@@ -1,0 +1,17 @@
+/*
+ * Copyright (C) 2000,
+ * 
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ */
+
+/*
+ *  XOTS_Module.def (install)
+ */
+
+XOTSTOPDIR=C:/PROGRA~1/Arjuna/TransactionService
+
+AddToIMakeFlags(-I$(XOTSTOPDIR)/config)
+AddToCPPFlags(-I$(XOTSTOPDIR)/config )

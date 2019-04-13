@@ -1,0 +1,20 @@
+/*
+ * Copyright (C) 2000,
+ * 
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ */
+
+/*
+ *  Local.def
+ */
+
+AddToIMakeFlags(-DVerboseMake=No -DTopDir=$(XOTSTOPDIR) -DInstallTopDir=C:/PROGRA~1/Arjuna/TransactionService)
+
+#include "C:/temp/src/ActivityService/config/XOTS_Module.def"
+#include "C:/temp/src/JTSArjuna/2.2/JTSArjuna/CosServices/CosTransactions/config/CosTransactions_Module.def"
+#include "C:/temp/src/JTSArjuna/2.2/JTSArjuna/OrbPortability/config/OrbPortability_Module.def"
+#include "C:/temp/src/JTSArjuna/2.2/JTSArjuna/JavaHarness/config/JavaHarness_Module.def"
+#include "C:/temp/src/JTSArjuna/2.2/JTSArjuna/ModuleBuildSystem/config/Module.def"
