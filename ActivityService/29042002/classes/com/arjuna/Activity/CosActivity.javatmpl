@@ -1,0 +1,46 @@
+/*
+ * Copyright (C) 2000, 2001,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.  
+ *
+ * $Id: CosActivity.javatmpl,v 1.1 2001/07/23 13:44:50 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package com.arjuna.Activity;
+
+import com.arjuna.OrbCommon.OAInterface;
+
+public class CosActivity
+{
+
+public synchronized static final org.omg.CosActivity.Current get_current ()
+    {
+	if (_currentRef == null)
+	{
+	    _currentInstance = new SCOPED_TIE_INSTANCE_(org.omg.CosActivityCoordination,Current)(_currentImple);
+
+	    READY_IMPL_(_currentInstance);
+	    
+	    org.omg.CosActivityCoordination.Current tempRef = CORBA_REF_(_currentInstance,org.omg.CosActivityCoordination.Current);
+
+	    _currentRef = SCOPED_NARROW_(org.omg.CosActivity,Current,tempRef);
+	}
+
+	return _currentRef;
+    }
+
+public synchronized static final CosActivityCurrentImple current ()
+    {
+	return _currentImple;
+    }
+
+private static CosActivityCoordinationCurrentImple _currentImple = new CosActivityCoordinationCurrentImple();
+private	static SCOPED_TIE_INSTANCE_(org.omg.CosActivityCoordination,Current) _currentInstance = null;
+private static org.omg.CosActivity.Current _currentRef = null;
+
+};

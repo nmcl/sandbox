@@ -1,0 +1,355 @@
+// File: CosActivity
+
+
+
+
+
+#pragma prefix "omg.org"
+
+
+
+#include <idl/CosTransactions.idl>
+
+
+
+
+module CosActivity
+{
+    exception NoActivity {};
+    exception ActivityPending {};
+    exception ActivityNotProcessed {};
+    exception InvalidToken {};
+    exception InvalidState {};
+    exception InvalidContext {};
+    exception ActionError {};
+    exception AlreadyDestroyed {};
+    exception ActionNotFound {};
+    exception ChildContextPending {};
+    exception InvalidParentContext {};
+    exception SignalSetUnknown {};
+    exception SignalSetAlreadyRegistered {};
+    exception SignalSetActive {};
+    exception SignalSetInactive {};
+    exception TimeoutOutOfRange {};
+    exception PropertyGroupUnknown {};
+
+    interface ActivityCoordinator;
+
+// The following system exceptions are added to support the Activity
+// service
+
+//   INVALID_ACTIVITY
+//   ACTIVITY_COMPLETED
+//   ACTIVITY_REQUIRED
+
+typedef unsigned short ActivityPolicyValue;
+
+const ActivityPolicyValue REQUIRES = 1;   
+const ActivityPolicyValue FORBIDS = 2;   
+const ActivityPolicyValue ADAPTS = 3;   
+const ActivityPolicyValue INTERNAL = 4;
+
+//const CORBA::PolicyType ActivityPolicyType = 58;
+
+/*
+interface ActivityPolicy : CORBA::Policy
+{
+  readonly attribute ActivityPolicyValue apv;
+}
+*/
+
+//const IOP::ComponentId TAG_ACTIVITY_POLICY = 37;
+
+    typedef sequence<octet> GlobalId;
+
+    enum Status
+    {
+        StatusActive,
+        StatusCompleting,
+        StatusCompleted,
+	StatusError,
+        StatusNoActivity,
+        StatusUnknown
+    };
+
+    enum CompletionStatus
+    {
+        CompletionStatusSuccess,
+        CompletionStatusFail,
+        CompletionStatusFailOnly
+    };
+
+    struct Signal
+    {
+        string signal_name;
+        string signal_set_name;
+        any    application_specific_data;
+    };
+
+    struct Outcome
+    {
+        string outcome_name;
+        any application_specific_data;
+    };
+
+    struct ActivityInformation
+    {
+        GlobalId activityId;
+        CompletionStatus status;
+	Outcome final_outcome;
+    };
+
+    struct PropertyGroupIdentity
+    {
+        string property_group_name;
+        any context_data;
+    };
+
+    struct ActivityIdentity
+    {
+	unsigned long type;
+        long timeout;
+        ActivityCoordinator coord;
+        sequence <octet> ctxId;
+        sequence <PropertyGroupIdentity> pgCtx;
+        any activity_specific_data;
+    };
+
+    struct ActivityContext
+    {
+        sequence <ActivityIdentity> hierarchy;
+        any invocation_specific_data;
+    };
+
+    interface PropertyGroup
+    {
+        readonly attribute string property_group_name;
+
+        void completed();
+        void suspended();
+        void resumed();
+
+        void destroy() raises(AlreadyDestroyed);
+    };
+
+    interface SignalSet   
+    {
+        readonly attribute string signal_set_name;
+
+        Signal get_signal (inout boolean lastSignal);
+        Outcome get_outcome () raises(SignalSetActive);
+
+        boolean set_response (in Outcome response, out boolean nextSignal)
+	    raises (SignalSetInactive);
+
+        void set_completion_status (in CompletionStatus cs);
+	CompletionStatus get_completion_status ();
+
+	void set_activity_coordinator (in ActivityCoordinator coord)
+	    raises(SignalSetActive);
+
+        void destroy() raises(AlreadyDestroyed);
+    };
+
+    interface SubordinateSignalSet : SignalSet
+    {
+	void set_signal (in Signal sig);
+	Outcome get_current_outcome () raises(SignalSetInactive);
+    };
+
+    interface Action
+    {
+        Outcome process_signal(in Signal sig) raises(ActionError);
+
+        void destroy() raises(AlreadyDestroyed);
+    };
+    typedef sequence<Action> ActionSeq;
+
+    interface ActivityCoordinator
+    {
+        Outcome complete_activity(in string signal_set_name,
+				  in CompletionStatus cs)
+            raises(ActivityPending, ChildContextPending,
+		   SignalSetUnknown, ActivityNotProcessed);
+        Outcome process_signal_set(in string signal_set_name,
+				   in CompletionStatus cs)
+	    raises(SignalSetUnknown, ActivityNotProcessed);
+
+        void add_signal_set (in SignalSet signal_set)
+	    raises(SignalSetAlreadyRegistered);
+        void remove_signal_set (in string signal_set_name)
+	    raises(SignalSetUnknown);
+
+        void add_action(in Action act, in string signal_set_name,
+                        in long priority) raises(SignalSetUnknown);
+        void remove_action(in Action act) raises(ActionNotFound);
+
+        void add_actions(in ActionSeq acts, in string signal_set_name,
+                         in long priority) raises(SignalSetUnknown);
+	ActionSeq remove_actions(in ActionSeq acts);
+
+	void add_global_action(in Action act, in long priority);
+	void remove_global_action(in Action act) raises(ActionNotFound);
+
+        long get_number_registered_actions(in string signal_set_name)
+	    raises(SignalSetUnknown);
+        ActionSeq get_actions(in string signal_set_name)
+	    raises(SignalSetUnknown);
+
+        ActivityCoordinator get_parent_coordinator ();
+
+	GlobalId get_global_id ();
+
+        Status get_status ();
+        Status get_parent_status ();
+        string get_activity_name ();
+
+        boolean is_same_activity (in ActivityCoordinator ac);
+
+        unsigned long hash_activity ();
+
+        void destroy() raises(AlreadyDestroyed);
+    };
+
+    interface ActivityToken
+    {
+        ActivityContext get_context ();
+        void destroy() raises(AlreadyDestroyed);
+    };
+
+    interface Current// : CORBA::Current
+    {
+        void begin(in long timeout) raises(InvalidState, TimeoutOutOfRange);
+        Outcome complete() raises (NoActivity,
+				   ActivityPending, ChildContextPending,
+				   ActivityNotProcessed);
+        Outcome complete_with_status(in CompletionStatus cs)
+	    raises (NoActivity, ActivityPending, ChildContextPending,
+		    InvalidState, ActivityNotProcessed);
+
+        void set_completion_status (in CompletionStatus cs)
+	    raises (NoActivity, InvalidState);
+        CompletionStatus get_completion_status () raises(NoActivity);
+
+        void set_completion_signal_set (in string signal_set_name)
+	    raises (NoActivity, SignalSetUnknown, InvalidState);
+        string get_completion_signal_set () raises(NoActivity);
+
+        ActivityToken suspend() raises(InvalidParentContext);
+        void resume(in ActivityToken at)
+	    raises (InvalidToken, InvalidParentContext);
+
+        ActivityToken suspend_all();
+        void resume_all(in ActivityToken at)
+            raises (InvalidToken, InvalidParentContext);
+
+	GlobalId get_global_id ();
+
+        Status get_status();
+        string get_activity_name ();
+
+        void set_timeout (in long seconds) raises(TimeoutOutOfRange);
+        long get_timeout ();
+
+        ActivityContext get_context();
+        void recreate_context(in ActivityContext ctx) raises(InvalidContext);
+
+        ActivityCoordinator get_coordinator();
+        ActivityCoordinator get_parent_coordinator();
+
+        ActivityIdentity get_identity ();
+        ActivityToken get_token ();
+
+        PropertyGroup get_property_group(in string name)
+	    raises(PropertyGroupUnknown, NoActivity);
+    };
+};
+
+module CosActivityAdministration
+{
+    exception PropertyGroupAlreadyRegistered {}; 
+    exception PropertyGroupNotRegistered {};
+    exception AttributeAlreadyExists {};
+    exception NoSuchAttribute {};
+
+    interface PropertyGroupAttributes
+    {
+        string get_attribute (in string name) raises(NoSuchAttribute);
+        void set_attribute (in string name, in string value)
+	    raises(AttributeAlreadyExists);
+        void replace_attribute (in string name, in string value);
+    };
+
+    interface PropertyGroupManager
+    {
+        CosActivity::PropertyGroup create(in CosActivity::PropertyGroup parent,
+					  in CosActivity::GlobalId gid);
+
+        CosActivity::PropertyGroupIdentity marshal_request
+                                            (in CosActivity::PropertyGroup pg);
+        CosActivity::PropertyGroupIdentity marshal_response
+                                            (in CosActivity::PropertyGroup pg);
+
+        CosActivity::PropertyGroup unmarshal_request
+                             (in CosActivity::PropertyGroupIdentity mpg,
+			      in CosActivity::PropertyGroup pg,
+			      in CosActivity::PropertyGroup parent,
+			      in CosActivity::GlobalId gid);
+        void unmarshal_response(in CosActivity::PropertyGroupIdentity mpg,
+                                in CosActivity::PropertyGroup pg);
+
+        void destroy() raises(CosActivity::AlreadyDestroyed);
+    };
+
+    interface Current : CosActivity::Current
+    {
+        void register_property_group(in string property_group_name,
+                                     in PropertyGroupManager manager,
+                                     in PropertyGroupAttributes attributes)
+	    raises(PropertyGroupAlreadyRegistered);
+
+        void unregister_property_group(in string property_group_name)
+	    raises(PropertyGroupNotRegistered);
+    };
+};
+
+module CosActivityCoordination
+{
+    interface Current : CosActivityAdministration::Current
+    {
+        CosActivity::Outcome broadcast(in string signal_set_name,
+				       in CosActivity::CompletionStatus cs)
+	    raises(CosActivity::SignalSetUnknown,
+		   CosActivity::NoActivity, CosActivity::ActivityNotProcessed);
+
+        void add_signal_set(in CosActivity::SignalSet signal_set)
+	    raises(CosActivity::SignalSetAlreadyRegistered,
+		   CosActivity::NoActivity);
+        void remove_signal_set (in string signal_set_name)
+	    raises(CosActivity::SignalSetUnknown, CosActivity::NoActivity);
+
+        void add_action(in CosActivity::Action act, in string signal_set_name,
+                        in long priority) raises(CosActivity::SignalSetUnknown,
+                                                 CosActivity::NoActivity);
+        void remove_action(in CosActivity::Action act)
+	    raises(CosActivity::ActionNotFound, CosActivity::NoActivity);
+
+        void add_actions(in CosActivity::ActionSeq acts,
+			 in string signal_set_name, in long priority)
+	    raises(CosActivity::SignalSetUnknown, CosActivity::NoActivity);
+        CosActivity::ActionSeq remove_actions(in CosActivity::ActionSeq acts)
+	    raises(CosActivity::NoActivity);
+
+	void add_global_action(in CosActivity::Action act, in long priority)
+	    raises(CosActivity::NoActivity);
+    	void remove_global_action(in CosActivity::Action act) 
+	    raises(CosActivity::ActionNotFound, CosActivity::NoActivity);
+
+        long get_number_registered_actions(in string signal_set_name) 
+	    raises(CosActivity::SignalSetUnknown, CosActivity::NoActivity);
+        CosActivity::ActionSeq get_actions(in string signal_set_name) 
+	    raises(CosActivity::SignalSetUnknown, CosActivity::NoActivity);
+    };
+};
+
+

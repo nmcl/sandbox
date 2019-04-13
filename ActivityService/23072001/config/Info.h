@@ -1,0 +1,6 @@
+#define MODULE "XOTS"
+#define SOURCEID "unknown"
+#define BUILDINFO "Arjuna Solutions Ltd. [unknown]"
+#define VERSION "1.0.0"
+#define DATE "Thu Sep 20 13:59:42 2001"
+#define NOTES "none"
