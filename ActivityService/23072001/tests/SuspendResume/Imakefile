@@ -1,0 +1,29 @@
+COMMENT 
+COMMENT Copyright (C) 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 2001/07/23 13:45:04 nmcl Exp $
+COMMENT
+
+SOURCES = BasicSuspendResume.java \
+	  BasicNestedSuspendResume.java \
+	  BasicTxSuspendResume.java \
+	  BasicNestedTxSuspendResume.java
+
+OBJECTS = BasicSuspendResume.class \
+	  BasicNestedSuspendResume.class \
+	  BasicTxSuspendResume.class \
+	  BasicNestedTxSuspendResume.class
+
+Target($(OBJECTS))
+
+BuildJavaByteCode(BasicSuspendResume,NullParam)
+BuildJavaByteCode(BasicNestedSuspendResume,NullParam)
+BuildJavaByteCode(BasicTxSuspendResume,NullParam)
+BuildJavaByteCode(BasicNestedTxSuspendResume,NullParam)
+
+Clean(*.class)
