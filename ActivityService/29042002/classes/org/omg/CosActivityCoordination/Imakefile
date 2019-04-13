@@ -1,0 +1,14 @@
+COMMENT 
+COMMENT Copyright (C) 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 2001/07/23 13:45:00 nmcl Exp $
+COMMENT
+
+BuildIDLCode(CosActivity)
+
+Clean(CosActivity.idl)
