@@ -1,6 +1,0 @@
-Test suspend and resume with activities only.
-Test suspend_all and resume_all with activities only.
-As above, but with transactions.
-Test completion scenarios.
-Test termination of activities out of sequence.
-Test termination of transactions out of sequence.
