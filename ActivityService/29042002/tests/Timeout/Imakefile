@@ -6,15 +6,15 @@ COMMENT Newcastle upon Tyne,
 COMMENT Tyne and Wear,
 COMMENT UK.
 COMMENT
-COMMENT $Id: Imakefile,v 1.2 2002/04/29 09:10:07 nmcl Exp $
+COMMENT $Id: Imakefile,v 1.1 2001/07/23 13:45:04 nmcl Exp $
 COMMENT
 
-SOURCES = report.java
+SOURCES = BasicReaper.java
 
-OBJECTS = report.class
+OBJECTS = BasicReaper.class
 
 Target($(OBJECTS))
 
-BuildJavaByteCode(report,NullParam)
+BuildJavaByteCode(BasicReaper,NullParam)
 
-Clean(*.class *.prof out)
+Clean(*.class)
