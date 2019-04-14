@@ -1,0 +1,8 @@
+com.arjuna.ats.arjuna.coordinator.asyncCommit=asyncCommit
+com.arjuna.ats.arjuna.coordinator.asyncPrepare=asyncPrepare
+com.arjuna.ats.arjuna.coordinator.commitOnePhase=commitOnePhase
+com.arjuna.ats.arjuna.objectstore.localOSRoot=localOSRoot
+com.arjuna.ats.arjuna.objectstore.objectStoreSync=objectStoreSync
+com.arjuna.ats.arjuna.objectstore.objectStoreType=objectStoreType
+com.arjuna.ats.arjuna.objectstore.hashedDirectories=hashedDirectories
+com.arjuna.ats.arjuna.objectstore.transactionSync=transactionSync

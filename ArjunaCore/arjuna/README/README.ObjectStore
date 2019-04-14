@@ -1,0 +1,9 @@
+Arjuna  requires a  minimum object  store to  save/load the  states of
+transaction logs.   The default location for  this is the  root of the
+Arjuna   installation  (the  system   will  automatically   create  an
+ObjectStore   subdirectory).     For   further   details,    see   the
+Administator's Guide.
+
+If you want to override the location of the object store, then use the
+com.hp.mw.arjuna.implementation.objectstore.objectStoreDir     property
+variable, either on the command line, or in the properties file.

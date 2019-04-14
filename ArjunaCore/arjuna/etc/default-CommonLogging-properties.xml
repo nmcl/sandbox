@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- $Id: default-CommonLogging-properties.xml,v 1.1 2003/08/04 10:12:59 nmcl Exp $ -->
+<!--
+  These options are described in the ArjunaTS manual.
+  Defaults are provided here for convenience only.
+ 
+  Please read through this file prior to using the system, and consider
+  updating the specified entries.
+-->
+<transaction-service
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="transaction-service-1_0.xsd">
+  <transaction-init>
+    <properties>
+      <!--
+        (default is YES)
+      -->
+      <property
+        name="com.hp.mw.common.utils.logging.log.disabled"
+        value="YES"/>
+      <!--
+        (default is 0x0)
+      -->
+      <property
+        name="com.hp.mw.common.utils.logging.CommonDebugLevel"
+        value="0x00000001 "/>
+      <!--
+        (default is 0x0004)
+      -->
+      <property
+        name="com.hp.mw.common.utils.logging.CommonVisibilityLevel"
+        value="0xffff"/>
+      <!--
+        (default is 0xffff)
+      -->
+      <property
+        name="com.hp.mw.common.utils.logging.CommonFacilityLevel"
+        value="0xffff"/>
+
+      <property
+        name="com.hp.mw.common.utils.logging.arjLoggerI18N.FinerDebug"
+        value="NO"/>
+      <property
+        name="com.hp.mw.common.utils.logging.arjLogger.fClass"
+        value="com.hp.mw.common.utils.logging.FacilityCode"/>
+      <property
+        name="com.hp.mw.common.utils.logging.arjLoggerI18N.fClass"
+        value="com.hp.mw.common.utils.logging.FacilityCode"/>
+      <property
+        name="com.hp.mw.common.utils.logging.arjLogger.DEBUG_VAL"
+        value="0"/>
+      <property
+        name="com.hp.mw.common.utils.logging.arjLogger.FACIL_VAL"
+        value="0"/>
+      <property
+        name="com.hp.mw.common.utils.logging.arjLogger.VISIB_VAL"
+        value="0"/>
+      <property
+        name="com.hp.mw.common.utils.logging.arjLoggerI18N.DEBUG_VAL"
+        value="0"/>
+      <property
+        name="com.hp.mw.common.utils.logging.arjLoggerI18N.FACIL_VAL"
+        value="0"/>
+      <property
+        name="com.hp.mw.common.utils.logging.arjLoggerI18N.VISIB_VAL"
+        value="0"/>
+    </properties>
+  </transaction-init>
+</transaction-service>

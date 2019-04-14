@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- $Id: default-RecoveryManager-properties.xml,v 1.4 2003/08/04 10:12:59 nmcl Exp $ -->
+<!--
+  This is the special properties file for the RecoveryManager - its settings
+  add to and override those in the regular arjuna properties file
+-->
+<transaction-service
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="transaction-service-1_0.xsd">
+  <transaction-init>
+    <properties>
+      <!--
+        overrides of debug tracing properties normally set in the arjuna
+        properties file.  RecoveryManager uses debug tracing with facility
+        code FAC_RECOVERY_NORMAL for its normal messages.  Consequently some
+        of the debug properties need to be changed from their defaults.
+      -->
+      <!--
+        Set debugEnabled=YES to show normal output.
+        RecoveryManager will produce no messages apart from errors if
+        debugEnabled=NO.
+      -->
+      <property
+        name="com.hp.mw.common.utils.logging.log.disabled"
+        value="NO"/>
+      <!--
+        (default is 0x0, RecoveryManager needs to set non-zero to make the
+        normal messages visible)
+      -->
+      <property
+        name="com.hp.mw.common.utils.logging.CommonDebugLevel"
+        value="0xFFFF"/>
+      <!--
+        visLevel default of 0x04 is usable
+      -->
+      <property
+        name="com.hp.mw.common.utils.logging.CommonVisibilityLevel"
+        value="0x0004"/>
+      <!--
+        RecoveryManager  forces FAC_RECOVERY_NORMAL (0x40000) on.
+        0x800 is FAC_CRASH_RECOVERY.
+        Default would produce a LOT of messages.
+      -->
+      <property
+        name="com.hp.mw.common.utils.logging.CommonFacilityLevel"
+        value="0x00"/>
+      <!--
+        Properties used only by the RecoveryManager.
+      -->
+      <!--
+        Periodic recovery settings.
+        Time values in this section are in seconds.
+      -->
+      <!--
+        Interval in seconds between initiating the periodic recovery modules.
+        Default is 120 seconds.
+      -->
+      <property
+        name="com.arjuna.ats.arjuna.recovery.periodicRecoveryPeriod"
+        value="120"/>
+      <!--
+        Interval in seconds between first and second pass of periodic recovery.
+        Default is 10 seconds.
+      -->
+      <property
+        name="com.arjuna.ats.arjuna.recovery.recoveryBackoffPeriod"
+        value="10"/>
+      <!--
+        Periodic recovery modules to use.  Invoked in sort-order of names.
+      -->
+      <property
+        name="com.arjuna.ats.arjuna.recovery.recoveryExtension1"
+        value="com.arjuna.ats.internal.arjuna.recovery.AtomicActionRecoveryModule"/>
+      <property
+        name="com.arjuna.ats.arjuna.recovery.recoveryExtension2"
+        value="com.arjuna.ats.internal.txoj.recovery.TORecoveryModule"/>
+      <!--
+        Expired entry removal
+      -->
+      <!--
+        Expiry scanners to use (order of invocation is random).
+        Names must begin with "com.arjuna.ats.arjuna.recovery.expiryScanner"
+      -->
+      <property
+        name="com.arjuna.ats.arjuna.recovery.expiryScannerTransactionStatusManager"
+        value="com.arjuna.ats.internal.arjuna.recovery.ExpiredTransactionStatusManagerScanner"/>
+      <!--
+        Interval, in hours, between running the expiry scanners.
+        This can be quite long. The absolute value determines the interval -
+        if the value is negative, the scan will NOT be run until after one
+        interval has elapsed. If positive the first scan will be immediately
+        after startup. Zero will prevent any scanning.
+        Default  = 12 = run immediately, then every 12 hours.
+      -->
+      <property
+        name="com.arjuna.ats.arjuna.recovery.expiryScanInterval"
+        value="12"/>
+      <!--
+        Age, in hours, for removal of transaction status manager item.
+        This should be longer than any ts-using process will remain running.
+        Zero = Never removed.  Default is 12.
+      -->
+      <property
+        name="com.arjuna.ats.arjuna.recovery.transactionStatusManagerExpiryTime"
+        value="12"/>
+      <!--
+        Use this to fix the port on which the TransactionStatusManager listens,
+        The default behaviour is to use any free port.
+      -->
+      <property
+        name="com.arjuna.ats.arjuna.recovery.transactionStatusManagerPort"
+        value="0"/>
+    </properties>
+  </transaction-init>
+</transaction-service>
