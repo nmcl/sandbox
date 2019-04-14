@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- $Id: default-arjuna-properties.xml,v 1.4 2003/08/04 10:12:59 nmcl Exp $ -->
+<!--
+  These options are described in the ArjunaJTS manual.
+  Defaults are provided here for convenience only.
+ 
+  Please read through this file prior to using the system, and consider
+  updating the specified entries.
+-->
+<transaction-service
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="transaction-service-1_0.xsd">
+  <transaction-init>
+    <properties>
+      <!--
+        Licence properties.
+      -->
+      <property
+        name="ArjunaCore_LicenceManager"
+        value="com.arjuna.ats.internal.arjuna.common.ArjunaLicenceControl"/>
+      <property
+        name="ArjunaCore_LicenceKey"
+        value="01234567-89abcdef-01234567-89abcdef-aabbccdd"/>
+      <property
+        name="ArjunaJTA_LicenceManager"
+        value="com.arjuna.ats.internal.arjuna.common.ArjunaLicenceControl"/>
+      <property
+        name="ArjunaJTA_LicenceKey"
+        value="01234567-89abcdef-01234567-89abcdef-aabbccdd"/>
+      <property
+        name="ArjunaJTS_LicenceManager"
+        value="com.arjuna.ats.internal.arjuna.common.ArjunaLicenceControl"/>
+      <property
+        name="ArjunaJTS_LicenceKey"
+        value="01234567-89abcdef-01234567-89abcdef-aabbccdd"/>
+      <!--
+        (default is arjuna-properties.xml)
+      -->
+      <!--
+        <property
+          name="com.arjuna.ats.arjuna.common.propertiesFile"
+          value="arjuna-properties.xml"/>
+      -->
+      <!--
+        (default is NO)
+      -->
+      <property
+        name="com.arjuna.ats.arjuna.coordinator.asyncCommit"
+        value="NO"/>
+      <!--
+        (default is NO)
+      -->
+      <property
+        name="com.arjuna.ats.arjuna.coordinator.asyncPrepare"
+        value="NO"/>
+      <!--
+        (default is YES)
+      -->
+      <property
+        name="com.arjuna.ats.arjuna.coordinator.commitOnePhase"
+        value="YES"/>
+      <!--
+        (default is defaultStore)
+      -->
+      <property
+        name="com.arjuna.ats.arjuna.objectstore.localOSRoot"
+        value="defaultStore"/>
+      <!--
+        default is under user.home - must be writeable!)
+      -->
+        <property
+          name="com.arjuna.ats.arjuna.objectstore.objectStoreDir"
+          value="PutObjectStoreDirHere"/>
+      <!--
+        (default is ON)
+      -->
+      <property
+        name="com.arjuna.ats.arjuna.objectstore.objectStoreSync"
+        value="ON"/>
+      <!--
+        (default is ShadowNoFileLockStore)
+      -->
+      <property
+        name="com.arjuna.ats.arjuna.objectstore.objectStoreType"
+        value="ShadowNoFileLockStore"/>
+      <!--
+        (default is 255)
+      -->
+      <property
+        name="com.arjuna.ats.arjuna.objectstore.hashedDirectories"
+        value="255"/>
+      <!--
+        (default is ON)
+      -->
+      <property
+        name="com.arjuna.ats.arjuna.objectstore.transactionSync"
+        value="ON"/>
+      <!--
+        The location for creating temporary files, e.g., Uids.
+        Default is under user.home.
+        IMPORTANT: make sure the directory is lockable, e.g., /tmp on Unix
+        may not be!
+      -->
+      <!--
+        <property
+          name="com.arjuna.ats.arjuna.common.varDir"
+          value="var"/>
+      -->
+    </properties>
+  </transaction-init>
+</transaction-service>
