@@ -1,0 +1,75 @@
+<project name="licence-arjuna" default="com.hp.mw.ts.arjuna.licence" basedir=".">
+
+	<!-- Set property defaults -->
+	<property name="com.hp.mw.ts.product.name" value="ArjunaCore"/>
+	<property name="com.hp.mwlabs.ts.arjuna.licence.src" value="classes"/>
+	<property name="com.hp.mwlabs.ts.arjuna.licence.licencecontrol.src" value="${com.hp.mwlabs.ts.arjuna.licence.src}/com/arjuna/ats/internal/arjuna/common/ArjunaLicenceControl.javatmpl"/>
+	<property name="com.hp.mwlabs.ts.arjuna.licence.licencecontrol.dest" value="${com.hp.mwlabs.ts.arjuna.licence.src}/com/arjuna/ats/internal/arjuna/common/ArjunaLicenceControl.java"/>
+
+	<target name="com.hp.mw.ts.arjuna.licence">
+		<echo message="Setting up licence keys for ${com.hp.mw.ts.product.name}"/>
+
+		<!-- ArjunaCore licence keys -->
+		<condition property="com.hp.mwlabs.ts.arjuna.licence.netmask" value="0xaef4108d">
+			<equals arg1="${com.hp.mw.ts.product.name}" arg2="ArjunaCore"/>
+		</condition>
+		<condition property="com.hp.mwlabs.ts.arjuna.licence.hostmask" value="0x2cab180e">
+			<equals arg1="${com.hp.mw.ts.product.name}" arg2="ArjunaCore"/>
+		</condition>
+		<condition property="com.hp.mwlabs.ts.arjuna.licence.codemask" value="0xfa68a01d">
+			<equals arg1="${com.hp.mw.ts.product.name}" arg2="ArjunaCore"/>
+		</condition>
+		<condition property="com.hp.mwlabs.ts.arjuna.licence.datemask" value="0x84ad1c5f">
+			<equals arg1="${com.hp.mw.ts.product.name}" arg2="ArjunaCore"/>
+		</condition>
+
+		<!-- ArjunaJTS licence keys -->
+		<condition property="com.hp.mwlabs.ts.arjuna.licence.netmask" value="0x21c4e73f">
+			<equals arg1="${com.hp.mw.ts.product.name}" arg2="ArjunaJTS"/>
+		</condition>
+		<condition property="com.hp.mwlabs.ts.arjuna.licence.hostmask" value="0x0fb5213d">
+			<equals arg1="${com.hp.mw.ts.product.name}" arg2="ArjunaJTS"/>
+		</condition>
+		<condition property="com.hp.mwlabs.ts.arjuna.licence.codemask" value="0x76ab47f3">
+			<equals arg1="${com.hp.mw.ts.product.name}" arg2="ArjunaJTS"/>
+		</condition>
+		<condition property="com.hp.mwlabs.ts.arjuna.licence.datemask" value="0xa56d19ea">
+			<equals arg1="${com.hp.mw.ts.product.name}" arg2="ArjunaJTS"/>
+		</condition>
+
+		<!-- ArjunaJTA licence keys -->
+		<condition property="com.hp.mwlabs.ts.arjuna.licence.netmask" value="0x428be20c">
+			<equals arg1="${com.hp.mw.ts.product.name}" arg2="ArjunaJTA"/>
+		</condition>
+		<condition property="com.hp.mwlabs.ts.arjuna.licence.hostmask" value="0x96fab307">
+			<equals arg1="${com.hp.mw.ts.product.name}" arg2="ArjunaJTA"/>
+		</condition>
+		<condition property="com.hp.mwlabs.ts.arjuna.licence.codemask" value="0x5de91ad6">
+			<equals arg1="${com.hp.mw.ts.product.name}" arg2="ArjunaJTA"/>
+		</condition>
+		<condition property="com.hp.mwlabs.ts.arjuna.licence.datemask" value="0xb3ee80f1">
+			<equals arg1="${com.hp.mw.ts.product.name}" arg2="ArjunaJTA"/>
+		</condition>
+
+		<copy
+			file="${com.hp.mwlabs.ts.arjuna.licence.licencecontrol.src}"
+			tofile="${com.hp.mwlabs.ts.arjuna.licence.licencecontrol.dest}"
+			overwrite="yes"
+		>
+			<filterset>
+				<filter token="PRODUCT" value="${com.hp.mw.ts.product.name}"/>
+				<filter token="NETMASK" value="${com.hp.mwlabs.ts.arjuna.licence.netmask}"/>
+				<filter token="HOSTMASK" value="${com.hp.mwlabs.ts.arjuna.licence.hostmask}"/>
+				<filter token="DATEMASK" value="${com.hp.mwlabs.ts.arjuna.licence.datemask}"/>
+				<filter token="CODEMASK" value="${com.hp.mwlabs.ts.arjuna.licence.codemask}"/>
+			</filterset>
+		</copy>
+	</target>
+
+	<target name="com.hp.mw.ts.arjuna.licenceclean">
+		<delete file="${com.hp.mwlabs.ts.arjuna.licence.licencecontrol.dest}"/>
+	</target>
+
+	<target name="clean" depends="com.hp.mw.ts.arjuna.licenceclean">
+	</target>
+</project>

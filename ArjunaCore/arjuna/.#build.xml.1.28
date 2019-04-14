@@ -1,0 +1,467 @@
+<project name="module-arjuna" default="com.hp.mw.ts.arjuna.build" basedir=".">
+
+	<!-- class path behaviour -->
+	<property name="build.sysclasspath" value="last"/>
+	<property name="com.hp.mwlabs.classpathbuilderfilename" location="buildsystem.classpath"/>
+
+	<!-- Set module name -->
+	<property name="com.hp.mwlabs.ts.modulename" value="arjuna"/>
+
+	<!-- Set default properties filename -->
+	<property name="com.hp.mw.ts.properties" value="module-arjuna.properties"/>
+
+	<!-- Load Build Properties File -->
+	<property file="${com.hp.mw.ts.properties}"/>
+
+	<!-- Set external property defaults -->
+	<property name="com.hp.mw.ts.arjuna.objectstore.cloudscape36.compile" value="no"/>
+	<property name="com.hp.mw.ts.arjuna.objectstore.sequelink51.compile" value="no"/>
+	<property name="com.hp.mw.ts.arjuna.objectstore.oracle81.compile" value="no"/>
+	<property name="com.hp.mw.ts.arjuna.objectstore.oracle90.compile" value="no"/>
+	<property name="com.hp.mw.ts.arjuna.tests.compile" value="yes"/>
+	<property name="com.hp.mw.ts.arjuna.tests.install" value="no"/>
+
+	<!-- Set internal property defaults -->
+		<!-- Path names -->
+	<property name="com.hp.mwlabs.ts.arjuna.src" location="classes"/>
+	<property name="com.hp.mwlabs.ts.arjuna.destroot" location="build"/>
+	<property name="com.hp.mwlabs.ts.arjuna.dest" location="${com.hp.mwlabs.ts.arjuna.destroot}/classes"/>
+	<property name="com.hp.mwlabs.ts.arjuna.tests.src" location="tests"/>
+	<property name="com.hp.mwlabs.ts.arjuna.tests.dest" location="${com.hp.mwlabs.ts.arjuna.destroot}/tests"/>
+	<property name="com.hp.mwlabs.ts.arjuna.jar.dest" location="lib"/>
+        <property name="com.hp.mwlabs.ts.arjuna.tests.destdir" location="${com.hp.mwlabs.ts.arjuna.jar.dest}/tests/"/>
+
+		<!-- Relative path for files to exclude in main compile -->
+	<property name="com.hp.mwlabs.ts.arjuna.compile.excludes" value="**/jdbc/**/*.java"/>
+		<!-- Files that need word substitutions -->
+	<property name="com.hp.mwlabs.ts.arjuna.info.src" location="${com.hp.mwlabs.ts.arjuna.src}/com/arjuna/ats/arjuna/Info.javatmpl"/>
+	<property name="com.hp.mwlabs.ts.arjuna.info.dest" location="${com.hp.mwlabs.ts.arjuna.src}/com/arjuna/ats/arjuna/Info.java"/>
+	<property name="com.hp.mwlabs.ts.arjuna.properties.src" location="${com.hp.mwlabs.ts.arjuna.src}/com/arjuna/ats/arjuna/common/Configuration.javatmpl"/>
+	<property name="com.hp.mwlabs.ts.arjuna.properties.dest" location="${com.hp.mwlabs.ts.arjuna.src}/com/arjuna/ats/arjuna/common/Configuration.java"/>
+	<property name="com.hp.mwlabs.ts.arjuna.brandings.src" location="${com.hp.mwlabs.ts.arjuna.src}/com/arjuna/ats/internal/arjuna/jdbc/brandings/list.javatmpl"/>
+	<property name="com.hp.mwlabs.ts.arjuna.brandings.dest" location="${com.hp.mwlabs.ts.arjuna.src}/com/arjuna/ats/internal/arjuna/jdbc/brandings/list.java"/>
+	<property name="com.hp.mwlabs.ts.arjuna.recoveryproperties.src" location="${com.hp.mwlabs.ts.arjuna.src}/com/arjuna/ats/arjuna/recovery/RecoveryConfiguration.javatmpl"/>
+	<property name="com.hp.mwlabs.ts.arjuna.recoveryproperties.dest" location="${com.hp.mwlabs.ts.arjuna.src}/com/arjuna/ats/arjuna/recovery/RecoveryConfiguration.java"/>
+
+        <property name="com.hp.mwlabs.ts.arjuna.resourcebundle" value="arjuna_msg_en_US.properties"/>
+
+	<!-- Initialisation -->
+	<target name="com.hp.mwlabs.ts.arjuna.init">
+		<!-- Define default build properties -->
+		<property name="com.hp.mw.sourceid" value="unknown"/>
+		<property name="com.hp.mw.version" value="unknown"/>
+		<property name="com.hp.mw.installationdirectory" value="install"/>
+		<property name="com.hp.mw.builder" value="Arjuna Technologies [${user.name}] (${os.name} ${os.version})"/>
+		<property name="com.hp.mw.notes" value=""/>
+
+		<tstamp>
+		<format property="com.hp.mw.date" pattern="yyyy/MMM/dd HH:mm"/>
+	  	</tstamp>
+
+                <!-- Define classpath builder task -->
+                <taskdef name="classpath-builder" classname="com.hp.mw.buildsystem.ant.ClasspathBuilder"/>
+
+		<echo message="Initialising module arjuna"/>
+		<echo message="Source ID = ${com.hp.mw.sourceid}"/>
+		<echo message="Version   = ${com.hp.mw.version}"/>
+		<echo message="Builder   = ${com.hp.mw.builder}"/>
+		<echo message="Date      = ${com.hp.mw.date}"/>
+		<echo message="Notes     = ${com.hp.mw.notes}"/>
+
+		<!-- Installation directory -->
+		<property name="com.hp.mwlabs.installationdirectory"
+		    location="${com.hp.mw.installationdirectory}"/>
+
+		<!-- Compile with debugging? -->
+		<condition property="com.hp.mwlabs.debug" value="no">
+			<equals arg1="${com.hp.mw.debug}" arg2="no"/>
+		</condition>
+		<property name="com.hp.mwlabs.debug" value="yes"/>
+
+		<!-- Compile with deprecation? -->
+		<condition property="com.hp.mwlabs.deprecation" value="yes">
+			<equals arg1="${com.hp.mw.deprecation}" arg2="yes"/>
+		</condition>
+		<property name="com.hp.mwlabs.deprecation" value="no"/>
+
+		<!-- Check which bits to compile and/or install -->
+		<condition property="com.hp.mwlabs.ts.arjuna.objectstore.cloudscape36.compile">
+			<equals arg1="${com.hp.mw.ts.arjuna.objectstore.cloudscape36.compile}" arg2="yes"/>
+		</condition>
+
+		<condition property="com.hp.mwlabs.ts.arjuna.objectstore.sequelink51.compile">
+			<equals arg1="${com.hp.mw.ts.arjuna.objectstore.sequelink51.compile}" arg2="yes"/>
+		</condition>
+
+		<condition property="com.hp.mwlabs.ts.arjuna.objectstore.oracle81.compile">
+			<equals arg1="${com.hp.mw.ts.arjuna.objectstore.oracle81.compile}" arg2="yes"/>
+		</condition>
+
+		<condition property="com.hp.mwlabs.ts.arjuna.objectstore.oracle90.compile">
+			<equals arg1="${com.hp.mw.ts.arjuna.objectstore.oracle90.compile}" arg2="yes"/>
+		</condition>
+
+		<condition property="com.hp.mwlabs.ts.arjuna.tests.compile">
+			<equals arg1="${com.hp.mw.ts.arjuna.tests.compile}" arg2="yes"/>
+		</condition>
+
+		<condition property="com.hp.mwlabs.ts.arjuna.tests.install">
+			<equals arg1="${com.hp.mw.ts.arjuna.tests.install}" arg2="yes"/>
+		</condition>
+
+		<!-- Process the info class -->
+		<copy
+			file="${com.hp.mwlabs.ts.arjuna.info.src}"
+			tofile="${com.hp.mwlabs.ts.arjuna.info.dest}"
+			overwrite="yes"
+		>
+			<filterset>
+				<filter token="MODULE" value="${com.hp.mwlabs.ts.modulename}"/>
+				<filter token="SOURCEID" value="${com.hp.mw.sourceid}"/>
+				<filter token="BUILDINFO" value="${com.hp.mw.builder}"/>
+				<filter token="VERSION" value="${com.hp.mw.version}"/>
+				<filter token="DATE" value="${com.hp.mw.date}"/>
+				<filter token="NOTES" value="${com.hp.mw.notes}"/>
+			</filterset>
+		</copy>
+
+		<!-- Set the module property files details -->
+
+		<property name="com.hp.mwlabs.ts.arjuna.propertyfile" value="${com.hp.mwlabs.ts.modulename}-properties.xml"/>
+	    <property name="com.hp.mwlabs.ts.arjuna.mappingfile" value="${com.hp.mwlabs.ts.modulename}-properties.mappings"/>
+		<property name="com.hp.mwlabs.ts.arjuna.recoverypropertyfile" value="RecoveryManager-properties.xml"/>
+
+		<property name="com.hp.mw.propertydirectory" location="${com.hp.mwlabs.installationdirectory}/etc"/>
+
+		<echo message="Property file name : ${com.hp.mwlabs.ts.arjuna.propertyfile}"/>
+		<echo message="Recovery property file name : ${com.hp.mwlabs.ts.arjuna.recoverypropertyfile}"/>
+		<echo message="Property directory : ${com.hp.mw.propertydirectory}"/>
+
+		<!-- Process the classes that use the property file -->
+		<copy
+			file="${com.hp.mwlabs.ts.arjuna.properties.src}"
+			tofile="${com.hp.mwlabs.ts.arjuna.properties.dest}"
+			overwrite="yes"
+		>
+			<filterset>
+				<filter token="ARJUNA_VERSION" value="${com.hp.mw.version}"/>
+				<filter token="PROPERTIES_FILE" value="${com.hp.mwlabs.ts.arjuna.propertyfile}"/>
+				<filter token="PROPERTIES_DIR" value="${com.hp.mw.propertydirectory}"/>
+			</filterset>
+		</copy>
+		<copy
+			file="${com.hp.mwlabs.ts.arjuna.recoveryproperties.src}"
+			tofile="${com.hp.mwlabs.ts.arjuna.recoveryproperties.dest}"
+			overwrite="yes"
+		>
+			<filterset>
+				<filter token="RECOVERY_PROPERTIES_FILE" value="${com.hp.mwlabs.ts.arjuna.recoverypropertyfile}"/>
+			</filterset>
+		</copy>
+
+		<!-- Process the licence using code -->
+		<ant antfile="licence.xml"/>
+
+		<!-- Make the destination directory -->
+		<mkdir dir="${com.hp.mwlabs.ts.arjuna.dest}"/>
+
+	</target>
+
+        <!-- Default build target -->
+        <target name="com.hp.mw.ts.arjuna.build" depends="com.hp.mw.ts.arjuna.jar, com.hp.mwlabs.ts.arjuna.tests.jar"/>
+
+	<!-- Compilation targets -->
+	<target name="com.hp.mw.ts.arjuna.compile" depends="com.hp.mwlabs.ts.arjuna.init,com.hp.mwlabs.ts.arjuna.objectstore.compile,com.hp.mwlabs.ts.arjuna.generateresourcebundle">
+
+		<echo message="Compiling module"/>
+
+		<classpath-builder filename="${com.hp.mwlabs.classpathbuilderfilename}" inproperty="build.classpath"/>
+
+		<javac
+			srcdir="${com.hp.mwlabs.ts.arjuna.src}"
+			destdir="${com.hp.mwlabs.ts.arjuna.dest}"
+			excludes="${com.hp.mwlabs.ts.arjuna.compile.excludes}"
+			debug="${com.hp.mwlabs.debug}"
+			deprecation="${com.hp.mwlabs.deprecation}"
+		>
+			<classpath>
+				<path path="${build.classpath}"/>
+				<path path="${com.hp.mwlabs.ts.arjuna.src}"/>
+			</classpath>
+		</javac>
+
+	</target>
+
+	<!-- Non-specific objectstore files -->
+	<target name="com.hp.mwlabs.ts.arjuna.objectstore.compile" depends="com.hp.mwlabs.ts.arjuna.objectstore.cloudscape36.compile, com.hp.mwlabs.ts.arjuna.objectstore.sequelink51.compile, com.hp.mwlabs.ts.arjuna.objectstore.oracle81.compile, com.hp.mwlabs.ts.arjuna.objectstore.oracle90.compile">
+
+		<!-- Set branding list condition -->
+		<condition property="com.hp.mwlabs.ts.arjuna.objectstore.sequelink51.ifdef" value=" ">
+			<equals arg1="${com.hp.mw.ts.arjuna.objectstore.sequelink51.compile}" arg2="yes"/>
+		</condition>
+		<property name="com.hp.mwlabs.ts.arjuna.objectstore.sequelink51.ifdef" value="/*"/>
+		<condition property="com.hp.mwlabs.ts.arjuna.objectstore.sequelink51.endif" value=" ">
+			<equals arg1="${com.hp.mw.ts.arjuna.objectstore.sequelink51.compile}" arg2="yes"/>
+		</condition>
+		<property name="com.hp.mwlabs.ts.arjuna.objectstore.sequelink51.endif" value="*/"/>
+
+		<!-- Process the list class -->
+		<copy
+			file="${com.hp.mwlabs.ts.arjuna.brandings.src}"
+			tofile="${com.hp.mwlabs.ts.arjuna.brandings.dest}"
+		>
+			<filterset>
+				<filter token="IFDEF_BUILD_SEQUELINK_5_1" value="${com.hp.mwlabs.ts.arjuna.objectstore.sequelink51.ifdef}"/>
+				<filter token="ENDIF_BUILD_SEQUELINK_5_1" value="${com.hp.mwlabs.ts.arjuna.objectstore.sequelink51.endif}"/>
+			</filterset>
+		</copy>
+
+		<classpath-builder filename="${com.hp.mwlabs.classpathbuilderfilename}" inproperty="build.classpath"/>
+
+		<javac
+			srcdir="${com.hp.mwlabs.ts.arjuna.src}"
+			destdir="${com.hp.mwlabs.ts.arjuna.dest}"
+			classpath="${com.hp.mwlabs.ts.arjuna.src}"
+			debug="${com.hp.mwlabs.debug}"
+			deprecation="${com.hp.mwlabs.deprecation}"
+		>
+			<include name="**/objectstore/jdbc/accessors/accessor.java"/>
+			<include name="**/jdbc/brandings/Brander.java"/>
+			<include name="**/jdbc/brandings/BrandingFactory.java"/>
+			<include name="**/jdbc/brandings/list.java"/>
+			<classpath>
+				<path path="${build.classpath}"/>
+				<path path="${com.hp.mwlabs.ts.arjuna.src}"/>
+			</classpath>
+		</javac>
+
+
+	</target>
+
+	<target name="com.hp.mwlabs.ts.arjuna.objectstore.cloudscape36.compile" depends="com.hp.mwlabs.ts.arjuna.init" if="com.hp.mwlabs.ts.arjuna.objectstore.cloudscape36.compile">
+
+		<echo message="Compiling cloudscape 3.6 object store support"/>
+
+		<classpath-builder filename="${com.hp.mwlabs.classpathbuilderfilename}" inproperty="build.classpath"/>
+
+		<javac
+			srcdir="${com.hp.mwlabs.ts.arjuna.src}"
+			destdir="${com.hp.mwlabs.ts.arjuna.dest}"
+			debug="${com.hp.mwlabs.debug}"
+			deprecation="${com.hp.mwlabs.deprecation}"
+		>
+			<include name="**/objectstore/jdbc/cloudscape_3_6.java"/>
+			<include name="**/objectstore/jdbc/cloudscape_3_6_accessor.java"/>
+			<classpath>
+				<path path="${build.classpath}"/>
+				<path path="${com.hp.mwlabs.ts.arjuna.src}"/>
+			</classpath>
+		</javac>
+
+	</target>
+
+	<target name="com.hp.mwlabs.ts.arjuna.objectstore.sequelink51.compile" depends="com.hp.mwlabs.ts.arjuna.init" if="com.hp.mwlabs.ts.arjuna.objectstore.sequelink51.compile">
+
+		<echo message="Compiling sequelink 5.1 object store support"/>
+
+		<classpath-builder filename="${com.hp.mwlabs.classpathbuilderfilename}" inproperty="build.classpath"/>
+
+		<javac
+			srcdir="${com.hp.mwlabs.ts.arjuna.src}"
+			destdir="${com.hp.mwlabs.ts.arjuna.dest}"
+			debug="${com.hp.mwlabs.debug}"
+			deprecation="${com.hp.mwlabs.deprecation}"
+		>
+			<include name="**/objectstore/jdbc/sequelink_5_1.java"/>
+			<include name="**/objectstore/jdbc/sequelink_5_1_accessor.java"/>
+			<include name="**/jdbc/brandings/merant.java"/>
+			<classpath>
+				<path path="${build.classpath}"/>
+				<path path="${com.hp.mwlabs.ts.arjuna.src}"/>
+			</classpath>
+		</javac>
+
+	</target>
+
+	<target name="com.hp.mwlabs.ts.arjuna.objectstore.oracle81.compile" depends="com.hp.mwlabs.ts.arjuna.init" if="com.hp.mwlabs.ts.arjuna.objectstore.oracle81.compile">
+
+		<echo message="Compiling oracle 8.1 object store support"/>
+
+		<classpath-builder filename="${com.hp.mwlabs.classpathbuilderfilename}" inproperty="build.classpath"/>
+
+		<javac
+			srcdir="${com.hp.mwlabs.ts.arjuna.src}"
+			destdir="${com.hp.mwlabs.ts.arjuna.dest}"
+			debug="${com.hp.mwlabs.debug}"
+			deprecation="${com.hp.mwlabs.deprecation}"
+		>
+			<include name="**/objectstore/jdbc/oracle_8_1.java"/>
+			<include name="**/objectstore/jdbc/oracle_8_1_accessor.java"/>
+			<classpath>
+				<path path="${build.classpath}"/>
+				<path path="${com.hp.mwlabs.ts.arjuna.src}"/>
+			</classpath>
+		</javac>
+
+	</target>
+
+	<target name="com.hp.mwlabs.ts.arjuna.objectstore.oracle90.compile" depends="com.hp.mwlabs.ts.arjuna.init" if="com.hp.mwlabs.ts.arjuna.objectstore.oracle90.compile">
+
+		<echo message="Compiling oracle 9.0 object store support"/>
+
+		<classpath-builder filename="${com.hp.mwlabs.classpathbuilderfilename}" inproperty="build.classpath"/>
+
+		<javac
+			srcdir="${com.hp.mwlabs.ts.arjuna.src}"
+			destdir="${com.hp.mwlabs.ts.arjuna.dest}"
+			debug="${com.hp.mwlabs.debug}"
+			deprecation="${com.hp.mwlabs.deprecation}"
+		>
+			<include name="**/objectstore/jdbc/oracle_9_0.java"/>
+			<include name="**/objectstore/jdbc/oracle_9_0_accessor.java"/>
+			<classpath>
+				<path path="${build.classpath}"/>
+				<path path="${com.hp.mwlabs.ts.arjuna.src}"/>
+			</classpath>
+		</javac>
+
+	</target>
+
+	<target name="com.hp.mwlabs.ts.arjuna.tests.jar" depends="com.hp.mwlabs.ts.arjuna.tests.compile" if="com.hp.mwlabs.ts.arjuna.tests.compile">
+
+            <mkdir dir="${com.hp.mwlabs.ts.arjuna.tests.destdir}"/>
+            <jar    basedir="${com.hp.mwlabs.ts.arjuna.tests.dest}"
+                    jarfile="${com.hp.mwlabs.ts.arjuna.tests.destdir}/${com.hp.mwlabs.ts.modulename}_tests.jar"/>
+
+        </target>
+
+	<target name="com.hp.mwlabs.ts.arjuna.tests.compile" depends="com.hp.mw.ts.arjuna.jar" if="com.hp.mwlabs.ts.arjuna.tests.compile">
+
+		<echo message="Compiling tests"/>
+
+		<mkdir dir="${com.hp.mwlabs.ts.arjuna.tests.dest}"/>
+
+		<classpath-builder filename="${com.hp.mwlabs.classpathbuilderfilename}" inproperty="build.classpath"/>
+
+		<javac
+			srcdir="${com.hp.mwlabs.ts.arjuna.tests.src}"
+			destdir="${com.hp.mwlabs.ts.arjuna.tests.dest}"
+			debug="${com.hp.mwlabs.debug}"
+			deprecation="${com.hp.mwlabs.deprecation}"
+		>
+			<classpath>
+				<path path="${build.classpath}"/>
+				<path path="${com.hp.mwlabs.ts.arjuna.dest}"/>
+			</classpath>
+		</javac>
+
+	</target>
+
+	<!-- Jar targets -->
+	<target name="com.hp.mw.ts.arjuna.jar" depends="com.hp.mw.ts.arjuna.compile">
+
+		<echo message="Building jar file"/>
+		<mkdir dir="${com.hp.mwlabs.ts.arjuna.jar.dest}"/>
+		<jar
+			jarfile="${com.hp.mwlabs.ts.arjuna.jar.dest}/${com.hp.mwlabs.ts.modulename}.jar"
+			basedir="${com.hp.mwlabs.ts.arjuna.dest}"
+		/>
+
+		<classpath-builder filename="${com.hp.mwlabs.classpathbuilderfilename}">
+			<classpath>
+				<pathelement location="${com.hp.mwlabs.ts.arjuna.jar.dest}/${com.hp.mwlabs.ts.modulename}.jar"/>
+			</classpath>
+		</classpath-builder>
+
+	</target>
+
+	<!-- Installation targets -->
+	<target name="com.hp.mw.ts.arjuna.install" depends="com.hp.mw.ts.arjuna.build, com.hp.mwlabs.ts.arjuna.tests.install">
+
+		<echo message="Installing module arjuna"/>
+		<echo message="Installation directory : ${com.hp.mwlabs.installationdirectory}"/>
+		<mkdir dir="${com.hp.mw.propertydirectory}"/>
+		<copy
+			file="etc/default-${com.hp.mwlabs.ts.arjuna.propertyfile}"
+			tofile="${com.hp.mw.propertydirectory}/${com.hp.mwlabs.ts.arjuna.propertyfile}"
+		>
+		</copy>
+		<copy
+			file="etc/${com.hp.mwlabs.ts.arjuna.mappingfile}"
+			tofile="${com.hp.mw.propertydirectory}/${com.hp.mwlabs.ts.arjuna.mappingfile}"
+		/>
+		<copy
+			file="etc/default-${com.hp.mwlabs.ts.arjuna.recoverypropertyfile}"
+			tofile="${com.hp.mw.propertydirectory}/${com.hp.mwlabs.ts.arjuna.recoverypropertyfile}"
+		>
+		</copy>
+	</target>
+
+	<target name="com.hp.mwlabs.ts.arjuna.tests.install" depends="com.hp.mwlabs.ts.arjuna.tests.compile" if="com.hp.mwlabs.ts.arjuna.tests.install">
+
+		<echo message="Installing tests"/>
+
+	</target>
+
+        <target name="com.hp.mwlabs.ts.arjuna.generateresourcebundle">
+
+            <echo message="Generating Arjuna Bundle"/>
+
+            <classpath-builder filename="${com.hp.mwlabs.classpathbuilderfilename}" inproperty="build.classpath"/>
+
+            <javadoc    sourcepath="${com.hp.mwlabs.ts.arjuna.src}"
+                        packagenames="com.arjuna.*"
+                        failonerror="yes"
+                        private="yes"
+                        defaultexcludes="yes"
+                        classpath="${build.classpath}">
+
+                 <doclet name="com.hp.mw.buildsystem.doclet.resbundledoclet.ResourceBundleDoclet">
+                    <path>
+                        <pathelement path="${com.hp.mw.ext.depends.classpath}"/>
+                    </path>
+                    <param name="-basedir" value="${com.hp.mwlabs.ts.arjuna.dest}"/>
+                    <param name="-resourcebundle" value="${com.hp.mwlabs.ts.arjuna.resourcebundle}"/>
+                 </doclet>
+            </javadoc>
+
+        </target>
+
+	<!-- Clean targets -->
+	<target name="com.hp.mw.ts.arjuna.clean" depends="com.hp.mwlabs.ts.arjuna.tests.clean">
+
+		<echo message="Cleaning module"/>
+		<delete dir="${com.hp.mwlabs.ts.arjuna.destroot}"/>
+		<delete dir="${com.hp.mwlabs.ts.arjuna.jar.dest}"/>
+		<delete file="${com.hp.mwlabs.ts.arjuna.info.dest}"/>
+		<delete file="${com.hp.mwlabs.ts.arjuna.properties.dest}"/>
+		<delete file="${com.hp.mwlabs.ts.arjuna.recoveryproperties.dest}"/>
+		<delete file="${com.hp.mwlabs.ts.arjuna.brandings.dest}"/>
+		<ant antfile="licence.xml" target="clean"/>
+	</target>
+
+	<target name="com.hp.mwlabs.ts.arjuna.tests.clean">
+
+		<echo message="Cleaning tests"/>
+		<delete dir="${com.hp.mwlabs.ts.arjuna.tests.dest}"/>
+
+	</target>
+
+	<!-- Short target names -->
+	<target name="compile" depends="com.hp.mw.ts.arjuna.compile">
+
+	</target>
+
+	<target name="jar" depends="com.hp.mw.ts.arjuna.jar">
+
+	</target>
+
+	<target name="install" depends="com.hp.mw.ts.arjuna.install">
+
+	</target>
+
+	<target name="clean" depends="com.hp.mw.ts.arjuna.clean">
+
+	</target>
+
+</project>
