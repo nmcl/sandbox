@@ -1,0 +1,25 @@
+Library versions
+
+Last update : $Id: Readme,v 1.11 2003/06/24 11:30:35 jcoleman Exp $
+
+"Local" libraries:
+
+buildsystem.jar		antbuildsystem : 8 July 2002
+common.jar		common :  tag = common_logging_1_1
+TestingFramework.jar	HPDTF : 16 July 2002
+hplic.jar		HP Licencing 08 Aug 2002 + local patches 24 June 2003
+hplic_ops.jar		HP Licencing 08 Aug 2002 + local patches 24 June 2003
+
+"3rd party" libraries:
+
+classes111.zip		Oracle 8.1.6
+jta-spec1_0_1.jar	JTA specification 1.0.1
+jndi.jar		JNDI
+jdbc2_0-stdext.jar	JDBC 2.0
+log4j-core.jar		Log for Java
+log4j.jar		Log for Java
+csf.jar			HP CSF : 31 May 2002
+mw-common.jar		HP MW common : 31 May 2002
+jmxri.jar		JMX reference implementation
+xercesImpl.jar		Xerces 2.3.0
+xmlParserAPIs.jar	Xerces 2.3.0
