@@ -1,0 +1,16 @@
+#ifndef NO_PRAGMA_SUPPORT
+#pragma prefix "mwtests.hp.com"
+#endif
+
+#include <CosTransactions.idl>
+
+module performance
+{
+    exception PerfTestException { };
+
+    interface PerfTestInterface : CosTransactions::TransactionalObject
+    {
+        void work() raises(PerfTestException);
+    };
+};
+

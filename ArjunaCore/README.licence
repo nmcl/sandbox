@@ -1,0 +1,51 @@
+Arjuna licence notes
+
+		a) Running code
+
+To run with the licence code, make sure that "hplic.jar" (usually in
+lib/ext/hplic.jar) and the "etc" directory (containing the properties
+file) are in your $CLASSPATH along with the module jar file and the
+common logging jar.  For example:
+
+	CLASSPATH=$HOME/Arjuna/ArjunaJTS/lib/arjunajts.jar:\
+	    $HOME/Arjuna/ArjunaCore/lib/ext/hplic.jar:\
+	    $HOME/Arjuna/ArjunaCore/lib/ext/common.jar:\
+	    $HOME/Arjuna/ArjunaCore/etc:.
+
+Also, make sure that the licence string in the properties file contains a
+valid licence.
+
+
+		b) Licence management
+
+Make sure that your $CLASSPATH also contains
+
+	hplic_ops.jar
+
+For example:
+
+	CLASSPATH=$HOME/Arjuna/ArjunaJTS/lib/arjunajts.jar:\
+	    $HOME/Arjuna/ArjunaCore/lib/ext/hplic.jar:\
+	    $HOME/ArjunaCore/lib/ext/hplic_ops.jar:\
+	    $HOME/Arjuna/ArjunaCore/lib/ext/common.jar:\
+	    $HOME/Arjuna/ArjunaCore/etc:.
+
+Make sure that an Arjuna properties file is in your $CLASSPATH, home directory
+or current directory.
+
+To display the key generation usage:
+
+	java com.hp.mwlabs.lic.LicUtils -k ArjunaCore_LicenceManager -u
+
+To generate a key:
+
+	java com.hp.mwlabs.lic.LicUtils -k ArjunaCore_LicenceManager -g <params>
+
+For unlimited time, set days to "-1".
+For any machine, set netmask to "255.255.255.0".
+
+To display the capabilities of the key in the properties file:
+
+	java com.hp.mwlabs.lic.LicUtils -k ArjunaCore_LicenceManager -r
+
+(Substitute ArjunaJTA or ArjunaJTS for ArjunaCore, as appropriate).
