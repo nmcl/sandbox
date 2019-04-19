@@ -1,0 +1,181 @@
+<project name="module-performance" default="com.hp.mw.ts.performance.build" basedir=".">
+	<!-- class path behaviour -->
+	<property name="build.sysclasspath" value="last"/>
+	<property name="com.hp.mwlabs.classpathbuilderfilename" location="buildsystem.classpath"/>
+
+	<!-- Set module name -->
+	<property name="com.hp.mwlabs.ts.modulename" value="performance_tests"/>
+
+	<!-- Load Build Properties File -->
+	<property file="${com.hp.mw.ts.properties}"/>
+
+	<!-- Set internal property defaults -->
+	<!-- Path names -->
+	<property name="com.hp.mwlabs.ts.performance.src" location="classes"/>
+	<property name="com.hp.mwlabs.ts.performance.idl" location="idl"/>
+	<property name="com.hp.mwlabs.ts.performance.destroot" location="build"/>
+	<property name="com.hp.mwlabs.ts.performance.jar.dest" location="lib/tests"/>
+	<property name="com.hp.mwlabs.ts.performance.dest" location="${com.hp.mwlabs.ts.performance.destroot}/classes"/>
+
+	<property name="com.hp.mwlabs.ts.performance.resourcebundle" value="common_msg_en_US.properties"/>
+
+	<!-- Initialisation -->
+	<target name="com.hp.mwlabs.ts.performance.init">
+		<!-- Define default build properties -->
+		<property name="com.hp.mw.sourceid" value="unknown"/>
+		<property name="com.hp.mw.version" value="unknown"/>
+		<property name="com.hp.mw.installationdirectory" value="install"/>
+		<property name="com.hp.mw.builder" value="Arjuna Technologies [${user.name}] (${os.name} ${os.version})"/>
+		<property name="com.hp.mw.notes" value=""/>
+
+		<tstamp>
+		<format property="com.hp.mw.date" pattern="yyyy/MMM/dd HH:mm"/>
+	  	</tstamp>
+
+		<!-- Define classpath builder task -->
+		<taskdef name="classpath-builder" classname="com.hp.mw.buildsystem.ant.ClasspathBuilder"/>
+
+		<echo message="Initialising module common"/>
+		<echo message="Source ID = ${com.hp.mw.sourceid}"/>
+		<echo message="Version   = ${com.hp.mw.version}"/>
+		<echo message="Builder   = ${com.hp.mw.builder}"/>
+		<echo message="Date      = ${com.hp.mw.date}"/>
+		<echo message="Notes     = ${com.hp.mw.notes}"/>
+
+		<!-- Compile with debugging? -->
+		<condition property="com.hp.mwlabs.ts.performance.debug" value="no">
+			<equals arg1="${com.hp.mw.ts.performance.debug}" arg2="no"/>
+		</condition>
+		<property name="com.hp.mwlabs.ts.performance.debug" value="yes"/>
+
+		<condition property="com.hp.mwlabs.ts.performance.tests.compile" value="yes">
+		    <equals arg1="${com.hp.mw.ts.performance.tests.compile}" arg2="yes"/>
+		</condition>
+
+		<!-- Product compile include lists -->
+
+		<!-- ArjunaJTS -->
+		<condition property="com.hp.mwlabs.ts.performance.compile.includes" value="com/hp/mwtests/performance/**/**">
+		    <equals arg1="${com.hp.mw.ts.product.name}" arg2="ArjunaJTS"/>
+		</condition>
+
+		<!-- ArjunaCore -->
+		<condition property="com.hp.mwlabs.ts.performance.compile.includes" value="com/hp/mwtests/performance/implementations/local/**/**,com/hp/mwtests/performance/resources/**/**,com/hp/mwtests/performance/resources/**">
+		    <or>
+			<equals arg1="${com.hp.mw.ts.product.name}" arg2="ArjunaCore"/>
+			<equals arg1="${com.hp.mw.ts.product.name}" arg2="ArjunaJTA"/>
+		    </or>
+		</condition>
+
+		<!-- Only build IDL if ArjunaJTS -->
+		<condition property="com.hp.mwlabs.ts.performance.tests.idl.compile" value="yes">
+		    <and>
+			<equals arg1="${com.hp.mwlabs.ts.performance.tests.compile}" arg2="yes"/>
+			<equals arg1="${com.hp.mw.ts.product.name}" arg2="ArjunaJTS"/>
+		    </and>
+		</condition>
+
+		<property name="com.hp.mwlabs.ts.performance.compile.includes" value="com/hp/mwtests/performance/**/**"/>
+
+		<!-- Set the module property file details -->
+		<property
+		name="com.hp.mwlabs.ts.performance.propertyfile"
+		value="${com.hp.mwlabs.ts.modulename}.properties"/>
+		<property name="com.hp.mw.ts.performance.propertydirectory" location="${com.hp.mw.installationdirectory}/etc"/>
+
+
+		<echo message="Property file name : ${com.hp.mwlabs.ts.performance.propertyfile}"/>
+		<echo message="Property directory : ${com.hp.mw.ts.performance.propertydirectory}"/>
+
+		<!-- Make the destination directory -->
+		<mkdir dir="${com.hp.mwlabs.ts.performance.dest}"/>
+	</target>
+
+	<target name="com.hp.mw.ts.performance.build" depends="com.hp.mw.ts.performance.jar"/>
+
+	<!-- Compilation targets -->
+	<target name="com.hp.mw.ts.performance.compile" depends="com.hp.mwlabs.ts.performance.init, com.hp.mwlabs.ts.performance.compile" if="com.hp.mwlabs.ts.performance.tests.compile"/>
+
+	<target name="com.hp.mwlabs.ts.performance.idl.compile" if="com.hp.mwlabs.ts.performance.tests.idl.compile">
+
+            <classpath-builder filename="${com.hp.mwlabs.classpathbuilderfilename}" inproperty="orbport.classpath"/>
+
+            <taskdef name="idl-build-list" classname="com.arjuna.orbportability.common.ant.IDLBuildList" classpath="${orbport.classpath}"/>
+            <taskdef name="idl-build-list-element" classname="com.arjuna.orbportability.common.ant.IDLBuildListElement" classpath="${orbport.classpath}"/>
+
+            <property name="com.hp.mwlabs.ts.performance.build-dir" location="."/>
+
+            <property name="com.hp.mw.orbportability.orbspecific.include"
+                      value="${com.hp.mwlabs.ts.performance.build-dir}/idl"/>
+
+            <property name="com.hp.mw.orbportability.orbspecific.lib"
+                      value="${com.hp.mwlabs.ts.performance.jar.dest}"/>
+
+            <idl-build-list inproperty="com.hp.mw.orbportability.orbspecific.buildlist">
+
+                <element    src="${com.hp.mwlabs.ts.performance.idl}/performance.idl"
+                            package="com.hp.mwtests" mappings="CosTransactions=org.omg;performance=com.hp.mwtests"/>
+
+            </idl-build-list>
+
+            <ant antfile="../orbportability/orbspecific.xml">
+                <property name="com.hp.mw.orbportability.orbspecific.modulename" value="performance_tests"/>
+                <property name="com.hp.mw.orbportability.orbspecific.srcdir" location="classes"/>
+            </ant>
+
+        </target>
+
+	<target name="com.hp.mwlabs.ts.performance.compile" depends="com.hp.mwlabs.ts.performance.init, com.hp.mwlabs.ts.performance.idl.compile" if="com.hp.mwlabs.ts.performance.tests.compile">
+
+            <echo message="Compiling module"/>
+
+            <classpath-builder filename="${com.hp.mwlabs.classpathbuilderfilename}" inproperty="build.classpath"/>
+
+            <javac  srcdir="${com.hp.mwlabs.ts.performance.src}"
+                    destdir="${com.hp.mwlabs.ts.performance.dest}"
+                    classpath="${com.hp.mwlabs.ts.performance.src}"
+                    includes="${com.hp.mwlabs.ts.performance.compile.includes}"
+                    excludes="${com.hp.mwlabs.ts.performance.compile.excludes}"
+                    debug="on">
+                <classpath>
+                    <path path="${build.classpath}"/>
+                    <path path="${com.hp.mwlabs.ts.performance.src}"/>
+                </classpath>
+            </javac>
+
+	</target>
+
+	<!-- Jar targets -->
+	<target name="com.hp.mw.ts.performance.jar" depends="com.hp.mw.ts.performance.compile" if="com.hp.mwlabs.ts.performance.tests.compile">
+
+            <echo message="Building jar file"/>
+
+            <mkdir dir="${com.hp.mwlabs.ts.performance.jar.dest}"/>
+
+            <jar    jarfile="${com.hp.mwlabs.ts.performance.jar.dest}/${com.hp.mwlabs.ts.modulename}.jar"
+                    basedir="${com.hp.mwlabs.ts.performance.dest}"/>
+
+            <classpath-builder filename="${com.hp.mwlabs.classpathbuilderfilename}">
+                <classpath>
+                    <pathelement location="${com.hp.mwlabs.ts.performance.jar.dest}/${com.hp.mwlabs.ts.modulename}.jar"/>
+                </classpath>
+            </classpath-builder>
+
+	</target>
+
+    <target name="com.hp.mw.ts.performance.install" depends="com.hp.mw.ts.performance.build">
+
+    </target>
+
+	<!-- Clean targets -->
+	<target name="com.hp.mw.ts.performance.clean">
+		<echo message="Cleaning module"/>
+		<delete dir="${com.hp.mwlabs.ts.performance.destroot}"/>
+		<delete dir="${com.hp.mwlabs.ts.performance.jar.dest}"/>
+	</target>
+
+	<!-- Short target names -->
+	<target name="compile" depends="com.hp.mw.ts.performance.compile"/>
+	<target name="jar" depends="com.hp.mw.ts.performance.jar"/>
+	<target name="clean" depends="com.hp.mw.ts.performance.clean"/>
+</project>
