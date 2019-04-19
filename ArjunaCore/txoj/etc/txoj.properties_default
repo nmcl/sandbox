@@ -1,0 +1,25 @@
+# 
+# Copyright (C) 1999-2001 by HP Bluestone Software, Inc. All rights Reserved.
+#
+# HP Arjuna Labs,
+# Newcastle upon Tyne,
+# Tyne and Wear,
+# UK.
+#
+# $Id: txoj.properties_default,v 1.3 2003/06/23 10:06:46 nmcl Exp $
+#
+
+# (default is LockStore of installation - must be writeable!)
+com.arjuna.ats.txoj.lockstore.lockStoreDir=""
+
+# (default is BasicLockStore)
+com.arjuna.ats.txoj.lockstore.lockStoreType=BasicLockStore
+
+# (default is NO)
+com.arjuna.ats.txoj.lockstore.multipleLockStore=NO
+
+# (default is YES)
+com.arjuna.ats.txoj.lockstore.singleLockStore=YES
+
+# (default is YES)
+com.arjuna.ats.txoj.lockstore.allowNestedLocking=YES

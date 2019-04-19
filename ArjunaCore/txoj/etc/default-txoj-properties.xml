@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- $Id: default-txoj-properties.xml,v 1.3 2003/06/23 10:06:46 nmcl Exp $ -->
+<!--
+  These options are described in the ArjunaJTS manual.
+  Defaults are provided here for convenience only.
+ 
+  Please read through this file prior to using the system, and consider
+  updating the specified entries.
+-->
+<transaction-service
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="transaction-service-1_0.xsd">
+  <transaction-init>
+    <properties>
+      <!--
+        (default is LockStore of installation - must be writeable!)
+      -->
+      <!--
+        <property
+          name="com.arjuna.ats.txoj.lockstore.lockStoreDir"
+          value="LockStore"/>
+      -->
+      <!--
+        (default is BasicLockStore)
+      -->
+      <property
+        name="com.arjuna.ats.txoj.lockstore.lockStoreType"
+        value="BasicLockStore"/>
+      <!--
+        (default is NO)
+      -->
+      <property
+        name="com.arjuna.ats.txoj.lockstore.multipleLockStore"
+        value="NO"/>
+      <!--
+        (default is YES)
+      -->
+      <property
+        name="com.arjuna.ats.txoj.lockstore.singleLockStore"
+        value="YES"/>
+      <!--
+        (default is YES)
+      -->
+      <property
+        name="com.arjuna.ats.txoj.lockstore.allowNestedLocking"
+        value="YES"/>
+    </properties>
+  </transaction-init>
+</transaction-service>
