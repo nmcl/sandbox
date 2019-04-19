@@ -1,0 +1,5 @@
+#The type of lockstore to use
+com.arjuna.ats.txoj.lockstore.lockStoreType=lockStoreType
+com.arjuna.ats.txoj.lockstore.multipleLockStore=multipleLockStore
+com.arjuna.ats.txoj.lockstore.singleLockStore=singleLockStore
+com.arjuna.ats.txoj.lockstore.allowNestedLocking=allowNestedLocking
