@@ -2,6 +2,8 @@ The old C++SIM used to be called Process and was developed for the Replica Place
 
 NOTE: at some point maybe this can be made to build, but it'll require replacement of the dependency on Sun's lwp package, so probably not really an effort worth doing because you might as well look at the latest C++SIM!
 
+Does not build as it has a dependency on Sun's LWP package.
+
 ----
 
 D. McCue, M. Little	Computing Laboratory
