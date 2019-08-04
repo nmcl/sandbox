@@ -1,0 +1,40 @@
+COMMENT 
+COMMENT Copyright (C) 1998, 1999, 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2.6.1.24.1 2000/11/02 16:52:45 nmcl Exp $
+COMMENT
+
+SOURCES = OTS_ClientContextFilter.java \
+	  OTS_ClientContextFilterFactory.java \
+	  OTS_ServerContextFilter.java \
+	  OTS_ServerContextFilterFactory.java \
+	  OTS_ClientContextBindFilter.java \
+	  OTS_ContextFilterManager.java \
+	  Init.java
+
+OBJECTS = OTS_ContextFilterManager.class \
+	  OTS_ClientContextFilter.class \
+	  OTS_ClientContextFilterFactory.class \
+	  OTS_ServerContextFilter.class \
+	  OTS_ServerContextFilterFactory.class \
+	  OTS_ClientContextBindFilter.class \
+	  Init.class
+
+#ifdef HAVE_FILTER
+Target($(OBJECTS))
+#endif
+
+BuildJavaByteCode(OTS_ClientContextFilter,NullParam)
+BuildJavaByteCode(OTS_ClientContextFilterFactory,NullParam)
+BuildJavaByteCode(OTS_ServerContextFilter,NullParam)
+BuildJavaByteCode(OTS_ServerContextFilterFactory,NullParam)
+BuildJavaByteCode(OTS_ClientContextBindFilter,NullParam)
+BuildJavaByteCode(OTS_ContextFilterManager,NullParam)
+BuildJavaByteCode(Init,NullParam)
+
+Clean(*.class)

@@ -1,0 +1,35 @@
+COMMENT 
+COMMENT Copyright (C) 1998, 1999, 2000, 2001,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.5.4.1.2.3.6.2.48.1 2001/04/18 12:47:17 nmcl Exp $
+COMMENT
+
+AddToIdlFlags(-DDRAFT5 -I$(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+SOURCES = OTS_Server.java \
+	  report.java
+
+OBJECTS = OTS_Server.class
+
+UTIL_OBJECTS = report.class
+
+Target($(OBJECTS))
+
+BuildJavaByteCode(OTS_Server,NullParam)
+BuildJavaByteCode(report,NullParam)
+
+InstallProgram(/bin,OTS)
+InstallProgram(/bin,Ots.bat)
+
+#ifdef ORBIXWEB
+InstallProgram(/bin,OTS.orbix)
+#endif
+
+InstallFile(/bin,OTS_Server.class)
+
+Clean(*.class)

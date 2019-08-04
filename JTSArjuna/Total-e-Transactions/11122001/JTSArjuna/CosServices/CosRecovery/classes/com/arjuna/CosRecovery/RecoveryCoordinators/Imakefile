@@ -1,0 +1,43 @@
+COMMENT 
+COMMENT Copyright (C) 2001,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.2.2.2.2 2001/02/06 16:55:35 pfurniss Exp $
+COMMENT
+
+
+SOURCES = GenericRecoveryCoordinator.java
+
+OBJECTS = GenericRecoveryCoordinator.class \
+          RecoveryCoordinatorId.class \
+          GenericRecoveryCreator.class \
+          RcvCoManager.class \
+          ResourceCompletor.class
+          
+Target($(SOURCES))
+
+#ifdef VISIBROKER
+#ifndef HAVE_POA
+SubDirectory(vbroker3)
+#endif
+#else
+#ifdef ORBIX2000
+SubDirectory(orbix2000)
+#endif
+#endif
+
+Target($(OBJECTS))
+
+PreprocessJavaCode(GenericRecoveryCoordinator,NullParam)
+
+BuildJavaByteCode(ResourceCompletor,NullParam)
+BuildJavaByteCode(GenericRecoveryCoordinator,NullParam)
+BuildJavaByteCode(RecoveryCoordinatorId,NullParam)
+BuildJavaByteCode(GenericRecoveryCreator,NullParam)
+BuildJavaByteCode(RcvCoManager,NullParam)
+
+Clean(*.class)

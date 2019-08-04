@@ -1,0 +1,44 @@
+COMMENT 
+COMMENT Copyright (C) 1998, 1999, 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2.26.1 2000/10/02 09:03:29 nmcl Exp $
+COMMENT
+
+AddToIdlFlags(-DDRAFT5 -I$(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+SOURCES = AtomicTransaction.java \
+	  TopLevelTransaction.java \
+	  Arjuna.java \
+	  TxAssociation.java \
+	  DebugTxAssociation.java \
+	  ThreadAssociations.java \
+	  ThreadAssociationControl.java
+
+OBJECTS = AtomicTransaction.class \
+	  TopLevelTransaction.class \
+	  Arjuna.class \
+	  TxAssociation.class \
+	  DebugTxAssociation.class \
+	  ThreadAssociations.class \
+	  ThreadAssociationControl.class
+
+Target($(SOURCES))
+Target($(OBJECTS))
+
+PreprocessJavaCode(AtomicTransaction,NullParam)
+PreprocessJavaCode(TopLevelTransaction,NullParam)
+
+BuildJavaByteCode(AtomicTransaction,NullParam)
+BuildJavaByteCode(TopLevelTransaction,NullParam)
+BuildJavaByteCode(Arjuna,NullParam)
+BuildJavaByteCode(TxAssociation,NullParam)
+BuildJavaByteCode(DebugTxAssociation,NullParam)
+BuildJavaByteCode(ThreadAssociations,NullParam)
+BuildJavaByteCode(ThreadAssociationControl,NullParam)
+
+Clean(*.class)

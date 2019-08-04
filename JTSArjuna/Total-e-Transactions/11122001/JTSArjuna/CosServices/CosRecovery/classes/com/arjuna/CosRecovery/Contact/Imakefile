@@ -1,0 +1,31 @@
+COMMENT 
+COMMENT Copyright (C) 1999, 2000, 2001,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.2.2.2.1.16.1 2001/05/15 13:02:55 nmcl Exp $
+COMMENT
+
+SOURCES = 	StatusChecker.java
+
+
+OBJECTS = FactoryContactItem.class \
+	StatusChecker.class \
+	RecoveryContactWriter.class \
+	ExpiredContactScanner.class
+
+Target($(SOURCES))
+
+Target($(OBJECTS))
+
+PreprocessJavaCode(StatusChecker,NullParam)
+
+BuildJavaByteCode(StatusChecker,NullParam)
+BuildJavaByteCode(FactoryContactItem,NullParam)
+BuildJavaByteCode(RecoveryContactWriter,NullParam)
+BuildJavaByteCode(ExpiredContactScanner,NullParam)
+
+Clean(*.class)
