@@ -1,0 +1,45 @@
+COMMENT 
+COMMENT Copyright (C) 1996, 1997, 1998, 1999,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2.8.1.8.1.140.1 2002/11/20 16:34:36 nmcl Exp $
+COMMENT
+
+AddToIdlFlags(-DDRAFT5 -I$(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+SOURCES = OTS_ServerControl.java \
+	  OTS_ServerFactory.java \
+	  OTS_ServerSynchronization.java \
+	  OTS_ServerTransaction.java \
+	  OTS_FactoryCreator.java \
+	  OTS_FactoryList.java
+
+OBJECTS = OTS_ServerControl.class \
+	  OTS_ServerFactory.class \
+	  OTS_ServerSynchronization.class \
+	  OTS_ServerTransaction.class \
+	  OTS_FactoryCreator.class \
+	  OTS_FactoryList.class \
+	  OTS_RecoveredServerTransaction.class
+
+Target($(SOURCES))
+Target($(OBJECTS))
+
+BuildJavaByteCode(OTS_ServerControl,NullParam)
+BuildJavaByteCode(OTS_ServerFactory,NullParam)
+BuildJavaByteCode(OTS_ServerSynchronization,NullParam)
+BuildJavaByteCode(OTS_ServerTransaction,NullParam)
+BuildJavaByteCode(OTS_FactoryCreator,NullParam)
+BuildJavaByteCode(OTS_FactoryList,NullParam)
+BuildJavaByteCode(OTS_RecoveredServerTransaction,NullParam)
+
+SubDirectory(Arjuna)
+SubDirectory(Strict)
+SubDirectory(Restricted)
+SubDirectory(OSI)
+
+Clean(*.class)

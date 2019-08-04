@@ -1,0 +1,35 @@
+COMMENT 
+COMMENT Copyright (C) 2000,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1 2000/02/25 14:06:01 nmcl Exp $
+COMMENT
+
+SOURCES = OTS_ClientContextInterceptor.java \
+	  OTS_ServerContextInterceptor.java \
+	  OTS_ContextBindInterceptor.java \
+	  OTS_ContextInterceptorManager.java \
+	  OTS_ContextPOALifeCycleInterceptor.java \
+	  Init.java
+
+OBJECTS = OTS_ContextInterceptorManager.class \
+	  OTS_ClientContextInterceptor.class \
+	  OTS_ServerContextInterceptor.class \
+	  OTS_ContextBindInterceptor.class \
+	  OTS_ContextPOALifeCycleInterceptor.class \
+	  Init.class
+
+Target($(OBJECTS))
+
+BuildJavaByteCode(OTS_ClientContextInterceptor,NullParam)
+BuildJavaByteCode(OTS_ServerContextInterceptor,NullParam)
+BuildJavaByteCode(OTS_ContextBindInterceptor,NullParam)
+BuildJavaByteCode(OTS_ContextInterceptorManager,NullParam)
+BuildJavaByteCode(OTS_ContextPOALifeCycleInterceptor,NullParam)
+BuildJavaByteCode(Init,NullParam)
+
+Clean(*.class)

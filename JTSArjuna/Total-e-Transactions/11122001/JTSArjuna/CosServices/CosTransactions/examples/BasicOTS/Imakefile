@@ -1,0 +1,16 @@
+COMMENT 
+COMMENT Copyright (C) 2001,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.2.1.4.2 2001/04/06 15:35:02 jcoleman Exp $
+COMMENT
+
+#if defined(HAVE_FILTER) || defined(HAVE_INTERCEPTOR)
+SubDirectory(ImplicitContextPropagation)
+#endif
+
+SubDirectory(ExplicitContextPropagation)

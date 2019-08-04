@@ -1,0 +1,29 @@
+COMMENT 
+COMMENT Copyright (C) 2000, 2001,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.2.1.4.1 2001/02/14 10:44:43 nmcl Exp $
+COMMENT
+
+SOURCES = OTS_InterpositionClientRequestInterceptorImpl.java \
+	  OTS_InterpositionORBInitializerImpl.java \
+	  OTS_InterpositionServerRequestInterceptorImpl.java \
+	  OTS_InterpositionThreadSetup.java
+
+OBJECTS = OTS_InterpositionClientRequestInterceptorImpl.class \
+	  OTS_InterpositionORBInitializerImpl.class \
+	  OTS_InterpositionServerRequestInterceptorImpl.class \
+	  OTS_InterpositionThreadSetup.class
+
+Target($(OBJECTS))
+
+BuildJavaByteCode(OTS_InterpositionClientRequestInterceptorImpl,NullParam)
+BuildJavaByteCode(OTS_InterpositionORBInitializerImpl,NullParam)
+BuildJavaByteCode(OTS_InterpositionServerRequestInterceptorImpl,NullParam)
+BuildJavaByteCode(OTS_InterpositionThreadSetup,NullParam)
+
+Clean(*.class)

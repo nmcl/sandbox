@@ -1,0 +1,39 @@
+COMMENT 
+COMMENT Copyright (C) 1999, 2000,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.8.1.8.1 2000/08/29 10:06:06 nmcl Exp $
+COMMENT
+
+AddToIdlFlags(-I$(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+SOURCES = OTIDMap.java \
+	  OTS_OSIInterposition.java \
+	  OTS_ServerOSINestedAction.java \
+	  OTS_ServerOSITopLevelAction.java \
+	  OTS_OSIInterpositionCreator.java
+
+OBJECTS = OTIDMap.class \
+	  OTS_OSIInterposition.class \
+	  OTS_ServerOSINestedAction.class \
+	  OTS_ServerOSITopLevelAction.class \
+	  OTS_OSIInterpositionCreator.class
+
+PreprocessJavaCode(OTS_OSIInterposition,NullParam)
+PreprocessJavaCode(OTS_ServerOSITopLevelAction,NullParam)
+PreprocessJavaCode(OTS_ServerOSINestedAction,NullParam)
+
+Target($(SOURCES))
+Target($(OBJECTS))
+
+BuildJavaByteCode(OTIDMap,NullParam)
+BuildJavaByteCode(OTS_OSIInterposition,NullParam)
+BuildJavaByteCode(OTS_ServerOSINestedAction,NullParam)
+BuildJavaByteCode(OTS_ServerOSITopLevelAction,NullParam)
+BuildJavaByteCode(OTS_OSIInterpositionCreator,NullParam)
+
+Clean(*.class)

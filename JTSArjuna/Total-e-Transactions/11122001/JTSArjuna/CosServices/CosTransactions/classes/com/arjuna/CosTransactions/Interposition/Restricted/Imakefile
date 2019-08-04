@@ -1,0 +1,34 @@
+COMMENT 
+COMMENT Copyright (C) 1998, 1999, 2000,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.8.1.8.1 2000/08/29 10:06:06 nmcl Exp $
+COMMENT
+
+AddToIdlFlags(-I$(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+SOURCES = OTS_RestrictedInterposition.java \
+	  OTS_ServerRestrictedNestedAction.java \
+	  OTS_ServerRestrictedTopLevelAction.java \
+	  OTS_RestrictedInterpositionCreator.java
+
+OBJECTS = OTS_RestrictedInterposition.class \
+	  OTS_ServerRestrictedNestedAction.class \
+	  OTS_ServerRestrictedTopLevelAction.class \
+	  OTS_RestrictedInterpositionCreator.class
+
+PreprocessJavaCode(OTS_RestrictedInterposition,NullParam)
+
+Target($(SOURCES))
+Target($(OBJECTS))
+
+BuildJavaByteCode(OTS_RestrictedInterposition,NullParam)
+BuildJavaByteCode(OTS_ServerRestrictedNestedAction,NullParam)
+BuildJavaByteCode(OTS_ServerRestrictedTopLevelAction,NullParam)
+BuildJavaByteCode(OTS_RestrictedInterpositionCreator,NullParam)
+
+Clean(*.class)
