@@ -17,3 +17,5 @@ work, specifically Gandiva.
 See specific READMEs in the sub-directories for further information.
 
 JavaArjuna referenced in http://www.cs.ncl.ac.uk/research/pubs/trs/papers/651.pdf
+
+The code builds.

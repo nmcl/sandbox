@@ -1,4 +1,4 @@
-Contains the original FTP-able source for Arjuna that we made available back in 1991.
+Contains the original FTP-able source for Arjuna that we (the Newcastle University Arjuna project team) made available back in 1991.
 
 Various versions are within the versions subdirectory.
 
