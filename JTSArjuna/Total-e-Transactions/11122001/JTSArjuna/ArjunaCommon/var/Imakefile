@@ -1,0 +1,14 @@
+COMMENT 
+COMMENT Copyright (C) 2001,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.2.1.4.2 2001/06/28 13:59:05 nmcl Exp $
+COMMENT
+
+SubDirectory(tmp)
+
+InstallFile(/var,Readme.txt)

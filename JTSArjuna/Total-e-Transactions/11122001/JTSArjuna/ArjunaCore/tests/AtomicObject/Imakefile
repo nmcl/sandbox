@@ -1,0 +1,27 @@
+COMMENT 
+COMMENT Copyright (C) 1996, 1997, 1998, 1999,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.4.1 2000/10/20 09:17:41 nmcl Exp $
+COMMENT
+
+SOURCES = AtomicObjectTest1.java \
+	  AtomicObjectTest2.java \
+	  AtomicObjectTest3.java
+
+OBJECTS = AtomicObjectTest1.class \
+	  AtomicObjectTest2.class \
+	  AtomicObjectTest3.class
+
+Target($(OBJECTS))
+
+BuildJavaByteCode(AtomicObjectTest1,NullParam)
+BuildJavaByteCode(AtomicObjectTest2,NullParam)
+BuildJavaByteCode(AtomicObjectTest3,NullParam)
+
+Clean(*.class *.prof out)
+

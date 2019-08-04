@@ -1,0 +1,15 @@
+COMMENT 
+COMMENT Copyright (C) 1998, 1999, 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.4.1.16.1 2001/04/06 15:30:58 jcoleman Exp $
+COMMENT
+
+InstallFile(/config,ArjunaCore_Version.def)
+InstallFileAs(/config,ArjunaCore_Module_install.def,ArjunaCore_Module.def)
+
+Purge(ArjunaCore.answers ArjunaCore.cf Local.def ArjunaCore_Module.def ArjunaCore_Module_install.def ArjunaCore_Version.def Info.h)

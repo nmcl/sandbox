@@ -1,0 +1,23 @@
+COMMENT 
+COMMENT Copyright (C) 1998, 1999, 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.2.1 2000/07/17 09:12:56 nmcl Exp $
+COMMENT
+
+SOURCES = ErrorTest.java
+
+OBJECTS = ErrorTest.class
+
+#ifdef BUILDTESTS
+Target($(OBJECTS))
+#endif
+
+BuildJavaByteCode(ErrorTest,NullParam)
+
+Clean(*.class *.prof out)
+

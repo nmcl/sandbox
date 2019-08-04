@@ -1,0 +1,38 @@
+COMMENT 
+COMMENT Copyright (C) 1998, 1999, 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.4.1.2.1 2000/11/08 14:32:50 nmcl Exp $
+COMMENT
+
+SOURCES = ObjectStoreIterator.java \
+	  ObjectStoreException.java \
+	  ObjectStoreError.java \
+	  LockStoreException.java \
+	  ArjunaCoreEnvironment.java \
+	  Configuration.java
+
+OBJECTS = ObjectStoreIterator.class \
+	  ObjectStoreException.class \
+	  ObjectStoreError.class \
+	  LockStoreException.class \
+	  ArjunaCoreEnvironment.class \
+	  Configuration.class
+
+Target($(SOURCES))
+Target($(OBJECTS))
+
+PreprocessJavaCode(Configuration,NullParam)
+
+BuildJavaByteCode(ObjectStoreIterator,NullParam)
+BuildJavaByteCode(LockStoreException,NullParam)
+BuildJavaByteCode(ObjectStoreException,NullParam)
+BuildJavaByteCode(ObjectStoreError,NullParam)
+BuildJavaByteCode(ArjunaCoreEnvironment,NullParam)
+BuildJavaByteCode(Configuration,NullParam)
+
+Clean(*.class)

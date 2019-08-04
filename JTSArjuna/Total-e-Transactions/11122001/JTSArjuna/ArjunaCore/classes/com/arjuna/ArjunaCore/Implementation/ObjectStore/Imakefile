@@ -1,0 +1,62 @@
+COMMENT 
+COMMENT Copyright (C) 1998, 1999, 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.4.1.4.1 2000/12/13 14:36:22 nmcl Exp $
+COMMENT
+
+SOURCES = ObjectStoreSetup.java \
+	  StoreList.java \
+	  FileSystemStore.java \
+	  ActionStore.java \
+	  ShadowingStore.java \
+	  ShadowingStoreSetup.java \
+	  ActionStoreSetup.java \
+	  ShadowNoFileLockStore.java \
+	  ShadowNoFileLockStoreSetup.java \
+	  ObjectStoreType.java \
+	  HashedStore.java \
+	  HashedStoreSetup.java \
+	  HashedActionStore.java \
+	  HashedActionStoreSetup.java
+
+OBJECTS = ObjectStoreSetup.class \
+	  ObjectStoreType.class \
+	  FileSystemStore.class \
+	  ShadowingStore.class \
+	  ActionStore.class \
+	  StoreList.class \
+	  ShadowingStoreSetup.class \
+	  ActionStoreSetup.class \
+	  ShadowNoFileLockStore.class \
+	  ShadowNoFileLockStoreSetup.class \
+	  HashedStore.class \
+	  HashedStoreSetup.class \
+	  HashedActionStore.class \
+	  HashedActionStoreSetup.class
+
+Target($(SOURCES))
+Target($(OBJECTS))
+
+PreprocessJavaCode(ShadowingStore,NullParam)
+
+BuildJavaByteCode(ObjectStoreSetup,NullParam)
+BuildJavaByteCode(StoreList,NullParam)
+BuildJavaByteCode(FileSystemStore,NullParam)
+BuildJavaByteCode(ActionStore,NullParam)
+BuildJavaByteCode(ShadowingStore,NullParam)
+BuildJavaByteCode(ShadowingStoreSetup,NullParam)
+BuildJavaByteCode(ActionStoreSetup,NullParam)
+BuildJavaByteCode(ShadowNoFileLockStore,NullParam)
+BuildJavaByteCode(ShadowNoFileLockStoreSetup,NullParam)
+BuildJavaByteCode(ObjectStoreType,NullParam)
+BuildJavaByteCode(HashedStore,NullParam)
+BuildJavaByteCode(HashedStoreSetup,NullParam)
+BuildJavaByteCode(HashedActionStore,NullParam)
+BuildJavaByteCode(HashedActionStoreSetup,NullParam)
+
+Clean(*.class)
