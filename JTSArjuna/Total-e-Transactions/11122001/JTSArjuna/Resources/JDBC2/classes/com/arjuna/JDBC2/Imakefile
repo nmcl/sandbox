@@ -1,0 +1,67 @@
+COMMENT 
+COMMENT Copyright (C) 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.4.4.1.2.1.2.1.6.2.10.1.48.1 2001/07/19 14:16:07 nmcl Exp $
+COMMENT
+
+SOURCES = ArjunaJDBC2Driver.java \
+	  ArjunaJDBC2Connection.java \
+	  ArjunaJDBC2RecoveryConnection.java \
+	  ArjunaJDBC2DynamicRecoveryConnection.java \
+	  ArjunaJDBC2DynamicClass.java \
+	  ArjunaJDBC2ModifierFactory.java \
+	  JDBC2Branding.java \
+	  ArjunaJDBC2BrandingFactory.java \
+	  ConnectionInfo.java \
+	  JDBC2ConnectionManager.java \
+	  Info.java \
+	  JDBC2Environment.java \
+	  drivers/jndi.java \
+	  drivers/modifiers/list.java \
+	  drivers/brandings/list.java
+
+OBJECTS = JDBC2Environment.class \
+	  ArjunaJDBC2Driver.class \
+	  ArjunaJDBC2Connection.class \
+	  ArjunaJDBC2RecoveryConnection.class \
+	  ArjunaJDBC2DynamicRecoveryConnection.class \
+	  ArjunaJDBC2DynamicClass.class \
+	  ArjunaJDBC2ModifierFactory.class \
+	  JDBC2Branding.class \
+	  ArjunaJDBC2BrandingFactory.class \
+	  ConnectionInfo.class \
+	  JDBC2ConnectionManager.class \
+	  Info.class
+
+Target($(SOURCES))
+Target($(OBJECTS))
+
+SubDirectory(drivers)
+SubDirectory(Implementation)
+SubDirectory(Recovery)
+
+PreprocessJavaCodeDir(drivers,jndi,NullParam)
+PreprocessJavaCodeDir(drivers/modifiers,list,NullParam)
+PreprocessJavaCodeDir(drivers/brandings,list,NullParam)
+PreprocessJavaCode(ArjunaJDBC2Connection,NullParam)
+PreprocessJavaCode(Info,NullParam)
+
+BuildJavaByteCode(JDBC2Environment,NullParam)
+BuildJavaByteCode(ArjunaJDBC2Driver,NullParam)
+BuildJavaByteCode(ArjunaJDBC2Connection,NullParam)
+BuildJavaByteCode(ArjunaJDBC2RecoveryConnection,NullParam)
+BuildJavaByteCode(ArjunaJDBC2DynamicRecoveryConnection,NullParam)
+BuildJavaByteCode(ArjunaJDBC2DynamicClass,NullParam)
+BuildJavaByteCode(ArjunaJDBC2ModifierFactory,NullParam)
+BuildJavaByteCode(ArjunaJDBC2BrandingFactory,NullParam)
+BuildJavaByteCode(JDBC2ConnectionManager,NullParam)
+BuildJavaByteCode(JDBC2Branding,NullParam)
+BuildJavaByteCode(ConnectionInfo,NullParam)
+BuildJavaByteCode(Info,NullParam)
+
+Clean(*.class)

@@ -1,0 +1,20 @@
+COMMENT 
+COMMENT Copyright (C) 1999, 2000, 2001,
+COMMENT
+COMMENT Hewlett-Packard Company,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.4.1.64.1.4.1 2001/06/28 14:10:05 nmcl Exp $
+COMMENT
+
+SubDirectory(com)
+
+Target(JavaHarness.jar)
+
+CreateJavaLibrary(JavaHarness,com)
+
+#ifdef INSTALLJAR
+InstallJavaLibrary(/lib,JavaHarness)
+#endif

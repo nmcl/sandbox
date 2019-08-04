@@ -1,0 +1,27 @@
+COMMENT 
+COMMENT Copyright (C) 2000,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2 2000/04/03 14:21:50 nmcl Exp $
+COMMENT
+
+SOURCES = Info.java \
+	  ModuleInfo.java
+
+OBJECTS = Info.class \
+	  ModuleInfo.class
+
+Target($(SOURCES))
+Target($(OBJECTS))
+
+PreprocessJavaCode(Info,NullParam)
+
+BuildJavaByteCode(ModuleInfo,NullParam)
+BuildJavaByteCode(Info,NullParam)
+
+Clean(*.class)
+

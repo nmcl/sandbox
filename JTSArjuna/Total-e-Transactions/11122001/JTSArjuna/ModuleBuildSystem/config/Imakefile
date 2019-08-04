@@ -1,0 +1,23 @@
+COMMENT 
+COMMENT Copyright (C) 2000, 2001,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.4.2.32.2.4.1 2001/04/06 15:30:59 jcoleman Exp $
+COMMENT
+
+InstallFile(/config,Config.def)
+InstallFile(/config,ModuleBuildSystem.tmpl)
+InstallFile(/config,Macro.def)
+InstallFile(/config,Override.def)
+InstallFile(/config,Prog.def)
+InstallFile(/config,Rule.def)
+InstallFile(/config,Sys.def)
+InstallProgram(/config,Sys)
+InstallProgram(/config,Sys_Version)
+InstallFileAs(/config,Module_install.def,Module.def)
+
+Purge(ModuleBuildSystem.answers ModuleBuildSystem.cf Config.def Local.def Module.def Module_install.def Sys Sys_Version Sys.def)

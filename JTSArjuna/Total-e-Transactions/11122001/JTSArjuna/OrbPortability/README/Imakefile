@@ -1,0 +1,26 @@
+COMMENT 
+COMMENT Copyright (C) 1998, 1999, 2000, 2001,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.10.1.6.1.14.1.12.1 2001/03/20 16:26:25 nmcl Exp $
+COMMENT
+
+CreateInstallDirectory(/.,/README)
+
+#ifdef ORBACUS
+InstallFileAs(/README,README_orbacus,README.ORB)
+#endif
+
+#ifdef ORBIXWEB
+InstallFileAs(/README,README_orbixweb,README.ORB)
+#endif
+
+#ifdef SUNSJDK
+InstallFileAs(/README,README_jdk1.2,README.ORB)
+#endif
+
+InstallFile(/README,README.init)

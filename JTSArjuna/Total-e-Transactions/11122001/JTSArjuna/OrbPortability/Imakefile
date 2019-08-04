@@ -1,0 +1,20 @@
+COMMENT 
+COMMENT Copyright (C) 1998, 1999, 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2.26.1.2.2 2000/10/20 16:17:51 nmcl Exp $
+COMMENT
+
+SubDirectory(config)
+SubDirectory(classes)
+SubDirectory(include)
+SubDirectory(etc)
+SubDirectory(bin)
+SubDirectory(tests)
+SubDirectory(README)
+
+Purge(MakefileBoot)

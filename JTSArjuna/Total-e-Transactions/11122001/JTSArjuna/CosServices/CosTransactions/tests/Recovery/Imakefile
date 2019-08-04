@@ -1,0 +1,114 @@
+COMMENT 
+COMMENT Copyright (C) 2002,
+COMMENT
+COMMENT HP Arjuna Labs,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.2.3 2002/07/01 17:44:22 delsworthy Exp $
+COMMENT
+
+COMMENT Full Build
+
+AddToIdlFlags(-I$(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+#ifdef INSTALLTESTS
+CreateInstallDirectory(/tests,/tests/Recovery)
+#endif
+
+SOURCES = Delays.java \
+	  ServerIORStore.java \
+          RemoveServerIORStore.java \
+          EmptyObjectStore.java \
+	  ResourceImpl01.java \
+	  ResourceImpl02.java \
+	  BeforeCrashServiceImpl01.java \
+	  BeforeCrashServiceImpl02.java \
+	  AfterCrashServiceImpl01.java  \
+	  AfterCrashServiceImpl02.java \
+	  Server03.java \
+	  Server04.java \
+	  Client06a.java \
+	  Client06b.java
+
+OBJECTS = Delays.class \
+	  ServerIORStore.class \
+          RemoveServerIORStore.class \
+          EmptyObjectStore.class \
+	  ResourceImpl01.class \
+	  ResourceImpl02.class \
+	  BeforeCrashServiceImpl01.class \
+	  BeforeCrashServiceImpl02.class \
+	  AfterCrashServiceImpl01.class \
+	  AfterCrashServiceImpl02.class \
+	  Server03.class \
+	  Server04.class \
+	  Client06a.class \
+	  Client06b.class
+
+Target($(SOURCES))
+Target($(OBJECTS))
+
+#ifdef INSTALLTESTS
+InstallFile(/tests/Recovery,Imakefile)
+InstallFile(/tests/Recovery,Delays.java)
+InstallFile(/tests/Recovery,ServerIORStore.java)
+InstallFile(/tests/Recovery,RemoveServerIORStore.java)
+InstallFile(/tests/Recovery,EmptyObjectStore.java)
+InstallFile(/tests/Recovery,AfterCrashServiceImpl01.java)
+InstallFile(/tests/Recovery,AfterCrashServiceImpl02.java)
+InstallFile(/tests/Recovery,BeforeCrashServiceImpl01.java)
+InstallFile(/tests/Recovery,BeforeCrashServiceImpl02.java)
+InstallFile(/tests/Recovery,ResourceImpl01.java)
+InstallFile(/tests/Recovery,ResourceImpl02.java)
+InstallFile(/tests/Recovery,Server03.java)
+InstallFile(/tests/Recovery,Server04.java)
+InstallFile(/tests/Recovery,Client06a.java)
+InstallFile(/tests/Recovery,Client06b.java)
+
+InstallFile(/tests/Recovery,Delays.class)
+InstallFile(/tests/Recovery,ServerIORStore.class)
+InstallFile(/tests/Recovery,RemoveServerIORStore.class)
+InstallFile(/tests/Recovery,EmptyObjectStore.class)
+InstallFile(/tests/Recovery,AfterCrashServiceImpl01.class)
+InstallFile(/tests/Recovery,AfterCrashServiceImpl02.class)
+InstallFile(/tests/Recovery,BeforeCrashServiceImpl01.class)
+InstallFile(/tests/Recovery,BeforeCrashServiceImpl02.class)
+InstallFile(/tests/Recovery,ResourceImpl01.class)
+InstallFile(/tests/Recovery,ResourceImpl02.class)
+InstallFile(/tests/Recovery,Server03.class)
+InstallFile(/tests/Recovery,Server04.class)
+InstallFile(/tests/Recovery,Client06a.class)
+InstallFile(/tests/Recovery,Client06b.class)
+InstallFile(/tests/Recovery,runtest)
+#endif
+
+PreprocessJavaCode(ResourceImpl01,NullParam)
+PreprocessJavaCode(ResourceImpl02,NullParam)
+PreprocessJavaCode(BeforeCrashServiceImpl01,NullParam)
+PreprocessJavaCode(BeforeCrashServiceImpl02,NullParam)
+PreprocessJavaCode(AfterCrashServiceImpl01,NullParam)
+PreprocessJavaCode(AfterCrashServiceImpl02,NullParam)
+PreprocessJavaCode(Server03,NullParam)
+PreprocessJavaCode(Server04,NullParam)
+PreprocessJavaCode(Client06a,NullParam)
+PreprocessJavaCode(Client06b,NullParam)
+
+BuildJavaByteCode(Delays,NullParam)
+BuildJavaByteCode(ServerIORStore,NullParam)
+BuildJavaByteCode(RemoveServerIORStore,NullParam)
+BuildJavaByteCode(EmptyObjectStore,NullParam)
+BuildJavaByteCode(ResourceImpl01,NullParam)
+BuildJavaByteCode(ResourceImpl02,NullParam)
+BuildJavaByteCode(BeforeCrashServiceImpl01,NullParam)
+BuildJavaByteCode(BeforeCrashServiceImpl02,NullParam)
+BuildJavaByteCode(AfterCrashServiceImpl01,NullParam)
+BuildJavaByteCode(AfterCrashServiceImpl02,NullParam)
+BuildJavaByteCode(Server03,NullParam)
+BuildJavaByteCode(Server04,NullParam)
+BuildJavaByteCode(Client06a,NullParam)
+BuildJavaByteCode(Client06b,NullParam)
+
+Clean(*.class)
+

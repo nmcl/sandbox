@@ -1,0 +1,16 @@
+COMMENT 
+COMMENT Copyright (C) 1999,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.4 2000/03/16 16:17:22 nmcl Exp $
+COMMENT
+
+#ifdef BUILDTESTS
+
+SubDirectory(BasicJDBC)
+
+#endif

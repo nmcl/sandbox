@@ -1,0 +1,39 @@
+COMMENT 
+COMMENT Copyright (C) 2000, 2001,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.34.1.4.1.54.1 2001/11/14 16:15:52 rbegg Exp $
+COMMENT
+
+AddToIdlFlags(-I$(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+#ifdef INSTALLTESTS
+CreateInstallDirectory(/tests,/tests/Performance)
+#endif
+
+SOURCES = Performance1.java \
+	  Performance2.java \
+	  Performance3.java
+
+TESTOBJECTS = Performance1.class \
+	      Performance2.class \
+	      Performance3.class
+
+Target($(SOURCES))
+Target($(TESTOBJECTS))
+
+#ifdef INSTALLTESTS
+InstallFile(/tests/Performance,Imakefile)
+InstallFiles(/tests/Performance,Performance1.class,$(TESTOBJECTS))
+InstallFiles(/tests/Performance,Performance1.java,$(SOURCES))
+#endif
+
+BuildJavaByteCode(Performance1,NullParam)
+BuildJavaByteCode(Performance2,NullParam)
+BuildJavaByteCode(Performance3,NullParam)
+
+Clean(*.class)

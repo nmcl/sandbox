@@ -1,0 +1,23 @@
+COMMENT 
+COMMENT Copyright (C) 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.2.1 2000/12/14 15:05:20 nmcl Exp $
+COMMENT
+
+SOURCES = ORBAttribute.java \
+	  OAAttribute.java
+
+OBJECTS = ORBAttribute.class \
+	  OAAttribute.class
+
+Target($(OBJECTS))
+
+BuildJavaByteCode(ORBAttribute,NullParam)
+BuildJavaByteCode(OAAttribute,NullParam)
+
+Clean(*.class)

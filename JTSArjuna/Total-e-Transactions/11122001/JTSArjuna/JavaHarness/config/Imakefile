@@ -1,0 +1,20 @@
+COMMENT 
+COMMENT Copyright (C) 1998, 1999, 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.4.4.1.40.1 2001/04/06 15:30:59 jcoleman Exp $
+COMMENT
+
+InstallFile(/config,JavaHarness.tmpl)
+InstallFile(/config,JavaHarness_Override.def)
+InstallFile(/config,JavaHarness_Prog.def)
+InstallFile(/config,JavaHarness_Rule.def)
+InstallFile(/config,JavaHarness_Version.def)
+InstallProgram(/config,JDKVersion)
+InstallFileAs(/config,JavaHarness_Module_install.def,JavaHarness_Module.def)
+
+Purge(JavaHarness.answers JavaHarness.cf JDKVersion Local.def JavaHarness_Module.def JavaHarness_Module_install.def JavaHarness_Version.def Info.h)

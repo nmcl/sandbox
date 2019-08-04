@@ -1,0 +1,28 @@
+COMMENT 
+COMMENT Copyright (C) 2000, 2001,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.2.1.6.1 2001/01/17 14:59:04 nmcl Exp $
+COMMENT
+
+SOURCES = sequelink_5_0.java \
+	  sequelink_5_1.java
+
+#ifdef BUILD_SEQUELINK_5_0
+Target(sequelink_5_0.class)
+#endif
+
+#ifdef BUILD_SEQUELINK_5_1
+Target(sequelink_5_1.class)
+#endif
+
+SubDirectory(brandings)
+
+BuildJavaByteCode(sequelink_5_0,NullParam)
+BuildJavaByteCode(sequelink_5_1,NullParam)
+
+Clean(*.class)

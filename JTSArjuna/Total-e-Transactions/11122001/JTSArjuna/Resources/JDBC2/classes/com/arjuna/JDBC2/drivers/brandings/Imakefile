@@ -1,0 +1,28 @@
+COMMENT 
+COMMENT Copyright (C) 2000, 2001,
+COMMENT
+COMMENT Department of Computing Science,
+COMMENT University of Newcastle upon Tyne,
+COMMENT Newcastle upon Tyne,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.2.1.24.1.42.1 2001/07/19 14:16:09 nmcl Exp $
+COMMENT
+
+SOURCES = merant.java \
+	  list.java
+
+Target($(SOURCES))
+
+#if BUILD_SEQUELINK_5_0 || BUILD_SEQUELINK_5_1
+Target(merant.class)
+#endif
+
+Target(list.class)
+
+PreprocessJavaCode(list,NullParam)
+
+BuildJavaByteCode(merant,NullParam)
+BuildJavaByteCode(list,NullParam)
+
+Clean(*.class)

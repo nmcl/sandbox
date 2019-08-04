@@ -1,0 +1,32 @@
+COMMENT 
+COMMENT Copyright (C) 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.2.1.44.1 2002/06/17 12:46:53 nmcl Exp $
+COMMENT
+
+SOURCES = sequelink_5_1.java \
+	  oracle_8_1.java \
+	  cloudscape_3_6.java
+
+#ifdef BUILD_SEQUELINK_5_1
+Target(sequelink_5_1.class)
+#endif
+
+#ifdef BUILD_ORACLE_8_1_6
+Target(oracle_8_1.class)
+#endif
+
+#ifdef BUILD_ORACLE_3_6
+Target(cloudscape_3_6.class)
+#endif
+
+BuildJavaByteCode(sequelink_5_1,NullParam)
+BuildJavaByteCode(oracle_8_1,NullParam)
+BuildJavaByteCode(cloudscape_3_6,NullParam)
+
+Clean(*.class)
