@@ -1,0 +1,27 @@
+COMMENT 
+COMMENT Copyright (C) 1998, 1999, 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.14.1.14.1 2000/10/20 13:02:29 nmcl Exp $
+COMMENT
+
+SOURCES = Resource.java \
+	  LicenceType.java \
+	  Lector.java
+
+OBJECTS = Resource.class \
+	  LicenceType.class \
+	  Lector.class
+
+Target($(OBJECTS))
+
+BuildJavaByteCode(Resource,NullParam)
+BuildJavaByteCode(LicenceType,NullParam)
+BuildJavaByteCode(Lector,NullParam)
+
+Clean(*.class)
+
