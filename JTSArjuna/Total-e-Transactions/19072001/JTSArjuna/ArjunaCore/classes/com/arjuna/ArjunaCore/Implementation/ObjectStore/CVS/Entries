@@ -1,0 +1,17 @@
+/ActionStore.java/1.1.4.1.2.2.2.3.2.1/Thu Dec 21 11:21:10 2000//TJTSArjuna_2_2_0_Beta_3
+/ActionStoreSetup.java/1.1.4.1/Mon Oct 16 16:00:30 2000//TJTSArjuna_2_2_0_Beta_3
+/FileLockingStore.java/1.1.4.1.2.1.2.1.2.1/Thu Dec 21 11:21:10 2000//TJTSArjuna_2_2_0_Beta_3
+/FileSystemStore.java/1.1.4.1.2.3.2.2.2.2.4.1.8.3.30.2/Thu Jul 19 13:58:20 2001//TJTSArjuna_2_2_0_Beta_3
+/HashedActionStore.java/1.1.2.2.2.2/Thu Jan 04 12:39:30 2001//TJTSArjuna_2_2_0_Beta_3
+/HashedActionStoreSetup.java/1.1.2.1/Wed Dec 13 14:35:22 2000//TJTSArjuna_2_2_0_Beta_3
+/HashedStore.java/1.1.4.1.2.2.2.2.2.3/Fri Jan 05 17:59:30 2001//TJTSArjuna_2_2_0_Beta_3
+/HashedStoreSetup.java/1.1.4.1/Mon Oct 16 16:00:30 2000//TJTSArjuna_2_2_0_Beta_3
+/Imakefile/1.1.4.1.4.1/Wed Dec 13 14:36:22 2000//TJTSArjuna_2_2_0_Beta_3
+/ObjectStoreSetup.java/1.1.4.1/Mon Oct 16 16:00:30 2000//TJTSArjuna_2_2_0_Beta_3
+/ObjectStoreType.java/1.1.4.1.2.3.2.2.2.1/Thu Dec 21 11:21:10 2000//TJTSArjuna_2_2_0_Beta_3
+/ShadowNoFileLockStore.java/1.1.4.1.2.1.2.2.2.1/Thu Dec 21 11:21:10 2000//TJTSArjuna_2_2_0_Beta_3
+/ShadowNoFileLockStoreSetup.java/1.1.4.1/Mon Oct 16 16:00:32 2000//TJTSArjuna_2_2_0_Beta_3
+/ShadowingStore.javatmpl/1.1.4.1.2.4.2.2.2.3.4.2.8.1.6.1.24.2/Thu Jul 19 13:58:20 2001//TJTSArjuna_2_2_0_Beta_3
+/ShadowingStoreSetup.java/1.1.4.1/Mon Oct 16 16:00:32 2000//TJTSArjuna_2_2_0_Beta_3
+/StoreList.java/1.1.4.1/Mon Oct 16 16:00:32 2000//TJTSArjuna_2_2_0_Beta_3
+D
