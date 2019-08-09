@@ -1,0 +1,190 @@
+/*
+ * Copyright (C) 2001,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: Visi3RCManager.javatmpl,v 1.1.2.1.18.1 2001/04/12 13:28:42 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package com.arjuna.CosRecovery.RecoveryCoordinators.vbroker3;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
+import org.omg.CosTransactions.*;
+import org.omg.CORBA.SystemException;
+
+import com.arjuna.ArjunaCommon.Common.*;
+import com.arjuna.ArjunaCore.Atomic.*;
+import com.arjuna.OrbCommon.*;
+import com.arjuna.CosTransactions.*;
+import com.arjuna.CosRecovery.*;
+import com.arjuna.CosTransactions.Interposition.*;
+import com.arjuna.ArjunaOTS.*;
+import java.util.Hashtable;
+import java.util.Vector;
+
+import com.arjuna.CosRecovery.RecoveryCoordinators.*;
+
+import java.lang.ClassCastException;
+import NAMESPACE_(CORBA).BAD_PARAM;
+
+/**
+ * Implementation of RecoveryCreator for Visibroker 3.x.
+ * Handles the creation of RecoveryCoordinator objects for
+ * Visibroker 3.x.  The RCs are created locally but also will be
+ * recreated in the RecoveryManager if necessary following a crash
+ * of this process.
+ */
+
+public class Visi3RCManager implements RcvCoManager
+{
+
+private String _RecCoordServiceName;
+
+public Visi3RCManager ()
+    {
+	_RecCoordServiceName = GenericRecoveryCreator.getRecCoordServiceName();
+    }
+
+    /**
+     * Create a new RecoveryCoordinator for Resource res. The params
+     * array is used to pass additional data. Currently params[0] is
+     * the OTS_Transaction ref. When create returns additional data is
+     * passed back using params. Currently params[0] is the
+     * RecoveryCoordinator Uid.
+     */
+    /**
+     * We create the RecoveryCoordinator locally but also link the
+     * reference with the service name that is handled by the
+     * Visi3RCActivator. The data needed to construct the
+     * RecoveryCoordinator is also packed in to the reference
+     * data. If this process crashes then the RecoveryCoordinator
+     * will be recreated by the Activator in the recovery daemon
+     * if a request is made. Pretty cool!
+     */
+    public RecoveryCoordinator makeRC( Uid RCUid, Uid tranUid,
+		Uid processUid, boolean isServerTransaction )
+    {
+	RecoveryCoordinator rc = null;
+
+	// mangle those parameters to the string key (object id sort of thing)
+	
+	String rcObjectKey = GenericRecoveryCoordinator.makeId(RCUid, tranUid, processUid, isServerTransaction);
+
+	// Now create the implementation object
+	rc = new GenericRecoveryCoordinator(RCUid, tranUid, processUid, isServerTransaction);
+
+	// Encode the Object Key in the reference data
+	int length = rcObjectKey.length();
+	byte[] ref_data = new byte[length];
+	ref_data = rcObjectKey.getBytes();
+
+	if (DebugController.enabled())
+	{
+	    DebugController.controller().println(DebugLevel.FUNCTIONS, VisibilityLevel.VIS_PUBLIC,
+						 FacilityCode.FAC_CRASH_RECOVERY,
+						 "Visi3RCManager: "
+						 +"Created RC for tran "+tranUid
+						 +", servicename = "+_RecCoordServiceName);
+	}
+
+	// Ready the object with the ServiceName and reference data
+	OAInterface.boa().obj_is_ready(rc, _RecCoordServiceName, ref_data);
+
+	// store it in the list for this transaction so it can be removed later
+	synchronized (_recoveryCoordinators)
+	    {
+		Vector v = (Vector) _recoveryCoordinators.get(tranUid);
+
+		if (v == null)
+		{
+		    v = new Vector();
+		    _recoveryCoordinators.put(tranUid, v);
+		}
+
+		v.add(rc);
+	    }
+
+	return rc;
+    }
+
+
+
+public void destroy (RecoveryCoordinator rc) throws SystemException
+    {
+	try
+	{
+	    if (rc != null)
+	    {
+		DESTROY_IMPL_(rc);
+		rc = null;
+	    }
+	}
+	catch (SystemException e1)
+	{
+	    throw e1;
+	}
+	catch (Exception e2)
+	{
+	    throw new BAD_PARAM(e2.toString());
+	}
+    }
+
+public synchronized void destroyAll (Object[] params) throws SystemException
+    {
+	if (params.length == 0)
+	    throw new BAD_PARAM();
+
+	OTS_Transaction tx = null;
+
+	try
+	{
+	    tx = (OTS_Transaction) params[0];
+	}
+	catch (ClassCastException ex)
+	{
+	    tx = null;
+	}
+
+	if (tx == null)
+	    throw new BAD_PARAM();
+
+	synchronized (_recoveryCoordinators)
+	{
+	    Vector v = (Vector) _recoveryCoordinators.remove(tx.getSavingUid());
+
+	    if (v != null)
+	    {
+		for (int i = 0; i < v.size(); i++)
+		{
+		    GenericRecoveryCoordinator rc = (GenericRecoveryCoordinator) v.elementAt(i);
+
+		    if (rc != null)
+		    {
+			try
+			{
+			    ORBInterface.orb().disconnect(rc);
+			    rc = null;
+			}
+			catch (Exception e)
+			{
+			    ErrorStream.warning().println(e);
+			}
+		    }
+		}
+
+		v.removeAllElements();
+		v = null;
+	    }
+	}
+    }
+
+private Hashtable _recoveryCoordinators = new Hashtable();
+
+};
