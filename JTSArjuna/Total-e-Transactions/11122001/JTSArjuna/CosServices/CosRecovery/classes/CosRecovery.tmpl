@@ -1,0 +1,46 @@
+/*
+ * Copyright (C) 2000
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: CosRecovery.tmpl,v 1.1.2.1.30.2 2001/03/19 15:59:26 nmcl Exp $
+ */
+
+#ifndef COSRECOVERY_IDL_
+#define COSRECOVERY_IDL_
+
+#ifndef NO_PRAGMA_SUPPORT
+#pragma prefix "CosRecovery.arjuna.com"
+#endif
+
+#ifdef HAVE_JAVAPACKAGE
+#pragma javaPackage "com.arjuna.CosRecovery"
+#endif
+
+module Admin
+{
+    /*
+     * WARNING: do not rely upon this interface being
+     * available in subsequent releases!
+     */
+
+    interface RecoveryManager
+    {
+	string createIOR (in string id);
+    };
+    
+    interface RecoveryManagerAdmin
+    {
+	long ping ();
+    };
+};
+
+#endif // COSRECOVERY_IDL_
+
+
+
+
+
