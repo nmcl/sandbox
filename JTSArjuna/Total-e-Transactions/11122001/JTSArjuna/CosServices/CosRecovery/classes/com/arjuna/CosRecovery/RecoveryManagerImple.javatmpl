@@ -1,0 +1,211 @@
+/*
+ * Copyright (C) 2001,
+ *
+ * HP Arjuna Labs,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: RecoveryManagerImple.javatmpl,v 1.1.2.2.2.1.2.1.4.1.6.2 2001/09/21 15:14:07 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package com.arjuna.CosRecovery;
+
+import java.util.Hashtable;
+import java.util.Properties;
+import java.util.Enumeration;
+
+import org.omg.CosTransactions.*;
+
+import com.arjuna.CosRecovery.Admin.*;
+import com.arjuna.CosRecovery.RecoveryCoordinators.*;
+
+import com.arjuna.ArjunaCommon.Common.*;
+import com.arjuna.CosTransactions.*;
+import com.arjuna.OrbCommon.*;
+
+import org.omg.CORBA.ORBPackage.InvalidName;
+import org.omg.CORBA.BAD_PARAM;
+import org.omg.CORBA.SystemException;
+import java.io.IOException;
+
+/**
+ * The RecoveryManagerImple - does the real work.
+ * Currently we can have only one of these per node, so
+ * each instance checks it's the only one running. If it isn't
+ * it will kill itself before doing any work.
+ *
+ * @author Dave Ingham, Peter Furniss, Mark Little.
+ * @since JTS 2.1.2.
+ */
+
+public class RecoveryManagerImple
+{
+
+    /**
+     * Does the work of setting up crash recovery. The ORB
+     * must have been initialised before this object is
+     * created.
+     */
+
+public RecoveryManagerImple ()
+    {
+#ifdef SUNSJDK
+	if (true)
+	    throw new FatalError("Crash recovery not supported by ORB.");
+#endif
+	
+	String rmPropertyFile = RecoveryConfiguration.recoveryManagerPropertiesFile() ;
+	
+	PropertyManager.addPropertiesFile(rmPropertyFile);
+	
+	try
+	{
+	    PropertyManager.loadProperties(true);
+	}
+	catch (java.io.IOException ex)
+	{
+	    ErrorStream.warning().println(" property io exception " + ex);
+	}
+	
+	// force normal recovery trace on
+	DebugController.controller().mergeFacilityCode(FacilityCode.FAC_RECOVERY_NORMAL);
+
+	// this next would force debugging on, but separate recovery mgr file makes this
+	// unnecessary
+	
+	// DebugController.enable(true);
+       
+	// get the tag to go on the end of our service names
+	String ourTag =  RecoveryEnablement.getRecoveryManagerTag();
+
+	if (ourTag == null)
+	{
+	    ErrorStream.fatal().println("Not able to find RecoveryManagerTag or hostname - stopping");
+
+	    throw new FatalError("Not able to find RecoveryManagerTag or hostname - stopping");
+	}
+
+	/*
+	 * setup the inventory
+	 */
+
+	com.arjuna.CosTransactions.Implementation.Implementations.initialise();
+
+	/*
+	 * Check whether there is a recovery daemon running - only allow
+	 * one per machine (currently!)
+	 */
+
+	if (activeRecoveryManager())
+	    throw new FatalError("Recovery manager already active!");
+	
+	// create and register the admin interface
+
+	// Create the admin object
+	recManAdmin = new RecManAdmin();
+
+	// Register it with the ORB
+	READY_IMPL_(recManAdmin);
+
+	recManRef = CORBA_REF_(recManAdmin,com.arjuna.CosRecovery.Admin.RecoveryManagerAdmin);
+
+	// set the name for it
+	String adminServiceName = RecoveryEnablement.getRecoveryAdminName();
+	
+	// Register it using the orbs default mechanism
+	try 
+	{
+	    ORBServices.registerService(recManRef, adminServiceName, null);
+	}
+	catch (Exception e)
+	{
+	    ErrorStream.fatal().println("Recovery Manager caught exception registering RecManAdmin: "+e);
+	    e.printStackTrace(ErrorStream.stream());
+
+	    throw new FatalError("Recovery Manager caught exception registering RecManAdmin: "+e);
+	}
+
+	RecoveryEnablement.startRCservice(ourTag);
+	
+	// start the expiry scanners
+	
+	ExpiredEntryMonitor.startUp();
+	
+	// start the periodic recovery thread
+	//  (don't start this until just about to go on the other stuff)
+
+	_periodicRecovery = new PeriodicRecovery();
+
+	if (DebugController.enabled())
+	{
+	    DebugController.controller().println(DebugLevel.FUNCTIONS, VisibilityLevel.VIS_PUBLIC,
+						 FacilityCode.FAC_RECOVERY_NORMAL,
+						 "RecoveryManagerImple (" + ourTag + ") is ready");
+	}
+    }
+
+public void stop ()
+    {
+	_periodicRecovery.shutdown();
+	ExpiredEntryMonitor.shutdown();
+    }
+    
+public void finalize ()
+    {
+	stop();
+	
+	// destroy the implementation
+
+	DESTROY_IMPL_(recManRef);
+	recManAdmin = null;
+    }
+    
+private final boolean activeRecoveryManager ()
+    {
+	// this must be aligned with what happens in RecoveryManager
+	
+	String recoveryManagerAdminName = RecoveryEnablement.getRecoveryAdminName();
+
+	try
+	{
+	    org.omg.CORBA.Object obj = ORBServices.getService(recoveryManagerAdminName,
+							      null);
+	    
+	    RecoveryManagerAdmin recManagerAdmin = HELPER_CLASS_(com.arjuna.CosRecovery.Admin.RecoveryManagerAdmin).narrow(obj);
+
+	    recManagerAdmin.ping();
+
+	    recManagerAdmin = null;
+	    
+	    return true;
+	}
+	catch (BAD_PARAM ex1)
+	{
+	    // Not a recovery manager IOR! Shouldn't happen!
+
+	    return false;
+	}
+	catch (SystemException ex2)
+	{
+	    return false;
+	}
+	catch (InvalidName ex3)
+	{
+	    return false;
+	}
+	catch (IOException ex4)
+	{
+	    return false;
+	}
+    }
+
+private RecManAdmin recManAdmin = null;
+private com.arjuna.CosRecovery.Admin.RecoveryManagerAdmin recManRef = null;
+private PeriodicRecovery _periodicRecovery = null;
+    
+}
+
+

@@ -1,0 +1,134 @@
+/*
+ * Copyright (C) 2000, 2001,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: AssumedCompleteTransaction.java,v 1.1.2.1 2001/03/21 12:37:33 nmcl Exp $
+ */
+
+
+package com.arjuna.CosRecovery.Transactions;
+
+import com.arjuna.ArjunaCommon.Common.*;
+import com.arjuna.ArjunaCore.Atomic.*;
+import com.arjuna.ArjunaCore.Interface.ObjectStore;
+import com.arjuna.CosTransactions.OTS_Transaction;
+import com.arjuna.CosTransactions.OTS_Transaction;
+import org.omg.CosTransactions.*;
+
+import org.omg.CORBA.SystemException;
+import java.util.Date;
+
+/**
+ * Transaction relic of a committed transaction that did not get committed
+ * responses from all resources/subordinates.
+ *
+ * Recovery will not be attempted unless a replay completion is received, in
+ * which case it is reactivated.
+ * <P>
+ * Several of the methods of OTS_Transaction could be simplified for an 
+ * AssumedCompleteTransaction (e.g. the status must be committed), but they
+ * are kept the same to simplify maintenance
+ * <P>
+ * @author Peter Furniss (peter.furniss@arjuna.com)
+ * @version $Id: AssumedCompleteTransaction.java,v 1.1.2.1 2001/03/21 12:37:33 nmcl Exp $ 
+ */
+
+public class AssumedCompleteTransaction extends RecoveredTransaction
+{
+    public AssumedCompleteTransaction ( Uid actionUid )
+    {
+	super(actionUid,ourTypeName);
+
+	if (DebugController.enabled()) 
+	{
+	    DebugController.controller().println(DebugLevel.CONSTRUCTORS, VisibilityLevel.VIS_PUBLIC,
+						 FacilityCode.FAC_CRASH_RECOVERY,
+						 "AssumedCompleteTransaction("+get_uid()+") created");
+	}
+
+    }
+
+/**
+ *  the original process must be deceased if we are assumed complete
+ */
+public Status getOriginalStatus()
+{
+    return Status.StatusNoTransaction;
+}
+
+
+public String type ()
+    {
+	return AssumedCompleteTransaction.typeName();
+    }
+  /**
+   * typeName differs from original to force the ActionStore to 
+   * keep AssumedCompleteTransactions separate
+   */
+
+public static String typeName ()
+    {
+	return ourTypeName;
+    }
+
+public String toString ()
+    {
+	return "AssumedCompleteTransaction < "+get_uid()+" >";
+    }
+
+/**
+ * This T is already assumed complete, so return false
+ */
+public boolean assumeComplete()
+    {
+	return false;
+    }
+
+public Date getLastActiveTime()
+{
+    return _lastActiveTime;
+}
+
+public boolean restore_state (InputObjectState objectState, int ot)
+{
+    // do the other stuff
+    boolean result = super.restore_state(objectState,ot);
+    
+    if (result) {
+	try {
+	    long oldtime = objectState.unpackLong();
+	    _lastActiveTime = new Date(oldtime);
+	} catch (java.io.IOException ex) {
+	    // can assume the assumptionTime is missing - make it now
+	    _lastActiveTime = new Date();
+	}
+    }
+    return result;
+}
+
+public boolean save_state (OutputObjectState os, int ot)
+{
+    // do the other stuff
+    boolean result = super.save_state(os,ot);
+    
+    if (result ) {
+	// a re-write means we have just been active
+	_lastActiveTime = new Date();
+	try {
+	    os.packLong(_lastActiveTime.getTime());
+	} catch (java.io.IOException ex) {
+	}
+    }
+    return result;
+
+}
+
+private Date _lastActiveTime;
+
+private static String ourTypeName = "/StateManager/BasicAction/OTS_Transaction/AssumedCompleteTransaction";
+	
+}
