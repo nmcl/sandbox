@@ -1,0 +1,329 @@
+#!/bin/sh
+#
+# Copyright (C) 1998, 1999, 2000, 2001,
+# 
+# Arjuna Solutions Limited,
+# Newcastle upon Tyne,
+# Tyne and Wear,
+# UK.
+# 
+# $Id: configure,v 1.1.2.1.14.1.4.2.4.2.4.2.4.1.4.2.44.1 2001/12/11 13:31:03 nmcl Exp $
+#
+#  top-level configure for Arjuna JTS for Java
+# 
+
+MODULES="ModuleBuildSystem JavaHarness ArjunaCommon ArjunaCore OrbPortability CosServices/CosTransactions CosServices/CosRecovery Resources/JDBC Resources/JDBC2 JTSArjuna"
+SINGLEJAR_MODULE=TeT
+MODULE_LIST=
+
+ECHO_TEST=`echo "Test \c"`
+if test "$ECHO_TEST" = "Test "
+then 
+	PRE_ECHO=""
+	POST_ECHO="\c"
+else
+	PRE_ECHO="-n"
+	POST_ECHO=""
+fi
+
+EXTRA_PARMS=
+BUILDRELEASE=NO
+USE_CONFIG=NO
+DO_CONFIG=NO
+DO_UNCONF=NO
+
+ARGS=$*
+# Get parameters
+BADPARAM=NO
+while test $# -gt 0
+do
+	case $1 in
+	-c)	if test $# -gt 1
+		then
+			USE_CONFIG=YES
+			DO_CONFIG=YES
+			shift
+			CONFIG_DIR=$1
+		else
+			BADPARAM=YES
+		fi
+		;;
+	-l)     EXTRA_PARMS="$EXTRA_PARMS -l"
+		DO_CONFIG=YES
+		;;
+	-r)     EXTRA_PARMS="$EXTRA_PARMS -r"
+		BUILDRELEASE=YES
+		DO_CONFIG=YES
+		;;
+	-u)     DO_UNCONF=YES
+		;;
+	*)	MODULE_OLD="$MODULE_LIST"
+		for module in $MODULES
+		do
+			if test `basename $module | sed -e y/ABCDHJMOPRST/abcdhjmoprst/` = `echo $1 | sed -e y/ABCDHJMOPRST/abcdhjmoprst/`
+			then
+				MODULE_LIST="$MODULE_LIST $module"
+			fi
+		done
+		if test x"$MODULE_OLD" = x"$MODULE_LIST"
+		then
+			BADPARAM=YES
+		fi
+		;;
+	esac
+	shift
+done
+
+if test "$DO_CONFIG" = "YES" -a "$DO_UNCONF" = "YES"
+then
+	BADPARAM=YES
+fi
+if test "$BADPARAM" = "YES"
+then
+	echo $0": illegal usage" >&2
+	echo "usage: "$0" [-c dir] [-l] [-r] [module] [module] ..." >&2
+	echo "       "$0" [-u]" >&2
+	exit 1
+fi
+
+THISMODULE=toplevel
+MODULE_VERSION=1.1.0
+
+SAVED_CONFIG=config/"$THISMODULE".cf
+SAVED_ANSWERS=config/"$THISMODULE".answers
+
+# Just one module?
+if test x"$MODULE_LIST" != x
+then
+	MODULES="$MODULE_LIST"
+fi
+
+# Unconfigure (remove files created during 'normal' configure)
+if test "$DO_UNCONF" = "YES"
+then
+	EXITCODE=0
+	if test x"$MODULE_LIST" = x
+	then
+		echo "Unconfiguring top level -----------------"
+		rm -f "$SAVED_CONFIG"
+		rm -f "$SAVED_ANSWERS"
+	fi
+	for module in $MODULES
+	do
+		(
+		cd $module
+		echo "Unconfiguring $module -----------------"
+		echo
+		./configure -u
+		)
+		if test $? != 0
+		then
+			echo "Unconfiguration failed for module $module" >&2
+			EXITCODE=1
+		fi
+	done
+	exit $EXITCODE
+fi
+
+if test $BUILDRELEASE = YES && test x$JTSARJUNA_HOME = x
+then
+	echo Error - \$JTSARJUNA_HOME is not set >&2
+	exit 1
+fi
+	
+if test $USE_CONFIG = YES
+then
+	echo Configuring from config files ...
+	# Check top level config file
+	echo "Configuring top level from config file -----------------"
+	CONFIGFILE="$CONFIG_DIR/$THISMODULE".cf
+	if test -r "$CONFIGFILE"
+	then
+		if test "`head -11 "$CONFIGFILE" | tail -1`" != "# Arjuna JTS top level configure file"
+		then
+			echo $0": configuration file \""$CONFIGFILE"\" is invalid/corrupt" >&2
+			exit 1
+		fi
+		if test "`head -12 "$CONFIGFILE" | tail -1`" != "# Version $MODULE_VERSION"
+		then
+			echo $0": configuration file \""$CONFIGFILE"\" is not version $MODULE_VERSION" >&2
+			exit 1
+		fi
+	else
+		echo $0": configuration file \""$CONFIGFILE"\" does not exist" >&2
+		exit 1
+	fi
+	. "$CONFIGFILE"
+	CONFIG_FOUND=1
+
+	# Make config directory an absolute path
+	case $OS in
+		CYGWIN*|Windows*)
+			CONFIG_DIR=`cygpath -u "$CONFIG_DIR"`
+		;;
+	esac
+	if [ `echo "$CONFIG_DIR" | sed -e "s/\(.\).*/\1/"` != "/" ]
+	then
+		CONFIG_DIR="`pwd`/$CONFIG_DIR"
+	fi
+
+	# Check readability of config files
+	for module in $MODULES $SINGLEJAR_MODULE
+	do
+		if test ! -r "$CONFIG_DIR/`basename $module`".cf
+		then
+			echo "	$CONFIG_DIR/`basename $module`.cf not found" >&2
+			CONFIG_FOUND=0
+		fi
+	done
+	if test $CONFIG_FOUND = 0
+	then
+		exit 1
+	fi
+
+	# Configure modules using config files
+	for module in $MODULES $SINGLEJAR_MODULE
+	do
+		(
+		cd $module
+		echo
+		echo "Configuring $module from config file -----------------"
+		./configure -all $CONFIG_DIR/`basename $module`.cf $EXTRA_PARMS
+		)
+		if test $? != 0
+		then
+			echo "Configuration failed" >&2
+			exit 1
+		fi
+		# If release then make install too (install implies all)
+		if test $BUILDRELEASE = YES
+		then
+			echo "Building and installing $module ----------------------"
+			make install-$module
+			if test $? != 0
+			then
+				echo Build failed >&2
+				exit 1
+			fi
+		fi
+	done
+else
+	# Configure top level
+	echo "Configuring top level ----------------------"
+	test -d config || mkdir config
+	echo "Hostname: "`hostname` > "$SAVED_ANSWERS"
+	echo "Uname   : "`uname -rs` >> "$SAVED_ANSWERS"
+	echo "Date    : "`date` >> "$SAVED_ANSWERS"
+	echo "" >> "$SAVED_ANSWERS"
+	echo "command line arguments : $ARGS" >> "$SAVED_ANSWERS"
+	echo "" >> "$SAVED_ANSWERS"
+	if test x$JTSARJUNA_HOME = x
+	then
+		case "$OS" in
+			CYGWIN*|Windows*)    ARJUNA_INSTALLATION_DIRECTORY=C:/PROGRA~1/hpmw/TransactionService
+			;;
+			*)	ARJUNA_INSTALLATION_DIRECTORY=/usr/local/hpmw/TransactionService
+			;;
+		esac
+	else
+		ARJUNA_INSTALLATION_DIRECTORY=$JTSARJUNA_HOME
+	fi
+
+	INPUT=""
+	echo $PRE_ECHO "Root of directory tree for installation ["$ARJUNA_INSTALLATION_DIRECTORY"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	echo
+	if test x$INPUT != x
+	then  
+		echo "$INPUT" >> "$SAVED_ANSWERS"
+		ARJUNA_INSTALLATION_DIRECTORY="$INPUT"
+	else
+		echo "(DEFAULT) $ARJUNA_INSTALLATION_DIRECTORY" >> "$SAVED_ANSWERS"
+	fi
+
+	INPUT="xxxx"
+	while test "$INPUT" = "xxxx"
+	do
+		echo $PRE_ECHO "Install separate jars, single jar, or both  [separate] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+		read INPUT
+		if test x$INPUT != x
+		then  
+			INPUT=`echo $INPUT | sed -e y/BEIS/beis/`
+			case $INPUT in
+			se*)	SEPARATEJAR_INST=""
+				SINGLEJAR_INST="-noinst"
+				echo "separate" >> "$SAVED_ANSWERS"
+				;;
+			si*)	SEPARATEJAR_INST="-noinst"
+				SINGLEJAR_INST=""
+				echo "single" >> "$SAVED_ANSWERS"
+				;;
+			b*)	SEPARATEJAR_INST=""
+				SINGLEJAR_INST=""
+				echo "both" >> "$SAVED_ANSWERS"
+				;;
+			*)	INPUT=xxxx	# Invalid answer - loop again 
+				;;
+			esac
+		else
+			echo "(DEFAULT) separate" >> "$SAVED_ANSWERS"
+			SEPARATEJAR_INST=""
+			SINGLEJAR_INST=-noinst
+		fi
+	done
+	echo
+
+	export ARJUNA_INSTALLATION_DIRECTORY
+
+	# Save config
+	(
+	echo "#!/bin/sh"
+	echo "#"
+	echo "# Copyright (C) 2001,"
+	echo "# "
+	echo "# HP Arjuna Labs,"
+	echo "# Newcastle upon Tyne,"
+	echo "# Tyne and Wear,"
+	echo "# UK."
+	echo "#"
+	echo ""
+	echo "# Arjuna JTS top level configure file"
+	echo "# Version "$MODULE_VERSION
+	echo "ARJUNA_INSTALLATION_DIRECTORY=$ARJUNA_INSTALLATION_DIRECTORY"
+	echo "SEPARATEJAR_INST=$SEPARATEJARS_INST"
+	echo "SINGLEJAR_INST=$SINGLEJAR_INST"
+	) > "$SAVED_CONFIG"
+
+	# Configure modules
+	for module in $MODULES $SINGLEJAR_MODULE
+	do
+		(
+		cd $module
+		echo
+		echo "Configuring $module ----------------------"
+		if test $module = $SINGLEJAR_MODULE
+		then
+			./configure -all $SINGLEJAR_INST $EXTRA_PARMS
+		else
+			./configure -all $SEPARATEJAR_INST $EXTRA_PARMS
+		fi
+		)
+		if test $? != 0
+		then
+			echo Configuration failed >&2
+			exit 1
+		fi
+		# If release then make install too (install implies all)
+		if test $BUILDRELEASE = YES
+		then
+			echo "Building and installing $module ----------------------"
+			make install-$module
+			if test $? != 0
+			then
+				echo Build failed >&2
+				exit 1
+			fi
+		fi
+	done
+fi
+exit 0
