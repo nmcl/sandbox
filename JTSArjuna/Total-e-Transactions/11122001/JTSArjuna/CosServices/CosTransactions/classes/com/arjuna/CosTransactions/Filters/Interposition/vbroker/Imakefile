@@ -1,0 +1,40 @@
+COMMENT 
+COMMENT Copyright (C) 1998, 1999, 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.4.1.24.1 2000/11/02 16:55:18 nmcl Exp $
+COMMENT
+
+SOURCES = OTS_ClientInterpositionFilter.java \
+	  OTS_ClientInterpositionFilterFactory.java \
+	  OTS_ServerInterpositionFilter.java \
+	  OTS_ServerInterpositionFilterFactory.java \
+	  OTS_ClientInterpositionBindFilter.java \
+	  OTS_InterpositionFilterManager.java \
+	  Init.java
+
+OBJECTS = OTS_InterpositionFilterManager.class \
+	  OTS_ClientInterpositionFilter.class \
+	  OTS_ClientInterpositionFilterFactory.class \
+	  OTS_ServerInterpositionFilter.class \
+	  OTS_ServerInterpositionFilterFactory.class \
+	  OTS_ClientInterpositionBindFilter.class \
+	  Init.class
+
+#ifdef HAVE_FILTER
+Target($(OBJECTS))
+#endif
+
+BuildJavaByteCode(OTS_ClientInterpositionFilter,NullParam)
+BuildJavaByteCode(OTS_ClientInterpositionFilterFactory,NullParam)
+BuildJavaByteCode(OTS_ServerInterpositionFilter,NullParam)
+BuildJavaByteCode(OTS_ServerInterpositionFilterFactory,NullParam)
+BuildJavaByteCode(OTS_ClientInterpositionBindFilter,NullParam)
+BuildJavaByteCode(OTS_InterpositionFilterManager,NullParam)
+BuildJavaByteCode(Init,NullParam)
+
+Clean(*.class)
