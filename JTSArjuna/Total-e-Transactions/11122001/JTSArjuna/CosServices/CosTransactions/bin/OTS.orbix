@@ -1,0 +1,1 @@
+putit -j TransactionService " -DORBPostInit1=com.arjuna.orb.OrbixSetup OTS_Server " -jdk2 -classpath $CLASSPATH
