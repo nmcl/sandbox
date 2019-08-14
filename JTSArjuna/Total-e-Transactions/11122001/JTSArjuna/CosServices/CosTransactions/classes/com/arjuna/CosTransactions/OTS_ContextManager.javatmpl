@@ -1,0 +1,745 @@
+/*
+ * Copyright (C) 2000, 2001,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.  
+ *
+ * $Id: OTS_ContextManager.javatmpl,v 1.1.2.3.2.3.2.3.4.1.6.1.2.1.42.1.6.2.8.1 2002/05/27 10:43:15 nmcl Exp $
+ */
+
+package com.arjuna.CosTransactions;
+
+import com.arjuna.OrbCommon.*;
+import org.omg.CosTransactions.*;
+import com.arjuna.CosTransactions.ArjunaOTS.*;
+import com.arjuna.ArjunaOTS.*;
+import com.arjuna.ArjunaCommon.Template.*;
+import com.arjuna.ArjunaCommon.Common.*;
+import com.arjuna.ArjunaCore.Atomic.BasicAction;
+import com.arjuna.ArjunaCore.Thread.ThreadActionData;
+import com.arjuna.ArjunaCore.Atomic.CheckedAction;
+import java.io.PrintStream;
+import java.util.*;
+import java.lang.Object;
+import org.omg.CORBA.CompletionStatus;
+import org.omg.CORBA.*;
+
+#if defined(HAVE_INTERCEPTOR) && !defined(VISIBROKER)
+import org.omg.PortableInterceptor.*;
+#endif
+
+import org.omg.CosTransactions.SubtransactionsUnavailable;
+import org.omg.CosTransactions.NoTransaction;
+import org.omg.CosTransactions.HeuristicMixed;
+import org.omg.CosTransactions.HeuristicHazard;
+import org.omg.CosTransactions.InvalidControl;
+import org.omg.CORBA.SystemException;
+import org.omg.CORBA.UserException;
+import org.omg.CORBA.UNKNOWN;
+import org.omg.CORBA.BAD_PARAM;
+import org.omg.CORBA.BAD_OPERATION;
+import java.lang.OutOfMemoryError;
+import java.util.EmptyStackException;
+#ifdef HAVE_INTERCEPTOR
+import org.omg.CORBA.ORBPackage.InvalidName;
+#endif
+
+/**
+ * This class is responsible for managing the thread-to-transaction
+ * context mappings.
+ *
+ * @author Mark Little (mark@arjuna.com)
+ * @version $Id: OTS_ContextManager.javatmpl,v 1.1.2.3.2.3.2.3.4.1.6.1.2.1.42.1.6.2.8.1 2002/05/27 10:43:15 nmcl Exp $
+ * @since JTS 1.0.
+ */
+
+public class OTS_ContextManager
+{
+
+public OTS_ContextManager ()
+    {	
+	if (DebugController.enabled())
+	{
+	    DebugController.controller().println(DebugLevel.CONSTRUCTORS, VisibilityLevel.VIS_PUBLIC,
+						 FacilityCode.FAC_OTS, "OTS_ContextManager::OTS_ContextManager ()");
+	}
+
+#if defined(HAVE_INTERCEPTOR) && !defined(VISIBROKER)
+	try
+	{
+	    _piCurrent = org.omg.PortableInterceptor.CurrentHelper.narrow(ORBInterface.orb().resolve_initial_references("PICurrent"));
+	}
+	catch (InvalidName ex)
+	{
+	    ErrorStream.fatal().println("OTS_ContextManager getting a reference to PICurrent");
+
+	    ex.printStackTrace();
+		
+	    throw new FatalError("OTS_ContextManager getting a reference to PICurrent");
+	}
+	catch (BAD_PARAM ex)
+	{
+	    ErrorStream.fatal().println("OTS_ContextManager getting a reference to PICurrent");
+		
+	    ex.printStackTrace();
+		
+	    throw new FatalError("OTS_ContextManager getting a reference to PICurrent");
+	}
+#endif
+    }
+
+/*
+ * Does not need to be synchronized since it is implicitly single-threaded.
+ */
+
+public OTS_ControlWrapper current (String threadId) throws SystemException
+    {
+	Object arg = otsCurrent.get(threadId);
+	OTS_ControlWrapper wrapper = null;
+
+	if (arg != null)
+	{
+	    try
+	    {
+		Stack hier = (Stack) arg;
+
+		return (OTS_ControlWrapper) hier.peek();
+	    }
+	    catch (EmptyStackException e)
+	    {
+	    }
+	}
+
+	return null;
+    }
+
+public final OTS_ControlWrapper popAction (String threadId)
+    {
+	if (DebugController.enabled())
+	{
+	    DebugController.controller().println(DebugLevel.FUNCTIONS, VisibilityLevel.VIS_PRIVATE,
+						 FacilityCode.FAC_OTS, "OTS_ContextManager::popAction ()");
+	}
+
+	OTS_ControlWrapper action = null;
+	Object arg = otsCurrent.get(threadId);
+
+	if (arg != null)
+	{
+	    Stack sl = (Stack) arg;
+
+	    try
+	    {
+		/*
+		 * When we pushed the action we did the check for whether
+		 * it was local to save time now.
+		 */
+
+		action = (OTS_ControlWrapper) sl.pop();
+	    }
+	    catch (EmptyStackException e)
+	    {
+	    }
+	
+	    /*
+	     * If size now zero we can delete from thread
+	     * specific data.
+	     */
+	
+	    if (sl.size() == 0)
+	    {
+		sl = null;
+
+		otsCurrent.remove(threadId);
+
+#if defined(HAVE_INTERCEPTOR) && !defined(VISIBROKER)
+		disassociateContext();
+#endif
+	    }
+	}
+	
+	/*
+	 * Now update action in thread's notion of current if
+	 * this action is local.
+	 */
+    
+	// Check that action is local and not a proxy.
+
+	if (action != null)
+	{
+	    /*
+	     * Now update action in thread's notion of current if
+	     * this action is local.
+	     */
+    
+	    // Check that action is local and not a proxy.
+
+	    if (action.isLocal())
+	    {
+		/*
+		 * If transaction is terminated by another thread
+		 * then our thread-action information may have already
+		 * been removed from the action.
+		 */
+
+		try
+		{
+		    ThreadActionData.popAction(threadId);
+		}
+		catch (EmptyStackException e)
+		{
+		}
+	    }
+	}
+	
+	return action;
+    }
+
+public final void purgeActions (String threadId)
+    {
+	if (DebugController.enabled())
+	{
+	    DebugController.controller().println(DebugLevel.FUNCTIONS, VisibilityLevel.VIS_PRIVATE,
+						 FacilityCode.FAC_OTS, "OTS_ContextManager::purgeActions ()");
+	}
+
+	/*
+	 * Don't do anything with these actions, i.e., do
+	 * not commit/abort them. Just because this thread is
+	 * finished with them does not mean other threads
+	 * are!
+	 */
+	
+	OTS_ControlWrapper ptr = popAction(threadId);
+
+	while (ptr != null)
+	{
+	    ptr = null;
+
+	    ptr = popAction(threadId);
+	    
+	}
+    }
+
+    /**
+     * Force the thread-to-transaction association. Applications should not use
+     * this method.
+     *
+     * @since JTS 2.1.1.
+     */
+
+public void associate () throws SystemException 
+    {
+	current();
+    }
+
+/**
+ * @return the current transaction for the invoking thread.
+ */
+
+OTS_ControlWrapper current () throws SystemException
+    {
+	if (DebugController.enabled())
+	{
+	    DebugController.controller().println(DebugLevel.FUNCTIONS, VisibilityLevel.VIS_PROTECTED,
+						 FacilityCode.FAC_OTS, "OTS_ContextManager::current ()");
+	}
+
+	Object arg = otsCurrent.get(Thread.currentThread().getName());
+	OTS_ControlWrapper wrapper = null;
+
+	if (arg != null)
+	{
+	    try
+	    {
+		Stack hier = (Stack) arg;
+
+		wrapper = (OTS_ControlWrapper) hier.peek();
+	    }
+	    catch (EmptyStackException e)
+	    {
+		e.printStackTrace();
+	    }
+	}
+
+	/*
+	 * If we do not have a context currently, then check to see if
+	 * we have just been spawned to handle a transactional invocation.
+	 * If so, there may be a context handle associated with this
+	 * thread in piCurrent.
+	 *
+	 * We only do this for the current thread, hence the difference
+	 * between the two versions of OTS_ContextManager.current.
+	 */
+
+#if defined(HAVE_INTERCEPTOR) && !defined(VISIBROKER)
+	if (wrapper == null)
+	{
+	    wrapper = currentPIContext();
+
+	    try
+	    {
+		if (wrapper != null)
+		{
+		    pushAction(wrapper);
+		}
+	    }
+	    catch (Throwable ex)
+	    {
+		ErrorStream.warning().println("OTS_ContextManager.current caught: "+ex);
+
+		ex.printStackTrace();
+		
+		throw new BAD_OPERATION();
+	    }
+	}
+#endif
+
+	return wrapper;
+    }
+
+    /**
+     * We could maintain a list of suspended action hierarchies and resume
+     * the right one (and the right place!) given the control. However, this
+     * can lead to memory leaks, since we never know when to remove this
+     * hierarchy information. So, for now we simply rely on the propagation
+     * context.
+     */
+
+final boolean addRemoteHierarchy (Control cont)
+    {
+	if (DebugController.enabled())
+	{
+	    DebugController.controller().println(DebugLevel.FUNCTIONS, VisibilityLevel.VIS_PRIVATE,
+						 FacilityCode.FAC_OTS, "OTS_ContextManager::addRemoteHierarchy ()");
+	}
+
+	/*
+	 * Here until we can make this work with recreate.
+	 */
+
+#ifdef FIXED
+	pushAction(new OTS_ControlWrapper(cont));
+
+	return true;
+#else
+	boolean isError = false;
+    
+	try
+	{
+	    Coordinator coord = cont.get_coordinator();
+	    PropagationContext ctx = coord.get_txcontext();
+
+	    if (ctx != null)
+	    {
+		/*
+		 * Depth must be non-zero or we wouldn't be here!
+		 */
+	    
+		int depth = ctx.parents.length;
+
+		for (int i = depth -1; i >= 0; i--)
+		{
+		    /*
+		     * No memory leak as we delete either when suspend
+		     * is called, or the transaction is terminated.
+		     *
+		     * Do this in a two step approach because when using RCP the
+		     * convertor operator from _mgmt to _ptr doesn't go off.
+		     */
+
+		    Coordinator tmpCoord = ctx.parents[i].coord;
+		    Terminator tmpTerm = ctx.parents[i].term;
+
+		    Control theControl = OTS_Factory.createProxy(tmpCoord, tmpTerm);
+		
+		    pushAction(new OTS_ControlWrapper(theControl));  // takes care of thread/BasicAction for us.
+		}
+
+		ctx = null;
+	    }
+	    else
+	    {
+		/*
+		 * If we can't get a propagation context then we cannot
+		 * create the hierarchy!
+		 */
+	    
+		isError = true;
+	    }
+
+	    coord = null;
+	}
+	catch (Exception e)
+	{
+	    isError = true;
+	}
+
+	return isError;
+#endif	
+    }
+
+    /*
+     * All OTSArjuna controls have a method for getting their parent.
+     */
+
+final boolean addActionControlHierarchy (ActionControl cont)
+    {
+	if (DebugController.enabled())
+	{
+	    DebugController.controller().println(DebugLevel.FUNCTIONS, VisibilityLevel.VIS_PRIVATE,
+						 FacilityCode.FAC_OTS, "OTS_ContextManager::addActionControlHierarchy ()");
+	}
+
+	boolean isError = false;
+    
+	try
+	{
+	    ActionControl actControl = cont;
+	    Control parentControl = actControl.getParentControl();
+	    Stack hier = new Stack();
+
+	    while (parentControl != null)
+	    {
+		hier.push(new OTS_ControlWrapper(parentControl));
+
+		actControl = null;
+
+		actControl = com.arjuna.ArjunaOTS.ActionControlHelper.narrow(parentControl);
+
+		/*
+		 * Currently assume that entire hierarchy will contain only one
+		 * type of action, i.e., Arjuna actions or someone elses!
+		 */
+
+		if (actControl != null)
+		    parentControl = actControl.getParentControl();
+		else
+		    parentControl = null;
+	    }
+
+	    actControl = null;
+
+	    try
+	    {
+		OTS_ControlWrapper wrapper = (OTS_ControlWrapper) hier.pop();
+	    
+		while (wrapper != null)
+		{
+		    pushAction(wrapper);
+		
+		    wrapper = null;
+		
+		    wrapper = (OTS_ControlWrapper) hier.pop();
+		}
+	    }
+	    catch (EmptyStackException e)
+	    {
+	    }
+	}
+	catch (Exception e)
+	{
+	    ErrorStream.stream(ErrorStream.WARNING).println("OTS_ContextManager::addActionControlHierarchy caught exception: "+e);
+	    
+	    isError = true;
+	}
+
+	return isError;
+    }
+ 
+/*
+ * If we have a hierarchy of remote actions (controls) then they will not be
+ * registered with BasicAction.
+ * Also, they will either all be remote references to controls, or all but
+ * the current action will be proxy/wrapper controls, i.e., controls which
+ * contain references to the remote coordinator/terminator.
+ */
+
+final void purgeActions ()
+    {
+	purgeActions(Thread.currentThread().getName());
+    }
+ 
+final void pushAction (OTS_ControlWrapper action)
+    {
+	if (DebugController.enabled())
+	{
+	    DebugController.controller().println(DebugLevel.FUNCTIONS, VisibilityLevel.VIS_PRIVATE,
+						 FacilityCode.FAC_OTS, "OTS_ContextManager::pushAction ()");
+	}
+
+	Thread ct = Thread.currentThread();
+	Stack sl = (Stack) otsCurrent.get(ct.getName());
+	boolean isNew = false;
+	
+	if (sl == null)
+	{
+	    isNew = true;
+	    sl = new Stack();
+	}
+
+	// Check here that action is local and not a proxy.
+
+	/*
+	 * If it's a local transaction then save the transaction
+	 * pointer. We'll need it when we pop the transaction
+	 * later.
+	 */
+
+	if (action != null)
+	    action.determineLocality();
+
+	/*
+	 * Doesn't need to be synchronized since only this thread
+	 * can play with its own stack!
+	 */
+
+	sl.push(action);
+
+	if (isNew)
+	    otsCurrent.put(ct.getName(), sl);
+
+#if defined(HAVE_INTERCEPTOR) && !defined(VISIBROKER)
+	associateContext();
+#endif
+	
+	if (action.isLocal())
+	{
+	    /*
+	     * Add thread to action list!
+	     */
+
+	    /*
+	     * Given a Control_ptr we can maintain a mapping to the
+	     * actual action.
+	     *
+	     * Do we want this to work for remote actions? Yes, because
+	     * we want all actions to know about active threads, even
+	     * those that are remote. (But we don't do it yet!)
+	     *
+	     * Call action to increment number of threads. This is all we
+	     * need to do for remote actions. If local, we need to make this
+	     * action the current action.
+	     */
+
+	    ThreadActionData.pushAction(action.getImple().getImplHandle());
+	}
+    }
+
+final OTS_ControlWrapper popAction ()
+    {
+	return popAction(Thread.currentThread().getName());
+    }
+
+#if defined(HAVE_INTERCEPTOR) && !defined(VISIBROKER)
+OTS_ControlWrapper currentPIContext () throws SystemException
+    {
+	if (_piCurrent != null)
+	{
+	    try
+	    {
+		int slotId = OTS.getReceivedSlotId();
+		
+		if (slotId == -1)
+		    return null;
+
+		org.omg.CORBA.Any ctx = _piCurrent.get_slot(slotId);
+
+		/*
+		 * If we have something then we must be a server thread.
+		 * In which case we save the thread id so that the server
+		 * interceptor can do the suspend when the call returns.
+		 */
+
+		if (ctx.type().kind().value() != TCKind._tk_null)
+		{
+		    OTS_ControlWrapper control = null;
+		    
+		    // Is this just a Coordinator, or a full blown context?
+
+		    if (ctx.type().kind().value() == TCKind._tk_string)
+		    {
+			control = createProxy(ctx);
+		    }
+		    else
+		    {
+			control = createHierarchy(ctx);
+		    }
+
+		    org.omg.CORBA.Any threadData = ORBInterface.orb().create_any();
+
+		    threadData.insert_string(Thread.currentThread().getName());
+
+		    _piCurrent.set_slot(slotId, threadData);
+
+		    return control;
+		}
+		else
+		    return null;
+	    }
+	    catch (NullPointerException e)
+	    {
+		// slot not set.
+
+		return null;
+	    }
+	    catch (InvalidSlot is)
+	    {
+		// Something very wrong
+		
+		throw new org.omg.CORBA.INTERNAL();
+	    }
+	}
+	else
+	    return null;
+    }
+
+final OTS_ControlWrapper createProxy (org.omg.CORBA.Any ctx) throws SystemException
+    {
+	String stringRef = null;
+	
+	try
+	{
+	    stringRef = ctx.extract_string();
+
+	    /*
+	     * Is this a thread id or an IOR? If the latter then use it,
+	     * otherwise ignore it as:
+	     *
+	     * (i) this thread has been re-used before our filter has had a
+	     * chance to remove the threading information from the slot. This
+	     * will happen later.
+	     *
+	     * or
+	     *
+	     * (ii) the thread is calling back into itself to setup the
+	     * BasicAction structure.
+	     *
+	     * Either way we can safely ignore.
+	     */
+
+	    if (stringRef.startsWith(IORTag))
+	    {
+		org.omg.CORBA.Object obj = ORBInterface.orb().string_to_object(stringRef);
+		Coordinator theCoordinator = org.omg.CosTransactions.CoordinatorHelper.narrow(obj);
+	    
+		if (theCoordinator == null)
+		    throw new BAD_PARAM();
+
+		return new OTS_ControlWrapper(OTS_Factory.createProxy(theCoordinator, null));
+	    }
+	    else
+		return null;
+	}
+	catch (BAD_PARAM e1)
+	{
+	    ErrorStream.warning().println("OTS_ContextManager expected a Coordinator and did not get one: "+stringRef);
+
+	    e1.printStackTrace();
+	}
+	catch (Exception e2)
+	{
+	    ErrorStream.warning().println("OTS_ContextManager caught: "+e2);
+	}
+
+	return null;
+    }
+
+final OTS_ControlWrapper createHierarchy (org.omg.CORBA.Any ctx) throws SystemException
+    {
+	if (ctx != null)
+	{
+	    try
+	    {
+		PropagationContext theContext = org.omg.CosTransactions.PropagationContextHelper.extract(ctx);
+	    
+		if (OTS.localFactory())
+		{
+		    OTS_Factory theFactory = OTS.factory();
+
+		    return new OTS_ControlWrapper(theFactory.recreateLocal(theContext));
+		}
+		else
+		{
+		    TransactionFactory theFactory = OTS.get_factory();
+		    
+		    return new OTS_ControlWrapper(theFactory.recreate(theContext));
+		}
+	    }
+	    catch (SystemException ex)
+	    {
+		ErrorStream.warning().println("OTS_ContextManager.createHierarchy caught: "+ex);
+
+		throw ex;
+	    }
+	    catch (Exception e)
+	    {
+		ErrorStream.warning().println("OTS_ContextManager.createHierarchy caught: "+e);
+		
+		throw new UNKNOWN();
+	    }
+	}
+	else
+	    return null;
+    }
+
+private final void associateContext () throws SystemException
+    {
+	if (_piCurrent != null)
+	{
+	    try
+	    {
+		int slotId = OTS.getLocalSlotId();
+		
+		if (slotId != -1)
+		{
+		    org.omg.CORBA.Any localDataAny = ORBInterface.orb().create_any();
+
+		    localDataAny.insert_string(Thread.currentThread().getName());
+
+		    _piCurrent.set_slot(slotId, localDataAny);
+		}
+	    }
+	    catch (InvalidSlot is)
+	    {
+		// Something very wrong
+
+		throw new org.omg.CORBA.INTERNAL();
+	    }
+	}
+    }
+
+private final void disassociateContext () throws SystemException
+    {
+	if (_piCurrent != null)
+	{
+	    try
+	    {
+		int slotId = OTS.getLocalSlotId();
+		
+		if (slotId != -1)
+		{
+		    _piCurrent.set_slot(slotId, null);
+		}
+	    }
+	    catch (InvalidSlot is)
+	    {
+		// Something very wrong
+
+		throw new org.omg.CORBA.INTERNAL();
+	    }
+	}
+    }
+#endif
+
+private Hashtable otsCurrent = new Hashtable();
+
+#if defined(HAVE_INTERCEPTOR) && !defined(VISIBROKER)
+private org.omg.PortableInterceptor.Current _piCurrent = null;
+#endif
+
+private static final String IORTag = "IOR";
+    
+}
