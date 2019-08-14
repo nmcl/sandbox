@@ -1,0 +1,106 @@
+/*
+ * Copyright (C) 2001,
+ *
+ * Hewlett-Packard Arjuna Labs,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.  
+ *
+ * $Id: OTS_ContextPropagationManager.javatmpl,v 1.1.2.2.4.4.2.1.50.1.14.1.8.1 2001/12/11 13:35:16 nmcl Exp $
+ */
+
+package com.arjuna.CosTransactions;
+
+import com.arjuna.ArjunaCommon.Common.PropertyManager;
+import com.arjuna.ArjunaCommon.Common.FatalError;
+import com.arjuna.ArjunaCommon.Common.ErrorStream;
+import com.arjuna.OrbCommon.ORBInterface;
+
+/**
+ * Registers the appropriate filter with the ORB.
+ *
+ * @author Mark Little (mark@arjuna.com)
+ * @version $Id: OTS_ContextPropagationManager.javatmpl,v 1.1.2.2.4.4.2.1.50.1.14.1.8.1 2001/12/11 13:35:16 nmcl Exp $
+ * @since JTS 2.1.
+ */
+
+public class OTS_ContextPropagationManager
+{
+    
+public OTS_ContextPropagationManager ()
+    {
+	String contextMode = PropertyManager.getProperty(OTS_Environment.OTS_CONTEXT_PROP_MODE);
+	boolean interposition = true;
+
+	if (contextMode != null)
+	{
+	    if (contextMode.equals("CONTEXT"))
+		interposition = false;
+	    else
+	    {
+		if (contextMode.equals("NONE"))
+		    return;
+	    }
+	}
+	
+#ifdef SUNSJDK
+	ErrorStream.fatal().println("OTS_ContextPropagation - cannot propagate context implicitly for ORB!");
+	    
+	throw new FatalError();
+#endif
+	    
+#ifdef VISIBROKER
+	/*
+	 * Visibroker is different because sometimes we need to have the
+	 * name service specified this way as well.
+	 */
+
+	String currProp = PropertyManager.getProperty("ORBservices");
+	
+	if (currProp == null)
+	    currProp = "";
+	else
+	    currProp = currProp + ",";
+	
+#ifndef HAVE_POA
+	if (interposition)
+	    PropertyManager.setProperty("ORBservices", currProp+"com.arjuna.CosTransactions.Filters.Interposition.vbroker");
+	else
+	    PropertyManager.setProperty("ORBservices", currProp+"com.arjuna.CosTransactions.Filters.Context.vbroker");
+#else
+	if (interposition)
+	    PropertyManager.setProperty("ORBservices", currProp+"com.arjuna.CosTransactions.Interceptors.Interposition.vbroker");
+	else
+	    PropertyManager.setProperty("ORBservices", currProp+"com.arjuna.CosTransactions.Interceptors.Context.vbroker");
+#endif
+#endif
+#ifdef ORBACUS
+	if (interposition)
+	    PropertyManager.setProperty("ORBPositInit1", "com.arjuna.CosTransactions.Filters.Interposition.orbacus.Init");
+	else
+	    PropertyManager.setProperty("ORBPositInit1", "com.arjuna.CosTransactions.Filters.Context.orbacus.Init");
+#endif
+#ifdef JBROKER
+#error "JBroker filter not added!"
+#endif
+#ifdef ORBIXWEB
+	if (interposition)
+	    PropertyManager.setProperty("ORBPositInit1", "com.arjuna.CosTransactions.Filters.Interposition.orbix.Init");
+	else
+	    PropertyManager.setProperty("ORBPositInit1", "com.arjuna.CosTransactions.Filters.Context.orbix.Init");
+#endif
+#ifdef ORBIX2000
+	if (interposition)
+	    PropertyManager.setProperty("org.omg.PortableInterceptor.ORBInitializerClass.com.arjuna.CosTransactions.Interceptors.Interposition.orbix2000.OTS_InterpositionORBInitializerImpl", "com.arjuna.CosTransactions.Interceptors.Interposition.orbix2000.OTS_InterpositionORBInitializerImpl");
+	else
+	    PropertyManager.setProperty("org.omg.PortableInterceptor.ORBInitializerClass.com.arjuna.CosTransactions.Interceptors.Context.orbix2000.OTS_ContextORBInitializerImpl", "com.arjuna.CosTransactions.Interceptors.Context.orbix2000.OTS_ContextORBInitializerImpl");
+#endif
+#ifdef HPORB
+	if (interposition)
+	    PropertyManager.setProperty("org.omg.PortableInterceptor.ORBInitializerClass.com.arjuna.CosTransactions.Interceptors.Interposition.hporb.OTS_InterpositionORBInitializerImpl", "com.arjuna.CosTransactions.Interceptors.Interposition.hporb.OTS_InterpositionORBInitializerImpl");
+	else
+	    PropertyManager.setProperty("org.omg.PortableInterceptor.ORBInitializerClass.com.arjuna.CosTransactions.Interceptors.Context.hporb.OTS_ContextORBInitializerImpl", "com.arjuna.CosTransactions.Interceptors.Context.hporb.OTS_ContextORBInitializerImpl");
+#endif
+    }
+
+}
