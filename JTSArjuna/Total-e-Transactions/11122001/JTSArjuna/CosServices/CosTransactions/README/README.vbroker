@@ -1,0 +1,5 @@
+If  you write idl  which requires CosTransactions.idl or ArjunaOTS.idl
+then you will need to use the -idl2package option for the idl compiler.
+
+	    -idl2package "::CosTransactions" org.omg.CosTransactions
+	    -idl2package "::ArjunaOTS" com.arjuna.ArjunaOTS

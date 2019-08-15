@@ -1,0 +1,18 @@
+This is  JTSArjuna for OrbixWeb  3.x.   Here  is a  brief overview  of
+things to watch out  for when using  JTSArjuna.   See the manuals  for
+further details.
+
+When using implicit context propagation and/or interposition, you must
+supply the correct filter on the command-line:
+
+	com.arjuna.CosTransactions.Filters.Context.orbix for implicit propagation
+	only.
+
+	com.arjuna.CosTransactions.Filters.Interposition.orbix for implicit and
+	interposition.
+
+It is important that *both* client and server use the same filter. For example:
+
+    java -DORBPostInit1=com.arjuna.CosTransactions.Filters.Interposition.orbix.Init myclient
+
+    java -DORBPostInit1=com.arjuna.CosTransactions.Filters.Interposition.orbix.Init myserver
