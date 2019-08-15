@@ -1,0 +1,47 @@
+/*
+ * Copyright (C) 1999-2001 by HP Bluestone Software, Inc. All rights Reserved.
+ *
+ * HP Arjuna Labs,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: DemoResource.javatmpl,v 1.1.2.2.50.1 2001/08/09 16:15:34 delsworthy Exp $
+ */
+
+#include "Common/OrbPortability.h"
+
+import org.omg.CosTransactions.*;
+import NAMESPACE_(CORBA).SystemException;
+
+public class DemoResource extends SCOPED_SKEL_(org.omg.CosTransactions, Resource)
+{
+	public Vote prepare() throws HeuristicMixed, HeuristicHazard, SystemException
+	{
+		System.out.println("prepare called");
+		
+		return Vote.VoteCommit;
+	}
+	
+	public void rollback() throws HeuristicCommit, HeuristicMixed, 
+								  HeuristicHazard, SystemException
+	{
+		System.out.println("rollback called");
+	}
+	
+	public void commit() throws NotPrepared, HeuristicRollback,
+								HeuristicMixed, HeuristicHazard, SystemException
+	{
+		System.out.println("commit called");
+	}
+	
+	public void commit_one_phase() throws HeuristicHazard, SystemException
+	{
+		System.out.println("commit_one_phase called");
+	}
+	
+	public void forget() throws SystemException
+	{
+		System.out.println("forget called");
+	}
+}

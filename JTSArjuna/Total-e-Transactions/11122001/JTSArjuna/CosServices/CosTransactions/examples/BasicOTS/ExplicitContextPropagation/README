@@ -1,0 +1,26 @@
+/*
+ * Copyright (C) 2001,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: README,v 1.1.2.2 2001/02/15 13:47:35 nmcl Exp $
+ */
+
+This example demonstrates the use of explicit context propagation.
+
+
+To generate the client and server code, perform the following:
+
+make purge
+cosmkmf
+make Makefiles
+make
+
+
+There is no further documentation available for this example.
+
+
+

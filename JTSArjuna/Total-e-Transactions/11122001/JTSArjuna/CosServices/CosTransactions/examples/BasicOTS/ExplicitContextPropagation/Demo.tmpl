@@ -1,0 +1,31 @@
+/*
+ * Copyright (C) 1999-2001 by HP Bluestone Software, Inc. All rights Reserved.
+ *
+ * HP Arjuna Labs,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: Demo.tmpl,v 1.1.2.2.50.1 2001/08/09 16:15:33 delsworthy Exp $
+ */
+
+#ifndef RCPORB
+INCLUDE_DIRECTIVE <idl/CosTransactions.idl>
+#endif
+
+#if defined(JDK_1_2) && defined(SUNSJDK)
+#pragma javaPackage ""
+#endif
+
+module Demo
+{
+	exception DemoException {};
+	exception DemoNoTransContextException {};
+
+	interface DemoInterface : CosTransactions::TransactionalObject
+	{
+		void work() raises (DemoException, DemoNoTransContextException);
+		void workWithExplicitTransContext(in CosTransactions::Control control)
+			raises (DemoException);
+	};
+};
