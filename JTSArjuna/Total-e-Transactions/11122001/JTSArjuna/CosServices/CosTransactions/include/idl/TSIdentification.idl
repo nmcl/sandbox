@@ -1,0 +1,26 @@
+/*
+ * Copyright (C) 1997, 1998, 1999, 2000, 2001,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: TSIdentification.idl,v 1.1.42.1 2001/03/20 16:24:48 nmcl Exp $
+ */
+
+#ifndef TSIDENTIFICATION_IDL_
+#define TSIDENTIFICATION_IDL_
+
+#pragma prefix "omg.org"
+
+#include <idl/CosTSPortability.idl>
+
+interface TSIdentification  // PIDL
+{
+    exception NotAvailable {};
+    exception AlreadyIdentified {};
+
+    void identify_sender (in CosTSPortability::Sender sender) raises (NotAvailable, AlreadyIdentified);
+    void identify_receiver (in CosTSPortability::Receiver receiver) raises (NotAvailable, AlreadyIdentified);
+};
