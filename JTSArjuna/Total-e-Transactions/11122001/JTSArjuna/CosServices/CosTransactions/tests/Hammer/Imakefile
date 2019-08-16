@@ -1,0 +1,42 @@
+COMMENT 
+COMMENT Copyright (C) 1998, 1999, 2000, 2001,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2.34.1.4.1.54.1 2001/11/14 16:15:51 rbegg Exp $
+COMMENT
+
+AddToIdlFlags(-I$(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+#ifdef INSTALLTESTS
+CreateInstallDirectory(/tests,/tests/Hammer)
+#endif
+
+SOURCES = AtomicObject1.java \
+	  AtomicObject2.java \
+	  AtomicObject3.java
+
+TESTOBJECTS = AtomicObject1.class \
+	      AtomicObject2.class \
+	      AtomicObject3.class
+
+Target($(SOURCES))
+Target($(TESTOBJECTS))
+
+#ifdef INSTALLTESTS
+InstallFile(/tests/Hammer,Imakefile)
+InstallFiles(/tests/Hammer,AtomicObject1.java,$(SOURCES))
+InstallFiles(/tests/Hammer,AtomicObject1.class,$(TESTOBJECTS))
+InstallFile(/tests/Hammer,README)
+InstallFile(/tests/Hammer,runtest)
+InstallFile(/tests/Hammer,runtest.cygwin)
+#endif
+
+BuildJavaByteCode(AtomicObject1,NullParam)
+BuildJavaByteCode(AtomicObject2,NullParam)
+BuildJavaByteCode(AtomicObject3,NullParam)
+
+Clean(*.class)

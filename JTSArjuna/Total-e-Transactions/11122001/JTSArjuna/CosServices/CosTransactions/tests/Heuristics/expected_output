@@ -1,0 +1,18 @@
+beginning top-level transaction.
+getting coordinator
+registering resources.
+committing top-level transaction.
+HEURISTIC : PREPARE
+	HEURISTIC : VoteCommit
+ATOMIC : PREPARE
+	ATOMIC : VoteCommit
+HEURISTIC : COMMIT
+HEURISTIC : throwing HeuristicRollback
+ATOMIC : COMMIT
+HEURISTIC : FORGET
+
+Transaction HeuristicMixed exception
+Trying to determing final transaction outcome.
+
+Final action status: CosTransactions::StatusCommitted
+Test completed successfully.
