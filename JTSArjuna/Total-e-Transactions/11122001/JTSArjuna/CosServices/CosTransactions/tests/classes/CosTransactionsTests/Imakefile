@@ -1,0 +1,161 @@
+COMMENT 
+COMMENT Copyright (C) 1996, 1997, 1998, 1999, 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2.102.1 2001/11/14 16:15:51 rbegg Exp $
+COMMENT
+
+AddToIdlFlags(-I$(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+SOURCES = Util.java \
+	  grid_i.javatmpl \
+	  setget_i.javatmpl \
+	  trangrid_i.javatmpl \
+	  DemoResource.javatmpl \
+	  DemoSubTranResource.javatmpl \
+	  demosync.javatmpl \
+	  tranobject_i.javatmpl \
+	  AtomicResource.javatmpl \
+	  heuristic.javatmpl \
+	  AtomicObject.java \
+	  TestException.java \
+	  DemoArjunaResource.javatmpl \
+	  HammerObject.javatmpl \
+	  AtomicWorker1.java \
+	  AtomicWorker2.java \
+	  AtomicWorker3.java \
+	  ThreadObject2.java \
+	  ThreadObject3a.java \
+	  ThreadObject3b.java \
+	  DistributedHammerWorker1.javatmpl \
+	  DistributedHammerWorker2.javatmpl \
+	  DistributedHammerWorker3.javatmpl \
+	  DHThreadObject2.java \
+	  DHThreadObject3a.java \
+	  DHThreadObject3b.java \
+	  ExplicitStackImple.javatmpl \
+	  StackImple.javatmpl \
+	  TransactionalThread.java
+	  
+PROCESSED_SOURCES = Util.java \
+	  	    grid_i.java \
+	  	    setget_i.java \
+	  	    trangrid_i.java \
+	  	    DemoResource.java \
+	  	    DemoSubTranResource.java \
+	  	    demosync.java \
+	  	    tranobject_i.java \
+	  	    AtomicResource.java \
+	  	    heuristic.java \
+	  	    AtomicObject.java \
+	  	    TestException.java \
+	  	    DemoArjunaResource.java \
+	  	    HammerObject.java \
+	  	    AtomicWorker1.java \
+	  	    AtomicWorker2.java \
+	  	    AtomicWorker3.java \
+	  	    ThreadObject2.java \
+	  	    ThreadObject3a.java \
+	  	    ThreadObject3b.java \
+	  	    DistributedHammerWorker1.java \
+	  	    DistributedHammerWorker2.java \
+	  	    DistributedHammerWorker3.java \
+	  	    DHThreadObject2.java \
+	  	    DHThreadObject3a.java \
+	  	    DHThreadObject3b.java \
+	  	    ExplicitStackImple.java \
+	  	    StackImple.java \
+	  	    TransactionalThread.java
+
+OBJECTS = Util.class \
+	  grid_i.class \
+	  setget_i.class \
+	  trangrid_i.class \
+	  DemoResource.class \
+	  DemoSubTranResource.class \
+          demosync.class \
+	  tranobject_i.class \
+	  AtomicResource.class \
+	  heuristic.class \
+	  AtomicObject.class \
+	  TestException.class \
+	  DemoArjunaResource.class \
+	  HammerObject.class \
+	  AtomicWorker1.class \
+	  AtomicWorker2.class \
+	  AtomicWorker3.class \
+	  ThreadObject2.class \
+	  ThreadObject3a.class \
+	  ThreadObject3b.class \
+	  DistributedHammerWorker1.class \
+	  DistributedHammerWorker2.class \
+	  DistributedHammerWorker3.class \
+	  DHThreadObject2.class \
+	  DHThreadObject3a.class \
+	  DHThreadObject3b.class \
+	  ExplicitStackImple.class \
+	  StackImple.class \
+	  TransactionalThread.class
+
+Target($(PROCESSED_SOURCES))
+Target($(OBJECTS))
+
+#ifdef INSTALLTESTS
+CreateInstallDirectory(/tests,/tests/classes/CosTransactionsTests)
+
+InstallFile(/tests/classes/CosTransactionsTests,Imakefile)
+InstallFiles(/tests/classes/CosTransactionsTests,Util.java,$(SOURCES))
+#endif
+
+PreprocessJavaCode(grid_i,NullParam)
+PreprocessJavaCode(setget_i,NullParam)
+PreprocessJavaCode(trangrid_i,NullParam)
+PreprocessJavaCode(DemoResource,NullParam)
+PreprocessJavaCode(DemoSubTranResource,NullParam)
+PreprocessJavaCode(tranobject_i,NullParam)
+PreprocessJavaCode(demosync,NullParam)
+PreprocessJavaCode(heuristic,NullParam)
+PreprocessJavaCode(AtomicResource,NullParam)
+PreprocessJavaCode(DemoArjunaResource,NullParam)
+PreprocessJavaCode(HammerObject,NullParam)
+PreprocessJavaCode(DistributedHammerWorker1,NullParam)
+PreprocessJavaCode(DistributedHammerWorker2,NullParam)
+PreprocessJavaCode(DistributedHammerWorker3,NullParam)
+PreprocessJavaCode(ExplicitStackImple,NullParam)
+PreprocessJavaCode(StackImple,NullParam)
+
+BuildJavaByteCode(grid_i,NullParam)
+BuildJavaByteCode(setget_i,NullParam)
+BuildJavaByteCode(trangrid_i,NullParam)
+BuildJavaByteCode(DemoResource,NullParam)
+BuildJavaByteCode(DemoSubTranResource,NullParam)
+BuildJavaByteCode(tranobject_i,NullParam)
+BuildJavaByteCode(demosync,NullParam)
+BuildJavaByteCode(heuristic,NullParam)
+BuildJavaByteCode(AtomicObject,NullParam)
+BuildJavaByteCode(AtomicResource,NullParam)
+BuildJavaByteCode(TestException,NullParam)
+BuildJavaByteCode(DemoArjunaResource,NullParam)
+BuildJavaByteCode(HammerObject,NullParam)
+BuildJavaByteCode(AtomicWorker1,NullParam)
+BuildJavaByteCode(AtomicWorker2,NullParam)
+BuildJavaByteCode(AtomicWorker3,NullParam)
+BuildJavaByteCode(ThreadObject2,NullParam)
+BuildJavaByteCode(ThreadObject3a,NullParam)
+BuildJavaByteCode(ThreadObject3b,NullParam)
+BuildJavaByteCode(DistributedHammerWorker1,NullParam)
+BuildJavaByteCode(DistributedHammerWorker2,NullParam)
+BuildJavaByteCode(DistributedHammerWorker3,NullParam)
+BuildJavaByteCode(DHThreadObject2,NullParam)
+BuildJavaByteCode(DHThreadObject3a,NullParam)
+BuildJavaByteCode(DHThreadObject3b,NullParam)
+BuildJavaByteCode(Util,NullParam)
+BuildJavaByteCode(ExplicitStackImple,NullParam)
+BuildJavaByteCode(StackImple,NullParam)
+BuildJavaByteCode(TransactionalThread,NullParam)
+
+Clean(*.class)
