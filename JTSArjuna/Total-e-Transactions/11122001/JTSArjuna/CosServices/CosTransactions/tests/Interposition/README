@@ -1,0 +1,7 @@
+NOTE: this  example will  only be built  when using ORBS  that support
+implicit transaction propagation/interposition.
+
+Server: TranGridServer
+
+Ensure that -ORBname arjuna.portable_interceptor.ots_interposition is
+passed to the server.
