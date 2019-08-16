@@ -1,0 +1,76 @@
+//
+// Copyright (C) 2000,
+//
+// Arjuna Solutions, Ltd., 
+// Newcastle upon Tyne,
+// Tyne and Wear,
+// UK.
+//
+
+#include <Common/OrbPortability.h>
+
+import org.omg.CORBA.*;
+import org.omg.CosTransactions.*;
+import com.arjuna.OrbCommon.*;
+import com.arjuna.CosTransactions.*;
+import Recovery.*;
+
+public class Client06b
+{
+    public static void main(String[] args)
+    {
+        try
+        {
+            ORBInterface.initORB(args, null);
+            OAInterface.initOA();
+
+            String             serviceIOR1 = ServerIORStore.loadIOR(args[args.length - 2]);
+            BeforeCrashService service1    = NARROW_(BeforeCrashService,ORBInterface.orb().string_to_object(serviceIOR1));
+
+            String             serviceIOR2 = ServerIORStore.loadIOR(args[args.length - 1]);
+            BeforeCrashService service2    = NARROW_(BeforeCrashService,ORBInterface.orb().string_to_object(serviceIOR2));
+
+            ResourceBehavior[] resourceBehaviors1  = new ResourceBehavior[1];
+            resourceBehaviors1[0]                  = new ResourceBehavior();
+            resourceBehaviors1[0].crash_behavior   = CrashBehavior.CrashBehaviorCrashInCommit;
+
+            ResourceBehavior[] resourceBehaviors2  = new ResourceBehavior[1];
+            resourceBehaviors2[0]                  = new ResourceBehavior();
+            resourceBehaviors2[0].crash_behavior   = CrashBehavior.CrashBehaviorCrashInCommit;
+
+            boolean correct = true;
+
+            OTS.current().begin();
+
+            service1.setup_oper(OTS.current().get_control(), resourceBehaviors1);
+            service2.setup_oper(OTS.current().get_control(), resourceBehaviors2);
+
+            correct = correct && service1.is_correct();
+            correct = correct && service2.is_correct();
+
+            OTS.current().commit(false);
+
+            if (correct)
+                System.out.println("Passed");
+            else
+                System.out.println("Failed");
+        }
+        catch (Exception exception)
+        {
+            System.out.println("Failed");
+            System.err.println("Client06b.main: " + exception);
+            exception.printStackTrace(System.err);
+        }
+
+        try
+        {
+            OAInterface.shutdownOA();
+            ORBInterface.shutdownORB();
+        }
+        catch (Exception exception)
+        {
+            System.err.println("Client06b.main: " + exception);
+            exception.printStackTrace(System.err);
+        }
+    }
+}
