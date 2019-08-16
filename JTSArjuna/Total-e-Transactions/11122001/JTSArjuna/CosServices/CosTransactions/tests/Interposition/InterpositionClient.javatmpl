@@ -1,0 +1,161 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: InterpositionClient.javatmpl,v 1.1.28.1 2000/11/08 14:25:58 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+import CosTransactionsTests.*;
+import TestModule.*;
+import com.arjuna.OrbCommon.*;
+import com.arjuna.CosTransactions.OTS;
+import com.arjuna.CosTransactions.OTS_Current;
+import org.omg.CosTransactions.*;
+import com.arjuna.ArjunaCommon.Common.ErrorStream;
+
+import org.omg.CosTransactions.Unavailable;
+import org.omg.CORBA.SystemException;
+import org.omg.CORBA.UserException;
+import org.omg.CosNaming.NamingContextPackage.InvalidName;
+
+public class InterpositionClient
+{
+    
+public static void main (String[] args)
+    {
+	try
+	{
+	    ORBInterface.initORB(args, null);
+	    OAInterface.initOA();
+	}
+	catch (Exception e)
+	{
+	    ErrorStream.fatal().println("Initialisation failed: "+e);
+	}
+
+	String refFile = "/tmp/trangrid.ref";
+	String serverName = "TranGrid";
+
+	if (System.getProperty("os.name").startsWith("Windows"))
+	{
+	    refFile = "C:\\temp\\trangrid.ref";
+	}
+	
+	for (int i = 0; i < args.length; i++)
+	{
+	    if (args[i].compareTo("-help") == 0)
+	    {
+		System.out.println("Usage: InterpositionClient [-reffile <file>] [-server <name>] [-help]");
+		System.exit(0);
+	    }
+	    if (args[i].compareTo("-reffile") == 0)
+		refFile = args[i+1];
+	    if (args[i].compareTo("-marker") == 0)
+	    {
+#ifdef HAVE_MARKER_NAME		
+		serverName = args[i+1];
+#else
+		System.err.println("Error - server name not supported.");
+		System.exit(1);
+#endif		
+	    }
+	}
+    
+	OTS_Current current = OTS.current();
+	TranGrid TranGridVar = null;
+	short h = 0, w = 0, v = 0;
+
+	try
+	{
+	    current.begin();
+	    
+#ifdef USE_BIND
+#ifdef ORBIXWEB
+	    serverName = ":"+serverName;
+#endif	    
+	    TranGridVar = SCOPED_CORBA_BIND_(TestModule,TranGrid,serverName);
+#else
+	    TranGridVar = HELPER_CLASS_(TranGrid).narrow(ORBObject.fileToObject(refFile));
+#endif
+    
+	    try
+	    {
+		h = TranGridVar.height();
+		w = TranGridVar.width();
+	    }
+	    catch (Exception e)
+	    {
+		System.err.println("Grid invocation failed: "+e);
+		System.exit(1);
+	    }
+	    
+	    System.out.println("height is "+h);
+	    System.out.println("width  is "+w);
+
+	    try
+	    {
+		System.out.println("calling set");
+		
+		TranGridVar.set((short) 2, (short) 4, (short) 123);
+
+		current.begin();
+		current.begin();
+		current.begin();
+		
+		System.out.println("calling get");
+		
+		v = TranGridVar.get((short) 2, (short) 4);
+	    }
+	    catch (Exception sysEx)
+	    {
+		System.err.println("Grid set/get failed: "+sysEx);
+		System.exit(1);
+	    }
+
+	    // no problem setting and getting the elememt:
+	    
+	    System.out.println("trangrid[2,4] is "+v);
+
+	    current.rollback();
+	    current.commit(false);
+	    current.rollback();
+
+	    System.out.println("aborted nested action");
+    
+	    try
+	    {
+		System.out.println("calling get");
+		
+		v = TranGridVar.get((short) 2, (short) 4);
+	    }
+	    catch (Exception sysEx)
+	    {
+		System.err.println("Grid get failed: "+sysEx);
+		System.exit(1);
+	    }
+
+	    System.out.println("trangrid[2,4] is "+v);
+
+	    current.commit(false);
+	}
+	catch (Exception e)
+	{
+	    System.out.println("Caught exception: "+e);
+	    System.exit(0);		
+	}
+
+	OAInterface.shutdownOA();
+	ORBInterface.shutdownORB();
+
+        System.out.println("Test completed.");
+
+	System.exit(0);
+    }
+
+};
