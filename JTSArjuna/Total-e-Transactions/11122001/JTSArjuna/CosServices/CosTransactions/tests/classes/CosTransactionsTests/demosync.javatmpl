@@ -1,0 +1,65 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.  
+ *
+ * $Id: demosync.javatmpl,v 1.1.10.1.20.1.2.1 2000/11/24 14:37:38 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package CosTransactionsTests;
+
+import com.arjuna.OrbCommon.OAInterface;
+import com.arjuna.OrbCommon.ORBInterface;
+import com.arjuna.CosTransactions.OTS;
+import com.arjuna.CosTransactions.OTS_Factory;
+import com.arjuna.CosTransactions.OTS_Utility;
+import org.omg.CosTransactions.*;
+
+import org.omg.CosTransactions.Unavailable;
+import org.omg.CORBA.SystemException;
+import org.omg.CORBA.UNKNOWN;
+
+public class demosync extends SCOPED_SKEL_(org.omg.CosTransactions,Synchronization)
+{
+    
+public demosync ()
+    {
+	READY_IMPL_(this);
+
+	ref = CORBA_REF_(this,Synchronization);
+    }
+
+public Synchronization getReference ()
+    {
+	return ref;
+    }
+ 
+public void before_completion () throws SystemException
+    {
+	System.out.println("DEMOSYNC : BEFORE_COMPLETION");
+	System.out.println("Synchronization throwing exception.");
+	
+	throw new UNKNOWN();
+    }
+
+#ifndef CORBA_2_0
+public void after_completion (org.omg.CosTransactions.Status status) throws SystemException
+#else
+public void after_completion (int status) throws SystemException
+#endif
+    {
+	System.out.println("DEMOSYNC : AFTER_COMPLETION ( "+OTS_Utility.printStatus(status)+" )");
+
+	System.out.println("Synchronization throwing exception.");
+	
+	throw new UNKNOWN(); // should not cause any affect!
+    }
+
+private Synchronization ref;
+
+};

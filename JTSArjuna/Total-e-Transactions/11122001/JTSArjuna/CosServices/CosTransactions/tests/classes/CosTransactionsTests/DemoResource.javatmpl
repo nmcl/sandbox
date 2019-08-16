@@ -1,0 +1,106 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.  
+ *
+ * $Id: DemoResource.javatmpl,v 1.1.28.1 2000/11/08 14:26:02 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package CosTransactionsTests;
+
+import com.arjuna.OrbCommon.*;
+import com.arjuna.CosTransactions.OTS;
+import com.arjuna.CosTransactions.OTS_Current;
+import org.omg.CosTransactions.*;
+
+import org.omg.CosTransactions.Unavailable;
+import org.omg.CosTransactions.NotPrepared;
+import org.omg.CosTransactions.HeuristicRollback;
+import org.omg.CosTransactions.HeuristicCommit;
+import org.omg.CosTransactions.HeuristicMixed;
+import org.omg.CosTransactions.HeuristicHazard;
+import org.omg.CORBA.SystemException;
+
+public class DemoResource extends SCOPED_SKEL_(org.omg.CosTransactions,Resource)
+{
+    
+public DemoResource ()
+    {
+	READY_IMPL_(this);
+
+	ref = CORBA_REF_(this,Resource);
+    }
+
+public Resource getResource ()
+    {
+	return ref;
+    }
+ 
+public void registerResource () throws Unavailable, Inactive, SystemException
+    {
+	OTS_Current current = OTS.current();
+	Control myControl = current.get_control();
+	Coordinator coord = myControl.get_coordinator();
+
+	coord.register_resource(ref);
+
+	if (!printThread)
+	    System.out.println("Registered DemoResource");
+    }
+
+#ifndef CORBA_2_0
+public org.omg.CosTransactions.Vote prepare () throws SystemException
+#else
+public int prepare () throws SystemException
+#endif    
+    {
+	if (printThread)
+	    System.out.println(Thread.currentThread());
+	
+	System.out.println("DEMORESOURCE : PREPARE");
+
+	return Vote.VoteCommit;
+    }
+
+public void rollback () throws SystemException, HeuristicCommit, HeuristicMixed, HeuristicHazard
+    {
+	if (printThread)
+	    System.out.println(Thread.currentThread());
+	
+	System.out.println("DEMORESOURCE : ROLLBACK");
+    }
+
+public void commit () throws SystemException, NotPrepared, HeuristicRollback, HeuristicMixed, HeuristicHazard
+    {
+	if (printThread)
+	    System.out.println(Thread.currentThread());
+	
+	System.out.println("DEMORESOURCE : COMMIT");
+    }
+
+public void forget () throws SystemException
+    {
+	if (printThread)
+	    System.out.println(Thread.currentThread());
+	
+	System.out.println("DEMORESOURCE : FORGET");
+    }
+
+public void commit_one_phase () throws HeuristicHazard, SystemException
+    {
+	if (printThread)
+	    System.out.println(Thread.currentThread());
+	
+	System.out.println("DEMORESOURCE : COMMIT_ONE_PHASE");
+    }
+
+public static boolean printThread = false;
+private Resource ref;
+ 
+};
+
