@@ -1,0 +1,13 @@
+This tests the heuristic capabilities of the OTS.
+
+Note: do not try this test with a transaction manager, i.e., make sure
+OTS_TRANSACTION_MANAGER is *not* set in your environment.
+
+Not a remote test. Will cause memory leaks since if we get a heuristic
+we do not remove the transaction information.
+
+expected_output: from HeuristicTest
+
+expected_output2: from HeuristicTest -abort
+
+expected_output3: from HeuristicTest -prepare
