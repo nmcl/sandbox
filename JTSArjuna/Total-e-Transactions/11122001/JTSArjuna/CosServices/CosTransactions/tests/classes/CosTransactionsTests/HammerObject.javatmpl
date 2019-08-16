@@ -1,0 +1,242 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.  
+ *
+ * $Id: HammerObject.javatmpl,v 1.2.4.1.28.1.4.1 2000/12/13 16:42:45 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package CosTransactionsTests;
+
+import com.arjuna.CosTransactions.OTS;
+import com.arjuna.CosTransactions.OTS_Current;
+import com.arjuna.CosTransactions.OTS_ExplicitInterposition;
+import com.arjuna.ArjunaCommon.Common.*;
+import com.arjuna.ArjunaCore.Atomic.*;
+import TestModule.*;
+import org.omg.CosTransactions.*;
+import org.omg.CORBA.IntHolder;
+
+import CosTransactionsTests.TestException;
+import org.omg.CosTransactions.SubtransactionsUnavailable;
+import org.omg.CORBA.SystemException;
+import java.io.IOException;
+
+#include <CosTransactions/CosTranExceptions.h>
+
+public class HammerObject extends LockManager implements SCOPED_TIE_CLASS_(TestModule,Hammer)
+{
+    
+public HammerObject ()
+    {
+	super(ObjectType.ANDPERSISTENT);
+
+	OTS_Current current = OTS.current();
+
+	_value = 0;
+
+	try
+	{
+	    current.begin();
+
+	    if (setlock(new Lock(LockMode.WRITE), 0) == LockResult.GRANTED)
+	    {
+		_value = 0;
+		current.commit(true);
+	    }
+	    else
+		current.rollback();
+	}
+	catch (Exception e)
+	{
+	    System.err.println("HammerObject: "+e);
+	}
+    }
+
+public HammerObject (Uid u)
+    {
+	super(u);
+    }
+
+public void finalize () throws Throwable
+    {
+	super.terminate();
+	super.finalize();
+    }
+
+public boolean incr (int value, Control control) throws SystemException
+    {
+	boolean res = false;
+	OTS_ExplicitInterposition inter = new OTS_ExplicitInterposition();
+
+	try
+	{
+	    inter.registerTransaction(control);
+	}
+	catch (Exception e)
+	{
+	    System.err.println("WARNING HammerObject.incr - could not do interposition");
+	    return false;
+	}
+
+	OTS_Current current = OTS.current();
+
+	try
+	{
+	    current.begin();
+
+	    if (setlock(new Lock(LockMode.WRITE), 0) == LockResult.GRANTED)
+	    {
+		_value = _value + value;
+
+		current.commit(true);
+		res = true;
+	    }
+	    else
+		current.rollback();
+	}
+	catch (Exception e)
+	{
+	    System.err.println("HammerObject.incr: "+e);
+	    
+	    res = false;
+	}
+
+	inter.unregisterTransaction();
+	
+	return res;
+    }
+
+public boolean set (int value, Control control) throws SystemException 
+    {
+	boolean res = false;
+	OTS_ExplicitInterposition inter = new OTS_ExplicitInterposition();
+
+	try
+	{
+	    inter.registerTransaction(control);
+	}
+	catch (Exception e)
+	{
+	    System.err.println("WARNING HammerObject.set - could not do interposition");
+	    return false;
+	}
+
+	OTS_Current current = OTS.current();    
+
+	try
+	{
+	    current.begin();
+
+	    if (setlock(new Lock(LockMode.WRITE), 0) == LockResult.GRANTED)
+	    {
+		_value = value;
+
+		current.commit(true);
+		res = true;
+	    }
+	    else
+		current.rollback();
+	}
+	catch (Exception e)
+	{
+	    System.err.println("HammerObject.set: "+e);
+
+	    res = false;
+	}
+
+	inter.unregisterTransaction();
+
+	return res;
+    }
+
+public boolean get (IntHolder value, Control control) throws SystemException
+    {
+	boolean res = false;
+	OTS_ExplicitInterposition inter = new OTS_ExplicitInterposition();
+
+	try
+	{
+	    inter.registerTransaction(control);
+	}
+	catch (Exception e)
+	{
+	    System.err.println("WARNING HammerObject.incr - could not do interposition");
+	    return false;
+	}
+
+	OTS_Current current = OTS.current();
+
+	try
+	{
+	    current.begin();
+
+	    if (setlock(new Lock(LockMode.READ), 0) == LockResult.GRANTED)
+	    {
+		value.value = _value;
+
+		current.commit(true);
+		res = true;
+	    }
+	    else
+		current.rollback();
+	}
+	catch (Exception e)
+	{
+	    System.err.println("HammerObject.get: "+e);
+	    
+	    res = false;
+	}
+
+	inter.unregisterTransaction();
+	
+	return res;
+    }
+
+public boolean save_state (OutputObjectState os, int ot)
+    {
+	if (!super.save_state(os, ot))
+	    return false;
+	
+	try
+	{
+	    os.packInt(_value);
+
+	    return true;
+	}
+	catch (IOException e)
+	{
+	    return false;
+	}
+    }
+
+public boolean restore_state (InputObjectState os, int ot)
+    {
+	if (!super.restore_state(os, ot))
+	    return false;
+	
+	try
+	{
+	    _value = os.unpackInt();
+
+	    return true;
+	}
+	catch (IOException e)
+	{
+	    return false;
+	}
+    }
+
+public String type ()
+    {
+	return "/StateManager/LockManager/HammerObject";
+    }
+
+private int _value;
+ 
+};
