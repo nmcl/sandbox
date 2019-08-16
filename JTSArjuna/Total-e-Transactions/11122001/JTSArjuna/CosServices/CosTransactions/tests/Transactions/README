@@ -1,0 +1,13 @@
+TransactionTest1: Tries to terminate transactions out of order.
+
+TransactionTest2: Shows  how Current  and a TransactionFactory  can be
+combined in the same  application, and the transactions are unrelated.
+Is a remote test.
+
+TransactionTest3: Tests  garbage collection. Will  run silently  for a
+while until it cannot create any  more transactions, and then rollback
+all created transactions.
+
+expected_output1: from TransactionTest1
+
+expected_output2: from TransactionTest2
