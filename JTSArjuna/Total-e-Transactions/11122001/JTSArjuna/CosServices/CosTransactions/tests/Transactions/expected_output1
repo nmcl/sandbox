@@ -1,0 +1,25 @@
+
+Attempting to terminate out of sequence 'current'. Should fail!
+WARNING Thu Jul 04 11:14:03 GMT+01:00 2002: BasicAction.checkIsCurrent f91ad65:2ae353bf:3d241fea:3 - terminating non-current transaction: f91ad65:2ae353bf:3d241fea:2
+WARNING Thu Jul 04 11:14:03 GMT+01:00 2002: BasicAction.checkIsCurrent f91ad65:2ae353bf:3d241fea:3 - terminating non-current transaction: f91ad65:2ae353bf:3d241fea:2
+WARNING Thu Jul 04 11:14:03 GMT+01:00 2002: Abort of action id f91ad65:2ae353bf:3d241fea:2 invoked while child actions active
+WARNING Thu Jul 04 11:14:03 GMT+01:00 2002: 	Aborting child: f91ad65:2ae353bf:3d241fea:3
+
+Commit failed! org.omg.CORBA.TRANSACTION_ROLLEDBACK:   minor code: 50001  completed: No
+
+Now attempting to terminate 'current' hierarchy. Should fail!
+Nested commit failed! org.omg.CORBA.INVALID_TRANSACTION:   minor code: 0  completed: No
+Top-level commit failed! org.omg.CORBA.INVALID_TRANSACTION:   minor code: 0  completed: No
+
+Now creating new top-level action.
+
+Attempting to terminate out of sequence 'factory' action. Should fail!
+WARNING Thu Jul 04 11:14:03 GMT+01:00 2002: Commit of action id f91ad65:2ae353bf:3d241fea:4 invoked while child actions active
+WARNING Thu Jul 04 11:14:03 GMT+01:00 2002: 	Aborting child: f91ad65:2ae353bf:3d241fea:5
+WARNING Thu Jul 04 11:14:03 GMT+01:00 2002: 	Now aborting self: f91ad65:2ae353bf:3d241fea:4
+
+Commit failed! org.omg.CORBA.TRANSACTION_ROLLEDBACK:   minor code: 50001  completed: No
+
+Now attempting to terminate 'factory' nested action. Should fail!
+Commit failed! org.omg.CORBA.INVALID_TRANSACTION:   minor code: 0  completed: No
+Test completed successfully.

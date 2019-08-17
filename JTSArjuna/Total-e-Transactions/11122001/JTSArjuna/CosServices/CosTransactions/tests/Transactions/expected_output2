@@ -1,0 +1,17 @@
+
+Current transaction: f91ad65:2ae2d5f4:3d24200a:2
+New transaction from server: f91ad65:2ae2d5f4:3d24200a:3
+These transactions are not the same. Correct result.
+These transactions are not ancestors. Correct result.
+These transactions are not related. Correct result.
+
+Creating nested transaction using current.
+
+Nested's parent transaction: f91ad65:2ae2d5f4:3d24200a:2
+Nested transaction is: f91ad65:2ae2d5f4:3d24200a:4
+These transactions are related. Correct result.
+
+Parent (self) status: CosTransactions::StatusActive
+Self is an ancestor. Correct result.
+My child is not an ancestor! Correct result.
+Test completed successfully.
