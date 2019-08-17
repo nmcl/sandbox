@@ -1,0 +1,10 @@
+DEMOSYNC : BEFORE_COMPLETION
+Synchronization throwing exception.
+WARNING: OTS_Transaction.beforeCompletion - caught exception.
+TRANOBJECT : ROLLBACK
+DEMOSYNC : AFTER_COMPLETION ( CosTransactions::StatusRolledBack )
+Synchronization throwing exception.
+WARNING: OTS_Transaction.afterCompletion - caught exception org.omg.CORBA.UNKNOWN:   minor code: 0  completed: No
+Transaction rolledback
+Final action status: CosTransactions::StatusRolledBack
+Test completed successfully.
