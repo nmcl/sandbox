@@ -1,0 +1,299 @@
+/*
+ * Copyright (C) 1999-2001 by HP Bluestone Software, Inc. All rights Reserved.
+ *
+ * HP Arjuna Labs,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: JavaHarness_Rule.def,v 1.20.8.1.2.2.8.1.20.1.2.1.4.1.20.1.8.1 2001/08/09 16:15:37 delsworthy Exp $
+ */
+
+/*
+ *  JavaHarness_Rule.def
+ */
+
+#ifndef JAVA_SUFF
+#  define JAVA_SUFF java
+#endif
+
+#ifndef CLASS_SUFF
+#  define CLASS_SUFF class
+#endif
+
+#ifndef JAVATMPL_SUFF
+#  define JAVATMPL_SUFF javatmpl
+#endif
+
+#ifndef JAR_SUFF
+#  define JAR_SUFF jar
+#endif
+
+#ifndef JAVA_SOURCE
+#  define JAVA_SOURCE(file) Concat(file,.java)
+#endif
+
+#ifndef JAVA_CLASS
+#  define JAVA_CLASS(file) Concat(file,.class)
+#endif
+
+#ifndef JAVATMPL_SOURCE
+#  define JAVATMPL_SOURCE(root) Concat(root,.JAVATMPL_SUFF)
+#endif
+
+#ifndef JAR_FILE
+#  define JAR_FILE(root) Concat(root,.JAR_SUFF)
+#endif
+
+#ifndef CPLUSPLUS_HEADER
+#  define CPLUSPLUS_HEADER(file) Concat(file,.h)
+#endif
+
+#ifndef CPLUSPLUS_SOURCE
+#  define CPLUSPLUS_SOURCE(file) Concat(file,.cc)
+#endif
+
+#ifndef CPLUSPLUS_OBJECT
+#  define CPLUSPLUS_OBJECT(file) Concat(file,.o)
+#endif
+
+#ifndef BuildDir
+#define BuildDir(dir)			@@\
+BUILD_DIR = dir
+#endif
+
+#ifndef RelativeTarget
+#define RelativeTarget(obj)		@@\
+all.local :: $(BUILD_DIR)/obj
+#endif
+
+#ifdef HAS_RECURSIVEMAKEVARIABLES
+
+#ifndef AddToJavacFlags
+#define AddToJavacFlags(flags)		@@\
+JAVAC_FLAGS = $(JAVAC_FLAGS) flags
+#endif
+
+#ifndef AddToRmicFlags
+#define AddToRmicFlags(flags)		@@\
+RMIC_FLAGS = $(RMIC_FLAGS) flags
+#endif
+
+#ifndef AddToJavadocFlags
+#define AddToJavadocFlags(flags)		@@\
+JAVADOC_FLAGS = $(JAVADOC_FLAGS) flags
+#endif
+
+#else
+
+#ifndef AddToJavacFlags
+#define AddToJavacFlags(flags)			@@\
+JAVAC_FLAGS += flags
+#endif
+
+#ifndef AddToRmicFlags
+#define AddToRmicFlags(flags)		@@\
+RMIC_FLAGS += flags
+#endif
+
+#ifndef AddToJavadocFlags
+#define AddToJavadocFlags(flags)		@@\
+JAVADOC_FLAGS += flags
+#endif
+
+#endif
+
+/*
+ *  Generate Java byte-code
+ */
+
+#ifndef BuildJavaByteCode
+#define BuildJavaByteCode(file,flags)                                 @@\
+Concat(file,.class): Concat(file,.java)                               @@\
+	@echo Generating Java bytecode Concat(file,.class)                 @@\
+	CommandPrefix($(JAVAC)) $(JAVAC_FLAGS) flags file.java
+#endif
+
+/*
+ *  Generate Java RMI stubs.
+ */
+
+#ifndef BuildJavaRMIStubs
+#define BuildJavaRMIStubs(file,package,flags)                          				@@\
+Concat(file,_Stub.class) Concat(file,_Skel.class):		               			@@\
+	@echo Generating Java RMI stubs Concat(Concat(package,.file),_Stub) and Concat(Concat(package,.file),_Skel)	@@\
+	CommandPrefix($(RMIC)) $(RMIC_FLAGS) flags Concat(package.,file)
+#endif
+
+/*
+ * No package specifier.
+ */
+
+#ifndef BuildGlobalJavaRMIStubs
+#define BuildGlobalJavaRMIStubs(file,flags)  	                  	@@\
+Concat(file,_Stub.class) Concat(file,_Skel.class):	               	@@\
+	@echo Generating Java RMI stubs Concat(file,_Stub) and Concat(file,_Skel)	@@\
+	CommandPrefix($(RMIC)) $(RMIC_FLAGS) flags file
+#endif
+
+/*
+ * Create java documentation.
+ */
+
+#ifndef GenerateJavaDocs
+#define GenerateJavaDocs(package,flags)  	        @@\
+.docs: 	               			@@\
+	@echo Generating Java documentation for package	@@\
+	CommandPrefix($(JAVADOC)) $(JAVADOCS_FLAGS) flags package	@@\
+	CommandPrefix(touch .docs)					@@\
+									@@\
+Clean(.docs)
+#endif
+
+/*
+ * Rename java files - used for "conditional" compilation.
+ */
+
+#ifndef CopyFile
+#define CopyFile(from,to)				@@\
+all.local :: to/**/.java				@@\
+to/**/.java: from/**/.java				@@\
+	@echo Copying from/**/.java as to/**/.java	@@\
+	CommandPrefix($(CP)) from/**/.java to/**/.java
+#endif
+
+/*
+ * Run a Java program.
+ */
+
+#ifndef RunJavaProgram
+#define RunJavaProgram(package,flags)			@@\
+	CommanPrefix($(JAVAEXEC)) flags package
+#endif
+
+#if !defined(GNU_CPP) && !defined(WIN32)
+
+/*
+ *  Pre-process source for different versions of the jdk.
+ */
+
+#ifndef PreprocessJavaCode
+#define PreprocessJavaCode(file,flags)						@@\
+Target(file/**/.JAVATMPL_SUFF)							@@\
+JAVA_SOURCE(file): JAVATMPL_SOURCE(file)					@@\
+	@echo Generating $@ from JAVATMPL_SOURCE(file)        		        @@\
+	CommandPrefix($(RM)) CPLUSPLUS_SOURCE(file)				@@\
+	CommandPrefix(ln -s) JAVATMPL_SOURCE(file) CPLUSPLUS_SOURCE(file)	@@\
+	CommandPrefix(exec $(CPP)) flags $(CPPINCLUDES) $(CPPFLAGS) CPLUSPLUS_SOURCE(file) > JAVA_SOURCE(file)	@@\
+	CommandPrefix($(RM)) CPLUSPLUS_SOURCE(file)				@@\
+										@@\
+Clean(file/**/.JAVA_SUFF)							@@\
+Clean(file/**/.cc)
+#endif
+
+#ifndef PreprocessJavaCodeDir
+#define PreprocessJavaCodeDir(dir,file,flags)					@@\
+Target(dir/file/**/.JAVATMPL_SUFF)					@@\
+										@@\
+JAVA_SOURCE(dir/file): JAVATMPL_SOURCE(dir/file)		@@\
+	@echo Generating $@ from JAVATMPL_SOURCE(dir/file)	        @@\
+	CommandPrefix($(RM)) CPLUSPLUS_SOURCE(dir/file)			@@\
+	CommandPrefix(ln -s) JAVATMPL_SOURCE(file) CPLUSPLUS_SOURCE(dir/file)@@\
+	CommandPrefix(exec $(CPP)) flags $(CPPINCLUDES) $(CPPFLAGS) CPLUSPLUS_SOURCE(dir/file) > JAVA_SOURCE(dir/file)	@@\
+	CommandPrefix($(RM)) CPLUSPLUS_SOURCE(dir/file)			@@\
+										@@\
+Clean(dir/file/**/.JAVA_SUFF)						@@\
+Clean(dir/file/**/.cc)
+#endif
+
+#else
+
+/*
+ *  Pre-process source for different versions of the jdk.
+ */
+
+#ifndef PreprocessJavaCode
+#define PreprocessJavaCode(file,flags)						@@\
+Target(file/**/.JAVATMPL_SUFF)							@@\
+JAVA_SOURCE(file): JAVATMPL_SOURCE(file)					@@\
+	@echo Generating $@ from JAVATMPL_SOURCE(file)        		        @@\
+	CommandPrefix(exec $(CPP)) flags $(CPPINCLUDES) $(CPPFLAGS) JAVATMPL_SOURCE(file) > JAVA_SOURCE(file)	@@\
+										@@\
+Clean(file/**/.JAVA_SUFF)							@@\
+Clean(file/**/.cc)
+#endif
+
+#ifndef PreprocessJavaCodeDir
+#define PreprocessJavaCodeDir(dir,file,flags)					@@\
+Target(dir/file/**/.JAVATMPL_SUFF)					@@\
+										@@\
+JAVA_SOURCE(dir/file): JAVATMPL_SOURCE(dir/file)		@@\
+	@echo Generating $@ from JAVATMPL_SOURCE(dir/file)	        @@\
+	CommandPrefix(exec $(CPP)) flags $(CPPINCLUDES) $(CPPFLAGS) JAVATMPL_SOURCE(dir/file) > JAVA_SOURCE(dir/file)	@@\
+										@@\
+Clean(dir/file/**/.JAVA_SUFF)						@@\
+Clean(dir/file/**/.cc)
+#endif
+
+#endif
+
+/*
+ *  Create a jar archive.
+ */
+
+#ifndef CreateJar
+#define CreateJar(jarname,names)						@@\
+JAR_FILE(jarname):: names							@@\
+	@echo Generating JAR_FILE(jarname) from names				@@\
+	CommandPrefix($(JAR)) -cf JAR_FILE(jarname) names			@@\
+Clean(JAR_FILE(jarname))
+#endif
+
+/*
+ *  Add to a jar archive.
+ */
+
+#ifndef AddToJar
+#define AddToJar(jarname,dir,type)					@@\
+JAR_FILE(jarname)::							@@\
+	@echo Adding type to JAR_FILE(jarname)				@@\
+	CommandPrefix($(JAR)) -uf JAR_FILE(jarname) `find dir -name "*.type" -print`
+#endif
+
+#ifndef WIN32
+
+#ifndef CreateJavaLibrary
+#define CreateJavaLibrary(jarname,dir)						@@\
+JAR_FILE(jarname)::								@@\
+	@echo \"Creating JAR_FILE(jarname)\"					@@\
+	CommandPrefix($(JAR)) -cvf JAR_FILE(jarname) `find dir -name "*.class" -print`	@@\
+										@@\
+Clean(JAR_FILE(jarname))
+#endif
+
+#else
+
+#ifndef CreateJavaLibrary
+#define CreateJavaLibrary(jarname,dir)						@@\
+JAR_FILE(jarname)::								@@\
+	@make JAR_FILE(jarname.tmp)			@@\
+												@@\
+JAR_FILE(jarname.tmp):							@@\
+	@echo Creating JAR_FILE(jarname)					@@\
+	CommandPrefix($(JAR)) -cvf JAR_FILE(jarname) `find dir -name "*.class" -print`	@@\
+										@@\
+Clean(JAR_FILE(jarname))
+#endif
+
+#endif
+
+#ifndef InstallJavaLibrary
+#define InstallJavaLibrary(dir,jarname)						@@\
+install.local :: $(INSTALLTOPDIR)dir                                        	@@\
+                                                                            	@@\
+install.local :: $(INSTALLTOPDIR)dir/JAR_FILE(jarname)                          @@\
+                                                                            	@@\
+$(INSTALLTOPDIR)dir/JAR_FILE(jarname) : JAR_FILE(jarname)                       @@\
+	@echo Installing JAR_FILE(jarname) as $(INSTALLTOPDIR)dir/JAR_FILE(jarname)	@@\
+	CommandPrefix($(INSTALL)) -m 0644 JAR_FILE(jarname) $(INSTALLTOPDIR)dir/JAR_FILE(jarname)
+#endif

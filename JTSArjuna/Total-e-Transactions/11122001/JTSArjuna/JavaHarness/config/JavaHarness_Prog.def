@@ -1,0 +1,38 @@
+/*
+ * Copyright (C) 1999-2001 by HP Bluestone Software, Inc. All rights Reserved.
+ *
+ * HP Arjuna Labs,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: JavaHarness_Prog.def,v 1.4.64.1.42.1 2001/08/09 16:15:37 delsworthy Exp $
+ */
+
+/*
+ *  JavaHarness_Prog.def
+ */
+
+#ifndef JavaProg
+#   define JavaProg java
+#endif
+
+#ifndef JavaCProg
+#   define JavaCProg javac
+#endif
+
+#ifndef JavaDocProg
+#   define JavaDocProg javadoc
+#endif
+
+#ifndef JarProg
+#   define JarProg jar
+#endif
+
+#ifndef RMICProg
+#   define RMICProg rmic
+#endif
+
+#ifndef CPP_PROGRAM
+#  define CPP_PROGRAM "/lib/cpp"
+#endif
