@@ -1,0 +1,249 @@
+#!/usr/bin/bash
+
+#
+# Test: CrashRecovery05_2 Test006
+#
+
+if [ "$MAX_PHASE_TIME" == "" ]
+then
+   export MAX_PHASE_TIME=1200
+fi
+
+rm -rf res/TS/CrashRecovery05_2/Test006
+mkdir -p res/TS/CrashRecovery05_2/Test006
+
+echo -n "Started:   " >> res/TS/CrashRecovery05_2/Test006/Info
+date >> res/TS/CrashRecovery05_2/Test006/Info
+
+#
+# Launch server 0 (phase 0)
+#
+
+touch res/TS/CrashRecovery05_2/Test006/Server0_out res/TS/CrashRecovery05_2/Test006/Server0_err
+java com.arjuna.CosRecovery.RecoveryManager $ORBFLAGS -test 1> res/TS/CrashRecovery05_2/Test006/Server0_out 2> res/TS/CrashRecovery05_2/Test006/Server0_err &
+Server0_pid=$!
+
+count=600
+Server_status=""
+until [ "$Server_status" = "Ready" -o $count -eq 0 ]
+do
+    if [ $count -eq 580 ]
+    then
+      touch res/TS/CrashRecovery05_2/Test006/Server0_slowstart
+    fi
+    read Server_status
+    if [ $? -ne 0 ]
+    then
+       count=$(expr $count - 1)
+       sleep 1
+    fi
+done < res/TS/CrashRecovery05_2/Test006/Server0_out
+if [ $count -eq 0 ]
+then
+  touch res/TS/CrashRecovery05_2/Test006/Server0_endstart
+  do_nothing_else=true
+fi
+
+#
+# Launch server 1 (phase 0)
+#
+
+touch res/TS/CrashRecovery05_2/Test006/Server1_out res/TS/CrashRecovery05_2/Test006/Server1_err
+java $JAVAFLAGS Server03 $ORBFLAGS 0 Server1 Server2 1> res/TS/CrashRecovery05_2/Test006/Server1_out 2> res/TS/CrashRecovery05_2/Test006/Server1_err &
+Server1_pid=$!
+
+count=600
+Server_status=""
+until [ "$Server_status" = "Ready" -o $count -eq 0 ]
+do
+    if [ $count -eq 580 ]
+    then
+      touch res/TS/CrashRecovery05_2/Test006/Server1_slowstart
+    fi
+    read Server_status
+    if [ $? -ne 0 ]
+    then
+       count=$(expr $count - 1)
+       sleep 1
+    fi
+done < res/TS/CrashRecovery05_2/Test006/Server1_out
+if [ $count -eq 0 ]
+then
+  touch res/TS/CrashRecovery05_2/Test006/Server1_endstart
+  do_nothing_else=true
+fi
+#
+# check if we should start the clients
+#
+
+if [ "$do_nothing_else" == "" ]
+   then
+
+
+#
+# Launch client 0 (phase 0)
+#
+
+touch res/TS/CrashRecovery05_2/Test006/Client0_out res/TS/CrashRecovery05_2/Test006/Client0_err
+java $JAVAFLAGS Client06b $ORBFLAGS Server1 Server2 1> res/TS/CrashRecovery05_2/Test006/Client0_out 2> res/TS/CrashRecovery05_2/Test006/Client0_err &
+Client0_pid=$!
+
+#
+# Setup termination for clients (phase 0)
+#
+
+(max_sleep_count=$MAX_PHASE_TIME 
+until [ $max_sleep_count -eq 0 ] 
+do
+    if [ $max_sleep_count -ne 0 ]
+    then
+    	max_sleep_count=$(expr $max_sleep_count - 2)
+    	sleep 2
+     fi
+done
+echo -n  "Timed-out: " >> res/TS/CrashRecovery05_2/Test006/Info 
+cp -r  res/TS/CrashRecovery05_2/Test006 res/TS/CrashRecovery05_2/Test006_Timeout_0 
+kill -9 $Client0_pid) &
+Terminator_pid=$!
+
+#
+# Wait for clients (phase 0)
+#
+
+wait $Client0_pid
+
+kill -9 $Terminator_pid
+
+# end if statement and tidy up environment
+
+fi
+
+
+#
+# Terminate servers (phase 0)
+#
+
+kill -TERM $Server1_pid
+
+#
+# Launch server 2 (phase 1)
+#
+
+touch res/TS/CrashRecovery05_2/Test006/Server2_out res/TS/CrashRecovery05_2/Test006/Server2_err
+java $JAVAFLAGS Server04 $ORBFLAGS 0 Server3 Server4 1> res/TS/CrashRecovery05_2/Test006/Server2_out 2> res/TS/CrashRecovery05_2/Test006/Server2_err &
+Server2_pid=$!
+
+count=600
+Server_status=""
+until [ "$Server_status" = "Ready" -o $count -eq 0 ]
+do
+    if [ $count -eq 580 ]
+    then
+      touch res/TS/CrashRecovery05_2/Test006/Server2_slowstart
+    fi
+    read Server_status
+    if [ $? -ne 0 ]
+    then
+       count=$(expr $count - 1)
+       sleep 1
+    fi
+done < res/TS/CrashRecovery05_2/Test006/Server2_out
+if [ $count -eq 0 ]
+then
+  touch res/TS/CrashRecovery05_2/Test006/Server2_endstart
+  do_nothing_else=true
+fi
+#
+# check if we should start the clients
+#
+
+if [ "$do_nothing_else" == "" ]
+   then
+
+
+#
+# Launch client 1 (phase 1)
+#
+
+touch res/TS/CrashRecovery05_2/Test006/Client1_out res/TS/CrashRecovery05_2/Test006/Client1_err
+java $JAVAFLAGS Client06a $ORBFLAGS Server3 Server4 1> res/TS/CrashRecovery05_2/Test006/Client1_out 2> res/TS/CrashRecovery05_2/Test006/Client1_err &
+Client1_pid=$!
+
+#
+# Setup termination for clients (phase 1)
+#
+
+(max_sleep_count=$MAX_PHASE_TIME 
+until [ $max_sleep_count -eq 0 ] 
+do
+    if [ $max_sleep_count -ne 0 ]
+    then
+    	max_sleep_count=$(expr $max_sleep_count - 2)
+    	sleep 2
+     fi
+done
+echo -n  "Timed-out: " >> res/TS/CrashRecovery05_2/Test006/Info 
+cp -r  res/TS/CrashRecovery05_2/Test006 res/TS/CrashRecovery05_2/Test006_Timeout_1 
+kill -9 $Client1_pid) &
+Terminator_pid=$!
+
+#
+# Wait for clients (phase 1)
+#
+
+wait $Client1_pid
+
+kill -9 $Terminator_pid
+
+# end if statement and tidy up environment
+
+fi
+
+
+#
+# Outcome checks
+#
+
+read Client0_outcome < res/TS/CrashRecovery05_2/Test006/Client0_out
+read Client1_outcome < res/TS/CrashRecovery05_2/Test006/Client1_out
+
+if [ "$Client0_outcome" = "Passed" -a "$Client1_outcome" = "Passed" ];
+then
+    echo "CrashRecovery05_2 Test006: Passed";
+else
+    echo "CrashRecovery05_2 Test006: Failed";
+fi
+
+#
+# Terminate servers (phase 1)
+#
+
+kill -TERM $Server0_pid
+kill -TERM $Server2_pid
+
+if [ "$do_nothing_else" == "true" ]
+    then
+    echo "CrashRecovery05_2 Test006: Failed";
+fi
+
+#
+# Cleanup
+#
+
+wait
+
+java $JAVAFLAGS RemoveServerIORStore 1> res/TS/CrashRecovery05_2/Test006/Cleanup0_out 2> res/TS/CrashRecovery05_2/Test006/Cleanup0_err
+java $JAVAFLAGS EmptyObjectStore 1> res/TS/CrashRecovery05_2/Test006/Cleanup1_out 2> res/TS/CrashRecovery05_2/Test006/Cleanup1_err
+echo -n "Completed: " >> res/TS/CrashRecovery05_2/Test006/Info
+date >> res/TS/CrashRecovery05_2/Test006/Info
+
+# Wrap up at terminate all possible job id's
+
+kill -9 $Server0_pid
+kill -9 $Server1_pid
+kill -9 $Server2_pid
+kill -9 $Client0_pid
+kill -9 $Client1_pid
+
+# Finally unset value
+unset do_nothing_else
