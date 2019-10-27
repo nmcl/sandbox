@@ -1,0 +1,48 @@
+/*
+ * Copyright (C) 1999-2001 by HP Bluestone Software, Inc. All rights Reserved.
+ *
+ * HP Arjuna Labs,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: OrbPortability.tmpl,v 1.2.2.1.10.2.80.1 2001/08/09 16:15:40 delsworthy Exp $
+ */
+
+/*
+ *  OrbPortability.tmpl
+ */
+
+/*
+ *  Inclusion of Overriding definitions.
+ */
+
+#include <OrbPortability_Override.def>
+
+/*
+ *  Inclusion of Programs definitions.
+ */
+
+#include <OrbPortability_Prog.def>
+
+/*
+ *  Inclusion of Rule definitions.
+ */
+
+#include <OrbPortability_Rule.def>
+
+JAVAIDL = IDL2JAVA
+IDLIR = IDL2IR
+IDLFLAGS = IDLFLAGS_DEFAULT
+IRFLAGS = IRFLAGS_DEFAULT
+IDL_CFLAGS = IDL_CFLAGS_DEFAULT
+IDL_SFLAGS = IDL_SFLAGS_DEFAULT
+IDL_HFLAGS = IDL_HFLAGS_DEFAULT
+
+ORB_INCLUDES = ORB_INCLUDES_DEFAULT
+ORB_LDFLAGS = ORB_LDFLAGS_DEFAULT
+ORB_LIBS = ORB_LIBS_DEFAULT
+
+AddToCPPFlags($(ORB_INCLUDES))
+AddToLdFlags($(ORB_LDFLAGS))
+AddToLdLibraries($(ORB_LIBS))
