@@ -1,0 +1,180 @@
+/*
+ * Copyright (C) 1998, 1999, 2000, 2001,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.  
+ *
+ * $Id: Configuration.javatmpl,v 1.1.8.2.22.1.4.1.4.4.2.1 2001/01/30 13:34:40 nmcl Exp $
+ */
+
+package com.arjuna.OrbCommon;
+
+import com.arjuna.ArjunaCommon.Common.ErrorStream;
+import com.arjuna.ArjunaCommon.Common.ClassPathParser;
+import com.arjuna.ArjunaCommon.Common.PropertyManager;
+import com.arjuna.ArjunaCommon.Common.Utility;
+import java.io.File;
+
+import java.io.IOException;
+
+/**
+ * Module specific configuration object.
+ *
+ * @author Mark Little (mark@arjuna.com)
+ * @version $Id: Configuration.javatmpl,v 1.1.8.2.22.1.4.1.4.4.2.1 2001/01/30 13:34:40 nmcl Exp $
+ * @since JTS 1.0.
+ */
+
+public class Configuration
+{
+
+    /**
+     * @return the name of the file where <name, object IOR> may be stored.
+     */
+
+public static synchronized final String configFile ()
+    {
+	return _configFile;
+    }
+
+    /**
+     * Set the name of the file where <name, object IOR> may be stored.
+     */
+
+public static synchronized void setConfigFile (String s)
+    {
+	_configFile = s;
+    }
+
+    /**
+     * @return the location of the file where <name, object IOR> may be stored.
+     */
+
+public static synchronized final String configFileRoot ()
+    {
+	if (_configFileRoot == null)
+	{
+	    ClassPathParser cp = new ClassPathParser();
+	    boolean found = false;
+	    
+	    /*
+	     * Search for an old file.
+	     */
+
+	    while (!found)
+	    {
+		String installDir = cp.getPath(File.separator + "etc");
+
+		if (installDir == null)
+		{
+		    if (Utility.isWindows())
+			installDir = cp.getPath("/etc");
+		}
+
+		if (installDir != null)
+		{
+		    File f = new File(installDir + File.separatorChar + _configFile);
+
+		    if (f.exists())
+		    {
+			_configFileRoot = installDir;
+			
+			found = true;
+		    }
+		}
+		else
+		    break;
+	    }
+
+	    if (!found)
+	    {
+		/*
+		 * Not found, so store in the same place as the core
+		 * properties file.
+		 *
+		 * Ensure properties are loaded first.
+		 */
+
+		try
+		{
+		    PropertyManager.loadProperties();
+		}
+		catch (IOException e)
+		{
+		    ErrorStream.warning().println(e.toString());
+		}
+		
+		_configFileRoot = com.arjuna.ArjunaCommon.Common.Configuration.propertiesDir();
+	    }
+	}
+	
+	return _configFileRoot;
+    }
+
+    /**
+     * Set the location of the file where <name, object IOR> may be stored.
+     */
+
+public static synchronized void setConfigFileRoot (String s)
+    {
+	_configFileRoot = s;
+    }
+
+    /**
+     * Set the default bind mechanism.
+     */
+
+public static synchronized final int bindDefault ()
+    {
+	return _bindDefault;
+    }
+
+    /**
+     * @return the default bind mechanism.
+     */
+
+public static synchronized final void setBindDefault (int i)
+    {
+	if ((i < ORBServices.CONFIGURATION_FILE) || (i > ORBServices.NAMED_CONNECT))
+	    ErrorStream.stream(ErrorStream.WARNING).println("com.arjuna.OrbCommon.Configuration.setBindDefault - invalid value "+i);
+	else
+	    _bindDefault = i;
+    }
+
+    /**
+     * @return the version of the module.
+     */
+
+public static final String version ()
+    {
+	return ORBPORTABILITY_VERSION;
+    }
+
+private static String _configFile = "CosServices.cfg";
+private static String _configFileRoot = null;
+private static int    _bindDefault;
+
+    static
+    {
+#ifdef USE_RESOLVE_INITIAL_REFERENCES
+	_bindDefault = ORBServices.RESOLVE_INITIAL_REFERENCES;
+#else
+#ifdef USE_NAME_SERVICE
+	_bindDefault = ORBServices.NAME_SERVICE;
+#else
+#ifdef USE_FILE
+	_bindDefault = ORBServices.FILE;
+#else
+#ifdef USE_NAMED_CONNECT
+	_bindDefault = ORBServices.NAMED_CONNECT;
+#else
+	_bindDefault = ORBServices.CONFIGURATION_FILE;
+#endif
+#endif
+#endif
+#endif
+    }
+    
+};
