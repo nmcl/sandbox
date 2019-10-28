@@ -1,0 +1,39 @@
+/*
+ * Copyright (C) 1997, 1998, 1999, 2000, 2001,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: CosPersistencePO.idl,v 1.1.42.1 2001/03/20 16:24:47 nmcl Exp $
+ */
+
+#ifndef COSPERSISTENCEPO_IDL_
+#define COSPERSISTENCEPO_IDL_
+
+#pragma prefix "omg.org"
+
+#include <idl/CosPersistencePDS.idl>
+
+module CosPersistencePO
+{
+    interface PO
+    {
+	attribute CosPersistencePID::PID p;
+
+	CosPersistencePDS::PDS connect (in CosPersistencePID::PID p);
+	void disconnect (in CosPersistencePID::PID p);
+	void store (in CosPersistencePID::PID p);
+	void restore (in CosPersistencePID::PID p);
+	void deleteState (in CosPersistencePID::PID p);
+    };
+
+    interface SD
+    {
+	void pre_store ();
+	void post_restore ();
+    };
+};
+
+#endif
