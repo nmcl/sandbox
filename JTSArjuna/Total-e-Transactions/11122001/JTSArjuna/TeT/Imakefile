@@ -1,0 +1,15 @@
+COMMENT 
+COMMENT Copyright (C) 2001,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.2.1 2001/05/21 13:47:15 jcoleman Exp $
+COMMENT
+
+SubDirectory(config)
+SubDirectory(classes)
+
+Purge(MakefileBoot)

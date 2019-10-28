@@ -1,0 +1,12 @@
+COMMENT 
+COMMENT Copyright (C) 2001,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.2.1 2001/05/21 13:49:13 jcoleman Exp $
+COMMENT
+
+Purge(TeT.answers TeT.cf Local.def TeT_Module.def)
