@@ -1,0 +1,91 @@
+#!/bin/sh
+#
+# Copyright (C) 2001,
+# 
+# Hewlett-Packard Company
+# Newcastle upon Tyne,
+# Tyne and Wear,
+# UK.
+# 
+# $Id: packcf,v 1.1.2.1.6.1.14.1.4.2 2001/07/19 14:20:14 nmcl Exp $
+#
+#  *.cf packer for Arjuna TS
+#  Creates unpack script
+#  Relies on the current naming scheme of MODNAME/config/MODNAME.cf files
+# 
+
+MODULES="ModuleBuildSystem JavaHarness ArjunaCommon ArjunaCore OrbPortability CosServices/CosTransactions CosServices/CosRecovery Resources/JDBC Resources/JDBC2 JTSArjuna TeT"
+UNPACK_SCRIPT=unpackcf
+
+# Header
+(
+echo "#!/bin/sh"
+echo "#"
+echo "# Copyright (C) 2001,"
+echo "# "
+echo "# Hewlett-Packard Company,"
+echo "# Newcastle upon Tyne,"
+echo "# Tyne and Wear,"
+echo "# UK."
+echo "#"
+echo ""
+echo "# Arjuna JTS configuration file unpacker"
+echo ""
+echo "if test x\$1 = x; then"
+echo "	echo usage: \$0 config_dir >&2"
+echo "	exit 1"
+echo "fi"
+echo ""
+echo "test -d \$1 || mkdir \$1 || exit 1"
+echo ""
+) > $UNPACK_SCRIPT
+
+# Top level
+TOP=toplevel
+echo "Packing config/$TOP.cf"
+(
+echo "# top level configuration ----------"
+echo "echo Unpacking top level configuration file"
+echo "cat << \"ENDOFMODULE-$TOP-CF\" > \"\$1\"/$TOP.cf || exit 1"
+cat config/$TOP.cf
+echo "ENDOFMODULE-$TOP-CF"
+echo ""
+) >> $UNPACK_SCRIPT
+echo "Packing config/$TOP.answers"
+(
+echo "# top level answers ----------"
+echo "echo Unpacking top level answers file"
+echo "cat << \"ENDOFMODULE-$TOP-ANS\" > \"\$1\"/$TOP.answers || exit 1"
+cat config/$TOP.answers
+echo "ENDOFMODULE-$TOP-ANS"
+echo ""
+) >> $UNPACK_SCRIPT
+
+# Modules
+for module in $MODULES
+do
+	base=`basename $module`
+	cf=$module/config/$base.cf
+	echo "Packing $cf"
+	(
+	echo "# Module $module configuration ----------"
+	echo "echo Unpacking $base configuration file"
+	echo "cat << \"ENDOFMODULE-$base-CF\" > \"\$1\"/$base.cf || exit 1"
+# Translate lines of the form VAR=$$JTSARJUNA_HOME to something parseable
+	cat $cf | sed -e 's/\$\$/\\\$/'
+	echo "ENDOFMODULE-$base-CF"
+	echo ""
+	) >> $UNPACK_SCRIPT
+	answers=$module/config/$base.answers
+	echo "Packing $answers"
+	(
+	echo "# Module $module answers ----------"
+	echo "echo Unpacking $base answers file"
+	echo "cat << \"ENDOFMODULE-$base-ANS\" > \"\$1\"/$base.answers || exit 1"
+	cat $answers
+	echo "ENDOFMODULE-$base-ANS"
+	echo ""
+	) >> $UNPACK_SCRIPT
+done
+echo "echo All modules unpacked" >> $UNPACK_SCRIPT
+chmod u+x $UNPACK_SCRIPT
