@@ -1,0 +1,16 @@
+/*
+ * Copyright (C) 1998, 1999, 2000, 2001,
+ * 
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ */
+
+/*
+ *  Local.def
+ */
+
+AddToIMakeFlags(-DINSTALLJAR -DVerboseMake=No -DTopDir=/temp/src/JTSArjuna/2.2/JTSArjuna/ModuleBuildSystem -DInstallTopDir=C:/PROGRA~1/Arjuna/TransactionService )
+
+#include "/temp/src/JTSArjuna/2.2/JTSArjuna/ModuleBuildSystem/config/Module.def"
