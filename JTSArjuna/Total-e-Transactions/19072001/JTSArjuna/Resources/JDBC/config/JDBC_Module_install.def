@@ -1,0 +1,20 @@
+/*
+ * Copyright (C) 1999, 2000, 2001,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ */
+
+/*
+ *  JDBC_Module.def (install)
+ */
+
+JDBCTOPDIR=C:/PROGRA~1/Arjuna/TransactionService
+
+AddToIMakeFlags(-I$(JDBCTOPDIR)/config)
+AddToCPPIncludes(-I$(JDBCTOPDIR)/include)
+
+AddToCPPFlags(-DJDBC_VERSION=\"4.0.0\")
