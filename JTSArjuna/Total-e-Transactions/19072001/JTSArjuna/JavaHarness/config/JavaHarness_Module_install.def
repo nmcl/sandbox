@@ -1,0 +1,20 @@
+/*
+ * Copyright (C) 1998, 1999, 2000, 2001,
+ * 
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ */
+
+/*
+ *  JavaHarness_Module.def (install)
+ */
+
+JAVAHARNESSTOPDIR=C:/PROGRA~1/Arjuna/TransactionService
+
+AddToIMakeFlags(-DCPP_PROGRAM=gcc -DGNU_CPP -I$(JAVAHARNESSTOPDIR)/config -DJavaCProg=javac -DJavaDocProg=javadoc -DJarProg=jar -DRMICProg=rmic -DJavaProg=java )
+AddToCPPFlags(-P -E -C -x c -D__STDC__ -I$(JAVAHARNESSTOPDIR)/config -DJDK_1_3 )
+
+#include "C:/PROGRA~1/Arjuna/TransactionService/config/JavaHarness.tmpl"
+

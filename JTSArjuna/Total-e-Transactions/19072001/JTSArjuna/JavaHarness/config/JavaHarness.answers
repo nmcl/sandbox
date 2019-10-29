@@ -1,0 +1,16 @@
+Hostname: thinkblue
+Uname   : CYGWIN_NT-5.0 20.1 (0.3/1/1)
+Date    : Thu Sep 20 13:40:12 2001
+
+command line arguments : -all
+
+Java compiler [javac] : (DEFAULT) javac
+Java [java] : (DEFAULT) java
+Java version [1.3.0] : (DEFAULT) 1.3.0
+Java documention generator [javadoc] : (DEFAULT) javadoc
+Java archive [jar] : (DEFAULT) jar
+Java RMI stub compiler [rmic] : (DEFAULT) rmic
+Specific javac flags governing compilation [] : (DEFAULT) 
+Cross compiler options [] : (DEFAULT) 
+Do you want to specify the module information (y/n) [n] : N
+Use gcc for CPP (y/n) [y] : Y

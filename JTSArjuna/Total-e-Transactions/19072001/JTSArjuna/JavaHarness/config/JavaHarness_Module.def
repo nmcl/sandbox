@@ -1,0 +1,18 @@
+/*
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ */
+
+/*
+ *  JavaHarness_Module.def (source)
+ */
+
+JAVAHARNESSTOPDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/JavaHarness
+
+AddToIMakeFlags(-DCPP_PROGRAM=gcc -DGNU_CPP -I$(JAVAHARNESSTOPDIR)/config -DJavaCProg=javac -DJavaDocProg=javadoc -DJarProg=jar -DRMICProg=rmic -DJavaProg=java )
+AddToCPPFlags(-P -E -C -x c -D__STDC__ -I$(JAVAHARNESSTOPDIR)/config -DJDK_1_3 )
+
+#include "C:/temp/src/JTSArjuna/2.2/JTSArjuna/JavaHarness/config/JavaHarness.tmpl"
+

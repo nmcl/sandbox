@@ -1,0 +1,41 @@
+#!/bin/sh
+#
+# Copyright (C) 1998, 1999, 2000, 2001,
+# 
+# Arjuna Solutions Limited,
+# Newcastle upon Tyne,
+# Tyne and Wear,
+# UK.
+#
+
+# Java Harness configure file
+# Version 1.4.3
+
+INSTALLTOPDIR=C:/PROGRA~1/Arjuna/TransactionService
+BUILDSYSTEMTOPDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/ModuleBuildSystem
+
+LOCAL_MAKEFLAGS=''
+LOCAL_IMAKEFLAGS='-DINSTALLJAR -DVerboseMake=No -DTopDir=$(JAVAHARNESSTOPDIR) -DInstallTopDir=C:/PROGRA~1/Arjuna/TransactionService'
+LOCAL_MAKEDEPENDFLAGS=''
+LOCAL_CPPFLAGS=''
+LOCAL_CPPINCLUDES=''
+LOCAL_CPLUSPLUSFLAGS=''
+LOCAL_LDFLAGS=''
+LOCAL_LDLIBRARIES=''
+LOCAL_LDLIBDEPENDS=''
+
+MODULE_MAKEFLAGS=''
+MODULE_IMAKEFLAGS='-DCPP_PROGRAM=gcc -DGNU_CPP -I$(JAVAHARNESSTOPDIR)/config -DJavaCProg=javac -DJavaDocProg=javadoc -DJarProg=jar -DRMICProg=rmic -DJavaProg=java '
+MODULE_MAKEDEPENDFLAGS=''
+MODULE_CPPFLAGS='-P -E -C -x c -D__STDC__ -I$(JAVAHARNESSTOPDIR)/config -DJDK_1_3 '
+MODULE_CPPINCLUDES=''
+MODULE_CPLUSPLUSFLAGS=''
+MODULE_LDFLAGS=''
+MODULE_LDLIBRARIES=''
+MODULE_LDLIBDEPENDS=''
+
+SOURCEID='unkown'
+BUILDINFO='Arjuna Solutions Ltd. [unknown]'
+NOTES='none'
+
+JDKVERSION='1_3'
