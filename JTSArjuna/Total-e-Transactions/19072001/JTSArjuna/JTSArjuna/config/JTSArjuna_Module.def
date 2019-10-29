@@ -1,0 +1,19 @@
+/*
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ */
+
+/*
+ *  JTSArjuna_Module.def (source)
+ */
+
+JTSARJUNATOPDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/JTSArjuna
+
+HTDOCS_TITLE="HP Bluestone Arjuna Transaction Service for Java Version 2_2_0"
+
+AddToIMakeFlags(-I$(JTSARJUNATOPDIR)/config)
+AddToCPPFlags(-I$(JTSARJUNATOPDIR)/include)
+
+AddToCPPFlags(-DJTSARJUNA_VERSION=\"2_2_0\")

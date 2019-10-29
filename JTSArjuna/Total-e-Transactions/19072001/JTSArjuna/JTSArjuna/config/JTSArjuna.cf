@@ -1,0 +1,55 @@
+#!/bin/sh
+#
+# Copyright (C) 1998, 1999, 2000, 2001,
+# 
+# Arjuna Solutions Limited,
+# Newcastle upon Tyne,
+# Tyne and Wear,
+# UK.
+#
+
+# JTSArjuna configure file
+# Version 2_2_0
+
+INSTALLTOPDIR=C:/PROGRA~1/Arjuna/TransactionService
+ORBCOMMONTOPDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/OrbPortability
+JDBCTOPDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/Resources/JDBC
+JDBC2TOPDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/Resources/JDBC2
+JTSTOPDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/CosServices/CosTransactions
+ARJUNACORETOPDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/ArjunaCore
+ARJUNACOMMONTOPDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/ArjunaCommon
+ARJUNACORETOPDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/ArjunaCore
+JAVAHARNESSTOPDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/JavaHarness
+BUILDSYSTEMTOPDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/ModuleBuildSystem
+RECOVERYTOPDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/CosServices/CosRecovery
+
+LOCAL_MAKEFLAGS=''
+LOCAL_IMAKEFLAGS='-DINSTALLJAR -DVerboseMake=No -DTopDir=C:/temp/src/JTSArjuna/2.2/JTSArjuna/JTSArjuna -DInstallTopDir=C:/PROGRA~1/Arjuna/TransactionService -DBUILDHTDOCS '
+LOCAL_MAKEDEPENDFLAGS=''
+LOCAL_CPPFLAGS=''
+LOCAL_CPPINCLUDES='-I$(JTSARJUNATOPDIR)/config'
+LOCAL_CPLUSPLUSFLAGS=''
+LOCAL_LDFLAGS=''
+LOCAL_LDLIBRARIES=''
+LOCAL_LDLIBDEPENDS=''
+
+MODULE_MAKEFLAGS=''
+MODULE_IMAKEFLAGS='-I$(JTSARJUNATOPDIR)/config'
+MODULE_MAKEDEPENDFLAGS=''
+MODULE_CPPFLAGS='-I$(JTSARJUNATOPDIR)/include'
+MODULE_CPPINCLUDES=''
+MODULE_CPLUSPLUSFLAGS=''
+MODULE_LDFLAGS=''
+MODULE_LDLIBRARIES=''
+MODULE_LDLIBDEPENDS=''
+
+PRODUCT_NAME='ArjunaTS'
+VERSION='2'
+MAJOR='2'
+MINOR='0'
+SOURCEID='unknown'
+CANDIDATE_RELEASE='Beta'
+RELEASE='internal'
+BUILDINFO='Arjuna Solutions Ltd. [unknown]'
+BUILDNUMBER='2_2_0'
+NOTES='none'

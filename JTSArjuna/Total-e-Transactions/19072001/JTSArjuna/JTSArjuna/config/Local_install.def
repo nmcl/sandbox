@@ -1,0 +1,24 @@
+/*
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ */
+
+/*
+ *  Local.def (install)
+ */
+
+#define TopDir C:/PROGRA~1/Arjuna/TransactionService
+#define InstallTopDir C:/PROGRA~1/Arjuna/TransactionService
+
+#include "C:/PROGRA~1/Arjuna/TransactionService/config/CosTransactions_Module.def"
+#include "C:/temp/src/JTSArjuna/2.2/JTSArjuna/OrbPortability/config/OrbPortability_Module.def"
+#include "C:/temp/src/JTSArjuna/2.2/JTSArjuna/ArjunaCore/config/ArjunaCore_Module.def"
+#include "C:/temp/src/JTSArjuna/2.2/JTSArjuna/ArjunaCommon/config/ArjunaCommon_Module.def"
+#include "C:/temp/src/JTSArjuna/2.2/JTSArjuna/CosServices/CosTransactions/config/CosTransactions_Module.def"
+#include "C:/temp/src/JTSArjuna/2.2/JTSArjuna/Resources/JDBC/config/JDBC_Module.def"
+#include "C:/temp/src/JTSArjuna/2.2/JTSArjuna/Resources/JDBC2/config/JDBC2_Module.def"
+#include "C:/temp/src/JTSArjuna/2.2/JTSArjuna/CosServices/CosRecovery/config/CosRecovery_Module.def"
+#include "C:/temp/src/JTSArjuna/2.2/JTSArjuna/JavaHarness/config/JavaHarness_Module.def"
+#include "C:/temp/src/JTSArjuna/2.2/JTSArjuna/ModuleBuildSystem/config/Module.def"

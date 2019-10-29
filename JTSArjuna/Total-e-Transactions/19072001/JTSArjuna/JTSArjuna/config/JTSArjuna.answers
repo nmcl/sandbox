@@ -1,0 +1,13 @@
+Hostname: thinkblue
+Uname   : CYGWIN_NT-5.0 20.1 (0.3/1/1)
+Date    : Thu Sep 20 13:40:31 2001
+
+command line arguments : -all
+
+Build htdocs (y/n) [y] : (DEFAULT) y
+What is the source identifier? [unknown] : (DEFAULT) unknown
+Candidate release information? [Beta] : (DEFAULT) Beta
+Internal or external release (i/e)? [i] : i
+What is your name? [unknown] : (DEFAULT) unknown
+What is the build number? [2_2_0] : (DEFAULT) 2_2_0
+Any other information? [none] : (DEFAULT) none
