@@ -1,0 +1,27 @@
+#!/bin/sh
+
+#
+# Copyright (C) 1998, 1999, 2000,
+# 
+# Arjuna Solutions Limited,
+# Newcastle upon Tyne,
+# Tyne and Wear,
+# UK.
+#
+
+IMAKE=imake
+MAKE=make
+COSSERVICES_IMAKE_INCLUDE="-IC:/temp/src/JTSArjuna/2.2/JTSArjuna/JTSArjuna/config -IC:/temp/src/JTSArjuna/2.2/JTSArjuna/CosServices/CosTransactions/config -IC:/temp/src/JTSArjuna/2.2/JTSArjuna/OrbPortability/config -I/config -IC:/temp/src/JTSArjuna/2.2/JTSArjuna/ArjunaCommon/config -IC:/temp/src/JTSArjuna/2.2/JTSArjuna/JavaHarness/config -IC:/temp/src/JTSArjuna/2.2/JTSArjuna/Resources/JDBC/config -IC:/temp/src/JTSArjuna/2.2/JTSArjuna/Resources/JDBC2/config -I/config -I/temp/src/JTSArjuna/2.2/JTSArjuna/ModuleBuildSystem/config"
+COSSERVICES_IMAKE_TEMPLATE=ModuleBuildSystem.tmpl
+COSSERVICES_IMAKE_FLAGS="-DTOPDIR_DEFAULT=C:/temp/src/JTSArjuna/2.2/JTSArjuna/JTSArjuna"
+
+SED=sed
+
+MV=mv
+RM="rm -f"
+
+$IMAKE -T$COSSERVICES_IMAKE_TEMPLATE $COSSERVICES_IMAKE_INCLUDE $COSSERVICES_IMAKE_FLAGS
+$MV Makefile Makefile.sed
+$SED -e '/^COMMENT$/s//#/' -e '/^COMMENT /s//# /' -e 's/\%\%/\\"/g' < Makefile.sed > Makefile
+$RM Makefile.sed
+$MAKE Makefile
