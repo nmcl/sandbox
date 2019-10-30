@@ -1,0 +1,85 @@
+/*
+ * Copyright (C) 1998, 1999, 2000, 2001,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.  
+ *
+ * $Id: Info.javatmpl,v 1.3.2.1.2.1.26.1.2.1.2.2.2.1.50.1 2001/08/01 14:18:24 jcoleman Exp $
+ */
+
+#include <Info.h>
+
+package com.arjuna.JDBC2;
+
+import com.arjuna.JavaHarness.ModuleInfo;
+import java.util.Hashtable;
+
+/**
+ * Module specific implementation of the information object.
+ *
+ * @author Mark Little (mark@arjuna.com)
+ * @version $Id: Info.javatmpl,v 1.3.2.1.2.1.26.1.2.1.2.2.2.1.50.1 2001/08/01 14:18:24 jcoleman Exp $
+ * @since JTS 2.0.
+ * @see com.arjuna.JavaHarness.ModuleInfo
+ */
+
+public class Info extends ModuleInfo
+{
+
+public Info ()
+    {
+	this("");
+    }
+
+public Info (String s)
+    {
+	_preString  = s;
+
+	_attributes = new Hashtable();
+	
+	_attributes.put(_keys[0], MODULE);
+	_attributes.put(_keys[1], SOURCEID);
+	_attributes.put(_keys[2], BUILDINFO);
+	_attributes.put(_keys[3], VERSION);
+	_attributes.put(_keys[4], DATE);
+	_attributes.put(_keys[5], NOTES);
+
+	String supportedVersions = "JNDI";
+	
+#ifdef BUILD_CLOUDSCAPE_3_0
+	supportedVersions += ", Cloudscape_3_0";
+#endif
+#ifdef BUILD_CLOUDSCAPE_3_5
+	supportedVersions += ", Cloudscape_3_5";
+#endif
+#ifdef BUILD_CLOUDSCAPE_3_6
+	supportedVersions += ", Cloudscape_3_6";
+#endif
+#ifdef BUILD_ORACLE_8_1_6
+	supportedVersions += ", Oracle_8_1_6";
+#endif
+#ifdef BUILD_SEQUELINK_5_0
+	supportedVersions += ", Sequelink_5_0";
+#endif
+#ifdef BUILD_SEQUELINK_5_1
+	supportedVersions += ", Sequelink_5_1";
+#endif
+
+	_attributes.put(_keys[6], supportedVersions);
+    }    
+
+public String[] keys ()
+    {
+	return _keys;
+    }
+
+    /*
+     * Do not re-order!
+     */
+
+private String[]  _keys = { "MODULE", "SOURCE IDENTIFIER", "BUILD INFORMATION", "VERSION", "DATE", "NOTES", "SUPPORTED DRIVERS" };
+   
+}
+
