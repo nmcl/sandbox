@@ -1,0 +1,20 @@
+COMMENT 
+COMMENT Copyright (C) 2000, 2001,
+COMMENT
+COMMENT Hewlett-Packard Company,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2.66.1.4.1 2001/06/28 14:15:25 nmcl Exp $
+COMMENT
+
+SubDirectory(com)
+
+Target(JDBC2Arjuna.jar)
+
+CreateJavaLibrary(JDBC2Arjuna,com)
+
+#ifdef INSTALLJAR
+InstallJavaLibrary(/lib,JDBC2Arjuna)
+#endif
