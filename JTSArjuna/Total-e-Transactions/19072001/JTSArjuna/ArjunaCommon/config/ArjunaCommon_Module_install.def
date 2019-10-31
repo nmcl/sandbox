@@ -1,0 +1,19 @@
+/*
+ * Copyright (C) 1998, 1999, 2000, 2001,
+ * 
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ */
+
+/*
+ *  ArjunaCommon_Module.def (install)
+ */
+
+JAVAGANDIVATOPDIR=C:/PROGRA~1/Arjuna/TransactionService
+
+AddToIMakeFlags(-I$(JAVAGANDIVATOPDIR)/config)
+AddToCPPIncludes(-I$(JAVAGANDIVATOPDIR)/include)
+
+AddToCPPFlags(-DGANDIVA_VERSION=\"4.3.0\")
