@@ -62,7 +62,20 @@ class World
 	    {
 		Cell current = _theWorld[i][j];
 		int liveNeighbours = 0;
-		
+
+		/*
+		 * <_width +1, _depth -1> <_width +1, _depth> <_width +1, _depth +1>
+		 * <_width, _depth -1> <_width, _depth> <_width, _depth +1>
+		 * <_width -1, _depth -1> <_width -1, _depth> <_width -1, _depth +1>
+		 *
+		 * 1,-1 1,0 1,1
+		 * 0,-1 0,0 0,1
+		 * -1,-1 -1,0 -1,1
+		 *
+		 * 0,0 0,1 0,2
+		 * 1,0 1,1 1,2
+		 * 2,0 2,1 2,2
+		 */
 	    }
 	}
     }
