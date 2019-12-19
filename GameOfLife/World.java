@@ -28,6 +28,11 @@ class World
 
     /*
      * How to seed the world?
+     *
+     * - define a class that contains the world to use?
+     * - define x/y coordinates?
+     * - a file with the data?
+     * -
      */
     
     public void print ()
