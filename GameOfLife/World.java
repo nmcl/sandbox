@@ -30,9 +30,9 @@ class World
      * How to seed the world?
      *
      * - define a class that contains the world to use?
-     * - define x/y coordinates?
+     * - define x/y coordinates on command line?
      * - a file with the data?
-     * -
+     * - graphically?
      */
     
     public void print ()
