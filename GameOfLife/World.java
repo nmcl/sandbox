@@ -61,7 +61,7 @@ class World
 	    for (int j = 0; j < _depth; j++)
 	    {
 		Cell current = _theWorld[i][j];
-		int liveNeighbours
+		int liveNeighbours = 0;
 		
 	    }
 	}
