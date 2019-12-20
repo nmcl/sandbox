@@ -125,28 +125,71 @@ class World
 
 		/*
 		 * Option (iii) dead cells beyond the grid ...
+		 *
+		 * Start by counting the number of live cells around us.
 		 */
-		
-		int n1x = ((x-1 < 0) ? _x : x-1);
-		int n1y = ((y-1 < 0) ? _y : y-1);
-		int n2x = ((x-1 < 0) ? _x : x-1);
-		int n2y = y;
-		int n3x = ((x-1 < 0) ? _x : x-1);
-		int n3y = ((y+1 == _x) ? 0 : y+1);
 
+		int n1x = x-1
+		int n1y = y-1;
+
+		if ((n1x >= 0) || (n1y >= 0))
+		    liveNeighbours += _theWorld[n1x][n1y];
+		    
+		int n2x = x-1;
+		int n2y = y;
+
+		if (n2x >= 0)
+		    liveNeighbours += _theWorld[n2x][n2y];
+		
+		int n3x = x-1;
+		int n3y = y+1;
+
+		if ((n3x >= 0) || (n3y < _y))
+		    liveNeighbours += _theWorld[n3x][n3y];
+		
 		int n4x = x;
-		int n4y = ((y-1 < 0) ? _y : y-1);
+		int n4y = y-1;
+
+		if (n4y >=0)
+		    liveNeighbours += _theWorld[n4x][n4y];
+		
 		int n5x = x;
 		int n5y = y;
-		int n6x = x;
-		int n6y = ((y+1 == _y) ? 0 : y+1);
 
-		int n7x = ((x+1 == _x) ? 0 : x+1);
-		int n7y = ((y-1 < 0) ? _y : y-1);
-		int n8x = ((x+1 == _x) ? 0 : x+1);
+		// nothing to do for ourself at this stage ...
+		
+		int n6x = x;
+		int n6y = y+1;
+
+		if (n6y < _y)
+		    liveNeighbours += _theWorld[n6x][n6y];
+
+		int n7x = x+1;
+		int n7y = y-1;
+
+		if ((n7x < _x) || (n7y >= 0))
+		    liveNeighbours += _theWorld[n7x][n7y];
+		
+		int n8x = x+1;
 		int n8y = y;
-		int n9x = ((x+1 == _x) ? 0 : x+1);
-		int n9y = ((y+1 == _x) ? 0 : y+1);
+
+		if (n8x < _x)
+		    liveNeighbours += _theWorld[n8x][n8y];
+		
+		int n9x = x+1;
+		int n9y = y+1;
+
+		if ((n9x < _x) || (n9y < _y))
+		    liveNeighbours += _theWorld[n9x][n9y];
+
+	/**
+	 * 1) Any live cell with two or three neighbours survives.
+	 * 2) Any dead cell with three live neighbours becomes a live cell.
+	 * 3) All other live cells die in the next generation.
+	 * 4) Dead cells remain dead unless triggered into life by rule 2).
+	 */
+
+
 	    }
 	}
     }
