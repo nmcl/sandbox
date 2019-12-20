@@ -81,6 +81,23 @@ class World
 		 *  1,-1  1,0  1,1
 		 */
 
+		/*
+		 * The board is assumed to be infinite in size. How do we simulate
+		 * that in a finite world?
+		 *
+		 * i) We could consider the board wrapping around to use the cells
+		 * on either side as neighbours.
+		 *
+		 * ii) We could keep expanding the world by adding new cells beyond
+		 * the current dimensions as they come alive, but we'd eventually
+		 * run out of memory.
+		 *
+		 * iii) We could assume all cells beyond the boundary are dead and
+		 * stay dead.
+		 *
+		 * Go with option (iii) for now.
+		 */
+		
 		int n1x = ((x-1 < 0) ? _x : x-1);
 		int n1y = ((y-1 < 0) ? _y : y-1);
 		int n2x = ((x-1 < 0) ? _x : x-1);
