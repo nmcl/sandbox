@@ -1,5 +1,8 @@
 /**
  * The world within which the cells live.
+ *
+ * <x,y> coordinates for every Cell. <0,0> is the top left
+ * hand corner.
  */
 
 class World
@@ -14,14 +17,14 @@ class World
 
     public World (int w, int d)
     {
-	_width = w;
-	_depth = d;
+	_x = w;
+	_y = d;
 
-	_theWorld = new Cell[_width][_depth];
+	_theWorld = new Cell[_x][_y];
 
-	for (int i = 0; i < _width; i++)
+	for (int i = 0; i < _x; i++)
 	{
-	    for (int j = 0; j < _depth; j++)
+	    for (int j = 0; j < _y; j++)
 		_theWorld[i][j] = new Cell();
 	}
     }
@@ -37,9 +40,9 @@ class World
     
     public void print ()
     {
-	for (int i = 0; i < _width; i++)
+	for (int i = 0; i < _x; i++)
 	{
-	    for (int j = 0; j < _depth; j++)
+	    for (int j = 0; j < _y; j++)
 	    {
 		System.out.print(_theWorld[i][j]);
 	    }
@@ -59,19 +62,19 @@ class World
 	 * 4) Dead cells remain dead unless triggered into life by rule 2).
 	 */
 
-	Cell[][] nextGeneration = new Cell[_width][_depth];
+	Cell[][] nextGeneration = new Cell[_x][_y];
 	
-	for (int i = 0; i < _width; i++)
+	for (int i = 0; i < _x; i++)
 	{
-	    for (int j = 0; j < _depth; j++)
+	    for (int j = 0; j < _y; j++)
 	    {
 		Cell current = _theWorld[i][j];
 		int liveNeighbours = 0;
 
 		/*
-		 * <_width -1, _depth -1> <_width -1, _depth> <_width -1, _depth +1>
-		 * <_width, _depth -1> <_width, _depth> <_width, _depth +1>
-		 * <_width +1, _depth -1> <_width +1, _depth> <_width +1, _depth +1>
+		 * <_x -1, _y -1> <_x -1, _y> <_x -1, _y +1>
+		 * <_x, _y -1> <_x, _y> <_x, _y +1>
+		 * <_x +1, _y -1> <_x +1, _y> <_x +1, _y +1>
 		 *
 		 * -1,-1 -1,0 -1,1
 		 *  0,-1  0,0  0,1
@@ -81,8 +84,8 @@ class World
 	}
     }
     
-    private int _width;
-    private int _depth;
+    private int _x;
+    private int _y;
     private Cell[][] _theWorld;
 
 }
