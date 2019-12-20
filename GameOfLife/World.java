@@ -81,26 +81,26 @@ class World
 		 *  1,-1  1,0  1,1
 		 */
 
-		int n1x = x-1;
-		int n1y = y-1;
-		int n2x = x-1;
+		int n1x = ((x-1 < 0) ? _x : x-1);
+		int n1y = ((y-1 < 0) ? _y : y-1);
+		int n2x = ((x-1 < 0) ? _x : x-1);
 		int n2y = y;
-		int n3x = x-1;
-		int n3y = y+1;
+		int n3x = ((x-1 < 0) ? _x : x-1);
+		int n3y = ((y+1 == _x) ? 0 : y+1);
 
 		int n4x = x;
-		int n4y = y-1;
+		int n4y = ((y-1 < 0) ? _y : y-1);
 		int n5x = x;
 		int n5y = y;
 		int n6x = x;
-		int n6y = y+1;
+		int n6y = ((y+1 == _y) ? 0 : y+1);
 
-		int n7x = x+1;
-		int n7y = y-1;
-		int n8x = x+1;
+		int n7x = ((x+1 == _x) ? 0 : x+1);
+		int n7y = ((y-1 < 0) ? _y : y-1);
+		int n8x = ((x+1 == _x) ? 0 : x+1);
 		int n8y = y;
-		int n9x = x+1;
-		int n9y = y+1;
+		int n9x = ((x+1 == _x) ? 0 : x+1);
+		int n9y = ((y+1 == _x) ? 0 : y+1);
 	    }
 	}
     }
