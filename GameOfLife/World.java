@@ -51,11 +51,28 @@ class World
 	}
     }
 
+    /**
+     * The tick of the clock and the world moves on ...
+     *
+     * The board is assumed to be infinite in size. How do we simulate
+     * that in a finite world?
+     *
+     * i) We could consider the board wrapping around to use the cells
+     * on either side as neighbours.
+     *
+     * ii) We could keep expanding the world by adding new cells beyond
+     * the current dimensions as they come alive, but we'd eventually
+     * run out of memory.
+     *
+     * iii) We could assume all cells beyond the boundary are dead and
+     * stay dead.
+     *
+     * Go with option (iii) for now.
+     */
+    
     public void tick ()
     {
-	/*
-	 * Assume the world wraps top, bottom and sides.
-	 *
+	/**
 	 * 1) Any live cell with two or three neighbours survives.
 	 * 2) Any dead cell with three live neighbours becomes a live cell.
 	 * 3) All other live cells die in the next generation.
@@ -82,20 +99,32 @@ class World
 		 */
 
 		/*
-		 * The board is assumed to be infinite in size. How do we simulate
-		 * that in a finite world?
+		 * Option (i) wrapping ...
 		 *
-		 * i) We could consider the board wrapping around to use the cells
-		 * on either side as neighbours.
+		 * int n1x = ((x-1 < 0) ? _x : x-1);
+		 * int n1y = ((y-1 < 0) ? _y : y-1);
+		 * int n2x = ((x-1 < 0) ? _x : x-1);
+		 * int n2y = y;
+		 * int n3x = ((x-1 < 0) ? _x : x-1);
+		 * int n3y = ((y+1 == _x) ? 0 : y+1);
 		 *
-		 * ii) We could keep expanding the world by adding new cells beyond
-		 * the current dimensions as they come alive, but we'd eventually
-		 * run out of memory.
+		 * int n4x = x;
+		 * int n4y = ((y-1 < 0) ? _y : y-1);
+		 * int n5x = x;
+		 * int n5y = y;
+		 * int n6x = x;
+		 * int n6y = ((y+1 == _y) ? 0 : y+1);
 		 *
-		 * iii) We could assume all cells beyond the boundary are dead and
-		 * stay dead.
-		 *
-		 * Go with option (iii) for now.
+		 * int n7x = ((x+1 == _x) ? 0 : x+1);
+		 * int n7y = ((y-1 < 0) ? _y : y-1);
+		 * int n8x = ((x+1 == _x) ? 0 : x+1);
+		 * int n8y = y;
+		 * int n9x = ((x+1 == _x) ? 0 : x+1);
+		 * int n9y = ((y+1 == _x) ? 0 : y+1);
+		 */
+
+		/*
+		 * Option (iii) dead cells beyond the grid ...
 		 */
 		
 		int n1x = ((x-1 < 0) ? _x : x-1);
