@@ -64,11 +64,11 @@ class World
 
 	Cell[][] nextGeneration = new Cell[_x][_y];
 	
-	for (int i = 0; i < _x; i++)
+	for (int x = 0; x < _x; x++)
 	{
-	    for (int j = 0; j < _y; j++)
+	    for (int y = 0; y < _y; y++)
 	    {
-		Cell current = _theWorld[i][j];
+		Cell current = _theWorld[x][y];
 		int liveNeighbours = 0;
 
 		/*
@@ -81,26 +81,26 @@ class World
 		 *  1,-1  1,0  1,1
 		 */
 
-		int n1x = i-1;
-		int n1y = j-1;
-		int n2x = i-1;
-		int n2y = j;
-		int n3x = i-1;
-		int n3y = j+1;
+		int n1x = x-1;
+		int n1y = y-1;
+		int n2x = x-1;
+		int n2y = y;
+		int n3x = x-1;
+		int n3y = y+1;
 
-		int n4x = i;
-		int n4y = j-1;
-		int n5x = i;
-		int n5y = j;
-		int n6x = i;
-		int n6y = j+1;
+		int n4x = x;
+		int n4y = y-1;
+		int n5x = x;
+		int n5y = y;
+		int n6x = x;
+		int n6y = y+1;
 
-		int n7x = i+1;
-		int n7y = j-1;
-		int n8x = i+1;
-		int n8y = j;
-		int n9x = i+1;
-		int n9y = j+1;
+		int n7x = x+1;
+		int n7y = y-1;
+		int n8x = x+1;
+		int n8y = y;
+		int n9x = x+1;
+		int n9y = y+1;
 	    }
 	}
     }
