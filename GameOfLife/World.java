@@ -80,6 +80,27 @@ class World
 		 *  0,-1  0,0  0,1
 		 *  1,-1  1,0  1,1
 		 */
+
+		int n1x = i-1;
+		int n1y = j-1;
+		int n2x = i-1;
+		int n2y = j;
+		int n3x = i-1;
+		int n3y = j+1;
+
+		int n4x = i;
+		int n4y = j-1;
+		int n5x = i;
+		int n5y = j;
+		int n6x = i;
+		int n6y = j+1;
+
+		int n7x = i+1;
+		int n7y = j-1;
+		int n8x = i+1;
+		int n8y = j;
+		int n9x = i+1;
+		int n9y = j+1;
 	    }
 	}
     }
