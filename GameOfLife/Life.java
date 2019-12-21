@@ -2,12 +2,32 @@ public class Life
 {
     public static void main (String[] args)
     {
-	World theWorld = new World();
+	SeedWorld theSeed = null;
+	
+	for (int i = 0; i < args.length; i++)
+	{
+	    if ("-help".equals(args[i]))
+	    {
+		System.out.println("Usage: -strategy <block> [-help]");
+		return;
+	    }
+	    
+	    if ("-strategy".equals(args[i]))
+	    {
+		// throw exception if necessary
+		
+		if ("block".equals(args[i+1]))
+		{
+		    theSeed = new Block();
+		}
+	    }
+	}
 
-	theWorld.print();
+	if (theSeed == null)
+	{
+	    System.err.println("No strategy defined!");
 
-	theWorld.tick();
-
-	theWorld.print();	
+	    return;
+	}
     }
 }

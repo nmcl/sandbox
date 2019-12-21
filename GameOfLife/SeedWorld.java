@@ -6,4 +6,7 @@
 public interface SeedWorld
 {
     public Cell[][] getWorld ();
+
+    public int x ();
+    public int y ();
 }
