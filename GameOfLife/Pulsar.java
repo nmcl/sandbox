@@ -18,29 +18,45 @@ public class Pulsar implements SeedWorld
 		_theWorld[i][j] = new Cell();
 	}
 
-	_theWorld[7][6] = new Cell(1, 1);
-	_theWorld[7][7] = new Cell(1, 1);
-	_theWorld[7][8] = new Cell(1, 1);
+	/*
+	 * First set.
+	 */
+	
+	_theWorld[5][6] = new Cell(1, 1);
+	_theWorld[5][7] = new Cell(1, 1);
+	_theWorld[5][8] = new Cell(1, 1);
 
-	_theWorld[7][12] = new Cell(1, 1);
-	_theWorld[7][13] = new Cell(1, 1);
-	_theWorld[7][14] = new Cell(1, 1);
+	_theWorld[5][12] = new Cell(1, 1);
+	_theWorld[5][13] = new Cell(1, 1);
+	_theWorld[5][14] = new Cell(1, 1);
 
+	_theWorld[7][4] = new Cell(1, 1);
+	_theWorld[8][4] = new Cell(1, 1);
 	_theWorld[9][4] = new Cell(1, 1);
-	_theWorld[10][4] = new Cell(1, 1);
-	_theWorld[11][4] = new Cell(1, 1);
 
+	_theWorld[7][9] = new Cell(1, 1);
+	_theWorld[8][9] = new Cell(1, 1);
 	_theWorld[9][9] = new Cell(1, 1);
-	_theWorld[10][9] = new Cell(1, 1);
-	_theWorld[11][9] = new Cell(1, 1);
 
+	_theWorld[7][11] = new Cell(1, 1);
+	_theWorld[8][11] = new Cell(1, 1);
 	_theWorld[9][11] = new Cell(1, 1);
-	_theWorld[10][11] = new Cell(1, 1);
-	_theWorld[11][11] = new Cell(1, 1);
 
+	_theWorld[7][16] = new Cell(1, 1);
+	_theWorld[8][16] = new Cell(1, 1);
 	_theWorld[9][16] = new Cell(1, 1);
-	_theWorld[10][16] = new Cell(1, 1);
-	_theWorld[11][16] = new Cell(1, 1);
+
+	_theWorld[10][6] = new Cell(1, 1);
+	_theWorld[10][7] = new Cell(1, 1);
+	_theWorld[10][8] = new Cell(1, 1);
+
+	_theWorld[10][12] = new Cell(1, 1);
+	_theWorld[10][13] = new Cell(1, 1);
+	_theWorld[10][14] = new Cell(1, 1);
+
+	/*
+	 * Second set.
+	 */
     }
     
     public Cell[][] getWorld ()
