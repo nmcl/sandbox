@@ -29,6 +29,10 @@ class World
 	}
     }
 
+    public World (SeedWorld aWorld)
+    {
+    }
+    
     /*
      * How to seed the world?
      *
