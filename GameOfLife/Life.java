@@ -11,7 +11,7 @@ public class Life
 	{
 	    if ("-help".equals(args[i]))
 	    {
-		System.out.println("Usage: -strategy <block | blinker | pulsar | glider> [-test] [-help]");
+		System.out.println("Usage: -strategy <block | blinker | pulsar | glider | gosper> [-test] [-help]");
 		return;
 	    }
 
@@ -37,6 +37,10 @@ public class Life
 		if ("glider".equals(args[i+1]))
 		{
 		    theSeed = new Glider();
+		}
+		if ("gosper".equals(args[i+1]))
+		{
+		    theSeed = new Gosper();
 		}
 	    }
 	}
