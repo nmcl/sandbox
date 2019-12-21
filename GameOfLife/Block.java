@@ -41,6 +41,6 @@ public class Block implements SeedWorld
     }
 
     private Cell[][] _theWorld;
-    private final int _x = 5;
-    private final int _y = 5;
+    private final int _x = 6;
+    private final int _y = 6;
 }

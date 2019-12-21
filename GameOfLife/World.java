@@ -31,6 +31,10 @@ class World
 
     public World (SeedWorld aWorld)
     {
+	_x = aWorld.x();
+	_y = aWorld.y();
+
+	_theWorld = aWorld.getWorld();
     }
     
     /*
