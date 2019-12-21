@@ -18,6 +18,7 @@ public class Glider implements SeedWorld
 		_theWorld[i][j] = new Cell();
 	}
 
+	/*
 	_theWorld[2][4] = new Cell(1, 1);
 	_theWorld[3][4] = new Cell(1, 1);
 	_theWorld[4][4] = new Cell(1, 1);
@@ -25,6 +26,15 @@ public class Glider implements SeedWorld
 	_theWorld[4][3] = new Cell(1, 1);
 
 	_theWorld[3][2] = new Cell(1, 1);
+	*/
+
+	_theWorld[3][3] = new Cell(1, 1);
+
+	_theWorld[4][4] = new Cell(1, 1);
+
+	_theWorld[5][2] = new Cell(1, 1);
+	_theWorld[5][3] = new Cell(1, 1);
+	_theWorld[5][4] = new Cell(1, 1);
     }
     
     public Cell[][] getWorld ()
