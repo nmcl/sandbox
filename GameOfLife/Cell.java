@@ -6,37 +6,52 @@ class Cell
 {
     public Cell ()
     {
-	_alive = false;
+	this(0, 0);
     }
 
-    public Cell (boolean alive)
+    public Cell (int alive, int age)
     {
 	_alive = alive;
+	_age = age;
     }
 
-    public boolean isAlive ()
+    public int isAlive ()
     {
 	return _alive;
     }
 
-    public boolean kill ()
+    public int getAge ()
     {
-	_alive = false;
-
-	return _alive;
+	return _age;
     }
 
-    public boolean regenerate ()
+    public void setAge (int value)
     {
-	_alive = true;
+	_age = value;
+    }
+    
+    public void incrementAge ()
+    {
+	_age++;
+    }
+    
+    public void kill ()
+    {
+	_alive = 0;
+	_age = 0;
+    }
 
-	return _alive;
+    public void regenerate ()
+    {
+	_alive = 1;
+	_age = 1;
     }
 
     public String toString ()
     {
-	return ((_alive) ? "@" : "-");
+	return ((_alive == 1) ? "@" : "-");
     }
     
-    private boolean _alive;
+    private int _alive;
+    private int _age;
 }
