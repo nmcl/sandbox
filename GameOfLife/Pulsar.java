@@ -57,6 +57,14 @@ public class Pulsar implements SeedWorld
 	/*
 	 * Second set.
 	 */
+
+	_theWorld[12][6] = new Cell(1, 1);
+	_theWorld[12][7] = new Cell(1, 1);
+	_theWorld[12][8] = new Cell(1, 1);
+
+	_theWorld[12][12] = new Cell(1, 1);
+	_theWorld[12][13] = new Cell(1, 1);
+	_theWorld[12][14] = new Cell(1, 1);
     }
     
     public Cell[][] getWorld ()
