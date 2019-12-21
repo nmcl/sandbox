@@ -5,5 +5,9 @@ public class Life
 	World theWorld = new World();
 
 	theWorld.print();
+
+	theWorld.tick();
+
+	theWorld.print();	
     }
 }
