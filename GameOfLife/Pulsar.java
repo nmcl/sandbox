@@ -65,6 +65,30 @@ public class Pulsar implements SeedWorld
 	_theWorld[12][12] = new Cell(1, 1);
 	_theWorld[12][13] = new Cell(1, 1);
 	_theWorld[12][14] = new Cell(1, 1);
+
+	_theWorld[13][4] = new Cell(1, 1);
+	_theWorld[14][4] = new Cell(1, 1);
+	_theWorld[15][4] = new Cell(1, 1);
+
+	_theWorld[13][9] = new Cell(1, 1);
+	_theWorld[14][9] = new Cell(1, 1);
+	_theWorld[15][9] = new Cell(1, 1);
+
+	_theWorld[13][11] = new Cell(1, 1);
+	_theWorld[14][11] = new Cell(1, 1);
+	_theWorld[15][11] = new Cell(1, 1);
+	
+	_theWorld[13][16] = new Cell(1, 1);
+	_theWorld[14][16] = new Cell(1, 1);
+	_theWorld[15][16] = new Cell(1, 1);
+
+	_theWorld[17][12] = new Cell(1, 1);
+	_theWorld[17][13] = new Cell(1, 1);
+	_theWorld[17][14] = new Cell(1, 1);
+	
+	_theWorld[17][6] = new Cell(1, 1);
+	_theWorld[17][7] = new Cell(1, 1);
+	_theWorld[17][8] = new Cell(1, 1);
     }
     
     public Cell[][] getWorld ()
