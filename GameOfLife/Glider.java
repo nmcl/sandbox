@@ -6,15 +6,15 @@ public class Glider implements SeedWorld
     
     public Glider ()
     {
-	_theWorld = new Cell[_x][_y];
+	_theWorld = new Cell[_y][_x];
 
 	/*
 	 * Initialise the world;
 	 */
 	
-	for (int i = 0; i < _x; i++)
+	for (int i = 0; i < _y; i++)
 	{
-	    for (int j = 0; j < _y; j++)
+	    for (int j = 0; j < _x; j++)
 		_theWorld[i][j] = new Cell();
 	}
 
@@ -53,6 +53,6 @@ public class Glider implements SeedWorld
     }
 
     private Cell[][] _theWorld;
-    private final int _x = 20;
-    private final int _y = 50;
+    private final int _x = 50;
+    private final int _y = 20;
 }

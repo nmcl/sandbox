@@ -7,15 +7,15 @@ public class Blinker implements SeedWorld
     
     public Blinker ()
     {
-	_theWorld = new Cell[_x][_y];
+	_theWorld = new Cell[_y][_x];
 
 	/*
 	 * Initialise the world;
 	 */
 	
-	for (int i = 0; i < _x; i++)
+	for (int i = 0; i < _y; i++)
 	{
-	    for (int j = 0; j < _y; j++)
+	    for (int j = 0; j < _x; j++)
 		_theWorld[i][j] = new Cell();
 	}
 

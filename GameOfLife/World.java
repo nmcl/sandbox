@@ -1,3 +1,4 @@
+
 /**
  * The world within which the cells live.
  *
@@ -7,6 +8,12 @@
 
 class World
 {
+    /**
+     * Width is x and depth is y.
+     *
+     * Array is y by x.
+     */
+    
     public static final int DEFAULT_WIDTH = 50;
     public static final int DEFAULT_DEPTH = 20;
 
@@ -15,28 +22,24 @@ class World
 	this(DEFAULT_DEPTH, DEFAULT_WIDTH);
     }
 
-    /*
-     * x and y are wrong way around.
-     */
-    
     public World (int w, int d)
     {
-	_x = w;
-	_y = d;
+	_y = w;
+	_x = d;
 
-	_theWorld = new Cell[_x][_y];
+	_theWorld = new Cell[_y][_x];
 
-	for (int i = 0; i < _x; i++)
+	for (int i = 0; i < _y; i++)
 	{
-	    for (int j = 0; j < _y; j++)
+	    for (int j = 0; j < _x; j++)
 		_theWorld[i][j] = new Cell();
 	}
     }
 
     public World (SeedWorld aWorld)
     {
-	_x = aWorld.x();
 	_y = aWorld.y();
+	_x = aWorld.x();
 
 	_theWorld = aWorld.getWorld();
     }
@@ -52,9 +55,9 @@ class World
     
     public void print ()
     {
-	for (int i = 0; i < _x; i++)
+	for (int i = 0; i < _y; i++)
 	{
-	    for (int j = 0; j < _y; j++)
+	    for (int j = 0; j < _x; j++)
 	    {
 		System.out.print(_theWorld[i][j]);
 	    }
@@ -91,13 +94,13 @@ class World
 	 * 4) Dead cells remain dead unless triggered into life by rule 2).
 	 */
 
-	Cell[][] nextGeneration = new Cell[_x][_y];
+	Cell[][] nextGeneration = new Cell[_y][_x];
 	
-	for (int x = 0; x < _x; x++)
+	for (int y = 0; y < _y; y++)
 	{
-	    for (int y = 0; y < _y; y++)
+	    for (int x = 0; x < _x; x++)
 	    {
-		Cell current = _theWorld[x][y];
+		Cell current = _theWorld[y][x];
 		int liveNeighbours = 0;
 
 		/*
@@ -141,58 +144,58 @@ class World
 		 * Start by counting the number of live cells around us.
 		 */
 
-		int n1x = x-1;
 		int n1y = y-1;
+		int n1x = x-1;
 
-		if ((n1x >= 0) && (n1y >= 0))
-		    liveNeighbours += _theWorld[n1x][n1y].isAlive();
+		if ((n1y >= 0) && (n1x >= 0))
+		    liveNeighbours += _theWorld[n1y][n1x].isAlive();
 		    
-		int n2x = x-1;
-		int n2y = y;
+		int n2y = y-1;
+		int n2x = x;
 
-		if (n2x >= 0)
-		    liveNeighbours += _theWorld[n2x][n2y].isAlive();
+		if (n2y >= 0)
+		    liveNeighbours += _theWorld[n2y][n2x].isAlive();
 		
-		int n3x = x-1;
-		int n3y = y+1;
+		int n3y = y-1;
+		int n3x = x+1;
 
-		if ((n3x >= 0) && (n3y < _y))
-		    liveNeighbours += _theWorld[n3x][n3y].isAlive();
+		if ((n3y >= 0) && (n3x < _x))
+		    liveNeighbours += _theWorld[n3y][n3x].isAlive();
 		
-		int n4x = x;
-		int n4y = y-1;
+		int n4y = y;
+		int n4x = x-1;
 
-		if (n4y >=0)
-		    liveNeighbours += _theWorld[n4x][n4y].isAlive();
+		if (n4x >=0)
+		    liveNeighbours += _theWorld[n4y][n4x].isAlive();
 		
-		int n5x = x;
 		int n5y = y;
+		int n5x = x;
 
 		// nothing to do for ourself at this stage ...
 		
-		int n6x = x;
-		int n6y = y+1;
+		int n6y = y;
+		int n6x = x+1;
 
-		if (n6y < _y)
-		    liveNeighbours += _theWorld[n6x][n6y].isAlive();
+		if (n6x < _x)
+		    liveNeighbours += _theWorld[n6y][n6x].isAlive();
 
-		int n7x = x+1;
-		int n7y = y-1;
+		int n7y = y+1;
+		int n7x = x-1;
 
-		if ((n7x < _x) && (n7y >= 0))
-		    liveNeighbours += _theWorld[n7x][n7y].isAlive();
+		if ((n7y < _y) && (n7x >= 0))
+		    liveNeighbours += _theWorld[n7y][n7x].isAlive();
 		
-		int n8x = x+1;
-		int n8y = y;
+		int n8y = y+1;
+		int n8x = x;
 
-		if (n8x < _x)
-		    liveNeighbours += _theWorld[n8x][n8y].isAlive();
+		if (n8y < _y)
+		    liveNeighbours += _theWorld[n8y][n8x].isAlive();
 		
-		int n9x = x+1;
 		int n9y = y+1;
+		int n9x = x+1;
 
-		if ((n9x < _x) && (n9y < _y))
-		    liveNeighbours += _theWorld[n9x][n9y].isAlive();
+		if ((n9y < _y) && (n9x < _x))
+		    liveNeighbours += _theWorld[n9y][n9x].isAlive();
 
 		if (current.isAlive() == 1)
 		{
@@ -204,7 +207,7 @@ class World
 		    {
 			// do nothing except get older
 
-			nextGeneration[x][y] = new Cell(1, current.getAge());
+			nextGeneration[y][x] = new Cell(1, current.getAge());
 		    }
 		}
 		else
@@ -215,7 +218,7 @@ class World
 
 		    if (liveNeighbours == 3)
 		    {
-			nextGeneration[x][y] = new Cell(1, 1);
+			nextGeneration[y][x] = new Cell(1, 1);
 		    }
 		}
 
@@ -224,9 +227,9 @@ class World
 		 * 4) Dead cells remain dead unless triggered into life by rule 2).
 		 */
 
-		if (nextGeneration[x][y] == null)
+		if (nextGeneration[y][x] == null)
 		{
-		    nextGeneration[x][y] = new Cell();
+		    nextGeneration[y][x] = new Cell();
 		}
 	    }
 	}
@@ -234,8 +237,8 @@ class World
 	_theWorld = nextGeneration;
     }
     
-    private int _x;
     private int _y;
+    private int _x;
     private Cell[][] _theWorld;
 
 }
