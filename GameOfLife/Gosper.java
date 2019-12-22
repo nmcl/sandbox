@@ -6,21 +6,35 @@ public class Gosper implements SeedWorld
     
     public Gosper ()
     {
-	_theWorld = new Cell[_x][_y];
+	_theWorld = new Cell[_y][_x];
 
 	/*
 	 * Initialise the world;
 	 */
 	
-	for (int i = 0; i < _x; i++)
+	for (int i = 0; i < _y; i++)
 	{
-	    for (int j = 0; j < _y; j++)
+	    for (int j = 0; j < _x; j++)
 		_theWorld[i][j] = new Cell();
 	}
 
-	_theWorld[2][2] = new Cell(1, 1);
-	_theWorld[2][3] = new Cell(1, 1);
-	_theWorld[2][4] = new Cell(1, 1);
+	_theWorld[6][2] = new Cell(1, 1);
+	_theWorld[6][3] = new Cell(1, 1);
+	_theWorld[7][2] = new Cell(1, 1);
+	_theWorld[7][3] = new Cell(1, 1);
+
+	_theWorld[4][14] = new Cell(1, 1);
+	_theWorld[4][15] = new Cell(1, 1);
+	_theWorld[5][13] = new Cell(1, 1);
+	_theWorld[5][17] = new Cell(1, 1);
+	_theWorld[6][12] = new Cell(1, 1);
+	_theWorld[7][12] = new Cell(1, 1);
+	_theWorld[8][12] = new Cell(1, 1);
+	_theWorld[6][18] = new Cell(1, 1);
+	_theWorld[7][18] = new Cell(1, 1);
+	_theWorld[8][18] = new Cell(1, 1);
+	_theWorld[7][19] = new Cell(1, 1);
+	_theWorld[7][16] = new Cell(1, 1);
     }
     
     public Cell[][] getWorld ()
@@ -39,6 +53,6 @@ public class Gosper implements SeedWorld
     }
 
     private Cell[][] _theWorld;
-    private final int _x = 7;
-    private final int _y = 7;
+    private final int _x = 50;
+    private final int _y = 20;
 }
