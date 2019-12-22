@@ -48,6 +48,16 @@ public class Gosper implements SeedWorld
 	_theWorld[6][23] = new Cell(1, 1);
 	_theWorld[3][24] = new Cell(1, 1);
 	_theWorld[7][24] = new Cell(1, 1);
+
+	_theWorld[2][26] = new Cell(1, 1);
+	_theWorld[3][26] = new Cell(1, 1);
+	_theWorld[7][26] = new Cell(1, 1);
+	_theWorld[8][26] = new Cell(1, 1);
+
+	_theWorld[4][36] = new Cell(1, 1);
+	_theWorld[4][37] = new Cell(1, 1);
+	_theWorld[5][36] = new Cell(1, 1);
+	_theWorld[5][37] = new Cell(1, 1);
     }
     
     public Cell[][] getWorld ()
