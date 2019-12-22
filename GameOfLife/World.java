@@ -15,6 +15,10 @@ class World
 	this(DEFAULT_DEPTH, DEFAULT_WIDTH);
     }
 
+    /*
+     * x and y are wrong way around.
+     */
+    
     public World (int w, int d)
     {
 	_x = w;
