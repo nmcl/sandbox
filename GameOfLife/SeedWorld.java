@@ -5,8 +5,10 @@
 
 public interface SeedWorld
 {
-    public Cell[][] getWorld ();
+    public Cell[][] getWorld (); // what's the world look like?
 
+    // x and y size of world
+    
     public int x ();
     public int y ();
 }
