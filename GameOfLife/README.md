@@ -6,3 +6,7 @@ Remember ...
 2) Any dead cell with three live neighbours becomes a live cell.
 3) All other live cells die in the next generation.
 4) Dead cells remain dead unless triggered into life by rule 2).
+
+To build: javac it
+
+To run: java it and try the -help option
