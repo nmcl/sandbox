@@ -7,6 +7,6 @@ Remember ...
 3) All other live cells die in the next generation.
 4) Dead cells remain dead unless triggered into life by rule 2).
 
-To build: javac *.java
+To build: 'javac *.java'
 
-To run: java it and try the -help option
+To run: 'java life' and try the -help option
