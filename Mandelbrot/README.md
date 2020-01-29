@@ -4,4 +4,4 @@ ASCII version.
 
 To build: javac Mandelbrot
 
-To run: java it
+To run: java Mandelbrot
