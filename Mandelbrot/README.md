@@ -2,6 +2,6 @@ Mandelbrot Set.
 
 ASCII version.
 
-To build: javac it
+To build: javac Mandelbrot
 
 To run: java it
