@@ -6,4 +6,4 @@ To build: javac Mandelbrot
 
 To run: java Mandelbrot
 
-Includes two examples of output you should expect.
+Includes two examples of output you should expect, one as a png and one as plain text file.
