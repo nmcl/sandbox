@@ -55,7 +55,7 @@ standard # doesn't seem to work). So added the ability to override cpp during co
 in my current build) and that works fine. See https://github.com/nmcl/sandbox/issues/80 Running the configure script should now
 auto-detect the fact that gcc-8 should be used on Mac OS X but you can override this during the configuration execution.
 
-When cleaning up a buid by running 'make purge' make sure to do this in the tests directory first.
+When cleaning up a build by running 'make purge' make sure to do this in the tests directory first.
 
 ----
 
