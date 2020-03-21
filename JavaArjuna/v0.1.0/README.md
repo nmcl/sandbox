@@ -1,3 +1,9 @@
+This is not the original JavaArjuna but something I tried to recreate from current sources and memory.
+The baseline source is the earliest version of JTSArjuna I could find, which is also in the repository elsewhere.
+
+This is here not for future development (for that, find a version of Narayana) but so that we don't lose a point in
+time which is important from a historical perspective.
+
 When building make sure to install imake and set CLASSPATH to the classes directory at the root and in the tests subdirectory if you're going to build them. You may see some instances of the following warning message, which you can safely ignore.
 
 "Note: Some input files use or override a deprecated API.
