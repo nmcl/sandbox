@@ -40,7 +40,7 @@ like at the start. Arguably none of these changes should have been made and the 
 
 ----
 
-When building make sure to install imake and set CLASSPATH to classes directory. You may see some instances of the following warning message, which you can safely ignore.
+When building make sure to install imake and set CLASSPATH to the classes directory at the root and in the tests subdirectory if you're going to build them. You may see some instances of the following warning message, which you can safely ignore.
 
 "Note: Some input files use or override a deprecated API.
 Note: Recompile with -Xlint:deprecation for details."
