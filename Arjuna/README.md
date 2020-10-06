@@ -1,4 +1,4 @@
-This repository contains the original source for Arjuna that we (the Newcastle University Arjuna project team) made available back in 1991 through the University's public FTP site.
+This repository contains the original source for Arjuna that we (the Newcastle University Arjuna project team) made available back in 1991 through the University's public FTP site. Had been in development since 1985.
 
 Various versions are within the versions subdirectory.
 
