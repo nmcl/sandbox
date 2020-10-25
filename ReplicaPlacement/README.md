@@ -1,4 +1,4 @@
-The algorithm code for the Replica Placement work we did.
+The algorithm code for the Replica Placement work we did in the 1990s.
 
 http://www.cs.ncl.ac.uk/publications/inproceedings/papers/630.pdf
 
