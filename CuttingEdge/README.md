@@ -5,7 +5,7 @@ There are a number of versions included, ordered roughly by the dates in which t
 
 Some of the work was developed by a number of people and relevant contributor files are in place.
 
-Relevant licence files will also be within specific directories.
+Licence files will also be within specific directories.
 
 ----
 
