@@ -1,4 +1,4 @@
-JavaArjuna was the world's very first pure Java transaction implementation. It predates JTA, JTS and was available
+JavaArjuna was the world's very first 100% pure Java transaction implementation. It predates JTA, JTS and was available
 soon after the first version of Java (aka Oak) was released.
 
 v0.1.0 version is an attempt to recreate the original from current
