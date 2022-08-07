@@ -1,0 +1,40 @@
+COMMENT 
+COMMENT Copyright (C) 1998, 1999, 2000, 2001,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2.34.1.4.1 2001/04/06 15:32:59 jcoleman Exp $
+COMMENT
+
+AddToIdlFlags(-I$(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+#ifdef INSTALLTESTS
+CreateInstallDirectory(/tests,/tests/Heuristics)
+#endif
+
+SOURCES = HeuristicTest.java
+
+TESTOBJECTS = HeuristicTest.class
+
+Target($(SOURCES))
+Target($(TESTOBJECTS))
+
+#ifdef INSTALLTESTS
+InstallFile(/tests/Heuristics,$(TESTOBJECTS))
+InstallFile(/tests/Heuristics,expected_output)
+InstallFile(/tests/Heuristics,expected_output2)
+InstallFile(/tests/Heuristics,expected_output3)
+InstallFile(/tests/Heuristics,README)
+InstallFile(/tests/Heuristics,runtest)
+InstallFile(/tests/Heuristics,runtest.bat)
+InstallFile(/tests/Heuristics,runtest.cygwin)
+#endif
+
+PreprocessJavaCode(HeuristicTest,NullParam)
+
+BuildJavaByteCode(HeuristicTest,NullParam)
+
+Clean(*.class)

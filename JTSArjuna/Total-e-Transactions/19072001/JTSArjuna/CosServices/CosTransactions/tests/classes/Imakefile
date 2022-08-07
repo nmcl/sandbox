@@ -1,0 +1,46 @@
+COMMENT 
+COMMENT Copyright (C) 1998, 1999, 2000, 2001,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2.28.1.2.2.4.1.4.2 2001/04/06 15:33:01 jcoleman Exp $
+COMMENT
+
+#ifdef INSTALLTESTS
+CreateInstallDirectory(/tests,/tests/classes)
+#endif
+
+AddToIdlIncludeFlags($(JAVACOSTRANSACTIONSTOPDIR)/include)
+AddToIRIncludeFlags($(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+Target(TestModule.idl)
+
+ProcessIDL(TestModule,NullParam)
+CopyIDL(TestModule,TestModule)
+
+#ifndef SUPPORT_IDL_PREFIX
+GlobalPackageRename(CosTransactions,org.omg)
+#else
+AddPrefixFlags(omg.org,org.omg)
+#endif
+
+CorbaJavaStubs(TestModule,NullParam)
+
+SubDirectory(TestModule)
+SubDirectory(CosTransactionsTests)
+
+Target(TestModule.jar)
+Target(CosTransactionsTests.jar)
+
+CreateJavaLibrary(TestModule,TestModule)
+CreateJavaLibrary(CosTransactionsTests,CosTransactionsTests)
+
+#ifdef INSTALLTESTS
+InstallJavaLibrary(/tests/classes,TestModule)
+InstallJavaLibrary(/tests/classes,CosTransactionsTests)
+#endif
+
+Clean(TestModule.idl)

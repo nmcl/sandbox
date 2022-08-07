@@ -1,0 +1,96 @@
+The  following examples  were  really designed  as internal  tests and
+consequently they're   not very user-friendly,  however they  might be
+useful in confirming that your release works as expected and in giving
+you some idea of how JTSArjuna operates.
+
+Note,   the scripts runtest, cxtest,  and  intertest typically take no
+parameters, and run  the test  within  the directory they are  located
+within. However, if  multiple  tests are  present, then  these scripts
+will take at least a single parameter,  which is the  name of the test
+to run.
+
+Before running the examples:
+
+1) make sure 'classes' is in your path.
+
+Run the examples in the order listed below :
+
+In each case,  if a server is  required (according to the text below),
+execute  the  'servers/runserver' script (unless  specified otherwise)
+then run the 'runtest' script. (Note  that under Windows these scripts
+are  suffixed with '.bat'). 'runserver' takes   the server name as its
+only   parameter. If using    OrbixWeb,  then use  the putserver.orbix
+script.
+
+Local/LocalTest: Tests basic functionality  on local transactions  and
+resources.
+
+Timeout/TerminationTest:  Tests    that transactions   are   correctly
+terminated when they timeout.
+
+Nested/NestedTester:   This test  illustrates   the difference between
+registering a Resource and a SubtransactionAwareResource with a nested
+transaction.  The Resource will   only be called during the  top-level
+transaction commit/abort, whereas the SubtransactionAwareResource will
+be   informed when   the   nested transaction    terminates.    If the
+SubtranscationAwareResource was registered  using    register_resource
+(the default  in this example) it  will be propagated to the top-level
+transaction; otherwise it will not. Use the -subtran option to see the
+differences.
+
+Current/CurrentTest:  Simple test for  current pseudo-object.  SERVER:
+GridServer.
+
+Heuristics/HeuristicTest:  Tests whether  we  can cope  with heuristic
+decisions.
+
+Synchronizations/SynchTest: Tests synchronization implementations.
+
+Transactions/TransactionTest1: Tries to  terminate transactions out of
+order.
+
+Transactions/TransactionTest2:      Shows how       Current      and a
+TransactionFactory can be combined in   the same application, and  the
+transactions are unrelated.
+
+Hammer/AtomicObject1,2&3: The sum of the two integers should always be
+101.
+
+RecoveryCoordinator: tests whether recovery works.
+
+Arjuna/ArjunaNestingTest:  This example  demonstrates   the difference
+between an  ArjunaSubtranAwareResource  and the standard  OTS version.
+An ArjunaSubtranAwareResource always  participates within  a two-phase
+commit protocol  for nested transactions.   Propagation occurs  in the
+same way, however, i.e.,   if registered using  register_subtran_aware
+then  the resource  is   not  propagated   to  the  parent;   if using
+register_resource  then   it  will  be  propagated.  For   each nested
+transaction, it will take part in the two-phase protocol.
+
+Explicit/ExplicitInterClient:  Illustrates    explicit  interposition.
+SERVER: SetGetServer.
+
+Implicit/ImplicitClient: This is a  basic example of implicit  context
+propagation.  Again, remember that in  general our objects should  not
+inherit  from  Resource.   SERVER:  ImplGridServer.  [Use 'cxtest' and
+'cxserver' scripts in place of 'runtest' and 'runserver'. For OrbixWeb
+use 'putcxserver.orbix' and 'cxtest.orbix'].
+
+Interposition/InterpositionClient:    Demonstrates implicit    context
+propagation   and  interposition.     SERVER:    TranGridServer.  [Use
+'intertest'  and 'interserver'  scripts   in place  of 'runtest'   and
+'runserver'.    For   OrbixWeb     use   'putinterserver.orbix'    and
+'intertest.orbix'].
+
+Distributed_hammer/DistributedHammer1,2&3: The sum of the two integers
+should always be 101.  SERVER:  HammerServer.  Start two servers using
+'1' or '2' as the second parameter to 'runserver'. [If using OrbixWeb,
+use the 'puthammer.orbix' script].
+
+Arjuna/ExplicitArjunaClient:  A  basic demonstration using  the Arjuna
+API and explicit interposition. SERVER ExplicitStackServer.
+
+Arjuna/ImplicitArjunaClient: A  basic  demonstration using the  Arjuna
+API and  explicit interposition.  SERVER  StackServer.  [Use intertest
+and interserver   scripts in place   of 'runtest' and  'runserver'. If
+using OrbixWeb use 'putinterserver.orbix' and 'intertest.orbix'].

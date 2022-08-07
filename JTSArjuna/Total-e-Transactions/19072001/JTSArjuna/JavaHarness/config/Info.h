@@ -1,0 +1,7 @@
+#define MODULE "JavaHarness"
+#define SOURCEID "unkown"
+#define BUILDINFO "Arjuna Solutions Ltd. [unknown]"
+#define VERSION "1.4.3"
+#define DATE "Thu Sep 20 13:40:15 2001"
+#define NOTES "none"
+#define JDK_VERSION "1_3"

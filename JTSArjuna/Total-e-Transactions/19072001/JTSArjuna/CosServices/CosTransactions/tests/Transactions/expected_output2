@@ -1,0 +1,17 @@
+
+Current transaction: -7f0f2f9a:80c983e:36cee539:0
+New transaction from server: -7f0f2f9a:80c983e:36cee539:2
+These transactions are not the same. Correct result.
+These transactions are not ancestors. Correct result.
+These transactions are not related. Correct result.
+
+Creating nested transaction using current.
+
+Nested's parent transaction: -7f0f2f9a:80c983e:36cee539:0
+Nested transaction is: -7f0f2f9a:80c983e:36cee539:3
+These transactions are related. Correct result.
+
+Parent (self) status: CosTransactions::StatusActive
+Self is an ancestor. Correct result.
+My child is not an ancestor! Correct result.
+Test completed successfully.

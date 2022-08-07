@@ -1,0 +1,985 @@
+/*
+ * Copyright (C) 1998, 1999, 2000, 2001,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: OAInterface.javatmpl,v 1.1.2.4.2.4.2.1.2.1.4.3.38.1 2001/08/09 10:34:43 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+
+package com.arjuna.OrbCommon;
+
+import com.arjuna.ArjunaCommon.Common.*;
+import com.arjuna.orb.ORB;
+import com.arjuna.orb.OA;
+import java.util.*;
+import java.applet.Applet;
+import java.io.*;
+import org.omg.PortableServer.*;
+import org.omg.CORBA.Policy;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import org.omg.CORBA.BAD_PARAM;
+import org.omg.CORBA.SystemException;
+import org.omg.CORBA.ORBPackage.InvalidName;
+import org.omg.PortableServer.POAPackage.AdapterAlreadyExists;
+import org.omg.PortableServer.POAPackage.InvalidPolicy;
+import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
+
+/**
+ * An attempt at some ORB portable ways of interacting with the OA.
+ *
+ * NOTE: initPOA *must* be called if you want to use the
+ * pre- and post- initialisation mechanisms.
+ *
+ * @author Mark Little (mark@arjuna.com)
+ * @version $Id: OAInterface.javatmpl,v 1.1.2.4.2.4.2.1.2.1.4.3.38.1 2001/08/09 10:34:43 nmcl Exp $
+ * @since JTS 2.1.
+ */
+
+public class OAInterface
+{
+
+    /**
+     * Ensure that all OA specific initialisation is done even if the
+     * programmer uses the OA specific init routines. This method does
+     * not need to be called if using initOA methods.
+     *
+     * @since JTS 2.1.1.
+     */
+
+public static synchronized void init () throws SystemException
+    {
+	// null op - just to ensure we create the OA object!
+    }
+
+#ifndef HAVE_POA
+
+    /**
+     * Initialise the BOA.
+     */
+      
+public static synchronized void initBOA () throws InvalidName, SystemException
+    {
+	if (DebugController.enabled())
+	{
+	    DebugController.controller().println(DebugLevel.FUNCTIONS, VisibilityLevel.VIS_PUBLIC,
+						 FacilityCode.FAC_ORB_PORTABILITY, "OAInterface::initBOA ()");
+	}
+
+	if (!OAInterface._oa.initialised())
+	{
+	    if (ORBInterface._orb.initialised())
+	    {
+		parseOAProperties(null, true);
+
+		OAInterface._oa.init();
+		
+		parseOAProperties(null, false);
+	    }
+	    else
+	    {
+		ErrorStream.fatal().println("ERROR - initBOA called without initialised ORB.");
+
+		throw new com.arjuna.ArjunaCommon.Common.FatalError("initORB not called!");
+	    }
+	}
+    }
+
+    /**
+     * Initialise the BOA.
+     */
+
+public static synchronized void initBOA (String a, Properties p) throws InvalidName, SystemException
+    {
+	if (DebugController.enabled())
+	{
+	    DebugController.controller().println(DebugLevel.FUNCTIONS, VisibilityLevel.VIS_PUBLIC,
+						 FacilityCode.FAC_ORB_PORTABILITY, "OAInterface::initORB (String, Properties)");
+	}
+
+	if (!OAInterface._oa.initialised())
+	{
+	    if (ORBInterface._orb.initialised())
+	    {
+		String[] args = new String[1];
+		args[0] = a;
+
+		parseOAProperties(args, true);
+
+		OAInterface._oa.init(a, p);
+		
+		parseOAProperties(args, false);
+
+		args = null;
+	    }
+	    else
+	    {
+		ErrorStream.fatal().println("ERROR - initBOA called without initialised ORB.");
+
+		throw new com.arjuna.ArjunaCommon.Common.FatalError("initORB not called!");
+	    }
+	}
+    }
+
+    /**
+     * Initialise the BOA.
+     */
+
+public static synchronized void initBOA (String[] a, Properties p) throws InvalidName, SystemException
+    {
+	if (DebugController.enabled())
+	{
+	    DebugController.controller().println(DebugLevel.FUNCTIONS, VisibilityLevel.VIS_PUBLIC,
+						 FacilityCode.FAC_ORB_PORTABILITY, "OAInterface::initORB (String[], Properties)");
+	}
+
+	if (!OAInterface._oa.initialised())
+	{
+	    if (ORBInterface._orb.initialised())
+	    {
+		parseOAProperties(a, true);
+
+		OAInterface._oa.init(a, p);
+
+		parseOAProperties(a, false);
+	    }
+	    else
+	    {
+		ErrorStream.fatal().println("ERROR - initBOA called without initialised ORB.");
+
+		throw new com.arjuna.ArjunaCommon.Common.FatalError("initORB not called!");
+	    }
+	}
+    }    
+
+#else
+
+public static synchronized void initPOA () throws InvalidName, SystemException
+    {
+	initPOA(null);
+    }
+    
+public static synchronized void initPOA (String[] args) throws InvalidName, SystemException
+    {
+	if (DebugController.enabled())
+	{
+	    DebugController.controller().println(DebugLevel.FUNCTIONS, VisibilityLevel.VIS_PUBLIC,
+						 FacilityCode.FAC_ORB_PORTABILITY, "OAInterface::initPOA (String[])");
+	}
+
+	if (!OAInterface._oa.initialised())
+	{
+	    if (ORBInterface._orb.initialised())
+	    {
+		parseOAProperties(args, true);
+
+		try
+		{
+		    _oa.init();  // create the root poa
+		}
+		catch (Exception e)
+		{
+		    ErrorStream.fatal().println("OAInterface.initPOA caught: "+e);
+
+		    throw new com.arjuna.ArjunaCommon.Common.FatalError(e.toString());
+		}
+		
+		parseOAProperties(args, false);
+	    }
+	    else
+	    {
+		ErrorStream.fatal().println("OAInterface.initPOA called without initialised ORB.");
+
+		throw new com.arjuna.ArjunaCommon.Common.FatalError("initORB not called!");
+	    }
+	}
+    }
+
+public static synchronized void createPOA (String adapterName,
+					   Policy[] policies) throws AdapterAlreadyExists, InvalidPolicy, AdapterInactive
+    {
+	if (DebugController.enabled())
+	{
+	    DebugController.controller().println(DebugLevel.FUNCTIONS, VisibilityLevel.VIS_PUBLIC,
+						 FacilityCode.FAC_ORB_PORTABILITY, "OAInterface::createPOA ("+adapterName+" )");
+	}
+
+	if (!_oa.initialised())
+	{
+	    ErrorStream.warning().println("OAInterface.createPOA called without root POA.");
+
+	    throw new AdapterInactive();
+	}
+
+	if (_defaultAdapterName == null)
+	    _defaultAdapterName = adapterName;
+	
+	_oa.createPOA(adapterName, policies);
+    }
+
+#endif
+
+public static void initOA () throws InvalidName, SystemException
+    {
+	initOA(null);
+    }
+
+public static void initOA (String[] args) throws InvalidName, SystemException
+    {
+#ifndef HAVE_POA
+	if (args == null)
+	    initBOA();
+	else
+	    initBOA(args, null);
+#else
+	initPOA(args);
+#endif
+    }
+
+public static synchronized boolean addOAAttribute (OAAttribute p)
+    {
+	if (DebugController.enabled())
+	{
+	    DebugController.controller().println(DebugLevel.FUNCTIONS, VisibilityLevel.VIS_PUBLIC,
+						 FacilityCode.FAC_ORB_PORTABILITY, "OAInterface::addOAAttribute ("+p+")");
+	}
+
+	if ((_oa.initialised()) || (p == null))  // oa already set up!
+	    return false;
+	
+	if (p.postOAInit())
+	    _postOAInitProperty.put(p, p);
+	else
+	    _preOAInitProperty.put(p, p);
+
+	return true;
+    }
+
+#ifndef HAVE_POA
+
+    /**
+     * Shutdown the BOA.
+     */
+
+public static synchronized void shutdownBOA (String name) throws SystemException
+    {
+	if (DebugController.enabled())
+	{
+	    DebugController.controller().println(DebugLevel.FUNCTIONS, VisibilityLevel.VIS_PUBLIC,
+						 FacilityCode.FAC_ORB_PORTABILITY, "OAInterface::shutdownBOA ()");
+	}
+
+	if (!_preOAShutdown.isEmpty())
+	{
+	    Enumeration elements = _preOAShutdown.elements();
+
+	    while (elements.hasMoreElements())
+	    {
+		OAPreShutdown c = (OAPreShutdown) elements.nextElement();
+
+		if (c != null)
+		{
+		    if (DebugController.enabled())
+		    {
+			DebugController.controller().println(DebugLevel.FUNCTIONS, VisibilityLevel.VIS_PUBLIC,
+							     FacilityCode.FAC_ORB_PORTABILITY, "OAInterface - pre-boa shutdown on "+c.name());
+		    }
+
+		    c.work();
+		    c = null;
+		}
+	    }
+
+	    _preOAShutdown.clear();
+	}
+
+	_oa.shutdown(name);
+
+	if (!_postOAShutdown.isEmpty())
+	{
+	    Enumeration elements = _postOAShutdown.elements();
+
+	    while (elements.hasMoreElements())
+	    {
+		OAPostShutdown c = (OAPostShutdown) elements.nextElement();
+
+		if (c != null)
+		{
+		    if (DebugController.enabled())
+		    {
+			DebugController.controller().println(DebugLevel.FUNCTIONS, VisibilityLevel.VIS_PUBLIC,
+							     FacilityCode.FAC_ORB_PORTABILITY, "OAInterface - post-boa shutdown on "+c.name());
+		    }
+
+		    c.work();
+		    c = null;
+		}
+	    }
+
+	    _postOAShutdown.clear();
+	}
+    }
+    
+public static synchronized void shutdownBOA () throws SystemException
+    {
+	shutdownBOA(null);
+    }
+
+#else
+
+public static synchronized void destroyRootPOA () throws SystemException
+    {
+	if (DebugController.enabled())
+	{
+	    DebugController.controller().println(DebugLevel.FUNCTIONS, VisibilityLevel.VIS_PUBLIC,
+						 FacilityCode.FAC_ORB_PORTABILITY, "OAInterface::destroyRootPOA ()");
+	}
+
+	if (!_oa.initialised())
+	{
+	    if (!_preOAShutdown.isEmpty())
+	    {
+		Enumeration elements = _preOAShutdown.elements();
+
+		while (elements.hasMoreElements())
+		{
+		    OAPreShutdown c = (OAPreShutdown) elements.nextElement();
+
+		    if (c != null)
+		    {
+			c.work();
+			c = null;
+		    }
+		}
+
+		_preOAShutdown.clear();
+	    }
+
+	    _oa.destroyRootPOA();
+
+	    if (!_postOAShutdown.isEmpty())
+	    {
+		Enumeration elements = _postOAShutdown.elements();
+		
+		while (elements.hasMoreElements())
+		{
+		    OAPostShutdown c = (OAPostShutdown) elements.nextElement();
+
+		    if (c != null)
+		    {
+			c.work();
+			c = null;
+		    }
+		}
+		
+		_postOAShutdown.clear();
+	    }
+	}
+    }
+
+public static synchronized void destroyPOA (String adapterName) throws SystemException
+    {
+	if (DebugController.enabled())
+	{
+	    DebugController.controller().println(DebugLevel.FUNCTIONS, VisibilityLevel.VIS_PUBLIC,
+						 FacilityCode.FAC_ORB_PORTABILITY, "OAInterface::destroyPOA ()");
+	}
+
+	if (adapterName == null)
+	    throw new BAD_PARAM();
+	
+	_oa.destroyPOA(adapterName);
+    }
+
+#endif
+
+public static void shutdownOA () throws SystemException
+    {
+#ifndef HAVE_POA
+	shutdownBOA();
+#else
+	// nothing equivalent for POA
+
+	if (!_preOAShutdown.isEmpty())
+	{
+	    Enumeration elements = _preOAShutdown.elements();
+
+	    while (elements.hasMoreElements())
+	    {
+		OAPreShutdown c = (OAPreShutdown) elements.nextElement();
+
+		if (c != null)
+		{
+		    c.work();
+		    c = null;
+		}
+	    }
+
+	    _preOAShutdown.clear();
+	}
+
+	if (!_postOAShutdown.isEmpty())
+	{
+	    Enumeration elements = _postOAShutdown.elements();
+
+	    while (elements.hasMoreElements())
+	    {
+		OAPostShutdown c = (OAPostShutdown) elements.nextElement();
+
+		if (c != null)
+		{
+		    c.work();
+		    c = null;
+		}
+	    }
+
+	    _postOAShutdown.clear();
+	}
+#endif
+    }
+
+public static void destroyOA () throws SystemException
+    {
+#ifndef HAVE_POA
+	destroyBOA();
+#else
+	destroyRootPOA();
+#endif
+    }
+    
+#ifndef HAVE_POA
+public static synchronized void destroyBOA () throws SystemException
+    {
+	if (DebugController.enabled())
+	{
+	    DebugController.controller().println(DebugLevel.FUNCTIONS, VisibilityLevel.VIS_PUBLIC,
+						 FacilityCode.FAC_ORB_PORTABILITY, "OAInterface::destroyBOA ()");
+	}
+
+	if (OAInterface._oa.initialised())
+	    shutdownBOA();
+    }
+#endif
+    
+#ifdef HAVE_BOA
+
+    /**
+     * @return a reference to the current BOA.
+     */
+  
+public static synchronized org.omg.CORBA.BOA boa ()
+    {
+	return (org.omg.CORBA.BOA) _oa.boa();
+    }
+
+public static synchronized boolean setBoa (org.omg.CORBA.BOA theBOA)
+    {
+	if (!_oa.initialised())
+	{
+	    _oa.boa(theBOA);
+
+	    return true;
+	}
+	else
+	    return false;
+    }
+
+#else
+
+#ifdef HAVE_POA
+
+public static synchronized org.omg.PortableServer.POA rootPoa ()
+    {
+	return _oa.rootPoa();
+    }
+
+public static synchronized org.omg.PortableServer.POA poa (String adapterName)
+    {
+	return _oa.poa(adapterName);
+    }
+    
+public static synchronized boolean setRootPoa (org.omg.PortableServer.POA thePOA)
+    {
+	if (!_oa.initialised())
+	{
+	    _oa.rootPoa(thePOA);
+
+	    return true;
+	}
+	else
+	    return false;
+    }
+
+public static synchronized boolean setPoa (String adapterName, org.omg.PortableServer.POA thePOA)
+    {
+	if (adapterName != null)
+	{
+	    _oa.poa(adapterName, thePOA);
+
+	    return true;
+	}
+	else
+	    return false;
+    }
+
+#endif
+
+#endif
+
+public static synchronized void addPreOAShutdown (OAPreShutdown c)
+    {
+	if (DebugController.enabled())
+	{
+	    DebugController.controller().println(DebugLevel.FUNCTIONS, VisibilityLevel.VIS_PUBLIC,
+						 FacilityCode.FAC_ORB_PORTABILITY, "OAInterface::addPreOAShutdown ("+c+")");
+	}
+
+	_preOAShutdown.put(c, c);
+    }
+
+public static synchronized void addPostOAShutdown (OAPostShutdown c)
+    {
+	if (DebugController.enabled())
+	{
+	    DebugController.controller().println(DebugLevel.FUNCTIONS, VisibilityLevel.VIS_PUBLIC,
+						 FacilityCode.FAC_ORB_PORTABILITY, "OAInterface::addPostOAShutdown ("+c+")");
+	}
+
+	_postOAShutdown.put(c, c);
+    }
+ 
+    /**
+     * @return a CORBA object reference for the Servant/Implementation.
+     */
+
+#ifndef HAVE_POA
+public static org.omg.CORBA.Object corbaReference (org.omg.CORBA.Object obj)
+    {
+	return obj;
+    }
+#else
+public static org.omg.CORBA.Object corbaReference (org.omg.PortableServer.Servant obj)
+    {
+	return corbaReference(obj, (String) null);
+    }
+    
+public static org.omg.CORBA.Object corbaReference (org.omg.PortableServer.Servant obj, String adapterName)
+    {
+	org.omg.CORBA.Object objRef = null;
+	
+	if ((adapterName == null) || (adapterName.equals("RootPOA")))
+	{
+	    try
+	    {
+		objRef = corbaReference(obj, _oa.rootPoa());
+	    }
+	    catch (Exception e)
+	    {
+		objRef = null;
+	    }
+	}
+	else
+	{
+	    if (_oa.initialised())
+	    {
+		try
+		{
+		    objRef = corbaReference(obj, _oa.poa(adapterName));
+		}
+		catch (Exception e)
+		{
+		    objRef = null;
+		}
+	    }
+	}
+	
+	return objRef;
+    }
+    
+public static org.omg.CORBA.Object corbaReference (org.omg.PortableServer.Servant obj,
+						   org.omg.PortableServer.POA poa)
+    {
+	try
+	{
+	    return poa.servant_to_reference(obj);
+	}
+	catch (Exception e)
+	{
+	    return null;
+	}
+    }
+#endif
+ 
+    /**
+     * Register the object with the ORB.
+     */
+
+#ifdef HAVE_POA
+public static boolean objectIsReady (org.omg.PortableServer.Servant obj) throws SystemException
+    {
+	return objectIsReady(obj, (String) null);
+    }
+
+public static boolean objectIsReady (org.omg.PortableServer.Servant obj, byte[] id) throws SystemException
+    {
+	return objectIsReady(obj, id, (String) null);
+    }
+
+public static boolean objectIsReady (org.omg.PortableServer.Servant obj, byte[] id,
+				     String adapterName) throws SystemException
+    {
+	if (DebugController.enabled())
+	{
+	    DebugController.controller().println(DebugLevel.FUNCTIONS, VisibilityLevel.VIS_PUBLIC,
+						 FacilityCode.FAC_ORB_PORTABILITY, "OAInterface::objectIsReady (Servant, byte[], "+adapterName+")");
+	}
+	
+	try
+	{
+	    if ((adapterName == null) || (adapterName.equals("RootPOA")))
+	    {
+		_oa.rootPoa().activate_object_with_id(id, obj);
+	    }
+	    else
+		_oa.poa(adapterName).activate_object_with_id(id, obj);
+	}
+	catch (Exception e)
+	{
+	    ErrorStream.warning().println("OAInterface.objectIsReady: caught "+e+ " for " + obj);
+
+	    return false;
+	}
+
+	return true;
+    }
+
+public static boolean objectIsReady (org.omg.PortableServer.Servant obj,
+				     java.lang.Object[] params) throws SystemException
+    {
+	return objectIsReady(obj, params, (String) null);
+    }
+#endif
+
+#ifndef HAVE_POA
+public static boolean objectIsReady (org.omg.CORBA.Object obj) throws SystemException
+#else
+public static boolean objectIsReady (org.omg.PortableServer.Servant obj, String adapterName) throws SystemException
+#endif
+    {
+	if (DebugController.enabled())
+	{
+#ifndef HAVE_POA
+	    DebugController.controller().println(DebugLevel.FUNCTIONS, VisibilityLevel.VIS_PUBLIC,
+						 FacilityCode.FAC_ORB_PORTABILITY, "OAInterface::objectIsReady (Object)");
+#else
+	    DebugController.controller().println(DebugLevel.FUNCTIONS, VisibilityLevel.VIS_PUBLIC,
+						 FacilityCode.FAC_ORB_PORTABILITY, "OAInterface::objectIsReady (Servant, "+adapterName+")");
+#endif
+	}
+
+	boolean result = true;
+	
+	try
+	{
+#ifndef HAVE_POA
+#ifdef CORBA_2_2
+	    ORBInterface.orb().connect(obj);
+#endif
+#ifdef CORBA_2_1
+	    OAInterface.boa().obj_is_ready(obj);
+#endif
+#ifdef CORBA_2_0
+	    OAInterface.boa().object_is_ready(obj);
+#endif
+
+#else
+	    boolean invalidPOA = false;
+	    boolean rootPoa = ((adapterName == null) || (adapterName.equals("RootPOA")));
+	    
+	    if (rootPoa)
+	    {
+		if (_oa.initialised())
+		{
+		    _oa.rootPoa().activate_object(obj);
+		}
+		else
+		    invalidPOA = true;
+	    }
+	    else
+	    {
+		if (_oa.poa(adapterName) != null)
+		    _oa.poa(adapterName).activate_object(obj);
+		else
+		    invalidPOA = true;
+	    }
+	    
+	    if (invalidPOA)
+	    {
+		ErrorStream.warning().println("OAInterface.objectIsReady - invalid POA: "+((rootPoa) ? "rootPOA" : "childPOA"));
+
+		result = false;
+	    }
+#endif
+
+	    com.arjuna.OrbCommon.event.EventManager.getManager().connected(corbaReference(obj));
+	}
+	catch (Exception e)
+	{
+	    ErrorStream.warning().println("OAInterface.objectIsReady: caught "+e + " for, no id and " + obj);
+
+	    result = false;
+	}
+	
+	return result;
+    }
+
+#ifndef HAVE_POA
+public static boolean objectIsReady (org.omg.CORBA.Object obj,
+				     java.lang.Object[] params) throws SystemException
+#else
+public static boolean objectIsReady (org.omg.PortableServer.Servant obj,
+				     java.lang.Object[] params,
+				     String adapterName) throws SystemException
+#endif
+    {
+	if (DebugController.enabled())
+	{
+#ifndef HAVE_POA
+	    DebugController.controller().println(DebugLevel.FUNCTIONS, VisibilityLevel.VIS_PUBLIC,
+						 FacilityCode.FAC_ORB_PORTABILITY, "OAInterface::objectIsReady (Object, java.lang.Object[])");
+#else
+	    DebugController.controller().println(DebugLevel.FUNCTIONS, VisibilityLevel.VIS_PUBLIC,
+						 FacilityCode.FAC_ORB_PORTABILITY, "OAInterface::objectIsReady (Servant, java.lang.Object[], "+adapterName+")");
+#endif
+	}
+
+#ifdef HAVE_POA
+	return objectIsReady(obj, adapterName);
+#else
+#ifndef ORBACUS
+	return objectIsReady(obj);
+#else
+	String name = (String) params[0];
+	
+	((com.ooc.CORBA.ORB) ORBInterface.orb()).connect(obj, name);
+	
+	return true;
+#endif	
+#endif
+    }
+
+    /**
+     * Dispose of the object, i.e., unregister it from the ORB.
+     */
+
+#ifdef HAVE_POA
+public static boolean shutdownObject (org.omg.CORBA.Object obj)
+    {
+	return shutdownObject(obj, (String) null);
+    }
+#endif
+
+#ifndef HAVE_POA
+public static boolean shutdownObject (org.omg.CORBA.Object obj)
+#else
+public static boolean shutdownObject (org.omg.CORBA.Object obj,
+				      String adapterName)
+#endif
+    {
+	if (DebugController.enabled())
+	{
+	    DebugController.controller().println(DebugLevel.FUNCTIONS, VisibilityLevel.VIS_PUBLIC,
+						 FacilityCode.FAC_ORB_PORTABILITY, "OAInterface::shutdownObject ()");
+	}
+	
+	boolean result = true;
+	
+	try
+	{
+	    com.arjuna.OrbCommon.event.EventManager.getManager().disconnected(obj);
+
+#ifndef HAVE_POA
+#ifdef CORBA_2_2
+	    ORBInterface.orb().disconnect(obj);
+#endif
+#ifdef CORBA_2_1
+	    OAInterface.boa().deactivate_obj(obj);
+#endif
+#ifdef CORBA_2_0
+	    OAInterface.boa().dispose(obj);
+#endif
+#else
+	    boolean invalidPOA = false;
+	    boolean rootPoa = ((adapterName == null) || (adapterName.equals("RootPOA")));
+	    
+	    if (rootPoa)
+	    {
+		if (_oa.initialised())
+		    _oa.rootPoa().deactivate_object(_oa.rootPoa().reference_to_id(obj));
+		else
+		    invalidPOA = true;
+	    }
+	    else
+	    {
+		if (_oa.poa(adapterName) != null)
+		    _oa.poa(adapterName).deactivate_object(_oa.poa(adapterName).reference_to_id(obj));
+		else
+		    invalidPOA = true;
+	    }
+
+	    if (invalidPOA)
+	    {
+		ErrorStream.warning().println("OAInterface.shutdownObject - invalid POA: "+((rootPoa) ? "rootPOA" : "childPOA"));
+
+		result = false;
+	    }
+#endif
+	}
+	catch (Exception e)
+	{
+	    ErrorStream.warning().println("OAInterface.shutdownObject: caught "+e);
+
+	    result = false;
+	}
+
+	return result;
+    }
+
+#ifdef HAVE_POA
+public static boolean shutdownObject (org.omg.PortableServer.Servant obj)
+    {
+	return shutdownObject(obj, null);
+    }
+    
+public static boolean shutdownObject (org.omg.PortableServer.Servant obj, String adapterName)
+    {
+	if (DebugController.enabled())
+	{
+	    DebugController.controller().println(DebugLevel.FUNCTIONS, VisibilityLevel.VIS_PUBLIC,
+						 FacilityCode.FAC_ORB_PORTABILITY, "OAInterface::shutdownObject ("+adapterName+")");
+	}
+
+	boolean result = true;
+	
+	try
+	{
+	    boolean invalidPOA = false;
+	    boolean rootPoa = ((adapterName == null) || (adapterName.equals("RootPOA")));
+	    
+	    if (rootPoa)
+	    {
+		if (_oa.initialised())
+		    _oa.rootPoa().deactivate_object(_oa.rootPoa().servant_to_id(obj));
+		else
+		    invalidPOA = true;
+	    }
+	    else
+	    {
+		if (_oa.poa(adapterName) != null)
+		    _oa.poa(adapterName).deactivate_object(_oa.poa(adapterName).servant_to_id(obj));
+		else
+		    invalidPOA = true;
+	    }
+
+	    if (invalidPOA)
+	    {
+		ErrorStream.warning().println("OAInterface.shutdownObject - invalid POA: "+((rootPoa) ? "rootPOA" : "childPOA"));
+
+		result = false;
+	    }
+	}
+	catch (Exception e)
+	{
+	    ErrorStream.warning().println("OAInterface.shutdownObject: caught "+e);
+
+	    result = false;
+	}
+
+	return result;
+    }
+#endif
+    
+    /**
+     * Place the server into a state where it can begin to
+     * accept requests for objects from clients.
+     */
+
+static void run (String name) throws SystemException
+    {
+	if (DebugController.enabled())
+	{
+	    DebugController.controller().println(DebugLevel.FUNCTIONS, VisibilityLevel.VIS_PUBLIC,
+						 FacilityCode.FAC_ORB_PORTABILITY, "OAInterface::run ("+name+")");
+	}
+
+	_oa.run(name);
+    }
+    
+static void run () throws SystemException
+    {
+	if (DebugController.enabled())
+	{
+	    DebugController.controller().println(DebugLevel.FUNCTIONS, VisibilityLevel.VIS_PUBLIC,
+						 FacilityCode.FAC_ORB_PORTABILITY, "OAInterface::run ()");
+	}
+
+	_oa.run();
+    }
+	     
+protected OAInterface ()
+    {
+    }
+    
+private static void parseOAProperties (String[] params, boolean preInit)
+    {
+	if (DebugController.enabled())
+	{
+	    DebugController.controller().println(DebugLevel.FUNCTIONS, VisibilityLevel.VIS_PUBLIC,
+						 FacilityCode.FAC_ORB_PORTABILITY, "OAInterface::parseOAProperties (String[], "+preInit+")");
+	}
+
+	Hashtable work = ((preInit) ? _preOAInitProperty : _postOAInitProperty);
+
+	if (!work.isEmpty())
+	{
+	    Enumeration elements = work.elements();
+
+	    while (elements.hasMoreElements())
+	    {
+		OAAttribute p = (OAAttribute) elements.nextElement();
+
+		if (p != null)
+		{
+		    if (DebugController.enabled())
+		    {
+			DebugController.controller().println(DebugLevel.FUNCTIONS, VisibilityLevel.VIS_PUBLIC,
+							     FacilityCode.FAC_ORB_PORTABILITY, "OAAttribute "+p+" initialising.");
+		    }
+
+		    p.initialise(params);
+		    p = null;
+		}
+	    }
+
+	    work.clear();
+	}
+    }    
+    
+static com.arjuna.orb.OA _oa = new com.arjuna.orb.OA(ORBInterface._orb);
+
+#ifdef HAVE_POA
+private static String    _defaultAdapterName = null;
+#endif
+
+private static Hashtable _preOAShutdown = new Hashtable();
+private static Hashtable _postOAShutdown = new Hashtable();    
+private static Hashtable _preOAInitProperty = new Hashtable();
+private static Hashtable _postOAInitProperty = new Hashtable();    
+
+}

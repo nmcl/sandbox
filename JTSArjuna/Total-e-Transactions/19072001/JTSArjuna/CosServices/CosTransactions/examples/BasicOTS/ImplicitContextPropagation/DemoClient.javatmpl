@@ -1,0 +1,50 @@
+/*
+ * Copyright (C) 2001,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: DemoClient.javatmpl,v 1.1.2.2 2001/02/15 13:47:35 nmcl Exp $
+ */
+
+#include "Common/OrbPortability.h"
+
+import Demo.*;
+import java.io.*;
+import com.arjuna.OrbCommon.*;
+import com.arjuna.CosTransactions.*;
+import org.omg.CosTransactions.*;
+import org.omg.*;
+
+public class DemoClient
+{
+	public static void main(String[] args)
+	{		
+		try
+		{
+			ORBInterface.initORB(args, null);
+			OAInterface.initOA();
+			
+			String         ref       = new String();
+			BufferedReader file      = new BufferedReader(new FileReader("DemoObjReference.tmp"));
+			
+			ref = file.readLine();
+			file.close();
+
+			org.omg.CORBA.Object obj = ORBInterface.orb().string_to_object(ref);
+			DemoInterface        d   = (DemoInterface) DemoInterfaceHelper.narrow(obj);
+			
+			OTS.get_current().begin();
+			
+			d.work();
+			
+			OTS.get_current().commit(true);
+		}
+		catch (Exception e)
+		{
+			System.err.println(e);
+		}
+	}
+}

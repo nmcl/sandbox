@@ -1,3 +1,0 @@
-When running configure it is necessary to set the ORB_ROOT environment
-variable to point to the root of the ORB you are about to use.
-

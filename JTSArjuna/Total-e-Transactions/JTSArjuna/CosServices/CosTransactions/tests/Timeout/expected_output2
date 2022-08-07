@@ -1,8 +1,0 @@
-Thread Thread[main,5,main] starting transaction.
-WARNING Thu Jul 04 11:13:11 GMT+01:00 2002: Abort of action id f91ad65:2ae4244d:3d241fb5:2 invoked while multiple threads active within it.
-
-WARNING Thu Jul 04 11:13:11 GMT+01:00 2002: CheckedAction::check - atomic action f91ad65:2ae4244d:3d241fb5:2 aborting with 1 threads active!
-Thread Thread[main,5,main] committing transaction.
-Caught exception: org.omg.CORBA.INVALID_TRANSACTION:   minor code: 0  completed: No
-Timeout went off.
-Test completed successfully.

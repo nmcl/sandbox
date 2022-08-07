@@ -1,0 +1,21 @@
+/*
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ */
+
+/*
+ *  TeT_Module.def (source)
+ */
+
+JDBCSRCDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/Resources/JDBC
+JDBC2SRCDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/Resources/JDBC2
+JTSSRCDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/CosServices/CosTransactions
+ORBCOMMONSRCDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/OrbPortability
+ARJUNACORESRCDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/ArjunaCore
+ARJUNACOMMONSRCDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/ArjunaCommon
+JAVAHARNESSSRCDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/JavaHarness
+RECOVERYSRCDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/CosServices/CosRecovery
+JTSARJUNASRCDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/JTSArjuna
+

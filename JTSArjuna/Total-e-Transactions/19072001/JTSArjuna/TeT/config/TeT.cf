@@ -1,0 +1,41 @@
+#!/bin/sh
+#
+# Copyright (C) 2001,
+# 
+# Arjuna Solutions Limited,
+# Newcastle upon Tyne,
+# Tyne and Wear,
+# UK.
+#
+
+# TeT configure file
+# Version 1.0.0
+
+INSTALLTOPDIR=C:/PROGRA~1/Arjuna/TransactionService
+ORBCOMMONTOPDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/OrbPortability
+JDBCTOPDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/Resources/JDBC
+JDBC2TOPDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/Resources/JDBC2
+JTSTOPDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/CosServices/CosTransactions
+ARJUNACOMMONTOPDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/ArjunaCommon
+ARJUNACORETOPDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/ArjunaCore
+JAVAHARNESSTOPDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/JavaHarness
+BUILDSYSTEMTOPDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/ModuleBuildSystem
+RECOVERYTOPDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/CosServices/CosRecovery
+JTSARJUNATOPDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/JTSArjuna
+
+ORBCOMMONSRCDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/OrbPortability
+JDBCSRCDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/Resources/JDBC
+JDBC2SRCDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/Resources/JDBC2
+JTSSRCDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/CosServices/CosTransactions
+ARJUNACOMMONSRCDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/ArjunaCommon
+ARJUNACORESRCDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/ArjunaCore
+JAVAHARNESSSRCDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/JavaHarness
+BUILDSYSTEMSRCDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/ModuleBuildSystem
+RECOVERYSRCDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/CosServices/CosRecovery
+JTSARJUNASRCDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/JTSArjuna
+
+LOCAL_IMAKEFLAGS='-DTopDir=C:/temp/src/JTSArjuna/2.2/JTSArjuna/TeT -DInstallTopDir=C:/PROGRA~1/Arjuna/TransactionService'
+MODULE_IMAKEFLAGS='-IC:/temp/src/JTSArjuna/2.2/JTSArjuna/TeT/config'
+
+PRODUCT_NAME='TeT'
+TET_VERSION='1.0.0'

@@ -1,0 +1,45 @@
+COMMENT 
+COMMENT Copyright (C) 1998, 1999, 2000, 2001,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2.34.1.4.2 2001/04/06 15:32:58 jcoleman Exp $
+COMMENT
+
+AddToIdlFlags(-I$(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+#ifdef INSTALLTESTS
+CreateInstallDirectory(/tests,/tests/DistributedHammer)
+#endif
+
+SOURCES = DistributedHammer1.java \
+	  DistributedHammer2.java \
+	  DistributedHammer3.java
+
+TESTOBJECTS = DistributedHammer1.class \
+	      DistributedHammer2.class \
+	      DistributedHammer3.class
+
+Target($(SOURCES))
+Target($(TESTOBJECTS))
+
+#ifdef INSTALLTESTS
+InstallFiles(/tests/DistributedHammer,DistributedHammer1.class,$(TESTOBJECTS))
+InstallFile(/tests/DistributedHammer,README)
+InstallFile(/tests/DistributedHammer,runtest)
+InstallFile(/tests/DistributedHammer,runtest.bat)
+InstallFile(/tests/DistributedHammer,runtest.cygwin)
+#endif
+
+PreprocessJavaCode(DistributedHammer1,NullParam)
+PreprocessJavaCode(DistributedHammer2,NullParam)
+PreprocessJavaCode(DistributedHammer3,NullParam)
+
+BuildJavaByteCode(DistributedHammer1,NullParam)
+BuildJavaByteCode(DistributedHammer2,NullParam)
+BuildJavaByteCode(DistributedHammer3,NullParam)
+
+Clean(*.class)

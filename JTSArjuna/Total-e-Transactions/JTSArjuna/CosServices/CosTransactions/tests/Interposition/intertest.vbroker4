@@ -1,8 +1,0 @@
-#!/bin/sh
-
-if test "'x$JTSARJUNA_HOME'" = "'x'"
-then
-    echo Environment variable JTSARJUNA_HOME is not set.
-else
-    java -Dvbroker.orb.dynamicLibs=com.arjuna.CosTransactions.Interceptors.Interposition.vbroker.Init InterpositionClient
-fi

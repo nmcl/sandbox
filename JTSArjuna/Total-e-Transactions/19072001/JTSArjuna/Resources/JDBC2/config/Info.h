@@ -1,0 +1,6 @@
+#define MODULE "JDBC2"
+#define SOURCEID "unkown"
+#define BUILDINFO "Arjuna Solutions Ltd. [unknown]"
+#define VERSION "1.0.1"
+#define DATE "Thu Sep 20 13:40:31 2001"
+#define NOTES "none"

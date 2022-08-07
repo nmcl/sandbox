@@ -1,0 +1,760 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.  
+ *
+ * $Id: OTS_Interposition.javatmpl,v 1.3.2.1.6.2.8.3.10.1.2.1 2000/12/04 12:12:07 nmcl Exp $
+ */
+
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.  
+ *
+ * $Id: OrbPortability.h,v 1.1 2000/02/25 14:09:59 nmcl Exp $
+ */
+
+
+
+
+/*
+ * Try to get around the differences between Ansi CPP and
+ * K&R cpp with concatenation.
+ */
+
+
+/*
+ * Copyright (C) 1998, 1999, 2000, 2001,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: OrbPortability_stdc.h,v 1.2.4.1.2.3.26.1.2.2.4.2 2001/02/02 11:51:52 nmcl Exp $
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+package com.arjuna.CosTransactions.Interposition.Arjuna;
+
+import com.arjuna.ArjunaCommon.Template.*;
+import com.arjuna.ArjunaCommon.Common.*;
+import com.arjuna.CosTransactions.OTS_Utility;
+import com.arjuna.CosTransactions.OTS_Utility;
+import com.arjuna.CosTransactions.OTS_Exceptions;
+import com.arjuna.CosTransactions.OTS_Control;
+import com.arjuna.CosTransactions.Interposition.OTS_ServerControl;
+import com.arjuna.CosTransactions.Interposition.OTS_ServerFactory;
+import org.omg.CosTransactions.*;
+import com.arjuna.ArjunaOTS.*;
+import org.omg.CORBA.CompletionStatus;
+
+import org.omg.CORBA.SystemException;
+import org.omg.CORBA.UNKNOWN;
+
+/*
+ * Copyright (C) 1998, 1999, 2000, 2001,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: CosTranExceptions.h,v 1.1.2.1.28.1.14.1 2001/03/20 16:24:46 nmcl Exp $
+ */
+
+
+
+
+
+/*
+ * Copyright (C) 1998, 1999, 2000, 2001,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: CosTranNames.h,v 1.1.42.1 2001/03/20 16:24:47 nmcl Exp $
+ */
+
+
+
+
+/*
+ * Simple renaming macros for portability.
+ *
+ * Slightly different from C++ version in that we don't need the
+ * typedefs. However, we do need some mapping for OTS exceptions which
+ * should now be system exceptions.
+ */
+
+/*
+ * CosTransaction module exceptions
+ */
+
+
+
+
+
+
+/*
+ * We need to check this. WRONG_TRANSACTION is supposed to
+ * be a system exception (in the latest draft of the OTS),
+ * but two ORBs have it as a user exception.
+ */
+
+
+
+
+
+/**/
+
+
+
+
+
+/*
+ * An attempt at a portable way of including the OTS exceptions,
+ * which are either mapped as system exceptions or user exceptions,
+ * depending upon the Orb.
+ */
+
+
+
+import org.omg.CosTransactions.WrongTransaction;
+
+import org.omg.CORBA.INVALID_TRANSACTION;
+import org.omg.CORBA.TRANSACTION_REQUIRED;
+import org.omg.CORBA.TRANSACTION_ROLLEDBACK;
+
+
+
+
+
+public class OTS_Interposition
+{
+
+public OTS_Interposition ()
+    {
+	_head = new HashList(11);
+    }
+
+public void finalize ()
+    {
+	_head = null;
+    }
+
+public static OTS_Control create (PropagationContext context) throws SystemException
+    {
+	if (__list != null)
+	    return __list.setupHierarchy(context);
+	else
+	    return null;
+    }
+
+public static boolean destroy (Uid act)
+    {
+	if (__list != null)
+	    return __list.removeHierarchy(act);
+	else
+	    return false;
+    }
+    
+    /*
+     * Assume that all actions in the imported hierarchy are of the same
+     * type, i.e., all Arjuna transactions.
+     *
+     * Because of the way garbage collection works in the ORB we have to
+     * run an explicit garbage collection phase for finished hierarchies.
+     */
+
+public synchronized OTS_Control setupHierarchy (PropagationContext context) throws SystemException
+    {
+	OTS_Control controlPtr = null;
+	Uid theUid = null;
+	InterposedHierarchy proxyAction = null;
+
+	if (context.parents.length == 0)
+	    theUid = OTS_Utility.otidToUid(context.currentTransaction.otid);
+	else
+	    theUid = OTS_Utility.otidToUid(context.parents[context.parents.length-1].otid);
+
+	proxyAction = present(theUid);
+
+	if (proxyAction == null)
+	{
+	    /*
+	     * Create a new proxyAction element and return the
+	     * "current" transaction.
+	     */
+
+	    controlPtr = createHierarchy(context, theUid);
+	}
+	else
+	{
+	    /*
+	     * Check hierarchy of existing element.
+	     */
+
+	    controlPtr = checkHierarchy(proxyAction, context);
+	    proxyAction = null;
+	}
+
+	return controlPtr;
+    }
+
+protected final synchronized InterposedHierarchy present (Uid actUid)
+    {
+	return (InterposedHierarchy) _head.lookFor(actUid);
+    }
+
+protected synchronized OTS_Control createHierarchy (PropagationContext ctx, Uid tlUid) throws SystemException
+    {
+	/*
+	 * Start at the parent and work our way down to "current". The current
+	 * transaction is not in the IDL sequence, but sent as separate field
+	 * of the propagation context. This tends to make the code more
+	 * complex than it would be if the entire hierarchy was represented in
+	 * one place.
+	 */
+
+	int depth = ctx.parents.length;
+	OTS_ServerResource action = null;
+	Coordinator tmpCoord = null;
+	Terminator tmpTerm = null;
+	
+	/*
+	 * First deal with top-level transaction, which may be
+	 * the current transaction.
+	 */
+
+	if (depth == 0)
+	{
+	    tmpCoord = ctx.currentTransaction.coord;
+	    tmpTerm = ctx.currentTransaction.term;
+	}
+	else
+	{
+	    tmpCoord = ctx.parents[depth-1].coord;
+	    tmpTerm = ctx.parents[depth-1].term;
+	}
+
+	if (tmpCoord == null)  // terminator may correctly be null
+	{
+	    return null;
+	}
+
+	OTS_ServerControl control = OTS_ServerFactory.create_transaction(tlUid, null, null,
+									 tmpCoord, tmpTerm, ctx.timeout);
+
+	action = new OTS_ServerTopLevelAction(control);
+
+	if (!action.valid())
+	{
+	    try
+	    {
+		((OTS_ServerTopLevelAction) action).rollback();  // does dispose as well!
+	    }
+	    catch (Exception e)
+	    {
+	    }
+
+
+	    throw new TRANSACTION_ROLLEDBACK ();
+
+	}
+		
+	InterposedHierarchy newElement = new InterposedHierarchy((OTS_ServerTopLevelAction) action);
+
+	_head.add(newElement);
+
+	if (depth > 0) // current is a nested transaction
+	{
+	    /*
+	     * Now deal with any nested transactions.
+	     * As we create, register with the original transactions.
+	     */
+
+	    OTS_ServerResource nestedAction = null;
+    
+	    for (int i = depth -2; i >= 0; i--)
+	    {
+		tmpCoord = ctx.parents[i].coord;
+		tmpTerm = ctx.parents[i].term;
+		
+		control = OTS_ServerFactory.create_subtransaction(OTS_Utility.otidToUid(ctx.parents[i].otid),
+								  tmpCoord, tmpTerm, control);
+
+		nestedAction = new OTS_ServerNestedAction(control);
+
+		if (!nestedAction.valid())
+		{
+		    /*
+		     * Just deal with current transaction. Others must have been
+		     * registered successfully, and will be deal with automatically
+		     * when the parent transaction terminates.
+		     */
+		
+		    try
+		    {
+			((OTS_ServerNestedAction) nestedAction).rollback_subtransaction();  // does dispose as well!
+			nestedAction = null;
+		    }
+		    catch (Exception e)
+		    {
+		    }
+
+
+		    throw new TRANSACTION_ROLLEDBACK ();
+
+		}
+		
+		/*
+		 * Add transaction resource to list.
+		 */
+
+		action.addChild((OTS_ServerNestedAction) nestedAction);
+		action = nestedAction;
+	    }
+
+	    /*
+	     * Now deal with current transaction. If there is
+	     * only one transaction we do nothing.
+	     */
+
+	    tmpCoord = ctx.currentTransaction.coord;
+	    tmpTerm = ctx.currentTransaction.term;
+	    
+	    control = OTS_ServerFactory.create_subtransaction(OTS_Utility.otidToUid(ctx.currentTransaction.otid),
+							      tmpCoord, tmpTerm, control);
+	    
+	    nestedAction = new OTS_ServerNestedAction(control);
+	    
+	    if (!nestedAction.valid())
+	    {
+		/*
+		 * Just deal with current transaction. Others must have been
+		 * registered successfully, and will be deal with automatically
+		 * when the parent transaction terminates.
+		 */
+		
+		try
+		{
+		    ((OTS_ServerNestedAction) nestedAction).rollback_subtransaction();  // does dispose as well!
+		    nestedAction = null;
+		}
+		catch (Exception e)
+		{
+		}
+
+
+		throw new TRANSACTION_ROLLEDBACK ();
+
+	    }
+ 
+	    action.addChild((OTS_ServerNestedAction) nestedAction);
+	}
+
+	if (DebugController.controller().enabled())
+	    compareHierarchies(ctx, newElement);
+
+	return control;
+    }
+    
+    /*
+     * In a single threaded environment we could walk down the hierarchy,
+     * aborting any actions which are no longer valid, and creating any new
+     * ones. However, in a multi-threaded environment, a thread can make a
+     * call from any point in the client's hierarchy, and multiple client
+     * threads can invoke the same server object. So, in general we cannot do
+     * this optimisation. We must maintain the entire tree until portions of
+     * it have explicitly been termined.
+     *
+     * Once we find the point in the new hierarchy which deviates from our
+     * current representation, we begin to assemble a new subtree in much the
+     * same way as we did for creating a completely new hierarchy.
+     */
+    
+protected synchronized OTS_Control checkHierarchy (InterposedHierarchy hier,
+						   PropagationContext context) throws SystemException
+    {
+	OTS_ServerControl control = null;
+	OTS_ServerResource currentAction = hier.action();  // top-level transaction
+	int depth = context.parents.length;
+	int differenceIndex = -1;  // index of the new transactions in the hierarchy
+	
+	/*
+	 * Find the point at which our notion of the hierarchy deviates from
+	 * the one we have just received.
+	 *
+	 * To get here we have already checked the id of the parent
+	 * transaction, i.e., depth -1.
+	 *
+	 * Remember: the context hierarchy sequence *does not* include the
+	 * current transaction!
+	 */
+
+	if (depth == 0)
+	{
+	    /*
+	     * There are no transactions in the context other than the current
+	     * transaction, which must therefore be top-level. We already have
+	     * the control to return.
+	     */
+
+	    control = hier.action().control();  // top-level transaction's control
+	}
+	else
+	{
+	    OTS_ServerResource nestedAction = null;
+	    
+	    /*
+	     * Start at -2 and work our way down the hierarchy. We
+	     * use -2 since the length gives us the *number* of elements,
+	     * which is 0 to n-1, and the n-1th element is the top-level
+	     * transaction, which we must deal with first!
+	     */
+
+	    for (int i = depth -2; i >= 0; i--)  // don't check depth-1 as it is current action!
+	    {
+		nestedAction = currentAction.getChild(OTS_Utility.otidToUid(context.parents[i].otid));
+
+		if (nestedAction == null)  // point of difference, so stop trawling hierarchy
+		{
+		    differenceIndex = i;   // remember for later so that we can add new actions.
+		    break;
+		}
+		else
+		{
+		    /*
+		     * currentAction *always* points to the last known
+		     * good transaction in our hierarchy.
+		     */
+		
+		    currentAction = nestedAction;
+		}
+	    }
+
+	    /*
+	     * Do we have anything left in the sent hierarchy (other than
+	     * current)? If so, add it now.
+	     */
+
+	    if (differenceIndex != -1)
+	    {
+		control = currentAction.control();
+
+		Coordinator tmpCoord;
+		Terminator tmpTerm;
+		
+		for (int j = differenceIndex; j >= 0; j--)
+		{
+		    tmpCoord = context.parents[j].coord;
+		    tmpTerm = context.parents[j].term;
+		    
+		    control = OTS_ServerFactory.create_subtransaction(OTS_Utility.otidToUid(context.parents[j].otid),
+								      tmpCoord, tmpTerm, control);
+		    nestedAction = new OTS_ServerNestedAction(control);
+
+		    if (!nestedAction.valid())
+		    {
+			/*
+			 * Just deal with current transaction. Others must have been
+			 * registered successfully, and will be deal with automatically
+			 * when the parent transaction terminates.
+			 */
+		
+			try
+			{
+			    ((OTS_ServerNestedAction) nestedAction).rollback();  // does dispose as well!
+			    nestedAction = null;
+			}
+			catch (Exception e)
+			{
+			}
+
+
+			throw new TRANSACTION_ROLLEDBACK ();
+
+		    }
+
+		    currentAction.addChild((OTS_ServerNestedAction) nestedAction);
+		    currentAction = nestedAction;
+		}
+	    }
+	    else
+	    {
+		/*
+		 * Hierarchies may be identical.
+		 * Remember to check!
+		 */
+	    }
+
+	    Uid currentUid = OTS_Utility.otidToUid(context.currentTransaction.otid);
+
+	    /*
+	     * currentAction points to the parent of the 'current'
+	     * transaction, i.e., the last element in the TransIdentity
+	     * structure. So, ask it if the sent hierarchy's child is
+	     * one of its children.
+	     */
+
+	    nestedAction = currentAction.getChild(currentUid);
+	    
+	    if (nestedAction == null)
+	    {
+		/*
+		 * Different notion of current in sent hierarchy.
+		 * So, add it to the hierarchy here.
+		 */
+
+		control = currentAction.control();
+		
+		/*
+		 * Now deal with the current transaction.
+		 */
+	    
+		TransIdentity currentID = context.currentTransaction;
+
+		control = OTS_ServerFactory.create_subtransaction(currentUid,
+								  currentID.coord, currentID.term, control);
+		nestedAction = new OTS_ServerNestedAction(control);
+
+		if (!nestedAction.valid())
+		{
+		    /*
+		     * Just deal with current transaction. Others must have been
+		     * registered successfully, and will be deal with automatically
+		     * when the parent transaction terminates.
+		     */
+		
+		    try
+		    {
+			((OTS_ServerNestedAction) nestedAction).rollback();  // does dispose as well!
+			nestedAction = null;
+		    }
+		    catch (Exception e)
+		    {
+		    }
+
+
+		    throw new TRANSACTION_ROLLEDBACK ();
+
+		}
+		
+		currentAction.addChild((OTS_ServerNestedAction) nestedAction);
+	    }
+	    else
+	    {
+		/*
+		 * Same current, so get its control and return it.
+		 */
+
+		control = nestedAction.control();
+	    }
+	}
+
+	if (DebugController.controller().enabled())
+	    compareHierarchies(context, hier);
+
+	return control;
+    }
+
+protected final synchronized boolean removeHierarchy (Uid action)
+    {
+	InterposedHierarchy hier = ((_head != null) ? (InterposedHierarchy) _head.remove(action) : null);
+
+	if (hier != null)
+	{
+	    hier = null;
+
+	    return true;
+	}
+	else
+	{
+	    if (DebugController.controller().enabled())
+		ErrorStream.stream(ErrorStream.WARNING).println("OTS_Interposition.removeHierarchy - could not find "+action+" to remove.");
+	}
+    
+	return false;
+    }
+    
+protected final void compareHierarchies (PropagationContext ctx, InterposedHierarchy ih)
+    {
+	int depth = ctx.parents.length;
+	Uid[] ctxHierarchy = new Uid [depth+1];
+	boolean printHierarchies = false;
+    
+	for (int i = depth -1; i >= 0; i--)
+	{
+	    ctxHierarchy[i+1] = new Uid(OTS_Utility.otidToUid(ctx.parents[i].otid));
+	}
+
+	ctxHierarchy[0] = new Uid(OTS_Utility.otidToUid(ctx.currentTransaction.otid));
+
+	OTS_ServerTopLevelAction action = ih.action();
+
+	if (action != null)
+	{
+	    if (action.get_uid().notEquals(ctxHierarchy[depth]))
+	    {
+		ErrorStream.stream(ErrorStream.WARNING).println("Toplevel transactions not identical: "+
+				   action.get_uid()+" "+ctxHierarchy[depth-1]);
+		printHierarchies = true;
+	    }
+	    else
+	    {
+		boolean problem = false;
+
+		if (depth > 0)
+		{
+		    OTS_ServerNestedAction child = action.getChild(ctxHierarchy[depth-1]);
+
+		    if (child != null)
+		    {
+			int i = 0;
+
+			for (i = depth -2; (i >= 0) && (child != null); i--)
+			{
+			    child = child.getChild(ctxHierarchy[i]);
+
+			    if (child == null)
+			    {
+				problem = true;
+				break;
+			    }
+			}
+
+			if (i != -1)
+			    problem = true;
+		    }
+		    else
+			problem = true;
+		}
+		
+		if (problem)
+		{
+		    ErrorStream.stream(ErrorStream.WARNING).println("Nested actions not identical");
+		    printHierarchies = true;		    
+		}
+	    }
+	}
+	else
+	{
+	    ErrorStream.stream(ErrorStream.WARNING).println("Interposed hierarchy null!");
+	    printHierarchies = true;
+	}
+
+	if (!printHierarchies)
+	    printHierarchies = DebugController.controller().enabled();
+	
+	if (printHierarchies)
+	{
+	    if (DebugController.enabled())
+	    {
+		if (DebugController.controller().debugAllowed(DebugLevel.FUNCTIONS, VisibilityLevel.VIS_PUBLIC, FacilityCode.FAC_OTS))
+		{
+		    synchronized (DebugController.controller().getStream())
+			{
+			    OTS_Utility.printHierarchy(ctx, DebugController.controller().getStream());
+			    DebugController.controller().getStream().print("\n");
+			    ih.print(DebugController.controller().getStream());
+			    DebugController.controller().getStream().print("\n");
+			}
+		}
+	    }
+	    else
+	    {
+		OTS_Utility.printHierarchy(ctx, ErrorStream.stream());
+		ErrorStream.stream().print("\n");
+		ih.print(ErrorStream.stream());
+		ErrorStream.stream().print("\n");
+	    }
+	}
+
+	if (ctxHierarchy != null)
+	{
+	    for (int i = 0; i < (int) depth; i++)
+	    {
+		if (ctxHierarchy[i] != null)
+		    ctxHierarchy[i] = null;
+	    }
+
+	    ctxHierarchy = null;
+	}
+    }
+
+protected HashList _head;
+
+private static OTS_Interposition __list = new OTS_Interposition();
+
+};

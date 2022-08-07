@@ -1,0 +1,27 @@
+#
+# Copyright (C) 1995, 1996
+#
+# Arjuna Solutions Limited,
+# Newcastle upon Tyne,
+# Tyne and Wear,
+# UK.
+#
+
+#
+# $Id: MakefileBoot.tmpl,v 1.1.4.1 2000/10/16 16:00:04 nmcl Exp $
+#
+
+MAKE           = make
+IMAKE          = imake
+RM             = rm -f
+
+IMAKE_INCLUDE  = -Iconfig -IC:/temp/src/JTSArjuna/2.2/JTSArjuna/JavaHarness/config -IC:/temp/src/JTSArjuna/2.2/JTSArjuna/ModuleBuildSystem/config
+IMAKE_TEMPLATE = ModuleBuildSystem.tmpl
+IMAKE_FLAGS    = 
+MAKEFILE_TMP   = Makefile.tmp
+
+Makefile ::
+	@echo "Building 'Makefile.tmp'"
+	@$(IMAKE) -T$(IMAKE_TEMPLATE) $(IMAKE_INCLUDE) $(IMAKE_FLAGS) -s $(MAKEFILE_TMP)
+	@$(MAKE) -f $(MAKEFILE_TMP) Makefile
+	@$(RM) $(MAKEFILE_TMP)

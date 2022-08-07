@@ -1,0 +1,19 @@
+/*
+ * Copyright (C) 1998, 1999, 2000, 2001,
+ * 
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ */
+
+/*
+ *  Local.def
+ */
+
+AddToIMakeFlags(-DINSTALLJAR -DHAVE_SWING -DBUILDUTILITIES -DINSTALLUTILITIES -UBUILDTESTS -UINSTALLTESTS -DVerboseMake=No -DBUILDDAEMONS -DINSTALLDAEMONS -DTopDir=$(JAVAARJUNACORETOPDIR) -DInstallTopDir=C:/PROGRA~1/Arjuna/TransactionService)
+AddToCPPFlags(-I$(JAVAARJUNACORETOPDIR)/config -I$(JAVAARJUNACORETOPDIR)/lib)
+
+#include "C:/temp/src/JTSArjuna/2.2/JTSArjuna/ArjunaCore/config/ArjunaCore_Module.def"
+#include "C:/temp/src/JTSArjuna/2.2/JTSArjuna/JavaHarness/config/JavaHarness_Module.def"
+#include "C:/temp/src/JTSArjuna/2.2/JTSArjuna/ModuleBuildSystem/config/Module.def"

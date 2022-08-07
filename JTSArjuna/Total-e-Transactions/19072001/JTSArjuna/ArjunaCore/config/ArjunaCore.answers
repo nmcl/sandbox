@@ -1,0 +1,10 @@
+Hostname: thinkblue
+Uname   : CYGWIN_NT-5.0 20.1 (0.3/1/1)
+Date    : Thu Sep 20 13:40:17 2001
+
+command line arguments : -all
+
+Build test programs (y/n) [n] : N
+Build utility programs (y/n) [y] : Y
+Install utility programs (y/n) [y] : Y
+Do you want to specify the module information (y/n) [n] : N

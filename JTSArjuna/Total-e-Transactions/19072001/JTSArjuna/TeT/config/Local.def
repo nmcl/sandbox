@@ -1,0 +1,20 @@
+/*
+ * Copyright (C) 1998, 1999, 2000, 2001,
+ * 
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ */
+
+/*
+ *  Local.def
+ */
+
+AddToIMakeFlags(-DTopDir=C:/temp/src/JTSArjuna/2.2/JTSArjuna/TeT -DInstallTopDir=C:/PROGRA~1/Arjuna/TransactionService)
+AddToIMakeFlags(-IC:/temp/src/JTSArjuna/2.2/JTSArjuna/TeT/config)
+#include "C:/temp/src/JTSArjuna/2.2/JTSArjuna/TeT/config/TeT_Module.def"
+#include "C:/temp/src/JTSArjuna/2.2/JTSArjuna/TeT/config/TeT_Rule.def"
+#include "C:/temp/src/JTSArjuna/2.2/JTSArjuna/JavaHarness/config/JavaHarness_Module.def"
+#include "C:/temp/src/JTSArjuna/2.2/JTSArjuna/ModuleBuildSystem/config/Module.def"
+

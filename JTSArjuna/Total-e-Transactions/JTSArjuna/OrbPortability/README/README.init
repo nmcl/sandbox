@@ -1,8 +1,0 @@
-If you do  not use ORBInterface/OAInterface to initialise  the ORB and
-BOA, then  you must call  setOrb and setBoa/setPoa with  references to
-the ORB and BOA/POA respectively immediately after initialisation.
-
-In addition to using  the ORBInterface/OAInterface methods initORB and
-initBOA/createPOA  you must  also use  shutdownOA and  shutdownORB (in
-that order) before terminating your  application. This is to allow the
-OTS to do any tidying up that is necessary.

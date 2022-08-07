@@ -1,0 +1,38 @@
+COMMENT 
+COMMENT Copyright (C) 1999, 2000, 2001,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2.34.1.4.1 2001/04/06 15:32:58 jcoleman Exp $
+COMMENT
+
+AddToIdlFlags(-I$(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+#ifdef INSTALLTESTS
+CreateInstallDirectory(/tests,/tests/Checked)
+#endif
+
+SOURCES = CheckedTransactions.java
+
+TESTOBJECTS = CheckedTransactions.class
+
+Target($(TESTOBJECTS))
+
+#ifdef INSTALLTESTS
+InstallFile(/tests/Checked,$(TESTOBJECTS))
+InstallFile(/tests/Checked,MyCheckedAction.class)
+InstallFile(/tests/Checked,TXThread.class)
+InstallFile(/tests/Checked,expected_output1)
+InstallFile(/tests/Checked,expected_output2)
+InstallFile(/tests/Checked,README)
+InstallFile(/tests/Checked,runtest)
+InstallFile(/tests/Checked,runtest.bat)
+InstallFile(/tests/Checked,runtest.cygwin)
+#endif
+
+BuildJavaByteCode(CheckedTransactions,NullParam)
+
+Clean(*.class)

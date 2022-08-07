@@ -1,0 +1,15 @@
+#!/bin/sh
+#
+# Copyright (C) 2001,
+# 
+# HP Arjuna Labs,
+# Newcastle upon Tyne,
+# Tyne and Wear,
+# UK.
+#
+
+# Arjuna JTS top level configure file
+# Version 1.1.0
+ARJUNA_INSTALLATION_DIRECTORY=C:/PROGRA~1/Arjuna/TransactionService
+SEPARATEJAR_INST=
+SINGLEJAR_INST=-noinst

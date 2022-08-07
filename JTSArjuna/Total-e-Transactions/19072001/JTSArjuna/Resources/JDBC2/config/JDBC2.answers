@@ -1,0 +1,13 @@
+Hostname: thinkblue
+Uname   : CYGWIN_NT-5.0 20.1 (0.3/1/1)
+Date    : Thu Sep 20 13:40:29 2001
+
+command line arguments : -all
+
+Build Cloudscape 3.6 support (y/n) [y] : N
+Build Oracle 8.1.6 support (y/n) [n] : N
+Build with Sequelink 5.1 support (y/n) [y] : Y
+Build test programs (y/n) [n] : N
+Build utility programs (y/n) [y] : Y
+Install utility programs (y/n) [y] : Y
+Do you want to specify the module information (y/n) [n] ? N

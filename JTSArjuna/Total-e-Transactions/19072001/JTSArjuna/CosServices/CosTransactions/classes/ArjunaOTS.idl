@@ -1,0 +1,136 @@
+/*
+ * Copyright (C) 1998, 1999, 2000, 2001,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: ArjunaOTS.tmpl,v 1.3.26.3.2.2.44.2 2001/07/23 11:13:08 nmcl Exp $
+ */
+
+
+
+
+
+#pragma prefix "arjuna.com"
+
+
+
+#include <idl/CosTransactions.idl>
+
+
+
+
+
+
+module ArjunaOTS
+{
+    enum TransactionType { TransactionTypeActive, TransactionTypeTerminated, TransactionTypeUnresolved };
+
+    struct GlobalTransactionInfo
+    {
+	long  totalNumberOfTransactions;
+	long  numberOfCommittedTransactions;
+	long  numberOfAbortedTransactions;
+	float averageLifetime;
+	long  numberOfHeuristics;
+	long  reaperTimeout;
+	long  defaultTimeout;
+    };
+
+    struct TransactionInfo
+    {
+	long currentDepth;
+	long timeout;
+	long numberOfThreads;
+    };
+    
+    typedef sequence<CosTransactions::otid_t> txIds;
+    
+
+    // Some useful exceptions
+
+    exception ActiveTransaction {};
+    exception BadControl {};
+    exception Destroyed {};
+    exception ActiveThreads {};
+    exception InterpositionFailed {};
+
+
+    exception NoContext {};
+
+    interface UidCoordinator : CosTransactions::Coordinator
+    {
+	readonly attribute string uid;
+	readonly attribute string topLevelUid;
+    };
+
+    interface ActionControl : CosTransactions::Control
+    {
+        CosTransactions::Control getParentControl () raises(CosTransactions::Unavailable);
+
+        void destroy () raises (ActiveTransaction, ActiveThreads, BadControl, Destroyed);
+    };
+
+    interface ArjunaSubtranAwareResource : CosTransactions::SubtransactionAwareResource
+    {
+	CosTransactions::Vote prepare_subtransaction ();
+    };
+
+    /*
+     * At the moment these management methods occur on the ArjunaFactory.
+     * However, we could have a separate interface which the factory gives
+     * out an implementation to, and that is then used.
+     */
+
+    interface ArjunaFactory : CosTransactions::TransactionFactory
+    {
+	txIds numberOfTransactions (in ArjunaOTS::TransactionType t) raises(CosTransactions::Inactive, CosTransactions::NoTransaction);
+
+	txIds getChildTransactions (in CosTransactions::otid_t parent) raises(CosTransactions::Inactive, CosTransactions::NoTransaction);
+
+	CosTransactions::Status getCurrentStatus (in CosTransactions::otid_t uid) raises(CosTransactions::NoTransaction);
+	CosTransactions::Status getStatus (in CosTransactions::otid_t uid) raises(CosTransactions::NoTransaction);
+
+	GlobalTransactionInfo getGlobalInfo ();
+	TransactionInfo getTransactionInfo (in CosTransactions::otid_t uid) raises(CosTransactions::NoTransaction);
+
+	CosTransactions::Control getTransaction (in CosTransactions::otid_t uid) raises(CosTransactions::NoTransaction);
+    };
+
+    interface ArjunaTransaction : UidCoordinator, CosTransactions::Terminator
+    {
+    };
+
+    interface Current : CosTransactions::Current
+    {
+	long get_timeout ();
+    };
+
+
+    interface OTSAbstractRecord : ArjunaSubtranAwareResource
+    {
+	readonly attribute long typeId;
+	readonly attribute string uid;
+
+	boolean propagateOnAbort ();
+	boolean propagateOnCommit ();
+
+	boolean saveRecord ();
+    
+	void merge (in OTSAbstractRecord record);
+	void alter (in OTSAbstractRecord record);
+
+	boolean shouldAdd (in OTSAbstractRecord record);
+	boolean shouldAlter (in OTSAbstractRecord record);
+	boolean shouldMerge (in OTSAbstractRecord record);
+	boolean shouldReplace (in OTSAbstractRecord record);
+    };
+
+};
+
+
+
+
+

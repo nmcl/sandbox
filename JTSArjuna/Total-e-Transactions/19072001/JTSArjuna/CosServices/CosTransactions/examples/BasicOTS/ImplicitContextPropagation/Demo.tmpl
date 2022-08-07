@@ -1,0 +1,36 @@
+/*
+ * Copyright (C) 2001,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: Demo.tmpl,v 1.1.2.2 2001/02/15 13:47:35 nmcl Exp $
+ */
+
+#ifdef ORBACUS
+// bug in ORBacus?
+
+#pragma prefix ""
+#endif
+
+#ifndef RCPORB
+INCLUDE_DIRECTIVE <idl/CosTransactions.idl>
+#else
+INCLUDE_DIRECTIVE "CosTransactions.idl"  // uugghh!!
+#endif
+
+#if defined(JDK_1_2) && defined(SUNSJDK)
+#pragma javaPackage ""
+#endif
+
+module Demo
+{
+	exception DemoException {};
+	
+	interface DemoInterface : CosTransactions::TransactionalObject
+	{
+		void work() raises (DemoException);
+	};
+};

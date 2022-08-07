@@ -1,0 +1,6 @@
+#define MODULE "CosTransactions"
+#define SOURCEID "unkown"
+#define BUILDINFO "Arjuna Solutions Ltd. [unknown]"
+#define VERSION "4.5.0"
+#define DATE "Thu Sep 20 13:40:24 2001"
+#define NOTES "none"

@@ -1,0 +1,6 @@
+#define MODULE "CosRecovery"
+#define SOURCEID "unkown"
+#define BUILDINFO "Arjuna Solutions Ltd. [unknown]"
+#define VERSION "0.0.8"
+#define DATE "Thu Sep 20 13:40:26 2001"
+#define NOTES "none"

@@ -1,8 +1,0 @@
-To enable multi-threading  capabilities for the client and/or  server,
-it is necessary  to use  the  BasicThreadFilter class  provided. This
-is accomplished automatically by ORBInterface.
-
-If you  do not use the  ORBInterface class for initialisation, then it
-will   be      necessary       to   create       an     instance    of
-com.arjuna.OrbPortability.Filters.BasicFilter.orbix.Init prior  to any
-ORB work.

@@ -1,0 +1,6 @@
+#define MODULE "OrbPortability"
+#define SOURCEID "unknown"
+#define BUILDINFO "Arjuna Solutions Ltd. [unknown]"
+#define VERSION "4.6.3"
+#define DATE "Thu Sep 20 13:40:22 2001"
+#define NOTES "none"

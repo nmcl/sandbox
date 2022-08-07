@@ -1,0 +1,38 @@
+COMMENT 
+COMMENT Copyright (C) 1998, 1999, 2000, 2001,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2.34.1.4.1 2001/04/06 15:32:58 jcoleman Exp $
+COMMENT
+
+AddToIdlFlags(-I$(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+#ifdef INSTALLTESTS
+CreateInstallDirectory(/tests,/tests/ExplicitInterposition)
+#endif
+
+SOURCES = ExplicitInterClient.java
+
+TESTOBJECTS = ExplicitInterClient.class
+
+Target($(SOURCES))
+Target($(TESTOBJECTS))
+
+#ifdef INSTALLTESTS
+InstallFile(/tests/ExplicitInterposition,$(TESTOBJECTS))
+InstallFile(/tests/ExplicitInterposition,expected_output)
+InstallFile(/tests/ExplicitInterposition,README)
+InstallFile(/tests/ExplicitInterposition,runtest)
+InstallFile(/tests/ExplicitInterposition,runtest.bat)
+InstallFile(/tests/ExplicitInterposition,runtest.cygwin)
+#endif
+
+PreprocessJavaCode(ExplicitInterClient,NullParam)
+
+BuildJavaByteCode(ExplicitInterClient,NullParam)
+
+Clean(*.class)

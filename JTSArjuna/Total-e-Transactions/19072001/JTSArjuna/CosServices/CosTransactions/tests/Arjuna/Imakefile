@@ -1,0 +1,50 @@
+COMMENT 
+COMMENT Copyright (C) 1998, 1999, 2000, 2001,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2.34.1.4.1 2001/04/06 15:32:57 jcoleman Exp $
+COMMENT
+
+AddToIdlFlags(-I$(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+#ifdef INSTALLTESTS
+CreateInstallDirectory(/tests,/tests/Arjuna)
+#endif
+
+SOURCES = ExplicitArjunaClient.java \
+	  ImplicitArjunaClient.java
+
+TESTOBJECTS = ExplicitArjunaClient.class
+
+FILTEROBJECTS = ImplicitArjunaClient.class
+
+Target($(SOURCES))
+Target($(TESTOBJECTS))
+
+#if defined(HAVE_FILTER) || defined(HAVE_INTERCEPTOR)
+Target($(FILTEROBJECTS))
+
+#ifdef INSTALLTESTS
+InstallFile(/tests/Arjuna,$(FILTEROBJECTS))
+#endif
+
+InstallFile(/tests/Arjuna,$(TESTOBJECTS))
+
+InstallFile(/tests/Arjuna,expected_output1)
+InstallFile(/tests/Arjuna,expected_output2)
+InstallFile(/tests/Arjuna,README)
+InstallFiles(/tests/Arjuna,intertest.bat,intertest.*)
+InstallFiles(/tests/Arjuna,runtest,runtest.*)
+#endif
+
+PreprocessJavaCode(ExplicitArjunaClient,NullParam)
+PreprocessJavaCode(ImplicitArjunaClient,NullParam)
+
+BuildJavaByteCode(ExplicitArjunaClient,NullParam)
+BuildJavaByteCode(ImplicitArjunaClient,NullParam)
+
+Clean(*.class)

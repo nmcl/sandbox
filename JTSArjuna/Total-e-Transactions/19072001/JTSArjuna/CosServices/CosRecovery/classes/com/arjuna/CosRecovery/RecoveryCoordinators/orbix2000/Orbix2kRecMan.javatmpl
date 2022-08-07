@@ -1,0 +1,79 @@
+/*
+ * Copyright (C) 2001,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: Orbix2kRecMan.javatmpl,v 1.1.4.1 2001/03/19 15:53:03 nmcl Exp $
+ */
+ 
+#include <Common/OrbPortability.h>
+
+package com.arjuna.CosRecovery.RecoveryCoordinators.orbix2000;
+
+import com.arjuna.OrbCommon.*;
+import org.omg.CosTransactions.*;
+import com.arjuna.CosRecovery.*;
+import com.arjuna.ArjunaCommon.Common.*;
+import org.omg.PortableServer.*;
+import org.omg.CORBA.Policy;
+
+import org.omg.CORBA.BAD_OPERATION;
+import org.omg.CORBA.SystemException;
+
+public class Orbix2kRecMan extends SCOPED_SKEL_(com.arjuna.CosRecovery.Admin,RecoveryManager)
+{
+
+public Orbix2kRecMan ()
+    {
+	_ourPOA = Orbix2kRCServiceInit.getRCPOA();
+
+	if (DebugController.enabled()) 
+	{
+	    DebugController.controller().println(DebugLevel.CONSTRUCTORS, VisibilityLevel.VIS_PUBLIC,
+						 FacilityCode.FAC_CRASH_RECOVERY,
+						 "Orbix2kRecMan created");
+	}
+	
+	READY_IMPL_(this);
+	
+	com.arjuna.CosRecovery.Admin.RecoveryManager theMan = CORBA_REF_(this,com.arjuna.CosRecovery.Admin.RecoveryManager);
+
+	try
+	{
+	    ORBServices.registerService(theMan, RecManName, null, ORBServices.CONFIGURATION_FILE);
+	}
+	catch (Exception e)
+	{
+	    ErrorStream.fatal().println("Orbix2kRecMan registerService failed: "+e);
+	    
+	    throw new FatalError(e.toString());
+	}
+    }
+
+public String createIOR (String id) throws SystemException
+    {
+	try
+	{
+	    org.omg.CORBA.Object rcAsObject = _ourPOA.create_reference_with_id(id.getBytes(), rcvcoRepositoryId);
+
+	    return ORBInterface.orb().object_to_string(rcAsObject);
+	}
+	catch (Exception e)
+	{
+	    ErrorStream.warning().println("Orbix2kRecMan.createIOR - caught: "+e);
+
+	    throw new BAD_OPERATION(e.toString());
+	}
+    }
+
+public static final String RecManName = "RecoveryManager";
+
+private POA _ourPOA;
+
+private static final String rcvcoRepositoryId = RecoveryCoordinatorHelper.id();
+
+}
+

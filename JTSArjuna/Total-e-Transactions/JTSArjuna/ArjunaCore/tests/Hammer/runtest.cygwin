@@ -1,1 +1,0 @@
-java -DOBJECTSTORE_DIR=/tmp/ObjectStore $@

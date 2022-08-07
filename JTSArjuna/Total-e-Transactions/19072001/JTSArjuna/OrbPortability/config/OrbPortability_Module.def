@@ -1,0 +1,24 @@
+/*
+ * Copyright (C) 1998, 1999, 2000, 2001,
+ * 
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ */
+
+/*
+ *  OrbPortability_Module.def (source)
+ */
+
+JAVAORBPORTABILITYTOPDIR=C:/temp/src/JTSArjuna/2.2/JTSArjuna/OrbPortability
+
+#include "C:/temp/src/JTSArjuna/2.2/JTSArjuna/OrbPortability/config/o_orbix2000_1.cf"
+#include "C:/temp/src/JTSArjuna/2.2/JTSArjuna/OrbPortability/config/OrbPortability.tmpl"
+
+AddToIMakeFlags(-DHAVE_POA -DIDL2JAVA=idl -DIDL2IR=idl -DORBIX2000 -I$(JAVAORBPORTABILITYTOPDIR)/config)
+AddToCPPFlags(-DUSE_CONFIG_FILE -DORBIX2000 -DJAVAIDL)
+AddToCPPIncludes(-I$(JAVAORBPORTABILITYTOPDIR)/include)
+AddToIdlFlags(-I$$ORB_ROOT/idl )
+
+AddToCPPFlags(-DORBPORTABILITY_VERSION=\"4.6.3\")

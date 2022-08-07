@@ -1,0 +1,1162 @@
+#!/bin/sh
+
+#
+# Copyright (C) 1998, 1999, 2000, 2001,
+# 
+# Hewlett-Packard Company,
+# Newcastle upon Tyne,
+# Tyne and Wear,
+# UK.
+# 
+# $Id: configure,v 1.8.2.2.2.8.4.1.2.1.2.2.6.6.8.1.2.4.2.2.6.3.2.1.4.1.18.1.4.2.4.2 2001/08/02 13:16:33 jcoleman Exp $
+#
+
+BUILDRELEASE="NO"
+VERIFY="NO"
+CONFIGFILE=""
+ALLMODULES=NO
+INST=YES
+DO_CONFIG=NO
+DO_UNCONF=NO
+
+ARGS=$*
+
+BADPARAM=NO
+while test $# -gt 0
+do
+	case $1 in
+	-v)     VERIFY=YES
+		DO_CONFIG=YES
+		;;
+	-r)	BUILDRELEASE=YES
+		DO_CONFIG=YES
+		;;
+	-u)	DO_UNCONF=YES
+		;;
+	-all)	ALLMODULES=YES
+		DO_CONFIG=YES
+		;;
+	-noinst)	INST=NO
+		DO_CONFIG=YES
+		;;
+	-*)	echo Unknown option $1 >&2
+		BADPARAM=YES
+		;;
+	*)	if test "$CONFIGFILE" = ""
+		then
+			CONFIGFILE=$1
+			DO_CONFIG=YES
+		else
+			echo Unknown option $1 >&2
+			BADPARAM=YES
+		fi
+		;;
+	esac
+	shift
+done
+
+if test "$DO_CONFIG" = "YES" -a "$DO_UNCONF" = "YES"
+then
+	BADPARAM=YES
+fi
+if test "$BADPARAM" = "YES"
+then
+	echo $0": illegal usage" >&2
+	echo "usage: "$0" [-v] [file] [-d]" >&2
+	echo "       "$0" [-u]" >&2
+	exit 1
+fi
+
+THISMODULE=OrbPortability
+ORBPORTABILITY_VERSION=4.6.3
+DEFAULT_BIND_MECHANISM="1"
+PRE_BUILDINFO='Arjuna Solutions Ltd. '
+SAVED_CONFIG=config/"$THISMODULE".cf
+SAVED_ANSWERS=config/"$THISMODULE".answers
+
+# Unconfigure (remove files created during 'normal' configure)
+if test "$DO_UNCONF" = "YES"
+then
+	rm -f Makefile MakefileBoot \
+	    "$SAVED_CONFIG" "$SAVED_ANSWERS" \
+	    config/Local.def config/"$THISMODULE"_Module.def \
+	    config/"$THISMODULE"_Module_install.def \
+	    config/"$THISMODULE"_Version.def config/Info.h
+	    exit 0
+fi
+
+if test "'$BUILD_RELEASE'" = "'YES'"
+then
+    BUILDRELEASE="YES"
+fi
+
+if test "$CONFIGFILE" != ""
+then
+	if test -f $CONFIGFILE
+	then
+		if test "`head -11 $CONFIGFILE | tail -1`" != "# "$THISMODULE"  configure file"
+		then
+			echo $0": configuration file \""$CONFIGFILE"\" is invalid/corrupt" >&2
+			exit 1
+		fi
+		if test "`head -12 $CONFIGFILE | tail -1`" != "# Version "$ORBPORTABILITY_VERSION
+		then
+			echo $0": configuration file \""$CONFIGFILE"\" is not version "$ORBPORTABILITY_VERSION >&2
+			exit 1
+		fi
+	else
+		echo $0": configuration file \""$CONFIGFILE"\" does not exist" >&2
+		exit 1
+	fi
+fi
+
+ECHO_TEST=`echo "Test \c"`
+if test "$ECHO_TEST" = "Test "
+then
+	PRE_ECHO=""
+	POST_ECHO="\c"
+else
+	PRE_ECHO="-n"
+	POST_ECHO=""
+fi
+
+echo "+-------------------------------------+"
+echo "|    "$THISMODULE" version "$ORBPORTABILITY_VERSION"     |"
+echo "+-------------------------------------+"
+
+TOPDIR=`pwd`
+
+if test "$CONFIGFILE" = ""
+then
+	echo "Hostname: "`hostname` > "$SAVED_ANSWERS"
+	echo "Uname   : "`uname -rs` >> "$SAVED_ANSWERS"
+	echo "Date    : "`date` >> "$SAVED_ANSWERS"
+	echo "" >> "$SAVED_ANSWERS"
+	echo "command line arguments : $ARGS" >> "$SAVED_ANSWERS"
+	echo "" >> "$SAVED_ANSWERS"
+
+	if test "'x$ARJUNA_INSTALLATION_DIRECTORY'" != "'x'"
+	then
+		INSTALLTOPDIR=$ARJUNA_INSTALLATION_DIRECTORY
+	else
+		case ${OS:-`(uname -s) 2> /dev/null`} in
+		CYGWIN*|Windows*)	INSTALLTOPDIR=C:/PROGRA~1/Arjuna/TransactionService/"$THISMODULE"$ORBPORTABILITY_VERSION
+		;;
+		*)	INSTALLTOPDIR=/usr/local/Arjuna/TransactionService/"$THISMODULE"$ORBPORTABILITY_VERSION
+		;;
+		esac
+	fi
+
+	if test "$ALLMODULES" != "YES"
+	then
+		echo
+		echo $PRE_ECHO "Root of directory of "$THISMODULE" installation ["$INSTALLTOPDIR"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+		read INPUT
+		if test "'x$INPUT'" != "'x'"
+		then
+			echo "$INPUT" >> "$SAVED_ANSWERS"
+			INSTALLTOPDIR=$INPUT
+		else
+			echo "(DEFAULT) $INSTALLTOPDIR" >> "$SAVED_ANSWERS"
+		fi
+	fi
+	
+	if test "'x$BUILDRELEASE'" != "'xNO'"
+	then
+	    BUILDSYSTEMTOPDIR=$INSTALLTOPDIR
+	else
+	    BUILDSYSTEMTOPDIR=`dirname $TOPDIR`/ModuleBuildSystem
+	fi
+
+	if test "'x$BUILDRELEASE'" != "'xNO'"
+	then
+	    JAVAHARNESSTOPDIR=$INSTALLTOPDIR
+	else
+	    JAVAHARNESSTOPDIR=`dirname $TOPDIR`/JavaHarness
+	fi
+
+	if test "$ALLMODULES" != "YES"
+	then
+		echo
+		echo $PRE_ECHO "Root of directory of JavaHarness ["$JAVAHARNESSTOPDIR"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+		read INPUT
+		if test "'x$INPUT'" != "'x'"
+		then
+		    echo "$INPUT" >> "$SAVED_ANSWERS"
+		    JAVAHARNESSTOPDIR=$INPUT
+		else
+		    echo "(DEFAULT) $JAVAHARNESSTOPDIR" >> "$SAVED_ANSWERS"
+		fi
+	
+		echo
+		echo $PRE_ECHO "Root of directory of ModuleBuildSystem ["$BUILDSYSTEMTOPDIR"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+		read INPUT
+		if test "'x$INPUT'" != "'x'"
+		then
+			echo "$INPUT" >> "$SAVED_ANSWERS"
+			BUILDSYSTEMTOPDIR=$INPUT
+		else
+			echo "(DEFAULT) $BUILDSYSTEMTOPDIR" >> "$SAVED_ANSWERS"
+		fi
+	fi
+	
+	if test -x $BUILDSYSTEMTOPDIR/config/Sys
+	then
+		SYS=`$BUILDSYSTEMTOPDIR/config/Sys`
+	else
+		echo "Error: "$BUILDSYSTEMTOPDIR/config/Sys": was not found or would not run." >&2
+		exit 1
+	fi
+
+	if test -x $BUILDSYSTEMTOPDIR/config/Sys_Version
+	then
+		SYS_VERSION=`$BUILDSYSTEMTOPDIR/config/Sys_Version`
+	else
+		echo "Error: "$BUILDSYSTEMTOPDIR/config/Sys_Version": was not found or would not run." >&2
+		exit 1
+	fi
+
+	case $SYS in
+	Windows) BUILDSYSTEMTOPDIR="`cygpath -w $BUILDSYSTEMTOPDIR | sed 's;\\\;/;g'`"
+		 JAVAHARNESSTOPDIR="`cygpath -w $JAVAHARNESSTOPDIR | sed 's;\\\;/;g'`"
+		 INSTALLTOPDIR="`cygpath -w $INSTALLTOPDIR | sed 's;\\\;/;g'`"
+		 TOPDIR="`cygpath -w $TOPDIR | sed 's;\\\;/;g'`"
+		 ;;
+	esac
+
+	LOCAL_MAKEFLAGS=""
+	LOCAL_IMAKEFLAGS="-DVerboseMake=No -DTopDir=\$(JAVAORBPORTABILITYTOPDIR) -DInstallTopDir="$INSTALLTOPDIR
+	LOCAL_MAKEDEPENDFLAGS=""
+	LOCAL_CPPFLAGS=""
+	LOCAL_CPPINCLUDES="-I\$(JAVAORBPORTABILITYTOPDIR)/config -I\$(JAVAORBPORTABILITYTOPDIR)/lib"
+	LOCAL_CPLUSPLUSFLAGS=""
+	LOCAL_LDFLAGS=""
+	LOCAL_LDLIBRARIES=""
+	LOCAL_LDLIBDEPENDS=""
+
+	MODULE_MAKEFLAGS=""
+	MODULE_IMAKEFLAGS="-I\$(JAVAORBPORTABILITYTOPDIR)/config"
+	MODULE_MAKEDEPENDFLAGS=""
+	MODULE_CPPFLAGS="-DJAVAIDL"
+	MODULE_CPPINCLUDES="-I\$(JAVAORBPORTABILITYTOPDIR)/include"
+	MODULE_CPLUSPLUSFLAGS=""
+	MODULE_LDFLAGS=""
+        MODULE_LDLIBRARIES=""
+	MODULE_LDLIBDEPENDS=""
+
+	BUILDINFO="$PRE_BUILDINFO [$BUILDINFO]"
+
+	ORB_DEFAULT=sunsjdk_1_2
+	IDLFLAGS_DEFAULT=""
+	IRFLAGS_DEFAULT=""
+	HAVE_INTERFACE_REPOSITORY="NO"
+
+	echo
+	echo "Build for which ORB:"
+	echo "  1) Sun's JDK (1.3)"
+	echo "  2) Visibroker 4.1.1 (patch 21297)"
+	echo "  3) ORBacus 4.x"
+	echo "  4) JBroker 2.1 (POA)"
+	echo "  5) Orbix 2000"
+	echo "  6) JacORB"
+	echo
+	INPUT="xxxx"
+	FINISHED=""
+	while test -z "$FINISHED"
+	do
+	    echo $PRE_ECHO "ORB : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	    read INPUT
+	    echo $INPUT >> "$SAVED_ANSWERS"
+	
+	    case $INPUT in
+	#    X)  ORB_DEFAULT=sunsjdk_1_2
+	#	MODULE_CPPFLAGS="-DSUNSJDK "$MODULE_CPPFLAGS
+	#	IDLFLAGS_DEFAULT="-ftie "$IDLFLAGS_DEFAULT
+	#	MODULE_IMAKEFLAGS="-DIDL2JAVA=idltojava -DSUNSJDK "$MODULE_IMAKEFLAGS
+	#
+	#	case $SYS in
+	#	Windows) IDLFLAGS_DEFAULT="-fcpp "$IDLFLAGS_DEFAULT
+	#		 ;;
+	#	esac
+	#
+	#	FINISHED="TRUE"
+	#	;;
+	    1)  ORB_DEFAULT=sunsjdk_1_3
+		MODULE_CPPFLAGS="-DSUNSJDK "$MODULE_CPPFLAGS
+	#	IDLFLAGS_DEFAULT="-fall -fallTIE "$IDLFLAGS_DEFAULT
+		MODULE_IMAKEFLAGS="-DIDL2JAVA=idlj -DSUNSJDK "$MODULE_IMAKEFLAGS
+	
+		FINISHED="TRUE"
+		;;
+	#    X)  ORB_DEFAULT=vbroker_2_5
+	#	MODULE_CPPFLAGS="-DVISIBROKER -DNO_ANONYMOUS_SEQUENCES "$MODULE_CPPFLAGS
+	#	IDLFLAGS_DEFAULT="-T "$IDLFLAGS_DEFAULT
+	#	MODULE_IMAKEFLAGS="-DVISIBROKER -DIDL2JAVA=idl2java -DIDL2IR=idl2ir "$MODULE_IMAKEFLAGS
+	#
+	#	FINISHED="TRUE"
+	#	;;
+	#    X)  ORB_DEFAULT=vbroker_3
+	#	MODULE_CPPFLAGS="-DVISIBROKER -DNO_ANONYMOUS_SEQUENCES "$MODULE_CPPFLAGS
+	#	IRFLAGS_DEFAULT="-replace -ir InterfaceRepository "$IRFLAGS_DEFAULT
+	#	MODULE_IMAKEFLAGS="-DIDL2JAVA=idl2java -DIDL2IR=idl2ir -DVISIBROKER "$MODULE_IMAKEFLAGS
+	#	HAVE_INTERFACE_REPOSITORY="YES"
+	#
+	#	echo
+	#	echo $PRE_ECHO "Support bind (y/n) [n] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	#	read INPUT
+	#
+	#	if test "'x$INPUT'" = "'xy'"
+	#	then
+	#	    echo "Y" >> "$SAVED_ANSWERS"
+	#	    IDLFLAGS_DEFAULT="-bind "$IDLFLAGS_DEFAULT
+	#	    MODULE_CPPFLAGS="-DHAVE_BIND "$MODULE_CPPFLAGS
+	#	    DEFAULT_BIND_MECHANISM="4"
+	#	else
+	#	    echo "N" >> "$SAVED_ANSWERS"
+	#	fi
+	#
+	#	FINISHED="TRUE"
+	#	;;
+	    2)  ORB_DEFAULT=vbroker_4
+		MODULE_CPPFLAGS="-DVISIBROKER "$MODULE_CPPFLAGS
+		IRFLAGS_DEFAULT="-replace -ir InterfaceRepository "$IRFLAGS_DEFAULT
+		MODULE_IMAKEFLAGS="-DHAVE_POA -DIDL2JAVA=idl2java -DIDL2IR=idl2ir -DVISIBROKER "$MODULE_IMAKEFLAGS
+		HAVE_INTERFACE_REPOSITORY="YES"
+	
+		echo
+		echo $PRE_ECHO "Support bind (y/n) [n] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+		read INPUT
+	
+		if test "'x$INPUT'" = "'xy'"
+		then
+		    echo "Y" >> "$SAVED_ANSWERS"
+		    IDLFLAGS_DEFAULT="-bind "$IDLFLAGS_DEFAULT
+		    MODULE_CPPFLAGS="-DHAVE_BIND "$MODULE_CPPFLAGS
+		    DEFAULT_BIND_MECHANISM="4"
+		else
+		    echo "N" >> "$SAVED_ANSWERS"
+		    IDLFLAGS_DEFAULT=" -strict -idl_strict "$IDLFLAGS_DEFAULT
+		fi
+	
+		FINISHED="TRUE"
+		;;
+	#    X)  ORB_DEFAULT=orbacus_3
+	#	MODULE_CPPFLAGS="-DORBACUS "$MODULE_CPPFLAGS
+	#	IDLFLAGS_DEFAULT="--tie "$IDLFLAGS_DEFAULT
+	#	MODULE_IMAKEFLAGS="-DSUPPORT_IDL_PREFIX -DIDL2JAVA=jidl -DIDL2IR=irfeed -DORBACUS "$MODULE_IMAKEFLAGS
+	#
+	#	HAVE_INTERCEPTORS="YES"
+	#
+	#	echo
+	#	echo $PRE_ECHO "Are interceptors enabled (YES/NO) ["$HAVE_INTERCEPTORS"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	#	read INPUT
+	#	if test "'x$INPUT'" != "'x'"
+	#	then
+	#	    echo "Y" >> "$SAVED_ANSWERS"
+	#	    HAVE_INTERCEPTORS=$INPUT
+	#	else
+	#	    echo "N" >> "$SAVED_ANSWERS"
+	#  	fi
+	#
+	#	if test "'x$HAVE_INTERCEPTORS'" = "'xYES'" -o "'x$HAVE_INTERCEPTORS'" = "'xyes'"
+	#	then
+	#	    MODULE_CPPFLAGS="-DHAVE_FILTER "$MODULE_CPPFLAGS
+	#	    MODULE_IMAKEFLAGS="-DHAVE_FILTER "$MODULE_IMAKEFLAGS
+	#	fi
+	#
+	#	FINISHED="TRUE"
+	#	;;
+	    3)  ORB_DEFAULT=orbacus_4
+		MODULE_CPPFLAGS="-DORBACUS "$MODULE_CPPFLAGS
+		IDLFLAGS_DEFAULT="--tie "$IDLFLAGS_DEFAULT
+		MODULE_IMAKEFLAGS="-DHAVE_POA -DSUPPORT_IDL_PREFIX -DIDL2JAVA=jidl -DIDL2IR=irfeed -DORBACUS "$MODULE_IMAKEFLAGS
+	
+		FINISHED="TRUE"
+		;;
+	#    X)  ORB_DEFAULT=voyager
+	#	MODULE_CPPFLAGS="-DVOYAGER "$MODULE_CPPFLAGS
+	#	MODULE_IMAKEFLAGS="-DVOYAGER "$MODULE_IMAKEFLAGS
+	#
+	#	FINISHED="TRUE"
+	#	;;
+	#    X)  ORB_DEFAULT=orbixweb
+	#	MODULE_CPPFLAGS="-DORBIXWEB "$MODULE_CPPFLAGS
+	#	MODULE_IMAKEFLAGS="-DORBIXWEB -DIDL2JAVA=idl -DIDL2IR=ifr "$MODULE_IMAKEFLAGS
+	
+	#	echo $PRE_ECHO "Support bind (y/n) [y] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	#	read INPUT
+	#
+	#	if test "'x$INPUT'" = "'xn'"
+	#	then
+	#	    echo "Y" >> "$SAVED_ANSWERS"
+	#	    IDLFLAGS_DEFAULT="-jOMG "$IDLFLAGS_DEFAULT
+	#	else
+	#	    echo "N" >> "$SAVED_ANSWERS"
+	#	    MODULE_CPPFLAGS="-DHAVE_BIND "$MODULE_CPPFLAGS
+	#	    DEFAULT_BIND_MECHANISM="4"
+	#	fi
+	#
+	#	FINISHED="TRUE"
+	#	;;
+	#     X) ORB_DEFAULT=daisj2
+	#	MODULE_CPPFLAGS="-DDAISJ2 "$MODULE_CPPFLAGS
+	#	IDLFLAGS_DEFAULT="-ljava -s "$IDLFLAGS_DEFAULT
+	#	MODULE_IMAKEFLAGS="-DHAVE_POA -DDAISJ2 -DIDL2JAVA=stubgen "$MODULE_IMAKEFLAGS
+	#
+	#	FINISHED="TRUE"
+	#	;;
+	#     X)	ORB_DEFAULT=jbroker_2
+	#	MODULE_CPPFLAGS="-DJBROKER "$MODULE_CPPFLAGS
+	#	MODULE_IMAKEFLAGS="-DJBROKER -DIDL2JAVA=idl2java "$MODULE_IMAKEFLAGS
+	#	DEFAULT_BIND_MECHANISM="2"
+	#
+	#	FINISHED="TRUE"
+	#	;;
+	    4)	ORB_DEFAULT=jbroker_2_1
+		MODULE_CPPFLAGS="-DJBROKER "$MODULE_CPPFLAGS
+		IDLFLAGS_DEFAULT="-poa "$IDLFLAGS_DEFAULT
+		MODULE_IMAKEFLAGS="-DHAVE_POA -DJBROKER -DIDL2JAVA=idl2java "$MODULE_IMAKEFLAGS
+		DEFAULT_BIND_MECHANISM="2"
+	
+		FINISHED="TRUE"
+		;;
+	     5) JDKVERSION=`$JAVAHARNESSTOPDIR/config/JDKVersion`
+# Workround for JDK problem
+#		case $JDKVERSION in
+#		*1_3*)	MODULE_IMAKEFLAGS="-DBROKEN_JDK "$MODULE_IMAKEFLAGS
+#			;;
+#		esac
+		ORB_DEFAULT=orbix2000_1
+		MODULE_CPPFLAGS="-DORBIX2000 "$MODULE_CPPFLAGS
+		IDLFLAGS_DEFAULT="-I\$\$ORB_ROOT/idl "$IDLFLAGS_DEFAULT
+	#	IRFLAGS_DEFAULT=" "$IRFLAGS_DEFAULT
+		MODULE_IMAKEFLAGS="-DHAVE_POA -DIDL2JAVA=idl -DIDL2IR=idl -DORBIX2000 "$MODULE_IMAKEFLAGS
+		HAVE_INTERFACE_REPOSITORY="YES"
+	
+		FINISHED="TRUE"
+		;;
+	     6) ORB_DEFAULT=jacorb_1_2
+		MODULE_CPPFLAGS="-DJACORB "$MODULE_CPPFLAGS
+		IDLFLAGS_DEFAULT="-I\$\$ORB_ROOT/idl "$IDLFLAGS_DEFAULT
+		MODULE_IMAKEFLAGS="-DHAVE_POA -DIDL2JAVA=idl -DJACORB "$MODULE_IMAKEFLAGS
+		HAVE_INTERFACE_REPOSITORY="NO"
+	
+		FINISHED="TRUE"
+		;;
+	    esac
+	done
+	
+	ORB_ROOT_DEFAULT=$ORB_ROOT
+	
+	if test "'x$ORB_ROOT'" = "'x'"
+	then
+	    echo
+	    echo "Error, ORB_ROOT environment variable is not set!" >&2
+	    exit 1
+	fi
+	
+	echo
+	echo $PRE_ECHO "ORB Installation Root ["$ORB_ROOT_DEFAULT"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	echo
+	if test "'x$INPUT'" != "'x'"
+	then
+	    echo "$INPUT" >> "$SAVED_ANSWERS"
+	    echo "Set ORB_ROOT accordingly and re-run configure"
+	    exit 1
+	else
+	    echo "(DEFAULT) $ORB_ROOT_DEFAULT" >> "$SAVED_ANSWERS"
+	fi
+	
+	echo $PRE_ECHO "Specific idl->Java generation flags ["$IDLFLAGS_DEFAULT"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	echo
+	if test "'x$INPUT'" != "'x'"
+	then  
+		if test "'x$INPUT'" != "'xNONE'" -o "'x$INPUT'" != "'xnone'"
+		then
+			echo "$INPUT" >> "$SAVED_ANSWERS"
+			IDLFLAGS_DEFAULT=$INPUT
+		else
+			echo "NONE" >> "$SAVED_ANSWERS"
+			IDLFLAGS_DEFAULT=""
+		fi
+	else
+		echo "(DEFAULT) $IDLFLAGS_DEFAULT" >> "$SAVED_ANSWERS"
+	fi
+	
+	if test "'x$HAVE_INTERFACE_REPOSITORY'" = "'xYES'"
+	then
+	    echo $PRE_ECHO "Specific interface repository flags ["$IRFLAGS_DEFAULT"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	    read INPUT
+	    echo
+	    if test "'x$INPUT'" != "'x'"
+	    then  
+		if test "'x$INPUT'" != "'xNONE'" -o "'x$INPUT'" != "'xnone'"
+		then
+			echo "$INPUT" >> "$SAVED_ANSWERS"
+			IRFLAGS_DEFAULT=$INPUT
+		else
+			echo "NONE" >> "$SAVED_ANSWERS"
+			IRFLAGS_DEFAULT=""
+		fi
+	    else
+		echo "(DEFAULT) $IRFLAGS_DEFAULT" >> "$SAVED_ANSWERS"
+	    fi
+	fi
+	
+	echo $PRE_ECHO "Default service resolution mechanism : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	echo
+	echo "  1) USE_CONFIG_FILE"
+	echo "  2) USE_RESOLVE_INITIAL_REFERENCES"
+	echo "  3) USE_NAME_SERVICE"
+	echo "  4) USE_BIND"
+	echo
+	FINISHED=""
+	while test -z "$FINISHED"
+	do
+	    echo $PRE_ECHO "Mechanism : ["$DEFAULT_BIND_MECHANISM"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	    read INPUT
+	    echo
+	    if test "'x$INPUT'" != "'x'"
+	    then
+		echo "$INPUT" >> "$SAVED_ANSWERS"
+		DEFAULT_BIND_MECHANISM=$INPUT
+	    else
+		echo "(DEFAULT) $DEFAULT_BIND_MECHANISM" >> "$SAVED_ANSWERS"
+	    fi
+	
+	    case $DEFAULT_BIND_MECHANISM in
+	    1)  MODULE_CPPFLAGS="-DUSE_CONFIG_FILE "$MODULE_CPPFLAGS
+		FINISHED="TRUE"
+		;;
+	    2)  MODULE_CPPFLAGS="-DUSE_RESOLVE_INITIAL_REFERENCES "$MODULE_CPPFLAGS
+		FINISHED="TRUE"
+		;;
+	    3)  MODULE_CPPFLAGS="-DUSE_NAME_SERVICE "$MODULE_CPPFLAGS
+		FINISHED="TRUE"
+		;;
+	    4)  MODULE_CPPFLAGS="-DUSE_BIND "$MODULE_CPPFLAGS
+	        FINISHED="TRUE"
+		;;
+	    esac
+	done
+	
+#	if test "'x$BUILDRELEASE'" = "'xYES'"
+#	then
+#		TEST_DEFAULT=y
+#	else
+		TEST_DEFAULT=n
+#	fi
+	echo
+	echo $PRE_ECHO "Build test programs (y/n) [$TEST_DEFAULT] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	
+	if test "'$TEST_DEFAULT'" = "'y'" -a "'x$INPUT'" = "'x'" || test "'x$INPUT'" = "'xy'" -o "'x$INPUT'" = "'xY'"
+	then	
+		echo "Y" >> "$SAVED_ANSWERS"
+		INPUT=""
+		echo $PRE_ECHO "Install test programs (y/n) [y] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+		read INPUT
+	
+		if test "'x$INPUT'" = "'xn'" -o "'x$INPUT'" = "'xN'"
+		then	
+			echo "N" >> "$SAVED_ANSWERS"
+			LOCAL_IMAKEFLAGS="-DBUILDTESTS -UINSTALLTESTS "$LOCAL_IMAKEFLAGS
+		else
+			echo "Y" >> "$SAVED_ANSWERS"
+			LOCAL_IMAKEFLAGS="-DBUILDTESTS -DINSTALLTESTS "$LOCAL_IMAKEFLAGS
+		fi
+	else
+		echo "N" >> "$SAVED_ANSWERS"
+		LOCAL_IMAKEFLAGS="-UBUILDTESTS -UINSTALLTESTS "$LOCAL_IMAKEFLAGS
+	fi
+	
+	echo
+	INPUT=""
+	echo $PRE_ECHO "Build utility programs (y/n) [y] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	
+	if test "'x$INPUT'" != "'xn'" -a "'x$INPUT'" != "'xN'"
+	then	
+		echo "Y" >> "$SAVED_ANSWERS"
+		INPUT=""
+		echo $PRE_ECHO "Install utility programs (y/n) [y] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+		read INPUT
+	
+		if test "'x$INPUT'" != "'xn'" -a "'x$INPUT'" != "'xN'"
+		then	
+			echo "Y" >> "$SAVED_ANSWERS"
+			LOCAL_IMAKEFLAGS="-DBUILDUTILITIES -DINSTALLUTILITIES "$LOCAL_IMAKEFLAGS
+		else
+			echo "N" >> "$SAVED_ANSWERS"
+			LOCAL_IMAKEFLAGS="-DBUILDUTILITIES -UINSTALLUTILITIES "$LOCAL_IMAKEFLAGS
+		fi
+	else
+		echo "N" >> "$SAVED_ANSWERS"
+		LOCAL_IMAKEFLAGS="-UBUILDUTILITIES -UINSTALLUTILITIES "$LOCAL_IMAKEFLAGS
+	fi
+	
+	# Defaults
+	SOURCEID=unknown
+	BUILDINFO=unknown
+	NOTES=none
+	
+	echo
+	echo $PRE_ECHO "Do you want to specify the module information (y/n) [n] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" = "'xy'" -o "'x$INPUT'" = "'xY'"
+	then
+	    echo "Y" >> "$SAVED_ANSWERS"
+	    echo
+	    INPUT=""
+	    echo $PRE_ECHO "What is the source identifier? ["$SOURCEID"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	    read INPUT
+	
+	    if test "'x$INPUT" != "'x'"
+	    then
+		if test "'x$INPUT'" != "'xNONE'" -o "'x$INPUT'" != "'xnone'"
+		then
+		    echo "$INPUT" >> "$SAVED_ANSWERS"
+		    SOURCEID=$INPUT
+		else
+		    echo "NONE" >> "$SAVED_ANSWERS"
+		    SOURCEID=""
+		fi
+	    else
+		echo "(DEFAULT) $SOURCEID" >> "$SAVED_ANSWERS"
+	    fi
+	
+	    echo
+	    echo $PRE_ECHO "What is your name? ["$BUILDINFO"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	    read INPUT
+	
+	    if test "'x$INPUT" != "'x'"
+	    then
+		if test "'x$INPUT'" != "'xNONE'" -o "'x$INPUT'" != "'xnone'"
+		then
+		    echo "$INPUT" >> "$SAVED_ANSWERS"
+		    BUILDINFO=$INPUT
+		else
+		    echo "NONE" >> "$SAVED_ANSWERS"
+		    BUILDINFO=""
+		fi
+	    else
+		echo "(DEFAULT) $BUILDINFO" >> "$SAVED_ANSWERS"
+	    fi
+	
+	    echo
+	    echo $PRE_ECHO "Any other information? ["$NOTES"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	    read INPUT
+	
+	    if test "'x$INPUT'" != "'x'"
+	    then
+		if test "'x$INPUT'" != "'xNONE'" -o "'x$INPUT'" != "'xnone'"
+		then
+		    echo "$INPUT" >> "$SAVED_ANSWERS"
+		    NOTES=$INPUT
+		else
+		    echo "NONE" >> "$SAVED_ANSWERS"
+		    NOTES=""
+		fi
+	    else
+		echo "(DEFAULT) $NOTES" >> "$SAVED_ANSWERS"
+	    fi
+	else
+	    echo "N" >> "$SAVED_ANSWERS"
+	fi
+
+	if test "$INST" = "YES"
+	then
+		LOCAL_IMAKEFLAGS="-DINSTALLJAR "$LOCAL_IMAKEFLAGS
+	fi
+else
+	. $CONFIGFILE
+	BUILDINFO=`echo $BUILDINFO | sed -e "s;$PRE_BUILDINFO\[;;" -e "s;]$;;"`
+	if test "'x$BUILDRELEASE'" = "'xYES'"
+	then
+		INSTALLTOPDIR=$XINSTALLTOPDIR
+		JAVAHARNESSTOPDIR=$XJAVAHARNESSTOPDIR
+		BUILDSYSTEMTOPDIR=$XBUILDSYSTEMTOPDIR
+	fi
+	case ${OS:-`(uname -s) 2> /dev/null`} in 
+        	CYGWIN*|Windows*)
+			TOPDIR="`cygpath -w $TOPDIR | sed 's;\\\;/;g'`"
+		;;
+	esac
+	echo Using ORB_ROOT=$ORB_ROOT
+fi
+
+sed -e "s;INCLUDES;-Iconfig -I$JAVAHARNESSTOPDIR/config -I$BUILDSYSTEMTOPDIR/config;" < MakefileBoot.tmpl > MakefileBoot
+
+BUILDINFO="$PRE_BUILDINFO [$BUILDINFO]"
+
+if test "$VERIFY" = "YES"
+then
+	echo
+	echo $PRE_ECHO "Local make flags ["$LOCAL_MAKEFLAGS"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		echo "$INPUT" >> "$SAVED_ANSWERS"
+		LOCAL_MAKEFLAGS=$INPUT
+	else
+		echo "(DEFAULT) $LOCAL_MAKEFLAGS" >> "$SAVED_ANSWERS"
+	fi
+
+	echo $PRE_ECHO "Local imake flags ["$LOCAL_IMAKEFLAGS"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		echo "$INPUT" >> "$SAVED_ANSWERS"
+		LOCAL_IMAKEFLAGS=$INPUT
+	else
+		echo "(DEFAULT) $LOCAL_IMAKEFLAGS" >> "$SAVED_ANSWERS"
+	fi
+
+	echo $PRE_ECHO "Local makedepend flags ["$LOCAL_MAKEDEPENDFLAGS"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		echo "$INPUT" >> "$SAVED_ANSWERS"
+		LOCAL_MAKEDEPENDFLAGS=$INPUT
+	else
+		echo "(DEFAULT) $LOCAL_MAKEDEPENDFLAGS" >> "$SAVED_ANSWERS"
+	fi
+
+	echo $PRE_ECHO "Local c pre-processor flags ["$LOCAL_CPPFLAGS"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		echo "$INPUT" >> "$SAVED_ANSWERS"
+		LOCAL_CPPFLAGS=$INPUT
+	else
+		echo "(DEFAULT) $LOCAL_CPPFLAGS" >> "$SAVED_ANSWERS"
+	fi
+
+	echo $PRE_ECHO "Local c pre-processor includes ["$LOCAL_CPPINCLUDES"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		echo "$INPUT" >> "$SAVED_ANSWERS"
+		LOCAL_CPPINCLUDES=$INPUT
+	else
+		echo "(DEFAULT) $LOCAL_CPPINCLUDES" >> "$SAVED_ANSWERS"
+	fi
+
+	echo $PRE_ECHO "Local c++ flags ["$LOCAL_CPLUSPLUSFLAGS"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		LOCAL_CPLUSPLUSFLAGS=$INPUT
+	fi
+
+	echo $PRE_ECHO "Local ld flags ["$LOCAL_LDFLAGS"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		echo "$INPUT" >> "$SAVED_ANSWERS"
+		LOCAL_LDFLAGS=$INPUT
+	else
+		echo "(DEFAULT) $LOCAL_LDFLAGS" >> "$SAVED_ANSWERS"
+	fi
+
+	echo $PRE_ECHO "Local ld libraries ["$LOCAL_LDLIBRARIES"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		LOCAL_LDLIBRARIES=$INPUT
+	fi
+
+	echo $PRE_ECHO "Local ld lib depends ["$LOCAL_LDLIBDEPENDS"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		echo "$INPUT" >> "$SAVED_ANSWERS"
+		LOCAL_LDLIBDEPENDS=$INPUT
+	else
+		echo "(DEFAULT) $LOCAL_LDLIBDEPENDS" >> "$SAVED_ANSWERS"
+	fi
+
+	echo
+	echo $PRE_ECHO "Module make flags ["$MODULE_MAKEFLAGS"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		MODULE_MAKEFLAGS=$INPUT
+	fi
+
+	echo $PRE_ECHO "Module imake flags ["$MODULE_IMAKEFLAGS"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		echo "$INPUT" >> "$SAVED_ANSWERS"
+		MODULE_IMAKEFLAGS=$INPUT
+	else
+		echo "(DEFAULT) $MODULE_IMAKEFLAGS" >> "$SAVED_ANSWERS"
+	fi
+
+	echo $PRE_ECHO "Module makedepend flags ["$MODULE_MAKEDEPENDFLAGS"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		MODULE_MAKEDEPENDFLAGS=$INPUT
+	fi
+
+	echo $PRE_ECHO "Module c pre-processor flags ["$MODULE_CPPFLAGS"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		echo "$INPUT" >> "$SAVED_ANSWERS"
+		MODULE_CPPFLAGS=$INPUT
+	else
+		echo "(DEFAULT) $MODULE_CPPFLAGS" >> "$SAVED_ANSWERS"
+	fi
+
+	echo $PRE_ECHO "Module c pre-processor includes ["$MODULE_CPPINCLUDES"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		echo "$INPUT" >> "$SAVED_ANSWERS"
+		MODULE_CPPINCLUDES=$INPUT
+	else
+		echo "(DEFAULT) $MODULE_CPPINCLUDES" >> "$SAVED_ANSWERS"
+	fi
+
+	echo $PRE_ECHO "Module c++ flags ["$MODULE_CPLUSPLUSFLAGS"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		MODULE_CPLUSPLUSFLAGS=$INPUT
+	fi
+
+	echo $PRE_ECHO "Module ld flags ["$MODULE_LDFLAGS"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		echo "$INPUT" >> "$SAVED_ANSWERS"
+		MODULE_LDFLAGS=$INPUT
+	else
+		echo "(DEFAULT) $MODULE_LDFLAGS" >> "$SAVED_ANSWERS"
+	fi
+
+	echo $PRE_ECHO "Module ld libraries ["$MODULE_LDLIBRARIES"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		MODULE_LDLIBRARIES=$INPUT
+	fi
+
+	echo $PRE_ECHO "Module ld lib depends ["$MODULE_LDLIBDEPENDS"] : " $POST_ECHO | tee -a "$SAVED_ANSWERS"
+	read INPUT
+	if test "'x$INPUT'" != "'x'"
+	then
+		echo "$INPUT" >> "$SAVED_ANSWERS"
+		MODULE_LDLIBDEPENDS=$INPUT
+	else
+		echo "(DEFAULT) $MODULE_LDLIBDEPENDS" >> "$SAVED_ANSWERS"
+	fi
+fi
+
+(
+echo "#!/bin/sh"
+echo "#"
+echo "# Copyright (C) 1998, 1999, 2000, 2001,"
+echo "# "
+echo "# Arjuna Solutions Limited,"
+echo "# Newcastle upon Tyne,"
+echo "# Tyne and Wear,"
+echo "# UK."
+echo "#"
+echo ""
+echo "# "$THISMODULE"  configure file"
+echo "# Version "$ORBPORTABILITY_VERSION
+echo ""
+if test "'x$BUILDRELEASE'" = "'xYES'"
+then
+    echo "BUILDRELEASE=YES"
+    echo "XINSTALLTOPDIR="$INSTALLTOPDIR
+    echo "XJAVAHARNESSTOPDIR="$JAVAHARNESSTOPDIR
+    echo "XBUILDSYSTEMTOPDIR="$BUILDSYSTEMTOPDIR
+    echo ""
+    echo "INSTALLTOPDIR=\$\$JTSARJUNA_HOME"
+    echo "JAVAHARNESSTOPDIR=\$\$JTSARJUNA_HOME"
+    echo "BUILDSYSTEMTOPDIR=\$\$JTSARJUNA_HOME"
+else
+    echo "INSTALLTOPDIR="$INSTALLTOPDIR
+    echo "JAVAHARNESSTOPDIR="$JAVAHARNESSTOPDIR
+    echo "BUILDSYSTEMTOPDIR="$BUILDSYSTEMTOPDIR
+fi
+echo ""
+echo "LOCAL_MAKEFLAGS='"$LOCAL_MAKEFLAGS"'"
+echo "LOCAL_IMAKEFLAGS='"$LOCAL_IMAKEFLAGS"'"
+echo "LOCAL_MAKEDEPENDFLAGS='"$LOCAL_MAKEDEPENDFLAGS"'"
+echo "LOCAL_CPPFLAGS='"$LOCAL_CPPFLAGS"'"
+echo "LOCAL_CPPINCLUDES='"$LOCAL_CPPINCLUDES"'"
+echo "LOCAL_CPLUSPLUSFLAGS='"$LOCAL_CPLUSPLUSFLAGS"'"
+echo "LOCAL_LDFLAGS='"$LOCAL_LDFLAGS"'"
+echo "LOCAL_LDLIBRARIES='"$LOCAL_LDLIBRARIES"'"
+echo "LOCAL_LDLIBDEPENDS='"$LOCAL_LDLIBDEPENDS"'"
+echo ""
+echo "MODULE_MAKEFLAGS='"$MODULE_MAKEFLAGS"'"
+echo "MODULE_IMAKEFLAGS='"$MODULE_IMAKEFLAGS"'"
+echo "MODULE_MAKEDEPENDFLAGS='"$MODULE_MAKEDEPENDFLAGS"'"
+echo "MODULE_CPPFLAGS='"$MODULE_CPPFLAGS"'"
+echo "MODULE_CPPINCLUDES='"$MODULE_CPPINCLUDES"'"
+echo "MODULE_CPLUSPLUSFLAGS='"$MODULE_CPLUSPLUSFLAGS"'"
+echo "MODULE_LDFLAGS='"$MODULE_LDFLAGS"'"
+echo "MODULE_LDLIBRARIES='"$MODULE_LDLIBRARIES"'"
+echo "MODULE_LDLIBDEPENDS='"$MODULE_LDLIBDEPENDS"'"
+echo ""
+echo "IDLFLAGS='"$IDLFLAGS_DEFAULT"'"
+echo "IRFLAGS='"$IRFLAGS_DEFAULT"'"
+echo
+echo "SOURCEID='"$SOURCEID"'"
+echo "BUILDINFO='"$BUILDINFO"'"
+echo "NOTES='"$NOTES"'"
+echo
+echo "ORB_ROOT='"$ORB_ROOT"'"
+echo "ORB_DEFAULT='"$ORB_DEFAULT"'"
+echo "IRFLAGS_DEFAULT='"$IRFLAGS_DEFAULT"'"
+echo "IDLFLAGS_DEFAULT='"$IDLFLAGS_DEFAULT"'"
+) > config/"$THISMODULE".cf
+chmod a+rx config/"$THISMODULE".cf
+
+(
+echo "/*"
+echo " * Copyright (C) 1998, 1999, 2000, 2001,"
+echo " * "
+echo " * Arjuna Solutions Limited,"
+echo " * Newcastle upon Tyne,"
+echo " * Tyne and Wear,"
+echo " * UK."
+echo " */"
+echo
+echo "/*"
+echo " *  Local.def"
+echo " */"
+echo
+if test "'x$LOCAL_MAKEFLAGS'" != "'x'"
+then
+	echo "AddToMakeFlags("$LOCAL_MAKEFLAGS")"
+fi
+if test "'x$LOCAL_IMAKEFLAGS'" != "'x'"
+then
+	echo "AddToIMakeFlags("$LOCAL_IMAKEFLAGS")"
+fi
+
+if test "'x$LOCAL_MAKEDEPENDFLAGS'" != "'x'"
+then
+	echo "AddToMakeDependFlags("$LOCAL_MAKEDEPENDFLAGS")"
+fi
+if test "'x$LOCAL_CPPFLAGS'" != "'x'"
+then
+	echo "AddToCPPFlags("$LOCAL_CPPFLAGS")"
+fi
+if test "'x$LOCAL_CPPINCLUDES'" != "'x'"
+then
+	echo "AddToCPPIncludes("$LOCAL_CPPINCLUDES")"
+fi
+if test "'x$LOCAL_CPLUSPLUSFLAGS'" != "'x'"
+then
+	echo "AddToCPLUSPLUSFlags("$LOCAL_CPLUSPLUSFLAGS")"
+fi
+if test "'x$LOCAL_LDFLAGS'" != "'x'"
+then
+	echo "AddToLdFlags("$LOCAL_LDFLAGS")"
+fi
+if test "'x$LOCAL_LDLIBRARIES'" != "'x'"
+then
+	echo "AddToLdLibraries("$LOCAL_LDLIBRARIES")"
+fi
+if test "'x$LOCAL_LDLIBDEPENDS'" != "'x'"
+then
+	echo "AddToLdLibDepends("$LOCAL_LDLIBDEPENDS")"
+fi
+echo
+echo "#define ORB_DEF o_"$ORB_DEFAULT
+echo
+echo "#include \""$TOPDIR"/config/"$THISMODULE"_Module.def\""
+echo "#include \""$JAVAHARNESSTOPDIR"/config/JavaHarness_Module.def\""
+echo "#include \""$BUILDSYSTEMTOPDIR"/config/Module.def\""
+) > config/Local.def
+chmod a+r config/Local.def
+
+(
+echo "/*"
+echo " * Copyright (C) 1998, 1999, 2000, 2001,"
+echo " * "
+echo " * Arjuna Solutions Limited,"
+echo " * Newcastle upon Tyne,"
+echo " * Tyne and Wear,"
+echo " * UK."
+echo " */"
+echo
+echo "/*"
+echo " *  "$THISMODULE"_Module.def (source)"
+echo " */"
+echo
+echo "JAVAORBPORTABILITYTOPDIR="$TOPDIR
+echo
+echo "#include \""$TOPDIR"/config/o_"$ORB_DEFAULT".cf\""
+echo "#include \""$TOPDIR"/config/"$THISMODULE".tmpl\""
+echo
+if test "'x$MODULE_MAKEFLAGS'" != "'x'"
+then
+	echo "AddToMakeFlags("$MODULE_MAKEFLAGS")"
+fi
+if test "'x$MODULE_IMAKEFLAGS'" != "'x'"
+then
+	echo "AddToIMakeFlags("$MODULE_IMAKEFLAGS")"
+fi
+if test "'x$MODULE_MAKEDEPENDFLAGS'" != "'x'"
+then
+	echo "AddToMakeDependFlags("$MODULE_MAKEDEPENDFLAGS")"
+fi
+if test "'x$MODULE_CPPFLAGS'" != "'x'"
+then
+	echo "AddToCPPFlags("$MODULE_CPPFLAGS")"
+fi
+if test "'x$MODULE_CPPINCLUDES'" != "'x'"
+then
+	echo "AddToCPPIncludes("$MODULE_CPPINCLUDES")"
+fi
+if test "'x$MODULE_CPLUSPLUSFLAGS'" != "'x'"
+then
+	echo "AddToCPLUSPLUSFlags("$MODULE_CPLUSPLUSFLAGS")"
+fi
+if test "'x$MODULE_LDFLAGS'" != "'x'"
+then
+	echo "AddToLdFlags("$MODULE_LDFLAGS")"
+fi
+if test "'x$MODULE_LDLIBRARIES'" != "'x'"
+then
+	echo "AddToLdLibraries("$MODULE_LDLIBRARIES")"
+fi
+if test "'x$MODULE_LDLIBDEPENDS'" != "'x'"
+then
+	echo "AddToLdLibDepends("$MODULE_LDLIBDEPENDS")"
+fi
+if test "'x$IDLFLAGS_DEFAULT'" != "'x'"
+then
+	echo "AddToIdlFlags("$IDLFLAGS_DEFAULT")"
+fi
+if test "'x$IRFLAGS_DEFAULT'" != "'x'"
+then
+	echo "AddToIRFlags("$IRFLAGS_DEFAULT")"
+fi
+echo
+echo "AddToCPPFlags(-DORBPORTABILITY_VERSION=\\\"$ORBPORTABILITY_VERSION\\\")"
+) > config/"$THISMODULE"_Module.def
+chmod a+r config/"$THISMODULE"_Module.def
+
+(
+echo "/*"
+echo " * Copyright (C) 1998, 1999, 2000, 2001,"
+echo " * "
+echo " * Arjuna Solutions Limited,"
+echo " * Newcastle upon Tyne,"
+echo " * Tyne and Wear,"
+echo " * UK."
+echo " */"
+echo
+echo "/*"
+echo " *  "$THISMODULE"_Module.def (install)"
+echo " */"
+echo
+if test "'x$BUILDRELEASE'" = "'xYES'"
+then
+    echo "JAVAORBPORTABILITYTOPDIR=\$\$JTSARJUNA_HOME"
+    echo
+    echo "#include \"o_"$ORB_DEFAULT".cf\""
+    echo "#include \""$THISMODULE".tmpl\""
+else
+    echo "JAVAORBPORTABILITYTOPDIR="$INSTALLTOPDIR
+    echo
+    echo "#include \""$INSTALLTOPDIR"/config/o_"$ORB_DEFAULT".cf\""
+    echo "#include \""$INSTALLTOPDIR"/config/"$THISMODULE".tmpl\""
+fi
+echo
+if test "'x$MODULE_MAKEFLAGS'" != "'x'"
+then
+	echo "AddToMakeFlags("$MODULE_MAKEFLAGS")"
+fi
+if test "'x$MODULE_IMAKEFLAGS'" != "'x'"
+then
+	echo "AddToIMakeFlags("$MODULE_IMAKEFLAGS")"
+fi
+if test "'x$MODULE_MAKEDEPENDFLAGS'" != "'x'"
+then
+	echo "AddToMakeDependFlags("$MODULE_MAKEDEPENDFLAGS")"
+fi
+if test "'x$MODULE_CPPFLAGS'" != "'x'"
+then
+	echo "AddToCPPFlags("$MODULE_CPPFLAGS")"
+fi
+if test "'x$MODULE_CPPINCLUDES'" != "'x'"
+then
+	echo "AddToCPPIncludes("$MODULE_CPPINCLUDES")"
+fi
+if test "'x$MODULE_CPLUSPLUSFLAGS'" != "'x'"
+then
+	echo "AddToCPLUSPLUSFlags("$MODULE_CPLUSPLUSFLAGS")"
+fi
+if test "'x$MODULE_LDFLAGS'" != "'x'"
+then
+	echo "AddToLdFlags("$MODULE_LDFLAGS")"
+fi
+if test "'x$MODULE_LDLIBRARIES'" != "'x'"
+then
+	echo "AddToLdLibraries("$MODULE_LDLIBRARIES")"
+fi
+if test "'x$MODULE_LDLIBDEPENDS'" != "'x'"
+then
+	echo "AddToLdLibDepends("$MODULE_LDLIBDEPENDS")"
+fi
+if test "'x$IDLFLAGS_DEFAULT'" != "'x'"
+then
+	echo "AddToIdlFlags("$IDLFLAGS_DEFAULT")"
+fi
+if test "'x$IRFLAGS_DEFAULT'" != "'x'"
+then
+	echo "AddToIRFlags("$IRFLAGS_DEFAULT")"
+fi
+echo
+echo "AddToCPPFlags(-DORBPORTABILITY_VERSION=\\\"$ORBPORTABILITY_VERSION\\\")"
+) > config/"$THISMODULE"_Module_install.def
+chmod a+r config/"$THISMODULE"_Module_install.def
+
+(
+echo "#!/bin/sh"
+echo "#"
+echo "# Copyright (C) 1998, 1999, 2000, 2001,"
+echo "# "
+echo "# Arjuna Solutions Limited,"
+echo "# Newcastle upon Tyne,"
+echo "# Tyne and Wear,"
+echo "# UK."
+echo "#"
+echo "#"
+echo
+echo "#"
+echo "# ORB.def"
+echo "#"
+echo
+echo "echo "$ORB_DEFAULT
+) > config/ORB.def
+chmod a+rx config/ORB.def
+
+(
+echo ""$THISMODULE" version $ORBPORTABILITY_VERSION"
+) > config/"$THISMODULE"_Version.def
+
+(
+echo "#define MODULE \""$THISMODULE"\""
+echo "#define SOURCEID \""$SOURCEID"\""
+echo "#define BUILDINFO \""$BUILDINFO"\""
+echo "#define VERSION \""$ORBPORTABILITY_VERSION"\""
+echo "#define DATE \""`date`"\""
+echo "#define NOTES \""$NOTES"\""
+) > config/Info.h
+
+exit 0

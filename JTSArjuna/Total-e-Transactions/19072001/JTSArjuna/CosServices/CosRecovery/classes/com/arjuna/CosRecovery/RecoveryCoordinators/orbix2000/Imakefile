@@ -1,0 +1,31 @@
+COMMENT 
+COMMENT Copyright (C) 2001,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.2.1.4.1 2001/03/19 15:59:26 nmcl Exp $
+COMMENT
+
+
+SOURCES = Orbix2kRecMan.java
+
+OBJECTS = Orbix2kRCDefaultServant.class \
+          Orbix2kRCManager.class \
+          Orbix2kRecoveryInit.class \
+          Orbix2kRCServiceInit.class
+          
+Target($(SOURCES))
+
+Target($(OBJECTS))
+
+PreprocessJavaCode(Orbix2kRecMan,NullParam)
+
+BuildJavaByteCode(Orbix2kRCDefaultServant,NullParam)
+BuildJavaByteCode(Orbix2kRCManager,NullParam)
+BuildJavaByteCode(Orbix2kRecoveryInit,NullParam)
+BuildJavaByteCode(Orbix2kRCServiceInit,NullParam)
+
+Clean(*.class)

@@ -1,0 +1,149 @@
+/*
+ * Copyright (C) 1998, 1999, 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: JTA_TransactionManager.javatmpl,v 1.2.14.4.16.3.2.1.2.1 2000/12/21 11:21:23 nmcl Exp $
+ */
+
+#include <Common/OrbPortability.h>
+#include <CosTransactions/CosTranNames.h>
+
+package com.arjuna.jta;
+
+import org.omg.CosTransactions.*;
+import com.arjuna.CosTransactions.*;
+import javax.transaction.*;
+import com.arjuna.ArjunaCommon.Common.*;
+
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.SystemException;
+import java.lang.SecurityException;
+import java.lang.IllegalStateException;
+import java.lang.NullPointerException;
+import org.omg.CosTransactions.SubtransactionsUnavailable;
+import org.omg.CosTransactions.NoTransaction;
+import org.omg.CosTransactions.HeuristicMixed;
+import org.omg.CosTransactions.HeuristicHazard;
+import org.omg.CosTransactions.InvalidControl;
+import org.omg.CORBA.NO_PERMISSION;
+import org.omg.CORBA.BAD_OPERATION;
+
+#include <CosTransactions/CosTranExceptions.h>
+#include <CosTransactions/OTS_Exceptions.h>
+
+/**
+ * An implementation of javax.transaction.TransactionManager.
+ *
+ * @author Mark Little (mark@arjuna.com)
+ * @version $Id: JTA_TransactionManager.javatmpl,v 1.2.14.4.16.3.2.1.2.1 2000/12/21 11:21:23 nmcl Exp $
+ * @since JTS 1.2.4.
+ */
+
+public class JTA_TransactionManager extends JTA_BaseTransaction implements javax.transaction.TransactionManager
+{
+
+public static synchronized javax.transaction.TransactionManager transactionManager ()
+    {
+	if (JTA_TransactionManager._theTransactionManager == null)
+	    JTA_TransactionManager._theTransactionManager = new JTA_TransactionManager();
+
+	return JTA_TransactionManager._theTransactionManager;
+    }
+    
+public Transaction getTransaction () throws javax.transaction.SystemException
+    {
+	try
+	{
+	    return JTA_Transaction.getTransaction(OTS.current().get_control());
+	}
+	catch (NullPointerException ex)
+	{
+	    return null;
+	}
+	catch (Exception e)
+	{
+	    throw new javax.transaction.SystemException();
+	}
+    }
+ 
+    /**
+     * @return the suspended transaction.
+     */
+
+public Transaction suspend () throws javax.transaction.SystemException
+    {
+	if (DebugController.enabled())
+	{
+	    DebugController.controller().println(DebugLevel.FUNCTIONS, VisibilityLevel.VIS_PUBLIC,
+						 FacilityCode.FAC_JTA, "JTA_TransactionManager.suspend");
+	}
+
+	try
+	{
+	    Control theControl = OTS.current().suspend();
+
+	    return JTA_Transaction.getTransaction(theControl);
+	}
+	catch (Exception e)
+	{
+	    throw new javax.transaction.SystemException();
+	}
+    }
+
+    /**
+     * Unlike the OTS, if we are already associated with a transaction
+     * then we cannot call resume.
+     */
+
+public void resume (Transaction which) throws InvalidTransactionException, java.lang.IllegalStateException, javax.transaction.SystemException
+    {
+	if (DebugController.enabled())
+	{
+	    DebugController.controller().println(DebugLevel.FUNCTIONS, VisibilityLevel.VIS_PUBLIC,
+						 FacilityCode.FAC_JTA, "JTA_TransactionManager.resume");
+	}
+
+	super.checkTransactionState();
+	
+	if (which instanceof JTA_Transaction)
+	{
+	    JTA_Transaction theTransaction = (JTA_Transaction) which;
+
+	    try
+	    {
+		OTS_ControlWrapper cont = theTransaction.getControlWrapper();
+
+		OTS.current().resume(cont.getControl());
+
+		cont = null;
+		theTransaction = null;
+	    }
+	    catch (org.omg.CosTransactions.InvalidControl e1)
+	    {
+		throw new InvalidTransactionException();
+	    }
+	    catch (org.omg.CORBA.SystemException e2)
+	    {
+		throw new javax.transaction.SystemException();
+	    }
+	}
+	else
+	    throw new InvalidTransactionException();
+    }
+
+protected JTA_TransactionManager ()
+    {
+	super();
+    }
+
+private static JTA_TransactionManager _theTransactionManager = null;
+    
+}

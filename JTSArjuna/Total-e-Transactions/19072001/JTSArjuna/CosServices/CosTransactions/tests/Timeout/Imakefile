@@ -1,0 +1,45 @@
+COMMENT 
+COMMENT Copyright (C) 1998, 1999, 2000, 2001,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.2.34.1.4.1 2001/04/06 15:33:00 jcoleman Exp $
+COMMENT
+
+AddToIdlFlags(-I$(JAVACOSTRANSACTIONSTOPDIR)/include)
+
+#ifdef INSTALLTESTS
+CreateInstallDirectory(/tests,/tests/Timeout)
+#endif
+
+SOURCES = TerminationTest.java \
+	  DefaultTimeout.java \
+	  TimeoutClient.java
+
+TESTOBJECTS = TerminationTest.class \
+	      DefaultTimeout.class \
+	      TimeoutClient.class
+
+Target($(SOURCES))
+Target($(TESTOBJECTS))
+
+#ifdef INSTALLTESTS
+InstallFiles(/tests/Timeout,TerminationTest.class,$(TESTOBJECTS))
+InstallFile(/tests/Timeout,expected_output1)
+InstallFile(/tests/Timeout,expected_output2)
+InstallFile(/tests/Timeout,expected_output3)
+InstallFile(/tests/Timeout,README)
+InstallFiles(/tests/Timeout,runtest,runtest.*)
+#endif
+
+PreprocessJavaCode(TerminationTest,NullParam)
+PreprocessJavaCode(TimeoutClient,NullParam)
+
+BuildJavaByteCode(TerminationTest,NullParam)
+BuildJavaByteCode(DefaultTimeout,NullParam)
+BuildJavaByteCode(TimeoutClient,NullParam)
+
+Clean(*.class)

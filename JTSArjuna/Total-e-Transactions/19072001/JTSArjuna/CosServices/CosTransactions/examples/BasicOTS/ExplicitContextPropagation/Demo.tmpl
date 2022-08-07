@@ -1,0 +1,31 @@
+/*
+ * Copyright (C) 2001,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.
+ *
+ * $Id: Demo.tmpl,v 1.1.2.2 2001/02/15 13:47:34 nmcl Exp $
+ */
+
+#ifndef RCPORB
+INCLUDE_DIRECTIVE <idl/CosTransactions.idl>
+#endif
+
+#if defined(JDK_1_2) && defined(SUNSJDK)
+#pragma javaPackage ""
+#endif
+
+module Demo
+{
+	exception DemoException {};
+	exception DemoNoTransContextException {};
+
+	interface DemoInterface : CosTransactions::TransactionalObject
+	{
+		void work() raises (DemoException, DemoNoTransContextException);
+		void workWithExplicitTransContext(in CosTransactions::Control control)
+			raises (DemoException);
+	};
+};

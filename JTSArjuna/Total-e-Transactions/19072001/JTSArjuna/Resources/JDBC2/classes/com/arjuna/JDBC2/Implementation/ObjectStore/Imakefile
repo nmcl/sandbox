@@ -1,0 +1,32 @@
+COMMENT 
+COMMENT Copyright (C) 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.2.1.2.2 2000/11/28 12:15:53 nmcl Exp $
+COMMENT
+
+SOURCES = JDBCStore.java \
+	  JDBCAccess.java \
+	  JDBCStoreSetup.java \
+	  JDBCActionStore.java \
+	  JDBCActionStoreSetup.java
+
+OBJECTS = JDBCStore.class \
+	  JDBCAccess.class \
+	  JDBCStoreSetup.class \
+	  JDBCActionStore.class \
+	  JDBCActionStoreSetup.class
+
+Target($(OBJECTS))
+
+BuildJavaByteCode(JDBCAccess,NullParam)
+BuildJavaByteCode(JDBCStore,NullParam)
+BuildJavaByteCode(JDBCStoreSetup,NullParam)
+BuildJavaByteCode(JDBCActionStore,NullParam)
+BuildJavaByteCode(JDBCActionStoreSetup,NullParam)
+
+Clean(*.class)

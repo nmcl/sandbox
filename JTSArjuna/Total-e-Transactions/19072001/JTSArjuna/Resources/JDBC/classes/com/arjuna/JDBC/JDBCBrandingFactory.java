@@ -1,0 +1,63 @@
+/*
+ * Copyright (C) 2000,
+ *
+ * Arjuna Solutions Limited,
+ * Newcastle upon Tyne,
+ * Tyne and Wear,
+ * UK.  
+ *
+ * $Id: JDBCBrandingFactory.javatmpl,v 1.1.2.1.2.1.2.1 2001/02/02 11:51:03 nmcl Exp $
+ */
+
+package com.arjuna.JDBC;
+
+import java.util.*;
+
+/**
+ * Keep track of any "brandings" we may require.
+ *
+ * @author Mark Little (mark@arjuna.com)
+ * @version $Id: JDBCBrandingFactory.javatmpl,v 1.1.2.1.2.1.2.1 2001/02/02 11:51:03 nmcl Exp $
+ * @since JTS 2.1.
+ */
+
+public class JDBCBrandingFactory
+{
+
+public static synchronized void putBranding (String dbName, JDBCBranding brand)
+    {
+	_brandings.put(dbName, brand);
+    }
+
+    /*
+     * Convert input to lower case first.
+     */
+
+public static synchronized JDBCBranding getBranding (String dbName)
+    {
+	Enumeration e = _brandings.keys();
+
+	dbName = dbName.toLowerCase();
+	
+	while (e.hasMoreElements())
+	{
+	    String s = (String) e.nextElement();
+	    
+	    if (dbName.indexOf(s) != -1)
+		return (JDBCBranding) _brandings.get(s);
+	}
+	
+	return null;
+    }
+
+private static Hashtable _brandings = new Hashtable();
+
+    static
+    {
+
+
+	JDBCBrandingFactory.putBranding(com.arjuna.JDBC.drivers.sequelink_5_1.driverName(), new com.arjuna.JDBC.drivers.brandings.merant());
+
+    }
+    
+}

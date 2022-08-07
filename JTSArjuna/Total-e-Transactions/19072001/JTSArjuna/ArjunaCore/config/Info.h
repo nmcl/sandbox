@@ -1,0 +1,6 @@
+#define MODULE "ArjunaCore"
+#define SOURCEID "unkown"
+#define BUILDINFO "Arjuna Solutions Ltd. [unknown]"
+#define VERSION "4.7.0"
+#define DATE "Thu Sep 20 13:40:17 2001"
+#define NOTES "none"

@@ -1,0 +1,17 @@
+Hostname: thinkblue
+Uname   : CYGWIN_NT-5.0 20.1 (0.3/1/1)
+Date    : Thu Sep 20 13:40:18 2001
+
+command line arguments : -all
+
+ORB : 
+ORB : 
+ORB : 5
+ORB Installation Root [c:/PROGRA~1/IONA/orbix_art/1.2/bin] : (DEFAULT) c:/PROGRA~1/IONA/orbix_art/1.2/bin
+Specific idl->Java generation flags [-I$$ORB_ROOT/idl ] : (DEFAULT) -I$$ORB_ROOT/idl 
+Specific interface repository flags [] : (DEFAULT) 
+Default service resolution mechanism : Mechanism : [1] : (DEFAULT) 1
+Build test programs (y/n) [n] : N
+Build utility programs (y/n) [y] : Y
+Install utility programs (y/n) [y] : Y
+Do you want to specify the module information (y/n) [n] : N

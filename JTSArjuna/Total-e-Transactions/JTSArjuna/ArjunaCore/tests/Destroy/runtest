@@ -1,4 +1,0 @@
-#!/bin/sh
-
-java -DOBJECTSTORE_DIR=/tmp/ObjectStore DestroyTest
-

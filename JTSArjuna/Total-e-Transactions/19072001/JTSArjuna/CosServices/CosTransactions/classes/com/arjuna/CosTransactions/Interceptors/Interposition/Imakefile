@@ -1,0 +1,18 @@
+COMMENT 
+COMMENT Copyright (C) 2000,
+COMMENT
+COMMENT Arjuna Solutions Limited,
+COMMENT Newcastle upon Tyne,
+COMMENT Tyne and Wear,
+COMMENT UK.
+COMMENT
+COMMENT $Id: Imakefile,v 1.1.26.1 2000/11/23 15:17:36 nmcl Exp $
+COMMENT
+
+#ifdef VISIBROKER
+SubDirectory(vbroker)
+#endif
+
+#ifdef ORBIX2000
+SubDirectory(orbix2000)
+#endif
