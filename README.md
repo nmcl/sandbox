@@ -1,5 +1,5 @@
 # sandbox
-Various efforts, some old and some new. Some stuff dating back to 1980's and 90's research papers etc.
+Various efforts, some dating back to 1980's and 1990's research papers etc.
 
 Any specific licences will be displayed within the relevant sub-directories.
 

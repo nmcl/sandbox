@@ -1,4 +1,4 @@
-The MonitorDaemon code. Sets up application level ping.
+The MonitorDaemon code. Sets up an application level ping.
 
 Start the pingdaemon (-help to see options).
 
